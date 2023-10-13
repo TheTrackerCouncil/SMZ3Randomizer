@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Speech.Recognition;
 
@@ -73,6 +74,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             Logger = logger;
         }
 
+        public abstract void AddCommands();
+
         /// <summary>
         /// Gets a dictionary that contains the rule names and their associated
         /// speech recognition patterns.
@@ -104,6 +107,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <summary>
         /// Gets a list of speech recognition grammars provided by the module.
         /// </summary>
+        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
         protected IList<Grammar> Grammars { get; }
             = new List<Grammar>();
 
@@ -304,6 +308,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected void AddCommand(string ruleName, GrammarBuilder grammarBuilder,
             Action<RecognitionResult> executeCommand)
         {
+            if (!OperatingSystem.IsWindows())
+            {
+                return;
+            }
+
             _syntax.TryAdd(ruleName, grammarBuilder.ToString().Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
 
             try

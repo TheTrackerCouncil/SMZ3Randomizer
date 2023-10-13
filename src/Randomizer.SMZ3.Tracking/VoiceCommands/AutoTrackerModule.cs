@@ -27,11 +27,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             Tracker.AutoTracker = autoTracker;
             _autoTracker = autoTracker;
-
-            AddCommand("Look at this", GetLookAtGameRule(), (result) =>
-            {
-                LookAtGame();
-            });
         }
 
         private GrammarBuilder GetLookAtGameRule()
@@ -57,6 +52,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public void Dispose()
         {
             _autoTracker.SetConnector(EmulatorConnectorType.None, "");
+        }
+
+        public override void AddCommands()
+        {
+            AddCommand("Look at this", GetLookAtGameRule(), (result) =>
+            {
+                LookAtGame();
+            });
         }
     }
 

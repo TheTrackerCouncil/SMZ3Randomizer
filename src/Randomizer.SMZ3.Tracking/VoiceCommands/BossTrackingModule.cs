@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 
 using Randomizer.Shared;
@@ -22,86 +23,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public BossTrackingModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<BossTrackingModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
-            AddCommand("Mark boss as defeated", GetMarkBossAsDefeatedRule(), (result) =>
-            {
-                var dungeon = GetBossDungeonFromResult(tracker, result);
-                if (dungeon != null)
-                {
-                    // Track boss with associated dungeon
-                    tracker.MarkDungeonAsCleared(dungeon, result.Confidence);
-                    return;
-                }
 
-                var boss = GetBossFromResult(tracker, result);
-                if (boss != null)
-                {
-                    // Track standalone boss
-                    var admittedGuilt = result.Text.ContainsAny("killed", "beat", "defeated", "dead")
-                        && !result.Text.ContainsAny("beat off", "beaten off");
-                    tracker.MarkBossAsDefeated(boss, admittedGuilt, result.Confidence);
-                    return;
-                }
-
-                throw new Exception($"Could not find boss or dungeon in command: '{result.Text}'");
-            });
-
-            AddCommand("Mark boss as alive", GetMarkBossAsNotDefeatedRule(), (result) =>
-            {
-                var dungeon = GetBossDungeonFromResult(tracker, result);
-                if (dungeon != null)
-                {
-                    // Untrack boss with associated dungeon
-                    tracker.MarkDungeonAsIncomplete(dungeon, result.Confidence);
-                    return;
-                }
-
-                var boss = GetBossFromResult(tracker, result);
-                if (boss != null)
-                {
-                    // Untrack standalone boss
-                    tracker.MarkBossAsNotDefeated(boss, result.Confidence);
-                    return;
-                }
-
-                throw new Exception($"Could not find boss or dungeon in command: '{result.Text}'");
-            });
-
-            AddCommand("Mark boss as defeated with content", GetBossDefeatedWithContentRule(), (result) =>
-            {
-                var contentItemData = itemService.FirstOrDefault("Content");
-
-                var dungeon = GetBossDungeonFromResult(tracker, result);
-                if (dungeon != null)
-                {
-                    if (contentItemData != null)
-                    {
-                        Tracker.Say(x => x.DungeonBossClearedAddContent);
-                        Tracker.TrackItem(contentItemData);
-                    }
-
-                    // Track boss with associated dungeon
-                    tracker.MarkDungeonAsCleared(dungeon, result.Confidence);
-                    return;
-                }
-
-                var boss = GetBossFromResult(tracker, result);
-                if (boss != null)
-                {
-                    if (contentItemData != null)
-                    {
-                        Tracker.Say(x => x.DungeonBossClearedAddContent);
-                        Tracker.TrackItem(contentItemData);
-                    }
-
-                    // Track standalone boss
-                    var admittedGuilt = result.Text.ContainsAny("killed", "beat", "defeated", "dead")
-                        && !result.Text.ContainsAny("beat off", "beaten off");
-                    tracker.MarkBossAsDefeated(boss, admittedGuilt, result.Confidence);
-                    return;
-                }
-
-                throw new Exception($"Could not find boss or dungeon in command: '{result.Text}'");
-            });
         }
 
         private GrammarBuilder GetMarkBossAsDefeatedRule()
@@ -161,6 +83,91 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append(BossKey, bossNames);
 
             return GrammarBuilder.Combine(beatBoss, oneCycled);
+        }
+
+        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
+        public override void AddCommands()
+        {
+            AddCommand("Mark boss as defeated", GetMarkBossAsDefeatedRule(), (result) =>
+            {
+                var dungeon = GetBossDungeonFromResult(Tracker, result);
+                if (dungeon != null)
+                {
+                    // Track boss with associated dungeon
+                    Tracker.MarkDungeonAsCleared(dungeon, result.Confidence);
+                    return;
+                }
+
+                var boss = GetBossFromResult(Tracker, result);
+                if (boss != null)
+                {
+                    // Track standalone boss
+                    var admittedGuilt = result.Text.ContainsAny("killed", "beat", "defeated", "dead")
+                        && !result.Text.ContainsAny("beat off", "beaten off");
+                    Tracker.MarkBossAsDefeated(boss, admittedGuilt, result.Confidence);
+                    return;
+                }
+
+                throw new Exception($"Could not find boss or dungeon in command: '{result.Text}'");
+            });
+
+            AddCommand("Mark boss as alive", GetMarkBossAsNotDefeatedRule(), (result) =>
+            {
+                var dungeon = GetBossDungeonFromResult(Tracker, result);
+                if (dungeon != null)
+                {
+                    // Untrack boss with associated dungeon
+                    Tracker.MarkDungeonAsIncomplete(dungeon, result.Confidence);
+                    return;
+                }
+
+                var boss = GetBossFromResult(Tracker, result);
+                if (boss != null)
+                {
+                    // Untrack standalone boss
+                    Tracker.MarkBossAsNotDefeated(boss, result.Confidence);
+                    return;
+                }
+
+                throw new Exception($"Could not find boss or dungeon in command: '{result.Text}'");
+            });
+
+            AddCommand("Mark boss as defeated with content", GetBossDefeatedWithContentRule(), (result) =>
+            {
+                var contentItemData = ItemService.FirstOrDefault("Content");
+
+                var dungeon = GetBossDungeonFromResult(Tracker, result);
+                if (dungeon != null)
+                {
+                    if (contentItemData != null)
+                    {
+                        Tracker.Say(x => x.DungeonBossClearedAddContent);
+                        Tracker.TrackItem(contentItemData);
+                    }
+
+                    // Track boss with associated dungeon
+                    Tracker.MarkDungeonAsCleared(dungeon, result.Confidence);
+                    return;
+                }
+
+                var boss = GetBossFromResult(Tracker, result);
+                if (boss != null)
+                {
+                    if (contentItemData != null)
+                    {
+                        Tracker.Say(x => x.DungeonBossClearedAddContent);
+                        Tracker.TrackItem(contentItemData);
+                    }
+
+                    // Track standalone boss
+                    var admittedGuilt = result.Text.ContainsAny("killed", "beat", "defeated", "dead")
+                        && !result.Text.ContainsAny("beat off", "beaten off");
+                    Tracker.MarkBossAsDefeated(boss, admittedGuilt, result.Confidence);
+                    return;
+                }
+
+                throw new Exception($"Could not find boss or dungeon in command: '{result.Text}'");
+            });
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data.Options;
@@ -33,7 +34,7 @@ namespace Randomizer.SMZ3.Generation
         /// the given GeneratedRom
         /// </summary>
         /// <param name="rom"></param>
-        public void LoadGeneratedRom(GeneratedRom rom)
+        public List<World> LoadGeneratedRom(GeneratedRom rom)
         {
             var trackerState = rom.TrackerState;
 
@@ -121,9 +122,9 @@ namespace Randomizer.SMZ3.Generation
                 }
             }
 
-
             _worldAccessor.Worlds = worlds;
             _worldAccessor.World = worlds.First(x => x.IsLocalWorld);
+            return worlds;
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Randomizer.Data.Logic;
+using Randomizer.Shared.Enums;
 using YamlDotNet.Serialization;
 
 namespace Randomizer.Data.Options
@@ -91,7 +92,7 @@ namespace Randomizer.Data.Options
         [YamlIgnore]
         public EmulatorConnectorType AutoTrackerDefaultConnector
         {
-            get => (EmulatorConnectorType)GeneralOptions.AutoTrackerDefaultConnector;
+            get => GeneralOptions.AutoTrackerDefaultConnectionType;
         }
 
         [YamlIgnore]
@@ -115,6 +116,12 @@ namespace Randomizer.Data.Options
             {
                 var options = JsonSerializer.Deserialize<RandomizerOptions>(fileText, s_jsonOptions) ?? new();
                 options.FilePath = savePath;
+                options.GeneralOptions.AutoTrackerDefaultConnectionType =
+                    (EmulatorConnectorType)options.GeneralOptions.AutoTrackerDefaultConnector;
+                options.GeneralOptions.TrackerVoiceFrequency =
+                    (TrackerVoiceFrequency)options.GeneralOptions.VoiceFrequency;
+                options.GeneralOptions.LaunchButtonOption =
+                    (LaunchButtonOptions)options.GeneralOptions.LaunchButton;
                 return options;
             }
         }

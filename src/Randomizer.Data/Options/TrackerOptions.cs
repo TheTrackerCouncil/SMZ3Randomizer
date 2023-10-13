@@ -110,5 +110,10 @@ namespace Randomizer.Data
         /// The file to write the current song to
         /// </summary>
         public string? MsuTrackOutputPath { get; set; }
+
+        /// <summary>
+        /// Automatically tracks the map and other "hey tracker, look at this" events when viewing
+        /// </summary>
+        public bool AutoSaveLookAtEvents { get; set; }
     }
 }

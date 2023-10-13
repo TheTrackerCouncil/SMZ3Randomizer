@@ -7,6 +7,7 @@
         xmlns:vm="clr-namespace:Randomizer.App.ViewModels"
         xmlns:options="clr-namespace:Randomizer.Data.Options;assembly=Randomizer.Data"
         xmlns:app="clr-namespace:Randomizer.App"
+        xmlns:enums="clr-namespace:Randomizer.Shared.Enums;assembly=Randomizer.Shared"
         x:Name="Self"
         ResizeMode="NoResize"
         mc:Ignorable="d"
@@ -177,10 +178,9 @@
                     <ColumnDefinition Width="*" />
                   </Grid.ColumnDefinitions>
 
-                  <ComboBox ItemsSource="{Binding QuickLaunchOptions}"
-                            SelectedIndex="{Binding LaunchButton}"
-                            Height="23"
-                            VerticalAlignment="Top">
+                  <ComboBox SelectedItem="{Binding LaunchButtonOption}"
+                            ItemsSource="{Binding Source={app:EnumBindingSource {x:Type options:LaunchButtonOptions}}}"
+                            MinWidth="75">
                   </ComboBox>
                 </Grid>
               </controls:LabeledControl>
@@ -192,10 +192,9 @@
                     <ColumnDefinition Width="*" />
                   </Grid.ColumnDefinitions>
 
-                  <ComboBox ItemsSource="{Binding TrackerVoiceFrequencyOptions}"
-                            SelectedIndex="{Binding VoiceFrequency}"
-                            Height="23"
-                            VerticalAlignment="Top">
+                  <ComboBox SelectedItem="{Binding TrackerVoiceFrequency}"
+                            ItemsSource="{Binding Source={app:EnumBindingSource {x:Type enums:TrackerVoiceFrequency}}}"
+                            MinWidth="75">
                   </ComboBox>
                 </Grid>
               </controls:LabeledControl>
@@ -218,10 +217,9 @@
                     <ColumnDefinition Width="*" />
                   </Grid.ColumnDefinitions>
 
-                  <ComboBox ItemsSource="{Binding AutoTrackerConnectorOptions}"
-                            SelectedIndex="{Binding AutoTrackerDefaultConnector}"
-                            Height="23"
-                            VerticalAlignment="Top">
+                  <ComboBox SelectedItem="{Binding AutoTrackerDefaultConnectionType}"
+                            ItemsSource="{Binding Source={app:EnumBindingSource {x:Type options:EmulatorConnectorType}}}"
+                            MinWidth="75">
                   </ComboBox>
                 </Grid>
               </controls:LabeledControl>

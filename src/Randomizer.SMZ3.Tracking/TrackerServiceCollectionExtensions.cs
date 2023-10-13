@@ -42,6 +42,15 @@ namespace Randomizer.SMZ3.Tracking
             services.AddScoped<IRandomizerConfigService, RandomizerConfigService>();
             services.AddScoped<Tracker>();
 
+            if (OperatingSystem.IsWindows())
+            {
+                services.AddScoped<ISpeechRecognitionService, SpeechRecognitionServiceEnabled>();
+            }
+            else
+            {
+                services.AddScoped<ISpeechRecognitionService, SpeechRecognitionServiceDisabled>();
+            }
+
             var assemblies = new[] { Assembly.GetExecutingAssembly() };
 
             var zeldaStateChecks = assemblies
@@ -63,7 +72,7 @@ namespace Randomizer.SMZ3.Tracking
             return services;
         }
 
-        
+
 
         /// <summary>
         /// Enables the specified tracker module.

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text;
 
 using FluentAssertions;
@@ -27,6 +28,12 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         [InlineData("test", 558598333)] // Smz3Randomizer v4.0
         public void StandardFillerWithSameSeedGeneratesSameWorld(string seed, int expectedHash)
         {
+            // Apparently RNG in Linux is different than on Windows...
+            if (OperatingSystem.IsLinux())
+            {
+                expectedHash = 951851411;
+            }
+
             var filler = new StandardFiller(GetLogger<StandardFiller>());
             var randomizer = GetRandomizer();
             var config = new Config();

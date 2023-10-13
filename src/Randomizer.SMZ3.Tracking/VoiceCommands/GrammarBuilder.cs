@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Speech.Recognition;
 
@@ -9,7 +10,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     /// </summary>
     public class GrammarBuilder
     {
-        private readonly System.Speech.Recognition.GrammarBuilder _grammar;
+        private readonly System.Speech.Recognition.GrammarBuilder _grammar = null!;
         private readonly List<string> _elements;
 
         /// <summary>
@@ -18,7 +19,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         public GrammarBuilder()
         {
-            _grammar = new();
+            if (OperatingSystem.IsWindows())
+            {
+                _grammar = new();
+            }
             _elements = new();
         }
 
@@ -30,6 +34,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public GrammarBuilder(IEnumerable<GrammarBuilder> choices)
             : this()
         {
+            if (!OperatingSystem.IsWindows())
+            {
+                return;
+            }
             _grammar.Append(new Choices(choices.Select(x => (System.Speech.Recognition.GrammarBuilder)x).ToArray()));
             foreach (var choice in choices)
                 _elements.Add(choice + "\n");
@@ -63,6 +71,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>This instance.</returns>
         public GrammarBuilder Append(string text)
         {
+            if (!OperatingSystem.IsWindows())
+            {
+                return this;
+            }
             _grammar.Append(text);
             _elements.Add(text);
             return this;
@@ -81,6 +93,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>This instance.</returns>
         public GrammarBuilder Append(string key, Choices choices)
         {
+            if (!OperatingSystem.IsWindows())
+            {
+                return this;
+            }
             _grammar.Append(new SemanticResultKey(key, choices));
             _elements.Add($"<{key}>");
             return this;
@@ -95,6 +111,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>This instance.</returns>
         public GrammarBuilder OneOf(params string[] choices)
         {
+            if (!OperatingSystem.IsWindows())
+            {
+                return this;
+            }
             _grammar.Append(new Choices(choices));
             _elements.Add($"[{string.Join('/', choices)}]");
             return this;
@@ -109,6 +129,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>This instance.</returns>
         public GrammarBuilder Optional(string text)
         {
+            if (!OperatingSystem.IsWindows())
+            {
+                return this;
+            }
             _grammar.Append(text, 0, 1);
             _elements.Add($"({text})");
             return this;
@@ -121,6 +145,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>This instance.</returns>
         public GrammarBuilder Optional(params string[] choices)
         {
+            if (!OperatingSystem.IsWindows())
+            {
+                return this;
+            }
             _grammar.Append(new Choices(choices), 0, 1);
             _elements.Add($"({string.Join('/', choices)})");
             return this;

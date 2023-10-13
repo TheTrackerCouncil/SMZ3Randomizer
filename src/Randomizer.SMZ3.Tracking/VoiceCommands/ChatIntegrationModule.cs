@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Speech.Recognition;
 using System.Text.RegularExpressions;
@@ -54,27 +55,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             ChatClient.MessageReceived += ChatClient_MessageReceived;
             ChatClient.Disconnected += ChatClient_Disconnected;
             ChatClient.SendMessageFailure += ChatClient_SendMessageFailure;
-
-            AddCommand("Start Ganon's Tower Big Key Guessing Game", GetStartGuessingGameRule(), async (result) =>
-            {
-                await StartGanonsTowerGuessingGame();
-            });
-
-            AddCommand("Close Ganon's Tower Big Key Guessing Game", GetStopGuessingGameGuessesRule(), async (result) =>
-            {
-                await CloseGanonsTowerGuessingGameGuesses();
-            });
-
-            AddCommand("Declare Ganon's Tower Big Key Guessing Game Winner", GetRevealGuessingGameWinnerRule(), async (result) =>
-            {
-                var winningNumber = (int)result.Semantics[WinningGuessKey].Value;
-                await DeclareGanonsTowerGuessingGameWinner(winningNumber);
-            });
-
-            AddCommand("Track Content", GetTrackContent(), async (result) =>
-            {
-                await AskChatAboutContent();
-            });
         }
 
         /// <summary>
@@ -545,6 +525,31 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Optional("please", "would you kindly")
                 .OneOf("track", "add")
                 .OneOf("content", "con-tent");
+        }
+
+        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
+        public override void AddCommands()
+        {
+            AddCommand("Start Ganon's Tower Big Key Guessing Game", GetStartGuessingGameRule(), async (result) =>
+            {
+                await StartGanonsTowerGuessingGame();
+            });
+
+            AddCommand("Close Ganon's Tower Big Key Guessing Game", GetStopGuessingGameGuessesRule(), async (result) =>
+            {
+                await CloseGanonsTowerGuessingGameGuesses();
+            });
+
+            AddCommand("Declare Ganon's Tower Big Key Guessing Game Winner", GetRevealGuessingGameWinnerRule(), async (result) =>
+            {
+                var winningNumber = (int)result.Semantics[WinningGuessKey].Value;
+                await DeclareGanonsTowerGuessingGameWinner(winningNumber);
+            });
+
+            AddCommand("Track Content", GetTrackContent(), async (result) =>
+            {
+                await AskChatAboutContent();
+            });
         }
     }
 }

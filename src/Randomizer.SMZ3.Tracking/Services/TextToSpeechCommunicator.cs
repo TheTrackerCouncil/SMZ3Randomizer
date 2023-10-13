@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Speech.Synthesis;
-using Randomizer.Data;
 using Randomizer.Data.Options;
 
 namespace Randomizer.SMZ3.Tracking.Services
@@ -11,7 +10,7 @@ namespace Randomizer.SMZ3.Tracking.Services
     /// </summary>
     public class TextToSpeechCommunicator : ICommunicator, IDisposable
     {
-        private readonly SpeechSynthesizer _tts;
+        private readonly SpeechSynthesizer _tts = null!;
         private bool _canSpeak;
 
         /// <summary>
@@ -20,6 +19,11 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </summary>
         public TextToSpeechCommunicator(TrackerOptionsAccessor trackerOptionsAccessor)
         {
+            if (!OperatingSystem.IsWindows())
+            {
+                return;
+            }
+
             _tts = new SpeechSynthesizer();
             _tts.SelectVoiceByHints(VoiceGender.Female);
             _canSpeak = trackerOptionsAccessor.Options?.VoiceFrequency != Shared.Enums.TrackerVoiceFrequency.Disabled;
@@ -29,13 +33,26 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// Selects a different text-to-speech voice.
         /// </summary>
         public void UseAlternateVoice()
-            => _tts.SelectVoiceByHints(VoiceGender.Male);
+        {
+            if (!OperatingSystem.IsWindows())
+            {
+                return;
+            }
+
+            _tts.SelectVoiceByHints(VoiceGender.Male);
+        }
 
         /// <summary>
         /// Aborts all current and queued up text-to-speech actions.
         /// </summary>
         public void Abort()
-            => _tts.SpeakAsyncCancelAll();
+        {
+            if (!OperatingSystem.IsWindows())
+            {
+                return;
+            }
+            _tts.SpeakAsyncCancelAll();
+        }
 
         /// <summary>
         /// Speaks the specified text or SSML.
@@ -45,9 +62,17 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </param>
         public void Say(string text)
         {
+            if (!OperatingSystem.IsWindows())
+            {
+                return;
+            }
+
             if (!_canSpeak) return;
             var prompt = GetPromptFromText(text);
-            _tts.SpeakAsync(prompt);
+            if (prompt != null)
+            {
+                _tts.SpeakAsync(prompt);
+            }
         }
 
         /// <summary>
@@ -59,9 +84,17 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </param>
         public void SayWait(string text)
         {
+            if (!OperatingSystem.IsWindows())
+            {
+                return;
+            }
+
             if (!_canSpeak) return;
             var prompt = GetPromptFromText(text);
-            _tts.Speak(prompt);
+            if (prompt != null)
+            {
+                _tts.Speak(prompt);
+            }
         }
 
         /// <summary>
@@ -69,6 +102,11 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </summary>
         public void SpeedUp()
         {
+            if (!OperatingSystem.IsWindows())
+            {
+                return;
+            }
+
             _tts.Rate += 2;
         }
 
@@ -77,6 +115,11 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </summary>
         public void SlowDown()
         {
+            if (!OperatingSystem.IsWindows())
+            {
+                return;
+            }
+
             _tts.Rate -= 2;
         }
 
@@ -92,8 +135,13 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </summary>
         /// <param name="text">The plain text or SSML markup to parse.</param>
         /// <returns>A new <see cref="Prompt"/>.</returns>
-        protected static Prompt GetPromptFromText(string text)
+        protected static Prompt? GetPromptFromText(string text)
         {
+            if (!OperatingSystem.IsWindows())
+            {
+                return null;
+            }
+
             // If text does not contain any XML elements, just interpret it as
             // text
             if (!text.Contains("<") && !text.Contains("/>"))
@@ -110,7 +158,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
+            if (disposing && OperatingSystem.IsWindows())
             {
                 _tts.Dispose();
             }

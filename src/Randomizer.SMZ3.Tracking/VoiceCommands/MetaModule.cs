@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Speech.Recognition;
 
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     /// </summary>
     public class MetaModule : TrackerModule
     {
+        private readonly ICommunicator _communicator;
         private const string ModifierKey = "Increase/Decrease";
         private const string ThresholdSettingKey = "ThresholdSetting";
         private const string ValueKey = "Value";
@@ -30,100 +32,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public MetaModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<MetaModule> logger, ICommunicator communicator)
             : base(tracker, itemService, worldService, logger)
         {
-            AddCommand("Repeat that", GetRepeatThatRule(), (result) =>
-            {
-                tracker.Repeat();
-            });
-
-            AddCommand("Shut up", GetShutUpRule(), (result) =>
-            {
-                tracker.ShutUp();
-            });
-
-            AddCommand("Temporarily change threshold setting", GetIncreaseThresholdGrammar(), (result) =>
-            {
-                var modifier = (int)result.Semantics[ModifierKey].Value;
-                var thresholdSetting = (int)result.Semantics[ThresholdSettingKey].Value;
-                var value = (float)(double)result.Semantics[ValueKey].Value;
-
-                var adjustment = modifier * value;
-                switch (thresholdSetting)
-                {
-                    case ThresholdSetting_Recognition:
-                        Tracker.Options.MinimumRecognitionConfidence += adjustment;
-                        Tracker.Say(Tracker.Responses.TrackerSettingChanged.Format(
-                            "recognition threshold", $"{Tracker.Options.MinimumRecognitionConfidence:P0}"));
-                        logger.LogInformation("Temporarily changed recognition threshold to {newValue}", Tracker.Options.MinimumRecognitionConfidence);
-                        break;
-
-                    case ThresholdSetting_Execution:
-                        Tracker.Options.MinimumExecutionConfidence += adjustment;
-                        Tracker.Say(Tracker.Responses.TrackerSettingChanged.Format(
-                            "execution threshold", $"{Tracker.Options.MinimumExecutionConfidence:P0}"));
-                        logger.LogInformation("Temporarily changed execution threshold to {newValue}", Tracker.Options.MinimumExecutionConfidence);
-                        break;
-
-                    case ThresholdSetting_Sass:
-                        Tracker.Options.MinimumSassConfidence += adjustment;
-                        Tracker.Say(Tracker.Responses.TrackerSettingChanged.Format(
-                            "sass threshold", $"{Tracker.Options.MinimumSassConfidence:P0}"));
-                        logger.LogInformation("Temporarily changed sass threshold to {newValue}", Tracker.Options.MinimumSassConfidence);
-                        break;
-
-                    default:
-                        throw new ArgumentException($"The threshold setting '{thresholdSetting}' was not recognized.");
-                }
-            });
-
-            AddCommand("Pause timer", GetPauseTimerRule(), (result) =>
-            {
-                tracker.PauseTimer();
-            });
-
-            AddCommand("Start timer", GetResumeTimerRule(), (result) =>
-            {
-                tracker.StartTimer();
-            });
-
-            AddCommand("Reset timer", GetResetTimerRule(), (result) =>
-            {
-                tracker.ResetTimer();
-            });
-
-            AddCommand("Mute", GetMuteRule(), (result) =>
-            {
-                if (communicator.IsEnabled)
-                {
-                    tracker.Say(x => x.Muted);
-                    communicator.Disable();
-                    tracker.AddUndo(() =>
-                    {
-                        communicator.Enable();
-                        Tracker.Say(x => x.ActionUndone);
-                    });
-                }
-
-            });
-
-            AddCommand("Unmute", GetUnmuteRule(), (result) =>
-            {
-                if (!communicator.IsEnabled)
-                {
-                    communicator.Enable();
-                    tracker.Say(x => x.Unmuted);
-                    tracker.AddUndo(() =>
-                    {
-                        communicator.Disable();
-                    });
-                }
-            });
-
-            AddCommand("Beat game", GetBeatGameRule(), (result) =>
-            {
-                tracker.GameBeaten(false);
-            });
+            _communicator = communicator;
         }
 
+        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
         private static Choices GetIncreaseDecrease()
         {
             var modifiers = new Choices();
@@ -132,6 +44,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return modifiers;
         }
 
+        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
         private static Choices GetOneThroughTenPercent()
         {
             var values = new Choices();
@@ -148,6 +61,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return values;
         }
 
+        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
         private static Choices GetThresholdSettings()
         {
             var settings = new Choices();
@@ -237,6 +151,103 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("Hey tracker, ")
                 .OneOf("I beat", "I finished")
                 .OneOf("the game", "the seed");
+        }
+
+        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
+        public override void AddCommands()
+        {
+            AddCommand("Repeat that", GetRepeatThatRule(), (_) =>
+            {
+                Tracker.Repeat();
+            });
+
+            AddCommand("Shut up", GetShutUpRule(), (_) =>
+            {
+                Tracker.ShutUp();
+            });
+
+            AddCommand("Temporarily change threshold setting", GetIncreaseThresholdGrammar(), (result) =>
+            {
+                var modifier = (int)result.Semantics[ModifierKey].Value;
+                var thresholdSetting = (int)result.Semantics[ThresholdSettingKey].Value;
+                var value = (float)(double)result.Semantics[ValueKey].Value;
+
+                var adjustment = modifier * value;
+                switch (thresholdSetting)
+                {
+                    case ThresholdSetting_Recognition:
+                        Tracker.Options.MinimumRecognitionConfidence += adjustment;
+                        Tracker.Say(Tracker.Responses.TrackerSettingChanged.Format(
+                            "recognition threshold", $"{Tracker.Options.MinimumRecognitionConfidence:P0}"));
+                        Logger.LogInformation("Temporarily changed recognition threshold to {newValue}", Tracker.Options.MinimumRecognitionConfidence);
+                        break;
+
+                    case ThresholdSetting_Execution:
+                        Tracker.Options.MinimumExecutionConfidence += adjustment;
+                        Tracker.Say(Tracker.Responses.TrackerSettingChanged.Format(
+                            "execution threshold", $"{Tracker.Options.MinimumExecutionConfidence:P0}"));
+                        Logger.LogInformation("Temporarily changed execution threshold to {newValue}", Tracker.Options.MinimumExecutionConfidence);
+                        break;
+
+                    case ThresholdSetting_Sass:
+                        Tracker.Options.MinimumSassConfidence += adjustment;
+                        Tracker.Say(Tracker.Responses.TrackerSettingChanged.Format(
+                            "sass threshold", $"{Tracker.Options.MinimumSassConfidence:P0}"));
+                        Logger.LogInformation("Temporarily changed sass threshold to {newValue}", Tracker.Options.MinimumSassConfidence);
+                        break;
+
+                    default:
+                        throw new ArgumentException($"The threshold setting '{thresholdSetting}' was not recognized.");
+                }
+            });
+
+            AddCommand("Pause timer", GetPauseTimerRule(), (_) =>
+            {
+                Tracker.PauseTimer();
+            });
+
+            AddCommand("Start timer", GetResumeTimerRule(), (_) =>
+            {
+                Tracker.StartTimer();
+            });
+
+            AddCommand("Reset timer", GetResetTimerRule(), (_) =>
+            {
+                Tracker.ResetTimer();
+            });
+
+            AddCommand("Mute", GetMuteRule(), (_) =>
+            {
+                if (_communicator.IsEnabled)
+                {
+                    Tracker.Say(x => x.Muted);
+                    _communicator.Disable();
+                    Tracker.AddUndo(() =>
+                    {
+                        _communicator.Enable();
+                        Tracker.Say(x => x.ActionUndone);
+                    });
+                }
+
+            });
+
+            AddCommand("Unmute", GetUnmuteRule(), (_) =>
+            {
+                if (!_communicator.IsEnabled)
+                {
+                    _communicator.Enable();
+                    Tracker.Say(x => x.Unmuted);
+                    Tracker.AddUndo(() =>
+                    {
+                        _communicator.Disable();
+                    });
+                }
+            });
+
+            AddCommand("Beat game", GetBeatGameRule(), (_) =>
+            {
+                Tracker.GameBeaten(false);
+            });
         }
     }
 }

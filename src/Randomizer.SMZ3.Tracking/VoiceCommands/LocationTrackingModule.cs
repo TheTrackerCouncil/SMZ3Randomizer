@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Logging;
 
 using Randomizer.SMZ3.Tracking.Services;
 
@@ -20,68 +21,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public LocationTrackingModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<LocationTrackingModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
-            AddCommand("Mark item at specific location", GetMarkItemAtLocationRule(), (result) =>
-            {
-                var item = GetItemFromResult(tracker, result, out _);
-                var location = GetLocationFromResult(tracker, result);
-                tracker.MarkLocation(location, item, result.Confidence);
-            });
 
-            AddCommand("Clear specific item location", GetClearLocationRule(), (result) =>
-            {
-                var location = GetLocationFromResult(tracker, result);
-                tracker.Clear(location, result.Confidence);
-            });
-
-            AddCommand("Clear available items in an area", GetClearAreaRule(), (result) =>
-            {
-                if (result.Semantics.ContainsKey(RoomKey))
-                {
-                    var room = GetRoomFromResult(tracker, result);
-                    tracker.ClearArea(room,
-                        trackItems: false,
-                        includeUnavailable: false,
-                        confidence: result.Confidence);
-                }
-                else if (result.Semantics.ContainsKey(DungeonKey))
-                {
-                    var dungeon = GetDungeonFromResult(tracker, result);
-                    tracker.ClearDungeon(dungeon, result.Confidence);
-                }
-                else if (result.Semantics.ContainsKey(RegionKey))
-                {
-                    var region = GetRegionFromResult(tracker, result);
-                    tracker.ClearArea(region,
-                        trackItems:false,
-                        includeUnavailable: false,
-                        confidence: result.Confidence);
-                }
-            });
-
-            AddCommand("Clear all items in an area (including out-of-logic)", GetClearAreaIncludingOutOfLogicRule(), (result) =>
-            {
-                if (result.Semantics.ContainsKey(RoomKey))
-                {
-                    var room = GetRoomFromResult(tracker, result);
-                    tracker.ClearArea(room,
-                        trackItems: false,
-                        includeUnavailable: true,
-                        confidence: result.Confidence);
-                }
-                else if (result.Semantics.ContainsKey(DungeonKey))
-                {
-                    var dungeon = GetDungeonFromResult(tracker, result);
-                    tracker.ClearDungeon(dungeon, result.Confidence);
-                }
-                else if (result.Semantics.ContainsKey(RegionKey))
-                {
-                    var region = GetRegionFromResult(tracker, result);
-                    tracker.ClearArea(region,
-                        trackItems:false,
-                        includeUnavailable: true,
-                        confidence: result.Confidence);
-                }
-            });
         }
 
         private GrammarBuilder GetMarkItemAtLocationRule()
@@ -186,6 +126,73 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append(RegionKey, regionNames);
 
             return GrammarBuilder.Combine(clearDungeon, clearRoom, clearRegion);
+        }
+
+        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
+        public override void AddCommands()
+        {
+            AddCommand("Mark item at specific location", GetMarkItemAtLocationRule(), (result) =>
+            {
+                var item = GetItemFromResult(Tracker, result, out _);
+                var location = GetLocationFromResult(Tracker, result);
+                Tracker.MarkLocation(location, item, result.Confidence);
+            });
+
+            AddCommand("Clear specific item location", GetClearLocationRule(), (result) =>
+            {
+                var location = GetLocationFromResult(Tracker, result);
+                Tracker.Clear(location, result.Confidence);
+            });
+
+            AddCommand("Clear available items in an area", GetClearAreaRule(), (result) =>
+            {
+                if (result.Semantics.ContainsKey(RoomKey))
+                {
+                    var room = GetRoomFromResult(Tracker, result);
+                    Tracker.ClearArea(room,
+                        trackItems: false,
+                        includeUnavailable: false,
+                        confidence: result.Confidence);
+                }
+                else if (result.Semantics.ContainsKey(DungeonKey))
+                {
+                    var dungeon = GetDungeonFromResult(Tracker, result);
+                    Tracker.ClearDungeon(dungeon, result.Confidence);
+                }
+                else if (result.Semantics.ContainsKey(RegionKey))
+                {
+                    var region = GetRegionFromResult(Tracker, result);
+                    Tracker.ClearArea(region,
+                        trackItems:false,
+                        includeUnavailable: false,
+                        confidence: result.Confidence);
+                }
+            });
+
+            AddCommand("Clear all items in an area (including out-of-logic)", GetClearAreaIncludingOutOfLogicRule(), (result) =>
+            {
+                if (result.Semantics.ContainsKey(RoomKey))
+                {
+                    var room = GetRoomFromResult(Tracker, result);
+                    Tracker.ClearArea(room,
+                        trackItems: false,
+                        includeUnavailable: true,
+                        confidence: result.Confidence);
+                }
+                else if (result.Semantics.ContainsKey(DungeonKey))
+                {
+                    var dungeon = GetDungeonFromResult(Tracker, result);
+                    Tracker.ClearDungeon(dungeon, result.Confidence);
+                }
+                else if (result.Semantics.ContainsKey(RegionKey))
+                {
+                    var region = GetRegionFromResult(Tracker, result);
+                    Tracker.ClearArea(region,
+                        trackItems:false,
+                        includeUnavailable: true,
+                        confidence: result.Confidence);
+                }
+            });
         }
     }
 }

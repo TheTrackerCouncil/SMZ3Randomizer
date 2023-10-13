@@ -23,25 +23,30 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public PersonalityModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<PersonalityModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
-            AddCommand("Ask about tracker's mood", GetMoodRule(), (result) =>
+
+        }
+
+        public override void AddCommands()
+        {
+            AddCommand("Ask about tracker's mood", GetMoodRule(), (_) =>
             {
-                tracker.Say(tracker.Responses.Moods[tracker.Mood]);
+                Tracker.Say(Tracker.Responses.Moods[Tracker.Mood]);
             });
 
-            AddCommand("Hey, ya missed pal", GetYaMissedRule(), (result) =>
+            AddCommand("Hey, ya missed pal", GetYaMissedRule(), (_) =>
             {
-                tracker.Say("Here Mike. This will explain everything.", wait: true);
+                Tracker.Say("Here Mike. This will explain everything.", wait: true);
                 OpenInBrowser(new Uri("https://www.youtube.com/watch?v=5P6UirFDdxM"));
             });
 
-            foreach (var request in tracker.Requests)
+            foreach (var request in Tracker.Requests)
             {
                 if (request.Phrases.Count == 0)
                     continue;
 
-                AddCommand(request.Phrases.First(), GetRequestRule(request.Phrases), (result) =>
+                AddCommand(request.Phrases.First(), GetRequestRule(request.Phrases), (_) =>
                 {
-                    tracker.Say(request.Response);
+                    Tracker.Say(request.Response);
                 });
             }
         }

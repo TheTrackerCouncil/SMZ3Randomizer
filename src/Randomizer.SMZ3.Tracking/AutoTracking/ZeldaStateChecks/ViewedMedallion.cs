@@ -31,7 +31,7 @@ public class ViewedMedallion : IZeldaStateCheck
     /// <returns>True if the check was identified, false otherwise</returns>
     public bool ExecuteCheck(Tracker tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
     {
-        if (tracker.AutoTracker == null) return false;
+        if (tracker.AutoTracker == null || tracker.AutoTracker.LatestViewAction?.IsValid == true) return false;
 
         _tracker = tracker;
 
@@ -41,11 +41,19 @@ public class ViewedMedallion : IZeldaStateCheck
         if (currentState.OverworldScreen == 112 && x is >= 172 and <= 438 && y is >= 3200 and <= 3432)
         {
             tracker.AutoTracker.LatestViewAction = new AutoTrackerViewedAction(MarkMiseryMireMedallion);
+            if (tracker.Options.AutoSaveLookAtEvents)
+            {
+                tracker.AutoTracker.LatestViewAction.Invoke();
+            }
             return true;
         }
         else if (currentState.OverworldScreen == 71 && x is >= 3708 and <= 4016 && y is >= 128 and <= 368)
         {
             tracker.AutoTracker.LatestViewAction = new AutoTrackerViewedAction(MarkTurtleRockMedallion);
+            if (tracker.Options.AutoSaveLookAtEvents)
+            {
+                tracker.AutoTracker.LatestViewAction.Invoke();
+            }
             return true;
         }
 
