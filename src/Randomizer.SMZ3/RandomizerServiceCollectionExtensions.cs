@@ -25,6 +25,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<RomGenerationService>();
             services.AddSingleton<SpritePatcherService>();
             services.AddSingleton<RomTextService>();
+            services.AddTransient<RomLauncherService>();
             return services;
         }
 

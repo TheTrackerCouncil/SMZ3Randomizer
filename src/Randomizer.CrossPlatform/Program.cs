@@ -6,6 +6,7 @@ using MSURandomizerLibrary.Services;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.SMZ3.Generation;
+using Randomizer.SMZ3.Infrastructure;
 using Serilog;
 
 namespace Randomizer.CrossPlatform;
@@ -34,6 +35,7 @@ public static class Program
         var optionsFile = new FileInfo("randomizer-options.yml");
         var randomizerOptions = s_services.GetRequiredService<OptionsFactory>().LoadFromFile(optionsFile.FullName, optionsFile.FullName, true);
         randomizerOptions.Save();
+        var launcher = s_services.GetRequiredService<RomLauncherService>();
 
         if (!ValidateRandomizerOptions(randomizerOptions))
         {
@@ -77,7 +79,8 @@ public static class Program
             {
                 var romPath = Path.Combine(randomizerOptions.RomOutputPath, results.Rom!.RomPath);
                 Console.WriteLine($"Rom generated successfully: {romPath}");
-                Launch(romPath, randomizerOptions);
+                launcher.LaunchRom(romPath, randomizerOptions.GeneralOptions.LaunchApplication,
+                    randomizerOptions.GeneralOptions.LaunchArguments);
                 _ = s_services.GetRequiredService<ConsoleTrackerDisplayService>().StartTracking(results.Rom, romPath);
             }
             else
@@ -99,7 +102,8 @@ public static class Program
             {
                 var selectedRom = roms[result.Value.Item1];
                 var romPath = Path.Combine(randomizerOptions.RomOutputPath, selectedRom.RomPath);
-                Launch(romPath, randomizerOptions);
+                launcher.LaunchRom(romPath, randomizerOptions.GeneralOptions.LaunchApplication,
+                    randomizerOptions.GeneralOptions.LaunchArguments);
                 _ = s_services.GetRequiredService<ConsoleTrackerDisplayService>().StartTracking(selectedRom, romPath);
             }
 
@@ -180,53 +184,6 @@ public static class Program
             }
         }
 
-    }
-
-    private static void Launch(string romPath, RandomizerOptions options)
-    {
-        if (!File.Exists(romPath))
-        {
-            Log.Error("No test rom found at {Path}", romPath);
-            return;
-        }
-
-        var launchApplication = options.GeneralOptions.LaunchApplication;
-        var launchArguments = "";
-        if (string.IsNullOrEmpty(launchApplication))
-        {
-            launchApplication = romPath;
-        }
-        else
-        {
-            if (string.IsNullOrEmpty(options.GeneralOptions.LaunchArguments))
-            {
-                launchArguments = $"\"{romPath}\"";
-            }
-            else if (options.GeneralOptions.LaunchArguments.Contains("%rom%"))
-            {
-                launchArguments = options.GeneralOptions.LaunchArguments.Replace("%rom%", $"{romPath}");
-            }
-            else
-            {
-                launchArguments = $"{options.GeneralOptions.LaunchArguments} \"{romPath}\"";
-            }
-        }
-
-        try
-        {
-            Console.WriteLine($"Executing {launchApplication} {launchArguments}");
-            Log.Information("Executing {FileName} {Arguments}", launchApplication, launchArguments);
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = launchApplication,
-                Arguments = launchArguments,
-                UseShellExecute = true,
-            });
-        }
-        catch (Exception e)
-        {
-            Log.Error(e, "Unable to launch rom");
-        }
     }
 
     private static void InitializeMsuRandomizer(IMsuRandomizerInitializationService msuRandomizerInitializationService)

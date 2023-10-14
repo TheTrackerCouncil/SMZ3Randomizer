@@ -185,6 +185,28 @@
                 </Grid>
               </controls:LabeledControl>
 
+              <controls:LabeledControl Text="Launch application:"
+                                       ToolTip="Determines the application to launch for the rom. If not supplied, it will use the system default for sfc files.">
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+
+                  <TextBox Name="LaunchApplicationTextBox" Text="{Binding LaunchApplication, Mode=TwoWay}" />
+                </Grid>
+              </controls:LabeledControl>
+
+              <controls:LabeledControl Text="Launch arguments:"
+                                       ToolTip="Arguments to be passed to the launch application, if needed. %rom% will be replaced with the rom path. If %rom% is not in the launch argument, the rom path will be passed at the end.">
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+
+                  <TextBox Name="LaunchArgumentsTextbox" Text="{Binding LaunchArguments, Mode=TwoWay}" />
+                </Grid>
+              </controls:LabeledControl>
+
               <controls:LabeledControl Text="Tracker voice frequency:"
                                        ToolTip="Determines how much tracker will say in response to events.">
                 <Grid>
@@ -246,16 +268,23 @@
               </controls:LabeledControl>
 
               <StackPanel Orientation="Horizontal">
-                <CheckBox Content="Auto Tracker Updates Map Automatically"
-                          IsChecked="{Binding AutoTrackerChangeMap}" />
+
               </StackPanel>
 
-              <StackPanel Orientation="Horizontal">
+              <WrapPanel>
+                <CheckBox Content="Auto Tracker Updates Map Automatically"
+                          IsChecked="{Binding AutoTrackerChangeMap}" />
+
+                <CheckBox Content="Auto Track Viewed Events"
+                          ToolTip="Automatically track things that are viewed, such as dungeon rewards when looking the map and dungeon requirements when near their entrances."
+                          IsChecked="{Binding AutoSaveLookAtEvents}" />
+
                 <CheckBox Content="Enable hints"
                           IsChecked="{Binding TrackerHintsEnabled}" />
+
                 <CheckBox Content="Enable spoilers"
                           IsChecked="{Binding TrackerSpoilersEnabled}" />
-              </StackPanel>
+              </WrapPanel>
 
             </StackPanel>
           </Expander>

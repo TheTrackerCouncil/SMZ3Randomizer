@@ -12,6 +12,7 @@ using Randomizer.Data.Services;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Generation;
+using Randomizer.SMZ3.Infrastructure;
 using YamlDotNet.Core;
 
 namespace Randomizer.App.Controls
@@ -26,7 +27,8 @@ namespace Randomizer.App.Controls
             OptionsFactory optionsFactory,
             ILogger<SoloRomListPanel> logger,
             RomGenerationService romGenerationService,
-            IGameDbService gameDbService) : base(serviceProvider, optionsFactory, logger, romGenerationService, gameDbService)
+            IGameDbService gameDbService,
+            RomLauncherService romLauncherService) : base(serviceProvider, optionsFactory, logger, romGenerationService, gameDbService, romLauncherService)
         {
             Model = new GeneratedRomsViewModel();
             DataContext = Model;

@@ -177,7 +177,7 @@ namespace Randomizer.Data.Options
         /// <summary>
         /// Automatically tracks the map and other "hey tracker, look at this" events when viewing
         /// </summary>
-        public bool AutoSaveLookAtEvents { get; set; }
+        public bool AutoSaveLookAtEvents { get; set; } = true;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

@@ -21,6 +21,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
     {
         private Tracker? _tracker;
         private readonly IWorldAccessor _worldAccessor;
+        private bool _lightWorldUpdated;
+        private bool _darkWorldUpdated;
 
         public ViewedMap(IWorldAccessor worldAccessor, IItemService itemService)
         {
@@ -41,7 +43,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
         /// <returns>True if the check was identified, false otherwise</returns>
         public bool ExecuteCheck(Tracker tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
         {
-            if (tracker.AutoTracker == null) return false;
+            if (tracker.AutoTracker == null || (_lightWorldUpdated && _darkWorldUpdated)) return false;
 
             if (currentState.State == 14 && currentState.Substate == 7 && currentState.ReadUInt8(0xE0) == 0x80)
             {
@@ -49,7 +51,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
                 var currentRegion = tracker.World.Regions
                     .OfType<Z3Region>()
                     .FirstOrDefault(x => x.StartingRooms != null && x.StartingRooms.Contains(currentState.OverworldScreen) && x.IsOverworld);
-                if (currentRegion is LightWorldNorthWest or LightWorldNorthEast or LightWorldSouth or LightWorldDeathMountainEast or LightWorldDeathMountainWest)
+                if (currentRegion is LightWorldNorthWest or LightWorldNorthEast or LightWorldSouth or LightWorldDeathMountainEast or LightWorldDeathMountainWest && !_lightWorldUpdated)
                 {
                     tracker.AutoTracker.LatestViewAction = new AutoTrackerViewedAction(UpdateLightWorldRewards);
                     if (tracker.Options.AutoSaveLookAtEvents)
@@ -57,7 +59,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
                         tracker.AutoTracker.LatestViewAction.Invoke();
                     }
                 }
-                else if (currentRegion is DarkWorldNorthWest or DarkWorldNorthEast or DarkWorldSouth or DarkWorldMire or DarkWorldDeathMountainEast or DarkWorldDeathMountainWest)
+                else if (currentRegion is DarkWorldNorthWest or DarkWorldNorthEast or DarkWorldSouth or DarkWorldMire or DarkWorldDeathMountainEast or DarkWorldDeathMountainWest && !_darkWorldUpdated)
                 {
                     tracker.AutoTracker.LatestViewAction = new AutoTrackerViewedAction(UpdateDarkWorldRewards);
                     if (tracker.Options.AutoSaveLookAtEvents)
@@ -76,7 +78,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
         /// </summary>
         private void UpdateLightWorldRewards()
         {
-            if (_tracker == null) return;
+            if (_tracker == null || _lightWorldUpdated) return;
 
             var rewards = new List<RewardType>();
             var dungeons = new (Region Region, ItemType Map)[] {
@@ -107,6 +109,14 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
             {
                 _tracker.Say(x => x.AutoTracker.LookedAtNothing);
             }
+
+            // If all dungeons are marked, save the light world as updated
+            if (dungeons.Select(x => x.Region as IDungeon).Count(x => x?.DungeonState.MarkedReward != null) >=
+                dungeons.Length)
+            {
+                _lightWorldUpdated = true;
+            }
+
         }
 
         /// <summary>
@@ -114,7 +124,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
         /// </summary>
         protected void UpdateDarkWorldRewards()
         {
-            if (_tracker == null) return;
+            if (_tracker == null || _darkWorldUpdated) return;
 
             var rewards = new List<RewardType>();
             var dungeons = new (Region Region, ItemType Map)[] {
@@ -151,6 +161,13 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
             else if (rewards.Count == 0)
             {
                 _tracker.Say(x => x.AutoTracker.LookedAtNothing);
+            }
+
+            // If all dungeons are marked, save the light world as updated
+            if (dungeons.Select(x => x.Region as IDungeon).Count(x => x?.DungeonState.MarkedReward != null) >=
+                dungeons.Length)
+            {
+                _darkWorldUpdated = true;
             }
 
         }

@@ -12,6 +12,7 @@ using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Generation;
+using Randomizer.SMZ3.Infrastructure;
 using Randomizer.SMZ3.Tracking;
 
 namespace Randomizer.App.Controls
@@ -19,19 +20,22 @@ namespace Randomizer.App.Controls
     public abstract class RomListPanel : UserControl
     {
         private TrackerWindow? _trackerWindow;
+        private RomLauncherService _romLauncherService;
 
 
         public RomListPanel(IServiceProvider serviceProvider,
             OptionsFactory optionsFactory,
             ILogger<RomListPanel> logger,
             RomGenerationService romGenerationService,
-            IGameDbService gameDbService)
+            IGameDbService gameDbService,
+            RomLauncherService romLauncherService)
         {
             ServiceProvider = serviceProvider;
             Logger = logger;
             RomGenerationService = romGenerationService;
             GameDbService = gameDbService;
             Options = optionsFactory.Create();
+            _romLauncherService = romLauncherService;
             CheckSpeechRecognition();
         }
 
@@ -170,11 +174,8 @@ namespace Randomizer.App.Controls
             {
                 try
                 {
-                    Process.Start(new ProcessStartInfo
-                    {
-                        FileName = path,
-                        UseShellExecute = true
-                    });
+                    _romLauncherService.LaunchRom(path, Options.GeneralOptions.LaunchApplication,
+                        Options.GeneralOptions.LaunchArguments);
                 }
                 catch (Win32Exception e)
                 {
