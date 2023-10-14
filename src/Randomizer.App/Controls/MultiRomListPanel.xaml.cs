@@ -11,6 +11,7 @@ using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Generation;
+using Randomizer.SMZ3.Infrastructure;
 
 namespace Randomizer.App.Controls
 {
@@ -23,7 +24,8 @@ namespace Randomizer.App.Controls
             OptionsFactory optionsFactory,
             ILogger<MultiRomListPanel> logger,
             RomGenerationService romGenerationService,
-            IGameDbService gameDbService) : base(serviceProvider, optionsFactory, logger, romGenerationService, gameDbService)
+            IGameDbService gameDbService,
+            RomLauncherService romLauncherService) : base(serviceProvider, optionsFactory, logger, romGenerationService, gameDbService, romLauncherService)
         {
             Model = new MultiplayerGamesViewModel();
             DataContext = Model;
