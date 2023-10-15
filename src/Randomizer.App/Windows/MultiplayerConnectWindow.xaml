@@ -86,8 +86,8 @@
 
         <controls:LabeledControl Text="Game Mode:" IsTabStop="False">
           <StackPanel Orientation="Vertical">
-            <ComboBox SelectedItem="{Binding MultiplayerGameType}"
-                      ItemsSource="{Binding Source={local:EnumBindingSource {x:Type shared:MultiplayerGameType}}}"
+            <ComboBox SelectedItem="{Binding MultiplayerGameType, Converter={StaticResource EnumDescriptionConverter}}"
+                      ItemsSource="{Binding Source={local:EnumDescriptionBindingSource {x:Type shared:MultiplayerGameType}}}"
                       HorizontalAlignment="Left"
                       MinWidth="75"
                       Margin="5 0 0 0 "

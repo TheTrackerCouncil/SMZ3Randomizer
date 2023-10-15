@@ -179,6 +179,11 @@ namespace Randomizer.Data.Options
         /// </summary>
         public bool AutoSaveLookAtEvents { get; set; } = true;
 
+        /// <summary>
+        /// How winners should be determined for the GT guessing game
+        /// </summary>
+        public GanonsTowerGuessingGameStyle GanonsTowerGuessingGameStyle { get; set; }
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public bool Validate()
@@ -205,7 +210,8 @@ namespace Randomizer.Data.Options
             UndoExpirationTime = UndoExpirationTime,
             MsuTrackDisplayStyle = MsuTrackDisplayStyle,
             MsuTrackOutputPath = MsuTrackOutputPath,
-            AutoSaveLookAtEvents = AutoSaveLookAtEvents
+            AutoSaveLookAtEvents = AutoSaveLookAtEvents,
+            GanonsTowerGuessingGameStyle = GanonsTowerGuessingGameStyle
         };
 
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)

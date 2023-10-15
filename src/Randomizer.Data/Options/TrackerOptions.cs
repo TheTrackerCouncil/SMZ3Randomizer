@@ -115,5 +115,10 @@ namespace Randomizer.Data
         /// Automatically tracks the map and other "hey tracker, look at this" events when viewing
         /// </summary>
         public bool AutoSaveLookAtEvents { get; set; }
+
+        /// <summary>
+        /// How winners should be determined for the GT guessing game
+        /// </summary>
+        public GanonsTowerGuessingGameStyle GanonsTowerGuessingGameStyle { get; set; }
     }
 }

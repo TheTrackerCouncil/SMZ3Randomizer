@@ -136,6 +136,17 @@ namespace Randomizer.Data.Configuration.ConfigTypes
 
         /// <summary>
         /// Gets the phrases to respond with when the guessing game has
+        /// concluded.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the correct number. <c>{1}</c> is a placeholder for the guessed number,
+        /// <c>{2}</c> is a placeholder for the names of the winners.
+        /// </remarks>
+        public SchrodingersString DeclareGuessingGameClosestButNotOverWinner { get; init; }
+            = new("The winners who guessed closest to the number of {0} without going over are {1}.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when the guessing game has
         /// concluded and nobody won.
         /// </summary>
         /// <remarks>
