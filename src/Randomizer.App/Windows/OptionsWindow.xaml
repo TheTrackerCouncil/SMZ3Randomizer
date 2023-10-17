@@ -178,8 +178,8 @@
                     <ColumnDefinition Width="*" />
                   </Grid.ColumnDefinitions>
 
-                  <ComboBox SelectedItem="{Binding LaunchButtonOption}"
-                            ItemsSource="{Binding Source={app:EnumBindingSource {x:Type options:LaunchButtonOptions}}}"
+                  <ComboBox SelectedItem="{Binding LaunchButtonOption, Converter={StaticResource EnumDescriptionConverter}}"
+                            ItemsSource="{Binding Source={app:EnumDescriptionBindingSource {x:Type options:LaunchButtonOptions}}}"
                             MinWidth="75">
                   </ComboBox>
                 </Grid>
@@ -214,8 +214,8 @@
                     <ColumnDefinition Width="*" />
                   </Grid.ColumnDefinitions>
 
-                  <ComboBox SelectedItem="{Binding TrackerVoiceFrequency}"
-                            ItemsSource="{Binding Source={app:EnumBindingSource {x:Type enums:TrackerVoiceFrequency}}}"
+                  <ComboBox SelectedItem="{Binding TrackerVoiceFrequency, Converter={StaticResource EnumDescriptionConverter}}"
+                            ItemsSource="{Binding Source={app:EnumDescriptionBindingSource {x:Type enums:TrackerVoiceFrequency}}}"
                             MinWidth="75">
                   </ComboBox>
                 </Grid>
@@ -239,8 +239,8 @@
                     <ColumnDefinition Width="*" />
                   </Grid.ColumnDefinitions>
 
-                  <ComboBox SelectedItem="{Binding AutoTrackerDefaultConnectionType}"
-                            ItemsSource="{Binding Source={app:EnumBindingSource {x:Type options:EmulatorConnectorType}}}"
+                  <ComboBox SelectedItem="{Binding AutoTrackerDefaultConnectionType, Converter={StaticResource EnumDescriptionConverter}}"
+                            ItemsSource="{Binding Source={app:EnumDescriptionBindingSource {x:Type options:EmulatorConnectorType}}}"
                             MinWidth="75">
                   </ComboBox>
                 </Grid>
@@ -253,8 +253,8 @@
 
               <controls:LabeledControl Text="Current song display style:"
                                        ToolTip="Changes the orientation of the information displayed in the current song window and the written text file with the current song.">
-                <ComboBox SelectedItem="{Binding MsuTrackDisplayStyle}"
-                          ItemsSource="{Binding Source={app:EnumBindingSource {x:Type options:MsuTrackDisplayStyle}}}"
+                <ComboBox SelectedItem="{Binding MsuTrackDisplayStyle, Converter={StaticResource EnumDescriptionConverter}}"
+                          ItemsSource="{Binding Source={app:EnumDescriptionBindingSource {x:Type options:MsuTrackDisplayStyle}}}"
                           MinWidth="75">
                 </ComboBox>
               </controls:LabeledControl>
@@ -349,6 +349,20 @@
                   <TextBlock VerticalAlignment="Center"
                              Margin="3,0,0,0">minutes</TextBlock>
                 </StackPanel>
+              </controls:LabeledControl>
+
+              <controls:LabeledControl Text="GT Guessing Game Style:"
+                                       ToolTip="How the winner(s) of the GT guessing game should be determined">
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+
+                  <ComboBox SelectedItem="{Binding GanonsTowerGuessingGameStyle, Converter={StaticResource EnumDescriptionConverter}}"
+                            ItemsSource="{Binding Source={app:EnumDescriptionBindingSource {x:Type enums:GanonsTowerGuessingGameStyle}}}"
+                            MinWidth="75">
+                  </ComboBox>
+                </Grid>
               </controls:LabeledControl>
 
               <CheckBox x:Name="EnableChatPolls"

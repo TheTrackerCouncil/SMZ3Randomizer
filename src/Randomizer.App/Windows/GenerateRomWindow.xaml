@@ -65,8 +65,8 @@
                         Margin="0,0,0,10">
                 <StackPanel>
                   <controls:LabeledControl Text="Keysanity:">
-                    <ComboBox SelectedItem="{Binding KeysanityMode}"
-                              ItemsSource="{Binding Source={local:EnumBindingSource {x:Type shared:KeysanityMode}}}"
+                    <ComboBox SelectedItem="{Binding KeysanityMode, Converter={StaticResource EnumDescriptionConverter}}"
+                              ItemsSource="{Binding Source={local:EnumDescriptionBindingSource {x:Type shared:KeysanityMode}}}"
                               HorizontalAlignment="Left"
                               MinWidth="75" />
                   </controls:LabeledControl>
@@ -75,8 +75,8 @@
                     IsEnabled="{Binding DisabledInMultiplayer, Mode=OneTime, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
                     Margin="0,0,0,3">
                     <StackPanel Orientation="Vertical">
-                      <ComboBox SelectedItem="{Binding ItemPlacementRule}"
-                                ItemsSource="{Binding Source={local:EnumBindingSource {x:Type shared:ItemPlacementRule}}}"
+                      <ComboBox SelectedItem="{Binding ItemPlacementRule, Converter={StaticResource EnumDescriptionConverter}}"
+                                ItemsSource="{Binding Source={local:EnumDescriptionBindingSource {x:Type shared:ItemPlacementRule}}}"
                                 HorizontalAlignment="Left"
                                 MinWidth="75" />
                       <TextBlock TextWrapping="Wrap" Margin="0 0 0 5">
@@ -234,8 +234,8 @@
                   <controls:LabeledControl Text="Wall jump difficulty:"
                                            ToolTip="The kind of wall jumps you're expected to be able to do."
                                            Margin="0,4,0,0">
-                    <ComboBox SelectedItem="{Binding WallJumpDifficulty}"
-                              ItemsSource="{Binding Source={local:EnumBindingSource {x:Type shared:WallJumpDifficulty}}}"
+                    <ComboBox SelectedItem="{Binding WallJumpDifficulty, Converter={StaticResource EnumDescriptionConverter}}"
+                              ItemsSource="{Binding Source={local:EnumDescriptionBindingSource {x:Type shared:WallJumpDifficulty}}}"
                               HorizontalAlignment="Left"
                               MinWidth="75" />
                   </controls:LabeledControl>
@@ -291,29 +291,29 @@
               </controls:LabeledControl>
 
               <controls:LabeledControl Text="Heart color:">
-                <ComboBox SelectedItem="{Binding HeartColor}"
-                          ItemsSource="{Binding Source={local:EnumBindingSource {x:Type options:HeartColor}}}"
+                <ComboBox SelectedItem="{Binding HeartColor, Converter={StaticResource EnumDescriptionConverter}}"
+                          ItemsSource="{Binding Source={local:EnumDescriptionBindingSource {x:Type options:HeartColor}}}"
                           HorizontalAlignment="Left"
                           MinWidth="75" />
               </controls:LabeledControl>
 
               <controls:LabeledControl Text="ALttP Menu speed:">
-                <ComboBox SelectedItem="{Binding MenuSpeed}"
-                          ItemsSource="{Binding Source={local:EnumBindingSource {x:Type options:MenuSpeed}}}"
+                <ComboBox SelectedItem="{Binding MenuSpeed, Converter={StaticResource EnumDescriptionConverter}}"
+                          ItemsSource="{Binding Source={local:EnumDescriptionBindingSource {x:Type options:MenuSpeed}}}"
                           HorizontalAlignment="Left"
                           MinWidth="75" />
               </controls:LabeledControl>
 
               <controls:LabeledControl Text="Low health beep speed:">
-                <ComboBox SelectedItem="{Binding LowHealthBeepSpeed}"
-                          ItemsSource="{Binding Source={local:EnumBindingSource {x:Type options:LowHealthBeepSpeed}}}"
+                <ComboBox SelectedItem="{Binding LowHealthBeepSpeed, Converter={StaticResource EnumDescriptionConverter}}"
+                          ItemsSource="{Binding Source={local:EnumDescriptionBindingSource {x:Type options:LowHealthBeepSpeed}}}"
                           HorizontalAlignment="Left"
                           MinWidth="75" />
               </controls:LabeledControl>
 
               <controls:LabeledControl Text="Zelda Item Drops:">
-                <ComboBox SelectedItem="{Binding ZeldaDrops}"
-                          ItemsSource="{Binding Source={local:EnumBindingSource {x:Type options:ZeldaDrops}}}"
+                <ComboBox SelectedItem="{Binding ZeldaDrops, Converter={StaticResource EnumDescriptionConverter}}"
+                          ItemsSource="{Binding Source={local:EnumDescriptionBindingSource {x:Type options:ZeldaDrops}}}"
                           HorizontalAlignment="Left"
                           MinWidth="75" />
               </controls:LabeledControl>

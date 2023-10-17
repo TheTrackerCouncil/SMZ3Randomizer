@@ -816,6 +816,10 @@ Chat:
   - Text: 'The winners are {1}.'
   - Text: '{1} guessed number {0}.'
   - Text: '{1} performed the miraculous feat of having correctly guessed the number {0}.'
+  DeclareGuessingGameClosestButNotOverWinner:
+  - Text: 'The winners are {2}.'
+  - Text: '{2} guessed number {1}, which is close enough to give it to them, I guess.'
+  - Text: '{2} performed the miraculous feat of guessing closest to the number {0}.'
   NobodyWonGuessingGame:
   - Text: Nobody guessed number {0}.
   - Text: Nobody guessed {0}.

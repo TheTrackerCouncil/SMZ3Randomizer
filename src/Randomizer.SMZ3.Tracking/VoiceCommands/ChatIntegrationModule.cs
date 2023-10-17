@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
-
+using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.ChatIntegration.Models;
 using Randomizer.SMZ3.Tracking.Services;
@@ -198,10 +198,27 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 return;
             }
 
+            var currentValue = winningNumber;
+
             var winners = GanonsTowerGuesses
                 .Where(x => x.Value == winningNumber)
                 .Select(x => x.Key)
                 .ToImmutableList();
+
+            while (winners.Count == 0 && Tracker.Options.GanonsTowerGuessingGameStyle ==
+                GanonsTowerGuessingGameStyle.ClosestWithoutGoingOver)
+            {
+                currentValue--;
+                if (currentValue <= 0)
+                {
+                    break;
+                }
+
+                winners = GanonsTowerGuesses
+                    .Where(x => x.Value == currentValue)
+                    .Select(x => x.Key)
+                    .ToImmutableList();
+            }
 
             if (winners.Count == 0)
             {
@@ -226,12 +243,23 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     winners = winners.Add("Tracker");
 
                 var pronouncedNames = winners.Select(Tracker.CorrectUserNamePronunciation);
-                Tracker.Say(x => x.Chat.DeclareGuessingGameWinners, winningNumber, NaturalLanguage.Join(pronouncedNames));
-
-                var chatMessage = Tracker.Responses.Chat.DeclareGuessingGameWinners.Format(winningNumber, NaturalLanguage.Join(winners));
-                if (chatMessage != null)
+                if (currentValue == winningNumber)
                 {
-                    await ChatClient.SendMessageAsync(chatMessage, announce: true);
+                    Tracker.Say(x => x.Chat.DeclareGuessingGameWinners, winningNumber, NaturalLanguage.Join(pronouncedNames));
+                    var chatMessage = Tracker.Responses.Chat.DeclareGuessingGameWinners.Format(winningNumber, NaturalLanguage.Join(winners));
+                    if (chatMessage != null)
+                    {
+                        await ChatClient.SendMessageAsync(chatMessage, announce: true);
+                    }
+                }
+                else
+                {
+                    Tracker.Say(x => x.Chat.DeclareGuessingGameClosestButNotOverWinner, winningNumber, currentValue, NaturalLanguage.Join(pronouncedNames));
+                    var chatMessage = Tracker.Responses.Chat.DeclareGuessingGameClosestButNotOverWinner.Format(winningNumber, currentValue, NaturalLanguage.Join(winners));
+                    if (chatMessage != null)
+                    {
+                        await ChatClient.SendMessageAsync(chatMessage, announce: true);
+                    }
                 }
 
                 if (winningNumber == _trackerGuess)
@@ -397,7 +425,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             if (!AllowGanonsTowerGuesses)
                 return;
 
-            var validGuessPattern = new Regex("\\b(?<guess>(2[012]|1[0-9]|[0-9]))\\b",
+            var validGuessPattern = new Regex("^(?<guess>(2[012]|1[0-9]|[0-9]))$",
                 RegexOptions.ExplicitCapture, TimeSpan.FromMilliseconds(200));
             var match = validGuessPattern.Match(message.Text);
             if (match.Success)
