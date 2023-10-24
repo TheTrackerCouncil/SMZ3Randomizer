@@ -6,6 +6,7 @@ using System.Speech.Recognition;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Randomizer.Abstractions;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -44,7 +45,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// A dictionary that contains the loaded speech recognition syntax.
         /// </returns>
-        public IReadOnlyDictionary<string, IEnumerable<string>> LoadAll(Tracker tracker, SpeechRecognitionEngine? engine, out bool moduleLoadError)
+        public IReadOnlyDictionary<string, IEnumerable<string>> LoadAll(ITracker tracker, SpeechRecognitionEngine? engine, out bool moduleLoadError)
         {
             moduleLoadError = false;
             _trackerModules = _serviceProvider.GetServices<TrackerModule>();

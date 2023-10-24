@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using Randomizer.Data.Logic;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
+using Randomizer.Shared.Enums;
 using Randomizer.Shared.Multiplayer;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 

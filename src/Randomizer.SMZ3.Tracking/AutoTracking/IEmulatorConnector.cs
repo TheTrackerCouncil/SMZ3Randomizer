@@ -1,4 +1,5 @@
 ﻿using System;
+using Randomizer.Data.Tracking;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking
 {

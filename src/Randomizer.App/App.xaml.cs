@@ -14,6 +14,7 @@ using MSURandomizerLibrary;
 using MSURandomizerLibrary.Models;
 using MSURandomizerLibrary.Services;
 using MSURandomizerUI;
+using Randomizer.Abstractions;
 using Randomizer.App.Controls;
 using Randomizer.App.Windows;
 using Randomizer.Data.Configuration;
@@ -112,12 +113,12 @@ namespace Randomizer.App
                 .AddOptionalModule<PegWorldModeModule>()
                 .AddOptionalModule<SpoilerModule>()
                 .AddOptionalModule<AutoTrackerModule>()
-                .AddOptionalModule<MapModule>()
-                .AddOptionalModule<GameService>();
+                .AddOptionalModule<MapModule>();
+            services.AddScoped<IGameService, GameService>();
 
             services.AddSingleton<MsuUiService>();
             services.AddScoped<TrackerLocationSyncer>();
-            services.AddScoped<AutoTracker>();
+            services.AddScoped<IAutoTracker, AutoTracker>();
             services.AddSingleton<ITrackerStateService, TrackerStateService>();
             services.AddMultiplayerServices();
             services.AddSingleton<SpriteService>();

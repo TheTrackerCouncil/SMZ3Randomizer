@@ -1,26 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
-namespace Randomizer.Shared
+namespace Randomizer.Shared.Enums;
+
+[DefaultValue(None)]
+[TypeConverter(typeof(EnumDescriptionTypeConverter))]
+public enum KeysanityMode
 {
-    [DefaultValue(None)]
-    [TypeConverter(typeof(EnumDescriptionTypeConverter))]
-    public enum KeysanityMode
-    {    
-        [Description("None")]
-        None,
+    [Description("None")]
+    None,
 
-        [Description("Both Games")]
-        Both,
+    [Description("Both Games")]
+    Both,
 
-        [Description("Zelda Only")]
-        Zelda,
+    [Description("Zelda Only")]
+    Zelda,
 
-        [Description("Metroid Only")]
-        SuperMetroid,
-    }
+    [Description("Metroid Only")]
+    SuperMetroid,
 }

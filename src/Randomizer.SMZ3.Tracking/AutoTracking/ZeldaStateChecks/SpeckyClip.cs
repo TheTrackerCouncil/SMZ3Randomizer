@@ -1,4 +1,8 @@
-﻿namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
+﻿using Randomizer.Abstractions;
+using Randomizer.Data;
+using Randomizer.Data.Tracking;
+
+namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
 {
     /// <summary>
     /// Zelda State check for performing the specky clip trick
@@ -13,7 +17,7 @@
         /// <param name="currentState">The current state in Zelda</param>
         /// <param name="prevState">The previous state in Zelda</param>
         /// <returns>True if the check was identified, false otherwise</returns>
-        public bool ExecuteCheck(Tracker tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
+        public bool ExecuteCheck(ITracker tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
         {
             var inCorrectLocation = currentState is
                 { CurrentRoom: 55, IsOnBottomHalfOfRoom: true, IsOnRightHalfOfRoom: false };

@@ -6,7 +6,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using MSURandomizerLibrary.Configs;
+using Randomizer.Abstractions;
 using Randomizer.Data.Options;
+using Randomizer.Data.Tracking;
 using Randomizer.SMZ3.Tracking;
 
 namespace Randomizer.App.Windows;
@@ -15,7 +17,7 @@ public partial class MsuTrackWindow : Window, IDisposable
 {
     private readonly DoubleAnimation _marquee = new();
     private CancellationTokenSource _cts = new();
-    private Tracker? _tracker;
+    private ITracker? _tracker;
     private RandomizerOptions? _options;
     private Track? _currentTrack;
     private Msu? _currentMsu;
@@ -29,7 +31,7 @@ public partial class MsuTrackWindow : Window, IDisposable
         App.RestoreWindowPositionAndSize(this);
     }
 
-    public void Init(Tracker tracker, RandomizerOptions options)
+    public void Init(ITracker tracker, RandomizerOptions options)
     {
         _tracker = tracker;
         _options = options;

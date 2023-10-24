@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Speech.Recognition;
 using Microsoft.Extensions.Logging;
+using Randomizer.Abstractions;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.Data.WorldData;
@@ -34,7 +35,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="itemService">Service to get item information</param>
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to write logging information.</param>
-        public CheatsModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<CheatsModule> logger)
+        public CheatsModule(ITracker tracker, IItemService itemService, IWorldService worldService, ILogger<CheatsModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
 

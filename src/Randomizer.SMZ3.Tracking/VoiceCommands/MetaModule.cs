@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Speech.Recognition;
 
 using Microsoft.Extensions.Logging;
-
+using Randomizer.Abstractions;
 using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
@@ -29,7 +29,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to write logging information.</param>
         /// <param name="communicator">Used to communicate information to the user</param>
-        public MetaModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<MetaModule> logger, ICommunicator communicator)
+        public MetaModule(ITracker tracker, IItemService itemService, IWorldService worldService, ILogger<MetaModule> logger, ICommunicator communicator)
             : base(tracker, itemService, worldService, logger)
         {
             _communicator = communicator;

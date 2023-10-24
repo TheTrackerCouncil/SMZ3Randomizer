@@ -1,7 +1,9 @@
 ﻿using System.Linq;
 using System.Speech.Recognition;
 using Microsoft.Extensions.Logging;
+using Randomizer.Abstractions;
 using Randomizer.Data.Configuration.ConfigFiles;
+using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
@@ -23,7 +25,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger"></param>
         /// <param name="config"></param>
-        public MapModule(Tracker tracker, IItemService itemService, ILogger<MapModule> logger, IWorldService worldService, TrackerMapConfig config)
+        public MapModule(ITracker tracker, IItemService itemService, ILogger<MapModule> logger, IWorldService worldService, TrackerMapConfig config)
             : base(tracker, itemService, worldService, logger)
         {
             _logger = logger;
@@ -91,7 +93,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             AddCommand("Show dark room map", DarkRoomRule(), (result) =>
             {
                 // If the player is not in a Zelda cave/dungeon
-                if (Tracker.AutoTracker?.CurrentGame != AutoTracking.Game.Zelda || Tracker.AutoTracker?.ZeldaState?.OverworldScreen != 0)
+                if (Tracker.AutoTracker?.CurrentGame != Game.Zelda || Tracker.AutoTracker?.ZeldaState?.OverworldScreen != 0)
                 {
                     Tracker.Say(x => x.Map.NotInDarkRoom);
                     return;

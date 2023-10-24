@@ -2,6 +2,7 @@
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
+using Randomizer.Abstractions;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;

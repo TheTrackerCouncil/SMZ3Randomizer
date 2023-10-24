@@ -7,6 +7,7 @@ using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.Data.Options;
+using Randomizer.Shared.Enums;
 
 namespace Randomizer.SMZ3
 {

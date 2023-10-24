@@ -2,7 +2,7 @@
 using System.Speech.Recognition;
 
 using Microsoft.Extensions.Logging;
-
+using Randomizer.Abstractions;
 using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
@@ -22,7 +22,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="itemService">Service to get item information</param>
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to log information.</param>
-        public ItemTrackingModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<ItemTrackingModule> logger)
+        public ItemTrackingModule(ITracker tracker, IItemService itemService, IWorldService worldService, ILogger<ItemTrackingModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
 

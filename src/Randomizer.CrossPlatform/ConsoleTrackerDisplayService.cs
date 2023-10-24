@@ -1,6 +1,8 @@
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
+using Randomizer.Abstractions;
 using Randomizer.Data.Options;
+using Randomizer.Data.Tracking;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
@@ -20,7 +22,7 @@ public class ConsoleTrackerDisplayService
     private readonly TrackerOptionsAccessor _trackerOptionsAccessor;
     private readonly RandomizerOptions _options;
     private readonly IServiceProvider _serviceProvider;
-    private Tracker _tracker = null!;
+    private ITracker _tracker = null!;
     private World _world = null!;
     private IWorldService _worldService = null!;
     private Region _lastRegion = null!;
@@ -40,7 +42,7 @@ public class ConsoleTrackerDisplayService
         _trackerOptionsAccessor.Options = _options.GeneralOptions.GetTrackerOptions();
         _world = _romLoaderService.LoadGeneratedRom(rom).First(x => x.IsLocalWorld);
         _worldService = _serviceProvider.GetRequiredService<IWorldService>();
-        _tracker = _serviceProvider.GetRequiredService<Tracker>();
+        _tracker = _serviceProvider.GetRequiredService<ITracker>();
         _tracker.Load(rom, romPath);
         _tracker.TryStartTracking();
         _tracker.AutoTracker?.SetConnector(_options.AutoTrackerDefaultConnector, _options.AutoTrackerQUsb2SnesIp);

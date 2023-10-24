@@ -6,6 +6,7 @@ using System.Linq;
 using System.Speech.Recognition;
 
 using Microsoft.Extensions.Logging;
+using Randomizer.Abstractions;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
@@ -66,7 +67,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="itemService">Service to get item information</param>
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to log information.</param>
-        protected TrackerModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger logger)
+        protected TrackerModule(ITracker tracker, IItemService itemService, IWorldService worldService, ILogger logger)
         {
             Tracker = tracker;
             ItemService = itemService;
@@ -92,7 +93,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <summary>
         /// Gets the Tracker instance.
         /// </summary>
-        protected Tracker Tracker { get; }
+        protected ITracker Tracker { get; }
 
         /// <summary>
         /// Service for getting item data
@@ -138,7 +139,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// A <see cref="DungeonInfo"/> from the recognition result.
         /// </returns>
-        protected static IDungeon GetDungeonFromResult(Tracker tracker, RecognitionResult result)
+        protected static IDungeon GetDungeonFromResult(ITracker tracker, RecognitionResult result)
         {
             var name = (string)result.Semantics[DungeonKey].Value;
             var dungeon = tracker.World.Dungeons.FirstOrDefault(x => x.DungeonName == name);
@@ -154,7 +155,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// A <see cref="DungeonInfo"/> from the recognition result.
         /// </returns>
-        protected static IDungeon? GetBossDungeonFromResult(Tracker tracker, RecognitionResult result)
+        protected static IDungeon? GetBossDungeonFromResult(ITracker tracker, RecognitionResult result)
         {
             var name = (string)result.Semantics[BossKey].Value;
             return tracker.World.Dungeons.FirstOrDefault(x => x.DungeonName == name);
@@ -169,7 +170,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// A <see cref="BossInfo"/> from the recognition result.
         /// </returns>
-        protected static Boss? GetBossFromResult(Tracker tracker, RecognitionResult result)
+        protected static Boss? GetBossFromResult(ITracker tracker, RecognitionResult result)
         {
             var bossName = (string)result.Semantics[BossKey].Value;
             return tracker.World.AllBosses.SingleOrDefault(x => x.Name.Contains(bossName, StringComparison.Ordinal));
@@ -187,7 +188,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// An <see cref="ItemData"/> from the recognition result.
         /// </returns>
-        protected Item GetItemFromResult(Tracker tracker, RecognitionResult result, out string itemName)
+        protected Item GetItemFromResult(ITracker tracker, RecognitionResult result, out string itemName)
         {
             itemName = (string)result.Semantics[ItemNameKey].Value;
             var item = ItemService.FirstOrDefault(itemName);
@@ -204,7 +205,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// A <see cref="Location"/> from the recognition result.
         /// </returns>
-        protected static Location GetLocationFromResult(Tracker tracker, RecognitionResult result)
+        protected static Location GetLocationFromResult(ITracker tracker, RecognitionResult result)
         {
             var id = (LocationId)result.Semantics[LocationKey].Value;
             var location = tracker.World.Locations.First(x => x.Id == id);
@@ -218,7 +219,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="result">The speech recognition result.</param>
         /// <returns>A <see cref="Room"/> from the recognition result.</returns>
-        protected static Room GetRoomFromResult(Tracker tracker, RecognitionResult result)
+        protected static Room GetRoomFromResult(ITracker tracker, RecognitionResult result)
         {
             var roomTypeName = (string)result.Semantics[RoomKey].Value;
             var room = tracker.World.Rooms.First(x => x.GetType().FullName == roomTypeName);
@@ -234,7 +235,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// A <see cref="Region"/> from the recognition result.
         /// </returns>
-        protected static Region GetRegionFromResult(Tracker tracker, RecognitionResult result)
+        protected static Region GetRegionFromResult(ITracker tracker, RecognitionResult result)
         {
             var regionTypeName = (string)result.Semantics[RegionKey].Value;
             var region = tracker.World.Regions.First(x => x.GetType().FullName == regionTypeName);
@@ -250,7 +251,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// The recognized area from the recognition result.
         /// </returns>
-        protected static IHasLocations GetAreaFromResult(Tracker tracker, RecognitionResult result)
+        protected static IHasLocations GetAreaFromResult(ITracker tracker, RecognitionResult result)
         {
             if (result.Semantics.ContainsKey(RegionKey))
                 return GetRegionFromResult(tracker, result);

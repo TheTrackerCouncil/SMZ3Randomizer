@@ -1,66 +1,64 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
-using Randomizer.SMZ3.Tracking.AutoTracking;
+using Randomizer.Abstractions;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.Data.Options;
 
-namespace Randomizer.SMZ3.Tracking.VoiceCommands
+namespace Randomizer.SMZ3.Tracking.VoiceCommands;
+
+/// <summary>
+/// Module for creating the auto tracker and interacting with the auto tracker
+/// </summary>
+public class AutoTrackerModule : TrackerModule, IDisposable
 {
+    private readonly IAutoTracker _autoTracker;
+
     /// <summary>
-    /// Module for creating the auto tracker and interacting with the auto tracker
+    /// Initializes a new instance of the <see cref="AutoTrackerModule"/>
+    /// class.
     /// </summary>
-    public class AutoTrackerModule : TrackerModule, IDisposable
+    /// <param name="tracker">The tracker instance.</param>
+    /// <param name="itemService">Service to get item information</param>
+    /// <param name="worldService">Service to get world information</param>
+    /// <param name="logger">Used to write logging information.</param>
+    /// <param name="autoTracker">The auto tracker to associate with this module</param>
+    public AutoTrackerModule(ITracker tracker, IItemService itemService, IWorldService worldService, ILogger<AutoTrackerModule> logger, IAutoTracker autoTracker)
+        : base(tracker, itemService, worldService, logger)
     {
-        private readonly AutoTracker _autoTracker;
+        Tracker.AutoTracker = autoTracker;
+        _autoTracker = autoTracker;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AutoTrackerModule"/>
-        /// class.
-        /// </summary>
-        /// <param name="tracker">The tracker instance.</param>
-        /// <param name="itemService">Service to get item information</param>
-        /// <param name="worldService">Service to get world information</param>
-        /// <param name="logger">Used to write logging information.</param>
-        /// <param name="autoTracker">The auto tracker to associate with this module</param>
-        public AutoTrackerModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<AutoTrackerModule> logger, AutoTracker autoTracker)
-            : base(tracker, itemService, worldService, logger)
-        {
-            Tracker.AutoTracker = autoTracker;
-            _autoTracker = autoTracker;
-        }
+    private GrammarBuilder GetLookAtGameRule()
+    {
+        return new GrammarBuilder()
+            .Append("Hey tracker, ")
+            .Optional("please", "would you please")
+            .OneOf("look at this", "look here", "record this", "log this", "take a look at this", "get a load of this")
+            .Optional("shit", "crap");
+    }
 
-        private GrammarBuilder GetLookAtGameRule()
+    private void LookAtGame()
+    {
+        if (_autoTracker.LatestViewAction == null || _autoTracker.LatestViewAction.Invoke() == false)
         {
-            return new GrammarBuilder()
-                .Append("Hey tracker, ")
-                .Optional("please", "would you please")
-                .OneOf("look at this", "look here", "record this", "log this", "take a look at this", "get a load of this")
-                .Optional("shit", "crap");
-        }
-
-        private void LookAtGame()
-        {
-            if (_autoTracker.LatestViewAction == null || _autoTracker.LatestViewAction.Invoke() == false)
-            {
-                Tracker.Say(x => x.AutoTracker.LookedAtNothing);
-            }
-        }
-
-        /// <summary>
-        /// Called when the module is destroyed
-        /// </summary>
-        public void Dispose()
-        {
-            _autoTracker.SetConnector(EmulatorConnectorType.None, "");
-        }
-
-        public override void AddCommands()
-        {
-            AddCommand("Look at this", GetLookAtGameRule(), (result) =>
-            {
-                LookAtGame();
-            });
+            Tracker.Say(x => x.AutoTracker.LookedAtNothing);
         }
     }
 
+    /// <summary>
+    /// Called when the module is destroyed
+    /// </summary>
+    public void Dispose()
+    {
+        _autoTracker.SetConnector(EmulatorConnectorType.None, "");
+    }
+
+    public override void AddCommands()
+    {
+        AddCommand("Look at this", GetLookAtGameRule(), (result) =>
+        {
+            LookAtGame();
+        });
+    }
 }

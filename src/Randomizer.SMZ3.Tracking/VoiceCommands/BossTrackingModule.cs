@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
-
+using Randomizer.Abstractions;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Tracking.Services;
 
@@ -20,7 +20,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="itemService">Service to get item information</param>
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to write logging information.</param>
-        public BossTrackingModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<BossTrackingModule> logger)
+        public BossTrackingModule(ITracker tracker, IItemService itemService, IWorldService worldService, ILogger<BossTrackingModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
 

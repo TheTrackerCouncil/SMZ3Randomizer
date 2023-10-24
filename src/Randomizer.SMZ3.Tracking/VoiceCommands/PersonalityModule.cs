@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.Extensions.Logging;
-
+using Randomizer.Abstractions;
 using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
@@ -20,7 +20,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="itemService">Service to get item information</param>
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to write logging information.</param>
-        public PersonalityModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<PersonalityModule> logger)
+        public PersonalityModule(ITracker tracker, IItemService itemService, IWorldService worldService, ILogger<PersonalityModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
 

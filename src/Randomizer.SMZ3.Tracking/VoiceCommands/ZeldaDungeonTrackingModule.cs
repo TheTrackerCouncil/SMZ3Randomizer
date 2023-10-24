@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Speech.Recognition;
 
 using Microsoft.Extensions.Logging;
+using Randomizer.Abstractions;
 using Randomizer.Shared;
 
 using Randomizer.SMZ3.Tracking.Services;
@@ -27,7 +28,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="itemService">Service to get item information</param>
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to log information.</param>
-        public ZeldaDungeonTrackingModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<ZeldaDungeonTrackingModule> logger)
+        public ZeldaDungeonTrackingModule(ITracker tracker, IItemService itemService, IWorldService worldService, ILogger<ZeldaDungeonTrackingModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
 

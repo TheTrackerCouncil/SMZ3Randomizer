@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Randomizer.Abstractions;
+using Randomizer.Data.Tracking;
 using Randomizer.Multiplayer.Client;
 using Randomizer.Multiplayer.Client.EventHandlers;
 using Randomizer.Shared;
@@ -25,8 +27,8 @@ public class MultiplayerModule : TrackerModule
     /// <param name="logger">Used to write logging information.</param>
     /// <param name="multiplayerGameService">The multiplayer game service</param>
     /// <param name="autoTracker"></param>
-    public MultiplayerModule(Tracker tracker, IItemService itemService, IWorldService worldService,
-        ILogger<MultiplayerModule> logger, MultiplayerGameService multiplayerGameService, AutoTracker autoTracker)
+    public MultiplayerModule(ITracker tracker, IItemService itemService, IWorldService worldService,
+        ILogger<MultiplayerModule> logger, MultiplayerGameService multiplayerGameService, IAutoTracker autoTracker)
         : base(tracker, itemService, worldService, logger)
     {
         _multiplayerGameService = multiplayerGameService;

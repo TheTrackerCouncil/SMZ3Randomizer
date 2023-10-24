@@ -9,8 +9,10 @@ using MSURandomizerLibrary;
 using MSURandomizerLibrary.Configs;
 using MSURandomizerLibrary.Models;
 using MSURandomizerLibrary.Services;
+using Randomizer.Abstractions;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Options;
+using Randomizer.Data.Tracking;
 using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands;
@@ -43,7 +45,7 @@ public class MsuModule : TrackerModule, IDisposable
     /// <param name="msuSelectorService"></param>
     /// <param name="msuTypeService"></param>
     /// <param name="msuConfig"></param>
-    public MsuModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<MsuModule> logger, IMsuLookupService msuLookupService, IMsuSelectorService msuSelectorService, IMsuTypeService msuTypeService, MsuConfig msuConfig)
+    public MsuModule(ITracker tracker, IItemService itemService, IWorldService worldService, ILogger<MsuModule> logger, IMsuLookupService msuLookupService, IMsuSelectorService msuSelectorService, IMsuTypeService msuTypeService, MsuConfig msuConfig)
         : base(tracker, itemService, worldService, logger)
     {
         _msuSelectorService = msuSelectorService;

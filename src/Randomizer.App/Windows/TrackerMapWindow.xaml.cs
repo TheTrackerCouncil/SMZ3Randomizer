@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Shapes;
 using Microsoft.Extensions.Logging;
+using Randomizer.Abstractions;
 using Randomizer.App.ViewModels;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Configuration.ConfigTypes;
@@ -23,7 +24,7 @@ namespace Randomizer.App.Windows
     public partial class TrackerMapWindow : Window
     {
         private readonly ILogger<TrackerMapWindow> _logger;
-        private readonly Tracker _tracker;
+        private readonly ITracker _tracker;
         private TrackerLocationSyncer _syncer;
 
         /// <summary>
@@ -37,7 +38,7 @@ namespace Randomizer.App.Windows
         /// The config for the map json file with all the location details
         /// </param>
         /// <param name="logger">Logger for logging</param>
-        public TrackerMapWindow(Tracker tracker, TrackerLocationSyncer syncer, TrackerMapConfig config, ILogger<TrackerMapWindow> logger)
+        public TrackerMapWindow(ITracker tracker, TrackerLocationSyncer syncer, TrackerMapConfig config, ILogger<TrackerMapWindow> logger)
         {
             InitializeComponent();
 

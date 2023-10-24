@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using Randomizer.Abstractions;
 using Randomizer.Data.Logic;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
@@ -42,7 +43,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to write logging information.</param>
         /// <param name="randomizerConfigService">Service for retrieving the randomizer config for the world</param>
-        public SpoilerModule(Tracker tracker, IItemService itemService, ILogger<SpoilerModule> logger, IWorldService worldService, IRandomizerConfigService randomizerConfigService)
+        public SpoilerModule(ITracker tracker, IItemService itemService, ILogger<SpoilerModule> logger, IWorldService worldService, IRandomizerConfigService randomizerConfigService)
             : base(tracker, itemService, worldService, logger)
         {
             Tracker.HintsEnabled = tracker.World.Config is { Race: false, DisableTrackerHints: false } && tracker.Options.HintsEnabled;
@@ -372,8 +373,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 // Who's it for and is it any good?
                 case 0:
                     var characterName = location.Item.Type.IsInCategory(ItemCategory.Metroid)
-                        ? Tracker.CorrectPronunciation(location.World.Config.SamusName)
-                        : Tracker.CorrectPronunciation(location.World.Config.LinkName);
+                        ? ITracker.CorrectPronunciation(location.World.Config.SamusName)
+                        : ITracker.CorrectPronunciation(location.World.Config.LinkName);
 
                     if (Tracker.IsWorth(location.Item))
                     {

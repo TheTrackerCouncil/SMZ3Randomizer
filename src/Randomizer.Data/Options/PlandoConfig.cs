@@ -7,6 +7,7 @@ using Randomizer.Shared;
 
 using YamlDotNet.Serialization;
 using Randomizer.Data.Logic;
+using Randomizer.Shared.Enums;
 
 namespace Randomizer.Data.Options
 {

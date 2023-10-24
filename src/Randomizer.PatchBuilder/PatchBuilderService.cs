@@ -4,6 +4,7 @@ using MSURandomizerLibrary.Models;
 using MSURandomizerLibrary.Services;
 using Randomizer.Data.Options;
 using Randomizer.SMZ3.Generation;
+using Randomizer.SMZ3.Infrastructure;
 
 namespace Randomizer.PatchBuilder;
 
@@ -15,10 +16,11 @@ public class PatchBuilderService
     private readonly IMsuTypeService _msuTypeService;
     private readonly IMsuLookupService _msuLookupService;
     private readonly IMsuSelectorService _msuSelectorService;
+    private readonly RomLauncherService _romLauncherService;
     private readonly string _solutionPath;
     private readonly string _randomizerRomPath;
 
-    public PatchBuilderService(ILogger<PatchBuilderService> logger, RomGenerationService romGenerationService, OptionsFactory optionsFactory, IMsuLookupService msuLookupService, IMsuSelectorService msuSelectorService, IMsuTypeService msuTypeService)
+    public PatchBuilderService(ILogger<PatchBuilderService> logger, RomGenerationService romGenerationService, OptionsFactory optionsFactory, IMsuLookupService msuLookupService, IMsuSelectorService msuSelectorService, IMsuTypeService msuTypeService, RomLauncherService romLauncherService)
     {
         _logger = logger;
         _romGenerationService = romGenerationService;
@@ -28,6 +30,7 @@ public class PatchBuilderService
         _msuLookupService = msuLookupService;
         _msuSelectorService = msuSelectorService;
         _msuTypeService = msuTypeService;
+        _romLauncherService = romLauncherService;
     }
 
     public void CreatePatches(PatchBuilderConfig config)
@@ -218,42 +221,8 @@ public class PatchBuilderService
             return;
         }
 
-        var launchApplication = config.EnvironmentSettings.LaunchApplication;
-        var launchArguments = "";
-        if (string.IsNullOrEmpty(launchApplication))
-        {
-            launchApplication = romPath;
-        }
-        else
-        {
-            if (string.IsNullOrEmpty(config.EnvironmentSettings.LaunchArguments))
-            {
-                launchArguments = $"\"{romPath}\"";
-            }
-            else if (config.EnvironmentSettings.LaunchArguments.Contains("%rom%"))
-            {
-                launchArguments = config.EnvironmentSettings.LaunchArguments.Replace("%rom%", $"{romPath}");
-            }
-            else
-            {
-                launchArguments = $"{config.EnvironmentSettings.LaunchArguments} \"{romPath}\"";
-            }
-        }
-
-        try
-        {
-            _logger.LogInformation("Executing {FileName} {Arguments}", launchApplication, launchArguments);
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = launchApplication,
-                Arguments = launchArguments,
-                UseShellExecute = true
-            });
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Unable to launch rom");
-        }
+        _romLauncherService.LaunchRom(romPath, config.EnvironmentSettings.LaunchApplication,
+            config.EnvironmentSettings.LaunchArguments);
     }
 
     private static string SolutionPath

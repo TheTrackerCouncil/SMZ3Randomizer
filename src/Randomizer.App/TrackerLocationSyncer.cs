@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using Microsoft.Extensions.Logging;
+using Randomizer.Abstractions;
 using Randomizer.Data.WorldData;
 using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.Services;
@@ -24,7 +25,7 @@ namespace Randomizer.App
         /// <param name="itemService">Service for retrieving the item data</param>
         /// <param name="worldService">Service for retrieving world data</param>
         /// <param name="logger">Logger</param>
-        public TrackerLocationSyncer(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<TrackerLocationSyncer> logger)
+        public TrackerLocationSyncer(ITracker tracker, IItemService itemService, IWorldService worldService, ILogger<TrackerLocationSyncer> logger)
         {
             Tracker = tracker;
             ItemService = itemService;
@@ -82,7 +83,7 @@ namespace Randomizer.App
             }
         }
 
-        public Tracker Tracker { get; private set; }
+        public ITracker Tracker { get; private set; }
 
         public IItemService ItemService { get; private set; }
 

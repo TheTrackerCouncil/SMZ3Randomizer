@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
+using Randomizer.Abstractions;
 using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.ChatIntegration.Models;
@@ -45,7 +46,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="timerService"></param>
         /// <param name="chatClient">The chat client to use.</param>
         /// <param name="logger">Used to write logging information.</param>
-        public ChatIntegrationModule(Tracker tracker, IChatClient chatClient, IItemService itemService, IWorldService worldService, ITrackerTimerService timerService, ILogger<ChatIntegrationModule> logger)
+        public ChatIntegrationModule(ITracker tracker, IChatClient chatClient, IItemService itemService, IWorldService worldService, ITrackerTimerService timerService, ILogger<ChatIntegrationModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
             ChatClient = chatClient;

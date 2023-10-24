@@ -16,8 +16,10 @@ using System.Windows.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MSURandomizerLibrary.Services;
+using Randomizer.Abstractions;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data.Options;
+using Randomizer.Data.Tracking;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData.Regions.Zelda;
@@ -64,7 +66,7 @@ namespace Randomizer.App.Windows
         private UILayout _layout;
         private readonly UILayout _defaultLayout;
         private UILayout? _previousLayout;
-        private Tracker? _tracker;
+        private ITracker? _tracker;
 
         public TrackerWindow(IServiceProvider serviceProvider,
             IItemService itemService,
@@ -118,7 +120,7 @@ namespace Randomizer.App.Windows
             BottomRight = 3
         }
 
-        public Tracker Tracker => _tracker ?? throw new InvalidOperationException("Tracker not created");
+        public ITracker Tracker => _tracker ?? throw new InvalidOperationException("Tracker not created");
 
         public GeneratedRom? Rom { get; set; }
 
@@ -725,7 +727,7 @@ namespace Randomizer.App.Windows
                 _msuLookupService.LookupMsus(_options.GeneralOptions.MsuPath);
             });
 
-            _tracker = _serviceProvider.GetRequiredService<Tracker>();
+            _tracker = _serviceProvider.GetRequiredService<ITracker>();
 
             // If a rom was passed in with a valid tracker state, reload the state from the database
             if (GeneratedRom.IsValid(Rom))
@@ -987,7 +989,11 @@ namespace Randomizer.App.Windows
             _msuTrackWindow?.Close(true);
             _msuTrackWindow = null;
             _msuTrackWindow?.Dispose();
-            _tracker?.Dispose();
+
+            if (_tracker is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
         }
 
         private void LocationsMenuItem_Click(object sender, RoutedEventArgs e)

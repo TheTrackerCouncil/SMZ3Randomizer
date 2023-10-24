@@ -1,6 +1,7 @@
-﻿using Randomizer.Data.WorldData;
+﻿using Randomizer.Abstractions;
+using Randomizer.Data.Tracking;
+using Randomizer.Data.WorldData;
 using Randomizer.SMZ3.Contracts;
-using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks;
 
@@ -9,7 +10,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks;
 /// </summary>
 public class ViewedMedallion : IZeldaStateCheck
 {
-    private Tracker? _tracker;
+    private ITracker? _tracker;
     private readonly IWorldAccessor _worldAccessor;
     private bool _mireUpdated;
     private bool _turtleRockUpdated;
@@ -31,7 +32,7 @@ public class ViewedMedallion : IZeldaStateCheck
     /// <param name="currentState">The current state in Zelda</param>
     /// <param name="prevState">The previous state in Zelda</param>
     /// <returns>True if the check was identified, false otherwise</returns>
-    public bool ExecuteCheck(Tracker tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
+    public bool ExecuteCheck(ITracker tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
     {
         if (tracker.AutoTracker == null || tracker.AutoTracker.LatestViewAction?.IsValid == true || (_mireUpdated && _turtleRockUpdated)) return false;
 
