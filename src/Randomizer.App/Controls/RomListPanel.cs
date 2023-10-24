@@ -76,7 +76,7 @@ namespace Randomizer.App.Controls
         /// <param name="rom">The rom to launch</param>
         public void QuickLaunchRom(GeneratedRom rom)
         {
-            var launchButtonOptions = (LaunchButtonOptions)Options.GeneralOptions.LaunchButton;
+            var launchButtonOptions = Options.GeneralOptions.LaunchButtonOption;
 
             if (launchButtonOptions is LaunchButtonOptions.PlayAndTrack or LaunchButtonOptions.OpenFolderAndTrack or LaunchButtonOptions.TrackOnly)
             {
