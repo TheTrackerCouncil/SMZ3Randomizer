@@ -37,8 +37,8 @@
         <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10 0 0 0">
           <TextBlock>Filter</TextBlock>
           <ComboBox Name="SpriteFilterComboBox"
-                    SelectedItem="{Binding SpriteFilter, Converter={StaticResource EnumDescriptionConverter}}"
-                    ItemsSource="{Binding Source={app:EnumDescriptionBindingSource {x:Type options:SpriteFilter}}}"
+                    SelectedItem="{Binding SpriteFilter}"
+                    ItemsSource="{Binding Source={app:EnumBindingSource {x:Type options:SpriteFilter}}}"
                     HorizontalAlignment="Left"
                     MinWidth="125"
                     SelectionChanged="SpriteFilterComboBox_OnSelectionChanged">

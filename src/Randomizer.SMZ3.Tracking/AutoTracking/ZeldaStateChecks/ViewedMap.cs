@@ -101,13 +101,16 @@ public class ViewedMap : IZeldaStateCheck
             }
         }
 
-        if (!World.Config.ZeldaKeysanity && rewards.Count(x => x == RewardType.CrystalRed || x == RewardType.CrystalBlue) == 3)
+        if (!World.Config.ZeldaKeysanity)
         {
-            _tracker.SayOnce(x => x.AutoTracker.LightWorldAllCrystals);
-        }
-        else if (rewards.Count == 0)
-        {
-            _tracker.Say(x => x.AutoTracker.LookedAtNothing);
+            if (rewards.Count(x => x == RewardType.CrystalRed || x == RewardType.CrystalBlue) == 3)
+            {
+                _tracker.SayOnce(x => x.AutoTracker.LightWorldAllCrystals);
+            }
+            else if (rewards.Count == 0)
+            {
+                _tracker.Say(x => x.AutoTracker.LookedAtNothing);
+            }
         }
 
         // If all dungeons are marked, save the light world as updated
@@ -154,13 +157,16 @@ public class ViewedMap : IZeldaStateCheck
         var isMiseryMirePendant = (World.MiseryMire as IDungeon).IsPendantDungeon;
         var isTurtleRockPendant = (World.TurtleRock as IDungeon).IsPendantDungeon;
 
-        if (!World.Config.ZeldaKeysanity && isMiseryMirePendant && isTurtleRockPendant)
+        if (!World.Config.ZeldaKeysanity)
         {
-            _tracker.SayOnce(x => x.AutoTracker.DarkWorldNoMedallions);
-        }
-        else if (rewards.Count == 0)
-        {
-            _tracker.Say(x => x.AutoTracker.LookedAtNothing);
+            if (isMiseryMirePendant && isTurtleRockPendant)
+            {
+                _tracker.SayOnce(x => x.AutoTracker.DarkWorldNoMedallions);
+            }
+            else if (rewards.Count == 0)
+            {
+                _tracker.Say(x => x.AutoTracker.LookedAtNothing);
+            }
         }
 
         // If all dungeons are marked, save the light world as updated
