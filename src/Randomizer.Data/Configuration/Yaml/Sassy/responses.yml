@@ -243,6 +243,10 @@ PegWorldModeOn:
 - Text: Toggled Peg World Go Mode <break time='1s'/> on.
 PegWorldModePegged:
 - Text: Pop.
+- Text: Poop.
+  Weight: 0.001
+- Text: Plop.
+  Weight: 0.001
 PegWorldModeDone:
 - Text: Toggled Peg World Mode off.
 - Text: Let's visit Shaktool next.

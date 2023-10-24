@@ -22,3 +22,6 @@ Idle:
 ActionUndone:
 - Text: I undid your fuck up
   Weight: 0.2
+PegWorldModeDone:
+  - Text: Was it good for you?
+    Weight: 0.1
