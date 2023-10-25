@@ -97,22 +97,34 @@ public abstract class AutoTrackerBase
     /// <param name="action">The action to write to memory</param>
     public abstract void WriteToMemory(EmulatorAction action);
 
-    protected void OnAutoTrackerEnabled()
+    /// <summary>
+    /// Invokes the AutoTrackerEnabled event
+    /// </summary>
+    protected virtual void OnAutoTrackerEnabled()
     {
         AutoTrackerEnabled?.Invoke(this, EventArgs.Empty);
     }
 
-    protected void OnAutoTrackerDisabled()
+    /// <summary>
+    /// Invokes the OnAutoTrackerDisabled event
+    /// </summary>
+    protected virtual void OnAutoTrackerDisabled()
     {
         AutoTrackerDisabled?.Invoke(this, EventArgs.Empty);
     }
 
-    protected void OnAutoTrackerConnected()
+    /// <summary>
+    /// Invokes the OnAutoTrackerConnected event
+    /// </summary>
+    protected virtual void OnAutoTrackerConnected()
     {
         AutoTrackerConnected?.Invoke(this, EventArgs.Empty);
     }
 
-    protected void OnAutoTrackerDisconnected()
+    /// <summary>
+    /// Invokes the OnAutoTrackerDisconnected event
+    /// </summary>
+    protected virtual void OnAutoTrackerDisconnected()
     {
         AutoTrackerDisconnected?.Invoke(this, EventArgs.Empty);
     }

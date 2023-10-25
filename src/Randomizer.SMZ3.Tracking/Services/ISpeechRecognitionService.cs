@@ -11,17 +11,7 @@ public abstract class SpeechRecognitionServiceBase
     /// <summary>
     /// Event fired when speech was successfully understood
     /// </summary>
-    public event System.EventHandler<SpeechRecognizedEventArgs>? SpeechRecognized;
-
-
-    protected virtual void OnSpeechRecognized(object? sender, SpeechRecognizedEventArgs args)
-    {
-        if (OperatingSystem.IsWindows())
-        {
-            SpeechRecognized?.Invoke(sender, args);
-        }
-
-    }
+    public event EventHandler<SpeechRecognizedEventArgs>? SpeechRecognized;
 
     /// <summary>
     /// Updates the microphone to be the default Windows mic
@@ -54,4 +44,18 @@ public abstract class SpeechRecognitionServiceBase
     /// Disposes of the service and speech recognition engine
     /// </summary>
     public abstract void Dispose();
+
+    /// <summary>
+    /// Invokes the SpeechRecognized event
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="args"></param>
+    protected virtual void OnSpeechRecognized(object? sender, SpeechRecognizedEventArgs args)
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            SpeechRecognized?.Invoke(sender, args);
+        }
+
+    }
 }

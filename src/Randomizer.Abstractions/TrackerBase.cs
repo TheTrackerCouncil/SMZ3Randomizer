@@ -757,86 +757,152 @@ public abstract class TrackerBase
     /// </returns>
     public abstract bool IsWorth(Item item);
 
+    /// <summary>
+    /// Invokes the SpeechRecognized event
+    /// </summary>
+    /// <param name="args"></param>
     protected virtual void OnSpeechRecognized(TrackerEventArgs args)
     {
         SpeechRecognized?.Invoke(this, args);
     }
 
+    /// <summary>
+    /// Invokes the ItemTracked event
+    /// </summary>
+    /// <param name="args"></param>
     protected virtual void OnItemTracked(ItemTrackedEventArgs args)
     {
         ItemTracked?.Invoke(this, args);
     }
 
+    /// <summary>
+    /// Invokes the LocationCleared event
+    /// </summary>
+    /// <param name="args"></param>
     protected virtual void OnLocationCleared(LocationClearedEventArgs args)
     {
         LocationCleared?.Invoke(this, args);
     }
 
+    /// <summary>
+    /// Invokes the ToggledPegWorldModeOn event
+    /// </summary>
+    /// <param name="args"></param>
     protected virtual void OnToggledPegWorldModeOn(TrackerEventArgs args)
     {
         ToggledPegWorldModeOn?.Invoke(this, args);
     }
 
+    /// <summary>
+    /// Invokes the ToggledShaktoolMode event
+    /// </summary>
+    /// <param name="args"></param>
     protected virtual void OnToggledShaktoolMode(TrackerEventArgs args)
     {
         ToggledShaktoolMode?.Invoke(this, args);
     }
 
+    /// <summary>
+    /// Invokes the PegPegged event
+    /// </summary>
+    /// <param name="args"></param>
     protected virtual void OnPegPegged(TrackerEventArgs args)
     {
         PegPegged?.Invoke(this, args);
     }
 
+    /// <summary>
+    /// Invokes the DungeonUpdated event
+    /// </summary>
+    /// <param name="args"></param>
     protected virtual void OnDungeonUpdated(DungeonTrackedEventArgs args)
     {
         DungeonUpdated?.Invoke(this, args);
     }
 
+    /// <summary>
+    /// Invokes the BossUpdated event
+    /// </summary>
+    /// <param name="args"></param>
     protected virtual void OnBossUpdated(BossTrackedEventArgs args)
     {
         BossUpdated?.Invoke(this, args);
     }
 
+    /// <summary>
+    /// Invokes the MarkedLocationsUpdated event
+    /// </summary>
+    /// <param name="args"></param>
     protected virtual void OnMarkedLocationsUpdated(TrackerEventArgs args)
     {
         MarkedLocationsUpdated?.Invoke(this, args);
     }
 
+    /// <summary>
+    /// Invokes the GoModeToggledOn event
+    /// </summary>
+    /// <param name="args"></param>
     protected virtual void OnGoModeToggledOn(TrackerEventArgs args)
     {
         GoModeToggledOn?.Invoke(this, args);
     }
 
+    /// <summary>
+    /// Invokes the ActionUndone event
+    /// </summary>
+    /// <param name="args"></param>
     protected virtual void OnActionUndone(TrackerEventArgs args)
     {
         ActionUndone?.Invoke(this, args);
     }
 
+    /// <summary>
+    /// Invokes the StateLoaded event
+    /// </summary>
     protected virtual void OnStateLoaded()
     {
         StateLoaded?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <summary>
+    /// Invokes the MapUpdated event
+    /// </summary>
     protected virtual void OnMapUpdated()
     {
         MapUpdated?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <summary>
+    /// Invokes the BeatGame event
+    /// </summary>
+    /// <param name="args"></param>
     protected virtual void OnBeatGame(TrackerEventArgs args)
     {
         BeatGame?.Invoke(this, args);
     }
 
+    /// <summary>
+    /// Invokes the PlayerDied event
+    /// </summary>
+    /// <param name="args"></param>
     protected virtual void OnPlayerDied(TrackerEventArgs args)
     {
         PlayerDied?.Invoke(this, args);
     }
 
+    /// <summary>
+    /// Invokes the TrackNumberUpdated event
+    /// </summary>
+    /// <param name="args"></param>
     protected virtual void OnTrackNumberUpdated(TrackNumberEventArgs args)
     {
         TrackNumberUpdated?.Invoke(this, args);
     }
 
+    /// <summary>
+    /// Invokes the TrackChanged event
+    /// </summary>
+    /// <param name="args"></param>
     protected virtual void OnTrackChanged(TrackChangedEventArgs args)
     {
         TrackChanged?.Invoke(this, args);
