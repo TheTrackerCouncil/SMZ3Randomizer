@@ -17,7 +17,6 @@ public class PatcherService : IPatcherService
 {
     private readonly ILogger<PatcherService> _logger;
     private readonly RomPatchFactory _romPatchFactory;
-    private readonly Configs _configs;
 
     public PatcherService(RomPatchFactory romPatchFactory, ILogger<PatcherService> logger)
     {
@@ -31,8 +30,8 @@ public class PatcherService : IPatcherService
 
         foreach (var patch in _romPatchFactory.GetPatches())
         {
-            var updates = patch.GetChanges(data);
-            _logger.LogInformation("Retrieving {Number} updates from {Name}", updates.Count(), patch.GetType().Name);
+            var updates = patch.GetChanges(data).ToList();
+            _logger.LogInformation("Retrieving {Number} updates from {Name}", updates.Count, patch.GetType().Name);
             patches.AddRange(updates);
         }
 

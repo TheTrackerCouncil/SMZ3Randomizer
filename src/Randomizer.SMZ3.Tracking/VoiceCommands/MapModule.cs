@@ -1,7 +1,10 @@
 ﻿using System.Linq;
+using System.Runtime.Versioning;
 using System.Speech.Recognition;
 using Microsoft.Extensions.Logging;
+using Randomizer.Abstractions;
 using Randomizer.Data.Configuration.ConfigFiles;
+using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
@@ -23,13 +26,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger"></param>
         /// <param name="config"></param>
-        public MapModule(Tracker tracker, IItemService itemService, ILogger<MapModule> logger, IWorldService worldService, TrackerMapConfig config)
+        public MapModule(TrackerBase tracker, IItemService itemService, ILogger<MapModule> logger, IWorldService worldService, TrackerMapConfig config)
             : base(tracker, itemService, worldService, logger)
         {
             _logger = logger;
             _config = config;
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetChangeMapRule()
         {
             var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
@@ -63,6 +67,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return GrammarBuilder.Combine(version1, version2);
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder DarkRoomRule()
         {
             return new GrammarBuilder()
@@ -70,6 +75,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .OneOf("it's dark in here", "I can't see", "show me this dark room map");
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder CanSeeRule()
         {
             return new GrammarBuilder()
@@ -77,6 +83,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .OneOf("I can see now", "I can see clearly now", "it's no longer dark", "I'm out of the dark room", "stop showing me the dark room map");
         }
 
+        [SupportedOSPlatform("windows")]
         public override void AddCommands()
         {
             var darkRoomMaps = _config.Maps.Where(x => x.IsDarkRoomMap == true && x.MemoryRoomNumbers?.Count > 0).ToList();
@@ -84,42 +91,42 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             AddCommand("Update map", GetChangeMapRule(), (result) =>
             {
                 var mapName = (string)result.Semantics[MapKey].Value;
-                Tracker.UpdateMap(mapName);
-                Tracker.Say(x => x.Map.UpdateMap, mapName);
+                TrackerBase.UpdateMap(mapName);
+                TrackerBase.Say(x => x.Map.UpdateMap, mapName);
             });
 
             AddCommand("Show dark room map", DarkRoomRule(), (result) =>
             {
                 // If the player is not in a Zelda cave/dungeon
-                if (Tracker.AutoTracker?.CurrentGame != AutoTracking.Game.Zelda || Tracker.AutoTracker?.ZeldaState?.OverworldScreen != 0)
+                if (TrackerBase.AutoTracker?.CurrentGame != Game.Zelda || TrackerBase.AutoTracker?.ZeldaState?.OverworldScreen != 0)
                 {
-                    Tracker.Say(x => x.Map.NotInDarkRoom);
+                    TrackerBase.Say(x => x.Map.NotInDarkRoom);
                     return;
                 }
 
                 // Get the room and map for the player
-                var roomNumber = Tracker.AutoTracker?.ZeldaState?.CurrentRoom ?? -1;
+                var roomNumber = TrackerBase.AutoTracker?.ZeldaState?.CurrentRoom ?? -1;
                 var map = darkRoomMaps.FirstOrDefault(x => x.MemoryRoomNumbers?.Contains(roomNumber) == true);
 
                 if (map != null)
                 {
                     if (ItemService.IsTracked(Shared.ItemType.Lamp))
                     {
-                        Tracker.Say(x => x.Map.HasLamp);
+                        TrackerBase.Say(x => x.Map.HasLamp);
                         return;
                     }
 
-                    _prevMap = Tracker.CurrentMap;
+                    _prevMap = TrackerBase.CurrentMap;
                     if (string.IsNullOrEmpty(_prevMap))
                     {
                         _prevMap = _config.Maps.Last().ToString();
                     }
-                    Tracker.UpdateMap(map.ToString());
-                    Tracker.Say(x => x.Map.ShowDarkRoomMap, map.Name);
+                    TrackerBase.UpdateMap(map.ToString());
+                    TrackerBase.Say(x => x.Map.ShowDarkRoomMap, map.Name);
                 }
                 else
                 {
-                    Tracker.Say(x => x.Map.NotInDarkRoom);
+                    TrackerBase.Say(x => x.Map.NotInDarkRoom);
                 }
             });
 
@@ -127,12 +134,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 if (string.IsNullOrEmpty(_prevMap))
                 {
-                    Tracker.Say(x => x.Map.NoPrevDarkRoomMap);
+                    TrackerBase.Say(x => x.Map.NoPrevDarkRoomMap);
                 }
                 else
                 {
-                    Tracker.UpdateMap(_prevMap);
-                    Tracker.Say(x => x.Map.HideDarkRoomMap, _prevMap);
+                    TrackerBase.UpdateMap(_prevMap);
+                    TrackerBase.Say(x => x.Map.HideDarkRoomMap, _prevMap);
                     _prevMap = "";
                 }
             });

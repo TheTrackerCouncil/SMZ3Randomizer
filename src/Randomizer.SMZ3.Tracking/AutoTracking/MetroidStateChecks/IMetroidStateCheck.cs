@@ -1,4 +1,8 @@
-﻿namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
+﻿using Randomizer.Abstractions;
+using Randomizer.Data;
+using Randomizer.Data.Tracking;
+
+namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
 {
     /// <summary>
     /// Abstract class for various Metroid state checks
@@ -12,6 +16,6 @@
         /// <param name="currentState">The current state in Super Metroid</param>
         /// <param name="prevState">The previous state in Super Metroid</param>
         /// <returns>True if the check was identified, false otherwise</returns>
-        bool ExecuteCheck(Tracker tracker, AutoTrackerMetroidState currentState, AutoTrackerMetroidState prevState);
+        bool ExecuteCheck(TrackerBase tracker, AutoTrackerMetroidState currentState, AutoTrackerMetroidState prevState);
     }
 }

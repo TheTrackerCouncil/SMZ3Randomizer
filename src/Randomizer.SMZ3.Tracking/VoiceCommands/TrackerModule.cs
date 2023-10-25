@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Speech.Recognition;
 
 using Microsoft.Extensions.Logging;
+using Randomizer.Abstractions;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
@@ -66,14 +68,17 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="itemService">Service to get item information</param>
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to log information.</param>
-        protected TrackerModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger logger)
+        protected TrackerModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger logger)
         {
-            Tracker = tracker;
+            TrackerBase = tracker;
             ItemService = itemService;
             WorldService = worldService;
             Logger = logger;
         }
 
+        /// <summary>
+        /// Add voice commands for the tracker module
+        /// </summary>
         public abstract void AddCommands();
 
         /// <summary>
@@ -92,7 +97,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <summary>
         /// Gets the Tracker instance.
         /// </summary>
-        protected Tracker Tracker { get; }
+        protected TrackerBase TrackerBase { get; }
 
         /// <summary>
         /// Service for getting item data
@@ -123,6 +128,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="engine">
         /// The speech recognition engine to initialize.
         /// </param>
+        [SupportedOSPlatform("windows")]
         public void LoadInto(SpeechRecognitionEngine engine)
         {
             foreach (var grammar in Grammars)
@@ -138,7 +144,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// A <see cref="DungeonInfo"/> from the recognition result.
         /// </returns>
-        protected static IDungeon GetDungeonFromResult(Tracker tracker, RecognitionResult result)
+        [SupportedOSPlatform("windows")]
+        protected static IDungeon GetDungeonFromResult(TrackerBase tracker, RecognitionResult result)
         {
             var name = (string)result.Semantics[DungeonKey].Value;
             var dungeon = tracker.World.Dungeons.FirstOrDefault(x => x.DungeonName == name);
@@ -154,7 +161,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// A <see cref="DungeonInfo"/> from the recognition result.
         /// </returns>
-        protected static IDungeon? GetBossDungeonFromResult(Tracker tracker, RecognitionResult result)
+        [SupportedOSPlatform("windows")]
+        protected static IDungeon? GetBossDungeonFromResult(TrackerBase tracker, RecognitionResult result)
         {
             var name = (string)result.Semantics[BossKey].Value;
             return tracker.World.Dungeons.FirstOrDefault(x => x.DungeonName == name);
@@ -169,7 +177,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// A <see cref="BossInfo"/> from the recognition result.
         /// </returns>
-        protected static Boss? GetBossFromResult(Tracker tracker, RecognitionResult result)
+        [SupportedOSPlatform("windows")]
+        protected static Boss? GetBossFromResult(TrackerBase tracker, RecognitionResult result)
         {
             var bossName = (string)result.Semantics[BossKey].Value;
             return tracker.World.AllBosses.SingleOrDefault(x => x.Name.Contains(bossName, StringComparison.Ordinal));
@@ -187,7 +196,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// An <see cref="ItemData"/> from the recognition result.
         /// </returns>
-        protected Item GetItemFromResult(Tracker tracker, RecognitionResult result, out string itemName)
+        [SupportedOSPlatform("windows")]
+        protected Item GetItemFromResult(TrackerBase tracker, RecognitionResult result, out string itemName)
         {
             itemName = (string)result.Semantics[ItemNameKey].Value;
             var item = ItemService.FirstOrDefault(itemName);
@@ -204,7 +214,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// A <see cref="Location"/> from the recognition result.
         /// </returns>
-        protected static Location GetLocationFromResult(Tracker tracker, RecognitionResult result)
+        [SupportedOSPlatform("windows")]
+        protected static Location GetLocationFromResult(TrackerBase tracker, RecognitionResult result)
         {
             var id = (LocationId)result.Semantics[LocationKey].Value;
             var location = tracker.World.Locations.First(x => x.Id == id);
@@ -218,7 +229,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="result">The speech recognition result.</param>
         /// <returns>A <see cref="Room"/> from the recognition result.</returns>
-        protected static Room GetRoomFromResult(Tracker tracker, RecognitionResult result)
+        [SupportedOSPlatform("windows")]
+        protected static Room GetRoomFromResult(TrackerBase tracker, RecognitionResult result)
         {
             var roomTypeName = (string)result.Semantics[RoomKey].Value;
             var room = tracker.World.Rooms.First(x => x.GetType().FullName == roomTypeName);
@@ -234,7 +246,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// A <see cref="Region"/> from the recognition result.
         /// </returns>
-        protected static Region GetRegionFromResult(Tracker tracker, RecognitionResult result)
+        [SupportedOSPlatform("windows")]
+        protected static Region GetRegionFromResult(TrackerBase tracker, RecognitionResult result)
         {
             var regionTypeName = (string)result.Semantics[RegionKey].Value;
             var region = tracker.World.Regions.First(x => x.GetType().FullName == regionTypeName);
@@ -250,7 +263,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// The recognized area from the recognition result.
         /// </returns>
-        protected static IHasLocations GetAreaFromResult(Tracker tracker, RecognitionResult result)
+        [SupportedOSPlatform("windows")]
+        protected static IHasLocations GetAreaFromResult(TrackerBase tracker, RecognitionResult result)
         {
             if (result.Semantics.ContainsKey(RegionKey))
                 return GetRegionFromResult(tracker, result);
@@ -268,6 +282,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="executeCommand">
         /// The command to execute when the phrase is recognized.
         /// </param>
+        [SupportedOSPlatform("windows")]
         protected void AddCommand(string ruleName, string phrase,
             Action<RecognitionResult> executeCommand)
         {
@@ -286,6 +301,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="executeCommand">
         /// The command to execute when any of the phrases is recognized.
         /// </param>
+        [SupportedOSPlatform("windows")]
         protected void AddCommand(string ruleName, string[] phrases,
             Action<RecognitionResult> executeCommand)
         {
@@ -305,6 +321,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// The command to execute when speech matching the grammar is
         /// recognized.
         /// </param>
+        [SupportedOSPlatform("windows")]
         protected void AddCommand(string ruleName, GrammarBuilder grammarBuilder,
             Action<RecognitionResult> executeCommand)
         {
@@ -318,16 +335,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             try
             {
                 var grammar = grammarBuilder.Build(ruleName);
-                grammar.SpeechRecognized += (sender, e) =>
+                grammar.SpeechRecognized += (_, e) =>
                 {
                     try
                     {
-                        var minimumConfidence = Math.Max(Tracker.Options.MinimumRecognitionConfidence, Tracker.Options.MinimumExecutionConfidence);
+                        var minimumConfidence = Math.Max(TrackerBase.Options.MinimumRecognitionConfidence, TrackerBase.Options.MinimumExecutionConfidence);
                         if (e.Result.Confidence >= minimumConfidence)
                         {
                             Logger.LogInformation("Recognized \"{text}\" with {confidence:P2} confidence.",
                                 e.Result.Text, e.Result.Confidence);
-                            Tracker.RestartIdleTimers();
+                            TrackerBase.RestartIdleTimers();
 
                             executeCommand(e.Result);
                         }
@@ -336,20 +353,20 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                             Logger.LogWarning("Confidence level too low ({Confidence} < {Threshold}) in voice command: \"{Text}\".",
                                 e.Result.Confidence, minimumConfidence, e.Result.Text);
 
-                            if (e.Result.Confidence >= Tracker.Options.MinimumRecognitionConfidence)
+                            if (e.Result.Confidence >= TrackerBase.Options.MinimumRecognitionConfidence)
                             {
                                 // If the confidence level is too low to be
                                 // executed, but high enough to be recognized,
                                 // let Tracker say something
-                                Tracker.Say(Tracker.Responses.Misheard);
-                                Tracker.RestartIdleTimers();
+                                TrackerBase.Say(TrackerBase.Responses.Misheard);
+                                TrackerBase.RestartIdleTimers();
                             }
                         }
                     }
                     catch (Exception ex)
                     {
                         Logger.LogError(ex, "An error occurred while executing recognized command '{command}': \"{text}\".", ruleName, e.Result.Text);
-                        Tracker.Error();
+                        TrackerBase.Error();
                     }
                 };
                 Grammars.Add(grammar);
@@ -369,6 +386,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// A new <see cref="Choices"/> object representing all possible item
         /// names.
         /// </returns>
+        [SupportedOSPlatform("windows")]
         protected virtual Choices GetPluralItemNames()
         {
             var itemNames = new Choices();
@@ -394,9 +412,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// A new <see cref="Choices"/> object representing all possible item
         /// names.
         /// </returns>
+        [SupportedOSPlatform("windows")]
         protected virtual Choices GetItemNames(Func<Item, bool>? where = null)
         {
-            where ??= a => true;
+            where ??= _ => true;
 
             var itemNames = new Choices();
             foreach (var item in ItemService.LocalPlayersItems().Where(where))
@@ -425,10 +444,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// A new <see cref="Choices"/> object representing all possible dungeon
         /// names.
         /// </returns>
+        [SupportedOSPlatform("windows")]
         protected virtual Choices GetDungeonNames(bool includeDungeonsWithoutReward = false)
         {
             var dungeonNames = new Choices();
-            foreach (var dungeon in Tracker.World.Dungeons)
+            foreach (var dungeon in TrackerBase.World.Dungeons)
             {
                 if ((dungeon.DungeonState.HasReward || includeDungeonsWithoutReward))
                 {
@@ -447,15 +467,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// A new <see cref="Choices"/> object representing all possible boss
         /// names.
         /// </returns>
+        [SupportedOSPlatform("windows")]
         protected virtual Choices GetBossNames()
         {
             var bossNames = new Choices();
-            foreach (var dungeon in Tracker.World.Dungeons)
+            foreach (var dungeon in TrackerBase.World.Dungeons)
             {
                 foreach (var name in dungeon.DungeonMetadata.Boss)
                     bossNames.Add(new SemanticResultValue(name.Text, dungeon.DungeonName));
             }
-            foreach (var boss in Tracker.World.AllBosses)
+            foreach (var boss in TrackerBase.World.AllBosses)
             {
                 foreach (var name in boss.Metadata.Name)
                     bossNames.Add(new SemanticResultValue(name.Text, boss.Name));
@@ -470,11 +491,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// A new <see cref="Choices"/> object representing all possible
         /// location names mapped to their IDs.
         /// </returns>
+        [SupportedOSPlatform("windows")]
         protected virtual Choices GetLocationNames()
         {
             var locationNames = new Choices();
 
-            foreach (var location in Tracker.World.Locations)
+            foreach (var location in TrackerBase.World.Locations)
             {
                 foreach (var name in location.Metadata.Name)
                     locationNames.Add(new SemanticResultValue(name.Text, (int)location.Id));
@@ -490,11 +512,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// A new <see cref="Choices"/> object representing all possible room
         /// names mapped to the primary room name.
         /// </returns>
+        [SupportedOSPlatform("windows")]
         protected virtual Choices GetRoomNames()
         {
             var roomNames = new Choices();
 
-            foreach (var room in Tracker.World.Rooms)
+            foreach (var room in TrackerBase.World.Rooms)
             {
                 var roomName = room.GetType().FullName;
                 if (roomName == null) continue;
@@ -512,11 +535,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// A new <see cref="Choices"/> object representing all possible region
         /// names mapped to the primary region name.
         /// </returns>
+        [SupportedOSPlatform("windows")]
         protected virtual Choices GetRegionNames(bool excludeDungeons = false)
         {
             var regionNames = new Choices();
 
-            foreach (var region in Tracker.World.Regions)
+            foreach (var region in TrackerBase.World.Regions)
             {
                 var regionName = region.GetType().FullName;
                 if (excludeDungeons && region is IDungeon || regionName == null)
@@ -536,6 +560,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// A new <see cref="Choices"/> object representing all possible medallion
         /// names mapped to the primary item name.
         /// </returns>
+        [SupportedOSPlatform("windows")]
         protected virtual Choices GetMedallionNames()
         {
             var medallions = new Choices();

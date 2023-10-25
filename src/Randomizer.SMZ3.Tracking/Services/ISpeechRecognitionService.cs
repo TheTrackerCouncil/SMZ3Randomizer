@@ -1,3 +1,4 @@
+using System;
 using System.Speech.Recognition;
 
 namespace Randomizer.SMZ3.Tracking.Services;
@@ -5,42 +6,56 @@ namespace Randomizer.SMZ3.Tracking.Services;
 /// <summary>
 /// Service for recognizing speech from a microphone
 /// </summary>
-public interface ISpeechRecognitionService
+public abstract class SpeechRecognitionServiceBase
 {
     /// <summary>
     /// Event fired when speech was successfully understood
     /// </summary>
-    public event System.EventHandler<SpeechRecognizedEventArgs>? SpeechRecognized;
+    public event EventHandler<SpeechRecognizedEventArgs>? SpeechRecognized;
 
     /// <summary>
     /// Updates the microphone to be the default Windows mic
     /// </summary>
-    public void SetInputToDefaultAudioDevice();
+    public abstract void SetInputToDefaultAudioDevice();
 
     /// <summary>
     /// The internal speech recognition engine used by the service, if applicable
     /// </summary>
-    public SpeechRecognitionEngine? RecognitionEngine { get; }
+    public abstract SpeechRecognitionEngine? RecognitionEngine { get; }
 
     /// <summary>
     /// Stop recognizing speech
     /// </summary>
-    public void RecognizeAsyncStop();
+    public abstract void RecognizeAsyncStop();
 
     /// <summary>
     /// Start recognizing speech
     /// </summary>
     /// <param name="Mode">The recognition mode (single/multiple)</param>
-    public void RecognizeAsync(RecognizeMode Mode);
+    public abstract void RecognizeAsync(RecognizeMode Mode);
 
     /// <summary>
     /// Initializes the microphone to the default Windows mic
     /// </summary>
     /// <returns>True if successful, false otherwise</returns>
-    public bool InitializeMicrophone();
+    public abstract bool InitializeMicrophone();
 
     /// <summary>
     /// Disposes of the service and speech recognition engine
     /// </summary>
-    public void Dispose();
+    public abstract void Dispose();
+
+    /// <summary>
+    /// Invokes the SpeechRecognized event
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="args"></param>
+    protected virtual void OnSpeechRecognized(object? sender, SpeechRecognizedEventArgs args)
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            SpeechRecognized?.Invoke(sender, args);
+        }
+
+    }
 }

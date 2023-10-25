@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Speech.Recognition;
 using Microsoft.Extensions.Logging;
+using Randomizer.Abstractions;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.Data.WorldData;
@@ -34,7 +36,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="itemService">Service to get item information</param>
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to write logging information.</param>
-        public CheatsModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<CheatsModule> logger)
+        public CheatsModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<CheatsModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
 
@@ -44,12 +46,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             if (!_cheatsEnabled)
             {
-                Tracker.Say(x => x.Cheats.PromptEnableCheats);
+                TrackerBase.Say(x => x.Cheats.PromptEnableCheats);
                 return false;
             }
-            else if (Tracker.AutoTracker == null || !Tracker.AutoTracker.IsConnected || !Tracker.AutoTracker.IsInSMZ3)
+            else if (TrackerBase.AutoTracker == null || !TrackerBase.AutoTracker.IsConnected || !TrackerBase.AutoTracker.IsInSMZ3)
             {
-                Tracker.Say(x => x.Cheats.PromptEnableAutoTracker);
+                TrackerBase.Say(x => x.Cheats.PromptEnableAutoTracker);
                 return false;
             }
             return true;
@@ -61,49 +63,49 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="fillType">What should be filled</param>
         private void Fill(string fillType)
         {
-            if (!PlayerCanCheat() || Tracker.GameService == null) return;
+            if (!PlayerCanCheat() || TrackerBase.GameService == null) return;
 
             var successful = false;
             if (s_fillHealthChoices.Contains(fillType))
             {
-                successful = Tracker.GameService.TryHealPlayer();
+                successful = TrackerBase.GameService.TryHealPlayer();
             }
             else if (s_fillMagicChoices.Contains(fillType))
             {
-                successful = Tracker.GameService.TryFillMagic();
+                successful = TrackerBase.GameService.TryFillMagic();
             }
             else if (s_fillBombsChoices.Contains(fillType))
             {
-                successful = Tracker.GameService.TryFillZeldaBombs();
+                successful = TrackerBase.GameService.TryFillZeldaBombs();
             }
             else if (s_fillArrowsChoices.Contains(fillType))
             {
-                successful = Tracker.GameService.TryFillArrows();
+                successful = TrackerBase.GameService.TryFillArrows();
             }
             else if (s_fillRupeesChoices.Contains(fillType))
             {
-                successful = Tracker.GameService.TryFillRupees();
+                successful = TrackerBase.GameService.TryFillRupees();
             }
             else if (s_fillMissilesChoices.Contains(fillType))
             {
-                successful = Tracker.GameService.TryFillMissiles();
+                successful = TrackerBase.GameService.TryFillMissiles();
             }
             else if (s_fillSuperMissileChoices.Contains(fillType))
             {
-                successful = Tracker.GameService.TryFillSuperMissiles();
+                successful = TrackerBase.GameService.TryFillSuperMissiles();
             }
             else if (s_fillPowerBombsChoices.Contains(fillType))
             {
-                successful = Tracker.GameService.TryFillPowerBombs();
+                successful = TrackerBase.GameService.TryFillPowerBombs();
             }
 
             if (successful)
             {
-                Tracker.Say(x => x.Cheats.CheatPerformed);
+                TrackerBase.Say(x => x.Cheats.CheatPerformed);
             }
             else
             {
-                Tracker.Say(x => x.Cheats.CheatFailed);
+                TrackerBase.Say(x => x.Cheats.CheatFailed);
             }
         }
 
@@ -113,18 +115,19 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             if (item == null || item.Type == ItemType.Nothing)
             {
-                Tracker.Say(x => x.Cheats.CheatInvalidItem);
+                TrackerBase.Say(x => x.Cheats.CheatInvalidItem);
             }
-            else if (Tracker.GameService?.TryGiveItem(item, null) == true)
+            else if (TrackerBase.GameService?.TryGiveItem(item, null) == true)
             {
-                Tracker.Say(x => x.Cheats.CheatPerformed);
+                TrackerBase.Say(x => x.Cheats.CheatPerformed);
             }
             else
             {
-                Tracker.Say(x => x.Cheats.CheatFailed);
+                TrackerBase.Say(x => x.Cheats.CheatFailed);
             }
         }
 
+        [SupportedOSPlatform("windows")]
         private static GrammarBuilder GetEnableCheatsRule()
         {
             return new GrammarBuilder()
@@ -133,6 +136,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .OneOf("cheats", "cheat codes", "sv_cheats");
         }
 
+        [SupportedOSPlatform("windows")]
         private static GrammarBuilder GetDisableHintsRule()
         {
             return new GrammarBuilder()
@@ -141,7 +145,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .OneOf("cheats", "cheat codes", "sv_cheats");
         }
 
-        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
+        [SupportedOSPlatform("windows")]
         private static GrammarBuilder FillRule()
         {
             var fillChoices = new Choices();
@@ -167,6 +171,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return GrammarBuilder.Combine(restore, heal);
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GiveItemRule()
         {
             var itemNames = GetItemNames(x => x.Name != "Content");
@@ -179,6 +184,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append(ItemNameKey, itemNames);
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder KillPlayerRule()
         {
             return new GrammarBuilder()
@@ -187,6 +193,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .OneOf("kill me", "give me a tactical reset");
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder SetupCrystalFlashRule()
         {
             return new GrammarBuilder()
@@ -195,21 +202,21 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .OneOf("setup crystal flash requirements", "ready a crystal flash");
         }
 
-        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
+        [SupportedOSPlatform("windows")]
         public override void AddCommands()
         {
-            if (Tracker.World.Config.Race || Tracker.World.Config.DisableCheats) return;
+            if (TrackerBase.World.Config.Race || TrackerBase.World.Config.DisableCheats) return;
 
             AddCommand("Enable cheats", GetEnableCheatsRule(), (result) =>
             {
                 _cheatsEnabled = true;
-                Tracker.Say(x => x.Cheats.EnabledCheats);
+                TrackerBase.Say(x => x.Cheats.EnabledCheats);
             });
 
             AddCommand("Disable cheats", GetDisableHintsRule(), (result) =>
             {
                 _cheatsEnabled = false;
-                Tracker.Say(x => x.Cheats.DisabledCheats);
+                TrackerBase.Say(x => x.Cheats.DisabledCheats);
             });
 
             AddCommand("Fill rule", FillRule(), (result) =>
@@ -220,7 +227,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             AddCommand("Give item", GiveItemRule(), (result) =>
             {
-                var item = GetItemFromResult(Tracker, result, out var itemName);
+                var item = GetItemFromResult(TrackerBase, result, out var itemName);
                 GiveItem(item);
             });
 
@@ -228,13 +235,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 if (!PlayerCanCheat()) return;
 
-                if (Tracker.GameService?.TryKillPlayer() == true)
+                if (TrackerBase.GameService?.TryKillPlayer() == true)
                 {
-                    Tracker.Say(x => x.Cheats.CheatPerformed);
+                    TrackerBase.Say(x => x.Cheats.CheatPerformed);
                 }
                 else
                 {
-                    Tracker.Say(x => x.Cheats.CheatFailed);
+                    TrackerBase.Say(x => x.Cheats.CheatFailed);
                 }
             });
 
@@ -242,13 +249,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 if (!PlayerCanCheat()) return;
 
-                if (Tracker.GameService?.TrySetupCrystalFlash() == true)
+                if (TrackerBase.GameService?.TrySetupCrystalFlash() == true)
                 {
-                    Tracker.Say(x => x.Cheats.CheatPerformed);
+                    TrackerBase.Say(x => x.Cheats.CheatPerformed);
                 }
                 else
                 {
-                    Tracker.Say(x => x.Cheats.CheatFailed);
+                    TrackerBase.Say(x => x.Cheats.CheatFailed);
                 }
             });
         }

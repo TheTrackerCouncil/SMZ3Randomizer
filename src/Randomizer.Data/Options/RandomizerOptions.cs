@@ -107,7 +107,9 @@ namespace Randomizer.Data.Options
 
             if (isYaml)
             {
-                var serializer = new YamlDotNet.Serialization.Deserializer();
+                var serializer = new DeserializerBuilder()
+                    .IgnoreUnmatchedProperties()
+                    .Build();
                 var options = serializer.Deserialize<RandomizerOptions>(fileText);
                 options.FilePath = savePath;
                 return options;

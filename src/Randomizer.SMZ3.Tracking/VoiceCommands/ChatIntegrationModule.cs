@@ -4,11 +4,13 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Speech.Recognition;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
+using Randomizer.Abstractions;
 using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.ChatIntegration.Models;
@@ -45,7 +47,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="timerService"></param>
         /// <param name="chatClient">The chat client to use.</param>
         /// <param name="logger">Used to write logging information.</param>
-        public ChatIntegrationModule(Tracker tracker, IChatClient chatClient, IItemService itemService, IWorldService worldService, ITrackerTimerService timerService, ILogger<ChatIntegrationModule> logger)
+        public ChatIntegrationModule(TrackerBase tracker, IChatClient chatClient, IItemService itemService, IWorldService worldService, ITrackerTimerService timerService, ILogger<ChatIntegrationModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
             ChatClient = chatClient;
@@ -91,7 +93,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var lastCloseBackup = _guessingGameClosed;
             if (!ChatClient.IsConnected)
             {
-                Tracker.Say(x => x.Chat.NoConnection);
+                TrackerBase.Say(x => x.Chat.NoConnection);
                 return;
             }
 
@@ -105,12 +107,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             _guessingGameStart = DateTimeOffset.Now;
             _guessingGameClosed = null;
             _trackerGuess = s_random.Next(1, 23);
-            Tracker.Say(x => x.Chat.StartedGuessingGame);
+            TrackerBase.Say(x => x.Chat.StartedGuessingGame);
 
             await Task.Delay(s_random.Next(100, 900));
-            Tracker.Say(x => x.Chat.TrackerGuess, _trackerGuess);
+            TrackerBase.Say(x => x.Chat.TrackerGuess, _trackerGuess);
 
-            Tracker.AddUndo(() =>
+            TrackerBase.AddUndo(() =>
             {
                 if (AllowGanonsTowerGuesses)
                 {
@@ -130,7 +132,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             if (!ChatClient.IsConnected)
             {
-                Tracker.Say(x => x.Chat.NoConnection);
+                TrackerBase.Say(x => x.Chat.NoConnection);
                 return;
             }
 
@@ -138,7 +140,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             if (_guessingGameStart == null)
             {
-                Tracker.Say(x => isModerator
+                TrackerBase.Say(x => isModerator
                     ? x.Chat.ModeratorClosedGuessingGameBeforeStarting
                     : x.Chat.ClosedGuessingGameBeforeStarting, moderator);
                 return;
@@ -149,7 +151,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 var secondsSinceLastClose = (DateTimeOffset.Now - _guessingGameClosed.Value).TotalSeconds;
                 if (secondsSinceLastClose > 10)
                 {
-                    Tracker.Say(x => isModerator
+                    TrackerBase.Say(x => isModerator
                         ? x.Chat.ModeratorClosedGuessingGameWhileClosed
                         : x.Chat.ClosedGuessingGameWhileClosed, moderator);
                 }
@@ -161,9 +163,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             if (!isModerator)
             {
-                Tracker.Say(x => x.Chat.ClosedGuessingGame);
+                TrackerBase.Say(x => x.Chat.ClosedGuessingGame);
 
-                var chatMessage = Tracker.Responses.Chat.ClosedGuessingGame.ToString();
+                var chatMessage = TrackerBase.Responses.Chat.ClosedGuessingGame.ToString();
                 if (chatMessage != null)
                 {
                     await ChatClient.SendMessageAsync(chatMessage, announce: true);
@@ -171,10 +173,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
             else
             {
-                Tracker.Say(x => x.Chat.ModeratorClosedGuessingGame, moderator);
+                TrackerBase.Say(x => x.Chat.ModeratorClosedGuessingGame, moderator);
             }
 
-            Tracker.AddUndo(() =>
+            TrackerBase.AddUndo(() =>
             {
                 if (!AllowGanonsTowerGuesses)
                 {
@@ -194,7 +196,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             if (!ChatClient.IsConnected)
             {
                 if (!isAutoTracked)
-                    Tracker.Say(x => x.Chat.NoConnection);
+                    TrackerBase.Say(x => x.Chat.NoConnection);
                 return;
             }
 
@@ -205,7 +207,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Select(x => x.Key)
                 .ToImmutableList();
 
-            while (winners.Count == 0 && Tracker.Options.GanonsTowerGuessingGameStyle ==
+            while (winners.Count == 0 && TrackerBase.Options.GanonsTowerGuessingGameStyle ==
                 GanonsTowerGuessingGameStyle.ClosestWithoutGoingOver)
             {
                 currentValue--;
@@ -224,14 +226,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 if (winningNumber == _trackerGuess)
                 {
-                    Tracker.Say(x => x.Chat.TrackerGuessOnlyWinner, winningNumber);
+                    TrackerBase.Say(x => x.Chat.TrackerGuessOnlyWinner, winningNumber);
                 }
                 else
                 {
-                    Tracker.Say(x => x.Chat.NobodyWonGuessingGame, winningNumber);
+                    TrackerBase.Say(x => x.Chat.NobodyWonGuessingGame, winningNumber);
                 }
 
-                var chatMessage = Tracker.Responses.Chat.NobodyWonGuessingGame.Format(winningNumber);
+                var chatMessage = TrackerBase.Responses.Chat.NobodyWonGuessingGame.Format(winningNumber);
                 if (chatMessage != null)
                 {
                     await ChatClient.SendMessageAsync(chatMessage, announce: true);
@@ -242,11 +244,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 if (winningNumber == _trackerGuess)
                     winners = winners.Add("Tracker");
 
-                var pronouncedNames = winners.Select(Tracker.CorrectUserNamePronunciation);
+                var pronouncedNames = winners.Select(TrackerBase.CorrectUserNamePronunciation);
                 if (currentValue == winningNumber)
                 {
-                    Tracker.Say(x => x.Chat.DeclareGuessingGameWinners, winningNumber, NaturalLanguage.Join(pronouncedNames));
-                    var chatMessage = Tracker.Responses.Chat.DeclareGuessingGameWinners.Format(winningNumber, NaturalLanguage.Join(winners));
+                    TrackerBase.Say(x => x.Chat.DeclareGuessingGameWinners, winningNumber, NaturalLanguage.Join(pronouncedNames));
+                    var chatMessage = TrackerBase.Responses.Chat.DeclareGuessingGameWinners.Format(winningNumber, NaturalLanguage.Join(winners));
                     if (chatMessage != null)
                     {
                         await ChatClient.SendMessageAsync(chatMessage, announce: true);
@@ -254,8 +256,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 }
                 else
                 {
-                    Tracker.Say(x => x.Chat.DeclareGuessingGameClosestButNotOverWinner, winningNumber, currentValue, NaturalLanguage.Join(pronouncedNames));
-                    var chatMessage = Tracker.Responses.Chat.DeclareGuessingGameClosestButNotOverWinner.Format(winningNumber, currentValue, NaturalLanguage.Join(winners));
+                    TrackerBase.Say(x => x.Chat.DeclareGuessingGameClosestButNotOverWinner, winningNumber, currentValue, NaturalLanguage.Join(pronouncedNames));
+                    var chatMessage = TrackerBase.Responses.Chat.DeclareGuessingGameClosestButNotOverWinner.Format(winningNumber, currentValue, NaturalLanguage.Join(winners));
                     if (chatMessage != null)
                     {
                         await ChatClient.SendMessageAsync(chatMessage, announce: true);
@@ -265,12 +267,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 if (winningNumber == _trackerGuess)
                 {
                     await Task.Delay(s_random.Next(100, 900));
-                    Tracker.Say(x => x.Chat.TrackerGuessWon, winningNumber);
+                    TrackerBase.Say(x => x.Chat.TrackerGuessWon, winningNumber);
                 }
             }
 
             if (winningNumber < _trackerGuess || (winningNumber != _trackerGuess && !isAutoTracked))
-                Tracker.Say(x => x.Chat.TrackerGuessFailed, winningNumber);
+                TrackerBase.Say(x => x.Chat.TrackerGuessFailed, winningNumber);
         }
 
         /// <summary>
@@ -286,7 +288,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             if (!wasBigKey && number == _trackerGuess)
             {
-                Tracker.Say(x => x.Chat.TrackerGuessFailed, number);
+                TrackerBase.Say(x => x.Chat.TrackerGuessFailed, number);
             }
             else if (wasBigKey)
             {
@@ -304,7 +306,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             if (contentItemData == null)
             {
                 Logger.LogError("Unable to determine content item data");
-                Tracker.Say(x => x.Error);
+                TrackerBase.Say(x => x.Error);
                 return;
             }
 
@@ -312,7 +314,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var shouldAskChat = ChatClient.IsConnected && (!_hasAskedChatAboutContent || s_random.Next(0, 3) == 0);
             if (!ShouldCreatePolls || !shouldAskChat)
             {
-                Tracker.TrackItem(contentItemData);
+                TrackerBase.TrackItem(contentItemData);
                 return;
             }
 
@@ -320,16 +322,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             if (string.IsNullOrEmpty(_askChatAboutContentPollId))
             {
-                Tracker.TrackItem(contentItemData);
+                TrackerBase.TrackItem(contentItemData);
                 return;
             }
 
-            Tracker.Say(x => x.Chat.AskChatAboutContent);
-            Tracker.Say(x => x.Chat.PollOpened, _askChatAboutContentPollTime);
+            TrackerBase.Say(x => x.Chat.AskChatAboutContent);
+            TrackerBase.Say(x => x.Chat.PollOpened, _askChatAboutContentPollTime);
             _askChatAboutContentCheckPollResults = true;
             _hasAskedChatAboutContent = true;
 
-            Tracker.AddUndo(() =>
+            TrackerBase.AddUndo(() =>
             {
                 _askChatAboutContentCheckPollResults = false;
             });
@@ -345,21 +347,21 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
                     if (result.IsPollSuccessful)
                     {
-                        Tracker.Say(x => x.Chat.PollComplete);
+                        TrackerBase.Say(x => x.Chat.PollComplete);
 
                         if ("Yes".Equals(result.WinningChoice, StringComparison.OrdinalIgnoreCase))
                         {
-                            Tracker.Say(x => x.Chat.AskChatAboutContentYes);
-                            Tracker.TrackItem(contentItemData);
+                            TrackerBase.Say(x => x.Chat.AskChatAboutContentYes);
+                            TrackerBase.TrackItem(contentItemData);
                         }
                         else
                         {
-                            Tracker.Say(x => x.Chat.AskChatAboutContentNo);
+                            TrackerBase.Say(x => x.Chat.AskChatAboutContentNo);
                         }
                     }
                     else
                     {
-                        Tracker.Say(x => x.Chat.PollError);
+                        TrackerBase.Say(x => x.Chat.PollError);
                     }
                 }
                 else if (_askChatAboutContentCheckPollResults)
@@ -391,7 +393,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var stopwatch = Stopwatch.StartNew();
             try
             {
-                var senderName = Tracker.CorrectUserNamePronunciation(e.Message.Sender);
+                var senderName = TrackerBase.CorrectUserNamePronunciation(e.Message.Sender);
 
                 if (ShouldRespondToGreetings)
                     TryRespondToGreetings(e.Message, senderName);
@@ -405,7 +407,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             catch (Exception ex)
             {
                 Logger.LogWarning(ex, "An unexpected error occurred while processing incoming chat messages.");
-                Tracker.Error();
+                TrackerBase.Error();
             }
             finally
             {
@@ -414,11 +416,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
         }
 
-        private bool ShouldRespondToGreetings => Tracker.Options.ChatGreetingEnabled
-            && (Tracker.Options.ChatGreetingTimeLimit == 0
-                || _timerService.TotalElapsedTime.TotalMinutes <= Tracker.Options.ChatGreetingTimeLimit);
+        private bool ShouldRespondToGreetings => TrackerBase.Options.ChatGreetingEnabled
+            && (TrackerBase.Options.ChatGreetingTimeLimit == 0
+                || _timerService.TotalElapsedTime.TotalMinutes <= TrackerBase.Options.ChatGreetingTimeLimit);
 
-        private bool ShouldCreatePolls => Tracker.Options.PollCreationEnabled;
+        private bool ShouldCreatePolls => TrackerBase.Options.PollCreationEnabled;
 
         private void TryRecordGanonsTowerGuess(ChatMessage message)
         {
@@ -440,15 +442,15 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private void TryRespondToGreetings(ChatMessage message, string senderNamePronunciation)
         {
-            foreach (var recognizedGreeting in Tracker.Responses.Chat.RecognizedGreetings)
+            foreach (var recognizedGreeting in TrackerBase.Responses.Chat.RecognizedGreetings)
             {
                 if (Regex.IsMatch(message.Text, recognizedGreeting, RegexOptions.IgnoreCase | RegexOptions.Singleline))
                 {
                     // Sass if it was the broadcaster
-                    if (message.SenderUserName.Equals(Tracker.Options.UserName)
-                        && Tracker.Responses.Chat.GreetedChannel != null)
+                    if (message.SenderUserName.Equals(TrackerBase.Options.UserName)
+                        && TrackerBase.Responses.Chat.GreetedChannel != null)
                     {
-                        Tracker.Say(x => x.Chat.GreetedChannel, senderNamePronunciation);
+                        TrackerBase.Say(x => x.Chat.GreetedChannel, senderNamePronunciation);
                         break;
                     }
 
@@ -458,12 +460,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         if (greeted >= 2)
                             break;
 
-                        Tracker.Say(x => x.Chat.GreetedTwice, senderNamePronunciation);
+                        TrackerBase.Say(x => x.Chat.GreetedTwice, senderNamePronunciation);
                         _usersGreetedTimes[message.Sender]++;
                     }
                     else
                     {
-                        Tracker.Say(x => x.Chat.GreetingResponses, senderNamePronunciation);
+                        TrackerBase.Say(x => x.Chat.GreetingResponses, senderNamePronunciation);
                         _usersGreetedTimes.Add(message.Sender, 1);
                     }
                     break;
@@ -486,19 +488,20 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private void ChatClient_Connected(object? sender, EventArgs e)
         {
-            Tracker.Say(x => x.Chat.WhenConnected);
+            TrackerBase.Say(x => x.Chat.WhenConnected);
         }
 
         private void ChatClient_Disconnected(object? sender, EventArgs e)
         {
-            Tracker.Say(x => x.Chat.WhenDisconnected);
+            TrackerBase.Say(x => x.Chat.WhenDisconnected);
         }
 
         private void ChatClient_SendMessageFailure(object? sender, EventArgs e)
         {
-            Tracker.Error();
+            TrackerBase.Error();
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetStartGuessingGameRule()
         {
             var commandRule = new GrammarBuilder()
@@ -518,6 +521,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return GrammarBuilder.Combine(commandRule, fromSpeech);
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetStopGuessingGameGuessesRule()
         {
             return new GrammarBuilder()
@@ -528,6 +532,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     "the floor is now closed for guesses");
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetRevealGuessingGameWinnerRule()
         {
             var validGuesses = new Choices();
@@ -546,6 +551,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append(WinningGuessKey, validGuesses);
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetTrackContent()
         {
             return new GrammarBuilder()
@@ -555,7 +561,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .OneOf("content", "con-tent");
         }
 
-        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
+        [SupportedOSPlatform("windows")]
         public override void AddCommands()
         {
             AddCommand("Start Ganon's Tower Big Key Guessing Game", GetStartGuessingGameRule(), async (result) =>

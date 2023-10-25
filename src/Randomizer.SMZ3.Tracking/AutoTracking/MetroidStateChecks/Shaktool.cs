@@ -1,4 +1,7 @@
 ﻿using System.Linq;
+using Randomizer.Abstractions;
+using Randomizer.Data;
+using Randomizer.Data.Tracking;
 using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
@@ -16,7 +19,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
         /// <param name="currentState">The current state in Super Metroid</param>
         /// <param name="prevState">The previous state in Super Metroid</param>
         /// <returns>True if the check was identified, false otherwise</returns>
-        public bool ExecuteCheck(Tracker tracker, AutoTrackerMetroidState currentState, AutoTrackerMetroidState prevState)
+        public bool ExecuteCheck(TrackerBase tracker, AutoTrackerMetroidState currentState, AutoTrackerMetroidState prevState)
         {
             if (currentState is { CurrentRegion: 4, CurrentRoomInRegion: 36 } && prevState.CurrentRoomInRegion == 28 &&
                 tracker.World.FindLocation(LocationId.InnerMaridiaSpringBall)?.State.Cleared != true &&

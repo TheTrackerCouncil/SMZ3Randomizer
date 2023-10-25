@@ -6,6 +6,9 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Randomizer.Data;
+using Randomizer.Data.Tracking;
+using Randomizer.Shared.Enums;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking
 {

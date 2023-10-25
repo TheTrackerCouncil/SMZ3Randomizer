@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Versioning;
 using Microsoft.Extensions.Logging;
-
+using Randomizer.Abstractions;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Tracking.Services;
 
@@ -20,12 +20,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="itemService">Service to get item information</param>
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to write logging information.</param>
-        public BossTrackingModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<BossTrackingModule> logger)
+        public BossTrackingModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<BossTrackingModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
 
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetMarkBossAsDefeatedRule()
         {
             var bossNames = GetBossNames();
@@ -49,6 +50,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return GrammarBuilder.Combine(beatBoss, markBoss, bossIsDead);
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetMarkBossAsNotDefeatedRule()
         {
             var bossNames = GetBossNames();
@@ -68,6 +70,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return GrammarBuilder.Combine(markBoss, bossIsAlive);
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetBossDefeatedWithContentRule()
         {
             var bossNames = GetBossNames();
@@ -85,26 +88,26 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return GrammarBuilder.Combine(beatBoss, oneCycled);
         }
 
-        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
+        [SupportedOSPlatform("windows")]
         public override void AddCommands()
         {
             AddCommand("Mark boss as defeated", GetMarkBossAsDefeatedRule(), (result) =>
             {
-                var dungeon = GetBossDungeonFromResult(Tracker, result);
+                var dungeon = GetBossDungeonFromResult(TrackerBase, result);
                 if (dungeon != null)
                 {
                     // Track boss with associated dungeon
-                    Tracker.MarkDungeonAsCleared(dungeon, result.Confidence);
+                    TrackerBase.MarkDungeonAsCleared(dungeon, result.Confidence);
                     return;
                 }
 
-                var boss = GetBossFromResult(Tracker, result);
+                var boss = GetBossFromResult(TrackerBase, result);
                 if (boss != null)
                 {
                     // Track standalone boss
                     var admittedGuilt = result.Text.ContainsAny("killed", "beat", "defeated", "dead")
                         && !result.Text.ContainsAny("beat off", "beaten off");
-                    Tracker.MarkBossAsDefeated(boss, admittedGuilt, result.Confidence);
+                    TrackerBase.MarkBossAsDefeated(boss, admittedGuilt, result.Confidence);
                     return;
                 }
 
@@ -113,19 +116,19 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             AddCommand("Mark boss as alive", GetMarkBossAsNotDefeatedRule(), (result) =>
             {
-                var dungeon = GetBossDungeonFromResult(Tracker, result);
+                var dungeon = GetBossDungeonFromResult(TrackerBase, result);
                 if (dungeon != null)
                 {
                     // Untrack boss with associated dungeon
-                    Tracker.MarkDungeonAsIncomplete(dungeon, result.Confidence);
+                    TrackerBase.MarkDungeonAsIncomplete(dungeon, result.Confidence);
                     return;
                 }
 
-                var boss = GetBossFromResult(Tracker, result);
+                var boss = GetBossFromResult(TrackerBase, result);
                 if (boss != null)
                 {
                     // Untrack standalone boss
-                    Tracker.MarkBossAsNotDefeated(boss, result.Confidence);
+                    TrackerBase.MarkBossAsNotDefeated(boss, result.Confidence);
                     return;
                 }
 
@@ -136,33 +139,33 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 var contentItemData = ItemService.FirstOrDefault("Content");
 
-                var dungeon = GetBossDungeonFromResult(Tracker, result);
+                var dungeon = GetBossDungeonFromResult(TrackerBase, result);
                 if (dungeon != null)
                 {
                     if (contentItemData != null)
                     {
-                        Tracker.Say(x => x.DungeonBossClearedAddContent);
-                        Tracker.TrackItem(contentItemData);
+                        TrackerBase.Say(x => x.DungeonBossClearedAddContent);
+                        TrackerBase.TrackItem(contentItemData);
                     }
 
                     // Track boss with associated dungeon
-                    Tracker.MarkDungeonAsCleared(dungeon, result.Confidence);
+                    TrackerBase.MarkDungeonAsCleared(dungeon, result.Confidence);
                     return;
                 }
 
-                var boss = GetBossFromResult(Tracker, result);
+                var boss = GetBossFromResult(TrackerBase, result);
                 if (boss != null)
                 {
                     if (contentItemData != null)
                     {
-                        Tracker.Say(x => x.DungeonBossClearedAddContent);
-                        Tracker.TrackItem(contentItemData);
+                        TrackerBase.Say(x => x.DungeonBossClearedAddContent);
+                        TrackerBase.TrackItem(contentItemData);
                     }
 
                     // Track standalone boss
                     var admittedGuilt = result.Text.ContainsAny("killed", "beat", "defeated", "dead")
                         && !result.Text.ContainsAny("beat off", "beaten off");
-                    Tracker.MarkBossAsDefeated(boss, admittedGuilt, result.Confidence);
+                    TrackerBase.MarkBossAsDefeated(boss, admittedGuilt, result.Confidence);
                     return;
                 }
 

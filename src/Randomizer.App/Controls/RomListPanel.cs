@@ -14,6 +14,7 @@ using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Infrastructure;
 using Randomizer.SMZ3.Tracking;
+using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.App.Controls
 {

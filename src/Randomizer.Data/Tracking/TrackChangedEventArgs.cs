@@ -1,7 +1,7 @@
 ﻿using System;
 using MSURandomizerLibrary.Configs;
 
-namespace Randomizer.SMZ3.Tracking;
+namespace Randomizer.Data.Tracking;
 
 public class TrackChangedEventArgs : EventArgs
 {

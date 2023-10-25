@@ -19,6 +19,7 @@ using NHyphenator;
 using Randomizer.Data.Logic;
 using Randomizer.Data.Options;
 using Randomizer.Shared;
+using Randomizer.Shared.Enums;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Infrastructure;

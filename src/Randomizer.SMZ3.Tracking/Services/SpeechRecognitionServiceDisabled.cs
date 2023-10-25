@@ -3,32 +3,30 @@ using System.Speech.Recognition;
 
 namespace Randomizer.SMZ3.Tracking.Services;
 
-public class SpeechRecognitionServiceDisabled : ISpeechRecognitionService
+public class SpeechRecognitionServiceDisabled : SpeechRecognitionServiceBase
 {
-    public event EventHandler<SpeechRecognizedEventArgs>? SpeechRecognized;
-
-    public void SetInputToDefaultAudioDevice()
+    public override void SetInputToDefaultAudioDevice()
     {
 
     }
 
-    public SpeechRecognitionEngine? RecognitionEngine => null;
+    public override SpeechRecognitionEngine? RecognitionEngine => null;
 
-    public void RecognizeAsyncStop()
+    public override void RecognizeAsyncStop()
     {
     }
 
-    public void RecognizeAsync(RecognizeMode Mode)
+    public override void RecognizeAsync(RecognizeMode Mode)
     {
 
     }
 
-    public bool InitializeMicrophone()
+    public override bool InitializeMicrophone()
     {
         return false;
     }
 
-    public void Dispose()
+    public override void Dispose()
     {
 
     }

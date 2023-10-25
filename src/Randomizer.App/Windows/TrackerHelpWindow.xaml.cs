@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-
+using Randomizer.Abstractions;
 using Randomizer.SMZ3.Tracking;
 
 namespace Randomizer.App
@@ -11,7 +11,7 @@ namespace Randomizer.App
     /// </summary>
     public partial class TrackerHelpWindow : Window
     {
-        public TrackerHelpWindow(Tracker tracker)
+        public TrackerHelpWindow(TrackerBase tracker)
         {
             SpeechRecognitionSyntax = tracker.Syntax;
 

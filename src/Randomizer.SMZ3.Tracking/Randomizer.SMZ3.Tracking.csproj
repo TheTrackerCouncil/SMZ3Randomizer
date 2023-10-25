@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Randomizer.Abstractions\Randomizer.Abstractions.csproj" />
     <ProjectReference Include="..\Randomizer.Data\Randomizer.Data.csproj" />
     <ProjectReference Include="..\Randomizer.Multiplayer.Client\Randomizer.Multiplayer.Client.csproj" />
     <ProjectReference Include="..\Randomizer.Shared\Randomizer.Shared.csproj" />

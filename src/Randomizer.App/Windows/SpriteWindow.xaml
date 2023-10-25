@@ -7,6 +7,7 @@
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:app="clr-namespace:Randomizer.App"
         xmlns:options="clr-namespace:Randomizer.Data.Options;assembly=Randomizer.Data"
+        xmlns:wpf="clr-namespace:Material.Icons.WPF;assembly=Material.Icons.WPF"
         mc:Ignorable="d"
         Loaded="SpriteWindow_OnLoaded"
         Closing="SpriteWindow_OnClosing"
@@ -92,8 +93,8 @@
                               Visibility="{Binding CanFavoriteAndHide, Converter={StaticResource BoolToVisibilityConverter}}"
                       >
                         <StackPanel Orientation="Horizontal">
-                          <fa:ImageAwesome Icon="Star" VerticalAlignment="Top" Tag="False" HorizontalAlignment="Left" Width="15" Foreground="Gray" Opacity="0.5" Visibility="{Binding IsNotFavorite, Converter={StaticResource BoolToVisibilityConverter}}" />
-                          <fa:ImageAwesome Icon="Star" VerticalAlignment="Top" Tag="True" HorizontalAlignment="Left" Width="15" Foreground="Goldenrod" Visibility="{Binding IsFavorite, Converter={StaticResource BoolToVisibilityConverter}}" />
+                          <wpf:MaterialIcon Kind="Star" VerticalAlignment="Top" Tag="False" HorizontalAlignment="Left" Width="15" Foreground="Gray" Opacity="0.5" Visibility="{Binding IsNotFavorite, Converter={StaticResource BoolToVisibilityConverter}}" />
+                          <wpf:MaterialIcon Kind="Star" VerticalAlignment="Top" Tag="True" HorizontalAlignment="Left" Width="15" Foreground="Goldenrod" Visibility="{Binding IsFavorite, Converter={StaticResource BoolToVisibilityConverter}}" />
                         </StackPanel>
                       </Button>
                       <TextBlock Grid.Column="1" Text="{Binding Name}" FontWeight="Bold" FontSize="16" TextWrapping="Wrap"></TextBlock>

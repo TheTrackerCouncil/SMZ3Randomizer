@@ -9,6 +9,7 @@
         xmlns:shared="clr-namespace:Randomizer.Shared;assembly=Randomizer.Shared"
         xmlns:options="clr-namespace:Randomizer.Data.Options;assembly=Randomizer.Data"
         xmlns:windows="clr-namespace:Randomizer.App.Windows"
+        xmlns:enums="clr-namespace:Randomizer.Shared.Enums;assembly=Randomizer.Shared"
         mc:Ignorable="d"
         Loaded="GenerateRomWindow_OnLoaded"
         Closing="Window_Closing"
@@ -66,7 +67,7 @@
                 <StackPanel>
                   <controls:LabeledControl Text="Keysanity:">
                     <ComboBox SelectedItem="{Binding KeysanityMode, Converter={StaticResource EnumDescriptionConverter}}"
-                              ItemsSource="{Binding Source={local:EnumDescriptionBindingSource {x:Type shared:KeysanityMode}}}"
+                              ItemsSource="{Binding Source={local:EnumDescriptionBindingSource {x:Type enums:KeysanityMode}}}"
                               HorizontalAlignment="Left"
                               MinWidth="75" />
                   </controls:LabeledControl>

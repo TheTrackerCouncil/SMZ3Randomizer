@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace Randomizer.SMZ3.Tracking.Services;
 
 [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
-public class SpeechRecognitionServiceEnabled : ISpeechRecognitionService
+public class SpeechRecognitionServiceEnabled : SpeechRecognitionServiceBase
 {
     private readonly ILogger<SpeechRecognitionServiceEnabled> _logger;
     private readonly SpeechRecognitionEngine _recognizer = new();
@@ -27,20 +27,18 @@ public class SpeechRecognitionServiceEnabled : ISpeechRecognitionService
 
     private void RecognizerOnSpeechRecognized(object? sender, SpeechRecognizedEventArgs e)
     {
-        SpeechRecognized?.Invoke(sender, e);
+        OnSpeechRecognized(sender, e);
     }
 
-    public event EventHandler<SpeechRecognizedEventArgs>? SpeechRecognized;
+    public override void SetInputToDefaultAudioDevice() => _recognizer.SetInputToDefaultAudioDevice();
 
-    public void SetInputToDefaultAudioDevice() => _recognizer.SetInputToDefaultAudioDevice();
+    public override SpeechRecognitionEngine? RecognitionEngine => _recognizer;
 
-    public SpeechRecognitionEngine? RecognitionEngine => _recognizer;
+    public override void RecognizeAsyncStop() =>_recognizer.RecognizeAsyncStop();
 
-    public void RecognizeAsyncStop() =>_recognizer.RecognizeAsyncStop();
+    public override void RecognizeAsync(RecognizeMode mode) => _recognizer.RecognizeAsync(mode);
 
-    public void RecognizeAsync(RecognizeMode mode) => _recognizer.RecognizeAsync(mode);
-
-    public bool InitializeMicrophone()
+    public override bool InitializeMicrophone()
     {
         try
         {
@@ -59,5 +57,5 @@ public class SpeechRecognitionServiceEnabled : ISpeechRecognitionService
         }
     }
 
-    public void Dispose() => _recognizer.Dispose();
+    public override void Dispose() => _recognizer.Dispose();
 }

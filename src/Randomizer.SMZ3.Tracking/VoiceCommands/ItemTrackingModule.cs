@@ -1,8 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Versioning;
 using System.Speech.Recognition;
 
 using Microsoft.Extensions.Logging;
-
+using Randomizer.Abstractions;
 using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
@@ -22,12 +23,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="itemService">Service to get item information</param>
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to log information.</param>
-        public ItemTrackingModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<ItemTrackingModule> logger)
+        public ItemTrackingModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<ItemTrackingModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
 
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetTrackDeathRule()
         {
             return new GrammarBuilder()
@@ -35,6 +37,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("I just died");
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetTrackItemRule(bool isMultiworld)
         {
             var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
@@ -85,6 +88,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetTrackEverythingRule()
         {
             var roomNames = GetRoomNames();
@@ -109,6 +113,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return GrammarBuilder.Combine(trackAllInRoom, trackAllInRegion);
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetTrackEverythingIncludingOutOfLogicRule()
         {
             var roomNames = GetRoomNames();
@@ -144,6 +149,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 cheatedRoom, cheatedRegion);
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetUntrackItemRule()
         {
             var itemNames = GetItemNames();
@@ -165,7 +171,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return GrammarBuilder.Combine(untrackItem, toggleItemOff);
         }
 
-        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetSetItemCountRule()
         {
             var itemNames = GetPluralItemNames();
@@ -180,33 +186,33 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append(ItemNameKey, itemNames);
         }
 
-        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
+        [SupportedOSPlatform("windows")]
         public override void AddCommands()
         {
             var isMultiworld = WorldService.World.Config.MultiWorld;
 
             AddCommand("Track item", GetTrackItemRule(isMultiworld), (result) =>
             {
-                var item = GetItemFromResult(Tracker, result, out var itemName);
+                var item = GetItemFromResult(TrackerBase, result, out var itemName);
 
                 if (result.Semantics.ContainsKey(DungeonKey))
                 {
-                    var dungeon = GetDungeonFromResult(Tracker, result);
-                    Tracker.TrackItem(item, dungeon,
+                    var dungeon = GetDungeonFromResult(TrackerBase, result);
+                    TrackerBase.TrackItem(item, dungeon,
                         trackedAs: itemName,
                         confidence: result.Confidence);
                 }
                 else if (result.Semantics.ContainsKey(RoomKey))
                 {
-                    var room = GetRoomFromResult(Tracker, result);
-                    Tracker.TrackItem(item, room,
+                    var room = GetRoomFromResult(TrackerBase, result);
+                    TrackerBase.TrackItem(item, room,
                         trackedAs: itemName,
                         confidence: result.Confidence);
                 }
                 else if (result.Semantics.ContainsKey(LocationKey))
                 {
-                    var location = GetLocationFromResult(Tracker, result);
-                    Tracker.TrackItem(item: item,
+                    var location = GetLocationFromResult(TrackerBase, result);
+                    TrackerBase.TrackItem(item: item,
                         trackedAs: itemName,
                         confidence: result.Confidence,
                         tryClear: true,
@@ -215,7 +221,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 }
                 else
                 {
-                    Tracker.TrackItem(item,
+                    TrackerBase.TrackItem(item,
                         trackedAs: itemName,
                         confidence: result.Confidence);
                 }
@@ -227,11 +233,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 if (death == null)
                 {
                     Logger.LogError("Tried to track death, but could not find an item named 'Death'.");
-                    Tracker.Say(x => x.Error);
+                    TrackerBase.Say(x => x.Error);
                     return;
                 }
 
-                Tracker.TrackItem(death, confidence: result.Confidence, tryClear: false);
+                TrackerBase.TrackItem(death, confidence: result.Confidence, tryClear: false);
             });
 
             if (!isMultiworld)
@@ -240,16 +246,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 {
                     if (result.Semantics.ContainsKey(RoomKey))
                     {
-                        var room = GetRoomFromResult(Tracker, result);
-                        Tracker.ClearArea(room,
+                        var room = GetRoomFromResult(TrackerBase, result);
+                        TrackerBase.ClearArea(room,
                             trackItems: true,
                             includeUnavailable: false,
                             confidence: result.Confidence);
                     }
                     else if (result.Semantics.ContainsKey(RegionKey))
                     {
-                        var region = GetRegionFromResult(Tracker, result);
-                        Tracker.ClearArea(region,
+                        var region = GetRegionFromResult(TrackerBase, result);
+                        TrackerBase.ClearArea(region,
                             trackItems: true,
                             includeUnavailable: false,
                             confidence: result.Confidence);
@@ -260,16 +266,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 {
                     if (result.Semantics.ContainsKey(RoomKey))
                     {
-                        var room = GetRoomFromResult(Tracker, result);
-                        Tracker.ClearArea(room,
+                        var room = GetRoomFromResult(TrackerBase, result);
+                        TrackerBase.ClearArea(room,
                             trackItems: true,
                             includeUnavailable: true,
                             confidence: result.Confidence);
                     }
                     else if (result.Semantics.ContainsKey(RegionKey))
                     {
-                        var region = GetRegionFromResult(Tracker, result);
-                        Tracker.ClearArea(region,
+                        var region = GetRegionFromResult(TrackerBase, result);
+                        TrackerBase.ClearArea(region,
                             trackItems: true,
                             includeUnavailable: true,
                             confidence: result.Confidence);
@@ -279,15 +285,15 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             AddCommand("Untrack an item", GetUntrackItemRule(), (result) =>
             {
-                var item = GetItemFromResult(Tracker, result, out _);
-                Tracker.UntrackItem(item, result.Confidence);
+                var item = GetItemFromResult(TrackerBase, result, out _);
+                TrackerBase.UntrackItem(item, result.Confidence);
             });
 
             AddCommand("Set item count", GetSetItemCountRule(), (result) =>
             {
-                var item = GetItemFromResult(Tracker, result, out _);
+                var item = GetItemFromResult(TrackerBase, result, out _);
                 var count = (int)result.Semantics[ItemCountKey].Value;
-                Tracker.TrackItemAmount(item, count, result.Confidence);
+                TrackerBase.TrackItemAmount(item, count, result.Confidence);
             });
         }
     }

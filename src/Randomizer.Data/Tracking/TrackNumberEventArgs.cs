@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Randomizer.SMZ3.Tracking;
+namespace Randomizer.Data.Tracking;
 
 public class TrackNumberEventArgs : EventArgs
 {

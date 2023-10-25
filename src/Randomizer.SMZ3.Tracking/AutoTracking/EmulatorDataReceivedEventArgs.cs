@@ -1,4 +1,7 @@
-﻿namespace Randomizer.SMZ3.Tracking.AutoTracking
+﻿using Randomizer.Data;
+using Randomizer.Data.Tracking;
+
+namespace Randomizer.SMZ3.Tracking.AutoTracking
 {
     /// <summary>
     /// Event arguments for when connector has received data from the emulator

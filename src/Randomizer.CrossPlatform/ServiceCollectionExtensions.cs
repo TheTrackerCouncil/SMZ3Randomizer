@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using MSURandomizerLibrary;
+using Randomizer.Abstractions;
 using Randomizer.Data.Configuration;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
@@ -24,9 +25,9 @@ public static class ServiceCollectionExtensions
             .AddOptionalModule<PegWorldModeModule>()
             .AddOptionalModule<SpoilerModule>()
             .AddOptionalModule<AutoTrackerModule>()
-            .AddOptionalModule<MapModule>()
-            .AddOptionalModule<GameService>();
-        services.AddScoped<AutoTracker>();
+            .AddOptionalModule<MapModule>();
+        services.AddScoped<IGameService, GameService>();
+        services.AddScoped<AutoTrackerBase, AutoTracker>();
         services.AddSingleton<ITrackerStateService, TrackerStateService>();
         services.AddMultiplayerServices();
 

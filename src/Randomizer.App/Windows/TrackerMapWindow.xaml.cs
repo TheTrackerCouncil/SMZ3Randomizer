@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Shapes;
 using Microsoft.Extensions.Logging;
+using Randomizer.Abstractions;
 using Randomizer.App.ViewModels;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Configuration.ConfigTypes;
@@ -23,7 +24,7 @@ namespace Randomizer.App.Windows
     public partial class TrackerMapWindow : Window
     {
         private readonly ILogger<TrackerMapWindow> _logger;
-        private readonly Tracker _tracker;
+        private readonly TrackerBase _trackerBase;
         private TrackerLocationSyncer _syncer;
 
         /// <summary>
@@ -37,12 +38,12 @@ namespace Randomizer.App.Windows
         /// The config for the map json file with all the location details
         /// </param>
         /// <param name="logger">Logger for logging</param>
-        public TrackerMapWindow(Tracker tracker, TrackerLocationSyncer syncer, TrackerMapConfig config, ILogger<TrackerMapWindow> logger)
+        public TrackerMapWindow(TrackerBase tracker, TrackerLocationSyncer syncer, TrackerMapConfig config, ILogger<TrackerMapWindow> logger)
         {
             InitializeComponent();
 
             _logger = logger;
-            _tracker = tracker;
+            _trackerBase = tracker;
             _syncer = syncer;
 
             Maps = config.Maps;
@@ -181,7 +182,7 @@ namespace Randomizer.App.Windows
         /// <param name="e"></param>
         private void MapComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            _tracker.UpdateMap(Maps.ElementAt(MapComboBox.SelectedIndex).ToString());
+            _trackerBase.UpdateMap(Maps.ElementAt(MapComboBox.SelectedIndex).ToString());
         }
 
         private void PropertyChanged(object?sender, PropertyChangedEventArgs e)
@@ -214,19 +215,19 @@ namespace Randomizer.App.Windows
             {
                 locations.Where(x => x.State.Cleared == false)
                     .ToList()
-                    .ForEach(x => _tracker.Clear(x));
+                    .ForEach(x => _trackerBase.Clear(x));
             }
             else if (shape.Tag is Region region)
             {
-                _tracker.ClearArea(region, false, false, null, region.Name != "Hyrule Castle");
+                _trackerBase.ClearArea(region, false, false, null, region.Name != "Hyrule Castle");
             }
             else if (shape.Tag is Boss boss)
             {
-                _tracker.MarkBossAsDefeated(boss);
+                _trackerBase.MarkBossAsDefeated(boss);
             }
             else if(shape.Tag is IDungeon dungeon)
             {
-                _tracker.MarkDungeonAsCleared(dungeon);
+                _trackerBase.MarkDungeonAsCleared(dungeon);
             }
 
         }
@@ -245,7 +246,7 @@ namespace Randomizer.App.Windows
             if (menuItem.Tag is not Location location)
                 return;
 
-            _tracker.Clear(location);
+            _trackerBase.Clear(location);
         }
     }
 }
