@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Speech.Recognition;
 using System.Text;
 using System.Threading;
@@ -26,7 +27,6 @@ using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData.Regions.Zelda;
 using Randomizer.Data.Logic;
 using Randomizer.Data.WorldData;
-using Randomizer.Data;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Data.Tracking;
@@ -37,11 +37,9 @@ namespace Randomizer.SMZ3.Tracking;
 /// Tracks items and locations in a playthrough by listening for voice
 /// commands and responding with text-to-speech.
 /// </summary>
-public class Tracker : ITracker, IDisposable
+public sealed class Tracker : TrackerBase, IDisposable
 {
-    private const int RepeatRateModifier = 2;
     private static readonly Random s_random = new();
-
 
     private readonly IWorldAccessor _worldAccessor;
     private readonly TrackerModuleFactory _moduleFactory;
@@ -50,25 +48,20 @@ public class Tracker : ITracker, IDisposable
     private readonly TrackerOptionsAccessor _trackerOptions;
     private readonly Dictionary<string, Timer> _idleTimers;
     private readonly Stack<(Action Action, DateTime UndoTime)> _undoHistory = new();
-    private readonly RandomizerContext _dbContext;
     private readonly ICommunicator _communicator;
     private readonly ITrackerStateService _stateService;
     private readonly IWorldService _worldService;
     private readonly ITrackerTimerService _timerService;
-    private readonly ISpeechRecognitionService _recognizer;
+    private readonly SpeechRecognitionServiceBase _recognizer;
     private bool _disposed;
-    private string? _mood;
     private string? _lastSpokenText;
-    private Dictionary<string, Progression> _progression = new();
     private readonly bool _alternateTracker;
     private readonly HashSet<SchrodingersString> _saidLines = new();
-    private bool _beatenGame;
     private IEnumerable<ItemType>? _previousMissingItems;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Tracker"/> class.
     /// </summary>
-    /// <param name="configProvider">Used to access external configuration.</param>
     /// <param name="worldAccessor">
     /// Used to get the world to track in.
     /// </param>
@@ -78,33 +71,27 @@ public class Tracker : ITracker, IDisposable
     /// <param name="chatClient"></param>
     /// <param name="logger">Used to write logging information.</param>
     /// <param name="trackerOptions">Provides Tracker preferences.</param>
-    /// <param name="dbContext">The database context</param>
     /// <param name="itemService"></param>
     /// <param name="communicator"></param>
     /// <param name="historyService">Service for</param>
     /// <param name="configs"></param>
-    /// <param name="metadataService"></param>
     /// <param name="stateService"></param>
     /// <param name="worldService"></param>
     /// <param name="timerService"></param>
     /// <param name="speechRecognitionService"></param>
-    /// <param name="gameModeService"></param>
-    public Tracker(ConfigProvider configProvider,
-        IWorldAccessor worldAccessor,
+    public Tracker(IWorldAccessor worldAccessor,
         TrackerModuleFactory moduleFactory,
         IChatClient chatClient,
         ILogger<Tracker> logger,
         TrackerOptionsAccessor trackerOptions,
-        RandomizerContext dbContext,
         IItemService itemService,
         ICommunicator communicator,
         IHistoryService historyService,
         Configs configs,
-        IMetadataService metadataService,
         ITrackerStateService stateService,
         IWorldService worldService,
         ITrackerTimerService timerService,
-        ISpeechRecognitionService speechRecognitionService)
+        SpeechRecognitionServiceBase speechRecognitionService)
     {
         if (trackerOptions.Options == null)
             throw new InvalidOperationException("Tracker options have not yet been activated.");
@@ -114,7 +101,6 @@ public class Tracker : ITracker, IDisposable
         _chatClient = chatClient;
         _logger = logger;
         _trackerOptions = trackerOptions;
-        _dbContext = dbContext;
         ItemService = itemService;
         _communicator = communicator;
         _stateService = stateService;
@@ -124,7 +110,6 @@ public class Tracker : ITracker, IDisposable
         // Initialize the tracker configuration
         Responses = configs.Responses;
         Requests = configs.Requests;
-        Metadata = metadataService;
         ItemService.ResetProgression();
 
         History = historyService;
@@ -143,238 +128,22 @@ public class Tracker : ITracker, IDisposable
 
         // Initialize the speech recognition engine
         _recognizer = speechRecognitionService;
-        _recognizer.SpeechRecognized += Recognizer_SpeechRecognized;
+        if (OperatingSystem.IsWindows())
+        {
+            _recognizer.SpeechRecognized += Recognizer_SpeechRecognized;
+        }
+
         InitializeMicrophone();
+        World = _worldAccessor.World;
+        Options = _trackerOptions.Options;
+
+        Mood = Responses.Moods.Keys.Random(Rng.Current) ?? Responses.Moods.Keys.First();
     }
 
-    /// <summary>
-    /// Occurs when any speech was recognized, regardless of configured
-    /// thresholds.
-    /// </summary>
-    public event EventHandler<TrackerEventArgs>? SpeechRecognized;
-
-    /// <summary>
-    /// Occurs when one more more items have been tracked.
-    /// </summary>
-    public event EventHandler<ItemTrackedEventArgs>? ItemTracked;
-
-    /// <summary>
-    /// Occurs when a location has been cleared.
-    /// </summary>
-    public event EventHandler<LocationClearedEventArgs>? LocationCleared;
-
-    /// <summary>
-    /// Occurs when Peg World mode has been toggled on.
-    /// </summary>
-    public event EventHandler<TrackerEventArgs>? ToggledPegWorldModeOn;
-
-    /// <summary>
-    /// Occurs when going to Shaktool
-    /// </summary>
-    public event EventHandler<TrackerEventArgs>? ToggledShaktoolMode;
-
-    /// <summary>
-    /// Occurs when a Peg World peg has been pegged.
-    /// </summary>
-    public event EventHandler<TrackerEventArgs>? PegPegged;
-
-    /// <summary>
-    /// Occurs when the properties of a dungeon have changed.
-    /// </summary>
-    public event EventHandler<DungeonTrackedEventArgs>? DungeonUpdated;
-
-    /// <summary>
-    /// Occurs when the properties of a boss have changed.
-    /// </summary>
-    public event EventHandler<BossTrackedEventArgs>? BossUpdated;
-
-    /// <summary>
-    /// Occurs when the marked locations have changed
-    /// </summary>
-    public event EventHandler<TrackerEventArgs>? MarkedLocationsUpdated;
-
-    /// <summary>
-    /// Occurs when Go mode has been turned on.
-    /// </summary>
-    public event EventHandler<TrackerEventArgs>? GoModeToggledOn;
-
-    /// <summary>
-    /// Occurs when the last action was undone.
-    /// </summary>
-    public event EventHandler<TrackerEventArgs>? ActionUndone;
-
-    /// <summary>
-    /// Occurs when the tracker state has been loaded.
-    /// </summary>
-    public event EventHandler? StateLoaded;
-
-    /// <summary>
-    /// Occurs when the map has been updated
-    /// </summary>
-    public event EventHandler? MapUpdated;
-
-    /// <summary>
-    /// Occurs when the map has been updated
-    /// </summary>
-    public event EventHandler<TrackerEventArgs>? BeatGame;
-
-    /// <summary>
-    /// Occurs when the map has died
-    /// </summary>
-    public event EventHandler<TrackerEventArgs>? PlayerDied;
-
-    /// <summary>
-    /// Occurs when the current played track number is updated
-    /// </summary>
-    public event EventHandler<TrackNumberEventArgs>? TrackNumberUpdated;
-
-    /// <summary>
-    /// Occurs when the current track has changed
-    /// </summary>
-    public event EventHandler<TrackChangedEventArgs>? TrackChanged;
-
-    /// <summary>
-    /// Set when the progression needs to be updated for the current tracker
-    /// instance
-    /// </summary>
-    public bool UpdateTrackerProgression { get; set; }
-
-    /// <summary>
-    /// Gets extra information about locations.
-    /// </summary>
-    public IMetadataService Metadata { get; }
-
-    /// <summary>
-    /// Gets a reference to the <see cref="ItemService"/>.
-    /// </summary>
-    public IItemService ItemService { get; }
-
-    /// <summary>
-    /// The number of pegs that have been pegged for Peg World mode
-    /// </summary>
-    public int PegsPegged { get; set; }
-
-    /// <summary>
-    /// Gets the world for the currently tracked playthrough.
-    /// </summary>
-    public World World => _worldAccessor.World;
-
-    /// <summary>
-    /// Indicates whether Tracker is in Go Mode.
-    /// </summary>
-    public bool GoMode { get; private set; }
-
-    /// <summary>
-    /// Indicates whether Tracker is in Peg World mode.
-    /// </summary>
-    public bool PegWorldMode { get; set; }
-
-    /// <summary>
-    /// Indicates whether Tracker is in Shaktool mode.
-    /// </summary>
-    public bool ShaktoolMode { get; set; }
-
-    /// <summary>
-    /// If the speech recognition engine was fully initialized
-    /// </summary>
-    public bool MicrophoneInitialized { get; private set; }
-
-    /// <summary>
-    /// If voice recognition has been enabled or not
-    /// </summary>
-    public bool VoiceRecognitionEnabled { get; private set; }
-
-    /// <summary>
-    /// Gets the configured responses.
-    /// </summary>
-    public ResponseConfig Responses { get; }
-
-    /// <summary>
-    /// Gets a collection of basic requests and responses.
-    /// </summary>
-    public IReadOnlyCollection<BasicVoiceRequest> Requests { get; }
-
-    /// <summary>
-    /// Gets a dictionary containing the rules and the various speech
-    /// recognition syntaxes.
-    /// </summary>
-    public IReadOnlyDictionary<string, IEnumerable<string>> Syntax { get; private set; }
-        = new Dictionary<string, IEnumerable<string>>();
-
-    /// <summary>
-    /// Gets the tracking preferences.
-    /// </summary>
-    public TrackerOptions Options => _trackerOptions.Options!;
-
-    /// <summary>
-    /// The generated rom
-    /// </summary>
-    public GeneratedRom? Rom { get; private set; }
-
-    /// <summary>
-    /// The path to the generated rom
-    /// </summary>
-    public string? RomPath { get; private set; }
-
-    /// <summary>
-    /// The region the player is currently in according to the Auto Tracker
-    /// </summary>
-    public RegionInfo? CurrentRegion { get; private set; }
-
-    /// <summary>
-    /// The map to display for the player
-    /// </summary>
-    public string CurrentMap { get; private set; } = "";
-
-    /// <summary>
-    /// The current track number being played
-    /// </summary>
-    public int CurrentTrackNumber { get; private set; }
-
-    /// <summary>
-    /// Gets a string describing tracker's mood.
-    /// </summary>
-    public string Mood
+    ~Tracker()
     {
-        get => _mood ??= Responses.Moods.Keys.Random(Rng.Current) ?? Responses.Moods.Keys.First();
+        Dispose();
     }
-
-    /// <summary>
-    /// Get if the Tracker has been updated since it was last saved
-    /// </summary>
-    public bool IsDirty { get; set; }
-
-    /// <summary>
-    /// The Auto Tracker for the Tracker
-    /// </summary>
-    public IAutoTracker? AutoTracker { get; set; }
-
-    /// <summary>
-    /// Service that handles modifying the game via auto tracker
-    /// </summary>
-    public IGameService? GameService { get; set; }
-
-    /// <summary>
-    /// Module that houses the history
-    /// </summary>
-    public IHistoryService History { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether Tracker may give hints when
-    /// asked about items or locations.
-    /// </summary>
-    public bool HintsEnabled { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether Tracker may give spoilers
-    /// when asked about items or locations.
-    /// </summary>
-    public bool SpoilersEnabled { get; set; }
-
-    /// <summary>
-    /// Gets if the local player has beaten the game or not
-    /// </summary>
-    public bool HasBeatenGame => _beatenGame;
 
     /// <summary>
     /// Attempts to replace a user name with a pronunciation-corrected
@@ -384,7 +153,7 @@ public class Tracker : ITracker, IDisposable
     /// <returns>
     /// The corrected user name, or <paramref name="userName"/>.
     /// </returns>
-    public string CorrectUserNamePronunciation(string userName)
+    public override string CorrectUserNamePronunciation(string userName)
     {
         var correctedUserName = Responses.Chat.UserNamePronunciation
             .SingleOrDefault(x => x.Key.Equals(userName, StringComparison.OrdinalIgnoreCase));
@@ -398,7 +167,7 @@ public class Tracker : ITracker, IDisposable
     /// <returns>
     /// True if the microphone is initialized, false otherwise
     /// </returns>
-    public bool InitializeMicrophone()
+    public override bool InitializeMicrophone()
     {
         if (MicrophoneInitialized) return true;
         MicrophoneInitialized = _recognizer.InitializeMicrophone();
@@ -411,7 +180,7 @@ public class Tracker : ITracker, IDisposable
     /// <param name="rom">The rom to load</param>
     /// <param name="romPath">The full path to the rom to load</param>
     /// <returns>True or false if the load was successful</returns>
-    public bool Load(GeneratedRom rom, string romPath)
+    public override bool Load(GeneratedRom rom, string romPath)
     {
         IsDirty = false;
         Rom = rom;
@@ -431,7 +200,7 @@ public class Tracker : ITracker, IDisposable
     /// Saves the state of the tracker to the database
     /// </summary>
     /// <returns></returns>
-    public async Task SaveAsync()
+    public override async Task SaveAsync()
     {
         if (Rom == null)
         {
@@ -445,7 +214,7 @@ public class Tracker : ITracker, IDisposable
     /// Undoes the last operation.
     /// </summary>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void Undo(float confidence)
+    public override void Undo(float confidence)
     {
         if (_undoHistory.TryPop(out var undoLast))
         {
@@ -471,7 +240,7 @@ public class Tracker : ITracker, IDisposable
     /// Toggles Go Mode on.
     /// </summary>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void ToggleGoMode(float? confidence = null)
+    public override void ToggleGoMode(float? confidence = null)
     {
         ShutUp();
         Say("Toggled Go Mode <break time='1s'/>", wait: true);
@@ -507,7 +276,7 @@ public class Tracker : ITracker, IDisposable
     /// <exception cref=" ArgumentOutOfRangeException">
     /// <paramref name="amount"/> is less than 1.
     /// </exception>
-    public bool TrackDungeonTreasure(IDungeon dungeon, float? confidence = null, int amount = 1, bool autoTracked = false, bool stateResponse = true)
+    public override bool TrackDungeonTreasure(IDungeon dungeon, float? confidence = null, int amount = 1, bool autoTracked = false, bool stateResponse = true)
     {
         if (amount < 1)
             throw new ArgumentOutOfRangeException(nameof(amount), "The amount of items must be greater than zero.");
@@ -525,7 +294,7 @@ public class Tracker : ITracker, IDisposable
 
             // If there are no more treasures and the boss is defeated, clear all locations in the dungeon
             var clearedLocations = new List<Location>();
-            if (dungeon.DungeonState.RemainingTreasure == 0 && dungeon.DungeonState.Cleared)
+            if (dungeon.DungeonState is { RemainingTreasure: 0, Cleared: true })
             {
                 foreach (var location in ((Region)dungeon).Locations.Where(x => !x.State.Cleared))
                 {
@@ -585,7 +354,7 @@ public class Tracker : ITracker, IDisposable
     /// </param>
     /// <param name="confidence">The speech recognition confidence.</param>
     /// <param name="autoTracked">If this was called by the auto tracker</param>
-    public void SetDungeonReward(IDungeon dungeon, RewardType? reward = null, float? confidence = null, bool autoTracked = false)
+    public override void SetDungeonReward(IDungeon dungeon, RewardType? reward = null, float? confidence = null, bool autoTracked = false)
     {
         var originalReward = dungeon.DungeonState.MarkedReward;
         if (reward == null)
@@ -612,7 +381,7 @@ public class Tracker : ITracker, IDisposable
     /// </summary>
     /// <param name="reward">The reward to set.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void SetUnmarkedDungeonReward(RewardType reward, float? confidence = null)
+    public override void SetUnmarkedDungeonReward(RewardType reward, float? confidence = null)
     {
         var unmarkedDungeons = World.Dungeons
             .Where(x => x.DungeonState is { HasReward: true, HasMarkedReward: false })
@@ -622,7 +391,7 @@ public class Tracker : ITracker, IDisposable
         {
             Say(Responses.RemainingDungeonsMarked.Format(ItemService.GetName(reward)));
             unmarkedDungeons.ForEach(dungeon => dungeon.DungeonState.MarkedReward = reward);
-            AddUndo(() => unmarkedDungeons.ForEach(dungeon => dungeon.DungeonState!.MarkedReward = RewardType.None));
+            AddUndo(() => unmarkedDungeons.ForEach(dungeon => dungeon.DungeonState.MarkedReward = RewardType.None));
             OnDungeonUpdated(new DungeonTrackedEventArgs(null, confidence, false));
         }
         else
@@ -637,14 +406,14 @@ public class Tracker : ITracker, IDisposable
     /// <param name="dungeon">The dungeon to mark.</param>
     /// <param name="medallion">The medallion that is required.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void SetDungeonRequirement(IDungeon dungeon, ItemType? medallion = null, float? confidence = null)
+    public override void SetDungeonRequirement(IDungeon dungeon, ItemType? medallion = null, float? confidence = null)
     {
         var region = World.Regions.SingleOrDefault(x => dungeon.DungeonMetadata.Name.Contains(x.Name, StringComparison.OrdinalIgnoreCase));
         if (region == null)
         {
             Say("Strange, I can't find that dungeon in this seed.");
         }
-        else if (region is not INeedsMedallion medallionRegion)
+        else if (region is not INeedsMedallion)
         {
             Say(Responses.DungeonRequirementInvalid.Format(dungeon.DungeonMetadata.Name));
             return;
@@ -683,12 +452,12 @@ public class Tracker : ITracker, IDisposable
     /// <summary>
     /// Starts voice recognition.
     /// </summary>
-    public virtual bool TryStartTracking()
+    public override bool TryStartTracking()
     {
         // Load the modules for voice recognition
         StartTimer(true);
 
-        var loadError = false;
+        bool loadError;
         try
         {
             Syntax = _moduleFactory.LoadAll(this, _recognizer.RecognitionEngine, out loadError);
@@ -727,7 +496,7 @@ public class Tracker : ITracker, IDisposable
     /// <param name="id">
     /// The is for <paramref name="userName"/>.
     /// </param>
-    public void ConnectToChat(string? userName, string? oauthToken, string? channel, string? id)
+    public override void ConnectToChat(string? userName, string? oauthToken, string? channel, string? id)
     {
         if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(oauthToken))
         {
@@ -746,7 +515,7 @@ public class Tracker : ITracker, IDisposable
     /// <summary>
     /// Sets the start time of the timer
     /// </summary>
-    public virtual void StartTimer(bool isInitial = false)
+    public override void StartTimer(bool isInitial = false)
     {
         _timerService.StartTimer();
 
@@ -760,7 +529,7 @@ public class Tracker : ITracker, IDisposable
     /// <summary>
     /// Resets the timer to 0
     /// </summary>
-    public virtual void ResetTimer(bool isInitial = false)
+    public override void ResetTimer(bool isInitial = false)
     {
         _timerService.ResetTimer();
 
@@ -774,7 +543,7 @@ public class Tracker : ITracker, IDisposable
     /// <summary>
     /// Pauses the timer, saving the elapsed time
     /// </summary>
-    public virtual Action? PauseTimer(bool addUndo = true)
+    public override Action? PauseTimer(bool addUndo = true)
     {
         _timerService.StopTimer();
 
@@ -795,7 +564,7 @@ public class Tracker : ITracker, IDisposable
     /// Pauses or resumes the timer based on if it is
     /// currently paused or not
     /// </summary>
-    public virtual void ToggleTimer()
+    public override void ToggleTimer()
     {
         if (_timerService.IsTimerPaused)
         {
@@ -810,7 +579,7 @@ public class Tracker : ITracker, IDisposable
     /// <summary>
     /// Stops voice recognition.
     /// </summary>
-    public virtual void StopTracking()
+    public override void StopTracking()
     {
         DisableVoiceRecognition();
         _communicator.Abort();
@@ -824,9 +593,9 @@ public class Tracker : ITracker, IDisposable
     /// <summary>
     /// Enables the voice recognizer if the microphone is enabled
     /// </summary>
-    public void EnableVoiceRecognition()
+    public override void EnableVoiceRecognition()
     {
-        if (MicrophoneInitialized && !VoiceRecognitionEnabled)
+        if (MicrophoneInitialized && !VoiceRecognitionEnabled && OperatingSystem.IsWindows())
         {
             _logger.LogInformation("Starting speech recognition");
             _recognizer.SetInputToDefaultAudioDevice();
@@ -839,7 +608,7 @@ public class Tracker : ITracker, IDisposable
     /// <summary>
     /// Disables voice recognition if it was previously enabled
     /// </summary>
-    public void DisableVoiceRecognition()
+    public override void DisableVoiceRecognition()
     {
         if (VoiceRecognitionEnabled)
         {
@@ -857,7 +626,7 @@ public class Tracker : ITracker, IDisposable
     /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
     /// name="text"/> was <c>null</c>.
     /// </returns>
-    public virtual bool Say(SchrodingersString? text)
+    public override bool Say(SchrodingersString? text)
     {
         if (text == null)
             return false;
@@ -873,7 +642,7 @@ public class Tracker : ITracker, IDisposable
     /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
     /// response was <c>null</c>.
     /// </returns>
-    public virtual bool Say(Func<ResponseConfig, SchrodingersString?> selectResponse)
+    public override bool Say(Func<ResponseConfig, SchrodingersString?> selectResponse)
     {
         return Say(selectResponse(Responses));
     }
@@ -887,7 +656,7 @@ public class Tracker : ITracker, IDisposable
     /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
     /// name="text"/> was <c>null</c>.
     /// </returns>
-    public virtual bool Say(SchrodingersString? text, params object?[] args)
+    public override bool Say(SchrodingersString? text, params object?[] args)
     {
         if (text == null)
             return false;
@@ -904,7 +673,7 @@ public class Tracker : ITracker, IDisposable
     /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
     /// response was <c>null</c>.
     /// </returns>
-    public virtual bool Say(Func<ResponseConfig, SchrodingersString?> selectResponse, params object?[] args)
+    public override bool Say(Func<ResponseConfig, SchrodingersString?> selectResponse, params object?[] args)
     {
         return Say(selectResponse(Responses), args);
     }
@@ -917,7 +686,7 @@ public class Tracker : ITracker, IDisposable
     /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
     /// name="text"/> was <c>null</c>.
     /// </returns>
-    public virtual bool SayOnce(SchrodingersString? text)
+    public override bool SayOnce(SchrodingersString? text)
     {
         if (text == null)
             return false;
@@ -939,7 +708,7 @@ public class Tracker : ITracker, IDisposable
     /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
     /// response was <c>null</c>.
     /// </returns>
-    public virtual bool SayOnce(Func<ResponseConfig, SchrodingersString?> selectResponse)
+    public override bool SayOnce(Func<ResponseConfig, SchrodingersString?> selectResponse)
     {
         return SayOnce(selectResponse(Responses));
     }
@@ -953,7 +722,7 @@ public class Tracker : ITracker, IDisposable
     /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
     /// name="text"/> was <c>null</c>.
     /// </returns>
-    protected virtual bool SayOnce(SchrodingersString? text, params object?[] args)
+    public override bool SayOnce(SchrodingersString? text, params object?[] args)
     {
         if (text == null)
             return false;
@@ -976,7 +745,7 @@ public class Tracker : ITracker, IDisposable
     /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
     /// response was <c>null</c>.
     /// </returns>
-    public virtual bool SayOnce(Func<ResponseConfig, SchrodingersString?> selectResponse, params object?[] args)
+    public override bool SayOnce(Func<ResponseConfig, SchrodingersString?> selectResponse, params object?[] args)
     {
         return SayOnce(selectResponse(Responses), args);
     }
@@ -993,7 +762,7 @@ public class Tracker : ITracker, IDisposable
     /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
     /// response was <c>null</c>.
     /// </returns>
-    public virtual bool Say(string? text, bool wait = false)
+    public override bool Say(string? text, bool wait = false)
     {
         if (text == null)
             return false;
@@ -1013,19 +782,19 @@ public class Tracker : ITracker, IDisposable
     /// <param name="text">The text with placeholders to format.</param>
     /// <returns>The formatted text with placeholders replaced.</returns>
     [return: NotNullIfNotNull("text")]
-    protected virtual string? FormatPlaceholders(string? text)
+    private string? FormatPlaceholders(string? text)
     {
         if (string.IsNullOrEmpty(text))
             return text;
 
         var builder = new StringBuilder(text);
-        builder.Replace("{Link}", ITracker.CorrectPronunciation(World.Config.LinkName));
-        builder.Replace("{Samus}", ITracker.CorrectPronunciation(World.Config.SamusName));
+        builder.Replace("{Link}", CorrectPronunciation(World.Config.LinkName));
+        builder.Replace("{Samus}", CorrectPronunciation(World.Config.SamusName));
         builder.Replace("{User}", CorrectUserNamePronunciation(Options.UserName ?? "someone"));
 
         // Just in case some text doesn't pass a string.Format
-        builder.Replace("{{Link}}", ITracker.CorrectPronunciation(World.Config.LinkName));
-        builder.Replace("{{Samus}}", ITracker.CorrectPronunciation(World.Config.SamusName));
+        builder.Replace("{{Link}}", CorrectPronunciation(World.Config.LinkName));
+        builder.Replace("{{Samus}}", CorrectPronunciation(World.Config.SamusName));
         builder.Replace("{{User}}", CorrectUserNamePronunciation(Options.UserName ?? "someone"));
         return builder.ToString();
     }
@@ -1034,7 +803,7 @@ public class Tracker : ITracker, IDisposable
     /// Repeats the most recently spoken sentence using text-to-speech at a
     /// slower rate.
     /// </summary>
-    public virtual void Repeat()
+    public override void Repeat()
     {
         if (Options.VoiceFrequency == TrackerVoiceFrequency.Disabled)
         {
@@ -1056,7 +825,7 @@ public class Tracker : ITracker, IDisposable
     /// <summary>
     /// Makes Tracker stop talking.
     /// </summary>
-    public virtual void ShutUp()
+    public override void ShutUp()
     {
         _communicator.Abort();
     }
@@ -1064,7 +833,7 @@ public class Tracker : ITracker, IDisposable
     /// <summary>
     /// Notifies the user an error occurred.
     /// </summary>
-    public virtual void Error()
+    public override void Error()
     {
         Say(Responses.Error);
     }
@@ -1099,7 +868,7 @@ public class Tracker : ITracker, IDisposable
     /// langword="false"/> if the item could not be tracked, e.g. when
     /// tracking Bow twice.
     /// </returns>
-    public bool TrackItem(Item item, string? trackedAs = null, float? confidence = null, bool tryClear = true, bool autoTracked = false, Location? location = null, bool giftedItem = false, bool silent = false)
+    public override bool TrackItem(Item item, string? trackedAs = null, float? confidence = null, bool tryClear = true, bool autoTracked = false, Location? location = null, bool giftedItem = false, bool silent = false)
     {
         var didTrack = false;
         var accessibleBefore = _worldService.AccessibleLocations(false);
@@ -1291,6 +1060,7 @@ public class Tracker : ITracker, IDisposable
                         allMissingItems = allMissingItems.OrderBy(x => x);
 
                         var missingItems = allMissingCombinations.MinBy(x => x.Length);
+                        var allPossibleMissingItems = allMissingItems.ToList();
                         if (missingItems == null)
                         {
                             Say(x => x.TrackedOutOfLogicItemTooManyMissing, item.Metadata.Name, locationInfo.Name);
@@ -1298,9 +1068,9 @@ public class Tracker : ITracker, IDisposable
                         // Do not say anything if the only thing missing are keys
                         else
                         {
-                            var itemsChanged = _previousMissingItems == null || !allMissingItems.SequenceEqual(_previousMissingItems);
-                            var onlyKeys = allMissingItems.All(x => x.IsInAnyCategory(ItemCategory.BigKey, ItemCategory.SmallKey, ItemCategory.Keycard));
-                            _previousMissingItems = allMissingItems;
+                            var itemsChanged = _previousMissingItems == null || !allPossibleMissingItems.SequenceEqual(_previousMissingItems);
+                            var onlyKeys = allPossibleMissingItems.All(x => x.IsInAnyCategory(ItemCategory.BigKey, ItemCategory.SmallKey, ItemCategory.Keycard));
+                            _previousMissingItems = allPossibleMissingItems;
 
                             if (itemsChanged && !onlyKeys)
                             {
@@ -1309,7 +1079,7 @@ public class Tracker : ITracker, IDisposable
                             }
                         }
 
-                        _previousMissingItems = allMissingItems;
+                        _previousMissingItems = allPossibleMissingItems;
                     }
 
                 }
@@ -1349,7 +1119,7 @@ public class Tracker : ITracker, IDisposable
     /// <param name="items">The items to track</param>
     /// <param name="autoTracked">If the items were tracked via auto tracker</param>
     /// <param name="giftedItem">If the items were gifted to the player</param>
-    public void TrackItems(List<Item> items, bool autoTracked, bool giftedItem)
+    public override void TrackItems(List<Item> items, bool autoTracked, bool giftedItem)
     {
         if (items.Count == 1)
         {
@@ -1394,7 +1164,7 @@ public class Tracker : ITracker, IDisposable
     /// </summary>
     /// <param name="item">The item to untrack.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void UntrackItem(Item item, float? confidence = null)
+    public override void UntrackItem(Item item, float? confidence = null)
     {
         var originalTrackingState = item.State.TrackingState;
         ItemService.ResetProgression();
@@ -1440,7 +1210,7 @@ public class Tracker : ITracker, IDisposable
     /// </param>
     /// <param name="dungeon">The dungeon the item was tracked in.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void TrackItem(Item item, IDungeon dungeon, string? trackedAs = null, float? confidence = null)
+    public override void TrackItem(Item item, IDungeon dungeon, string? trackedAs = null, float? confidence = null)
     {
         var tracked = TrackItem(item, trackedAs, confidence, tryClear: false);
         var undoTrack = _undoHistory.Pop();
@@ -1500,7 +1270,7 @@ public class Tracker : ITracker, IDisposable
     /// </param>
     /// <param name="area">The area the item was found in.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void TrackItem(Item item, IHasLocations area, string? trackedAs = null, float? confidence = null)
+    public override void TrackItem(Item item, IHasLocations area, string? trackedAs = null, float? confidence = null)
     {
         var locations = area.Locations
             .Where(x => x.Item.Type == item.Type)
@@ -1542,7 +1312,7 @@ public class Tracker : ITracker, IDisposable
     /// The amount of the item that is in the player's inventory now.
     /// </param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void TrackItemAmount(Item item, int count, float confidence)
+    public override void TrackItemAmount(Item item, int count, float confidence)
     {
         ItemService.ResetProgression();
 
@@ -1598,7 +1368,7 @@ public class Tracker : ITracker, IDisposable
     /// <param name="assumeKeys">
     /// Set to true to ignore keys when clearing the location.
     /// </param>
-    public void ClearArea(IHasLocations area, bool trackItems, bool includeUnavailable = false, float? confidence = null, bool assumeKeys = false)
+    public override void ClearArea(IHasLocations area, bool trackItems, bool includeUnavailable = false, float? confidence = null, bool assumeKeys = false)
     {
         var locations = area.Locations
             .Where(x => x.State.Cleared == false)
@@ -1746,7 +1516,7 @@ public class Tracker : ITracker, IDisposable
     /// </summary>
     /// <param name="dungeon">The dungeon to clear.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void ClearDungeon(IDungeon dungeon, float? confidence = null)
+    public override void ClearDungeon(IDungeon dungeon, float? confidence = null)
     {
         var remaining = dungeon.DungeonState.RemainingTreasure;
         if (remaining > 0)
@@ -1782,7 +1552,7 @@ public class Tracker : ITracker, IDisposable
         {
             var anyMissedLocation = inaccessibleLocations.Random(s_random) ?? inaccessibleLocations.First();
             var locationInfo = anyMissedLocation.Metadata;
-            var missingItemCombinations = Logic.GetMissingRequiredItems(anyMissedLocation, progress, out _);
+            var missingItemCombinations = Logic.GetMissingRequiredItems(anyMissedLocation, progress, out _).ToList();
             if (missingItemCombinations.Any())
             {
                 var missingItems = (missingItemCombinations.Random(s_random) ?? missingItemCombinations.First())
@@ -1818,7 +1588,7 @@ public class Tracker : ITracker, IDisposable
     /// <param name="location">The location to clear.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
     /// <param name="autoTracked">If this was tracked by the auto tracker</param>
-    public void Clear(Location location, float? confidence = null, bool autoTracked = false)
+    public override void Clear(Location location, float? confidence = null, bool autoTracked = false)
     {
         ItemService.ResetProgression();
         location.State.Cleared = true;
@@ -1872,7 +1642,7 @@ public class Tracker : ITracker, IDisposable
     /// <param name="dungeon">The dungeon that was cleared.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
     /// <param name="autoTracked">If this was cleared by the auto tracker</param>
-    public void MarkDungeonAsCleared(IDungeon dungeon, float? confidence = null, bool autoTracked = false)
+    public override void MarkDungeonAsCleared(IDungeon dungeon, float? confidence = null, bool autoTracked = false)
     {
         if (dungeon.DungeonState.Cleared)
         {
@@ -1945,7 +1715,7 @@ public class Tracker : ITracker, IDisposable
     /// </param>
     /// <param name="confidence">The speech recognition confidence.</param>
     /// <param name="autoTracked">If this was tracked by the auto tracker</param>
-    public void MarkBossAsDefeated(Boss boss, bool admittedGuilt = true, float? confidence = null, bool autoTracked = false)
+    public override void MarkBossAsDefeated(Boss boss, bool admittedGuilt = true, float? confidence = null, bool autoTracked = false)
     {
         if (boss.State.Defeated)
         {
@@ -1990,7 +1760,7 @@ public class Tracker : ITracker, IDisposable
     /// </summary>
     /// <param name="boss">The boss that should be 'revived'.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void MarkBossAsNotDefeated(Boss boss, float? confidence = null)
+    public override void MarkBossAsNotDefeated(Boss boss, float? confidence = null)
     {
         if (boss.State.Defeated != true)
         {
@@ -2014,7 +1784,7 @@ public class Tracker : ITracker, IDisposable
     /// </summary>
     /// <param name="dungeon">The dungeon that should be un-cleared.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void MarkDungeonAsIncomplete(IDungeon dungeon, float? confidence = null)
+    public override void MarkDungeonAsIncomplete(IDungeon dungeon, float? confidence = null)
     {
         if (!dungeon.DungeonState.Cleared)
         {
@@ -2078,7 +1848,7 @@ public class Tracker : ITracker, IDisposable
     /// The item that is found at <paramref name="location"/>.
     /// </param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void MarkLocation(Location location, Item item, float? confidence = null)
+    public override void MarkLocation(Location location, Item item, float? confidence = null)
     {
         var locationName = location.Metadata.Name;
         GiveLocationComment(item, location, isTracking: false, confidence);
@@ -2111,7 +1881,7 @@ public class Tracker : ITracker, IDisposable
     /// Pegs a Peg World peg.
     /// </summary>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void Peg(float? confidence = null)
+    public override void Peg(float? confidence = null)
     {
         if (!PegWorldMode)
             return;
@@ -2132,12 +1902,12 @@ public class Tracker : ITracker, IDisposable
     /// Starts Peg World mode.
     /// </summary>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void StartPegWorldMode(float? confidence = null)
+    public override void StartPegWorldMode(float? confidence = null)
     {
         ShutUp();
         PegWorldMode = true;
         Say(Responses.PegWorldModeOn, wait: true);
-        OnPegWorldModeToggled(new TrackerEventArgs(confidence));
+        OnToggledPegWorldModeOn(new TrackerEventArgs(confidence));
         AddUndo(() => PegWorldMode = false);
     }
 
@@ -2145,11 +1915,11 @@ public class Tracker : ITracker, IDisposable
     /// Turns Peg World mode off.
     /// </summary>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void StopPegWorldMode(float? confidence = null)
+    public override void StopPegWorldMode(float? confidence = null)
     {
         PegWorldMode = false;
         Say(Responses.PegWorldModeDone);
-        OnPegWorldModeToggled(new TrackerEventArgs(confidence));
+        OnToggledPegWorldModeOn(new TrackerEventArgs(confidence));
         AddUndo(() => PegWorldMode = true);
     }
 
@@ -2157,10 +1927,10 @@ public class Tracker : ITracker, IDisposable
     /// Starts Peg World mode.
     /// </summary>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void StartShaktoolMode(float? confidence = null)
+    public override void StartShaktoolMode(float? confidence = null)
     {
         ShaktoolMode = true;
-        OnShaktoolModeToggled(new TrackerEventArgs(confidence));
+        OnToggledShaktoolMode(new TrackerEventArgs(confidence));
         AddUndo(() => ShaktoolMode = false);
     }
 
@@ -2168,10 +1938,10 @@ public class Tracker : ITracker, IDisposable
     /// Turns Peg World mode off.
     /// </summary>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void StopShaktoolMode(float? confidence = null)
+    public override void StopShaktoolMode(float? confidence = null)
     {
         ShaktoolMode = false;
-        OnShaktoolModeToggled(new TrackerEventArgs(confidence));
+        OnToggledShaktoolMode(new TrackerEventArgs(confidence));
         AddUndo(() => ShaktoolMode = true);
     }
 
@@ -2181,7 +1951,7 @@ public class Tracker : ITracker, IDisposable
     /// <param name="region">The region the player is in</param>
     /// <param name="updateMap">Set to true to update the map for the player to match the region</param>
     /// <param name="resetTime">If the time should be reset if this is the first region update</param>
-    public void UpdateRegion(Region region, bool updateMap = false, bool resetTime = false)
+    public override void UpdateRegion(Region region, bool updateMap = false, bool resetTime = false)
     {
         UpdateRegion(region.Metadata, updateMap, resetTime);
     }
@@ -2192,7 +1962,7 @@ public class Tracker : ITracker, IDisposable
     /// <param name="region">The region the player is in</param>
     /// <param name="updateMap">Set to true to update the map for the player to match the region</param>
     /// <param name="resetTime">If the time should be reset if this is the first region update</param>
-    public void UpdateRegion(RegionInfo? region, bool updateMap = false, bool resetTime = false)
+    public override void UpdateRegion(RegionInfo? region, bool updateMap = false, bool resetTime = false)
     {
         if (region != CurrentRegion)
         {
@@ -2219,10 +1989,10 @@ public class Tracker : ITracker, IDisposable
     /// Updates the map to display for the user
     /// </summary>
     /// <param name="map">The name of the map</param>
-    public void UpdateMap(string map)
+    public override void UpdateMap(string map)
     {
         CurrentMap = map;
-        MapUpdated?.Invoke(this, EventArgs.Empty);
+        OnMapUpdated();
     }
 
     /// <summary>
@@ -2230,19 +2000,19 @@ public class Tracker : ITracker, IDisposable
     /// or entering the ship after beating both bosses
     /// </summary>
     /// <param name="autoTracked">If this was triggered by the auto tracker</param>
-    public void GameBeaten(bool autoTracked)
+    public override void GameBeaten(bool autoTracked)
     {
-        if (!_beatenGame)
+        if (!HasBeatenGame)
         {
-            _beatenGame = true;
+            HasBeatenGame = true;
             var pauseUndo = PauseTimer(false);
             Say(x => x.BeatGame);
-            BeatGame?.Invoke(this, new TrackerEventArgs(autoTracked));
+            OnBeatGame(new TrackerEventArgs(autoTracked));
             if (!autoTracked)
             {
                 AddUndo(() =>
                 {
-                    _beatenGame = false;
+                    HasBeatenGame = false;
                     if (pauseUndo != null)
                     {
                         pauseUndo();
@@ -2255,20 +2025,20 @@ public class Tracker : ITracker, IDisposable
     /// <summary>
     /// Called when the player has died
     /// </summary>
-    public void TrackDeath(bool autoTracked)
+    public override void TrackDeath(bool autoTracked)
     {
-        PlayerDied?.Invoke(this, new TrackerEventArgs(autoTracked));
+        OnPlayerDied(new TrackerEventArgs(autoTracked));
     }
 
     /// <summary>
     /// Updates the current track number being played
     /// </summary>
     /// <param name="number">The number of the track</param>
-    public void UpdateTrackNumber(int number)
+    public override void UpdateTrackNumber(int number)
     {
         if (number <= 0 || number > 200 || number == CurrentTrackNumber) return;
         CurrentTrackNumber = number;
-        TrackNumberUpdated?.Invoke(this, new TrackNumberEventArgs(number));
+        OnTrackNumberUpdated(new TrackNumberEventArgs(number));
     }
 
     /// <summary>
@@ -2277,12 +2047,15 @@ public class Tracker : ITracker, IDisposable
     /// <param name="msu">The current MSU pack</param>
     /// <param name="track">The current track</param>
     /// <param name="outputText">Formatted output text matching the requested style</param>
-    public void UpdateTrack(Msu msu, Track track, string outputText)
+    public override void UpdateTrack(Msu msu, Track track, string outputText)
     {
-        TrackChanged?.Invoke(this, new TrackChangedEventArgs(msu, track, outputText));
+        OnTrackChanged(new TrackChangedEventArgs(msu, track, outputText));
     }
 
-    public void RestartIdleTimers()
+    /// <summary>
+    /// Resets the timers for tracker mentioning nothing has happened
+    /// </summary>
+    public override void RestartIdleTimers()
     {
         foreach (var item in _idleTimers)
         {
@@ -2301,7 +2074,7 @@ public class Tracker : ITracker, IDisposable
     /// <see langword="true"/> if the reward leads to something good;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public bool IsWorth(RewardType reward)
+    public override bool IsWorth(RewardType reward)
     {
         var sahasrahlaItem = World.FindLocation(LocationId.Sahasrahla).Item;
         if (sahasrahlaItem.Type != ItemType.Nothing && reward == RewardType.PendantGreen)
@@ -2339,7 +2112,7 @@ public class Tracker : ITracker, IDisposable
     /// another item that is worth getting; otherwise, <see
     /// langword="false"/>.
     /// </returns>
-    public bool IsWorth(Item item)
+    public override bool IsWorth(Item item)
     {
         var leads = new Dictionary<ItemType, Location[]>()
         {
@@ -2386,7 +2159,7 @@ public class Tracker : ITracker, IDisposable
     /// <param name="undo">
     /// The action to invoke to undo the last operation.
     /// </param>
-    public virtual void AddUndo(Action undo) => _undoHistory.Push((undo, DateTime.Now));
+    public override void AddUndo(Action undo) => _undoHistory.Push((undo, DateTime.Now));
 
     /// <summary>
     /// Cleans up resources used by this class.
@@ -2394,7 +2167,7 @@ public class Tracker : ITracker, IDisposable
     /// <param name="disposing">
     /// <c>true</c> to dispose of managed resources.
     /// </param>
-    protected virtual void Dispose(bool disposing)
+    private void Dispose(bool disposing)
     {
         if (!_disposed)
         {
@@ -2410,89 +2183,6 @@ public class Tracker : ITracker, IDisposable
             _disposed = true;
         }
     }
-
-    /// <summary>
-    /// Raises the <see cref="ItemTracked"/> event.
-    /// </summary>
-    /// <param name="e">Event data.</param>
-    protected virtual void OnItemTracked(ItemTrackedEventArgs e)
-        => ItemTracked?.Invoke(this, e);
-
-    /// <summary>
-    /// Raises the <see cref="ToggledPegWorldModeOn"/> event.
-    /// </summary>
-    /// <param name="e">Event data.</param>
-    protected virtual void OnPegWorldModeToggled(TrackerEventArgs e)
-        => ToggledPegWorldModeOn?.Invoke(this, e);
-
-    /// <summary>
-    /// Raises the <see cref="PegPegged"/> event.
-    /// </summary>
-    /// <param name="e">Event data.</param>
-    protected virtual void OnPegPegged(TrackerEventArgs e)
-        => PegPegged?.Invoke(this, e);
-
-    /// <summary>
-    /// Raises the <see cref="ToggledPegWorldModeOn"/> event.
-    /// </summary>
-    /// <param name="e">Event data.</param>
-    protected virtual void OnShaktoolModeToggled(TrackerEventArgs e)
-        => ToggledShaktoolMode?.Invoke(this, e);
-
-    /// <summary>
-    /// Raises the <see cref="DungeonUpdated"/> event.
-    /// </summary>
-    /// <param name="e">Event data.</param>
-    protected virtual void OnDungeonUpdated(DungeonTrackedEventArgs e)
-        => DungeonUpdated?.Invoke(this, e);
-
-    /// <summary>
-    /// Raises the <see cref="BossUpdated"/> event.
-    /// </summary>
-    /// <param name="e">Event data.</param>
-    protected virtual void OnBossUpdated(BossTrackedEventArgs e)
-        => BossUpdated?.Invoke(this, e);
-
-    /// <summary>
-    /// Raises the <see cref="MarkedLocationsUpdated"/> event.
-    /// </summary>
-    /// <param name="e">Event data.</param>
-    protected virtual void OnMarkedLocationsUpdated(TrackerEventArgs e)
-        => MarkedLocationsUpdated?.Invoke(this, e);
-
-    /// <summary>
-    /// Raises the <see cref="GoModeToggledOn"/> event.
-    /// </summary>
-    /// <param name="e">Event data.</param>
-    protected virtual void OnGoModeToggledOn(TrackerEventArgs e)
-        => GoModeToggledOn?.Invoke(this, e);
-
-    /// <summary>
-    /// Raises the <see cref="LocationCleared"/> event.
-    /// </summary>
-    /// <param name="e">Event data.</param>
-    protected virtual void OnLocationCleared(LocationClearedEventArgs e)
-        => LocationCleared?.Invoke(this, e);
-
-    /// <summary>
-    /// Raises the <see cref="ActionUndone"/> event.
-    /// </summary>
-    /// <param name="e">Event data.</param>
-    protected virtual void OnActionUndone(TrackerEventArgs e)
-        => ActionUndone?.Invoke(this, e);
-
-    /// <summary>
-    /// Raises the <see cref="StateLoaded"/> event.
-    /// </summary>
-    protected virtual void OnStateLoaded()
-        => StateLoaded?.Invoke(this, EventArgs.Empty);
-
-    /// <summary>
-    /// Raises the <see cref="SpeechRecognized"/> event.
-    /// </summary>
-    /// <param name="e">Event data.</param>
-    protected virtual void OnSpeechRecognized(TrackerEventArgs e)
-        => SpeechRecognized?.Invoke(this, e);
 
     private static bool IsTreasure(Item? item)
         => item is { IsDungeonItem: false };
@@ -2513,27 +2203,6 @@ public class Tracker : ITracker, IDisposable
             Region region => region as IDungeon,
             _ => null
         };
-    }
-
-    private Action? TryTrackDungeonTreasure(Item item, float? confidence)
-    {
-        if (confidence < Options.MinimumSassConfidence)
-        {
-            // Tracker response could give away the location of an item if
-            // it is in a dungeon but tracker misheard.
-            return null;
-        }
-
-        var dungeon = GetDungeonFromItem(item);
-        if (dungeon != null && (IsTreasure(item) || World.Config.ZeldaKeysanity))
-        {
-            if (TrackDungeonTreasure(dungeon, confidence))
-                return _undoHistory.Pop().Action;
-        }
-
-        IsDirty = true;
-
-        return null;
     }
 
     private Action? TryTrackDungeonTreasure(Location location, float? confidence, bool autoTracked = false, bool stateResponse = true)
@@ -2650,6 +2319,7 @@ public class Tracker : ITracker, IDisposable
         Say(Responses.Idle[key]);
     }
 
+    [SupportedOSPlatform("windows")]
     private void Recognizer_SpeechRecognized(object? sender, SpeechRecognizedEventArgs e)
     {
         RestartIdleTimers();
@@ -2659,13 +2329,9 @@ public class Tracker : ITracker, IDisposable
     private void GiveLocationHint(IEnumerable<Location> accessibleBefore)
     {
         var accessibleAfter = _worldService.AccessibleLocations(false);
-        var newlyAccessible = accessibleAfter.Except(accessibleBefore);
+        var newlyAccessible = accessibleAfter.Except(accessibleBefore).ToList();
         if (newlyAccessible.Any())
         {
-            var regions = newlyAccessible.GroupBy(x => x.Region)
-                .OrderByDescending(x => x.Count())
-                .ThenBy(x => x.Key.Name);
-
             if (newlyAccessible.Contains(World.FindLocation(LocationId.InnerMaridiaSpringBall)))
                 Say(Responses.ShaktoolAvailable);
 

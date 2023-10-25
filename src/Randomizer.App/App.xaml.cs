@@ -118,7 +118,7 @@ namespace Randomizer.App
 
             services.AddSingleton<MsuUiService>();
             services.AddScoped<TrackerLocationSyncer>();
-            services.AddScoped<IAutoTracker, AutoTracker>();
+            services.AddScoped<AutoTrackerBase, AutoTracker>();
             services.AddSingleton<ITrackerStateService, TrackerStateService>();
             services.AddMultiplayerServices();
             services.AddSingleton<SpriteService>();

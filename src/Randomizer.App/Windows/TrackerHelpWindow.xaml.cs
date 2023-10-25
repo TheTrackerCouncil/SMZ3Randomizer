@@ -11,7 +11,7 @@ namespace Randomizer.App
     /// </summary>
     public partial class TrackerHelpWindow : Window
     {
-        public TrackerHelpWindow(ITracker tracker)
+        public TrackerHelpWindow(TrackerBase tracker)
         {
             SpeechRecognitionSyntax = tracker.Syntax;
 

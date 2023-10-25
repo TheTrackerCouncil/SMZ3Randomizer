@@ -21,7 +21,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
         /// <param name="currentState">The current state in Super Metroid</param>
         /// <param name="prevState">The previous state in Super Metroid</param>
         /// <returns>True if the check was identified, false otherwise</returns>
-        public bool ExecuteCheck(ITracker tracker, AutoTrackerMetroidState currentState, AutoTrackerMetroidState prevState)
+        public bool ExecuteCheck(TrackerBase tracker, AutoTrackerMetroidState currentState, AutoTrackerMetroidState prevState)
         {
             if (currentState.CurrentRegion != _previousMetroidRegionValue || tracker.CurrentRegion?.GetRegion(tracker.World) is Z3Region)
             {

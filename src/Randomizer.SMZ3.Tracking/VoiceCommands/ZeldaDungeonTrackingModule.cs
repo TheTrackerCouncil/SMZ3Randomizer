@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Versioning;
 using System.Speech.Recognition;
 
 using Microsoft.Extensions.Logging;
@@ -28,13 +29,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="itemService">Service to get item information</param>
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to log information.</param>
-        public ZeldaDungeonTrackingModule(ITracker tracker, IItemService itemService, IWorldService worldService, ILogger<ZeldaDungeonTrackingModule> logger)
+        public ZeldaDungeonTrackingModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<ZeldaDungeonTrackingModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
 
         }
 
-        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetMarkDungeonRewardRule()
         {
             var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: false);
@@ -53,6 +54,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append(RewardKey, rewardNames);
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetMarkRemainingDungeonRewardsRule()
         {
             return new GrammarBuilder()
@@ -63,6 +65,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .OneOf("crystal", "blue crystal");
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetClearDungeonRule()
         {
             var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
@@ -77,6 +80,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return GrammarBuilder.Combine(markDungeon);
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetMarkDungeonRequirementRule()
         {
             var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: false);
@@ -113,7 +117,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 markDungeon, markItem);
         }
 
-        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetTreasureTrackingRule()
         {
             var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
@@ -140,32 +144,32 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return GrammarBuilder.Combine(clearOne, clearMultiple);
         }
 
-        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
+        [SupportedOSPlatform("windows")]
         public override void AddCommands()
         {
             AddCommand("Mark dungeon pendant/crystal", GetMarkDungeonRewardRule(), (result) =>
             {
-                var dungeon = GetDungeonFromResult(Tracker, result);
+                var dungeon = GetDungeonFromResult(TrackerBase, result);
                 var reward = (RewardType)result.Semantics[RewardKey].Value;
-                Tracker.SetDungeonReward(dungeon, reward, result.Confidence);
+                TrackerBase.SetDungeonReward(dungeon, reward, result.Confidence);
             });
 
             AddCommand("Mark remaining dungeons", GetMarkRemainingDungeonRewardsRule(), (result) =>
             {
-                Tracker.SetUnmarkedDungeonReward(RewardType.CrystalBlue, result.Confidence);
+                TrackerBase.SetUnmarkedDungeonReward(RewardType.CrystalBlue, result.Confidence);
             });
 
             AddCommand("Mark dungeon as cleared", GetClearDungeonRule(), (result) =>
             {
-                var dungeon = GetDungeonFromResult(Tracker, result);
-                Tracker.MarkDungeonAsCleared(dungeon, result.Confidence);
+                var dungeon = GetDungeonFromResult(TrackerBase, result);
+                TrackerBase.MarkDungeonAsCleared(dungeon, result.Confidence);
             });
 
             AddCommand("Mark dungeon medallion", GetMarkDungeonRequirementRule(), (result) =>
             {
-                var dungeon = GetDungeonFromResult(Tracker, result);
-                var medallion = GetItemFromResult(Tracker, result, out _);
-                Tracker.SetDungeonRequirement(dungeon, medallion.Type, result.Confidence);
+                var dungeon = GetDungeonFromResult(TrackerBase, result);
+                var medallion = GetItemFromResult(TrackerBase, result, out _);
+                TrackerBase.SetDungeonRequirement(dungeon, medallion.Type, result.Confidence);
             });
 
             AddCommand("Clear dungeon treasure", GetTreasureTrackingRule(), (result) =>
@@ -173,8 +177,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 var count = result.Semantics.ContainsKey(TreasureCountKey)
                     ? (int)result.Semantics[TreasureCountKey].Value
                     : 1;
-                var dungeon = GetDungeonFromResult(Tracker, result);
-                Tracker.TrackDungeonTreasure(dungeon, result.Confidence, amount: count);
+                var dungeon = GetDungeonFromResult(TrackerBase, result);
+                TrackerBase.TrackDungeonTreasure(dungeon, result.Confidence, amount: count);
 
                 dungeon.DungeonState.HasManuallyClearedTreasure = true;
             });

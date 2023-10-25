@@ -16,7 +16,7 @@ public class DiverDown : IZeldaStateCheck
     /// <param name="currentState">The current state in Zelda</param>
     /// <param name="prevState">The previous state in Zelda</param>
     /// <returns>True if the check was identified, false otherwise</returns>
-    public bool ExecuteCheck(ITracker tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
+    public bool ExecuteCheck(TrackerBase tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
     {
         // Back diver down
         if (currentState.CurrentRoom == 118 && currentState.LinkX < 3474 && (currentState.LinkX < 3424 || currentState.LinkX > 3440) && currentState.LinkY <= 4000 && prevState.LinkY > 4000 && (currentState.LinkState is 0 or 6 or 3) && currentState.IsOnBottomHalfOfRoom && currentState.IsOnRightHalfOfRoom)

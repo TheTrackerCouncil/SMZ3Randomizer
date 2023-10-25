@@ -22,7 +22,7 @@ public class ConsoleTrackerDisplayService
     private readonly TrackerOptionsAccessor _trackerOptionsAccessor;
     private readonly RandomizerOptions _options;
     private readonly IServiceProvider _serviceProvider;
-    private ITracker _tracker = null!;
+    private TrackerBase _trackerBase = null!;
     private World _world = null!;
     private IWorldService _worldService = null!;
     private Region _lastRegion = null!;
@@ -42,14 +42,14 @@ public class ConsoleTrackerDisplayService
         _trackerOptionsAccessor.Options = _options.GeneralOptions.GetTrackerOptions();
         _world = _romLoaderService.LoadGeneratedRom(rom).First(x => x.IsLocalWorld);
         _worldService = _serviceProvider.GetRequiredService<IWorldService>();
-        _tracker = _serviceProvider.GetRequiredService<ITracker>();
-        _tracker.Load(rom, romPath);
-        _tracker.TryStartTracking();
-        _tracker.AutoTracker?.SetConnector(_options.AutoTrackerDefaultConnector, _options.AutoTrackerQUsb2SnesIp);
+        _trackerBase = _serviceProvider.GetRequiredService<TrackerBase>();
+        _trackerBase.Load(rom, romPath);
+        _trackerBase.TryStartTracking();
+        _trackerBase.AutoTracker?.SetConnector(_options.AutoTrackerDefaultConnector, _options.AutoTrackerQUsb2SnesIp);
 
-        if (_tracker.AutoTracker != null)
+        if (_trackerBase.AutoTracker != null)
         {
-            _tracker.AutoTracker.AutoTrackerConnected += delegate
+            _trackerBase.AutoTracker.AutoTrackerConnected += delegate
             {
                 UpdateScreen();
                 if (!_timer.Enabled)
@@ -58,7 +58,7 @@ public class ConsoleTrackerDisplayService
                 }
             };
 
-            _tracker.LocationCleared += delegate(object? _, LocationClearedEventArgs args)
+            _trackerBase.LocationCleared += delegate(object? _, LocationClearedEventArgs args)
             {
                 _lastRegion = args.Location.Region;
             };
@@ -74,7 +74,7 @@ public class ConsoleTrackerDisplayService
 
             if ("y".Equals(response, StringComparison.OrdinalIgnoreCase))
             {
-                await _tracker.SaveAsync();
+                await _trackerBase.SaveAsync();
                 break;
             }
 
@@ -145,15 +145,15 @@ public class ConsoleTrackerDisplayService
     {
         var lines = new List<string>();
 
-        var connected = $"Connected: {_tracker.AutoTracker?.IsConnected == true}";
+        var connected = $"Connected: {_trackerBase.AutoTracker?.IsConnected == true}";
 
-        switch (_tracker.AutoTracker?.CurrentGame)
+        switch (_trackerBase.AutoTracker?.CurrentGame)
         {
             case Game.Zelda:
-                lines.Add($"{connected} | {_tracker.AutoTracker.ZeldaState}");
+                lines.Add($"{connected} | {_trackerBase.AutoTracker.ZeldaState}");
                 break;
             case Game.SM:
-                lines.Add($"{connected} | {_tracker.AutoTracker.MetroidState}");
+                lines.Add($"{connected} | {_trackerBase.AutoTracker.MetroidState}");
                 break;
             default:
                 lines.Add(connected);

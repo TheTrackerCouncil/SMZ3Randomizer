@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Versioning;
 using Microsoft.Extensions.Logging;
 using Randomizer.Abstractions;
 using Randomizer.SMZ3.Tracking.Services;
@@ -11,7 +12,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands;
 /// </summary>
 public class AutoTrackerModule : TrackerModule, IDisposable
 {
-    private readonly IAutoTracker _autoTracker;
+    private readonly AutoTrackerBase _autoTrackerBase;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AutoTrackerModule"/>
@@ -21,12 +22,12 @@ public class AutoTrackerModule : TrackerModule, IDisposable
     /// <param name="itemService">Service to get item information</param>
     /// <param name="worldService">Service to get world information</param>
     /// <param name="logger">Used to write logging information.</param>
-    /// <param name="autoTracker">The auto tracker to associate with this module</param>
-    public AutoTrackerModule(ITracker tracker, IItemService itemService, IWorldService worldService, ILogger<AutoTrackerModule> logger, IAutoTracker autoTracker)
+    /// <param name="autoTrackerBase">The auto tracker to associate with this module</param>
+    public AutoTrackerModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<AutoTrackerModule> logger, AutoTrackerBase autoTrackerBase)
         : base(tracker, itemService, worldService, logger)
     {
-        Tracker.AutoTracker = autoTracker;
-        _autoTracker = autoTracker;
+        TrackerBase.AutoTracker = autoTrackerBase;
+        _autoTrackerBase = autoTrackerBase;
     }
 
     private GrammarBuilder GetLookAtGameRule()
@@ -40,9 +41,9 @@ public class AutoTrackerModule : TrackerModule, IDisposable
 
     private void LookAtGame()
     {
-        if (_autoTracker.LatestViewAction == null || _autoTracker.LatestViewAction.Invoke() == false)
+        if (_autoTrackerBase.LatestViewAction == null || _autoTrackerBase.LatestViewAction.Invoke() == false)
         {
-            Tracker.Say(x => x.AutoTracker.LookedAtNothing);
+            TrackerBase.Say(x => x.AutoTracker.LookedAtNothing);
         }
     }
 
@@ -51,9 +52,10 @@ public class AutoTrackerModule : TrackerModule, IDisposable
     /// </summary>
     public void Dispose()
     {
-        _autoTracker.SetConnector(EmulatorConnectorType.None, "");
+        _autoTrackerBase.SetConnector(EmulatorConnectorType.None, "");
     }
 
+    [SupportedOSPlatform("windows")]
     public override void AddCommands()
     {
         AddCommand("Look at this", GetLookAtGameRule(), (result) =>

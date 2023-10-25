@@ -26,19 +26,21 @@ public class LocationsPatch : RomPatch
                 yield return new GeneratedPatch(Snes(location.RomAddress), UshortBytes(GetMetroidItemValue(data, location)));
                 yield return ItemTablePatch(location, GetZ3ItemId(data, location));
             }
-            else
+            /*else
             {
                 var plmId = GetMetroidItemValue(data, location);
                 yield return new GeneratedPatch(Snes(location.RomAddress), UshortBytes(plmId));
                 if (plmId >= 0xEFE0)
                     yield return new GeneratedPatch(Snes(location.RomAddress + 5), new[] { GetZ3ItemId(data, location) });
-            }
+            }*/
         }
     }
 
     private ushort GetMetroidItemValue(GetPatchesRequest data, Location location)
     {
-        var plmId = GetPatchesRequest.EnableMultiworld ?
+        var plmId = 0xEFE0;
+
+        /*var plmId = GetPatchesRequest.EnableMultiworld ?
             0xEFE0 :
             location.Item.Type switch
             {
@@ -65,6 +67,7 @@ public class LocationsPatch : RomPatch
                 ItemType.ScrewAttack => 0xEF1F,
                 _ => 0xEFE0,
             };
+            */
 
         plmId += plmId switch
         {
@@ -99,10 +102,12 @@ public class LocationsPatch : RomPatch
                 yield return new GeneratedPatch(Snes(location.RomAddress), new[] { (byte)(location.Id - 256) });
                 yield return ItemTablePatch(location, GetZ3ItemId(data, location));
             }
+            /*
             else
             {
                 yield return new GeneratedPatch(Snes(location.RomAddress), new[] { GetZ3ItemId(data, location) });
             }
+            */
         }
     }
 

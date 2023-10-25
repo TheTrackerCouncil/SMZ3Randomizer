@@ -17,7 +17,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="itemService">Service to get item information</param>
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to log information.</param>
-        public UndoModule(ITracker tracker, IItemService itemService, IWorldService worldService, ILogger<UndoModule> logger)
+        public UndoModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<UndoModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
 
@@ -35,7 +35,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             AddCommand("Undo last operation", GetUndoRule(), (result) =>
             {
-                Tracker.Undo(result.Confidence);
+                TrackerBase.Undo(result.Confidence);
             });
         }
     }

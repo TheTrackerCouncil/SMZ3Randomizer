@@ -24,7 +24,7 @@ public class ZeldaDeath : IZeldaStateCheck
     /// <param name="currentState">The current state in Zelda</param>
     /// <param name="prevState">The previous state in Zelda</param>
     /// <returns>True if the check was identified, false otherwise</returns>
-    public bool ExecuteCheck(ITracker tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
+    public bool ExecuteCheck(TrackerBase tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
     {
         if (tracker.AutoTracker == null || currentState.State != 0x12 || prevState.State == 0x12 || tracker.AutoTracker.PlayerHasFairy) return false;
 

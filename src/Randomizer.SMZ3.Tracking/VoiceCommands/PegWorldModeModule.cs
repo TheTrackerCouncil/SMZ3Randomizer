@@ -20,7 +20,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="itemService">Service to get item information</param>
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to log information.</param>
-        public PegWorldModeModule(ITracker tracker, IItemService itemService, IWorldService worldService, ILogger<PegWorldModeModule> logger)
+        public PegWorldModeModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<PegWorldModeModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
 
@@ -35,7 +35,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 "Hey tracker, let's go to Peg World!"
             }, (result) =>
             {
-                Tracker.StartPegWorldMode(result.Confidence);
+                TrackerBase.StartPegWorldMode(result.Confidence);
             });
 
             AddCommand("Toggle Peg World mode off", new[] {
@@ -46,7 +46,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 "Hey tracker, release me from Peg World"
             }, (result) =>
             {
-                Tracker.StopPegWorldMode(result.Confidence);
+                TrackerBase.StopPegWorldMode(result.Confidence);
             });
 
             AddCommand("Track Peg World peg", new[] {
@@ -54,9 +54,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 "Hey tracker, peg."
             }, (result) =>
             {
-                if (Tracker.PegsPegged < TotalPegs)
+                if (TrackerBase.PegsPegged < TotalPegs)
                 {
-                    Tracker.Peg(result.Confidence);
+                    TrackerBase.Peg(result.Confidence);
                 }
             });
         }

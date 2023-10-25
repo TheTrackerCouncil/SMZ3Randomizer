@@ -26,22 +26,22 @@ public class MultiplayerModule : TrackerModule
     /// <param name="worldService">Service to get world information</param>
     /// <param name="logger">Used to write logging information.</param>
     /// <param name="multiplayerGameService">The multiplayer game service</param>
-    /// <param name="autoTracker"></param>
-    public MultiplayerModule(ITracker tracker, IItemService itemService, IWorldService worldService,
-        ILogger<MultiplayerModule> logger, MultiplayerGameService multiplayerGameService, IAutoTracker autoTracker)
+    /// <param name="autoTrackerBase"></param>
+    public MultiplayerModule(TrackerBase tracker, IItemService itemService, IWorldService worldService,
+        ILogger<MultiplayerModule> logger, MultiplayerGameService multiplayerGameService, AutoTrackerBase autoTrackerBase)
         : base(tracker, itemService, worldService, logger)
     {
         _multiplayerGameService = multiplayerGameService;
 
-        if (Tracker.Rom is { MultiplayerGameDetails: null }) return;
+        if (TrackerBase.Rom is { MultiplayerGameDetails: null }) return;
 
-        Tracker.LocationCleared += TrackerOnLocationCleared;
-        Tracker.BossUpdated += TrackerOnBossUpdated;
-        Tracker.ItemTracked += TrackerOnItemTracked;
-        Tracker.DungeonUpdated += TrackerOnDungeonUpdated;
-        Tracker.BeatGame += TrackerOnBeatGame;
-        Tracker.PlayerDied += TrackerOnPlayerDied;
-        autoTracker.AutoTrackerConnected += AutoTrackerOnAutoTrackerConnected;
+        TrackerBase.LocationCleared += TrackerOnLocationCleared;
+        TrackerBase.BossUpdated += TrackerOnBossUpdated;
+        TrackerBase.ItemTracked += TrackerOnItemTracked;
+        TrackerBase.DungeonUpdated += TrackerOnDungeonUpdated;
+        TrackerBase.BeatGame += TrackerOnBeatGame;
+        TrackerBase.PlayerDied += TrackerOnPlayerDied;
+        autoTrackerBase.AutoTrackerConnected += AutoTrackerOnAutoTrackerConnected;
 
         _multiplayerGameService.PlayerTrackedLocation += PlayerTrackedLocation;
         _multiplayerGameService.PlayerTrackedItem += PlayerTrackedItem;
@@ -70,7 +70,7 @@ public class MultiplayerModule : TrackerModule
                 do
                 {
                     await Task.Delay(TimeSpan.FromSeconds(5));
-                } while (Tracker.AutoTracker?.HasValidState != true || Tracker.AutoTracker!.CurrentGame == Game.Neither);
+                } while (TrackerBase.AutoTracker?.HasValidState != true || TrackerBase.AutoTracker!.CurrentGame == Game.Neither);
 
                 Logger.LogInformation("Requesting player sync");
                 await _multiplayerGameService.OnAutoTrackingConnected();
@@ -85,10 +85,10 @@ public class MultiplayerModule : TrackerModule
     private void PlayerSyncReceived(PlayerSyncReceivedEventHandlerArgs args)
     {
         // Ignore the sync if auto tracker is not connected as we don't want to lose out on items
-        if (Tracker.AutoTracker?.HasValidState != true) return;
+        if (TrackerBase.AutoTracker?.HasValidState != true) return;
         if (args.PlayerId == null || args.ItemsToGive == null || args.ItemsToGive.Count == 0 || args.IsLocalPlayer) return;
         var items = args.ItemsToGive.Select(x => ItemService.FirstOrDefault(x)).NonNull().ToList();
-        Tracker.GameService!.TryGiveItems(items, args.PlayerId.Value);
+        TrackerBase.GameService!.TryGiveItems(items, args.PlayerId.Value);
 
         foreach (var locationState in args.UpdatedLocationStates)
         {
@@ -124,13 +124,13 @@ public class MultiplayerModule : TrackerModule
         if (args.DidComplete)
         {
             if (args.SendItemsOnComplete)
-                Tracker.Say(x => x.Multiplayer.OtherPlayerBeatGame, args.PhoneticName);
+                TrackerBase.Say(x => x.Multiplayer.OtherPlayerBeatGame, args.PhoneticName);
             else
-                Tracker.Say(x => x.Multiplayer.OtherPlayerBeatGameNoItems, args.PhoneticName);
+                TrackerBase.Say(x => x.Multiplayer.OtherPlayerBeatGameNoItems, args.PhoneticName);
         }
         else if (args.DidForfeit)
         {
-            Tracker.Say(x => x.Multiplayer.OtherPlayerForfeitGame, args.PhoneticName);
+            TrackerBase.Say(x => x.Multiplayer.OtherPlayerForfeitGame, args.PhoneticName);
         }
     }
 
@@ -144,27 +144,27 @@ public class MultiplayerModule : TrackerModule
             return;
         }
 
-        Tracker.Say(x => x.Multiplayer.OtherPlayerTrackedItem, args.PhoneticName, item.Metadata.Name,
+        TrackerBase.Say(x => x.Multiplayer.OtherPlayerTrackedItem, args.PhoneticName, item.Metadata.Name,
             item.Metadata.NameWithArticle);
     }
 
     private void PlayerTrackedLocation(PlayerTrackedLocationEventHandlerArgs args)
     {
         // Ignore the sync if auto tracker is not connected as we don't want to lose out on items
-        if (Tracker.AutoTracker?.HasValidState != true) return;
+        if (TrackerBase.AutoTracker?.HasValidState != true) return;
         if (args.ItemToGive == ItemType.Nothing) return;
         var item = ItemService.FirstOrDefault(args.ItemToGive);
         if (item == null)
             throw new InvalidOperationException($"Player retrieved invalid item {args.ItemToGive}");
-        Tracker.GameService!.TryGiveItem(item, args.PlayerId);
+        TrackerBase.GameService!.TryGiveItem(item, args.PlayerId);
         if (item.Type.IsPossibleProgression(item.World.Config.ZeldaKeysanity, item.World.Config.MetroidKeysanity))
         {
-            Tracker.Say(x => x.Multiplayer.ReceivedUsefulItemFromOtherPlayer, args.PhoneticName, item.Metadata.Name,
+            TrackerBase.Say(x => x.Multiplayer.ReceivedUsefulItemFromOtherPlayer, args.PhoneticName, item.Metadata.Name,
                 item.Metadata.NameWithArticle);
         }
         else if (item.Type.IsInCategory(ItemCategory.Junk))
         {
-            Tracker.Say(x => x.Multiplayer.ReceivedJunkItemFromOtherPlayer, args.PhoneticName, item.Metadata.Name,
+            TrackerBase.Say(x => x.Multiplayer.ReceivedJunkItemFromOtherPlayer, args.PhoneticName, item.Metadata.Name,
                 item.Metadata.NameWithArticle);
         }
         args.LocationState.Cleared = true;
@@ -180,13 +180,13 @@ public class MultiplayerModule : TrackerModule
         if (dungeon == null) return;
         if (dungeon is { HasReward: true, DungeonReward: { } })
         {
-            Tracker.Say(x => x.Multiplayer.OtherPlayerClearedDungeonWithReward, args.PhoneticName,
+            TrackerBase.Say(x => x.Multiplayer.OtherPlayerClearedDungeonWithReward, args.PhoneticName,
                 dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss, dungeon.DungeonReward.Metadata.Name,
                 dungeon.DungeonReward.Metadata.NameWithArticle);
         }
         else
         {
-            Tracker.Say(x => x.Multiplayer.OtherPlayerClearedDungeonWithoutReward, args.PhoneticName,
+            TrackerBase.Say(x => x.Multiplayer.OtherPlayerClearedDungeonWithoutReward, args.PhoneticName,
                 dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss);
         }
     }
@@ -197,7 +197,7 @@ public class MultiplayerModule : TrackerModule
         args.BossState.AutoTracked = true;
         var boss = WorldService.World.GoldenBosses.FirstOrDefault(x => x.Type == args.BossState.Type);
         if (boss == null) return;
-        Tracker.Say(x => x.Multiplayer.OtherPlayerDefeatedBoss, args.PhoneticName, boss.Metadata.Name);
+        TrackerBase.Say(x => x.Multiplayer.OtherPlayerDefeatedBoss, args.PhoneticName, boss.Metadata.Name);
     }
 
     private void PlayerTrackedDeath(PlayerTrackedDeathEventHandlerArgs args)
@@ -205,12 +205,12 @@ public class MultiplayerModule : TrackerModule
         if (args.DeathLinkEnabled && !args.IsLocalPlayer)
         {
             Logger.LogInformation("Other player died with death link enabled");
-            Tracker.GameService!.TryKillPlayer();
-            Tracker.Say(x => x.Multiplayer.OtherPlayedDiedDeathLink, args.PhoneticName);
+            TrackerBase.GameService!.TryKillPlayer();
+            TrackerBase.Say(x => x.Multiplayer.OtherPlayedDiedDeathLink, args.PhoneticName);
         }
         else if(!args.IsLocalPlayer)
         {
-            Tracker.Say(x => x.Multiplayer.OtherPlayedDied, args.PhoneticName);
+            TrackerBase.Say(x => x.Multiplayer.OtherPlayedDied, args.PhoneticName);
         }
 
     }
@@ -225,7 +225,7 @@ public class MultiplayerModule : TrackerModule
     {
         if (e.Item == null || e.Item.Type == ItemType.Nothing || !e.AutoTracked) return;
 
-        if (e.Item.World.Guid == Tracker.World.Guid)
+        if (e.Item.World.Guid == TrackerBase.World.Guid)
             await _multiplayerGameService.TrackItem(e.Item);
     }
 
@@ -243,7 +243,7 @@ public class MultiplayerModule : TrackerModule
         var localItem = ItemService.FirstOrDefault(e.Location.Item.Type);
         if (localItem == null || localItem.State.TrackingState >= e.Location.Item.State.TrackingState) return;
         var otherPlayer = e.Location.Item.World.Config.PhoneticName;
-        Tracker.Say(x => x.Multiplayer.GiftedUsefulItemToOtherPlayer, otherPlayer, localItem.Metadata.Name,
+        TrackerBase.Say(x => x.Multiplayer.GiftedUsefulItemToOtherPlayer, otherPlayer, localItem.Metadata.Name,
             localItem.Metadata.NameWithArticle);
     }
 
@@ -255,7 +255,7 @@ public class MultiplayerModule : TrackerModule
 
     private async void TrackerOnPlayerDied(object? sender, TrackerEventArgs e)
     {
-        if (!e.AutoTracked || Tracker.GameService!.PlayerRecentlyKilled) return;
+        if (!e.AutoTracked || TrackerBase.GameService!.PlayerRecentlyKilled) return;
         await _multiplayerGameService.TrackDeath();
     }
 

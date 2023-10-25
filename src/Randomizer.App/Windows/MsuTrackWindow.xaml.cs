@@ -17,7 +17,7 @@ public partial class MsuTrackWindow : Window, IDisposable
 {
     private readonly DoubleAnimation _marquee = new();
     private CancellationTokenSource _cts = new();
-    private ITracker? _tracker;
+    private TrackerBase? _tracker;
     private RandomizerOptions? _options;
     private Track? _currentTrack;
     private Msu? _currentMsu;
@@ -31,7 +31,7 @@ public partial class MsuTrackWindow : Window, IDisposable
         App.RestoreWindowPositionAndSize(this);
     }
 
-    public void Init(ITracker tracker, RandomizerOptions options)
+    public void Init(TrackerBase tracker, RandomizerOptions options)
     {
         _tracker = tracker;
         _options = options;

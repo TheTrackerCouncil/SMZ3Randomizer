@@ -37,15 +37,15 @@ public static class TrackerServiceCollectionExtensions
         services.AddScoped<IUIService, UIService>();
         services.AddScoped<IWorldService, WorldService>();
         services.AddScoped<IRandomizerConfigService, RandomizerConfigService>();
-        services.AddScoped<ITracker, Tracker>();
+        services.AddScoped<TrackerBase, Tracker>();
 
         if (OperatingSystem.IsWindows())
         {
-            services.AddScoped<ISpeechRecognitionService, SpeechRecognitionServiceEnabled>();
+            services.AddScoped<SpeechRecognitionServiceBase, SpeechRecognitionServiceEnabled>();
         }
         else
         {
-            services.AddScoped<ISpeechRecognitionService, SpeechRecognitionServiceDisabled>();
+            services.AddScoped<SpeechRecognitionServiceBase, SpeechRecognitionServiceDisabled>();
         }
 
         var assemblies = new[] { Assembly.GetExecutingAssembly() };

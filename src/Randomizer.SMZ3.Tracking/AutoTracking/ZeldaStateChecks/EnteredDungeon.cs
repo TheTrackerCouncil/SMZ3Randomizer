@@ -33,7 +33,7 @@ public class EnteredDungeon : IZeldaStateCheck
     /// <param name="currentState">The current state in Zelda</param>
     /// <param name="prevState">The previous state in Zelda</param>
     /// <returns>True if the check was identified, false otherwise</returns>
-    public bool ExecuteCheck(ITracker tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
+    public bool ExecuteCheck(TrackerBase tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
     {
         if (currentState.State == 0x07 && (prevState.State == 0x06 || prevState.State == 0x09 || prevState.State == 0x0F || prevState.State == 0x10 || prevState.State == 0x11))
         {

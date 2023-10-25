@@ -25,7 +25,7 @@ namespace Randomizer.App
         /// <param name="itemService">Service for retrieving the item data</param>
         /// <param name="worldService">Service for retrieving world data</param>
         /// <param name="logger">Logger</param>
-        public TrackerLocationSyncer(ITracker tracker, IItemService itemService, IWorldService worldService, ILogger<TrackerLocationSyncer> logger)
+        public TrackerLocationSyncer(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<TrackerLocationSyncer> logger)
         {
             Tracker = tracker;
             ItemService = itemService;
@@ -83,7 +83,7 @@ namespace Randomizer.App
             }
         }
 
-        public ITracker Tracker { get; private set; }
+        public TrackerBase Tracker { get; private set; }
 
         public IItemService ItemService { get; private set; }
 

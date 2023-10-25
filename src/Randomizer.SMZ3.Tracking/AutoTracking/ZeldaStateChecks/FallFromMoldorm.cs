@@ -16,7 +16,7 @@ public class FallFromMoldorm : IZeldaStateCheck
     /// <param name="currentState">The current state in Zelda</param>
     /// <param name="prevState">The previous state in Zelda</param>
     /// <returns>True if the check was identified, false otherwise</returns>
-    public bool ExecuteCheck(ITracker tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
+    public bool ExecuteCheck(TrackerBase tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
     {
         // Tower of Hera
         if (currentState.CurrentRoom == 23 && currentState.PreviousRoom == 7 && prevState.CurrentRoom == 7)

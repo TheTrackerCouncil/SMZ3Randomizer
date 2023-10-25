@@ -27,7 +27,7 @@ public static class ServiceCollectionExtensions
             .AddOptionalModule<AutoTrackerModule>()
             .AddOptionalModule<MapModule>();
         services.AddScoped<IGameService, GameService>();
-        services.AddScoped<IAutoTracker, AutoTracker>();
+        services.AddScoped<AutoTrackerBase, AutoTracker>();
         services.AddSingleton<ITrackerStateService, TrackerStateService>();
         services.AddMultiplayerServices();
 

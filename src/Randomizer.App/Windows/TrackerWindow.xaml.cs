@@ -66,7 +66,7 @@ namespace Randomizer.App.Windows
         private UILayout _layout;
         private readonly UILayout _defaultLayout;
         private UILayout? _previousLayout;
-        private ITracker? _tracker;
+        private TrackerBase? _tracker;
 
         public TrackerWindow(IServiceProvider serviceProvider,
             IItemService itemService,
@@ -120,7 +120,7 @@ namespace Randomizer.App.Windows
             BottomRight = 3
         }
 
-        public ITracker Tracker => _tracker ?? throw new InvalidOperationException("Tracker not created");
+        public TrackerBase TrackerBase => _tracker ?? throw new InvalidOperationException("Tracker not created");
 
         public GeneratedRom? Rom { get; set; }
 
@@ -373,7 +373,7 @@ namespace Randomizer.App.Windows
                     }
 
                     var fileName = _uiService.GetSpritePath("Items",
-                        Tracker?.PegsPegged >= pegNumber ? "pegged.png" : "peg.png", out _);
+                        TrackerBase?.PegsPegged >= pegNumber ? "pegged.png" : "peg.png", out _);
 
                     var image = GetGridItemControl(fileName, gridLocation.Column, gridLocation.Row, out _);
                     image.Tag = gridLocation;
@@ -415,7 +415,7 @@ namespace Randomizer.App.Windows
 
             string? GetMatchingDungeonNameImages(ItemType requirement)
             {
-                var names = Tracker.World.Dungeons.Where(x => x.DungeonState.MarkedMedallion == requirement)
+                var names = TrackerBase.World.Dungeons.Where(x => x.DungeonState.MarkedMedallion == requirement)
                     .Select(x => x.DungeonName)
                     .ToList();
 
@@ -449,21 +449,21 @@ namespace Randomizer.App.Windows
                     if (gridLocation.Type == UIGridLocationType.Items)
                     {
                         var item = _itemService.FirstOrDefault(gridLocation.Identifiers.First());
-                        if (item != null) Tracker.TrackItem(item);
+                        if (item != null) TrackerBase.TrackItem(item);
                     }
                     else if (gridLocation.Type == UIGridLocationType.Dungeon)
                     {
                         var dungeon = _world.World.Dungeons.First(x => x.DungeonName == gridLocation.Identifiers.First());
-                        Tracker.MarkDungeonAsCleared(dungeon);
+                        TrackerBase.MarkDungeonAsCleared(dungeon);
                     }
                     else if (gridLocation.Type == UIGridLocationType.Peg)
                     {
-                        Tracker.Peg();
+                        TrackerBase.Peg();
                     }
                     else if (gridLocation.Type == UIGridLocationType.SMBoss)
                     {
                         var boss = _world.World.AllBosses.First(x => x.Name == gridLocation.Identifiers.First());
-                        Tracker.MarkBossAsDefeated(boss);
+                        TrackerBase.MarkBossAsDefeated(boss);
                     }
                     else
                     {
@@ -501,7 +501,7 @@ namespace Randomizer.App.Windows
                     };
                     menuItem.Click += (sender, e) =>
                     {
-                        Tracker.TrackItem(item);
+                        TrackerBase.TrackItem(item);
                         RefreshGridItems();
                     };
                     menu.Items.Add(menuItem);
@@ -519,7 +519,7 @@ namespace Randomizer.App.Windows
                     };
                     menuItem.Click += (sender, e) =>
                     {
-                        Tracker.UntrackItem(item);
+                        TrackerBase.UntrackItem(item);
                         RefreshGridItems();
                     };
                     menu.Items.Add(menuItem);
@@ -528,8 +528,8 @@ namespace Randomizer.App.Windows
                 if (item.Type is ItemType.Bombos or ItemType.Ether or ItemType.Quake)
                 {
                     var medallion = item.Type;
-                    var turtleRock = Tracker.World.TurtleRock as IDungeon;
-                    var miseryMire = Tracker.World.MiseryMire as IDungeon;
+                    var turtleRock = TrackerBase.World.TurtleRock as IDungeon;
+                    var miseryMire = TrackerBase.World.MiseryMire as IDungeon;
 
                     var requiredByNone = new MenuItem
                     {
@@ -612,7 +612,7 @@ namespace Randomizer.App.Windows
                 };
                 unclear.Click += (sender, e) =>
                 {
-                    Tracker.MarkBossAsNotDefeated(boss);
+                    TrackerBase.MarkBossAsNotDefeated(boss);
                 };
                 menu.Items.Add(unclear);
             }
@@ -635,7 +635,7 @@ namespace Randomizer.App.Windows
                 };
                 unclear.Click += (sender, e) =>
                 {
-                    Tracker.MarkDungeonAsIncomplete(dungeon);
+                    TrackerBase.MarkDungeonAsIncomplete(dungeon);
                 };
                 menu.Items.Add(unclear);
             }
@@ -683,19 +683,19 @@ namespace Randomizer.App.Windows
             ResetGridSize();
             RefreshGridItems();
 
-            if (!Tracker.TryStartTracking())
+            if (!TrackerBase.TryStartTracking())
             {
                 ShowModuleWarning();
             }
 
-            Tracker.ConnectToChat(_options.GeneralOptions.TwitchUserName, _options.GeneralOptions.TwitchOAuthToken,
+            TrackerBase.ConnectToChat(_options.GeneralOptions.TwitchUserName, _options.GeneralOptions.TwitchOAuthToken,
                 _options.GeneralOptions.TwitchChannel, _options.GeneralOptions.TwitchId);
             _dispatcherTimer.Start();
 
             // Show proper voice status bar icon and warn the user if no mic is available
-            StatusBarConfidence.Visibility = Tracker.VoiceRecognitionEnabled ? Visibility.Visible : Visibility.Collapsed;
-            StatusBarVoiceDisabled.Visibility = Tracker.VoiceRecognitionEnabled ? Visibility.Collapsed : Visibility.Visible;
-            if (!Tracker.MicrophoneInitialized)
+            StatusBarConfidence.Visibility = TrackerBase.VoiceRecognitionEnabled ? Visibility.Visible : Visibility.Collapsed;
+            StatusBarVoiceDisabled.Visibility = TrackerBase.VoiceRecognitionEnabled ? Visibility.Collapsed : Visibility.Visible;
+            if (!TrackerBase.MicrophoneInitialized)
             {
                 ShowNoMicrophoneWarning();
             }
@@ -710,7 +710,7 @@ namespace Randomizer.App.Windows
             if (_options.GeneralOptions.DisplayMsuTrackWindow)
             {
                 _msuTrackWindow = new MsuTrackWindow();
-                _msuTrackWindow.Init(Tracker, _options);
+                _msuTrackWindow.Init(TrackerBase, _options);
                 _msuTrackWindow.Show();
             }
 
@@ -727,59 +727,59 @@ namespace Randomizer.App.Windows
                 _msuLookupService.LookupMsus(_options.GeneralOptions.MsuPath);
             });
 
-            _tracker = _serviceProvider.GetRequiredService<ITracker>();
+            _tracker = _serviceProvider.GetRequiredService<TrackerBase>();
 
             // If a rom was passed in with a valid tracker state, reload the state from the database
             if (GeneratedRom.IsValid(Rom))
             {
                 var romPath = Path.Combine(_options.RomOutputPath, Rom.RomPath);
-                Tracker.Load(Rom, romPath);
+                TrackerBase.Load(Rom, romPath);
             }
 
-            Tracker.SpeechRecognized += (sender, e) => Dispatcher.Invoke(() =>
+            TrackerBase.SpeechRecognized += (sender, e) => Dispatcher.Invoke(() =>
             {
                 UpdateStats(e);
             });
-            Tracker.ItemTracked += (sender, e) => Dispatcher.Invoke(() =>
+            TrackerBase.ItemTracked += (sender, e) => Dispatcher.Invoke(() =>
             {
                 TogglePegWorld(false);
                 ToggleShaktoolMode(false);
                 RefreshGridItems();
             });
-            Tracker.ToggledPegWorldModeOn += (sender, e) => Dispatcher.Invoke(() =>
+            TrackerBase.ToggledPegWorldModeOn += (sender, e) => Dispatcher.Invoke(() =>
             {
-                TogglePegWorld(Tracker.PegWorldMode);
+                TogglePegWorld(TrackerBase.PegWorldMode);
                 RefreshGridItems();
             });
-            Tracker.ToggledShaktoolMode += (sender, e) => Dispatcher.Invoke(() =>
+            TrackerBase.ToggledShaktoolMode += (sender, e) => Dispatcher.Invoke(() =>
             {
-                ToggleShaktoolMode(Tracker.ShaktoolMode);
+                ToggleShaktoolMode(TrackerBase.ShaktoolMode);
                 RefreshGridItems();
             });
-            Tracker.PegPegged += (sender, e) => Dispatcher.Invoke(() =>
+            TrackerBase.PegPegged += (sender, e) => Dispatcher.Invoke(() =>
             {
-                TogglePegWorld(Tracker.PegsPegged < PegWorldModeModule.TotalPegs);
+                TogglePegWorld(TrackerBase.PegsPegged < PegWorldModeModule.TotalPegs);
                 RefreshGridItems();
             });
-            Tracker.DungeonUpdated += (sender, e) => Dispatcher.Invoke(() =>
+            TrackerBase.DungeonUpdated += (sender, e) => Dispatcher.Invoke(() =>
             {
                 TogglePegWorld(false);
                 RefreshGridItems();
             });
-            Tracker.BossUpdated += (sender, e) => Dispatcher.Invoke(() =>
+            TrackerBase.BossUpdated += (sender, e) => Dispatcher.Invoke(() =>
             {
                 TogglePegWorld(false);
                 ToggleShaktoolMode(false);
                 RefreshGridItems();
             });
-            Tracker.GoModeToggledOn += (sender, e) => Dispatcher.Invoke(() =>
+            TrackerBase.GoModeToggledOn += (sender, e) => Dispatcher.Invoke(() =>
             {
                 TrackerStatusBar.Background = Brushes.Green;
                 StatusBarGoMode.Visibility = Visibility.Visible;
             });
-            Tracker.ActionUndone += (sender, e) => Dispatcher.Invoke(() =>
+            TrackerBase.ActionUndone += (sender, e) => Dispatcher.Invoke(() =>
             {
-                if (!Tracker.GoMode)
+                if (!TrackerBase.GoMode)
                 {
                     TrackerStatusBar.Background = null;
                     StatusBarGoMode.Visibility = Visibility.Collapsed;
@@ -787,16 +787,16 @@ namespace Randomizer.App.Windows
 
                 RefreshGridItems();
             });
-            Tracker.StateLoaded += (sender, e) => Dispatcher.Invoke(() =>
+            TrackerBase.StateLoaded += (sender, e) => Dispatcher.Invoke(() =>
             {
                 RefreshGridItems();
                 ResetGridSize();
-                TrackerStatusBar.Background = Tracker.GoMode ? Brushes.Green : null;
-                StatusBarGoMode.Visibility = Tracker.GoMode ? Visibility.Visible : Visibility.Collapsed;
+                TrackerStatusBar.Background = TrackerBase.GoMode ? Brushes.Green : null;
+                StatusBarGoMode.Visibility = TrackerBase.GoMode ? Visibility.Visible : Visibility.Collapsed;
             });
-            Tracker.MapUpdated += (sender, e) => Dispatcher.Invoke(() =>
+            TrackerBase.MapUpdated += (sender, e) => Dispatcher.Invoke(() =>
             {
-                _trackerMapWindow?.UpdateMap(Tracker.CurrentMap);
+                _trackerMapWindow?.UpdateMap(TrackerBase.CurrentMap);
             });
         }
 
@@ -846,7 +846,7 @@ namespace Randomizer.App.Windows
             };
             _autoTrackerDisableMenuItem.Click += (sender, e) =>
             {
-                Tracker.AutoTracker?.SetConnector(EmulatorConnectorType.None, "");
+                TrackerBase.AutoTracker?.SetConnector(EmulatorConnectorType.None, "");
             };
             menu.Items.Add(_autoTrackerDisableMenuItem);
 
@@ -857,7 +857,7 @@ namespace Randomizer.App.Windows
             };
             _autoTrackerLuaMenuItem.Click += (sender, e) =>
             {
-                Tracker.AutoTracker?.SetConnector(EmulatorConnectorType.Lua, "");
+                TrackerBase.AutoTracker?.SetConnector(EmulatorConnectorType.Lua, "");
             };
             menu.Items.Add(_autoTrackerLuaMenuItem);
 
@@ -868,7 +868,7 @@ namespace Randomizer.App.Windows
             };
             _autoTrackerUSB2SNESMenuItem.Click += (sender, e) =>
             {
-                Tracker.AutoTracker?.SetConnector(EmulatorConnectorType.USB2SNES, _options.AutoTrackerQUsb2SnesIp);
+                TrackerBase.AutoTracker?.SetConnector(EmulatorConnectorType.USB2SNES, _options.AutoTrackerQUsb2SnesIp);
             };
             menu.Items.Add(_autoTrackerUSB2SNESMenuItem);
 
@@ -907,35 +907,35 @@ namespace Randomizer.App.Windows
             StatusBarAutoTrackerConnected.ContextMenu = menu;
             StatusBarAutoTrackerDisabled.ContextMenu = menu;
 
-            if (Tracker.AutoTracker == null)
+            if (TrackerBase.AutoTracker == null)
             {
                 _logger.LogError("Auto tracker not found");
                 return;
             }
 
-            Tracker.AutoTracker.AutoTrackerEnabled += (sender, e) => Dispatcher.Invoke(UpdateAutoTrackerMenu);
-            Tracker.AutoTracker.AutoTrackerDisabled += (sender, e) => Dispatcher.Invoke(UpdateAutoTrackerMenu);
-            Tracker.AutoTracker.AutoTrackerConnected += (sender, e) => Dispatcher.Invoke(UpdateAutoTrackerMenu);
-            Tracker.AutoTracker.AutoTrackerDisconnected += (sender, e) => Dispatcher.Invoke(UpdateAutoTrackerMenu);
+            TrackerBase.AutoTracker.AutoTrackerEnabled += (sender, e) => Dispatcher.Invoke(UpdateAutoTrackerMenu);
+            TrackerBase.AutoTracker.AutoTrackerDisabled += (sender, e) => Dispatcher.Invoke(UpdateAutoTrackerMenu);
+            TrackerBase.AutoTracker.AutoTrackerConnected += (sender, e) => Dispatcher.Invoke(UpdateAutoTrackerMenu);
+            TrackerBase.AutoTracker.AutoTrackerDisconnected += (sender, e) => Dispatcher.Invoke(UpdateAutoTrackerMenu);
 
-            Tracker.AutoTracker.SetConnector(_options.AutoTrackerDefaultConnector, _options.AutoTrackerQUsb2SnesIp);
+            TrackerBase.AutoTracker.SetConnector(_options.AutoTrackerDefaultConnector, _options.AutoTrackerQUsb2SnesIp);
         }
 
         private void UpdateAutoTrackerMenu()
         {
-            if (Tracker.AutoTracker == null) return;
-            StatusBarAutoTrackerDisabled.Visibility = !Tracker.AutoTracker.IsEnabled ? Visibility.Visible : Visibility.Collapsed;
-            StatusBarAutoTrackerEnabled.Visibility = Tracker.AutoTracker.IsEnabled && !Tracker.AutoTracker.IsConnected ? Visibility.Visible : Visibility.Collapsed;
-            StatusBarAutoTrackerConnected.Visibility = Tracker.AutoTracker.IsEnabled && Tracker.AutoTracker.IsConnected ? Visibility.Visible : Visibility.Collapsed;
+            if (TrackerBase.AutoTracker == null) return;
+            StatusBarAutoTrackerDisabled.Visibility = !TrackerBase.AutoTracker.IsEnabled ? Visibility.Visible : Visibility.Collapsed;
+            StatusBarAutoTrackerEnabled.Visibility = TrackerBase.AutoTracker.IsEnabled && !TrackerBase.AutoTracker.IsConnected ? Visibility.Visible : Visibility.Collapsed;
+            StatusBarAutoTrackerConnected.Visibility = TrackerBase.AutoTracker.IsEnabled && TrackerBase.AutoTracker.IsConnected ? Visibility.Visible : Visibility.Collapsed;
             if (_autoTrackerDisableMenuItem != null)
                 _autoTrackerDisableMenuItem.IsChecked =
-                    Tracker.AutoTracker?.ConnectorType == EmulatorConnectorType.None;
+                    TrackerBase.AutoTracker?.ConnectorType == EmulatorConnectorType.None;
             if (_autoTrackerLuaMenuItem != null)
                 _autoTrackerLuaMenuItem.IsChecked =
-                    Tracker.AutoTracker?.ConnectorType == EmulatorConnectorType.Lua;
+                    TrackerBase.AutoTracker?.ConnectorType == EmulatorConnectorType.Lua;
             if (_autoTrackerUSB2SNESMenuItem != null)
                 _autoTrackerUSB2SNESMenuItem.IsChecked =
-                    Tracker.AutoTracker?.ConnectorType == EmulatorConnectorType.USB2SNES;
+                    TrackerBase.AutoTracker?.ConnectorType == EmulatorConnectorType.USB2SNES;
         }
 
         private void UpdateStats(TrackerEventArgs e)
@@ -963,9 +963,9 @@ namespace Randomizer.App.Windows
 
         private async void Window_Closing(object sender, CancelEventArgs e)
         {
-            if (Tracker.IsDirty)
+            if (TrackerBase.IsDirty)
             {
-                if (Tracker.World.Config.MultiWorld)
+                if (TrackerBase.World.Config.MultiWorld)
                 {
                     await SaveStateAsync();
                 }
@@ -975,7 +975,7 @@ namespace Randomizer.App.Windows
                     await SaveStateAsync();
                 }
             }
-            Tracker.StopTracking();
+            TrackerBase.StopTracking();
             _dispatcherTimer.Stop();
             App.SaveWindowPositionAndSize(this);
         }
@@ -1021,7 +1021,7 @@ namespace Randomizer.App.Windows
             }
             else
             {
-                _trackerHelpWindow = new TrackerHelpWindow(Tracker);
+                _trackerHelpWindow = new TrackerHelpWindow(TrackerBase);
                 _trackerHelpWindow.Show();
             }
         }
@@ -1037,9 +1037,9 @@ namespace Randomizer.App.Windows
             if (GeneratedRom.IsValid(Rom))
             {
                 var romPath = Path.Combine(_options.RomOutputPath, Rom.RomPath);
-                await Task.Run(() => Tracker.Load(Rom, romPath));
+                await Task.Run(() => TrackerBase.Load(Rom, romPath));
 
-                Tracker.StartTimer(true);
+                TrackerBase.StartTimer(true);
                 if (_dispatcherTimer.IsEnabled)
                 {
                     _dispatcherTimer.Start();
@@ -1054,9 +1054,9 @@ namespace Randomizer.App.Windows
         private async Task SaveStateAsync()
         {
             // If there is a rom, save it to the database
-            if (GeneratedRom.IsValid(Tracker.Rom))
+            if (GeneratedRom.IsValid(TrackerBase.Rom))
             {
-                await Tracker.SaveAsync();
+                await TrackerBase.SaveAsync();
             }
 
             SavedState?.Invoke(this, EventArgs.Empty);
@@ -1070,13 +1070,13 @@ namespace Randomizer.App.Windows
         private void StatusBarTimer_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             // Reset timer on double click
-            Tracker.ResetTimer();
+            TrackerBase.ResetTimer();
         }
 
         private void StatusBarTimer_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
             // Pause/resume timer on right click
-            Tracker.ToggleTimer();
+            TrackerBase.ToggleTimer();
         }
 
         /// <summary>
@@ -1086,9 +1086,9 @@ namespace Randomizer.App.Windows
         /// <param name="e"></param>
         private void StatusBarStatusBarConfidence_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            Tracker.DisableVoiceRecognition();
-            StatusBarConfidence.Visibility = Tracker.VoiceRecognitionEnabled ? Visibility.Visible : Visibility.Collapsed;
-            StatusBarVoiceDisabled.Visibility = Tracker.VoiceRecognitionEnabled ? Visibility.Collapsed : Visibility.Visible;
+            TrackerBase.DisableVoiceRecognition();
+            StatusBarConfidence.Visibility = TrackerBase.VoiceRecognitionEnabled ? Visibility.Visible : Visibility.Collapsed;
+            StatusBarVoiceDisabled.Visibility = TrackerBase.VoiceRecognitionEnabled ? Visibility.Collapsed : Visibility.Visible;
         }
 
         /// <summary>
@@ -1098,9 +1098,9 @@ namespace Randomizer.App.Windows
         /// <param name="e"></param>
         private void StatusBarVoiceDisabled_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (!Tracker.MicrophoneInitialized)
+            if (!TrackerBase.MicrophoneInitialized)
             {
-                if (!Tracker.InitializeMicrophone())
+                if (!TrackerBase.InitializeMicrophone())
                 {
                     ShowNoMicrophoneWarning();
                     return;
@@ -1109,7 +1109,7 @@ namespace Randomizer.App.Windows
 
             try
             {
-                Tracker.EnableVoiceRecognition();
+                TrackerBase.EnableVoiceRecognition();
             }
             catch (InvalidOperationException ex)
             {
@@ -1117,8 +1117,8 @@ namespace Randomizer.App.Windows
                 ShowModuleWarning();
             }
 
-            StatusBarConfidence.Visibility = Tracker.VoiceRecognitionEnabled ? Visibility.Visible : Visibility.Collapsed;
-            StatusBarVoiceDisabled.Visibility = Tracker.VoiceRecognitionEnabled ? Visibility.Collapsed : Visibility.Visible;
+            StatusBarConfidence.Visibility = TrackerBase.VoiceRecognitionEnabled ? Visibility.Visible : Visibility.Collapsed;
+            StatusBarVoiceDisabled.Visibility = TrackerBase.VoiceRecognitionEnabled ? Visibility.Collapsed : Visibility.Visible;
         }
 
         /// <summary>
@@ -1206,7 +1206,7 @@ namespace Randomizer.App.Windows
             else
             {
                 _msuTrackWindow = new MsuTrackWindow();
-                _msuTrackWindow.Init(Tracker, _options);
+                _msuTrackWindow.Init(TrackerBase, _options);
                 _msuTrackWindow.Show();
             }
         }

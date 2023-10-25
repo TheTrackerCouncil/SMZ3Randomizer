@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Speech.Recognition;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
@@ -159,6 +160,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         /// <param name="name">The name of the grammar rule.</param>
         /// <returns>A new <see cref="Grammar"/>.</returns>
+        [SupportedOSPlatform("windows")]
         public Grammar Build(string name)
         {
             return new Grammar(this)

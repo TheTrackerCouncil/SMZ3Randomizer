@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Runtime.Versioning;
 using Microsoft.Extensions.Logging;
 using Randomizer.Abstractions;
 using Randomizer.Data.Logic;
@@ -43,11 +44,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to write logging information.</param>
         /// <param name="randomizerConfigService">Service for retrieving the randomizer config for the world</param>
-        public SpoilerModule(ITracker tracker, IItemService itemService, ILogger<SpoilerModule> logger, IWorldService worldService, IRandomizerConfigService randomizerConfigService)
+        public SpoilerModule(TrackerBase tracker, IItemService itemService, ILogger<SpoilerModule> logger, IWorldService worldService, IRandomizerConfigService randomizerConfigService)
             : base(tracker, itemService, worldService, logger)
         {
-            Tracker.HintsEnabled = tracker.World.Config is { Race: false, DisableTrackerHints: false } && tracker.Options.HintsEnabled;
-            Tracker.SpoilersEnabled = tracker.World.Config is { Race: false, DisableTrackerSpoilers: false } && tracker.Options.SpoilersEnabled;
+            TrackerBase.HintsEnabled = tracker.World.Config is { Race: false, DisableTrackerHints: false } && tracker.Options.HintsEnabled;
+            TrackerBase.SpoilersEnabled = tracker.World.Config is { Race: false, DisableTrackerSpoilers: false } && tracker.Options.SpoilersEnabled;
             _randomizerConfigService = randomizerConfigService;
             _isMultiworld = tracker.World.Config.MultiWorld;
         }
@@ -59,9 +60,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         private void GiveProgressionHint()
         {
-            if (Tracker is { HintsEnabled: false, SpoilersEnabled: false })
+            if (TrackerBase is { HintsEnabled: false, SpoilersEnabled: false })
             {
-                Tracker.Say(x => x.Hints.PromptEnableItemHints);
+                TrackerBase.Say(x => x.Hints.PromptEnableItemHints);
                 return;
             }
 
@@ -71,11 +72,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             if (locationWithProgressionItem != null)
             {
-                Tracker.Say(x => x.Hints.AreaSuggestion, locationWithProgressionItem.Region.GetName());
+                TrackerBase.Say(x => x.Hints.AreaSuggestion, locationWithProgressionItem.Region.GetName());
                 return;
             }
 
-            Tracker.Say(x => x.Hints.NoApplicableHints);
+            TrackerBase.Say(x => x.Hints.NoApplicableHints);
         }
 
         /// <summary>
@@ -84,9 +85,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="area">The area to give hints about.</param>
         private void GiveAreaHint(IHasLocations area)
         {
-            if (Tracker is { HintsEnabled: false, SpoilersEnabled: false })
+            if (TrackerBase is { HintsEnabled: false, SpoilersEnabled: false })
             {
-                Tracker.Say(x => x.Hints.PromptEnableItemHints);
+                TrackerBase.Say(x => x.Hints.PromptEnableItemHints);
                 return;
             }
 
@@ -95,43 +96,43 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .ToImmutableList();
             if (locations.Count == 0)
             {
-                Tracker.Say(x => x.Hints.AreaAlreadyCleared, area.GetName());
+                TrackerBase.Say(x => x.Hints.AreaAlreadyCleared, area.GetName());
                 return;
             }
 
             var items = locations
                 .Select(x => x.Item)
                 .NonNull();
-            if (Tracker.SpoilersEnabled)
+            if (TrackerBase.SpoilersEnabled)
             {
-                var itemNames = NaturalLanguage.Join(items, Tracker.World.Config);
-                Tracker.Say(x => x.Spoilers.ItemsInArea, area.GetName(), itemNames);
+                var itemNames = NaturalLanguage.Join(items, TrackerBase.World.Config);
+                TrackerBase.Say(x => x.Spoilers.ItemsInArea, area.GetName(), itemNames);
             }
-            else if (Tracker.HintsEnabled)
+            else if (TrackerBase.HintsEnabled)
             {
-                if (items.Any(x => x.Metadata.IsJunk(Tracker.World.Config) == false))
+                if (items.Any(x => x.Metadata.IsJunk(TrackerBase.World.Config) == false))
                 {
-                    Tracker.Say(x => x.Hints.AreaHasSomethingGood, area.GetName());
+                    TrackerBase.Say(x => x.Hints.AreaHasSomethingGood, area.GetName());
                 }
                 else if (area is IHasReward region)
                 {
                     if (region.RewardType == RewardType.CrystalBlue
                         || region.RewardType == RewardType.CrystalRed)
                     {
-                        Tracker.Say(x => x.Hints.AreaHasJunkAndCrystal, area.GetName());
+                        TrackerBase.Say(x => x.Hints.AreaHasJunkAndCrystal, area.GetName());
                     }
-                    else if (Tracker.IsWorth(region.RewardType))
+                    else if (TrackerBase.IsWorth(region.RewardType))
                     {
-                        Tracker.Say(x => x.Hints.AreaWorthComplicated, area.GetName());
+                        TrackerBase.Say(x => x.Hints.AreaWorthComplicated, area.GetName());
                     }
                     else
                     {
-                        Tracker.Say(x => x.Hints.AreaHasJunk, area.GetName());
+                        TrackerBase.Say(x => x.Hints.AreaHasJunk, area.GetName());
                     }
                 }
                 else
                 {
-                    Tracker.Say(x => x.Hints.AreaHasJunk, area.GetName());
+                    TrackerBase.Say(x => x.Hints.AreaHasJunk, area.GetName());
                 }
             }
         }
@@ -144,12 +145,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             if (item.Metadata.HasStages && item.State.TrackingState >= item.Metadata.MaxStage)
             {
-                Tracker.Say(x => x.Spoilers.TrackedAllItemsAlready, item.Name);
+                TrackerBase.Say(x => x.Spoilers.TrackedAllItemsAlready, item.Name);
                 return;
             }
             else if (!item.Metadata.Multiple && item.State.TrackingState > 0)
             {
-                Tracker.Say(x => x.Spoilers.TrackedItemAlready, item.Metadata.NameWithArticle);
+                TrackerBase.Say(x => x.Spoilers.TrackedItemAlready, item.Metadata.NameWithArticle);
                 return;
             }
 
@@ -160,14 +161,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 var locationName = markedLocation.Metadata.Name;
                 var regionName = markedLocation.Region.Metadata.Name;
-                Tracker.Say(x => x.Spoilers.MarkedItem, item.Metadata.NameWithArticle, locationName, regionName);
+                TrackerBase.Say(x => x.Spoilers.MarkedItem, item.Metadata.NameWithArticle, locationName, regionName);
                 return;
             }
 
             // Now that we're ready to give hints, make sure they're turned on
-            if (Tracker is { HintsEnabled: false, SpoilersEnabled: false })
+            if (TrackerBase is { HintsEnabled: false, SpoilersEnabled: false })
             {
-                Tracker.Say(x => x.Hints.PromptEnableItemHints);
+                TrackerBase.Say(x => x.Hints.PromptEnableItemHints);
                 return;
             }
 
@@ -177,37 +178,37 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             if (locations.Count == 0)
             {
                 if (item.Metadata.Multiple || item.Metadata.HasStages)
-                    Tracker.Say(x => x.Spoilers.ItemsNotFound, item.Metadata.Plural);
+                    TrackerBase.Say(x => x.Spoilers.ItemsNotFound, item.Metadata.Plural);
                 else
-                    Tracker.Say(x => x.Spoilers.ItemNotFound, item.Metadata.NameWithArticle);
+                    TrackerBase.Say(x => x.Spoilers.ItemNotFound, item.Metadata.NameWithArticle);
                 return;
             }
             else if (locations.Count > 0 && locations.All(x => x.State.Cleared))
             {
                 // The item exists, but all locations are cleared
-                Tracker.Say(x => x.Spoilers.LocationsCleared, item.Metadata.NameWithArticle);
+                TrackerBase.Say(x => x.Spoilers.LocationsCleared, item.Metadata.NameWithArticle);
                 return;
             }
 
             // Give hints first (if enabled)
-            if (Tracker.HintsEnabled && GiveItemLocationHint(item))
+            if (TrackerBase.HintsEnabled && GiveItemLocationHint(item))
                 return;
 
             // Fall back to spoilers if enabled, or prompt to turn them on if hints fail
-            if (Tracker.SpoilersEnabled)
+            if (TrackerBase.SpoilersEnabled)
             {
                 if (GiveItemLocationSpoiler(item))
                     return;
             }
             else
             {
-                Tracker.Say(x => x.Spoilers.PromptEnableItemSpoilers);
+                TrackerBase.Say(x => x.Spoilers.PromptEnableItemSpoilers);
                 return;
             }
 
             // We ran out of hints?
             Logger.LogWarning("Ran out of hints for {Item}", item.Name[0]);
-            Tracker.Say(x => x.Hints.NoApplicableHints);
+            TrackerBase.Say(x => x.Hints.NoApplicableHints);
         }
 
         /// <summary>
@@ -219,15 +220,15 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var locationName = location.Metadata.Name;
             if (location.State.Cleared)
             {
-                if (Tracker.HintsEnabled || Tracker.SpoilersEnabled)
+                if (TrackerBase.HintsEnabled || TrackerBase.SpoilersEnabled)
                 {
                     var itemName = ItemService.GetName(location.Item.Type);
-                    Tracker.Say(x => x.Hints.LocationAlreadyClearedSpoiler, locationName, itemName);
+                    TrackerBase.Say(x => x.Hints.LocationAlreadyClearedSpoiler, locationName, itemName);
                     return;
                 }
                 else
                 {
-                    Tracker.Say(x => x.Hints.LocationAlreadyCleared, locationName);
+                    TrackerBase.Say(x => x.Hints.LocationAlreadyCleared, locationName);
                     return;
                 }
             }
@@ -237,26 +238,26 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 var markedItem = ItemService.FirstOrDefault(location.State.MarkedItem.Value);
                 if (markedItem != null)
                 {
-                    Tracker.Say(x => x.Spoilers.MarkedLocation, locationName, markedItem.Metadata.NameWithArticle);
+                    TrackerBase.Say(x => x.Spoilers.MarkedLocation, locationName, markedItem.Metadata.NameWithArticle);
                     return;
                 }
             }
 
-            if (Tracker.HintsEnabled && GiveLocationHints(location))
+            if (TrackerBase.HintsEnabled && GiveLocationHints(location))
                 return;
 
-            if (Tracker.SpoilersEnabled && GiveLocationSpoiler(location))
+            if (TrackerBase.SpoilersEnabled && GiveLocationSpoiler(location))
                 return;
 
-            if (!Tracker.HintsEnabled)
+            if (!TrackerBase.HintsEnabled)
             {
-                Tracker.Say(x => x.Hints.PromptEnableLocationHints);
+                TrackerBase.Say(x => x.Hints.PromptEnableLocationHints);
                 return;
             }
 
-            if (!Tracker.SpoilersEnabled)
+            if (!TrackerBase.SpoilersEnabled)
             {
-                Tracker.Say(x => x.Spoilers.PromptEnableLocationSpoilers);
+                TrackerBase.Say(x => x.Spoilers.PromptEnableLocationSpoilers);
             }
         }
 
@@ -276,7 +277,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             Item item, params object?[] additionalArgs)
         {
             var args = Args.Combine(item.Metadata.NameWithArticle, additionalArgs);
-            if (!Tracker.Say(responses => selectHint(responses.Hints), args))
+            if (!TrackerBase.Say(responses => selectHint(responses.Hints), args))
                 return false;
 
             if (_itemHintsGiven.ContainsKey(item.Type))
@@ -302,7 +303,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             Item item, params object?[] additionalArgs)
         {
             var args = Args.Combine(item.Metadata.NameWithArticle, additionalArgs);
-            if (!Tracker.Say(hint, args))
+            if (!TrackerBase.Say(hint, args))
                 return false;
 
             if (_itemHintsGiven.ContainsKey(item.Type))
@@ -329,7 +330,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             var name = location.Metadata.Name;
             var args = Args.Combine(name, additionalArgs);
-            if (!Tracker.Say(responses => selectHint(responses.Hints), args))
+            if (!TrackerBase.Say(responses => selectHint(responses.Hints), args))
                 return false;
 
             if (_locationHintsGiven.ContainsKey(location.Id))
@@ -356,7 +357,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             var name = location.Metadata.Name;
             var args = Args.Combine(name, additionalArgs);
-            if (!Tracker.Say(hint, args))
+            if (!TrackerBase.Say(hint, args))
                 return false;
 
             if (_locationHintsGiven.ContainsKey(location.Id))
@@ -373,10 +374,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 // Who's it for and is it any good?
                 case 0:
                     var characterName = location.Item.Type.IsInCategory(ItemCategory.Metroid)
-                        ? ITracker.CorrectPronunciation(location.World.Config.SamusName)
-                        : ITracker.CorrectPronunciation(location.World.Config.LinkName);
+                        ? TrackerBase.CorrectPronunciation(location.World.Config.SamusName)
+                        : TrackerBase.CorrectPronunciation(location.World.Config.LinkName);
 
-                    if (Tracker.IsWorth(location.Item))
+                    if (TrackerBase.IsWorth(location.Item))
                     {
                         return GiveLocationHint(x => x.LocationHasUsefulItem, location, characterName);
                     }
@@ -402,7 +403,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var locationName = location.Metadata.Name;
             if (location.Item.Type == ItemType.Nothing)
             {
-                Tracker.Say(x => x.Spoilers.EmptyLocation, locationName);
+                TrackerBase.Say(x => x.Spoilers.EmptyLocation, locationName);
                 return true;
             }
 
@@ -411,21 +412,21 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 if (_isMultiworld)
                 {
-                    Tracker.Say(x => location.Item.World == WorldService.World ? x.Spoilers.LocationHasItemOwnWorld : x.Spoilers.LocationHasItemOtherWorld,
+                    TrackerBase.Say(x => location.Item.World == WorldService.World ? x.Spoilers.LocationHasItemOwnWorld : x.Spoilers.LocationHasItemOtherWorld,
                                 locationName,
                                 item.Metadata.NameWithArticle,
                                 location.Item.World.Player);
                 }
                 else
                 {
-                    Tracker.Say(x => x.Spoilers.LocationHasItem, locationName, item.Metadata.NameWithArticle);
+                    TrackerBase.Say(x => x.Spoilers.LocationHasItem, locationName, item.Metadata.NameWithArticle);
                 }
 
                 return true;
             }
             else
             {
-                Tracker.Say(x => x.Spoilers.LocationHasUnknownItem, locationName);
+                TrackerBase.Say(x => x.Spoilers.LocationHasUnknownItem, locationName);
                 return true;
             }
         }
@@ -446,7 +447,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 {
                     if (item.Metadata.Multiple || item.Metadata.HasStages)
                     {
-                        Tracker.Say(x => reachableLocation.World == WorldService.World ? x.Spoilers.ItemsAreAtLocationOwnWorld : x.Spoilers.ItemsAreAtLocationOtherWorld,
+                        TrackerBase.Say(x => reachableLocation.World == WorldService.World ? x.Spoilers.ItemsAreAtLocationOwnWorld : x.Spoilers.ItemsAreAtLocationOtherWorld,
                                     item.Metadata.NameWithArticle,
                                     locationName,
                                     regionName,
@@ -454,7 +455,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     }
                     else
                     {
-                        Tracker.Say(x => reachableLocation.World == WorldService.World ? x.Spoilers.ItemIsAtLocationOwnWorld : x.Spoilers.ItemIsAtLocationOtherWorld,
+                        TrackerBase.Say(x => reachableLocation.World == WorldService.World ? x.Spoilers.ItemIsAtLocationOwnWorld : x.Spoilers.ItemIsAtLocationOtherWorld,
                                     item.Metadata.NameWithArticle,
                                     locationName,
                                     regionName,
@@ -464,9 +465,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 else
                 {
                     if (item.Metadata.Multiple || item.Metadata.HasStages)
-                        Tracker.Say(x => x.Spoilers.ItemsAreAtLocation, item.Metadata.NameWithArticle, locationName, regionName);
+                        TrackerBase.Say(x => x.Spoilers.ItemsAreAtLocation, item.Metadata.NameWithArticle, locationName, regionName);
                     else
-                        Tracker.Say(x => x.Spoilers.ItemIsAtLocation, item.Metadata.NameWithArticle, locationName, regionName);
+                        TrackerBase.Say(x => x.Spoilers.ItemIsAtLocation, item.Metadata.NameWithArticle, locationName, regionName);
                 }
 
                 return true;
@@ -483,7 +484,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 {
                     if (item.Metadata.Multiple || item.Metadata.HasStages)
                     {
-                        Tracker.Say(x => worldLocation.World == WorldService.World ? x.Spoilers.ItemsAreAtOutOfLogicLocationOwnWorld : x.Spoilers.ItemsAreAtOutOfLogicLocationOtherWorld,
+                        TrackerBase.Say(x => worldLocation.World == WorldService.World ? x.Spoilers.ItemsAreAtOutOfLogicLocationOwnWorld : x.Spoilers.ItemsAreAtOutOfLogicLocationOtherWorld,
                                     item.Metadata.NameWithArticle,
                                     locationName,
                                     regionName,
@@ -491,7 +492,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     }
                     else
                     {
-                        Tracker.Say(x => worldLocation.World == WorldService.World ? x.Spoilers.ItemIsAtOutOfLogicLocationOwnWorld : x.Spoilers.ItemIsAtOutOfLogicLocationOtherWorld,
+                        TrackerBase.Say(x => worldLocation.World == WorldService.World ? x.Spoilers.ItemIsAtOutOfLogicLocationOwnWorld : x.Spoilers.ItemIsAtOutOfLogicLocationOtherWorld,
                                     item.Metadata.NameWithArticle,
                                     locationName,
                                     regionName,
@@ -501,9 +502,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 else
                 {
                     if (item.Metadata.Multiple || item.Metadata.HasStages)
-                        Tracker.Say(x => x.Spoilers.ItemsAreAtOutOfLogicLocation, item.Metadata.NameWithArticle, locationName, regionName);
+                        TrackerBase.Say(x => x.Spoilers.ItemsAreAtOutOfLogicLocation, item.Metadata.NameWithArticle, locationName, regionName);
                     else
-                        Tracker.Say(x => x.Spoilers.ItemIsAtOutOfLogicLocation, item.Metadata.NameWithArticle, locationName, regionName);
+                        TrackerBase.Say(x => x.Spoilers.ItemIsAtOutOfLogicLocation, item.Metadata.NameWithArticle, locationName, regionName);
                 }
 
                 return true;
@@ -617,7 +618,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         if (sphere >= lateThreshold)
                             return GiveItemHint(x => x.ItemInLateSphere, item);
 
-                        var areaWithoutItem = Tracker.World.Regions
+                        var areaWithoutItem = TrackerBase.World.Regions
                             .GroupBy(x => x.Area)
                             .Where(x => x.SelectMany(r => r.Locations)
                                 .Where(l => l.State.Cleared == false)
@@ -673,7 +674,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                             if (regionHint is { Count: > 0 })
                             {
                                 if (!randomLocationWithHint.World.IsLocalWorld)
-                                    Tracker.Say(x => x.Hints.ItemInPlayerWorldRegionRoomPrefixHint,
+                                    TrackerBase.Say(x => x.Hints.ItemInPlayerWorldRegionRoomPrefixHint,
                                         randomLocationWithHint.World.Config.PhoneticName);
                                 return GiveItemHint(regionHint, item);
                             }
@@ -701,7 +702,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                                 if (roomHint is { Count: > 0 })
                                 {
                                     if (!randomLocation.World.IsLocalWorld)
-                                        Tracker.Say(x => x.Hints.ItemInPlayerWorldRegionRoomPrefixHint,
+                                        TrackerBase.Say(x => x.Hints.ItemInPlayerWorldRegionRoomPrefixHint,
                                             randomLocation.World.Config.PhoneticName);
                                     return GiveItemHint(roomHint, item);
                                 }
@@ -711,7 +712,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                             if (locationHint is { Count: > 0 })
                             {
                                 if (!randomLocation.World.IsLocalWorld)
-                                    Tracker.Say(x => x.Hints.ItemInPlayerWorldRegionRoomPrefixHint,
+                                    TrackerBase.Say(x => x.Hints.ItemInPlayerWorldRegionRoomPrefixHint,
                                         randomLocation.World.Config.PhoneticName);
                                 return GiveItemHint(locationHint, item);
                             }
@@ -721,7 +722,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         if (randomLocation != null && randomLocation.VanillaItem.IsInCategory(ItemCategory.Plentiful))
                         {
                             if (!randomLocation.World.IsLocalWorld)
-                                Tracker.Say(x => x.Hints.ItemInPlayerWorldRegionRoomPrefixHint,
+                                TrackerBase.Say(x => x.Hints.ItemInPlayerWorldRegionRoomPrefixHint,
                                     randomLocation.World.Config.PhoneticName);
 
                             if (randomLocation.Region is SMRegion
@@ -770,6 +771,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return randomLocation;
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetItemSpoilerRule()
         {
             var items = GetItemNames();
@@ -783,6 +785,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append(ItemNameKey, items);
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetLocationSpoilerRule()
         {
             var locations = GetLocationNames();
@@ -805,6 +808,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return GrammarBuilder.Combine(whatsAtRule, whatDoesLocationHaveRule);
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetEnableSpoilersRule()
         {
             return new GrammarBuilder()
@@ -813,6 +817,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("spoilers");
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetDisableSpoilersRule()
         {
             return new GrammarBuilder()
@@ -821,6 +826,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("spoilers");
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetEnableHintsRule()
         {
             return new GrammarBuilder()
@@ -829,6 +835,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("hints");
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetDisableHintsRule()
         {
             return new GrammarBuilder()
@@ -837,6 +844,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("hints");
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetProgressionHintRule()
         {
             return new GrammarBuilder()
@@ -849,6 +857,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     "what should I do?");
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetLocationUsefulnessHintRule()
         {
             var regionNames = GetRegionNames();
@@ -878,23 +887,24 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return GrammarBuilder.Combine(regionGrammar, roomGrammar);
         }
 
+        [SupportedOSPlatform("windows")]
         public override void AddCommands()
         {
-            if (Tracker.World.Config.Race) return;
+            if (TrackerBase.World.Config.Race) return;
 
-            Playthrough.TryGenerate(new[] { Tracker.World }, Tracker.World.Config, out _playthrough);
+            Playthrough.TryGenerate(new[] { TrackerBase.World }, TrackerBase.World.Config, out _playthrough);
 
-            if (!Tracker.World.Config.DisableTrackerHints)
+            if (!TrackerBase.World.Config.DisableTrackerHints)
             {
                 AddCommand("Enable hints", GetEnableHintsRule(), (_) =>
                 {
-                    Tracker.HintsEnabled = true;
-                    Tracker.Say(x => x.Hints.EnabledHints);
+                    TrackerBase.HintsEnabled = true;
+                    TrackerBase.Say(x => x.Hints.EnabledHints);
                 });
                 AddCommand("Disable hints", GetDisableHintsRule(), (_) =>
                 {
-                    Tracker.HintsEnabled = false;
-                    Tracker.Say(x => x.Hints.DisabledHints);
+                    TrackerBase.HintsEnabled = false;
+                    TrackerBase.Say(x => x.Hints.DisabledHints);
                 });
                 AddCommand("Give progression hint", GetProgressionHintRule(), (_) =>
                 {
@@ -903,33 +913,33 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
                 AddCommand("Give area hint", GetLocationUsefulnessHintRule(), (result) =>
                 {
-                    var area = GetAreaFromResult(Tracker, result);
+                    var area = GetAreaFromResult(TrackerBase, result);
                     GiveAreaHint(area);
                 });
             }
 
-            if (!Tracker.World.Config.DisableTrackerSpoilers)
+            if (!TrackerBase.World.Config.DisableTrackerSpoilers)
             {
                 AddCommand("Enable spoilers", GetEnableSpoilersRule(), (_) =>
                 {
-                    Tracker.SpoilersEnabled = true;
-                    Tracker.Say(x => x.Spoilers.EnabledSpoilers);
+                    TrackerBase.SpoilersEnabled = true;
+                    TrackerBase.Say(x => x.Spoilers.EnabledSpoilers);
                 });
                 AddCommand("Disable spoilers", GetDisableSpoilersRule(), (_) =>
                 {
-                    Tracker.SpoilersEnabled = false;
-                    Tracker.Say(x => x.Spoilers.DisabledSpoilers);
+                    TrackerBase.SpoilersEnabled = false;
+                    TrackerBase.Say(x => x.Spoilers.DisabledSpoilers);
                 });
 
                 AddCommand("Reveal item location", GetItemSpoilerRule(), (result) =>
                 {
-                    var item = GetItemFromResult(Tracker, result, out _);
+                    var item = GetItemFromResult(TrackerBase, result, out _);
                     RevealItemLocation(item);
                 });
 
                 AddCommand("Reveal location item", GetLocationSpoilerRule(), (result) =>
                 {
-                    var location = GetLocationFromResult(Tracker, result);
+                    var location = GetLocationFromResult(TrackerBase, result);
                     RevealLocationItem(location);
                 });
             }

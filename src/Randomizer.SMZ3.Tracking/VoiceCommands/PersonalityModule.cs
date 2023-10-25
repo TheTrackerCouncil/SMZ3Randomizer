@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Versioning;
 using Microsoft.Extensions.Logging;
 using Randomizer.Abstractions;
 using Randomizer.SMZ3.Tracking.Services;
@@ -20,33 +21,34 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="itemService">Service to get item information</param>
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to write logging information.</param>
-        public PersonalityModule(ITracker tracker, IItemService itemService, IWorldService worldService, ILogger<PersonalityModule> logger)
+        public PersonalityModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<PersonalityModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
 
         }
 
+        [SupportedOSPlatform("windows")]
         public override void AddCommands()
         {
             AddCommand("Ask about tracker's mood", GetMoodRule(), (_) =>
             {
-                Tracker.Say(Tracker.Responses.Moods[Tracker.Mood]);
+                TrackerBase.Say(TrackerBase.Responses.Moods[TrackerBase.Mood]);
             });
 
             AddCommand("Hey, ya missed pal", GetYaMissedRule(), (_) =>
             {
-                Tracker.Say("Here Mike. This will explain everything.", wait: true);
+                TrackerBase.Say("Here Mike. This will explain everything.", wait: true);
                 OpenInBrowser(new Uri("https://www.youtube.com/watch?v=5P6UirFDdxM"));
             });
 
-            foreach (var request in Tracker.Requests)
+            foreach (var request in TrackerBase.Requests)
             {
                 if (request.Phrases.Count == 0)
                     continue;
 
                 AddCommand(request.Phrases.First(), GetRequestRule(request.Phrases), (_) =>
                 {
-                    Tracker.Say(request.Response);
+                    TrackerBase.Say(request.Response);
                 });
             }
         }
@@ -57,6 +59,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         public override bool IsSecret => true;
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetMoodRule()
         {
             return new GrammarBuilder()
@@ -64,6 +67,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .OneOf("how are you?", "how are you doing?", "how are you feeling?");
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetYaMissedRule()
         {
             return new GrammarBuilder()
@@ -72,6 +76,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .OneOf("your missing steak knives?", "my shoes getting bloody?");
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetRequestRule(IEnumerable<string> requests)
         {
             return new GrammarBuilder(requests.Select(x =>

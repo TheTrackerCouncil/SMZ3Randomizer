@@ -29,7 +29,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to write logging information.</param>
         /// <param name="communicator">Used to communicate information to the user</param>
-        public MetaModule(ITracker tracker, IItemService itemService, IWorldService worldService, ILogger<MetaModule> logger, ICommunicator communicator)
+        public MetaModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<MetaModule> logger, ICommunicator communicator)
             : base(tracker, itemService, worldService, logger)
         {
             _communicator = communicator;
@@ -158,12 +158,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             AddCommand("Repeat that", GetRepeatThatRule(), (_) =>
             {
-                Tracker.Repeat();
+                TrackerBase.Repeat();
             });
 
             AddCommand("Shut up", GetShutUpRule(), (_) =>
             {
-                Tracker.ShutUp();
+                TrackerBase.ShutUp();
             });
 
             AddCommand("Temporarily change threshold setting", GetIncreaseThresholdGrammar(), (result) =>
@@ -176,24 +176,24 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 switch (thresholdSetting)
                 {
                     case ThresholdSetting_Recognition:
-                        Tracker.Options.MinimumRecognitionConfidence += adjustment;
-                        Tracker.Say(Tracker.Responses.TrackerSettingChanged.Format(
-                            "recognition threshold", $"{Tracker.Options.MinimumRecognitionConfidence:P0}"));
-                        Logger.LogInformation("Temporarily changed recognition threshold to {newValue}", Tracker.Options.MinimumRecognitionConfidence);
+                        TrackerBase.Options.MinimumRecognitionConfidence += adjustment;
+                        TrackerBase.Say(TrackerBase.Responses.TrackerSettingChanged.Format(
+                            "recognition threshold", $"{TrackerBase.Options.MinimumRecognitionConfidence:P0}"));
+                        Logger.LogInformation("Temporarily changed recognition threshold to {newValue}", TrackerBase.Options.MinimumRecognitionConfidence);
                         break;
 
                     case ThresholdSetting_Execution:
-                        Tracker.Options.MinimumExecutionConfidence += adjustment;
-                        Tracker.Say(Tracker.Responses.TrackerSettingChanged.Format(
-                            "execution threshold", $"{Tracker.Options.MinimumExecutionConfidence:P0}"));
-                        Logger.LogInformation("Temporarily changed execution threshold to {newValue}", Tracker.Options.MinimumExecutionConfidence);
+                        TrackerBase.Options.MinimumExecutionConfidence += adjustment;
+                        TrackerBase.Say(TrackerBase.Responses.TrackerSettingChanged.Format(
+                            "execution threshold", $"{TrackerBase.Options.MinimumExecutionConfidence:P0}"));
+                        Logger.LogInformation("Temporarily changed execution threshold to {newValue}", TrackerBase.Options.MinimumExecutionConfidence);
                         break;
 
                     case ThresholdSetting_Sass:
-                        Tracker.Options.MinimumSassConfidence += adjustment;
-                        Tracker.Say(Tracker.Responses.TrackerSettingChanged.Format(
-                            "sass threshold", $"{Tracker.Options.MinimumSassConfidence:P0}"));
-                        Logger.LogInformation("Temporarily changed sass threshold to {newValue}", Tracker.Options.MinimumSassConfidence);
+                        TrackerBase.Options.MinimumSassConfidence += adjustment;
+                        TrackerBase.Say(TrackerBase.Responses.TrackerSettingChanged.Format(
+                            "sass threshold", $"{TrackerBase.Options.MinimumSassConfidence:P0}"));
+                        Logger.LogInformation("Temporarily changed sass threshold to {newValue}", TrackerBase.Options.MinimumSassConfidence);
                         break;
 
                     default:
@@ -203,29 +203,29 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             AddCommand("Pause timer", GetPauseTimerRule(), (_) =>
             {
-                Tracker.PauseTimer();
+                TrackerBase.PauseTimer();
             });
 
             AddCommand("Start timer", GetResumeTimerRule(), (_) =>
             {
-                Tracker.StartTimer();
+                TrackerBase.StartTimer();
             });
 
             AddCommand("Reset timer", GetResetTimerRule(), (_) =>
             {
-                Tracker.ResetTimer();
+                TrackerBase.ResetTimer();
             });
 
             AddCommand("Mute", GetMuteRule(), (_) =>
             {
                 if (_communicator.IsEnabled)
                 {
-                    Tracker.Say(x => x.Muted);
+                    TrackerBase.Say(x => x.Muted);
                     _communicator.Disable();
-                    Tracker.AddUndo(() =>
+                    TrackerBase.AddUndo(() =>
                     {
                         _communicator.Enable();
-                        Tracker.Say(x => x.ActionUndone);
+                        TrackerBase.Say(x => x.ActionUndone);
                     });
                 }
 
@@ -236,8 +236,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 if (!_communicator.IsEnabled)
                 {
                     _communicator.Enable();
-                    Tracker.Say(x => x.Unmuted);
-                    Tracker.AddUndo(() =>
+                    TrackerBase.Say(x => x.Unmuted);
+                    TrackerBase.AddUndo(() =>
                     {
                         _communicator.Disable();
                     });
@@ -246,7 +246,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             AddCommand("Beat game", GetBeatGameRule(), (_) =>
             {
-                Tracker.GameBeaten(false);
+                TrackerBase.GameBeaten(false);
             });
         }
     }

@@ -16,7 +16,7 @@ public class IceBreaker : IZeldaStateCheck
     /// <param name="currentState">The current state in Zelda</param>
     /// <param name="prevState">The previous state in Zelda</param>
     /// <returns>True if the check was identified, false otherwise</returns>
-    public bool ExecuteCheck(ITracker tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
+    public bool ExecuteCheck(TrackerBase tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
     {
         if (currentState.CurrentRoom == 31 && currentState.PreviousRoom == 30 && currentState.LinkX >= 8000 && prevState.LinkX < 8000 && currentState.IsOnRightHalfOfRoom && prevState.IsOnRightHalfOfRoom)
         {

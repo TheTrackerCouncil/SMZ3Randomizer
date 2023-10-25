@@ -2,7 +2,6 @@ using MSURandomizerLibrary.Configs;
 using Randomizer.Data;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Configuration.ConfigTypes;
-using Randomizer.Data.Services;
 using Randomizer.Data.Tracking;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
@@ -11,9 +10,9 @@ using Randomizer.Shared.Models;
 
 namespace Randomizer.Abstractions;
 
-public interface ITracker
+public abstract class TrackerBase
 {
-        /// <summary>
+    /// <summary>
     /// Occurs when any speech was recognized, regardless of configured
     /// thresholds.
     /// </summary>
@@ -100,115 +99,105 @@ public interface ITracker
     public event EventHandler<TrackChangedEventArgs>? TrackChanged;
 
     /// <summary>
-    /// Set when the progression needs to be updated for the current tracker
-    /// instance
-    /// </summary>
-    public bool UpdateTrackerProgression { get; set; }
-
-    /// <summary>
-    /// Gets extra information about locations.
-    /// </summary>
-    public IMetadataService Metadata { get; }
-
-    /// <summary>
     /// Gets a reference to the <see cref="ItemService"/>.
     /// </summary>
-    public IItemService ItemService { get; }
+    public IItemService ItemService { get; protected init; } = null!;
 
     /// <summary>
     /// The number of pegs that have been pegged for Peg World mode
     /// </summary>
-    public int PegsPegged { get; set; }
+    public int PegsPegged { get; protected set; }
 
     /// <summary>
     /// Gets the world for the currently tracked playthrough.
     /// </summary>
-    public World World { get; }
+    public World World { get; protected init; } = null!;
 
     /// <summary>
     /// Indicates whether Tracker is in Go Mode.
     /// </summary>
-    public bool GoMode { get; }
+    public bool GoMode { get; protected set; }
 
     /// <summary>
     /// Indicates whether Tracker is in Peg World mode.
     /// </summary>
-    public bool PegWorldMode { get; set; }
+    public bool PegWorldMode { get; protected set; }
 
     /// <summary>
     /// Indicates whether Tracker is in Shaktool mode.
     /// </summary>
-    public bool ShaktoolMode { get; set; }
+    public bool ShaktoolMode { get; protected set; }
 
     /// <summary>
     /// If the speech recognition engine was fully initialized
     /// </summary>
-    public bool MicrophoneInitialized { get; }
+    public bool MicrophoneInitialized { get; protected set; }
 
     /// <summary>
     /// If voice recognition has been enabled or not
     /// </summary>
-    public bool VoiceRecognitionEnabled { get; }
+    public bool VoiceRecognitionEnabled { get; protected set; }
 
     /// <summary>
     /// Gets the configured responses.
     /// </summary>
-    public ResponseConfig Responses { get; }
+    public ResponseConfig Responses { get; protected init; } = null!;
 
     /// <summary>
     /// Gets a collection of basic requests and responses.
     /// </summary>
-    public IReadOnlyCollection<BasicVoiceRequest> Requests { get; }
+    public IReadOnlyCollection<BasicVoiceRequest> Requests { get; protected init; } = null!;
 
     /// <summary>
     /// Gets a dictionary containing the rules and the various speech
     /// recognition syntaxes.
     /// </summary>
-    public IReadOnlyDictionary<string, IEnumerable<string>> Syntax { get; }
+    public IReadOnlyDictionary<string, IEnumerable<string>> Syntax { get; protected set; } = new Dictionary<string, IEnumerable<string>>();
 
     /// <summary>
     /// Gets the tracking preferences.
     /// </summary>
-    public TrackerOptions Options { get;}
+    public TrackerOptions Options { get; protected init; } = null!;
 
     /// <summary>
     /// The generated rom
     /// </summary>
-    public GeneratedRom? Rom { get; }
+    public GeneratedRom? Rom { get; protected set; }
 
     /// <summary>
     /// The path to the generated rom
     /// </summary>
-    public string? RomPath { get; }
+    public string? RomPath { get; protected set; }
 
     /// <summary>
     /// The region the player is currently in according to the Auto Tracker
     /// </summary>
-    public RegionInfo? CurrentRegion { get; }
+    public RegionInfo? CurrentRegion { get; protected set; }
 
     /// <summary>
     /// The map to display for the player
     /// </summary>
-    public string CurrentMap { get; }
+    public string CurrentMap { get; protected set; } = "";
 
     /// <summary>
     /// The current track number being played
     /// </summary>
-    public int CurrentTrackNumber { get; }
+    public int CurrentTrackNumber { get; protected set; }
 
     /// <summary>
     /// Gets a string describing tracker's mood.
     /// </summary>
-    public string Mood { get;}
+    public string Mood { get; protected set; } = "";
+
     /// <summary>
     /// Get if the Tracker has been updated since it was last saved
     /// </summary>
-    public bool IsDirty { get; set; }
+    public bool IsDirty { get; protected set; }
 
     /// <summary>
     /// The Auto Tracker for the Tracker
     /// </summary>
-    public IAutoTracker? AutoTracker { get; set; }
+    public AutoTrackerBase? AutoTracker { get; set; }
 
     /// <summary>
     /// Service that handles modifying the game via auto tracker
@@ -218,7 +207,7 @@ public interface ITracker
     /// <summary>
     /// Module that houses the history
     /// </summary>
-    public IHistoryService History { get; set; }
+    protected IHistoryService History { get; init; } = null!;
 
     /// <summary>
     /// Gets or sets a value indicating whether Tracker may give hints when
@@ -235,7 +224,7 @@ public interface ITracker
     /// <summary>
     /// Gets if the local player has beaten the game or not
     /// </summary>
-    public bool HasBeatenGame { get; }
+    public bool HasBeatenGame { get; protected set; }
 
     /// <summary>
     /// Attempts to replace a user name with a pronunciation-corrected
@@ -245,7 +234,7 @@ public interface ITracker
     /// <returns>
     /// The corrected user name, or <paramref name="userName"/>.
     /// </returns>
-    public string CorrectUserNamePronunciation(string userName);
+    public abstract string CorrectUserNamePronunciation(string userName);
 
     /// <summary>
     /// Initializes the microphone from the default audio device
@@ -253,7 +242,7 @@ public interface ITracker
     /// <returns>
     /// True if the microphone is initialized, false otherwise
     /// </returns>
-    public bool InitializeMicrophone();
+    public abstract bool InitializeMicrophone();
 
     /// <summary>
     /// Loads the state from the database for a given rom
@@ -261,25 +250,25 @@ public interface ITracker
     /// <param name="rom">The rom to load</param>
     /// <param name="romPath">The full path to the rom to load</param>
     /// <returns>True or false if the load was successful</returns>
-    public bool Load(GeneratedRom rom, string romPath);
+    public abstract bool Load(GeneratedRom rom, string romPath);
 
     /// <summary>
     /// Saves the state of the tracker to the database
     /// </summary>
     /// <returns></returns>
-    public Task SaveAsync();
+    public abstract Task SaveAsync();
 
     /// <summary>
     /// Undoes the last operation.
     /// </summary>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void Undo(float confidence);
+    public abstract void Undo(float confidence);
 
     /// <summary>
     /// Toggles Go Mode on.
     /// </summary>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void ToggleGoMode(float? confidence = null);
+    public abstract void ToggleGoMode(float? confidence = null);
 
     /// <summary>
     /// Removes one or more items from the available treasure in the
@@ -301,7 +290,7 @@ public interface ITracker
     /// <exception cref=" ArgumentOutOfRangeException">
     /// <paramref name="amount"/> is less than 1.
     /// </exception>
-    public bool TrackDungeonTreasure(IDungeon dungeon, float? confidence = null, int amount = 1, bool autoTracked = false, bool stateResponse = true);
+    public abstract bool TrackDungeonTreasure(IDungeon dungeon, float? confidence = null, int amount = 1, bool autoTracked = false, bool stateResponse = true);
 
     /// <summary>
     /// Sets the dungeon's reward to the specific pendant or crystal.
@@ -313,14 +302,14 @@ public interface ITracker
     /// </param>
     /// <param name="confidence">The speech recognition confidence.</param>
     /// <param name="autoTracked">If this was called by the auto tracker</param>
-    public void SetDungeonReward(IDungeon dungeon, RewardType? reward = null, float? confidence = null, bool autoTracked = false);
+    public abstract void SetDungeonReward(IDungeon dungeon, RewardType? reward = null, float? confidence = null, bool autoTracked = false);
 
     /// <summary>
     /// Sets the reward of all unmarked dungeons.
     /// </summary>
     /// <param name="reward">The reward to set.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void SetUnmarkedDungeonReward(RewardType reward, float? confidence = null);
+    public abstract void SetUnmarkedDungeonReward(RewardType reward, float? confidence = null);
 
     /// <summary>
     /// Sets the dungeon's medallion requirement to the specified item.
@@ -328,12 +317,12 @@ public interface ITracker
     /// <param name="dungeon">The dungeon to mark.</param>
     /// <param name="medallion">The medallion that is required.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void SetDungeonRequirement(IDungeon dungeon, ItemType? medallion = null, float? confidence = null);
+    public abstract void SetDungeonRequirement(IDungeon dungeon, ItemType? medallion = null, float? confidence = null);
 
     /// <summary>
     /// Starts voice recognition.
     /// </summary>
-    public bool TryStartTracking();
+    public abstract bool TryStartTracking();
 
     /// <summary>
     /// Connects Tracker to chat.
@@ -348,43 +337,43 @@ public interface ITracker
     /// <param name="id">
     /// The is for <paramref name="userName"/>.
     /// </param>
-    public void ConnectToChat(string? userName, string? oauthToken, string? channel, string? id);
+    public abstract void ConnectToChat(string? userName, string? oauthToken, string? channel, string? id);
 
     /// <summary>
     /// Sets the start time of the timer
     /// </summary>
-    public void StartTimer(bool isInitial = false);
+    public abstract void StartTimer(bool isInitial = false);
 
     /// <summary>
     /// Resets the timer to 0
     /// </summary>
-    public void ResetTimer(bool isInitial = false);
+    public abstract void ResetTimer(bool isInitial = false);
 
     /// <summary>
     /// Pauses the timer, saving the elapsed time
     /// </summary>
-    public Action? PauseTimer(bool addUndo = true);
+    public abstract Action? PauseTimer(bool addUndo = true);
 
     /// <summary>
     /// Pauses or resumes the timer based on if it is
     /// currently paused or not
     /// </summary>
-    public void ToggleTimer();
+    public abstract void ToggleTimer();
 
     /// <summary>
     /// Stops voice recognition.
     /// </summary>
-    public void StopTracking();
+    public abstract void StopTracking();
 
     /// <summary>
     /// Enables the voice recognizer if the microphone is enabled
     /// </summary>
-    public void EnableVoiceRecognition();
+    public abstract void EnableVoiceRecognition();
 
     /// <summary>
     /// Disables voice recognition if it was previously enabled
     /// </summary>
-    public void DisableVoiceRecognition();
+    public abstract void DisableVoiceRecognition();
 
     /// <summary>
     /// Speak a sentence using text-to-speech.
@@ -394,7 +383,7 @@ public interface ITracker
     /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
     /// name="text"/> was <c>null</c>.
     /// </returns>
-    public bool Say(SchrodingersString? text);
+    public abstract bool Say(SchrodingersString? text);
 
     /// <summary>
     /// Speak a sentence using text-to-speech.
@@ -404,7 +393,7 @@ public interface ITracker
     /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
     /// response was <c>null</c>.
     /// </returns>
-    public bool Say(Func<ResponseConfig, SchrodingersString?> selectResponse);
+    public abstract bool Say(Func<ResponseConfig, SchrodingersString?> selectResponse);
 
     /// <summary>
     /// Speak a sentence using text-to-speech.
@@ -415,7 +404,7 @@ public interface ITracker
     /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
     /// name="text"/> was <c>null</c>.
     /// </returns>
-    public bool Say(SchrodingersString? text, params object?[] args);
+    public abstract bool Say(SchrodingersString? text, params object?[] args);
 
     /// <summary>
     /// Speak a sentence using text-to-speech.
@@ -426,7 +415,7 @@ public interface ITracker
     /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
     /// response was <c>null</c>.
     /// </returns>
-    public bool Say(Func<ResponseConfig, SchrodingersString?> selectResponse, params object?[] args);
+    public abstract bool Say(Func<ResponseConfig, SchrodingersString?> selectResponse, params object?[] args);
 
     /// <summary>
     /// Speak a sentence using text-to-speech only one time.
@@ -436,7 +425,7 @@ public interface ITracker
     /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
     /// name="text"/> was <c>null</c>.
     /// </returns>
-    public bool SayOnce(SchrodingersString? text);
+    public abstract bool SayOnce(SchrodingersString? text);
 
     /// <summary>
     /// Speak a sentence using text-to-speech only one time.
@@ -446,10 +435,19 @@ public interface ITracker
     /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
     /// response was <c>null</c>.
     /// </returns>
-    public bool SayOnce(Func<ResponseConfig, SchrodingersString?> selectResponse)
-    {
-        return SayOnce(selectResponse(Responses));
-    }
+    public abstract bool SayOnce(Func<ResponseConfig, SchrodingersString?> selectResponse);
+
+    /// <summary>
+    /// Speak a sentence using text-to-speech only one time.
+    /// </summary>
+    /// <param name="text">The text response to use.</param>
+    /// <param name="args">Arguments to substitute out in the text</param>
+    /// <returns>
+    /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
+    /// response was <c>null</c>.
+    /// </returns>
+    public abstract bool SayOnce(SchrodingersString? text, params object?[] args);
+
     /// <summary>
     /// Speak a sentence using text-to-speech only one time.
     /// </summary>
@@ -459,7 +457,7 @@ public interface ITracker
     /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
     /// response was <c>null</c>.
     /// </returns>
-    public bool SayOnce(Func<ResponseConfig, SchrodingersString?> selectResponse, params object?[] args);
+    public abstract bool SayOnce(Func<ResponseConfig, SchrodingersString?> selectResponse, params object?[] args);
 
     /// <summary>
     /// Speak a sentence using text-to-speech.
@@ -473,23 +471,23 @@ public interface ITracker
     /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
     /// response was <c>null</c>.
     /// </returns>
-    public bool Say(string? text, bool wait = false);
+    public abstract bool Say(string? text, bool wait = false);
 
     /// <summary>
     /// Repeats the most recently spoken sentence using text-to-speech at a
     /// slower rate.
     /// </summary>
-    public void Repeat();
+    public abstract void Repeat();
 
     /// <summary>
     /// Makes Tracker stop talking.
     /// </summary>
-    public void ShutUp();
+    public abstract void ShutUp();
 
     /// <summary>
     /// Notifies the user an error occurred.
     /// </summary>
-    public void Error();
+    public abstract void Error();
 
     /// <summary>
     /// Tracks the specifies item.
@@ -512,7 +510,7 @@ public interface ITracker
     /// langword="false"/> if the item could not be tracked, e.g. when
     /// tracking Bow twice.
     /// </returns>
-    public bool TrackItem(Item item, string? trackedAs = null, float? confidence = null, bool tryClear = true, bool autoTracked = false, Location? location = null, bool giftedItem = false, bool silent = false);
+    public abstract bool TrackItem(Item item, string? trackedAs = null, float? confidence = null, bool tryClear = true, bool autoTracked = false, Location? location = null, bool giftedItem = false, bool silent = false);
 
     /// <summary>
     /// Tracks multiple items at the same time
@@ -520,14 +518,14 @@ public interface ITracker
     /// <param name="items">The items to track</param>
     /// <param name="autoTracked">If the items were tracked via auto tracker</param>
     /// <param name="giftedItem">If the items were gifted to the player</param>
-    public void TrackItems(List<Item> items, bool autoTracked, bool giftedItem);
+    public abstract void TrackItems(List<Item> items, bool autoTracked, bool giftedItem);
 
     /// <summary>
     /// Removes an item from the tracker.
     /// </summary>
     /// <param name="item">The item to untrack.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void UntrackItem(Item item, float? confidence = null);
+    public abstract void UntrackItem(Item item, float? confidence = null);
 
     /// <summary>
     /// Tracks the specifies item and clears it from the specified dungeon.
@@ -538,7 +536,7 @@ public interface ITracker
     /// </param>
     /// <param name="dungeon">The dungeon the item was tracked in.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void TrackItem(Item item, IDungeon dungeon, string? trackedAs = null, float? confidence = null);
+    public abstract void TrackItem(Item item, IDungeon dungeon, string? trackedAs = null, float? confidence = null);
 
     /// <summary>
     /// Tracks the specified item and clears it from the specified room.
@@ -549,7 +547,7 @@ public interface ITracker
     /// </param>
     /// <param name="area">The area the item was found in.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void TrackItem(Item item, IHasLocations area, string? trackedAs = null, float? confidence = null);
+    public abstract void TrackItem(Item item, IHasLocations area, string? trackedAs = null, float? confidence = null);
 
     /// <summary>
     /// Sets the item count for the specified item.
@@ -559,7 +557,7 @@ public interface ITracker
     /// The amount of the item that is in the player's inventory now.
     /// </param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void TrackItemAmount(Item item, int count, float confidence);
+    public abstract void TrackItemAmount(Item item, int count, float confidence);
 
     /// <summary>
     /// Clears every item in the specified area, optionally tracking the
@@ -579,14 +577,14 @@ public interface ITracker
     /// <param name="assumeKeys">
     /// Set to true to ignore keys when clearing the location.
     /// </param>
-    public void ClearArea(IHasLocations area, bool trackItems, bool includeUnavailable = false, float? confidence = null, bool assumeKeys = false);
+    public abstract void ClearArea(IHasLocations area, bool trackItems, bool includeUnavailable = false, float? confidence = null, bool assumeKeys = false);
 
     /// <summary>
     /// Marks all locations and treasure within a dungeon as cleared.
     /// </summary>
     /// <param name="dungeon">The dungeon to clear.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void ClearDungeon(IDungeon dungeon, float? confidence = null);
+    public abstract void ClearDungeon(IDungeon dungeon, float? confidence = null);
 
     /// <summary>
     /// Clears an item from the specified location.
@@ -594,7 +592,7 @@ public interface ITracker
     /// <param name="location">The location to clear.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
     /// <param name="autoTracked">If this was tracked by the auto tracker</param>
-    public void Clear(Location location, float? confidence = null, bool autoTracked = false);
+    public abstract void Clear(Location location, float? confidence = null, bool autoTracked = false);
 
     /// <summary>
     /// Marks a dungeon as cleared and, if possible, tracks the boss reward.
@@ -602,7 +600,7 @@ public interface ITracker
     /// <param name="dungeon">The dungeon that was cleared.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
     /// <param name="autoTracked">If this was cleared by the auto tracker</param>
-    public void MarkDungeonAsCleared(IDungeon dungeon, float? confidence = null, bool autoTracked = false);
+    public abstract void MarkDungeonAsCleared(IDungeon dungeon, float? confidence = null, bool autoTracked = false);
 
     /// <summary>
     /// Marks a boss as defeated.
@@ -614,14 +612,14 @@ public interface ITracker
     /// </param>
     /// <param name="confidence">The speech recognition confidence.</param>
     /// <param name="autoTracked">If this was tracked by the auto tracker</param>
-    public void MarkBossAsDefeated(Boss boss, bool admittedGuilt = true, float? confidence = null, bool autoTracked = false);
+    public abstract void MarkBossAsDefeated(Boss boss, bool admittedGuilt = true, float? confidence = null, bool autoTracked = false);
 
     /// <summary>
     /// Un-marks a boss as defeated.
     /// </summary>
     /// <param name="boss">The boss that should be 'revived'.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void MarkBossAsNotDefeated(Boss boss, float? confidence = null);
+    public abstract void MarkBossAsNotDefeated(Boss boss, float? confidence = null);
 
     /// <summary>
     /// Un-marks a dungeon as cleared and, if possible, untracks the boss
@@ -629,7 +627,7 @@ public interface ITracker
     /// </summary>
     /// <param name="dungeon">The dungeon that should be un-cleared.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void MarkDungeonAsIncomplete(IDungeon dungeon, float? confidence = null);
+    public abstract void MarkDungeonAsIncomplete(IDungeon dungeon, float? confidence = null);
 
     /// <summary>
     /// Marks an item at the specified location.
@@ -639,37 +637,37 @@ public interface ITracker
     /// The item that is found at <paramref name="location"/>.
     /// </param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void MarkLocation(Location location, Item item, float? confidence = null);
+    public abstract void MarkLocation(Location location, Item item, float? confidence = null);
 
     /// <summary>
     /// Pegs a Peg World peg.
     /// </summary>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void Peg(float? confidence = null);
+    public abstract void Peg(float? confidence = null);
 
     /// <summary>
     /// Starts Peg World mode.
     /// </summary>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void StartPegWorldMode(float? confidence = null);
+    public abstract void StartPegWorldMode(float? confidence = null);
 
     /// <summary>
     /// Turns Peg World mode off.
     /// </summary>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void StopPegWorldMode(float? confidence = null);
+    public abstract void StopPegWorldMode(float? confidence = null);
 
     /// <summary>
     /// Starts Peg World mode.
     /// </summary>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void StartShaktoolMode(float? confidence = null);
+    public abstract void StartShaktoolMode(float? confidence = null);
 
     /// <summary>
     /// Turns Peg World mode off.
     /// </summary>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void StopShaktoolMode(float? confidence = null);
+    public abstract void StopShaktoolMode(float? confidence = null);
 
     /// <summary>
     /// Updates the region that the player is in
@@ -677,7 +675,7 @@ public interface ITracker
     /// <param name="region">The region the player is in</param>
     /// <param name="updateMap">Set to true to update the map for the player to match the region</param>
     /// <param name="resetTime">If the time should be reset if this is the first region update</param>
-    public void UpdateRegion(Region region, bool updateMap = false, bool resetTime = false);
+    public abstract void UpdateRegion(Region region, bool updateMap = false, bool resetTime = false);
 
     /// <summary>
     /// Updates the region that the player is in
@@ -685,31 +683,31 @@ public interface ITracker
     /// <param name="region">The region the player is in</param>
     /// <param name="updateMap">Set to true to update the map for the player to match the region</param>
     /// <param name="resetTime">If the time should be reset if this is the first region update</param>
-    public void UpdateRegion(RegionInfo? region, bool updateMap = false, bool resetTime = false);
+    public abstract void UpdateRegion(RegionInfo? region, bool updateMap = false, bool resetTime = false);
 
     /// <summary>
     /// Updates the map to display for the user
     /// </summary>
     /// <param name="map">The name of the map</param>
-    public void UpdateMap(string map);
+    public abstract void UpdateMap(string map);
 
     /// <summary>
     /// Called when the game is beaten by entering triforce room
     /// or entering the ship after beating both bosses
     /// </summary>
     /// <param name="autoTracked">If this was triggered by the auto tracker</param>
-    public void GameBeaten(bool autoTracked);
+    public abstract void GameBeaten(bool autoTracked);
 
     /// <summary>
     /// Called when the player has died
     /// </summary>
-    public void TrackDeath(bool autoTracked);
+    public abstract void TrackDeath(bool autoTracked);
 
     /// <summary>
     /// Updates the current track number being played
     /// </summary>
     /// <param name="number">The number of the track</param>
-    public void UpdateTrackNumber(int number);
+    public abstract void UpdateTrackNumber(int number);
 
     /// <summary>
     /// Updates the current track being played
@@ -717,9 +715,9 @@ public interface ITracker
     /// <param name="msu">The current MSU pack</param>
     /// <param name="track">The current track</param>
     /// <param name="outputText">Formatted output text matching the requested style</param>
-    public void UpdateTrack(Msu msu, Track track, string outputText);
+    public abstract void UpdateTrack(Msu msu, Track track, string outputText);
 
-    public void RestartIdleTimers();
+    public abstract void RestartIdleTimers();
 
     /// <summary>
     /// Adds an action to be invoked to undo the last operation.
@@ -727,7 +725,7 @@ public interface ITracker
     /// <param name="undo">
     /// The action to invoke to undo the last operation.
     /// </param>
-    public void AddUndo(Action undo);
+    public abstract void AddUndo(Action undo);
 
     /// <summary>
     /// Determines whether or not the specified reward is worth getting.
@@ -737,7 +735,7 @@ public interface ITracker
     /// <see langword="true"/> if the reward leads to something good;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public bool IsWorth(RewardType reward);
+    public abstract bool IsWorth(RewardType reward);
 
     /// <summary>
     /// Formats a string so that it will be pronounced correctly by the
@@ -757,5 +755,90 @@ public interface ITracker
     /// another item that is worth getting; otherwise, <see
     /// langword="false"/>.
     /// </returns>
-    public bool IsWorth(Item item);
+    public abstract bool IsWorth(Item item);
+
+    protected virtual void OnSpeechRecognized(TrackerEventArgs args)
+    {
+        SpeechRecognized?.Invoke(this, args);
+    }
+
+    protected virtual void OnItemTracked(ItemTrackedEventArgs args)
+    {
+        ItemTracked?.Invoke(this, args);
+    }
+
+    protected virtual void OnLocationCleared(LocationClearedEventArgs args)
+    {
+        LocationCleared?.Invoke(this, args);
+    }
+
+    protected virtual void OnToggledPegWorldModeOn(TrackerEventArgs args)
+    {
+        ToggledPegWorldModeOn?.Invoke(this, args);
+    }
+
+    protected virtual void OnToggledShaktoolMode(TrackerEventArgs args)
+    {
+        ToggledShaktoolMode?.Invoke(this, args);
+    }
+
+    protected virtual void OnPegPegged(TrackerEventArgs args)
+    {
+        PegPegged?.Invoke(this, args);
+    }
+
+    protected virtual void OnDungeonUpdated(DungeonTrackedEventArgs args)
+    {
+        DungeonUpdated?.Invoke(this, args);
+    }
+
+    protected virtual void OnBossUpdated(BossTrackedEventArgs args)
+    {
+        BossUpdated?.Invoke(this, args);
+    }
+
+    protected virtual void OnMarkedLocationsUpdated(TrackerEventArgs args)
+    {
+        MarkedLocationsUpdated?.Invoke(this, args);
+    }
+
+    protected virtual void OnGoModeToggledOn(TrackerEventArgs args)
+    {
+        GoModeToggledOn?.Invoke(this, args);
+    }
+
+    protected virtual void OnActionUndone(TrackerEventArgs args)
+    {
+        ActionUndone?.Invoke(this, args);
+    }
+
+    protected virtual void OnStateLoaded()
+    {
+        StateLoaded?.Invoke(this, EventArgs.Empty);
+    }
+
+    protected virtual void OnMapUpdated()
+    {
+        MapUpdated?.Invoke(this, EventArgs.Empty);
+    }
+
+    protected virtual void OnBeatGame(TrackerEventArgs args)
+    {
+        BeatGame?.Invoke(this, args);
+    }
+
+    protected virtual void OnPlayerDied(TrackerEventArgs args)
+    {
+        PlayerDied?.Invoke(this, args);
+    }
+
+    protected virtual void OnTrackNumberUpdated(TrackNumberEventArgs args)
+    {
+        TrackNumberUpdated?.Invoke(this, args);
+    }
+
+    protected virtual void OnTrackChanged(TrackChangedEventArgs args)
+    {
+        TrackChanged?.Invoke(this, args);
+    }
 }

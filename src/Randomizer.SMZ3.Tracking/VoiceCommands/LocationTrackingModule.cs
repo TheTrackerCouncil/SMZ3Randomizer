@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Versioning;
 using Microsoft.Extensions.Logging;
 using Randomizer.Abstractions;
 using Randomizer.SMZ3.Tracking.Services;
@@ -18,12 +19,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="itemService">Service to get item information</param>
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to log information.</param>
-        public LocationTrackingModule(ITracker tracker, IItemService itemService, IWorldService worldService, ILogger<LocationTrackingModule> logger)
+        public LocationTrackingModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<LocationTrackingModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
 
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetMarkItemAtLocationRule()
         {
             var itemNames = GetItemNames();
@@ -67,6 +69,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 locationHasItem, markAtLocation);
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetClearLocationRule()
         {
             var locationNames = GetLocationNames();
@@ -77,6 +80,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append(LocationKey, locationNames);
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetClearAreaRule()
         {
             var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
@@ -101,6 +105,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return GrammarBuilder.Combine(clearDungeon, clearRoom, clearRegion);
         }
 
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetClearAreaIncludingOutOfLogicRule()
         {
             var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
@@ -128,41 +133,41 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return GrammarBuilder.Combine(clearDungeon, clearRoom, clearRegion);
         }
 
-        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
+        [SupportedOSPlatform("windows")]
         public override void AddCommands()
         {
             AddCommand("Mark item at specific location", GetMarkItemAtLocationRule(), (result) =>
             {
-                var item = GetItemFromResult(Tracker, result, out _);
-                var location = GetLocationFromResult(Tracker, result);
-                Tracker.MarkLocation(location, item, result.Confidence);
+                var item = GetItemFromResult(TrackerBase, result, out _);
+                var location = GetLocationFromResult(TrackerBase, result);
+                TrackerBase.MarkLocation(location, item, result.Confidence);
             });
 
             AddCommand("Clear specific item location", GetClearLocationRule(), (result) =>
             {
-                var location = GetLocationFromResult(Tracker, result);
-                Tracker.Clear(location, result.Confidence);
+                var location = GetLocationFromResult(TrackerBase, result);
+                TrackerBase.Clear(location, result.Confidence);
             });
 
             AddCommand("Clear available items in an area", GetClearAreaRule(), (result) =>
             {
                 if (result.Semantics.ContainsKey(RoomKey))
                 {
-                    var room = GetRoomFromResult(Tracker, result);
-                    Tracker.ClearArea(room,
+                    var room = GetRoomFromResult(TrackerBase, result);
+                    TrackerBase.ClearArea(room,
                         trackItems: false,
                         includeUnavailable: false,
                         confidence: result.Confidence);
                 }
                 else if (result.Semantics.ContainsKey(DungeonKey))
                 {
-                    var dungeon = GetDungeonFromResult(Tracker, result);
-                    Tracker.ClearDungeon(dungeon, result.Confidence);
+                    var dungeon = GetDungeonFromResult(TrackerBase, result);
+                    TrackerBase.ClearDungeon(dungeon, result.Confidence);
                 }
                 else if (result.Semantics.ContainsKey(RegionKey))
                 {
-                    var region = GetRegionFromResult(Tracker, result);
-                    Tracker.ClearArea(region,
+                    var region = GetRegionFromResult(TrackerBase, result);
+                    TrackerBase.ClearArea(region,
                         trackItems:false,
                         includeUnavailable: false,
                         confidence: result.Confidence);
@@ -173,21 +178,21 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 if (result.Semantics.ContainsKey(RoomKey))
                 {
-                    var room = GetRoomFromResult(Tracker, result);
-                    Tracker.ClearArea(room,
+                    var room = GetRoomFromResult(TrackerBase, result);
+                    TrackerBase.ClearArea(room,
                         trackItems: false,
                         includeUnavailable: true,
                         confidence: result.Confidence);
                 }
                 else if (result.Semantics.ContainsKey(DungeonKey))
                 {
-                    var dungeon = GetDungeonFromResult(Tracker, result);
-                    Tracker.ClearDungeon(dungeon, result.Confidence);
+                    var dungeon = GetDungeonFromResult(TrackerBase, result);
+                    TrackerBase.ClearDungeon(dungeon, result.Confidence);
                 }
                 else if (result.Semantics.ContainsKey(RegionKey))
                 {
-                    var region = GetRegionFromResult(Tracker, result);
-                    Tracker.ClearArea(region,
+                    var region = GetRegionFromResult(TrackerBase, result);
+                    TrackerBase.ClearArea(region,
                         trackItems:false,
                         includeUnavailable: true,
                         confidence: result.Confidence);

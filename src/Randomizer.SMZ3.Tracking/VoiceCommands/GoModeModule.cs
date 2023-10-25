@@ -22,7 +22,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to log information.</param>
         /// <param name="responseConfig"></param>
-        public GoModeModule(ITracker tracker, IItemService itemService, IWorldService worldService, ILogger<GoModeModule> logger, ResponseConfig responseConfig)
+        public GoModeModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<GoModeModule> logger, ResponseConfig responseConfig)
             : base(tracker, itemService, worldService, logger)
         {
             _responseConfig = responseConfig;
@@ -40,7 +40,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             AddCommand("Toggle Go Mode", GetGoModeRule(_responseConfig.GoModePrompts), (result) =>
             {
-                Tracker.ToggleGoMode(result.Confidence);
+                TrackerBase.ToggleGoMode(result.Confidence);
             });
         }
     }

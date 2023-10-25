@@ -21,6 +21,6 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
         /// <param name="currentState">The current state in Zelda</param>
         /// <param name="prevState">The previous state in Zelda</param>
         /// <returns>True if the state was found</returns>
-        bool ExecuteCheck(ITracker tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState);
+        bool ExecuteCheck(TrackerBase tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState);
     }
 }

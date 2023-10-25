@@ -45,7 +45,7 @@ public class MsuModule : TrackerModule, IDisposable
     /// <param name="msuSelectorService"></param>
     /// <param name="msuTypeService"></param>
     /// <param name="msuConfig"></param>
-    public MsuModule(ITracker tracker, IItemService itemService, IWorldService worldService, ILogger<MsuModule> logger, IMsuLookupService msuLookupService, IMsuSelectorService msuSelectorService, IMsuTypeService msuTypeService, MsuConfig msuConfig)
+    public MsuModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<MsuModule> logger, IMsuLookupService msuLookupService, IMsuSelectorService msuSelectorService, IMsuTypeService msuTypeService, MsuConfig msuConfig)
         : base(tracker, itemService, worldService, logger)
     {
         _msuSelectorService = msuSelectorService;
@@ -105,17 +105,17 @@ public class MsuModule : TrackerModule, IDisposable
         if (_currentTrack != null)
         {
             var output = GetOutputText();
-            Tracker.UpdateTrack(_currentMsu, _currentTrack, output);
+            TrackerBase.UpdateTrack(_currentMsu, _currentTrack, output);
 
-            if (!string.IsNullOrEmpty(Tracker.Options.MsuTrackOutputPath))
+            if (!string.IsNullOrEmpty(TrackerBase.Options.MsuTrackOutputPath))
             {
                 try
                 {
-                    _ = File.WriteAllTextAsync(Tracker.Options.MsuTrackOutputPath, output);
+                    _ = File.WriteAllTextAsync(TrackerBase.Options.MsuTrackOutputPath, output);
                 }
                 catch (Exception ex)
                 {
-                    Logger.LogError(ex, "Unable to write current track details to {Path}", Tracker.Options.MsuTrackOutputPath);
+                    Logger.LogError(ex, "Unable to write current track details to {Path}", TrackerBase.Options.MsuTrackOutputPath);
                 }
             }
         }
@@ -128,7 +128,7 @@ public class MsuModule : TrackerModule, IDisposable
         if (_currentMsu == null || _currentTrack == null)
             return "";
 
-        var options = Tracker.Options;
+        var options = TrackerBase.Options;
         if (options.MsuTrackDisplayStyle == MsuTrackDisplayStyle.Horizontal)
         {
             if (!string.IsNullOrEmpty(_currentTrack.DisplayAlbum) || !string.IsNullOrEmpty(_currentTrack.DisplayArtist))
@@ -248,7 +248,7 @@ public class MsuModule : TrackerModule, IDisposable
         {
             parts.Add($"by {track.DisplayArtist}");
         }
-        if (!string.IsNullOrEmpty(track.MsuName) && Tracker.Rom!.MsuRandomizationStyle != null)
+        if (!string.IsNullOrEmpty(track.MsuName) && TrackerBase.Rom!.MsuRandomizationStyle != null)
         {
             parts.Add($"from MSU Pack {track.MsuName}");
             if (!string.IsNullOrEmpty(track.MsuCreator)) parts.Add($"by {track.MsuCreator}");
@@ -299,7 +299,7 @@ public class MsuModule : TrackerModule, IDisposable
             Logger.LogError(exception, "Error creating MSU");
         }
 
-        Tracker.GameService?.TryCancelMsuResume();
+        TrackerBase.GameService?.TryCancelMsuResume();
     }
 
     public void Dispose()
@@ -318,7 +318,7 @@ public class MsuModule : TrackerModule, IDisposable
         {
             if (_currentMsu == null)
             {
-                Tracker.Say(_msuConfig.UnknownSong);
+                TrackerBase.Say(_msuConfig.UnknownSong);
                 return;
             }
 
@@ -326,11 +326,11 @@ public class MsuModule : TrackerModule, IDisposable
             var track = _currentMsu.GetTrackFor(trackNumber);
             if (track != null)
             {
-                Tracker.Say(_msuConfig.CurrentSong, GetTrackText(track));
+                TrackerBase.Say(_msuConfig.CurrentSong, GetTrackText(track));
             }
             else
             {
-                Tracker.Say(_msuConfig.UnknownSong);
+                TrackerBase.Say(_msuConfig.UnknownSong);
             }
         });
 
@@ -338,7 +338,7 @@ public class MsuModule : TrackerModule, IDisposable
         {
             if (_currentMsu == null)
             {
-                Tracker.Say(_msuConfig.UnknownSong);
+                TrackerBase.Say(_msuConfig.UnknownSong);
                 return;
             }
 
@@ -346,11 +346,11 @@ public class MsuModule : TrackerModule, IDisposable
             var track = _currentMsu.GetTrackFor(trackNumber);
             if (track?.GetMsuName() != null)
             {
-                Tracker.Say(_msuConfig.CurrentMsu, track.GetMsuName());
+                TrackerBase.Say(_msuConfig.CurrentMsu, track.GetMsuName());
             }
             else
             {
-                Tracker.Say(_msuConfig.UnknownSong);
+                TrackerBase.Say(_msuConfig.UnknownSong);
             }
         });
 
@@ -358,20 +358,20 @@ public class MsuModule : TrackerModule, IDisposable
         {
             if (_currentTrack == null)
             {
-                Tracker.Say(_msuConfig.UnknownSong);
+                TrackerBase.Say(_msuConfig.UnknownSong);
                 return;
             }
-            Tracker.Say(_msuConfig.CurrentSong, GetTrackText(_currentTrack));
+            TrackerBase.Say(_msuConfig.CurrentSong, GetTrackText(_currentTrack));
         });
 
         AddCommand("current msu", GetCurrentMsuRules(), (_) =>
         {
             if (_currentTrack == null)
             {
-                Tracker.Say(_msuConfig.UnknownSong);
+                TrackerBase.Say(_msuConfig.UnknownSong);
                 return;
             }
-            Tracker.Say(_msuConfig.CurrentMsu, _currentTrack.GetMsuName());
+            TrackerBase.Say(_msuConfig.CurrentMsu, _currentTrack.GetMsuName());
         });
     }
 }

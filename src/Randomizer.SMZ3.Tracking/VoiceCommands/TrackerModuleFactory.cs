@@ -45,10 +45,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// A dictionary that contains the loaded speech recognition syntax.
         /// </returns>
-        public IReadOnlyDictionary<string, IEnumerable<string>> LoadAll(ITracker tracker, SpeechRecognitionEngine? engine, out bool moduleLoadError)
+        public IReadOnlyDictionary<string, IEnumerable<string>> LoadAll(TrackerBase tracker, SpeechRecognitionEngine? engine, out bool moduleLoadError)
         {
             moduleLoadError = false;
-            _trackerModules = _serviceProvider.GetServices<TrackerModule>();
+            _trackerModules = _serviceProvider.GetServices<TrackerModule>().ToList();
 
             if (engine != null && OperatingSystem.IsWindows())
             {

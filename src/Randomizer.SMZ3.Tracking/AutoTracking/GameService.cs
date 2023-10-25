@@ -20,7 +20,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking;
 /// </summary>
 public class GameService : TrackerModule, IGameService
 {
-    private IAutoTracker? AutoTracker => Tracker.AutoTracker;
+    private AutoTrackerBase? AutoTracker => TrackerBase.AutoTracker;
     private readonly ILogger<GameService> _logger;
     private readonly int _trackerPlayerId;
     private int _itemCounter;
@@ -35,10 +35,10 @@ public class GameService : TrackerModule, IGameService
     /// <param name="worldService">Service to get world information</param>
     /// <param name="logger">The logger to associate with this module</param>
     /// <param name="worldAccessor">The accesor to determine the tracker player id</param>
-    public GameService(ITracker tracker, IItemService itemService, IWorldService worldService, ILogger<GameService> logger, IWorldAccessor worldAccessor)
+    public GameService(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<GameService> logger, IWorldAccessor worldAccessor)
         : base(tracker, itemService, worldService, logger)
     {
-        Tracker.GameService = this;
+        TrackerBase.GameService = this;
         _logger = logger;
         _trackerPlayerId = worldAccessor.Worlds.Count > 0 ? worldAccessor.Worlds.Count : 0;
     }
@@ -99,7 +99,7 @@ public class GameService : TrackerModule, IGameService
             return false;
         }
 
-        Tracker.TrackItems(items, true, true);
+        TrackerBase.TrackItems(items, true, true);
 
         return TryGiveItemTypes(items.Select(x => (x.Type, fromPlayerId)).ToList());
     }
@@ -541,7 +541,7 @@ public class GameService : TrackerModule, IGameService
         _itemCounter = previouslyGiftedItems.Count;
 
         var otherCollectedItems = WorldService.Worlds.SelectMany(x => x.Locations)
-            .Where(x => x.State.ItemWorldId == Tracker.World.Id && x.State.WorldId != Tracker.World.Id &&
+            .Where(x => x.State.ItemWorldId == TrackerBase.World.Id && x.State.WorldId != TrackerBase.World.Id &&
                         x.State.Autotracked).Select(x => (x.State.Item, x.State.WorldId)).ToList();
 
         foreach (var item in previouslyGiftedItems)
