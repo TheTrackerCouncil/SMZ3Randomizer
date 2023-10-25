@@ -197,7 +197,15 @@ namespace Randomizer.App.Controls
             }
             catch (System.Runtime.InteropServices.COMException)
             {
-                Clipboard.SetDataObject(text);
+                try
+                {
+                    Clipboard.Clear();
+                    Clipboard.SetDataObject(text);
+                }
+                catch (Exception e)
+                {
+                    // Ignored
+                }
             }
         }
 
