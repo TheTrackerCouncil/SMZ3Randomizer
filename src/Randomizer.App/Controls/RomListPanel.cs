@@ -23,7 +23,6 @@ namespace Randomizer.App.Controls
         private TrackerWindow? _trackerWindow;
         private RomLauncherService _romLauncherService;
 
-
         public RomListPanel(IServiceProvider serviceProvider,
             OptionsFactory optionsFactory,
             ILogger<RomListPanel> logger,
@@ -198,7 +197,15 @@ namespace Randomizer.App.Controls
             }
             catch (System.Runtime.InteropServices.COMException)
             {
-                Clipboard.SetDataObject(text);
+                try
+                {
+                    Clipboard.Clear();
+                    Clipboard.SetDataObject(text);
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError(e, "Unable to copy to clipboard");
+                }
             }
         }
 
