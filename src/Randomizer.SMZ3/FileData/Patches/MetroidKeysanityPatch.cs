@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Randomizer.Abstractions;
+using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.FileData.Patches;
 
+[Manual]
 public class MetroidKeysanityPatch : RomPatch
 {
 
@@ -64,7 +67,7 @@ public class MetroidKeysanityPatch : RomPatch
 
     public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
     {
-        if (!data.World.Config.MetroidKeysanity)
+        if (!data.World.Config.GameModeConfigs.KeysanityConfig.MetroidKeysanity)
             yield break;
 
         ushort plaquePLm = 0xd410;
@@ -105,5 +108,8 @@ public class MetroidKeysanityPatch : RomPatch
         }
 
         yield return new GeneratedPatch(Snes(0x8f0000 + plmTablePos), new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+
+        // Show doors on map
+        yield return new GeneratedPatch(Snes(0xF47006), UshortBytes(0x0001));
     }
 }

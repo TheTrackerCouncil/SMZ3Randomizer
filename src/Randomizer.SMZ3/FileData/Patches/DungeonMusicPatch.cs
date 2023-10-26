@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Randomizer.Abstractions;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData.Regions.Zelda;
 using Randomizer.Shared;
@@ -11,7 +12,7 @@ public class DungeonMusicPatch : RomPatch
 {
     public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
     {
-        if (data.World.Config.ZeldaKeysanity)
+        if (data.World.Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity)
         {
             return new List<GeneratedPatch>();
         };

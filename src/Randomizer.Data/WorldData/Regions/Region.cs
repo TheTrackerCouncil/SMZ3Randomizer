@@ -112,7 +112,7 @@ namespace Randomizer.Data.WorldData.Regions
         /// </returns>
         public virtual bool CanFill(Item item, Progression items)
         {
-            return (item.World.Config.ZeldaKeysanity || !item.IsDungeonItem || IsRegionItem(item)) && MatchesItemPlacementRule(item);
+            return (item.World.Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity || !item.IsDungeonItem || IsRegionItem(item)) && MatchesItemPlacementRule(item);
         }
 
         private bool MatchesItemPlacementRule(Item item)
@@ -121,7 +121,7 @@ namespace Randomizer.Data.WorldData.Regions
             var rule = Config.ItemPlacementRule;
             if (rule == ItemPlacementRule.Anywhere
                 || (!item.Progression && !item.IsKey && !item.IsKeycard && !item.IsBigKey)
-                || (!item.World.Config.ZeldaKeysanity && (item.IsKey || item.IsBigKey))) return true;
+                || (!item.World.Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity && (item.IsKey || item.IsBigKey))) return true;
             else if (rule == ItemPlacementRule.DungeonsAndMetroid)
             {
                 return this is Z3Region { IsOverworld: false } || this is SMRegion;

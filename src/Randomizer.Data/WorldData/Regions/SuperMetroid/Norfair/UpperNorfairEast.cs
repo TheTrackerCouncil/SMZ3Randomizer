@@ -49,7 +49,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
                         Logic.CanAccessNorfairUpperPortal(items)
                     ) && items.Varia && items.Super && (
                         /* Cathedral */
-                        (Logic.CanOpenRedDoors(items) && (Config.MetroidKeysanity ? items.CardNorfairL2 : items.Super) &&
+                        (Logic.CanOpenRedDoors(items) && (Config.GameModeConfigs.KeysanityConfig.MetroidKeysanity ? items.CardNorfairL2 : items.Super) &&
                             (Logic.CanFly(items) || items.HiJump || items.SpeedBooster)) ||
                         /* Frog Speedway */
                         (items.SpeedBooster && (items.CardNorfairL2 || items.Wave) && Logic.CanUsePowerBombs(items))

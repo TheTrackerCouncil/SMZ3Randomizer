@@ -200,7 +200,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         };
 
         private bool IsKeysanityForLocation(Location location)
-            => World.Config.KeysanityForRegion(location.Region);
+            => World.Config.GameModeConfigs.KeysanityConfig.KeysanityForRegion(location.Region);
 
         private Progression Progression(bool assumeKeys)
             => _itemService.GetProgression(assumeKeys);

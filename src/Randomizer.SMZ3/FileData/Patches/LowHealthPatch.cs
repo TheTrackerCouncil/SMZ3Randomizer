@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Randomizer.Abstractions;
 using Randomizer.Data.Options;
 
 namespace Randomizer.SMZ3.FileData.Patches

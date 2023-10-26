@@ -29,7 +29,7 @@ namespace Randomizer.Data.WorldData.Regions
         public int GetTreasureCount()
         {
             var region = (Region)this;
-            return region.Locations.Count(x => x.Item.Type != ItemType.Nothing && (!x.Item.IsDungeonItem || region.World.Config.ZeldaKeysanity) && x.Type != LocationType.NotInDungeon);
+            return region.Locations.Count(x => x.Item.Type != ItemType.Nothing && (!x.Item.IsDungeonItem || region.World.Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity) && x.Type != LocationType.NotInDungeon);
         }
 
         /// <summary>

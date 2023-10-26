@@ -6,6 +6,7 @@ using FluentAssertions;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Randomizer.Abstractions;
 using Randomizer.Data.Configuration;
 using Randomizer.Data.Logic;
 using Randomizer.Data.Options;
@@ -14,6 +15,7 @@ using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.FileData.Patches;
+using Randomizer.SMZ3.GameModes;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Infrastructure;
 
@@ -176,6 +178,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
                 .AddSingleton<IMetadataService, MetadataService>()
                 .AddSingleton<IGameHintService, GameHintService>()
                 .AddSingleton<IPatcherService, PatcherService>()
+                .AddSingleton<IGameModeService, GameModeService>()
                 .AddConfigs()
                 .BuildServiceProvider();
 
@@ -183,7 +186,8 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             return new Smz3Randomizer(filler, new WorldAccessor(),
                 serviceProvider.GetRequiredService<IGameHintService>(),
                 GetLogger<Smz3Randomizer>(),
-                serviceProvider.GetRequiredService<IPatcherService>());
+                serviceProvider.GetRequiredService<IPatcherService>(),
+                serviceProvider.GetRequiredService<IGameModeService>());
         }
     }
 }

@@ -13,6 +13,8 @@ public class WorldItemPools
 {
     public WorldItemPools(World world)
     {
+        World = world;
+
         // Create the item pools
         var progression = CreateProgressionPool(world);
         var nice = CreateNicePool(world);
@@ -35,16 +37,6 @@ public class WorldItemPools
                 keycards.Remove(keycards.First(x => x.Type == itemType));
         }
 
-        // If we're missing any items, fill up the spots with twenty rupees
-        var itemCount = progression.Count + nice.Count + dungeon.Count + junk.Count;
-        if (world.Config.MetroidKeysanity)
-            itemCount += keycards.Count;
-        var locationCount = world.Locations.Count();
-        if (itemCount < locationCount)
-        {
-            junk.AddRange(Copies(locationCount - itemCount, () => new Item(ItemType.TwentyRupees, world)));
-        }
-
         Progression = progression;
         Nice = nice;
         Junk = junk;
@@ -52,12 +44,26 @@ public class WorldItemPools
         Keycards = keycards;
     }
 
-    public IReadOnlyCollection<Item> Progression { get; set; }
-    public IReadOnlyCollection<Item> Nice { get; }
-    public IReadOnlyCollection<Item> Junk { get; }
-    public IReadOnlyCollection<Item> Dungeon { get; set; }
-    public IReadOnlyCollection<Item> Keycards { get; set; }
+    public World World { get; init; }
+    public List<Item> Progression { get; set; }
+    public List<Item> Nice { get; }
+    public List<Item> Junk { get; }
+    public List<Item> Dungeon { get; set; }
+    public List<Item> Keycards { get; set; }
     public IEnumerable<Item> AllItems => Progression.Concat(Nice).Concat(Junk).Concat(Dungeon).Concat(Keycards);
+
+    public void FillGaps()
+    {
+        // If we're missing any items, fill up the spots with twenty rupees
+        var itemCount = Progression.Count + Nice.Count + Dungeon.Count + Junk.Count;
+        if (World.Config.GameModeConfigs.KeysanityConfig.MetroidKeysanity)
+            itemCount += Keycards.Count;
+        var locationCount = World.Locations.Count();
+        if (itemCount < locationCount)
+        {
+            Junk.AddRange(Copies(locationCount - itemCount, () => new Item(ItemType.TwentyRupees, World)));
+        }
+    }
 
     /// <summary>
     /// Returns a list of items that are nice to have but are not required
@@ -172,8 +178,22 @@ public class WorldItemPools
             new Item(ItemType.MapIP, world),
             new Item(ItemType.MapMM, world),
             new Item(ItemType.MapTR, world),
+
+            new Item(ItemType.MapHC, world),
+            new Item(ItemType.MapGT, world),
+            new Item(ItemType.CompassEP, world),
+            new Item(ItemType.CompassDP, world),
+            new Item(ItemType.CompassTH, world),
+            new Item(ItemType.CompassPD, world),
+            new Item(ItemType.CompassSP, world),
+            new Item(ItemType.CompassSW, world),
+            new Item(ItemType.CompassTT, world),
+            new Item(ItemType.CompassIP, world),
+            new Item(ItemType.CompassMM, world),
+            new Item(ItemType.CompassTR, world),
+            new Item(ItemType.CompassGT, world),
         });
-        if (!world.Config.MetroidKeysanity)
+        /*if (!world.Config.MetroidKeysanity)
         {
             itemPool.AddRange(new[] {
                 new Item(ItemType.MapHC, world),
@@ -190,7 +210,7 @@ public class WorldItemPools
                 new Item(ItemType.CompassTR, world),
                 new Item(ItemType.CompassGT, world),
             });
-        }
+        }*/
 
         return itemPool;
     }

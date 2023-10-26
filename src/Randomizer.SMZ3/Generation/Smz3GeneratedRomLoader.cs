@@ -63,8 +63,8 @@ namespace Randomizer.SMZ3.Generation
                 var itemWorld = worlds.First(w => w.Id == locationState.ItemWorldId);
                 location.Item = new Item(locationState.Item, itemWorld,
                     itemState.ItemName, itemMetadata, itemState,
-                    locationState.Item.IsPossibleProgression(itemWorld.Config.ZeldaKeysanity,
-                        itemWorld.Config.MetroidKeysanity));
+                    locationState.Item.IsPossibleProgression(itemWorld.Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity,
+                        itemWorld.Config.GameModeConfigs.KeysanityConfig.MetroidKeysanity));
             }
 
             // Create items for saved state items not in the world

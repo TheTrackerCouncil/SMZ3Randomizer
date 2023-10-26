@@ -7,7 +7,6 @@ using Randomizer.Shared;
 
 using YamlDotNet.Serialization;
 using Randomizer.Data.Logic;
-using Randomizer.Shared.Enums;
 
 namespace Randomizer.Data.Options
 {
@@ -31,7 +30,7 @@ namespace Randomizer.Data.Options
         /// <param name="world">The world instance to export to a config.</param>
         public PlandoConfig(World world)
         {
-            KeysanityMode = world.Config.KeysanityMode;
+            GameModeConfigs = world.Config.GameModeConfigs;
             GanonsTowerCrystalCount = world.Config.GanonCrystalCount;
             GanonCrystalCount = world.Config.GanonCrystalCount;
             OpenPyramid = world.Config.OpenPyramid;
@@ -61,9 +60,10 @@ namespace Randomizer.Data.Options
         public string FileName { get; set; } = "";
 
         /// <summary>
-        /// Gets or sets a value indicating whether Keysanity should be enabled.
+        /// Gets or sets the properties for the game modes
         /// </summary>
-        public KeysanityMode KeysanityMode { get; set; }
+
+        public GameModeConfigs GameModeConfigs { get; set; } = new();
 
         /// <summary>
         /// Gets or sets the number of crystals for entering GT

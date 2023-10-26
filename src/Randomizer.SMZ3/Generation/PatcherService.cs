@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
-using Randomizer.Data.Configuration;
-using Randomizer.Data.Options;
-using Randomizer.Data.WorldData;
+using Randomizer.Abstractions;
 using Randomizer.SMZ3.FileData;
 using Randomizer.SMZ3.FileData.Patches;
+using Randomizer.SMZ3.GameModes;
 
 namespace Randomizer.SMZ3.Generation;
 
@@ -17,25 +15,30 @@ public class PatcherService : IPatcherService
 {
     private readonly ILogger<PatcherService> _logger;
     private readonly RomPatchFactory _romPatchFactory;
+    private readonly IGameModeService _gameModeService;
 
-    public PatcherService(RomPatchFactory romPatchFactory, ILogger<PatcherService> logger)
+    public PatcherService(RomPatchFactory romPatchFactory, ILogger<PatcherService> logger, IGameModeService gameModeService)
     {
         _logger = logger;
+        _gameModeService = gameModeService;
         _romPatchFactory = romPatchFactory;
     }
 
     public Dictionary<int, byte[]> GetPatches(GetPatchesRequest data)
     {
-        var patches = new List<GeneratedPatch>();
+        var patches = new Dictionary<int, byte[]>();
 
-        foreach (var patch in _romPatchFactory.GetPatches())
+        foreach (var patch in _romPatchFactory.GetPatches().SelectMany(x => x.GetChanges(data)))
         {
-            var updates = patch.GetChanges(data).ToList();
-            _logger.LogInformation("Retrieving {Number} updates from {Name}", updates.Count, patch.GetType().Name);
-            patches.AddRange(updates);
+            patches[patch.Offset] = patch.Data;
         }
 
-        return patches.ToDictionary(x => x.Offset, x => x.Data);
+        foreach (var patch in _gameModeService.GetPatches(data.World).SelectMany(x => x.GetChanges(data)))
+        {
+            patches[patch.Offset] = patch.Data;
+        }
+
+        return patches;
     }
 
 }

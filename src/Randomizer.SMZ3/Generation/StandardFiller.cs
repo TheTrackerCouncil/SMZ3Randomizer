@@ -79,7 +79,7 @@ namespace Randomizer.SMZ3.Generation
 
                 InitialFillInOwnWorld(dungeon, progression, world, config, startingInventory);
 
-                if (worldConfig.ZeldaKeysanity == false)
+                if (worldConfig.GameModeConfigs.KeysanityConfig.ZeldaKeysanity == false)
                 {
                     _logger.LogDebug("Distributing dungeon items according to logic");
                     var worldLocations = world.Locations.Empty().Shuffle(Random);
@@ -87,7 +87,7 @@ namespace Randomizer.SMZ3.Generation
                     AssumedFill(dungeon, progression.Concat(keyCards).Concat(assumedInventory).Concat(preferenceItems).ToList(), worldLocations, new[] { world }, cancellationToken);
                 }
 
-                if (worldConfig.MetroidKeysanity)
+                if (worldConfig.GameModeConfigs.KeysanityConfig.MetroidKeysanity)
                 {
                     progressionItems.AddRange(world.ItemPools.Keycards);
                 }

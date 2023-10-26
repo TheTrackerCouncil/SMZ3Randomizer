@@ -37,6 +37,7 @@ public class AutoTracker : AutoTrackerBase
     private readonly TrackerModuleFactory _trackerModuleFactory;
     private readonly IRandomizerConfigService _config;
     private readonly IWorldService _worldService;
+    private readonly IGameModeService _gameModeService;
     private int _currentIndex;
     private Game _previousGame;
     private bool _hasStarted;
@@ -62,6 +63,7 @@ public class AutoTracker : AutoTrackerBase
     /// <param name="randomizerConfigService"></param>
     /// <param name="worldService"></param>
     /// <param name="trackerBase"></param>
+    /// <param name="gameModeService"></param>
     public AutoTracker(ILogger<AutoTracker> logger,
         ILoggerFactory loggerFactory,
         IItemService itemService,
@@ -70,7 +72,8 @@ public class AutoTracker : AutoTrackerBase
         TrackerModuleFactory trackerModuleFactory,
         IRandomizerConfigService randomizerConfigService,
         IWorldService worldService,
-        TrackerBase trackerBase)
+        TrackerBase trackerBase,
+        IGameModeService gameModeService)
     {
         _logger = logger;
         _loggerFactory = loggerFactory;
@@ -78,6 +81,7 @@ public class AutoTracker : AutoTrackerBase
         _trackerModuleFactory = trackerModuleFactory;
         _config = randomizerConfigService;
         _worldService = worldService;
+        _gameModeService = gameModeService;
         TrackerBase = trackerBase;
 
         // Check if the game has started or not
@@ -747,6 +751,8 @@ public class AutoTracker : AutoTrackerBase
                 _logger.LogInformation("{StateName} detected", check.GetType().Name);
             }
         }
+
+        _gameModeService.ZeldaStateChanged(ZeldaState, prevState);
     }
 
     /// <summary>
@@ -847,6 +853,8 @@ public class AutoTracker : AutoTrackerBase
                 _logger.LogInformation("{StateName} detected", check.GetType().Name);
             }
         }
+
+        _gameModeService.MetroidStateChanged(MetroidState, prevState);
     }
 
     /// <summary>
@@ -865,7 +873,7 @@ public class AutoTracker : AutoTrackerBase
 
     private void IncrementGTItems(Location location)
     {
-        if (_foundGTKey || _config.Config.ZeldaKeysanity) return;
+        if (_foundGTKey || _config.Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity) return;
 
         var chatIntegrationModule = _trackerModuleFactory.GetModule<ChatIntegrationModule>();
         _numGTItems++;

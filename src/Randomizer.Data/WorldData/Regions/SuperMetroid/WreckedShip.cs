@@ -47,7 +47,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
         {
             return items.Super && (
                         /* Over the Moat */
-                        ((Config.MetroidKeysanity ? items.CardCrateriaL2 : Logic.CanUsePowerBombs(items)) && (
+                        ((Config.GameModeConfigs.KeysanityConfig.MetroidKeysanity ? items.CardCrateriaL2 : Logic.CanUsePowerBombs(items)) && (
                             Logic.CanMoatSpeedBoost(items) || items.Grapple || items.SpaceJump ||
                             (items.Gravity && (Logic.CanIbj(items) || (items.HiJump && Logic.CanWallJump(WallJumpDifficulty.Easy))))
                             || Logic.CanWallJump(WallJumpDifficulty.Insane)

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Randomizer.Abstractions;
 using Randomizer.Data.Options;
 using Randomizer.SMZ3.Generation;
 

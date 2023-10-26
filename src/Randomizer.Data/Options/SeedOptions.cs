@@ -23,8 +23,6 @@ namespace Randomizer.Data.Options
         [JsonIgnore]
         public string ConfigString { get; set; } = "";
 
-        public KeysanityMode KeysanityMode { get; set; } = KeysanityMode.None;
-
         public ItemPlacementRule ItemPlacementRule { get; set; } = ItemPlacementRule.Anywhere;
 
         public bool Race { get; set; }
@@ -43,6 +41,8 @@ namespace Randomizer.Data.Options
         public int GanonCrystalCount { get; set; } = 7;
         public bool OpenPyramid { get; set; } = false;
         public int TourianBossCount { get; set; } = 4;
+
+        public GameModeConfigs GameModeConfigs { get; set; } = new();
 
         [JsonIgnore, YamlIgnore]
         public int MaxHints => 15;

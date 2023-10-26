@@ -68,7 +68,7 @@ public class RomGenerationService
     {
         var config = options.ToConfig();
         config.PlandoConfig = plandoConfig;
-        config.KeysanityMode = plandoConfig.KeysanityMode;
+        config.GameModeConfigs = plandoConfig.GameModeConfigs;
         config.GanonsTowerCrystalCount = plandoConfig.GanonsTowerCrystalCount;
         config.GanonCrystalCount = plandoConfig.GanonCrystalCount;
         config.OpenPyramid = plandoConfig.OpenPyramid;

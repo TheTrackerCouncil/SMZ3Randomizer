@@ -226,7 +226,7 @@ public class ItemService : IItemService
 
         var progression = new Progression();
 
-        if (!_world.World.Config.MetroidKeysanity || assumeKeys)
+        if (!_world.World.Config.GameModeConfigs.KeysanityConfig.MetroidKeysanity || assumeKeys)
         {
             progression.AddRange(_world.World.ItemPools.Keycards);
             if (assumeKeys)
@@ -266,12 +266,12 @@ public class ItemService : IItemService
         {
             case Z3Region:
             case Room { Region: Z3Region }:
-                return GetProgression(assumeKeys: !_world.World.Config.ZeldaKeysanity);
+                return GetProgression(assumeKeys: !_world.World.Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity);
             case SMRegion:
             case Room { Region: SMRegion }:
-                return GetProgression(assumeKeys: !_world.World.Config.MetroidKeysanity);
+                return GetProgression(assumeKeys: !_world.World.Config.GameModeConfigs.KeysanityConfig.MetroidKeysanity);
             default:
-                return GetProgression(assumeKeys: _world.World.Config.KeysanityMode == KeysanityMode.None);
+                return GetProgression(assumeKeys: _world.World.Config.GameModeConfigs.KeysanityConfig.KeysanityMode == KeysanityMode.None);
         }
     }
 

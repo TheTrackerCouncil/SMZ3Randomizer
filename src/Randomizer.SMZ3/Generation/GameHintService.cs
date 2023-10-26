@@ -162,7 +162,7 @@ namespace Randomizer.SMZ3.Generation
         {
             // For keysanity/multiworld check all dungeons, otherwise check non-crystal dungeons
             var dungeons = hintPlayerWorld.Dungeons
-                .Where(x => hintPlayerWorld.Config.MultiWorld || hintPlayerWorld.Config.ZeldaKeysanity || x.IsPendantDungeon || x is HyruleCastle or GanonsTower);
+                .Where(x => hintPlayerWorld.Config.MultiWorld || hintPlayerWorld.Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity || x.IsPendantDungeon || x is HyruleCastle or GanonsTower);
             var hints = new List<Hint>();
 
             foreach (var dungeon in dungeons)
@@ -432,7 +432,7 @@ namespace Randomizer.SMZ3.Generation
         /// </summary>
         private bool CheckSphereCrateriaBossKeys(IEnumerable<Location> sphereLocations)
         {
-            var numKeysanity = sphereLocations.Select(x => x.World).Distinct().Count(x => x.Config.MetroidKeysanity);
+            var numKeysanity = sphereLocations.Select(x => x.World).Distinct().Count(x => x.Config.GameModeConfigs.KeysanityConfig.MetroidKeysanity);
             var numCratieriaBossKeys = sphereLocations.Select(x => x.Item.Type).Count(x => x == ItemType.CardMaridiaBoss);
             return numKeysanity == numCratieriaBossKeys;
         }

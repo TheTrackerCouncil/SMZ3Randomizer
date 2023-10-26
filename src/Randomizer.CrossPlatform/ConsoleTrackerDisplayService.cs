@@ -8,6 +8,7 @@ using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
 using Randomizer.Shared.Models;
+using Randomizer.SMZ3.GameModes;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.AutoTracking;
@@ -22,15 +23,17 @@ public class ConsoleTrackerDisplayService
     private readonly TrackerOptionsAccessor _trackerOptionsAccessor;
     private readonly RandomizerOptions _options;
     private readonly IServiceProvider _serviceProvider;
+    private readonly IGameModeService _gameModeService;
     private TrackerBase _trackerBase = null!;
     private World _world = null!;
     private IWorldService _worldService = null!;
     private Region _lastRegion = null!;
 
-    public ConsoleTrackerDisplayService(IServiceProvider serviceProvider, Smz3GeneratedRomLoader romLoaderService, TrackerOptionsAccessor trackerOptionsAccessor, OptionsFactory optionsFactory)
+    public ConsoleTrackerDisplayService(IServiceProvider serviceProvider, Smz3GeneratedRomLoader romLoaderService, TrackerOptionsAccessor trackerOptionsAccessor, OptionsFactory optionsFactory, IGameModeService gameModeService)
     {
         _romLoaderService = romLoaderService;
         _trackerOptionsAccessor = trackerOptionsAccessor;
+        _gameModeService = gameModeService;
         _options = optionsFactory.Create();
         _serviceProvider = serviceProvider;
         _timer = new System.Timers.Timer(TimeSpan.FromMilliseconds(250));
@@ -43,6 +46,7 @@ public class ConsoleTrackerDisplayService
         _world = _romLoaderService.LoadGeneratedRom(rom).First(x => x.IsLocalWorld);
         _worldService = _serviceProvider.GetRequiredService<IWorldService>();
         _trackerBase = _serviceProvider.GetRequiredService<TrackerBase>();
+        _gameModeService.SetTracker(_trackerBase, _world.Config.GameModeConfigs);
         _trackerBase.Load(rom, romPath);
         _trackerBase.TryStartTracking();
         _trackerBase.AutoTracker?.SetConnector(_options.AutoTrackerDefaultConnector, _options.AutoTrackerQUsb2SnesIp);

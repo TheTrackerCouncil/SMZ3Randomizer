@@ -25,7 +25,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 memoryFlag: 0x4,
                 metadata: metadata,
                 trackerState: trackerState)
-                .Allow((item, items) => Config.ZeldaKeysanity || item.Is(ItemType.KeySP, World));
+                .Allow((item, items) => Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity || item.Is(ItemType.KeySP, World));
 
             MapChest = new Location(this, LocationId.SwampPalaceMapChest, 0x1E986, LocationType.Regular,
                 name: "Map Chest",

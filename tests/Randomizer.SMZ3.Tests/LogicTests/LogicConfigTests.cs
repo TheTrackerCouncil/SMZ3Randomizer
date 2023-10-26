@@ -414,7 +414,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         [Fact]
         public void TestEasyBlueBrinstarTop()
         {
-            var config = new Config { LogicConfig = { EasyBlueBrinstarTop = false, }, KeysanityMode = KeysanityMode.None };
+            var config = new Config { LogicConfig = { EasyBlueBrinstarTop = false, }, GameModeConfigs = new() };
 
             var tempWorld = new World(config, "", 0, "");
             var progression = new Progression(new[] { ItemType.Morph, ItemType.PowerBomb, ItemType.CardBrinstarL1 }, new List<RewardType>(), new List<BossType>());

@@ -265,7 +265,7 @@ namespace Randomizer.Data.WorldData
         {
             var oldItem = Item;
             Item = item;
-            var isCustomPlacementAndSphereOne = (item.Progression || item.IsDungeonItem && item.World.Config.ZeldaKeysanity || item.IsKeycard && item.World.Config.MetroidKeysanity)
+            var isCustomPlacementAndSphereOne = (item.Progression || item.IsDungeonItem && item.World.Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity || item.IsKeycard && item.World.Config.GameModeConfigs.KeysanityConfig.MetroidKeysanity)
                                                 && Region.Config.ItemPlacementRule != ItemPlacementRule.Anywhere
                                                 && _weight <= -10;
             var fillable = _alwaysAllow(item, items)

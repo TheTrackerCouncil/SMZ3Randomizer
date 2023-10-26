@@ -89,7 +89,7 @@ public class ViewedMap : IZeldaStateCheck
 
         foreach (var (region, map) in dungeons)
         {
-            if (World.Config.ZeldaKeysanity && !Items.IsTracked(map))
+            if (World.Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity && !Items.IsTracked(map))
                 continue;
 
             var dungeon = (IDungeon)region;
@@ -101,7 +101,7 @@ public class ViewedMap : IZeldaStateCheck
             }
         }
 
-        if (!World.Config.ZeldaKeysanity)
+        if (!World.Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity)
         {
             if (rewards.Count(x => x == RewardType.CrystalRed || x == RewardType.CrystalBlue) == 3)
             {
@@ -142,7 +142,7 @@ public class ViewedMap : IZeldaStateCheck
 
         foreach (var (region, map) in dungeons)
         {
-            if (World.Config.ZeldaKeysanity && !Items.IsTracked(map))
+            if (World.Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity && !Items.IsTracked(map))
                 continue;
 
             var dungeon = (IDungeon)region;
@@ -157,7 +157,7 @@ public class ViewedMap : IZeldaStateCheck
         var isMiseryMirePendant = (World.MiseryMire as IDungeon).IsPendantDungeon;
         var isTurtleRockPendant = (World.TurtleRock as IDungeon).IsPendantDungeon;
 
-        if (!World.Config.ZeldaKeysanity)
+        if (!World.Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity)
         {
             if (isMiseryMirePendant && isTurtleRockPendant)
             {
