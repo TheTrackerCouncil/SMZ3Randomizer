@@ -103,6 +103,12 @@ macro CheckMSUPresence16(labelToJump)
     BEQ + : jmp <labelToJump> : +
 endmacro
 
+; Hijack SM reset code to mute msu
+org $C08462
+base $808462
+    jml debug_reset_mute_msu
+
+
 ; Hijack the jump to the second-to-last routine in the main gameplay loop
 org $C28BAF
     jsl msu_fade_in
@@ -561,3 +567,13 @@ msu_fade_in:
     rep #$20                    ; Return to 16-bit mode
 +
     rtl
+
+debug_reset_mute_msu:
+    sep #$30
+    lda.b #$00
+    sta.w $2004
+    sta.w $2005
+    REP #$30
+    LDX #$1FFF
+    TCD
+    JML $80846E
