@@ -175,9 +175,9 @@ public class RomTextService
             var logicOptions = string.Join(',', type.GetProperties().Select(x => $"{x.Name}: {x.GetValue(world.Config.LogicConfig)}"));
             log.AppendLine($"Logic Options: {logicOptions}");
 
-            if (world.Config.Keysanity)
+            if (world.Config.GameModeConfigs.KeysanityConfig.KeysanityEnabled)
             {
-                log.AppendLine("Keysanity: " + world.Config.KeysanityMode.ToString());
+                log.AppendLine("Keysanity: " + world.Config.GameModeConfigs.KeysanityConfig.KeysanityMode);
             }
 
             var gtCrystals = world.Config.GanonsTowerCrystalCount;

@@ -29,9 +29,9 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
         {
             return
                     /* Ship -> Moat */
-                    ((Config.MetroidKeysanity ? items.CardCrateriaL2 : Logic.CanUsePowerBombs(items)) && items.Super) ||
+                    ((Config.GameModeConfigs.KeysanityConfig.MetroidKeysanity ? items.CardCrateriaL2 : Logic.CanUsePowerBombs(items)) && items.Super) ||
                     /* UN Portal -> Red Tower -> Moat */
-                    ((Config.MetroidKeysanity ? items.CardCrateriaL2 : Logic.CanUsePowerBombs(items)) && Logic.CanAccessNorfairUpperPortal(items) &&
+                    ((Config.GameModeConfigs.KeysanityConfig.MetroidKeysanity ? items.CardCrateriaL2 : Logic.CanUsePowerBombs(items)) && Logic.CanAccessNorfairUpperPortal(items) &&
                         (items.Ice || items.HiJump || items.SpaceJump)) ||
                     /*Through Maridia From Portal*/
                     (Logic.CanAccessMaridiaPortal(items, requireRewards) && items.Gravity && items.Super && (

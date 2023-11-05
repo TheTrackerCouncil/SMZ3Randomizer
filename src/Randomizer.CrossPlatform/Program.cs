@@ -66,10 +66,14 @@ public static class Program
                     .Where(x => x.ValidTracks.Count > 10).ToList();
 
                 result = DisplayMenu("Which msu do you want to use?",
-                    msus.Select(x => $"{x.Name} ({x.MsuTypeName})").ToList());
-                if (result != null)
+                    msus.Select(x => $"{x.Name} ({x.MsuTypeName})").Append("None").ToList());
+                if (result != null && result.Value.Item1 < msus.Count)
                 {
                     randomizerOptions.PatchOptions.MsuPaths = new List<string>() { msus[result.Value.Item1].Path };
+                }
+                else
+                {
+                    randomizerOptions.PatchOptions.MsuPaths = new List<string>();
                 }
             }
 
@@ -81,6 +85,7 @@ public static class Program
                 Console.WriteLine($"Rom generated successfully: {romPath}");
                 launcher.LaunchRom(romPath, randomizerOptions.GeneralOptions.LaunchApplication,
                     randomizerOptions.GeneralOptions.LaunchArguments);
+                randomizerOptions.Save();
                 _ = s_services.GetRequiredService<ConsoleTrackerDisplayService>().StartTracking(results.Rom, romPath);
             }
             else

@@ -71,7 +71,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
                     new Location(this, LocationId.UpperNorfairIceBeam, 0x8F8B24, LocationType.Chozo,
                         name: "Ice Beam",
                         vanillaItem: ItemType.Ice,
-                        access: items => (Config.MetroidKeysanity ? items.CardNorfairL1 : items.Super)
+                        access: items => (Config.GameModeConfigs.KeysanityConfig.MetroidKeysanity ? items.CardNorfairL1 : items.Super)
                                          && Logic.CanPassBombPassages(items) && items.Varia && Logic.CanMoveAtHighSpeeds(items),
                         memoryAddress: 0x6,
                         memoryFlag: 0x4,
@@ -91,7 +91,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
                     new Location(this, LocationId.UpperNorfairCrumbleShaft, 0x8F8B46, LocationType.Hidden,
                         name: "Missile (below Ice Beam)",
                         vanillaItem: ItemType.Missile,
-                        access: items => (Config.MetroidKeysanity ? items.CardNorfairL1 : items.Super)
+                        access: items => (Config.GameModeConfigs.KeysanityConfig.MetroidKeysanity ? items.CardNorfairL1 : items.Super)
                                          && Logic.CanUsePowerBombs(items) && items.Varia && Logic.CanMoveAtHighSpeeds(items)
                                          && (Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanFly(items)),
                         memoryAddress: 0x6,

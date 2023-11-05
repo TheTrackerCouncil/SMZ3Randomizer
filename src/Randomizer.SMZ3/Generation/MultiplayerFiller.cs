@@ -119,7 +119,7 @@ namespace Randomizer.SMZ3.Generation
                 var generatedData = generatedLocationData.Single(x => x.Id == location.Id);
                 var itemType = generatedData.Item;
                 var itemWorld = worlds.Single(x => x.Id == generatedData.ItemWorldId);
-                location.Item = new Item(itemType, itemWorld, isProgression: itemType.IsPossibleProgression(itemWorld.Config.ZeldaKeysanity, itemWorld.Config.MetroidKeysanity));
+                location.Item = new Item(itemType, itemWorld, isProgression: itemType.IsPossibleProgression(itemWorld.Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity, itemWorld.Config.GameModeConfigs.KeysanityConfig.MetroidKeysanity));
                 _logger.LogDebug("Fast-filled {Item} at {Location}", generatedData.Item, location.Name);
             }
             EnsureLocationsHaveItems(world);

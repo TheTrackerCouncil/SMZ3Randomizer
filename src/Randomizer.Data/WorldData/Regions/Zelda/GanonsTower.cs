@@ -177,7 +177,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                     return false;
                 }
 
-                if (Config.ZeldaKeysanity
+                if (Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity
                     && !((item.Type == ItemType.BigKeyGT || item.Type == ItemType.KeyGT) && item.World == World)
                     && (item.IsKey || item.IsBigKey || item.IsKeycard))
                 {

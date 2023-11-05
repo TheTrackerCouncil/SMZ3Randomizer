@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Randomizer.Abstractions;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.FileData.Patches;
+using Randomizer.SMZ3.GameModes;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Infrastructure;
+using GameMode = Randomizer.Data.Options.GameMode;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -26,6 +29,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<SpritePatcherService>();
             services.AddSingleton<RomTextService>();
             services.AddTransient<RomLauncherService>();
+            services.AddGameModes<RomPatchFactory>();
+            services.AddSingleton<IGameModeService, GameModeService>();
             return services;
         }
 
@@ -69,6 +74,19 @@ namespace Microsoft.Extensions.DependencyInjection
             foreach (var moduleType in moduleTypes)
             {
                 services.TryAddEnumerable(ServiceDescriptor.Singleton(typeof(RomPatch), moduleType));
+            }
+
+            return services;
+        }
+
+        private static IServiceCollection AddGameModes<TAssembly>(this IServiceCollection services)
+        {
+            var moduleTypes = typeof(TAssembly).Assembly.GetTypes()
+                .Where(x => x.IsSubclassOf(typeof(GameModeBase)));
+
+            foreach (var moduleType in moduleTypes)
+            {
+                services.TryAddEnumerable(ServiceDescriptor.Scoped(typeof(GameModeBase), moduleType));
             }
 
             return services;

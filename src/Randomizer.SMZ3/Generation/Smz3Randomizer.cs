@@ -5,12 +5,14 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using Microsoft.Extensions.Logging;
+using Randomizer.Abstractions;
 using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.FileData;
+using Randomizer.SMZ3.GameModes;
 
 namespace Randomizer.SMZ3.Generation
 {
@@ -20,14 +22,16 @@ namespace Randomizer.SMZ3.Generation
         private readonly ILogger<Smz3Randomizer> _logger;
         private readonly IGameHintService _hintService;
         private readonly IPatcherService _patcherService;
+        private readonly IGameModeService _gameModeService;
 
         public Smz3Randomizer(IFiller filler, IWorldAccessor worldAccessor, IGameHintService gameHintGenerator,
-            ILogger<Smz3Randomizer> logger, IPatcherService patcherService)
+            ILogger<Smz3Randomizer> logger, IPatcherService patcherService, IGameModeService gameModeService)
         {
             Filler = filler;
             _worldAccessor = worldAccessor;
             _logger = logger;
             _patcherService = patcherService;
+            _gameModeService = gameModeService;
             _hintService = gameHintGenerator;
         }
 
@@ -82,15 +86,24 @@ namespace Randomizer.SMZ3.Generation
             var worlds = new List<World>();
             if (primaryConfig.SingleWorld)
             {
+                _gameModeService.ModifyConfig(primaryConfig);
                 worlds.Add(new World(primaryConfig, "Player", 0, Guid.NewGuid().ToString("N")));
+                _gameModeService.ModifyWorldItemPools(worlds[0]);
+                worlds[0].ItemPools.FillGaps();
                 _logger.LogDebug(
                     "Seed: {SeedNumber} | Race: {PrimaryConfigRace} | Keysanity: {PrimaryConfigKeysanityMode} | Item placement: {PrimaryConfigItemPlacementRule}",
-                    seedNumber, primaryConfig.Race, primaryConfig.KeysanityMode, primaryConfig.ItemPlacementRule);
+                    seedNumber, primaryConfig.Race, primaryConfig.GameModeConfigs.KeysanityConfig.KeysanityMode, primaryConfig.ItemPlacementRule);
             }
             else
             {
+                configs.ForEach(x => _gameModeService.ModifyConfig(x));
                 worlds.AddRange(configs.OrderBy(x => x.Id).Select(config =>
                     new World(config, config.PlayerName, config.Id, config.PlayerGuid, config.IsLocalConfig)));
+                worlds.ForEach(x =>
+                {
+                    _gameModeService.ModifyWorldItemPools(x);
+                    x.ItemPools.FillGaps();
+                });
                 _logger.LogDebug(
                     "Seed: {SeedNumber} | Race: {PrimaryConfigRace} | World Count: {Count}",
                     seedNumber, primaryConfig.Race, configs.Count);

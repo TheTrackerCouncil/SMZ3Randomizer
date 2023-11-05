@@ -95,7 +95,7 @@ namespace Randomizer.SMZ3
 
             foreach (var world in worlds)
             {
-                if (!world.Config.MetroidKeysanity)
+                if (!world.Config.GameModeConfigs.KeysanityConfig.MetroidKeysanity)
                 {
                     var keycards = world.ItemPools.Keycards;
                     items.AddRange(keycards);
@@ -169,7 +169,7 @@ namespace Randomizer.SMZ3
                         text.Add($"Inaccessible Item: {location}", $"{location.Item.Name}");
                 }
 
-                foreach (var location in x.Locations.Where(l => IsImportant(l, Config.KeysanityMode)))
+                foreach (var location in x.Locations.Where(l => IsImportant(l, Config.GameModeConfigs.KeysanityConfig.KeysanityMode)))
                 {
                     if (Config.MultiWorld)
                         text.Add($"{location} ({location.Region.World.Player})", $"{location.Item.Name} ({location.Item.World.Player})");

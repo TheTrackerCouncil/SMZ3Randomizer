@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Randomizer.Abstractions;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Generation;
 
@@ -56,7 +57,7 @@ public class MetadataPatch : RomPatch
     {
         var configField =
             ((_data.World.Config.Race ? 1 : 0) << 15) |
-            ((_data.World.Config.Keysanity ? 1 : 0) << 13) |
+            ((_data.World.Config.GameModeConfigs.KeysanityConfig.KeysanityEnabled ? 1 : 0) << 13) |
             ((GetPatchesRequest.EnableMultiworld ? 1 : 0) << 12) |
             (Smz3Randomizer.Version.Major << 4) |
             (Smz3Randomizer.Version.Minor << 0);
@@ -82,8 +83,5 @@ public class MetadataPatch : RomPatch
         /* Common Combo Configuration flags at [asm]/config.asm */
         // Enable multiworld (for cheats)
         yield return new GeneratedPatch(Snes(0xF47000), UshortBytes(0x0001));
-        // Enable keysanity if applicable
-        if (_data.World.Config.Keysanity)
-            yield return new GeneratedPatch(Snes(0xF47006), UshortBytes(0x0001));
     }
 }

@@ -47,7 +47,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
                     new Location(this, LocationId.CrateriaPowerBomb, 0x8F81CC, LocationType.Visible,
                         name: "Power Bomb (Crateria surface)",
                         vanillaItem: ItemType.PowerBomb,
-                        access: items => (Config.MetroidKeysanity ? items.CardCrateriaL1 : Logic.CanUsePowerBombs(items)) && (items.SpeedBooster || Logic.CanFly(items)),
+                        access: items => (Config.GameModeConfigs.KeysanityConfig.MetroidKeysanity ? items.CardCrateriaL1 : Logic.CanUsePowerBombs(items)) && (items.SpeedBooster || Logic.CanFly(items)),
                         memoryAddress: 0x0,
                         memoryFlag: 0x1,
                         metadata: metadata,
@@ -123,7 +123,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
                     new Location(this, LocationId.CrateriaBombTorizo, 0x8F8404, LocationType.Chozo,
                         name: "Bombs",
                         vanillaItem: ItemType.Bombs,
-                        access: items => (Config.MetroidKeysanity ? items.CardCrateriaBoss : Logic.CanOpenRedDoors(items))
+                        access: items => (Config.GameModeConfigs.KeysanityConfig.MetroidKeysanity ? items.CardCrateriaBoss : Logic.CanOpenRedDoors(items))
                                          && (Logic.CanPassBombPassages(items) || Logic.CanWallJump(WallJumpDifficulty.Hard)),
                         memoryAddress: 0x0,
                         memoryFlag: 0x80,

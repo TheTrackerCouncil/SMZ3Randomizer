@@ -53,6 +53,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     private readonly IWorldService _worldService;
     private readonly ITrackerTimerService _timerService;
     private readonly SpeechRecognitionServiceBase _recognizer;
+    private readonly IGameModeService _gameModeService;
     private bool _disposed;
     private string? _lastSpokenText;
     private readonly bool _alternateTracker;
@@ -79,6 +80,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     /// <param name="worldService"></param>
     /// <param name="timerService"></param>
     /// <param name="speechRecognitionService"></param>
+    /// <param name="gameModeService"></param>
     public Tracker(IWorldAccessor worldAccessor,
         TrackerModuleFactory moduleFactory,
         IChatClient chatClient,
@@ -91,7 +93,8 @@ public sealed class Tracker : TrackerBase, IDisposable
         ITrackerStateService stateService,
         IWorldService worldService,
         ITrackerTimerService timerService,
-        SpeechRecognitionServiceBase speechRecognitionService)
+        SpeechRecognitionServiceBase speechRecognitionService,
+        IGameModeService gameModeService)
     {
         if (trackerOptions.Options == null)
             throw new InvalidOperationException("Tracker options have not yet been activated.");
@@ -106,6 +109,8 @@ public sealed class Tracker : TrackerBase, IDisposable
         _stateService = stateService;
         _worldService = worldService;
         _timerService = timerService;
+        _recognizer = speechRecognitionService;
+        _gameModeService = gameModeService;
 
         // Initialize the tracker configuration
         Responses = configs.Responses;
@@ -127,7 +132,6 @@ public sealed class Tracker : TrackerBase, IDisposable
         }
 
         // Initialize the speech recognition engine
-        _recognizer = speechRecognitionService;
         if (OperatingSystem.IsWindows())
         {
             _recognizer.SpeechRecognized += Recognizer_SpeechRecognized;
@@ -876,13 +880,13 @@ public sealed class Tracker : TrackerBase, IDisposable
         var originalTrackingState = item.State.TrackingState;
         ItemService.ResetProgression();
 
-        var isGTPreBigKey = !World.Config.ZeldaKeysanity
+        var isGTPreBigKey = !World.Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity
                             && autoTracked
                             && location?.Region.GetType() == typeof(GanonsTower)
                             && !ItemService.GetProgression(false).BigKeyGT;
         var stateResponse = !isGTPreBigKey && !silent && (!autoTracked
                                                           || !item.Metadata.IsDungeonItem()
-                                                          || World.Config.ZeldaKeysanity);
+                                                          || World.Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity);
 
         // Actually track the item if it's for the local player's world
         if (item.World == World)
@@ -1034,7 +1038,7 @@ public sealed class Tracker : TrackerBase, IDisposable
                     }
                 }
 
-                var isKeysanityForLocation = (location.Region is Z3Region && World.Config.ZeldaKeysanity) || (location.Region is SMRegion && World.Config.MetroidKeysanity);
+                var isKeysanityForLocation = (location.Region is Z3Region && World.Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity) || (location.Region is SMRegion && World.Config.GameModeConfigs.KeysanityConfig.MetroidKeysanity);
                 var items = ItemService.GetProgression(!isKeysanityForLocation);
                 if (stateResponse && !location.IsAvailable(items) && (confidence >= Options.MinimumSassConfidence || autoTracked))
                 {
@@ -1107,6 +1111,11 @@ public sealed class Tracker : TrackerBase, IDisposable
             });
         }
 
+        if (autoTracked || giftedItem)
+        {
+            _gameModeService.ItemTracked(item, location!);
+        }
+
         GiveLocationHint(accessibleBefore);
         RestartIdleTimers();
 
@@ -1132,6 +1141,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         foreach (var item in items)
         {
             item.Track();
+            _gameModeService.ItemTracked(item, null);
         }
 
         if (items.Count == 2)
@@ -1144,11 +1154,11 @@ public sealed class Tracker : TrackerBase, IDisposable
         }
         else
         {
-            var itemsToSay = items.Where(x => x.Type.IsPossibleProgression(World.Config.ZeldaKeysanity, World.Config.MetroidKeysanity)).Take(2).ToList();
+            var itemsToSay = items.Where(x => x.Type.IsPossibleProgression(World.Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity, World.Config.GameModeConfigs.KeysanityConfig.MetroidKeysanity)).Take(2).ToList();
             if (itemsToSay.Count() < 2)
             {
                 var numToTake = 2 - itemsToSay.Count();
-                itemsToSay.AddRange(items.Where(x => !x.Type.IsPossibleProgression(World.Config.ZeldaKeysanity, World.Config.MetroidKeysanity)).Take(numToTake));
+                itemsToSay.AddRange(items.Where(x => !x.Type.IsPossibleProgression(World.Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity, World.Config.GameModeConfigs.KeysanityConfig.MetroidKeysanity)).Take(numToTake));
             }
 
             Say(x => x.TrackedManyItems, itemsToSay[0].Metadata.Name, itemsToSay[1].Metadata.Name, items.Count - 2);
@@ -1417,7 +1427,7 @@ public sealed class Tracker : TrackerBase, IDisposable
                     itemsCleared++;
                     if (!trackItems)
                     {
-                        if (IsTreasure(location.Item) || World.Config.ZeldaKeysanity)
+                        if (IsTreasure(location.Item) || World.Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity)
                             treasureTracked++;
                         location.State.Cleared = true;
                         World.LastClearedLocation = location;
@@ -1430,7 +1440,7 @@ public sealed class Tracker : TrackerBase, IDisposable
                         _logger.LogWarning("Failed to track {ItemType} in {Area}.", item.Name, area.Name); // Probably the compass or something, who cares
                     else
                         itemsTracked.Add(item);
-                    if (IsTreasure(location.Item) || World.Config.ZeldaKeysanity)
+                    if (IsTreasure(location.Item) || World.Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity)
                         treasureTracked++;
 
                     location.State.Cleared = true;
@@ -1529,7 +1539,7 @@ public sealed class Tracker : TrackerBase, IDisposable
             dungeon.DungeonState.Cleared = true;
 
         var region = (Region)dungeon;
-        var progress = ItemService.GetProgression(assumeKeys: !World.Config.ZeldaKeysanity);
+        var progress = ItemService.GetProgression(assumeKeys: !World.Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity);
         var locations = region.Locations.Where(x => x.State.Cleared == false).ToList();
         var inaccessibleLocations = locations.Where(x => !x.IsAvailable(progress)).ToList();
         if (locations.Count > 0)
@@ -1703,6 +1713,10 @@ public sealed class Tracker : TrackerBase, IDisposable
                 }
             });
         }
+        else
+        {
+            _gameModeService.DungeonCleared(dungeon);
+        }
     }
 
     /// <summary>
@@ -1752,6 +1766,10 @@ public sealed class Tracker : TrackerBase, IDisposable
                 boss.State.Defeated = false;
                 addedEvent.IsUndone = true;
             });
+        }
+        else
+        {
+            _gameModeService.BossDefeated(boss);
         }
     }
 
@@ -2215,7 +2233,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         }
 
         var dungeon = GetDungeonFromLocation(location);
-        if (dungeon != null && (IsTreasure(location.Item) || World.Config.ZeldaKeysanity))
+        if (dungeon != null && (IsTreasure(location.Item) || World.Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity))
         {
             if (TrackDungeonTreasure(dungeon, confidence, 1, autoTracked, stateResponse))
                 return _undoHistory.Pop().Action;

@@ -151,7 +151,6 @@ namespace Randomizer.Data.Options
                 var config = new Config()
                 {
                     GameMode = GameMode.Normal,
-                    KeysanityMode = SeedOptions.KeysanityMode,
                     Race = SeedOptions.Race,
                     ItemPlacementRule = SeedOptions.ItemPlacementRule,
                     DisableSpoilerLog = SeedOptions.DisableSpoilerLog,
@@ -177,7 +176,8 @@ namespace Randomizer.Data.Options
                     TourianBossCount = SeedOptions.TourianBossCount,
                     MetroidControls = PatchOptions.MetroidControls.Clone(),
                     ItemOptions = SeedOptions.ItemOptions,
-                    ZeldaDrops = PatchOptions.ZeldaDrops
+                    ZeldaDrops = PatchOptions.ZeldaDrops,
+                    GameModeConfigs = SeedOptions.GameModeConfigs,
                 };
                 return config;
             }
@@ -209,7 +209,6 @@ namespace Randomizer.Data.Options
                 return new Config()
                 {
                     GameMode = GameMode.Normal,
-                    KeysanityMode = oldConfig.KeysanityMode,
                     ItemPlacementRule = oldConfig.ItemPlacementRule,
                     Race = race,
                     DisableSpoilerLog = disableSpoilerLog,
@@ -236,7 +235,8 @@ namespace Randomizer.Data.Options
                     TourianBossCount = oldConfig.TourianBossCount,
                     MetroidControls = PatchOptions.MetroidControls.Clone(),
                     ItemOptions = oldConfig.ItemOptions,
-                    ZeldaDrops = zeldaDrops
+                    ZeldaDrops = zeldaDrops,
+                    GameModeConfigs = oldConfig.GameModeConfigs
                 };
             }
         }

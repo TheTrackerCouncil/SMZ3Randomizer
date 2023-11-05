@@ -47,11 +47,11 @@ public class EnteredDungeon : IZeldaStateCheck
             var dungeon = region as IDungeon;
             if (dungeon == null) return false;
 
-            if (!_worldAccessor.World.Config.ZeldaKeysanity && !_enteredDungeons.Contains(region) && dungeon.IsPendantDungeon)
+            if (!_worldAccessor.World.Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity && !_enteredDungeons.Contains(region) && dungeon.IsPendantDungeon)
             {
                 tracker.Say(tracker.Responses.AutoTracker.EnterPendantDungeon, dungeon.DungeonMetadata.Name, dungeon.DungeonReward?.Metadata.Name);
             }
-            else if (!_worldAccessor.World.Config.ZeldaKeysanity && region is CastleTower)
+            else if (!_worldAccessor.World.Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity && region is CastleTower)
             {
                 tracker.Say(x => x.AutoTracker.EnterHyruleCastleTower);
             }

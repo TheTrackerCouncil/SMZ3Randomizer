@@ -62,7 +62,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 memoryType: LocationMemoryType.ZeldaMisc,
                 metadata: metadata,
                 trackerState: trackerState)
-                .Allow((item, items) => Config.ZeldaKeysanity || !item.IsDungeonItem)
+                .Allow((item, items) => Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity || !item.IsDungeonItem)
                 .Weighted(SphereOne);
 
             SecretPassage = new Location(this, LocationId.SecretPassage, 0x1E971, LocationType.NotInDungeon,
@@ -72,7 +72,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 memoryFlag: 0x4,
                 metadata: metadata,
                 trackerState: trackerState)
-                .Allow((item, items) => Config.ZeldaKeysanity || !item.IsDungeonItem)
+                .Allow((item, items) => Config.GameModeConfigs.KeysanityConfig.ZeldaKeysanity || !item.IsDungeonItem)
                 .Weighted(SphereOne);
 
             BackOfEscape = new BackOfEscapeRoom(this, metadata, trackerState);

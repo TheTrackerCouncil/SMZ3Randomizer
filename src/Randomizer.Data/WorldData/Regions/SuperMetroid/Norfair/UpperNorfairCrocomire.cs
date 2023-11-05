@@ -44,11 +44,11 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
                     ) &&
                     items.Varia && (
                         /* Ice Beam -> Croc Speedway */
-                        ((Config.MetroidKeysanity ? items.CardNorfairL1 : items.Super) && Logic.CanUsePowerBombs(items) && items.SpeedBooster) ||
+                        ((Config.GameModeConfigs.KeysanityConfig.MetroidKeysanity ? items.CardNorfairL1 : items.Super) && Logic.CanUsePowerBombs(items) && items.SpeedBooster) ||
                         /* Frog Speedway */
                         (items.SpeedBooster && items.Wave) ||
                         /* Cathedral -> through the floor or Vulcano */
-                        (Logic.CanOpenRedDoors(items) && (Config.MetroidKeysanity ? items.CardNorfairL2 : items.Super) &&
+                        (Logic.CanOpenRedDoors(items) && (Config.GameModeConfigs.KeysanityConfig.MetroidKeysanity ? items.CardNorfairL2 : items.Super) &&
                             (Logic.CanFly(items) || items.HiJump || items.SpeedBooster) &&
                             (Logic.CanPassBombPassages(items) || (items.Gravity && items.Morph)) && items.Wave)
                         ||
@@ -60,7 +60,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
 
         private bool CanAccessCrocomire(Progression items)
         {
-            return (Config.MetroidKeysanity ? items.CardNorfairBoss : items.Super) && (items.HiJump || items.SpeedBooster || Logic.CanFly(items) || Logic.CanWallJump(WallJumpDifficulty.Easy));
+            return (Config.GameModeConfigs.KeysanityConfig.MetroidKeysanity ? items.CardNorfairBoss : items.Super) && (items.HiJump || items.SpeedBooster || Logic.CanFly(items) || Logic.CanWallJump(WallJumpDifficulty.Easy));
         }
 
         public class CrocomiresRoom : Room
