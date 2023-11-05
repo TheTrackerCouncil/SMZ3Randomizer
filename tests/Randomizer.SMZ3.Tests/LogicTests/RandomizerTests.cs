@@ -25,13 +25,13 @@ namespace Randomizer.SMZ3.Tests.LogicTests
     {
         // If this test breaks, update Smz3Randomizer.Version
         [Theory]
-        [InlineData("test", 558598333)] // Smz3Randomizer v4.0
+        [InlineData("test", -787405869)] // Smz3Randomizer v5.0
         public void StandardFillerWithSameSeedGeneratesSameWorld(string seed, int expectedHash)
         {
             // Apparently RNG in Linux is different than on Windows...
             if (OperatingSystem.IsLinux())
             {
-                expectedHash = 951851411;
+                expectedHash = 1752413809;
             }
 
             var filler = new StandardFiller(GetLogger<StandardFiller>());
