@@ -87,6 +87,13 @@ namespace Randomizer.SMZ3.Generation
             _random = new Random();
         }
 
+        public LocationUsefulness GetLocationUsefulness(Location location, ICollection<World> allWorlds,
+            Playthrough playthrough)
+        {
+            var importantLocations = GetImportantLocations(allWorlds);
+            return CheckIfLocationsAreImportant(allWorlds, importantLocations, new List<Location>() { location });
+        }
+
         /// <summary>
         /// Retrieves the hints to display in game for the player
         /// </summary>
@@ -570,12 +577,6 @@ namespace Randomizer.SMZ3.Generation
                 .Distinct();
         }
 
-        private enum LocationUsefulness
-        {
-            Useless,
-            NiceToHave,
-            Mandatory,
-            Sword
-        }
+
     }
 }

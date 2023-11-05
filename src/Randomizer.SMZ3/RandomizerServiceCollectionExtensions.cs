@@ -68,7 +68,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             foreach (var moduleType in moduleTypes)
             {
-                services.TryAddEnumerable(ServiceDescriptor.Singleton(typeof(RomPatch), moduleType));
+                services.TryAddEnumerable(ServiceDescriptor.Transient(typeof(RomPatch), moduleType));
             }
 
             return services;
