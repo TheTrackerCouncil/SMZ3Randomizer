@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Randomizer.Data.WorldData;
+using Randomizer.Shared.Enums;
 
 namespace Randomizer.SMZ3.Contracts
 {
@@ -21,5 +22,15 @@ namespace Randomizer.SMZ3.Contracts
         /// <param name="seed">Seed number for shuffling and randomization</param>
         /// <returns>A collection of strings to use for the in game hints</returns>
         IEnumerable<string> GetInGameHints(World hintPlayerWorld, ICollection<World> allWorlds, Playthrough playthrough, int seed);
+
+        /// <summary>
+        /// Retrieves the usefulness of a particular location in a seed
+        /// </summary>
+        /// <param name="location">The location to check</param>
+        /// <param name="allWorlds">All worlds that are a part of the seed</param>
+        /// <param name="playthrough">The initial playthrough with all of the spheres</param>
+        /// <returns>How useful the location is</returns>
+        LocationUsefulness GetLocationUsefulness(Location location, ICollection<World> allWorlds,
+            Playthrough playthrough);
     }
 }

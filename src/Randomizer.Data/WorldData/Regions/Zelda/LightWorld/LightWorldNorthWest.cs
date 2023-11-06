@@ -22,7 +22,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                 memoryFlag: 0x40,
                 memoryType: LocationMemoryType.ZeldaMisc,
                 metadata: metadata,
-                trackerState: trackerState);
+                trackerState: trackerState)
+                .Weighted(6);
 
             Mushroom = new Location(this, LocationId.Mushroom, 0x308013, LocationType.Regular,
                 name: "Mushroom",
@@ -51,7 +52,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                 memoryAddress: 0xE2,
                 memoryFlag: 0x9,
                 metadata: metadata,
-                trackerState: trackerState);
+                trackerState: trackerState)
+                .Weighted(100);
 
             PegasusRocks = new Location(this, LocationId.PegasusRocks, 0x1EB3F, LocationType.Regular,
                 name: "Pegasus Rocks",
