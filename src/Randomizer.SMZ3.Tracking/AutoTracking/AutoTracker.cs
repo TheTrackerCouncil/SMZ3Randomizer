@@ -350,6 +350,18 @@ public class AutoTracker : AutoTrackerBase
         _sendActions.Enqueue(action);
     }
 
+    public override void SetLatestViewAction(Action action)
+    {
+        if (TrackerBase.Options.AutoSaveLookAtEvents)
+        {
+            action.Invoke();
+        }
+        else
+        {
+            LatestViewAction = new AutoTrackerViewedAction(action);
+        }
+    }
+
     /// <summary>
     /// Called when a connector has temporarily lost connection with the emulator
     /// </summary>
