@@ -76,6 +76,19 @@ public class AutoTrackerZeldaState
     public int OverworldScreen => ReadUInt16(0x8A);
 
     /// <summary>
+    /// Returns true if Link is within a region of the screen
+    /// </summary>
+    /// <param name="topLeftX"></param>
+    /// <param name="topLeftY"></param>
+    /// <param name="bottomRightX"></param>
+    /// <param name="bottomRightY"></param>
+    /// <returns></returns>
+    public bool IsWithinRegion(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY)
+    {
+        return LinkX >= topLeftX && LinkX <= bottomRightX && LinkY >= topLeftY && LinkX <= bottomRightY;
+    }
+
+    /// <summary>
     /// Reads a specific block of memory
     /// </summary>
     /// <param name="address">The address offset from 0x7E0000</param>

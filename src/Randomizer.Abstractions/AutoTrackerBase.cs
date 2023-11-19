@@ -98,6 +98,12 @@ public abstract class AutoTrackerBase
     public abstract void WriteToMemory(EmulatorAction action);
 
     /// <summary>
+    /// Sets the latest view action to use by voice command, or if specified in the options, automatically execute it
+    /// </summary>
+    /// <param name="action"></param>
+    public abstract void SetLatestViewAction(Action action);
+
+    /// <summary>
     /// Invokes the AutoTrackerEnabled event
     /// </summary>
     protected virtual void OnAutoTrackerEnabled()
