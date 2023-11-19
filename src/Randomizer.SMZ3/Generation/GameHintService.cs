@@ -335,7 +335,7 @@ namespace Randomizer.SMZ3.Generation
         /// </summary>
         private HintTile GetLocationHint(World hintPlayerWorld, List<World> allWorlds, List<Location> importantLocations, List<Location> locations, string? areaName = null)
         {
-            var typeAndKey = GetHintTileTypeAndKey(hintPlayerWorld, locations);
+            var typeAndKey = GetHintTileTypeAndKey(locations, areaName);
 
             return new HintTile()
             {
@@ -344,7 +344,7 @@ namespace Randomizer.SMZ3.Generation
                 LocationKey = typeAndKey.Item2,
                 LocationWorldId = locations.First().World.Id,
                 Locations = locations.Select(x => x.Id),
-                Usefulness = CheckIfLocationsAreImportant(allWorlds, importantLocations, locations)
+                Usefulness = locations.Count > 1 ? CheckIfLocationsAreImportant(allWorlds, importantLocations, locations) : null
             };
         }
 
@@ -471,11 +471,15 @@ namespace Randomizer.SMZ3.Generation
             return hints;
         }
 
-        private (HintTileType, string) GetHintTileTypeAndKey(World hintPlayerWorld, List<Location> locations)
+        private (HintTileType, string) GetHintTileTypeAndKey(List<Location> locations, string? areaName)
         {
             if (locations.Count == 1)
             {
                 return (HintTileType.Location, locations.First().Name);
+            }
+            else if (!string.IsNullOrEmpty(areaName))
+            {
+                return (HintTileType.LocationGroup, areaName);
             }
             else
             {

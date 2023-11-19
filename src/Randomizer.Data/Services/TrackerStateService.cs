@@ -97,17 +97,20 @@ namespace Randomizer.Data.Services
             var hintStates = new List<TrackerHintState>();
             foreach (var hint in worldList.SelectMany(x => x.HintTiles))
             {
-                hintStates.Add(new TrackerHintState()
+                var hintState = new TrackerHintState()
                 {
                     Type = hint.Type,
                     WorldId = hint.WorldId,
                     LocationKey = hint.LocationKey,
                     LocationWorldId = hint.LocationWorldId,
-                    LocationString = hint.Locations == null ? null : string.Join(",", hint.Locations.Select(x => (int)x)),
+                    LocationString =
+                        hint.Locations == null ? null : string.Join(",", hint.Locations.Select(x => (int)x)),
                     Usefulness = hint.Usefulness,
                     MedallionType = hint.MedallionType,
                     HintTileCode = hint.HintTileCode
-                });
+                };
+                hint.State = hintState;
+                hintStates.Add(hintState);
             }
 
             // Add starting equipment, including items that may not be in the world anymore
@@ -185,7 +188,8 @@ namespace Randomizer.Data.Services
                         Locations = hint.LocationString?.Split(",").Select(x => (LocationId)int.Parse(x)),
                         Usefulness = hint.Usefulness,
                         MedallionType = hint.MedallionType,
-                        HintTileCode = hint.HintTileCode
+                        HintTileCode = hint.HintTileCode,
+                        State = hint
                     });
                 world.State = trackerState;
             }
