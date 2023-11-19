@@ -42,7 +42,9 @@ namespace Randomizer.Data.Services
 
         public TrackerState CreateTrackerState(IEnumerable<World> worlds)
         {
-            var locationStates = worlds
+            var worldList = worlds.ToList();
+
+            var locationStates = worldList
                 .SelectMany(x => x.Locations)
                 .Select(x => new TrackerLocationState
                 {
@@ -57,7 +59,7 @@ namespace Randomizer.Data.Services
 
             var addedItems = new List<(World, ItemType)>();
             var itemStates = new List<TrackerItemState>();
-            foreach (var item in worlds.SelectMany(x => x.AllItems))
+            foreach (var item in worldList.SelectMany(x => x.AllItems))
             {
                 if (addedItems.Contains((item.World, item.Type))) continue;
                 itemStates.Add(new TrackerItemState
@@ -69,7 +71,7 @@ namespace Randomizer.Data.Services
                 addedItems.Add((item.World, item.Type));
             }
 
-            var dungeonStates = worlds
+            var dungeonStates = worldList
                 .SelectMany(x => x.Dungeons)
                 .Select(x => new TrackerDungeonState
                 {
@@ -82,7 +84,7 @@ namespace Randomizer.Data.Services
                 })
                 .ToList();
 
-            var bossStates = worlds
+            var bossStates = worldList
                 .SelectMany(x => x.AllBosses)
                 .Select(boss => new TrackerBossState()
                 {
@@ -92,11 +94,26 @@ namespace Randomizer.Data.Services
                 })
                 .ToList();
 
+            var hintStates = new List<TrackerHintState>();
+            foreach (var hint in worldList.SelectMany(x => x.HintTiles))
+            {
+                hintStates.Add(new TrackerHintState()
+                {
+                    Type = hint.Type,
+                    WorldId = hint.WorldId,
+                    LocationKey = hint.LocationKey,
+                    LocationWorldId = hint.LocationWorldId,
+                    LocationString = hint.Locations == null ? null : string.Join(",", hint.Locations.Select(x => (int)x)),
+                    Usefulness = hint.Usefulness,
+                    MedallionType = hint.MedallionType,
+                    HintTileCode = hint.HintTileCode
+                });
+            }
 
             // Add starting equipment, including items that may not be in the world anymore
-            foreach (var world in worlds)
+            foreach (var world in worldList)
             {
-                var startingInventory = ItemSettingOptions.GetStartingItemTypes(world.Config);
+                var startingInventory = ItemSettingOptions.GetStartingItemTypes(world.Config).ToList();
                 foreach (var itemType in startingInventory.Distinct())
                 {
                     _logger.LogInformation("Adding Starting Inventory Item {ItemName} to Tracker State", itemType.GetDescription());
@@ -119,7 +136,7 @@ namespace Randomizer.Data.Services
             }
 
             // Add items from metadata that may be missing
-            foreach (var world in worlds)
+            foreach (var world in worldList)
             {
                 foreach (var itemMetadata in _configs.Items.Where(m => !itemStates.Any(s => m.Is(s) && s.WorldId == world.Id)))
                 {
@@ -140,7 +157,8 @@ namespace Randomizer.Data.Services
                 ItemStates = itemStates,
                 DungeonStates = dungeonStates,
                 BossStates = bossStates,
-                LocalWorldId = worlds.First(x => x.IsLocalWorld).Id,
+                LocalWorldId = worldList.First(x => x.IsLocalWorld).Id,
+                Hints = hintStates,
                 StartDateTime = DateTimeOffset.Now,
                 UpdatedDateTime = DateTimeOffset.Now
             };
@@ -157,6 +175,18 @@ namespace Randomizer.Data.Services
 
             foreach (var world in worlds)
             {
+                world.HintTiles = trackerState.Hints.Where(x => x.WorldId == world.Id)
+                    .Select(hint => new HintTile()
+                    {
+                        Type = hint.Type,
+                        WorldId = hint.WorldId,
+                        LocationKey = hint.LocationKey,
+                        LocationWorldId = hint.LocationWorldId,
+                        Locations = hint.LocationString?.Split(",").Select(x => (LocationId)int.Parse(x)),
+                        Usefulness = hint.Usefulness,
+                        MedallionType = hint.MedallionType,
+                        HintTileCode = hint.HintTileCode
+                    });
                 world.State = trackerState;
             }
 

@@ -36,11 +36,6 @@ public class GetPatchesRequest
     public required Random Random { get; init; }
 
     /// <summary>
-    /// Hints to be added as hint tiles
-    /// </summary>
-    public IEnumerable<string> Hints { get; init; } = new List<string>();
-
-    /// <summary>
     /// The PlandoConfig being used to specify data about the world
     /// </summary>
     public PlandoConfig PlandoConfig { get; init; } = new();

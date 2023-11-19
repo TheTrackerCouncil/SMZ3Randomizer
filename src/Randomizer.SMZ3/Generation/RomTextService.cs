@@ -8,16 +8,19 @@ using Microsoft.Extensions.Logging;
 using Randomizer.Data.Options;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
+using Randomizer.SMZ3.Contracts;
 
 namespace Randomizer.SMZ3.Generation;
 
 public class RomTextService
 {
     private readonly ILogger<RomTextService> _logger;
+    private readonly IGameHintService _gameHintService;
 
-    public RomTextService(ILogger<RomTextService> logger)
+    public RomTextService(ILogger<RomTextService> logger, IGameHintService gameHintService)
     {
         _logger = logger;
+        _gameHintService = gameHintService;
     }
 
     public async Task<string> WriteSpoilerLog(RandomizerOptions options, SeedData seed, Config config, string folderPath, string fileSuffix)
@@ -210,9 +213,11 @@ public class RomTextService
                 log.AppendLine();
             }
 
-            foreach (var hint in worldGenerationData.Hints)
+            foreach (var hint in worldGenerationData.World.HintTiles)
             {
-                log.AppendLine(hint);
+                var hintText = _gameHintService.GetHintTileText(hint, worldGenerationData.World,
+                    seed.WorldGenerationData.Worlds.ToList());
+                log.AppendLine($"{hint.HintTileCode} - {hintText}");
             }
             log.AppendLine();
         }

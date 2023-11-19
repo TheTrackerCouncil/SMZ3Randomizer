@@ -8,6 +8,8 @@ using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
+using Randomizer.Shared.Models;
+using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Text;
 
@@ -21,10 +23,12 @@ public class ZeldaTextsPatch : RomPatch
     private readonly GameLinesConfig _gameLines;
     private readonly ItemConfig _items;
     private readonly RegionConfig _regions;
+    private IGameHintService _gameHintService;
     private GetPatchesRequest _data = null!;
 
-    public ZeldaTextsPatch(Configs configs)
+    public ZeldaTextsPatch(Configs configs, IGameHintService gameHintService)
     {
+        _gameHintService = gameHintService;
         _gameLines = configs.GameLines;
         _items = configs.Items;
         _regions = configs.Regions;
@@ -81,7 +85,11 @@ public class ZeldaTextsPatch : RomPatch
         yield return SetText(0x308400, StringTable.TriforceRoom,
             _gameLines.TriforceRoom, _plandoText.TriforceRoom, true);
 
-        SetHintText();
+        if (data.World.HintTiles.Any())
+        {
+            SetHintText();
+        }
+
 
         yield return new GeneratedPatch(Snes(0x1C8000), _stringTable.GetPaddedBytes());
     }
@@ -184,61 +192,51 @@ public class ZeldaTextsPatch : RomPatch
 
     private void SetHintText()
     {
-        // Get the correct number of hints
-        var hints = _data.Hints.ToList();
-        if (hints.Any() && _data.Config.UniqueHintCount > 0)
-        {
-            hints = hints.Take(_data.Config.UniqueHintCount).ToList();
-            while (hints.Count < GameHintService.HintLocations.Count)
-            {
-                hints.AddRange(hints.Take(Math.Min(GameHintService.HintLocations.Count - hints.Count,
-                    hints.Count)));
-            }
+        var hints = _data.World.HintTiles.ToDictionary(x => x.HintTileCode, x => x);
 
-            hints.Shuffle(_data.Random);
-        }
-        else
-        {
-            hints = Enumerable.Repeat("",GameHintService.HintLocations.Count).ToList();
-        }
-
-        SetHintTileText(StringTable.HintTileEasternPalace, hints[0],
+        SetHintTileText(StringTable.HintTileEasternPalace, hints,
             _plandoText.HintTileEasternPalace);
-        SetHintTileText(StringTable.HintTileTowerOfHeraFloor4, hints[1],
+        SetHintTileText(StringTable.HintTileTowerOfHeraFloor4, hints,
             _plandoText.HintTileTowerOfHeraFloor4);
-        SetHintTileText(StringTable.HintTileSpectacleRock, hints[2],
+        SetHintTileText(StringTable.HintTileSpectacleRock, hints,
             _plandoText.HintTileSpectacleRock);
-        SetHintTileText(StringTable.HintTileSwampEntrance, hints[3],
+        SetHintTileText(StringTable.HintTileSwampEntrance, hints,
             _plandoText.HintTileSwampEntrance);
-        SetHintTileText(StringTable.HintTileThievesTownUpstairs, hints[4],
+        SetHintTileText(StringTable.HintTileThievesTownUpstairs, hints,
             _plandoText.HintTileThievesTownUpstairs);
-        SetHintTileText(StringTable.HintTileMiseryMire, hints[5],
+        SetHintTileText(StringTable.HintTileMiseryMire, hints,
             _plandoText.HintTileMiseryMire);
-        SetHintTileText(StringTable.HintTilePalaceOfDarkness, hints[6],
+        SetHintTileText(StringTable.HintTilePalaceOfDarkness, hints,
             _plandoText.HintTilePalaceOfDarkness);
-        SetHintTileText(StringTable.HintTileDesertBonkTorchRoom, hints[7],
+        SetHintTileText(StringTable.HintTileDesertBonkTorchRoom, hints,
             _plandoText.HintTileDesertBonkTorchRoom);
-        SetHintTileText(StringTable.HintTileCastleTower, hints[8],
+        SetHintTileText(StringTable.HintTileCastleTower, hints,
             _plandoText.HintTileCastleTower);
-        SetHintTileText(StringTable.HintTileIceLargeRoom, hints[9],
+        SetHintTileText(StringTable.HintTileIceLargeRoom, hints,
             _plandoText.HintTileIceLargeRoom);
-        SetHintTileText(StringTable.HintTileTurtleRock, hints[10],
+        SetHintTileText(StringTable.HintTileTurtleRock, hints,
             _plandoText.HintTileTurtleRock);
-        SetHintTileText(StringTable.HintTileIceEntrance, hints[11],
+        SetHintTileText(StringTable.HintTileIceEntrance, hints,
             _plandoText.HintTileIceEntrance);
-        SetHintTileText(StringTable.HintTileIceStalfosKnightsRoom, hints[12],
+        SetHintTileText(StringTable.HintTileIceStalfosKnightsRoom, hints,
             _plandoText.HintTileIceStalfosKnightsRoom);
-        SetHintTileText(StringTable.HintTileTowerOfHeraEntrance, hints[13],
+        SetHintTileText(StringTable.HintTileTowerOfHeraEntrance, hints,
             _plandoText.HintTileTowerOfHeraEntrance);
-        SetHintTileText(StringTable.HintTileSouthEastDarkworldCave, hints[14],
+        SetHintTileText(StringTable.HintTileSouthEastDarkworldCave, hints,
             _plandoText.HintTileSouthEastDarkworldCave);
     }
 
-    private void SetHintTileText(string key, string? defaultText, string? overrideText)
+    private void SetHintTileText(string key, Dictionary<string, HintTile> hints, string? overrideText)
     {
-        var text = string.IsNullOrEmpty(overrideText) ? defaultText : overrideText;
-        if (string.IsNullOrEmpty(text)) return;
-        _stringTable.SetHintText(key, Dialog.GetGameSafeString(text));
+        if (!string.IsNullOrEmpty(overrideText))
+        {
+            _stringTable.SetHintText(key, Dialog.GetGameSafeString(overrideText));
+        }
+        else if (hints.TryGetValue(key, out var hint))
+        {
+            var hintText = _gameHintService.GetHintTileText(hint, _data.World, _data.Worlds);
+            _stringTable.SetHintText(key, Dialog.GetGameSafeString(hintText));
+        }
     }
 
     private string GetRegionName(Region region)
