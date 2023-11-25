@@ -35,6 +35,7 @@ namespace Randomizer.Data.Configuration
             UILayouts = provider.GetUIConfig(profiles);
             GameLines = provider.GetGameConfig(profiles);
             MsuConfig = provider.GetMsuConfig(profiles);
+            HintTileConfig = provider.GetHintTileConfig(profiles);
         }
 
         /// <summary>
@@ -126,5 +127,10 @@ namespace Randomizer.Data.Configuration
         /// Gets the msu config
         /// </summary>
         public MsuConfig MsuConfig { get; }
+
+        /// <summary>
+        /// Gets the hint tile config
+        /// </summary>
+        public HintTileConfig HintTileConfig { get; }
     }
 }

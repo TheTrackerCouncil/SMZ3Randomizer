@@ -64,11 +64,17 @@ namespace Randomizer.App
                 TrackedLocationUpdated?.Invoke(this, new(""));
                 MarkedLocationUpdated?.Invoke(this, new(""));
             };
+            Tracker.HintTileUpdated += (_, _) =>
+            {
+                HintTileUpdated?.Invoke(this, new PropertyChangedEventArgs(""));
+            };
         }
 
         public event PropertyChangedEventHandler? TrackedLocationUpdated;
 
         public event PropertyChangedEventHandler? MarkedLocationUpdated;
+
+        public event PropertyChangedEventHandler? HintTileUpdated;
 
         /// <summary>
         /// If out of logic locations should be displayed on the tracker

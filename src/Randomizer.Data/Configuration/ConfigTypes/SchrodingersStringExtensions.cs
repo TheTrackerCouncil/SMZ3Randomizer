@@ -1,4 +1,5 @@
 ﻿using System;
+using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
@@ -18,11 +19,26 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// </returns>
         public static SchrodingersString GetName(this IHasLocations area)
         {
-            var names = new SchrodingersString();
-            names.Add(area.Name);
-            foreach (var name in area.AlsoKnownAs)
-                names.Add(name);
-            return names;
+            if (area is IDungeon dungeon)
+            {
+                return dungeon.DungeonMetadata.Name;
+            }
+            else if (area is Region region)
+            {
+                return region.Metadata.Name;
+            }
+            else if (area is Room room)
+            {
+                return room.Metadata.Name;
+            }
+            else
+            {
+                var names = new SchrodingersString();
+                names.Add(area.Name);
+                foreach (var name in area.AlsoKnownAs)
+                    names.Add(name);
+                return names;
+            }
         }
     }
 }

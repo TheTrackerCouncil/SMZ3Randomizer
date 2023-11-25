@@ -273,6 +273,15 @@ LocationHasDifferentItem:
 # {0} is replaced with the name of the location
 LocationCleared:
 
+# The list of possibilities when the player clears multiple locations
+# {0} is replaced with the number of locations cleared
+LocationCleared:
+
+# The list of possibilities when the player clears multiple locations from a single region
+# {0} is replaced with the number of locations cleared
+# {1} is replaced with the name region the locations are from
+LocationsClearedSameRegion:
+
 # A list of different statements that will toggle go mode on. Not that you will need to say "Hey tracker" before each
 # entry, and each line is just the string (no "Text: ") before it.
 # For example, the following would allow you to say "Hey tracker, enable go mode" and "Hey tracker, initiate go mode"

@@ -354,7 +354,11 @@ public class AutoTracker : AutoTrackerBase
     {
         if (TrackerBase.Options.AutoSaveLookAtEvents)
         {
-            action.Invoke();
+            Task.Factory.StartNew(() =>
+            {
+                Thread.Sleep(TimeSpan.FromSeconds(0.5));
+                action.Invoke();
+            });
         }
         else
         {

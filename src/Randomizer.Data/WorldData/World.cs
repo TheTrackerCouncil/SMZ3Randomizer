@@ -158,7 +158,7 @@ namespace Randomizer.Data.WorldData
         public LowerNorfairEast LowerNorfairEast { get; }
         public WreckedShip WreckedShip { get; }
         public WorldItemPools ItemPools { get; }
-        public IEnumerable<HintTile> HintTiles { get; set; }
+        public IEnumerable<PlayerHintTile> HintTiles { get; set; }
 
         public Location? LastClearedLocation { get; set; }
 

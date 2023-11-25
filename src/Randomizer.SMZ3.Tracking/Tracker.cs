@@ -108,6 +108,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         _timerService = timerService;
 
         // Initialize the tracker configuration
+        Configs = configs;
         Responses = configs.Responses;
         Requests = configs.Requests;
         ItemService.ResetProgression();
@@ -406,7 +407,8 @@ public sealed class Tracker : TrackerBase, IDisposable
     /// <param name="dungeon">The dungeon to mark.</param>
     /// <param name="medallion">The medallion that is required.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public override void SetDungeonRequirement(IDungeon dungeon, ItemType? medallion = null, float? confidence = null)
+    /// <param name="autoTracked">If the marked dungeon requirement was autotracked</param>
+    public override void SetDungeonRequirement(IDungeon dungeon, ItemType? medallion = null, float? confidence = null, bool autoTracked = false)
     {
         var region = World.Regions.SingleOrDefault(x => dungeon.DungeonMetadata.Name.Contains(x.Name, StringComparison.OrdinalIgnoreCase));
         if (region == null)
@@ -1600,8 +1602,10 @@ public sealed class Tracker : TrackerBase, IDisposable
             Say(Responses.LocationCleared.Format(locationName));
         }
 
+        ItemType? prevMarkedItem = null;
         if (location.State.HasMarkedItem)
         {
+            prevMarkedItem = location.State.MarkedItem;
             location.State.MarkedItem = null;
             OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
         }
@@ -1626,6 +1630,11 @@ public sealed class Tracker : TrackerBase, IDisposable
             AddUndo(() =>
             {
                 location.State.Cleared = false;
+                location.State.MarkedItem = prevMarkedItem;
+                if (prevMarkedItem != null)
+                {
+                    OnMarkedLocationsUpdated(new TrackerEventArgs(null));
+                }
                 undoTrackTreasure?.Invoke();
                 undoStopPegWorldMode?.Invoke();
                 ItemService.ResetProgression();
@@ -1634,6 +1643,75 @@ public sealed class Tracker : TrackerBase, IDisposable
 
         World.LastClearedLocation = location;
         OnLocationCleared(new(location, confidence, autoTracked));
+    }
+
+    /// <summary>
+    /// Clears an item from the specified locations.
+    /// </summary>
+    /// <param name="locations">The locations to clear.</param>
+    /// <param name="confidence">The speech recognition confidence</param>
+    public override void Clear(List<Location> locations, float? confidence = null)
+    {
+        if (locations.Count == 1)
+        {
+            Clear(locations.First(), confidence);
+            return;
+        }
+
+        ItemService.ResetProgression();
+
+        var originalClearedValues = new Dictionary<Location, bool>();
+        var originalMarkedItems = new Dictionary<Location, ItemType>();
+
+        // Clear the locations
+        foreach (var location in locations)
+        {
+            originalClearedValues.Add(location, location.State.Cleared);
+            if (location.State.MarkedItem != null)
+            {
+                originalMarkedItems.Add(location, location.State.MarkedItem.Value);
+            }
+            location.State.Cleared = true;
+            location.State.MarkedItem = null;
+        }
+
+        Action? undoDungeonTreasure = null;
+        if (locations.Select(x => x.Region).Distinct().Count() == 1)
+        {
+            Say(x => x.LocationsClearedSameRegion, locations.Count, locations.First().Region.GetName());
+            if (locations.First().Region is IDungeon dungeon)
+            {
+                var treasureCount = locations.Count(x => IsTreasure(x.Item) || World.Config.ZeldaKeysanity);
+                if (TrackDungeonTreasure(dungeon, confidence, treasureCount))
+                    undoDungeonTreasure = _undoHistory.Pop().Action;
+            }
+        }
+        else
+        {
+            Say(x => x.LocationsCleared, locations.Count);
+        }
+
+        AddUndo(() =>
+        {
+            foreach (var location in locations)
+            {
+                location.State.Cleared = originalClearedValues[location];
+                if (originalMarkedItems.TryGetValue(location, out var item))
+                {
+                    location.State.MarkedItem = item;
+                }
+            }
+            undoDungeonTreasure?.Invoke();
+            ItemService.ResetProgression();
+        });
+
+        World.LastClearedLocation = locations.First();
+        if (originalMarkedItems.Count > 0)
+        {
+            OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
+        }
+        IsDirty = true;
+        OnLocationCleared(new(locations.First(), confidence, false));
     }
 
     /// <summary>
@@ -1848,7 +1926,8 @@ public sealed class Tracker : TrackerBase, IDisposable
     /// The item that is found at <paramref name="location"/>.
     /// </param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public override void MarkLocation(Location location, Item item, float? confidence = null)
+    /// <param name="autoTracked">If the marked location was auto tracked</param>
+    public override void MarkLocation(Location location, Item item, float? confidence = null, bool autoTracked = false)
     {
         var locationName = location.Metadata.Name;
         GiveLocationComment(item, location, isTracking: false, confidence);
@@ -1863,13 +1942,19 @@ public sealed class Tracker : TrackerBase, IDisposable
             var oldType = location.State.MarkedItem;
             location.State.MarkedItem = item.Type;
             Say(Responses.LocationMarkedAgain.Format(locationName, item.Name, oldType.GetDescription()));
-            AddUndo(() => location.State.MarkedItem = oldType);
+            if (!autoTracked)
+            {
+                AddUndo(() => location.State.MarkedItem = oldType);
+            }
         }
         else
         {
             location.State.MarkedItem = item.Type;
             Say(Responses.LocationMarked.Format(locationName, item.Name));
-            AddUndo(() => location.State.MarkedItem = null);
+            if (!autoTracked)
+            {
+                AddUndo(() => location.State.MarkedItem = null);
+            }
         }
 
         IsDirty = true;
@@ -2050,6 +2135,64 @@ public sealed class Tracker : TrackerBase, IDisposable
     public override void UpdateTrack(Msu msu, Track track, string outputText)
     {
         OnTrackChanged(new TrackChangedEventArgs(msu, track, outputText));
+    }
+
+    public override void UpdateHintTile(PlayerHintTile hintTile)
+    {
+        if (hintTile.State == null)
+        {
+            return;
+        }
+        else if (hintTile.State.HintState == HintState.Cleared)
+        {
+            OnHintTileUpdated(new HintTileUpdatedEventArgs(hintTile));
+            return;
+        }
+
+        LastViewedHintTile = hintTile;
+
+        if (hintTile.Type == HintTileType.Location)
+        {
+            var locationId = hintTile.Locations!.First();
+            var location = World.FindLocation(locationId);
+            if (location.State is { Cleared: false, Autotracked: false } && location.State.MarkedItem != location.State.Item)
+            {
+                MarkLocation(location, location.Item, null, true);
+                hintTile.State.HintState = HintState.Viewed;
+            }
+            else
+            {
+                hintTile.State.HintState = HintState.Cleared;
+            }
+        }
+        else if (hintTile.Type == HintTileType.Requirement)
+        {
+            var dungeon = World.Dungeons.First(x => x.DungeonName == hintTile.LocationKey);
+            if (dungeon.DungeonState.MarkedMedallion != dungeon.DungeonState.RequiredMedallion)
+            {
+                SetDungeonRequirement(dungeon, hintTile.MedallionType, null, true);
+                hintTile.State.HintState = HintState.Viewed;
+            }
+            else
+            {
+                hintTile.State.HintState = HintState.Cleared;
+            }
+        }
+        else
+        {
+            var locations = hintTile.Locations!.Select(x => World.FindLocation(x)).ToList();
+            if (locations.All(x => x.State.Autotracked || x.State.Cleared))
+            {
+                hintTile.State.HintState = HintState.Cleared;
+            }
+            else
+            {
+                hintTile.State.HintState = HintState.Viewed;
+                Say(Configs.HintTileConfig.ViewedHintTile);
+            }
+        }
+
+        OnHintTileUpdated(new HintTileUpdatedEventArgs(hintTile));
     }
 
     /// <summary>

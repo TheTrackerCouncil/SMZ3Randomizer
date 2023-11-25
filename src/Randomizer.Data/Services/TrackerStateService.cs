@@ -179,7 +179,7 @@ namespace Randomizer.Data.Services
             foreach (var world in worlds)
             {
                 world.HintTiles = trackerState.Hints.Where(x => x.WorldId == world.Id)
-                    .Select(hint => new HintTile()
+                    .Select(hint => new PlayerHintTile()
                     {
                         Type = hint.Type,
                         WorldId = hint.WorldId,

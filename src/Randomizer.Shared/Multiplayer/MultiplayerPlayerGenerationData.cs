@@ -17,7 +17,7 @@ public class MultiplayerPlayerGenerationData
     };
 
     public MultiplayerPlayerGenerationData(string playerGuid, int worldId, List<PlayerGenerationLocationData> locations,
-        List<PlayerGenerationDungeonData> dungeons, List<HintTile> hints)
+        List<PlayerGenerationDungeonData> dungeons, List<PlayerHintTile> hints)
     {
         PlayerGuid = playerGuid;
         WorldId = worldId;
@@ -30,7 +30,7 @@ public class MultiplayerPlayerGenerationData
     public int WorldId { get; }
     public List<PlayerGenerationLocationData> Locations { get; }
     public List<PlayerGenerationDungeonData> Dungeons { get; }
-    public List<HintTile> Hints { get; }
+    public List<PlayerHintTile> Hints { get; }
 
     /// <summary>
     /// Converts the generation data into a compressed string of the json

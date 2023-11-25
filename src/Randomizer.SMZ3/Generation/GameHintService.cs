@@ -16,32 +16,13 @@ using Randomizer.SMZ3.Contracts;
 namespace Randomizer.SMZ3.Generation
 {
 
-    public delegate HintTile? Hint();
+    public delegate PlayerHintTile? Hint();
 
     /// <summary>
     /// Service for generating hints for the player
     /// </summary>
     public class GameHintService : IGameHintService
     {
-        public static readonly List<string> HintLocations = new()
-        {
-            "telepathic_tile_eastern_palace",
-            "telepathic_tile_tower_of_hera_floor_4",
-            "telepathic_tile_spectacle_rock",
-            "telepathic_tile_swamp_entrance",
-            "telepathic_tile_thieves_town_upstairs",
-            "telepathic_tile_misery_mire",
-            "telepathic_tile_palace_of_darkness",
-            "telepathic_tile_desert_bonk_torch_room",
-            "telepathic_tile_castle_tower",
-            "telepathic_tile_ice_large_room",
-            "telepathic_tile_turtle_rock",
-            "telepathic_tile_ice_entrance",
-            "telepathic_tile_ice_stalfos_knights_room",
-            "telepathic_tile_tower_of_hera_entrance",
-            "telepathic_tile_south_east_darkworld_cave"
-        };
-
         private static readonly List<LocationId> s_importantLocations = new()
         {
             LocationId.KraidsLairVariaSuit, // After Kraid
@@ -78,12 +59,14 @@ namespace Randomizer.SMZ3.Generation
         private readonly ILogger<GameHintService> _logger;
         private readonly IMetadataService _metadataService;
         private readonly GameLinesConfig _gameLines;
+        private readonly HintTileConfig _hintTileConfig;
         private Random _random;
 
         public GameHintService(Configs configs, IMetadataService metadataService, ILogger<GameHintService> logger)
         {
             _gameLines = configs.GameLines;
             _logger = logger;
+            _hintTileConfig = configs.HintTileConfig;
             _metadataService = metadataService;
             _random = new Random();
         }
@@ -122,7 +105,7 @@ namespace Randomizer.SMZ3.Generation
 
             allHints = allHints.Shuffle(_random);
 
-            var selectedHints = new List<HintTile>();
+            var selectedHints = new List<PlayerHintTile>();
 
             // Get the number of requested hints
             while (selectedHints.Count < hintPlayerWorld.Config.UniqueHintCount && allHints.Any())
@@ -136,10 +119,10 @@ namespace Randomizer.SMZ3.Generation
                 }
             }
 
-            var worldHintTiles = new List<HintTile>();
+            var worldHintTiles = new List<PlayerHintTile>();
 
             // Assign each hint to a tile
-            var hintLocations = HintLocations.Shuffle(_random);
+            var hintLocations = _hintTileConfig.HintTiles.Select(x => x.HintTileKey).Shuffle(_random);
             var hintIndex = 0;
             foreach (var hintLocation in hintLocations)
             {
@@ -173,9 +156,9 @@ namespace Randomizer.SMZ3.Generation
 
             return progressionLocations.Select(x => new Hint(() => GetProgressionItemHint(x)));
 
-            HintTile GetProgressionItemHint(Location location)
+            PlayerHintTile GetProgressionItemHint(Location location)
             {
-                return new HintTile()
+                return new PlayerHintTile()
                 {
                     Type = HintTileType.Location,
                     WorldId = hintPlayerWorld.Id,
@@ -203,12 +186,12 @@ namespace Randomizer.SMZ3.Generation
 
             return hints;
 
-            HintTile GetDungeonHint(IDungeon dungeon)
+            PlayerHintTile GetDungeonHint(IDungeon dungeon)
             {
                 var dungeonRegion = (Region)dungeon;
                 var locations = dungeonRegion.Locations.Where(x => x.Type != LocationType.NotInDungeon).ToList();
                 var usefulness = CheckIfLocationsAreImportant(allWorlds, importantLocations, locations);
-                return new HintTile()
+                return new PlayerHintTile()
                 {
                     Type = HintTileType.Dungeon,
                     WorldId = hintPlayerWorld.Id,
@@ -333,11 +316,11 @@ namespace Randomizer.SMZ3.Generation
         /// <summary>
         /// Adds a hint for a given set of location(s) to the list of hints
         /// </summary>
-        private HintTile GetLocationHint(World hintPlayerWorld, List<World> allWorlds, List<Location> importantLocations, List<Location> locations, string? areaName = null)
+        private PlayerHintTile GetLocationHint(World hintPlayerWorld, List<World> allWorlds, List<Location> importantLocations, List<Location> locations, string? areaName = null)
         {
             var typeAndKey = GetHintTileTypeAndKey(locations, areaName);
 
-            return new HintTile()
+            return new PlayerHintTile()
             {
                 Type = typeAndKey.Item1,
                 WorldId = hintPlayerWorld.Id,
@@ -447,7 +430,7 @@ namespace Randomizer.SMZ3.Generation
             hints.Add(() =>
             {
                 var mmMedallion = hintPlayerWorld.MiseryMire.Medallion;
-                return new HintTile()
+                return new PlayerHintTile()
                 {
                     Type = HintTileType.Requirement,
                     WorldId = hintPlayerWorld.Id,
@@ -459,7 +442,7 @@ namespace Randomizer.SMZ3.Generation
             hints.Add(() =>
             {
                 var trMedallion = hintPlayerWorld.TurtleRock.Medallion;
-                return new HintTile()
+                return new PlayerHintTile()
                 {
                     Type = HintTileType.Requirement,
                     WorldId = hintPlayerWorld.Id,
@@ -598,7 +581,7 @@ namespace Randomizer.SMZ3.Generation
                 .Distinct();
         }
 
-        public string? GetHintTileText(HintTile tile, World hintPlayerWorld, List<World> worlds)
+        public string? GetHintTileText(PlayerHintTile tile, World hintPlayerWorld, List<World> worlds)
         {
             if (tile.Type == HintTileType.Requirement && tile.MedallionType != null)
             {

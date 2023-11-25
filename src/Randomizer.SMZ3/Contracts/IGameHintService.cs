@@ -34,6 +34,14 @@ namespace Randomizer.SMZ3.Contracts
         LocationUsefulness GetLocationUsefulness(Location location, List<World> allWorlds,
             Playthrough playthrough);
 
-        string? GetHintTileText(HintTile tile, World hintPlayerWorld, List<World> worlds);
+        /// <summary>
+        /// Retrieves the text that could be displayed on one of the hint tiles in a player's
+        /// world
+        /// </summary>
+        /// <param name="tile">The hint tile to get the text for</param>
+        /// <param name="hintPlayerWorld">The world which the hint tile is contained in</param>
+        /// <param name="worlds">All of the worlds in the game</param>
+        /// <returns>The text that could be displayed on the hint tile</returns>
+        string? GetHintTileText(PlayerHintTile tile, World hintPlayerWorld, List<World> worlds);
     }
 }

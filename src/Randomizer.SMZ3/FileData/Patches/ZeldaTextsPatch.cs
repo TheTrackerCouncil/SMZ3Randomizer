@@ -226,7 +226,7 @@ public class ZeldaTextsPatch : RomPatch
             _plandoText.HintTileSouthEastDarkworldCave);
     }
 
-    private void SetHintTileText(string key, Dictionary<string, HintTile> hints, string? overrideText)
+    private void SetHintTileText(string key, Dictionary<string, PlayerHintTile> hints, string? overrideText)
     {
         if (!string.IsNullOrEmpty(overrideText))
         {
