@@ -10,12 +10,13 @@ using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData.Regions.Zelda;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
+using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Contracts;
 
 namespace Randomizer.SMZ3.Generation
 {
 
-    public delegate string? Hint();
+    public delegate HintTile? Hint();
 
     /// <summary>
     /// Service for generating hints for the player
@@ -87,7 +88,7 @@ namespace Randomizer.SMZ3.Generation
             _random = new Random();
         }
 
-        public LocationUsefulness GetLocationUsefulness(Location location, ICollection<World> allWorlds,
+        public LocationUsefulness GetLocationUsefulness(Location location, List<World> allWorlds,
             Playthrough playthrough)
         {
             var importantLocations = GetImportantLocations(allWorlds);
@@ -102,13 +103,17 @@ namespace Randomizer.SMZ3.Generation
         /// <param name="playthrough">The initial playthrough with all of the spheres</param>
         /// <param name="seed">Seed number for shuffling and randomization</param>
         /// <returns>A collection of strings to use for the in game hints</returns>
-        public IEnumerable<string> GetInGameHints(World hintPlayerWorld, ICollection<World> allWorlds, Playthrough playthrough, int seed)
+        public void GetInGameHints(World hintPlayerWorld, List<World> allWorlds, Playthrough playthrough, int seed)
         {
+            if (hintPlayerWorld.Config.UniqueHintCount <= 0)
+            {
+                return;
+            }
             _random = new Random(seed).Sanitize();
 
             var allHints = new List<Hint>();
 
-            var importantLocations = GetImportantLocations(allWorlds);
+            var importantLocations = GetImportantLocations(allWorlds).ToList();
 
             allHints.AddRange(GetProgressionItemHints(hintPlayerWorld, playthrough.Spheres, 5));
             allHints.AddRange(GetDungeonHints(hintPlayerWorld, allWorlds, importantLocations));
@@ -117,26 +122,39 @@ namespace Randomizer.SMZ3.Generation
 
             allHints = allHints.Shuffle(_random);
 
-            var hintLines = new List<string>();
+            var selectedHints = new List<HintTile>();
 
-            while (hintLines.Count < 15 && allHints.Any())
+            // Get the number of requested hints
+            while (selectedHints.Count < hintPlayerWorld.Config.UniqueHintCount && allHints.Any())
             {
                 var hint = allHints.First();
                 allHints.Remove(hint);
                 var hintLine = hint.Invoke();
-                if (!string.IsNullOrEmpty(hintLine) && !hintLines.Contains(hintLine))
+                if (hintLine != null)
                 {
-                    hintLines.Add(hintLine);
+                    selectedHints.Add(hintLine);
                 }
             }
 
-            _logger.LogDebug("Possible in game hints");
-            foreach (var hint in hintLines)
+            var worldHintTiles = new List<HintTile>();
+
+            // Assign each hint to a tile
+            var hintLocations = HintLocations.Shuffle(_random);
+            var hintIndex = 0;
+            foreach (var hintLocation in hintLocations)
             {
-                _logger.LogDebug("{Hint}", hint);
+                worldHintTiles.Add(selectedHints[hintIndex].GetHintTile(hintLocation));
+                hintIndex = (hintIndex + 1) % selectedHints.Count;
             }
 
-            return hintLines;
+            _logger.LogDebug("Hints: ");
+            foreach (var hint in worldHintTiles)
+            {
+                var hintText = GetHintTileText(hint, hintPlayerWorld, allWorlds);
+                _logger.LogDebug("{Hint}", hintText);
+            }
+
+            hintPlayerWorld.HintTiles = worldHintTiles;
         }
 
         /// <summary>
@@ -149,23 +167,29 @@ namespace Randomizer.SMZ3.Generation
             var progressionLocations = spheres
                 .SelectMany(x => x.Locations)
                 .Where(x => x.Item.World == hintPlayerWorld && x.Item.Progression &&
-                            !x.Item.Type.IsInAnyCategory(ItemCategory.Junk, ItemCategory.Scam));
+                            !x.Item.Type.IsInAnyCategory(ItemCategory.Junk, ItemCategory.Scam)).ToList();
             progressionLocations =
-                progressionLocations.TakeLast(progressionLocations.Count() / 2).Shuffle(_random).Take(count);
+                progressionLocations.TakeLast(progressionLocations.Count() / 2).Shuffle(_random).Take(count).ToList();
 
             return progressionLocations.Select(x => new Hint(() => GetProgressionItemHint(x)));
 
-            string? GetProgressionItemHint(Location location)
+            HintTile GetProgressionItemHint(Location location)
             {
-                return _gameLines.HintLocationHasItem?.Format(GetLocationName(hintPlayerWorld, location),
-                    GetItemName(hintPlayerWorld, location.Item));
+                return new HintTile()
+                {
+                    Type = HintTileType.Location,
+                    WorldId = hintPlayerWorld.Id,
+                    LocationKey = GetLocationName(hintPlayerWorld, location),
+                    LocationWorldId = location.World.Id,
+                    Locations = new List<LocationId>() { location.Id },
+                };
             }
         }
 
         /// <summary>
         /// Retrives hints stating how important dungeons are to beating the game
         /// </summary>
-        private IEnumerable<Hint> GetDungeonHints(World hintPlayerWorld, ICollection<World> allWorlds, IEnumerable<Location> importantLocations)
+        private IEnumerable<Hint> GetDungeonHints(World hintPlayerWorld, List<World> allWorlds, List<Location> importantLocations)
         {
             // For keysanity/multiworld check all dungeons, otherwise check non-crystal dungeons
             var dungeons = hintPlayerWorld.Dungeons
@@ -179,135 +203,129 @@ namespace Randomizer.SMZ3.Generation
 
             return hints;
 
-            string? GetDungeonHint(IDungeon dungeon)
+            HintTile GetDungeonHint(IDungeon dungeon)
             {
                 var dungeonRegion = (Region)dungeon;
-                var usefulness = CheckIfLocationsAreImportant(allWorlds, importantLocations, dungeonRegion.Locations.Where(x => x.Type != LocationType.NotInDungeon));
-                var dungeonName = GetDungeonName(hintPlayerWorld, dungeon, dungeonRegion);
-
-                if (usefulness == LocationUsefulness.Mandatory)
+                var locations = dungeonRegion.Locations.Where(x => x.Type != LocationType.NotInDungeon).ToList();
+                var usefulness = CheckIfLocationsAreImportant(allWorlds, importantLocations, locations);
+                return new HintTile()
                 {
-                    return _gameLines.HintLocationIsMandatory?.Format(dungeonName);
-                }
-                else if (usefulness == LocationUsefulness.NiceToHave)
-                {
-                    return _gameLines.HintLocationHasUsefulItem?.Format(dungeonName);
-                }
-                else if (usefulness == LocationUsefulness.Sword)
-                {
-                    return _gameLines.HintLocationHasSword?.Format(dungeonName);
-                }
-                else
-                {
-                    return _gameLines.HintLocationEmpty?.Format(dungeonName);
-                }
+                    Type = HintTileType.Dungeon,
+                    WorldId = hintPlayerWorld.Id,
+                    LocationKey = dungeon.DungeonName,
+                    LocationWorldId = locations.First().World.Id,
+                    Locations = locations.Select(x => x.Id),
+                    Usefulness = usefulness
+                };
             }
         }
 
         /// <summary>
         /// Retrieves hints for out of the way locations and rooms to the pool of hints
         /// </summary>
-        private IEnumerable<Hint> GetLocationHints(World hintPlayerWorld, ICollection<World> allWorlds, IEnumerable<Location> importantLocations)
+        private IEnumerable<Hint> GetLocationHints(World hintPlayerWorld, List<World> allWorlds, List<Location> importantLocations)
         {
             var hints = new List<Hint>();
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.PinkBrinstarWaterwayEnergyTank)));
+                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.PinkBrinstarWaterwayEnergyTank).ToList()));
 
             // Wrecked pool
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.WreckedShipEnergyTank)));
+                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.WreckedShipEnergyTank).ToList()));
 
             // Shaktool
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.InnerMaridiaSpringBall)));
+                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.InnerMaridiaSpringBall).ToList()));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.InnerMaridiaPlasma)));
+                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.InnerMaridiaPlasma).ToList()));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.Sahasrahla)));
+                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.Sahasrahla).ToList()));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.MasterSwordPedestal)));
+                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.MasterSwordPedestal).ToList()));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.KingZora)));
+                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.KingZora).ToList()));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.Catfish)));
+                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.Catfish).ToList()));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.TowerOfHeraBigKeyChest)));
+                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.TowerOfHeraBigKeyChest).ToList()));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.RedBrinstarXRayScope)));
+                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.RedBrinstarXRayScope).ToList()));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.PinkBrinstarHoptank)));
+                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.PinkBrinstarHoptank).ToList()));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.EtherTablet)));
+                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.EtherTablet).ToList()));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.BombosTablet)));
+                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.BombosTablet).ToList()));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.CrateriaSuper)));
+                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.CrateriaSuper).ToList()));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.SpikeCave)));
+                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.SpikeCave).ToList()));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.SwampPalaceWestChest or LocationId.SwampPalaceBigKeyChest), "The left side of swamp palace"));
+                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.SwampPalaceWestChest or LocationId.SwampPalaceBigKeyChest).ToList(), "The left side of swamp palace"));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.WreckedShipGravitySuit or LocationId.WreckedShipBowlingAlleyTop or LocationId.WreckedShipBowlingAlleyBottom), "Wrecked Ship post Chozo concert area"));
+                hintPlayerWorld.Locations.Where(x =>
+                    x.Id is LocationId.WreckedShipGravitySuit or LocationId.WreckedShipBowlingAlleyTop
+                        or LocationId.WreckedShipBowlingAlleyBottom).ToList(), "Wrecked Ship post Chozo concert area"));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.DarkWorldNorthEast.PyramidFairy.Locations));
+                hintPlayerWorld.DarkWorldNorthEast.PyramidFairy.Locations.ToList()));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.DarkWorldSouth.HypeCave.Locations));
+                hintPlayerWorld.DarkWorldSouth.HypeCave.Locations.ToList()));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.DarkWorldDeathMountainEast.HookshotCave.Locations));
+                hintPlayerWorld.DarkWorldDeathMountainEast.HookshotCave.Locations.ToList()));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.LightWorldDeathMountainEast.ParadoxCave.Locations));
+                hintPlayerWorld.LightWorldDeathMountainEast.ParadoxCave.Locations.ToList()));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.UpperNorfairCrocomire.Locations));
+                hintPlayerWorld.UpperNorfairCrocomire.Locations.ToList()));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.InnerMaridia.LeftSandPit.Locations));
+                hintPlayerWorld.InnerMaridia.LeftSandPit.Locations.ToList()));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.InnerMaridia.RightSandPit.Locations));
+                hintPlayerWorld.InnerMaridia.RightSandPit.Locations.ToList()));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.InnerMaridiaAqueductLeft or LocationId.InnerMaridiaAqueductRight), "Inner Maridia Aqueduct"));
+                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.InnerMaridiaAqueductLeft or LocationId.InnerMaridiaAqueductRight).ToList(), "Inner Maridia Aqueduct"));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.Blacksmith or LocationId.PurpleChest), "Smith chain"));
+                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.Blacksmith or LocationId.PurpleChest).ToList(), "Smith chain"));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.CrateriaGauntletEnergyTank or LocationId.CrateriaGauntletShaftLeft or LocationId.CrateriaGauntletShaftRight), "Crateria gauntlet"));
+                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.CrateriaGauntletEnergyTank or LocationId.CrateriaGauntletShaftLeft or LocationId.CrateriaGauntletShaftRight).ToList(), "Crateria gauntlet"));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.FluteSpot)));
+                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.FluteSpot).ToList()));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.MagicBat)));
+                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.MagicBat).ToList()));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.PotionShop)));
+                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.PotionShop).ToList()));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.GreenBrinstarEarlySupersBottom or LocationId.GreenBrinstarEarlySupersTop or LocationId.GreenBrinstarReserveTankChozo or LocationId.GreenBrinstarReserveTankHidden or LocationId.GreenBrinstarReserveTankVisible), "Green Brinstar machball hall"));
+                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.GreenBrinstarEarlySupersBottom or LocationId.GreenBrinstarEarlySupersTop or LocationId.GreenBrinstarReserveTankChozo or LocationId.GreenBrinstarReserveTankHidden or LocationId.GreenBrinstarReserveTankVisible).ToList(), "Green Brinstar machball hall"));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.GreenBrinstarEtecoonSuper or LocationId.GreenBrinstarEtecoonEnergyTank or LocationId.GreenBrinstarMainShaft), "Green Brinstar bottom left area"));
+                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.GreenBrinstarEtecoonSuper or LocationId.GreenBrinstarEtecoonEnergyTank or LocationId.GreenBrinstarMainShaft).ToList(), "Green Brinstar bottom left area"));
 
             return hints;
         }
@@ -315,64 +333,42 @@ namespace Randomizer.SMZ3.Generation
         /// <summary>
         /// Adds a hint for a given set of location(s) to the list of hints
         /// </summary>
-        private string? GetLocationHint(World hintPlayerWorld, ICollection<World> allWorlds, IEnumerable<Location> importantLocations, IEnumerable<Location> locations, string? areaName = null)
+        private HintTile GetLocationHint(World hintPlayerWorld, List<World> allWorlds, List<Location> importantLocations, List<Location> locations, string? areaName = null)
         {
-            // If we only have a single location, just say what item is there
-            if (locations.Count() == 1)
-            {
-                areaName = areaName == null
-                    ? GetLocationName(hintPlayerWorld, locations.First())
-                    : $"{areaName}{GetMultiworldSuffix(hintPlayerWorld, locations.First().World)}";
+            var typeAndKey = GetHintTileTypeAndKey(locations, areaName);
 
-                return  _gameLines.HintLocationHasItem?.Format(areaName,
-                    GetItemName(hintPlayerWorld, locations.First().Item));
-            }
-
-            var usefulness = CheckIfLocationsAreImportant(allWorlds, importantLocations, locations);
-
-            areaName = areaName == null
-                ? GetLocationsName(hintPlayerWorld, locations)
-                : $"{areaName}{GetMultiworldSuffix(hintPlayerWorld, locations.First().World)}";
-
-            if (usefulness == LocationUsefulness.Mandatory)
+            return new HintTile()
             {
-                return _gameLines.HintLocationIsMandatory?.Format(areaName);
-            }
-            else if (usefulness == LocationUsefulness.NiceToHave)
-            {
-                return _gameLines.HintLocationHasUsefulItem?.Format(areaName);
-            }
-            else if (usefulness == LocationUsefulness.Sword)
-            {
-                return _gameLines.HintLocationHasSword?.Format(areaName);
-            }
-            else
-            {
-                return _gameLines.HintLocationEmpty?.Format(areaName);
-            }
+                Type = typeAndKey.Item1,
+                WorldId = hintPlayerWorld.Id,
+                LocationKey = typeAndKey.Item2,
+                LocationWorldId = locations.First().World.Id,
+                Locations = locations.Select(x => x.Id),
+                Usefulness = locations.Count > 1 ? CheckIfLocationsAreImportant(allWorlds, importantLocations, locations) : null
+            };
         }
 
         /// <summary>
         /// Checks how useful a location is based on if the seed can be completed if we remove those
         /// locations from the playthrough and if the items there are at least slightly useful
         /// </summary>
-        private LocationUsefulness CheckIfLocationsAreImportant(IEnumerable<World> allWorlds, IEnumerable<Location> importantLocations, IEnumerable<Location> locations)
+        private LocationUsefulness CheckIfLocationsAreImportant(List<World> allWorlds, IEnumerable<Location> importantLocations, List<Location> locations)
         {
             var worldLocations = importantLocations.Except(locations).ToList();
             try
             {
                 var spheres = Playthrough.GenerateSpheres(worldLocations);
-                var sphereLocations = spheres.SelectMany(x => x.Locations);
+                var sphereLocations = spheres.SelectMany(x => x.Locations).ToList();
 
-                var canBeatGT = CheckSphereLocationCount(sphereLocations, locations, LocationId.GanonsTowerMoldormChest, allWorlds.Count());
-                var canBeatKraid = CheckSphereLocationCount(sphereLocations, locations, LocationId.KraidsLairVariaSuit, allWorlds.Count());
-                var canBeatPhantoon = CheckSphereLocationCount(sphereLocations, locations, LocationId.WreckedShipEastSuper, allWorlds.Count());
-                var canBeatDraygon = CheckSphereLocationCount(sphereLocations, locations, LocationId.InnerMaridiaSpaceJump, allWorlds.Count());
-                var canBeatRidley = CheckSphereLocationCount(sphereLocations, locations, LocationId.LowerNorfairRidleyTank, allWorlds.Count());
+                var canBeatGT = CheckSphereLocationCount(sphereLocations, locations, LocationId.GanonsTowerMoldormChest, allWorlds.Count);
+                var canBeatKraid = CheckSphereLocationCount(sphereLocations, locations, LocationId.KraidsLairVariaSuit, allWorlds.Count);
+                var canBeatPhantoon = CheckSphereLocationCount(sphereLocations, locations, LocationId.WreckedShipEastSuper, allWorlds.Count);
+                var canBeatDraygon = CheckSphereLocationCount(sphereLocations, locations, LocationId.InnerMaridiaSpaceJump, allWorlds.Count);
+                var canBeatRidley = CheckSphereLocationCount(sphereLocations, locations, LocationId.LowerNorfairRidleyTank, allWorlds.Count);
                 var allCrateriaBosSKeys = CheckSphereCrateriaBossKeys(sphereLocations);
 
                 // Make sure all players have the silver arrows
-                if (sphereLocations.Count(x => x.Item.Type == ItemType.SilverArrows) < allWorlds.Count())
+                if (sphereLocations.Count(x => x.Item.Type == ItemType.SilverArrows) < allWorlds.Count)
                 {
                     return LocationUsefulness.Mandatory;
                 }
@@ -437,7 +433,7 @@ namespace Randomizer.SMZ3.Generation
         /// <summary>
         /// Checks if the crateria boss keycard is found in the spheres for all players
         /// </summary>
-        private bool CheckSphereCrateriaBossKeys(IEnumerable<Location> sphereLocations)
+        private bool CheckSphereCrateriaBossKeys(List<Location> sphereLocations)
         {
             var numKeysanity = sphereLocations.Select(x => x.World).Distinct().Count(x => x.Config.MetroidKeysanity);
             var numCratieriaBossKeys = sphereLocations.Select(x => x.Item.Type).Count(x => x == ItemType.CardMaridiaBoss);
@@ -451,23 +447,39 @@ namespace Randomizer.SMZ3.Generation
             hints.Add(() =>
             {
                 var mmMedallion = hintPlayerWorld.MiseryMire.Medallion;
-                return _gameLines.HintDungeonMedallion?.Format(hintPlayerWorld.MiseryMire.Metadata.Name, GetItemName(mmMedallion));
+                return new HintTile()
+                {
+                    Type = HintTileType.Requirement,
+                    WorldId = hintPlayerWorld.Id,
+                    LocationKey = hintPlayerWorld.MiseryMire.Name,
+                    MedallionType = mmMedallion
+                };
             });
 
             hints.Add(() =>
             {
                 var trMedallion = hintPlayerWorld.TurtleRock.Medallion;
-                return _gameLines.HintDungeonMedallion?.Format(hintPlayerWorld.TurtleRock.Metadata.Name, GetItemName(trMedallion));
+                return new HintTile()
+                {
+                    Type = HintTileType.Requirement,
+                    WorldId = hintPlayerWorld.Id,
+                    LocationKey = hintPlayerWorld.TurtleRock.Name,
+                    MedallionType = trMedallion
+                };
             });
 
             return hints;
         }
 
-        private string GetLocationsName(World hintPlayerWorld, IEnumerable<Location> locations)
+        private (HintTileType, string) GetHintTileTypeAndKey(List<Location> locations, string? areaName)
         {
-            if (locations.Count() == 1)
+            if (locations.Count == 1)
             {
-                return GetLocationName(hintPlayerWorld, locations.First());
+                return (HintTileType.Location, locations.First().Name);
+            }
+            else if (!string.IsNullOrEmpty(areaName))
+            {
+                return (HintTileType.LocationGroup, areaName);
             }
             else
             {
@@ -475,14 +487,11 @@ namespace Randomizer.SMZ3.Generation
 
                 if (room != null && locations.All(x => x.Room == room))
                 {
-                    var roomInfo = _metadataService.Room(room);
-                    var name = roomInfo?.Name ?? room.Name;
-                    return $"{name}{GetMultiworldSuffix(hintPlayerWorld, locations.First().World)}";
+                    return (HintTileType.Room, room.Name);
                 }
                 else
                 {
-                    var name = _metadataService.Region(locations.First().Region).Name;
-                    return $"{name}{GetMultiworldSuffix(hintPlayerWorld, locations.First().World)}";
+                    return (HintTileType.Region, locations.First().Region.Name);
                 }
             }
         }
@@ -490,6 +499,18 @@ namespace Randomizer.SMZ3.Generation
         private string GetDungeonName(World hintPlayerWorld, IDungeon dungeon, Region region)
         {
             var dungeonName = _metadataService.Dungeon(dungeon).Name.ToString();
+            return $"{dungeonName}{GetMultiworldSuffix(hintPlayerWorld, region.World)}";
+        }
+
+        private string GetRoomName(World hintPlayerWorld, Room room)
+        {
+            var roomName = _metadataService.Room(room)?.Name.ToString() ?? room.Name;
+            return $"{roomName}{GetMultiworldSuffix(hintPlayerWorld, room.World)}";
+        }
+
+        private string GetRegionName(World hintPlayerWorld, Region region)
+        {
+            var dungeonName = _metadataService.Region(region).Name.ToString();
             return $"{dungeonName}{GetMultiworldSuffix(hintPlayerWorld, region.World)}";
         }
 
@@ -543,7 +564,7 @@ namespace Randomizer.SMZ3.Generation
             }
         }
 
-        private IEnumerable<Location> GetImportantLocations(IEnumerable<World> allWorlds)
+        private IEnumerable<Location> GetImportantLocations(List<World> allWorlds)
         {
             // Get the first accessible ammo locations to make sure early ammo isn't considered mandatory when there
             // are others available
@@ -575,6 +596,70 @@ namespace Randomizer.SMZ3.Generation
                                 ItemCategory.Keycard) || l.Item.Type is ItemType.Super or ItemType.PowerBomb or ItemType.ProgressiveSword or ItemType.SilverArrows)
                 .Concat(ammoLocations)
                 .Distinct();
+        }
+
+        public string? GetHintTileText(HintTile tile, World hintPlayerWorld, List<World> worlds)
+        {
+            if (tile.Type == HintTileType.Requirement && tile.MedallionType != null)
+            {
+                var dungeon = _metadataService.Dungeons.FirstOrDefault(x => x.Dungeon == tile.LocationKey);
+                var dungeonName = dungeon?.Name.ToString() ?? tile.LocationKey;
+                var itemName = GetItemName(tile.MedallionType.Value);
+                return _gameLines.HintDungeonMedallion?.Format(dungeonName, itemName);
+            }
+            else if (tile.Type == HintTileType.Location && tile.Locations?.Any() == true)
+            {
+                var world = worlds.First(x => x.Id == tile.LocationWorldId);
+                var location = world.FindLocation(tile.Locations.First());
+                var areaName = GetLocationName(hintPlayerWorld, location);
+                return  _gameLines.HintLocationHasItem?.Format(areaName,
+                    GetItemName(hintPlayerWorld, location.Item));
+            }
+            else
+            {
+                var areaName = tile.LocationKey;
+                var world = worlds.First(x => x.Id == tile.LocationWorldId);
+
+                if (tile.Type == HintTileType.Region)
+                {
+                    var region = world.Regions.First(x => x.Name == areaName);
+                    areaName = GetRegionName(hintPlayerWorld, region);
+                }
+                else if (tile.Type == HintTileType.Dungeon)
+                {
+                    var region = world.Regions.First(x => x.Name == areaName);
+                    var dungeon = world.Dungeons.First(x => x.DungeonName == areaName);
+                    areaName = GetDungeonName(hintPlayerWorld, dungeon, region);
+                }
+                else if (tile.Type == HintTileType.Room)
+                {
+                    var room = world.Rooms.First(x => x.Name == areaName);
+                    areaName = GetRoomName(hintPlayerWorld, room);
+                }
+                else if (tile.Type == HintTileType.LocationGroup)
+                {
+                    areaName = $"{areaName}{GetMultiworldSuffix(hintPlayerWorld, world)}";
+                }
+
+                var usefulness = tile.Usefulness;
+
+                if (usefulness == LocationUsefulness.Mandatory)
+                {
+                    return _gameLines.HintLocationIsMandatory?.Format(areaName);
+                }
+                else if (usefulness == LocationUsefulness.NiceToHave)
+                {
+                    return _gameLines.HintLocationHasUsefulItem?.Format(areaName);
+                }
+                else if (usefulness == LocationUsefulness.Sword)
+                {
+                    return _gameLines.HintLocationHasSword?.Format(areaName);
+                }
+                else
+                {
+                    return _gameLines.HintLocationEmpty?.Format(areaName);
+                }
+            }
         }
 
 

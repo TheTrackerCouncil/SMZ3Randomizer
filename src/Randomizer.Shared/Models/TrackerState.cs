@@ -26,6 +26,7 @@ namespace Randomizer.Shared.Models
         public ICollection<TrackerMarkedLocation> MarkedLocations { get; set; } = new List<TrackerMarkedLocation>();
         public ICollection<TrackerBossState> BossStates { get; set; } = new List<TrackerBossState>();
         public ICollection<TrackerHistoryEvent> History { get; set; } = new List<TrackerHistoryEvent>();
+        public ICollection<TrackerHintState> Hints { get; set; } = new List<TrackerHintState>();
     }
 
 }

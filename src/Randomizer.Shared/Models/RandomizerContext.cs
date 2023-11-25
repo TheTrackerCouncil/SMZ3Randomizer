@@ -34,6 +34,7 @@ namespace Randomizer.Shared.Models {
             modelBuilder.Entity<TrackerState>().HasMany(x => x.MarkedLocations).WithOne(x => x.TrackerState!).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<TrackerState>().HasMany(x => x.BossStates).WithOne(x => x.TrackerState!).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<TrackerState>().HasMany(x => x.History).WithOne(x => x.TrackerState!).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<TrackerState>().HasMany(x => x.Hints).WithOne(x => x.TrackerState!).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<MultiplayerGameDetails>().HasOne(x => x.GeneratedRom);
 
             base.OnModelCreating(modelBuilder);
@@ -49,6 +50,7 @@ namespace Randomizer.Shared.Models {
         public DbSet<TrackerMarkedLocation> TrackerMarkedLocations { get; set; }
         public DbSet<TrackerBossState> TrackerBossStates { get; set; }
         public DbSet<TrackerHistoryEvent> TrackerHistoryEvents { get; set; }
+        public DbSet<TrackerHintState> TrackerHintStates { get; set; }
         public DbSet<MultiplayerGameDetails> MultiplayerGames { get; set; }
 
 #if DEBUG

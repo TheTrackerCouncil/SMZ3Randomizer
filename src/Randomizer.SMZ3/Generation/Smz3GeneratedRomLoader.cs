@@ -48,6 +48,7 @@ namespace Randomizer.SMZ3.Generation
             _randomizerContext.Entry(trackerState).Collection(x => x.DungeonStates).Load();
             _randomizerContext.Entry(trackerState).Collection(x => x.BossStates).Load();
             _randomizerContext.Entry(trackerState).Collection(x => x.History).Load();
+            _randomizerContext.Entry(trackerState).Collection(x => x.Hints).Load();
 
             var configs = Config.FromConfigString(rom.Settings);
             var worlds = configs.Select(config => new World(config, config.PlayerName, config.Id, config.PlayerGuid, config.Id == trackerState.LocalWorldId, _metadata, trackerState)).ToList();

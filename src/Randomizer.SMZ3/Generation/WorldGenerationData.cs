@@ -18,16 +18,14 @@ public class WorldGenerationData
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
 
-    public WorldGenerationData(World world, Dictionary<int, byte[]>? patches = null, IEnumerable<string>? hints = null)
+    public WorldGenerationData(World world, Dictionary<int, byte[]>? patches = null)
     {
         World = world;
         Patches = patches ?? new Dictionary<int, byte[]>();
-        Hints = hints ?? new List<string>();
     }
 
     public World World { get; }
     public Dictionary<int, byte[]> Patches { get; }
-    public IEnumerable<string> Hints { get; }
     public Config Config => World.Config;
     public bool IsLocalWorld => World.IsLocalWorld;
 
@@ -37,7 +35,7 @@ public class WorldGenerationData
             .Select(x => new PlayerGenerationLocationData(x.Id, x.Item.World.Id, x.Item.Type)).ToList();
         var dungeonData = World.Dungeons
             .Select(x => new PlayerGenerationDungeonData(x.DungeonName, x.DungeonRewardType, x.Medallion)).ToList();
-        return new MultiplayerPlayerGenerationData(World.Guid, World.Id, locationItems, dungeonData, Hints.ToList());
+        return new MultiplayerPlayerGenerationData(World.Guid, World.Id, locationItems, dungeonData, World.HintTiles.ToList());
     }
 
 

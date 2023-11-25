@@ -5,6 +5,7 @@ using System.IO.Compression;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using Randomizer.Shared.Models;
 
 namespace Randomizer.Shared.Multiplayer;
 
@@ -16,7 +17,7 @@ public class MultiplayerPlayerGenerationData
     };
 
     public MultiplayerPlayerGenerationData(string playerGuid, int worldId, List<PlayerGenerationLocationData> locations,
-        List<PlayerGenerationDungeonData> dungeons, List<string> hints)
+        List<PlayerGenerationDungeonData> dungeons, List<HintTile> hints)
     {
         PlayerGuid = playerGuid;
         WorldId = worldId;
@@ -29,7 +30,7 @@ public class MultiplayerPlayerGenerationData
     public int WorldId { get; }
     public List<PlayerGenerationLocationData> Locations { get; }
     public List<PlayerGenerationDungeonData> Dungeons { get; }
-    public List<string> Hints { get; }
+    public List<HintTile> Hints { get; }
 
     /// <summary>
     /// Converts the generation data into a compressed string of the json

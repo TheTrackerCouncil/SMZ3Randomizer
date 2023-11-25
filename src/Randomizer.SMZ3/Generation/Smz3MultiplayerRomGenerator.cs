@@ -69,17 +69,17 @@ public class Smz3MultiplayerRomGenerator : ISeededRandomizer
         foreach (var world in worlds.OrderBy(x => x.Id))
         {
             var hints = world.Config.MultiplayerPlayerGenerationData!.Hints;
+            world.HintTiles = hints;
             var patches = _patcherService.GetPatches(new GetPatchesRequest()
             {
                 World = world,
                 Worlds = worlds,
                 SeedGuid = seedData.Guid,
                 Seed = seedNumber,
-                Random = new Random(seedNumber % 1000 + world.Id).Sanitize(),
-                Hints = hints
+                Random = new Random(seedNumber % 1000 + world.Id).Sanitize()
             });
 
-            var worldGenerationData = new WorldGenerationData(world, patches, hints);
+            var worldGenerationData = new WorldGenerationData(world, patches);
             seedData.WorldGenerationData.Add(worldGenerationData);
         }
 
