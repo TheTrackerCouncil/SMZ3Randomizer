@@ -749,6 +749,18 @@ public abstract class TrackerBase
     public abstract void UpdateHintTile(PlayerHintTile playerHintTile);
 
     /// <summary>
+    /// Updates the most recently marked locations to be able to clear later
+    /// </summary>
+    /// <param name="locations">List of locations that were just marked</param>
+    public abstract void UpdateLastMarkedLocations(List<Location> locations);
+
+    /// <summary>
+    /// Clears the most recently marked locations
+    /// </summary>
+    /// <param name="confidence">Voice recognition confidence</param>
+    public abstract void ClearLastMarkedLocations(float confidence);
+
+    /// <summary>
     /// Resets the idle timers when tracker will comment on nothing happening
     /// </summary>
     public abstract void RestartIdleTimers();
