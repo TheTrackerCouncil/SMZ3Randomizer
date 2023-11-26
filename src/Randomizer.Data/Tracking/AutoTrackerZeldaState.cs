@@ -85,7 +85,7 @@ public class AutoTrackerZeldaState
     /// <returns></returns>
     public bool IsWithinRegion(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY)
     {
-        return LinkX >= topLeftX && LinkX <= bottomRightX && LinkY >= topLeftY && LinkX <= bottomRightY;
+        return LinkX >= topLeftX && LinkX <= bottomRightX && LinkY >= topLeftY && LinkY <= bottomRightY;
     }
 
     /// <summary>

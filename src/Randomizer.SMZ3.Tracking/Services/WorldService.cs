@@ -7,6 +7,7 @@ using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
+using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Contracts;
 
 namespace Randomizer.SMZ3.Tracking.Services
@@ -184,6 +185,9 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <returns></returns>
         public Region? Region(string name)
             => World.Regions.FirstOrDefault(x => x.Name == name || x.GetType().FullName == name);
+
+        public IEnumerable<PlayerHintTile> ViewedHintTiles
+            => World.HintTiles.Where(x => x.State?.HintState == HintState.Viewed);
 
         /// <summary>
         /// Returns if a given region matches the LocationFilter

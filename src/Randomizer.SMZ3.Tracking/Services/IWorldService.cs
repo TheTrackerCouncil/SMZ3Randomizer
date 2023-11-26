@@ -7,6 +7,7 @@ using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
+using Randomizer.Shared.Models;
 
 namespace Randomizer.SMZ3.Tracking.Services
 {
@@ -119,5 +120,10 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <param name="name">The region name to lookup</param>
         /// <returns></returns>
         public Region? Region(string name);
+
+        /// <summary>
+        /// Returns the list of hint tiles that have been viewed but not cleared
+        /// </summary>
+        public IEnumerable<PlayerHintTile> ViewedHintTiles { get; }
     }
 }

@@ -1,5 +1,6 @@
 using MSURandomizerLibrary.Configs;
 using Randomizer.Data;
+using Randomizer.Data.Configuration;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data.Tracking;
@@ -99,6 +100,11 @@ public abstract class TrackerBase
     public event EventHandler<TrackChangedEventArgs>? TrackChanged;
 
     /// <summary>
+    /// Occurs when a hint tile is viewed that is for a region, dungeon, or group of locations
+    /// </summary>
+    public event EventHandler<HintTileUpdatedEventArgs>? HintTileUpdated;
+
+    /// <summary>
     /// Gets a reference to the <see cref="ItemService"/>.
     /// </summary>
     public IItemService ItemService { get; protected init; } = null!;
@@ -147,6 +153,11 @@ public abstract class TrackerBase
     /// Gets a collection of basic requests and responses.
     /// </summary>
     public IReadOnlyCollection<BasicVoiceRequest> Requests { get; protected init; } = null!;
+
+    /// <summary>
+    /// Metadata configs
+    /// </summary>
+    public Configs Configs { get; protected init; } = null!;
 
     /// <summary>
     /// Gets a dictionary containing the rules and the various speech
@@ -225,6 +236,11 @@ public abstract class TrackerBase
     /// Gets if the local player has beaten the game or not
     /// </summary>
     public bool HasBeatenGame { get; protected set; }
+
+    /// <summary>
+    /// The last viewed hint tile by the player
+    /// </summary>
+    public PlayerHintTile? LastViewedHintTile { get; set; }
 
     /// <summary>
     /// Attempts to replace a user name with a pronunciation-corrected
@@ -317,7 +333,8 @@ public abstract class TrackerBase
     /// <param name="dungeon">The dungeon to mark.</param>
     /// <param name="medallion">The medallion that is required.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public abstract void SetDungeonRequirement(IDungeon dungeon, ItemType? medallion = null, float? confidence = null);
+    /// <param name="autoTracked">If the marked dungeon requirement was auto tracked</param>
+    public abstract void SetDungeonRequirement(IDungeon dungeon, ItemType? medallion = null, float? confidence = null, bool autoTracked = false);
 
     /// <summary>
     /// Starts voice recognition.
@@ -595,6 +612,13 @@ public abstract class TrackerBase
     public abstract void Clear(Location location, float? confidence = null, bool autoTracked = false);
 
     /// <summary>
+    /// Clears an item from the specified locations.
+    /// </summary>
+    /// <param name="locations">The locations to clear.</param>
+    /// <param name="confidence">The speech recognition confidence.</param>
+    public abstract void Clear(List<Location> locations, float? confidence = null);
+
+    /// <summary>
     /// Marks a dungeon as cleared and, if possible, tracks the boss reward.
     /// </summary>
     /// <param name="dungeon">The dungeon that was cleared.</param>
@@ -637,7 +661,8 @@ public abstract class TrackerBase
     /// The item that is found at <paramref name="location"/>.
     /// </param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public abstract void MarkLocation(Location location, Item item, float? confidence = null);
+    /// <param name="autoTracked">If the marked location was auto tracked</param>
+    public abstract void MarkLocation(Location location, Item item, float? confidence = null, bool autoTracked = false);
 
     /// <summary>
     /// Pegs a Peg World peg.
@@ -717,6 +742,15 @@ public abstract class TrackerBase
     /// <param name="outputText">Formatted output text matching the requested style</param>
     public abstract void UpdateTrack(Msu msu, Track track, string outputText);
 
+    /// <summary>
+    /// Marks a hint tile as viewed or cleared
+    /// </summary>
+    /// <param name="playerHintTile">Details about the hint for the player</param>
+    public abstract void UpdateHintTile(PlayerHintTile playerHintTile);
+
+    /// <summary>
+    /// Resets the idle timers when tracker will comment on nothing happening
+    /// </summary>
     public abstract void RestartIdleTimers();
 
     /// <summary>
@@ -906,5 +940,14 @@ public abstract class TrackerBase
     protected virtual void OnTrackChanged(TrackChangedEventArgs args)
     {
         TrackChanged?.Invoke(this, args);
+    }
+
+    /// <summary>
+    /// Invokes the HintTileUpdated event
+    /// </summary>
+    /// <param name="args"></param>
+    protected virtual void OnHintTileUpdated(HintTileUpdatedEventArgs args)
+    {
+        HintTileUpdated?.Invoke(this, args);
     }
 }

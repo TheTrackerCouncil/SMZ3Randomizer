@@ -30,6 +30,7 @@ namespace Randomizer.App.ViewModels
             _syncer = syncer;
             _syncer.TrackedLocationUpdated += (_, _) => OnPropertyChanged(nameof(TopLocations));
             _syncer.MarkedLocationUpdated += (_, _) => OnPropertyChanged(nameof(MarkedLocations));
+            _syncer.HintTileUpdated += (_, _) => OnPropertyChanged(nameof(HintTiles));
             _uiService = uiService;
         }
 
@@ -53,6 +54,19 @@ namespace Randomizer.App.ViewModels
         {
             get => _syncer.ShowOutOfLogicLocations;
             set => _syncer.ShowOutOfLogicLocations = value;
+        }
+
+        public IEnumerable<HintTileViewModel> HintTiles
+        {
+            get
+            {
+                if (_isDesign)
+                    return new List<HintTileViewModel>();
+
+                return _syncer.WorldService.ViewedHintTiles
+                    .Where(x => x.Locations?.Count() > 1)
+                    .Select(x => new HintTileViewModel(x));
+            }
         }
 
         public IEnumerable<MarkedLocationViewModel> MarkedLocations

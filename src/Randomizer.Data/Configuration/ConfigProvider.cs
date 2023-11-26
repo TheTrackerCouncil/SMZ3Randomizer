@@ -182,6 +182,14 @@ namespace Randomizer.Data.Configuration
             LoadYamlConfigs<MsuConfig, MsuConfig>("msu.yml", profiles);
 
         /// <summary>
+        /// Returns the configs with hint tiles
+        /// </summary>
+        /// <param name="profiles">The selected tracker profile(s) to load</param>
+        /// <returns></returns>
+        public virtual HintTileConfig GetHintTileConfig(params string?[] profiles) =>
+            LoadYamlConfigs<HintTileConfig, HintTileConfig>("hint_tiles.yml", profiles);
+
+        /// <summary>
         /// Returns a collection of all possible config profiles to
         /// select from
         /// </summary>

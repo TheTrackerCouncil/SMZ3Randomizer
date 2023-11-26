@@ -94,6 +94,12 @@ namespace Randomizer.Data.Configuration
                 return configs.MsuConfig;
             });
 
+            services.AddScoped(serviceProvider =>
+            {
+                var configs = serviceProvider.GetRequiredService<Configs>();
+                return configs.HintTileConfig;
+            });
+
             return services;
         }
     }

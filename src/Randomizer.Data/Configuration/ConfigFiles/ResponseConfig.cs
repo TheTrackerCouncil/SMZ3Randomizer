@@ -556,6 +556,26 @@ namespace Randomizer.Data.Configuration.ConfigFiles
             = new SchrodingersString("Cleared {0}.");
 
         /// <summary>
+        /// Gets the phrases to respond with when clearing multiple locations.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the number of locations.
+        /// </remarks>
+        public SchrodingersString LocationsCleared { get; init; }
+            = new SchrodingersString("Cleared {0} locations.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when clearing multiple locations
+        /// from the same region.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the number of locations.
+        /// <c>{1}</c> is a placeholder for the name of the region
+        /// </remarks>
+        public SchrodingersString LocationsClearedSameRegion { get; init; }
+            = new SchrodingersString("Cleared {0} locations from {1}.");
+
+        /// <summary>
         /// Gets the phrases to request tracker to initiate go mode
         /// </summary>
         public List<string> GoModePrompts { get; init; } = new() { "track Go Mode." };

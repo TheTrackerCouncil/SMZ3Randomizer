@@ -1,0 +1,31 @@
+﻿RequestedHintTile:
+  - Text: 'If you were to look at that hint tile, it would say {0}'
+  - Text: 'I guess you''re too lazy to go there yourself? Fine. It says {0}'
+  - Text: 'Can''t read it yourself? It says {0}'
+  - Text: 'From what I''ve heard, it says {0}'
+NoPreviousHintTile:
+  - Text: You need to look at a hint tile before I can do that.
+ClearHintTileFailed:
+  - Text: What do you expect me to do with that hint tile?
+ViewedHintTile:
+  - Text: Now don't you forget about that.
+  - Text: Hopefully you will remember that one later.
+  - Text: Writing that down for you.
+  - Text: Maybe this seed will move by faster thanks to that hint tile.
+HintTiles:
+  - HintTileKey: telepathic_tile_eastern_palace
+    Name:
+      - Text: Easturd Palace
+  - HintTileKey: telepathic_tile_misery_mire
+    Name:
+      - Text: Miserable Mire
+  - HintTileKey: telepathic_tile_palace_of_darkness
+    Name:
+      - Text: Palace of Dorkness
+      - Text: Dork Palace
+  - HintTileKey: telepathic_tile_desert_bonk_torch_room
+    Name:
+      - Text: Dessert Palace
+  - HintTileKey: telepathic_tile_turtle_rock
+    Name:
+      - Text: Tortoise Rock
