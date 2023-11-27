@@ -225,3 +225,7 @@ OnBeginSaveAndQuit:
 	LDA.b #$17 : STA $10 ; thing we wrote over. Go to save and quit module
 RTL
 ;--------------------------------------------------------------------------------
+OnEnterAga:
+	LDA $7EF2DB : AND #$DF : STA $7EF2DB
+	LDA $7EF2DB
+RTL
