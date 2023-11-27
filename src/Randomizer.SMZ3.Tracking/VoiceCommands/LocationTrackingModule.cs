@@ -70,6 +70,18 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         }
 
         [SupportedOSPlatform("windows")]
+        private GrammarBuilder GetClearMarkedLocationsRule()
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker,")
+                .Append("clear")
+                .OneOf("that", "those")
+                .Optional("last", "recent")
+                .Append("marked")
+                .OneOf("location", "locations");
+        }
+
+        [SupportedOSPlatform("windows")]
         private GrammarBuilder GetClearLocationRule()
         {
             var locationNames = GetLocationNames();
@@ -197,6 +209,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         includeUnavailable: true,
                         confidence: result.Confidence);
                 }
+            });
+
+            AddCommand("Clear recent marked locations", GetClearMarkedLocationsRule(), (result) =>
+            {
+                TrackerBase.ClearLastMarkedLocations(result.Confidence);
             });
         }
     }

@@ -565,6 +565,12 @@ namespace Randomizer.Data.Configuration.ConfigFiles
             = new SchrodingersString("Cleared {0} locations.");
 
         /// <summary>
+        /// Gets the phrases to respond with when trying to clear the last marked locations when there aren't any
+        /// </summary>
+        public SchrodingersString NoMarkedLocations { get; init; }
+            = new SchrodingersString("There are no marked locations to clear");
+
+        /// <summary>
         /// Gets the phrases to respond with when clearing multiple locations
         /// from the same region.
         /// </summary>

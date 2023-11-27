@@ -58,6 +58,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     private readonly bool _alternateTracker;
     private readonly HashSet<SchrodingersString> _saidLines = new();
     private IEnumerable<ItemType>? _previousMissingItems;
+    private List<Location> _lastMarkedLocations;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Tracker"/> class.
@@ -2193,6 +2194,21 @@ public sealed class Tracker : TrackerBase, IDisposable
         }
 
         OnHintTileUpdated(new HintTileUpdatedEventArgs(hintTile));
+    }
+
+    public override void UpdateLastMarkedLocations(List<Location> locations)
+    {
+        _lastMarkedLocations = locations;
+    }
+
+    public override void ClearLastMarkedLocations(float confidence)
+    {
+        if (_lastMarkedLocations.Count == 0)
+        {
+            Say(x => x.NoMarkedLocations);
+            return;
+        }
+        Clear(_lastMarkedLocations, confidence);
     }
 
     /// <summary>

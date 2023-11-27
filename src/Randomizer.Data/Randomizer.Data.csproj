@@ -55,9 +55,8 @@
     <EmbeddedResource Include="Configuration\Yaml\Templates\rewards.yml" />
     <EmbeddedResource Include="maps.json" />
     <EmbeddedResource Include="Options\ItemSettingOptions.yml" />
-    <None Remove="WorldData\HintTiles.yml" />
-    <None Remove="Configuration\Yaml\Sassy\hint_tiles.yml" />
     <EmbeddedResource Include="Configuration\Yaml\Sassy\hint_tiles.yml" />
+    <EmbeddedResource Include="WorldData\VisibleItems.yml" />
   </ItemGroup>
 
   <ItemGroup>
