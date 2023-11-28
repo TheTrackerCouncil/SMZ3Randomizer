@@ -59,6 +59,7 @@ RTL
 ;--------------------------------------------------------------------------------
 OnAga2Defeated:
 	JSL.l Dungeon_SaveRoomData_justKeys ; thing we wrote over, make sure this is first
+	LDA.b #$01 : STA.l Aga2Duck
 	;JSL.l IncrementAgahnim2Sword
 RTL
 ;--------------------------------------------------------------------------------
