@@ -2563,3 +2563,14 @@ org $08C531
 ; Hook the beginning of Save & Quit to add soft-reset restrictions
 org $00fa2b ; Bank00.asm : 8724 (LDA.b #$17 : STA $10)
     jsl OnBeginSaveAndQuit
+
+
+;================================================================================
+; Replace pyramid hole check for killing aga2
+;
+; This check originally intended to prevent getting fluted out a second time if you 
+; return to his room after already killing him once. Overwrite to flute out if Aga2
+; has been defeated
+;---------------------------------------------------------------------------------
+org $01C74E ; 00C74E - bank_01.asm:13281 - (LDA.l $7EF2DB : AND.b #$20)
+LDA.l Aga2Duck : NOP #2

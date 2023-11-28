@@ -59,6 +59,7 @@ RTL
 ;--------------------------------------------------------------------------------
 OnAga2Defeated:
 	JSL.l Dungeon_SaveRoomData_justKeys ; thing we wrote over, make sure this is first
+	LDA.b #$01 : STA.l Aga2Duck
 	;JSL.l IncrementAgahnim2Sword
 RTL
 ;--------------------------------------------------------------------------------
@@ -225,3 +226,7 @@ OnBeginSaveAndQuit:
 	LDA.b #$17 : STA $10 ; thing we wrote over. Go to save and quit module
 RTL
 ;--------------------------------------------------------------------------------
+OnEnterAga:
+	LDA $7EF2DB : AND #$DF : STA $7EF2DB
+	LDA $7EF2DB
+RTL
