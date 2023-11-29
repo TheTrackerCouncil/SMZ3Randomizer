@@ -14,6 +14,7 @@ using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.Data.Options;
 using Randomizer.Shared.Enums;
+using Randomizer.SMZ3.Contracts;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -35,6 +36,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private Playthrough? _playthrough;
         private readonly IRandomizerConfigService _randomizerConfigService;
         private readonly bool _isMultiworld;
+        private readonly IGameHintService _gameHintService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SpoilerModule"/> class.
@@ -44,12 +46,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to write logging information.</param>
         /// <param name="randomizerConfigService">Service for retrieving the randomizer config for the world</param>
-        public SpoilerModule(TrackerBase tracker, IItemService itemService, ILogger<SpoilerModule> logger, IWorldService worldService, IRandomizerConfigService randomizerConfigService)
+        public SpoilerModule(TrackerBase tracker, IItemService itemService, ILogger<SpoilerModule> logger, IWorldService worldService, IRandomizerConfigService randomizerConfigService, IGameHintService gameHintService)
             : base(tracker, itemService, worldService, logger)
         {
             TrackerBase.HintsEnabled = tracker.World.Config is { Race: false, DisableTrackerHints: false } && tracker.Options.HintsEnabled;
             TrackerBase.SpoilersEnabled = tracker.World.Config is { Race: false, DisableTrackerSpoilers: false } && tracker.Options.SpoilersEnabled;
             _randomizerConfigService = randomizerConfigService;
+            _gameHintService = gameHintService;
             _isMultiworld = tracker.World.Config.MultiWorld;
         }
 
@@ -66,17 +69,17 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 return;
             }
 
-            var locationWithProgressionItem = WorldService.Locations(keysanityByRegion: true)
-                .Where(x => x.Item.State.TrackingState == 0 && x.Item.Metadata.IsProgression(Config))
-                .Random();
+            var locations = WorldService.Locations(keysanityByRegion: true).ToList();
 
-            if (locationWithProgressionItem != null)
+            var result = _gameHintService.FindMostValueableLocation(WorldService.Worlds, locations);
+
+            if (result is not { Usefulness: LocationUsefulness.Mandatory })
             {
-                TrackerBase.Say(x => x.Hints.AreaSuggestion, locationWithProgressionItem.Region.GetName());
+                TrackerBase.Say(x => x.Hints.NoApplicableHints);
                 return;
             }
 
-            TrackerBase.Say(x => x.Hints.NoApplicableHints);
+            TrackerBase.Say(x => x.Hints.AreaSuggestion, result.Value.Location.Region.GetName());
         }
 
         /// <summary>
@@ -100,17 +103,22 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 return;
             }
 
-            var items = locations
-                .Select(x => x.Item)
-                .NonNull();
             if (TrackerBase.SpoilersEnabled)
             {
+                var items = locations
+                    .Select(x => x.Item)
+                    .NonNull();
                 var itemNames = NaturalLanguage.Join(items, TrackerBase.World.Config);
                 TrackerBase.Say(x => x.Spoilers.ItemsInArea, area.GetName(), itemNames);
             }
             else if (TrackerBase.HintsEnabled)
             {
-                if (items.Any(x => x.Metadata.IsJunk(TrackerBase.World.Config) == false))
+                var usefulness = _gameHintService.GetUsefulness(locations.ToList(), WorldService.Worlds);
+                if (usefulness == LocationUsefulness.Mandatory)
+                {
+                    TrackerBase.Say(x => x.Hints.AreaHasSomethingMandatory, area.GetName());
+                }
+                else if (usefulness is LocationUsefulness.NiceToHave or LocationUsefulness.Sword)
                 {
                     TrackerBase.Say(x => x.Hints.AreaHasSomethingGood, area.GetName());
                 }

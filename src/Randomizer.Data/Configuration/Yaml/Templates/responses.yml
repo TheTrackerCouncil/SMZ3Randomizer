@@ -275,7 +275,7 @@ LocationCleared:
 
 # The list of possibilities when the player clears multiple locations
 # {0} is replaced with the number of locations cleared
-LocationCleared:
+LocationsCleared:
 
 # The list of possibilities when the player clears multiple locations from a single region
 # {0} is replaced with the number of locations cleared
@@ -493,7 +493,11 @@ Hints:
   # {0} is replaced with the name of the area
   AreaAlreadyCleared:
 
-  # The list of possibilities when a hint for an area is requested, and the area possibly has something good
+  # The list of possibilities when a hint for an area is requested, and the area has something mandatory
+  # {0} is replaced with the name of the area
+  AreaHasSomethingMandatory:
+
+  # The list of possibilities when a hint for an area is requested, and the area has something useful but not required
   # {0} is replaced with the name of the area
   AreaHasSomethingGood:
 

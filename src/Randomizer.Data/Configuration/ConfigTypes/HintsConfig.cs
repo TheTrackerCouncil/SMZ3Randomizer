@@ -305,6 +305,16 @@ namespace Randomizer.Data.Configuration
             = new("You already got everything in {0}.");
 
         /// <summary>
+        /// Gets the hint to give for an area that has one or more useful
+        /// items.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the area.
+        /// </remarks>
+        public SchrodingersString AreaHasSomethingMandatory { get; init; }
+            = new("{0} has something mandatory.");
+
+        /// <summary>
         /// Gets the hint to give for an area that might have one or more useful
         /// items.
         /// </summary>
@@ -312,7 +322,7 @@ namespace Randomizer.Data.Configuration
         /// <c>{0}</c> is a placeholder for the name of the area.
         /// </remarks>
         public SchrodingersString AreaHasSomethingGood { get; init; }
-            = new("{0} might have something good.");
+            = new("{0} has something nice but not required.");
 
         /// <summary>
         /// Gets the hint to give for an area that only has junk items left.
