@@ -639,15 +639,20 @@ Hints:
   AreaAlreadyCleared:
   - Text: You already got everything in {0}.
   - Text: If there was anything good in {0} you already got it.
-  AreaHasSomethingGood:
-  - Text: '{0} might have something good.'
-  - Text: It might have something good.
-  - Text: '{0} might be worth checking out.'
-  - Text: It might be worth checking out.
+  AreaHasSomethingMandatory:
+  - Text: You'll want to check out {0}
+  - Text: '{0} is worth checking out.'
+  - Text: It's worth checking out.
   - Text: I wouldn't skip it if I were you.
   - Text: I wouldn't skip {0} if I were you.
-  - Text: '{0} might be on the way of the hero.'
+  - Text: '{0} is on the way of the hero.'
     Weight: 0.5
+  AreaHasSomethingGood:
+  - Text: "{0} might have something useful, but it's not required."
+  - Text: It might have something you'd like, but you can live without it.
+  - Text: It can be skipped, but you might like what's there.
+  - Text: It's not required to go to {0}, but you might like what's there.
+  - Text: Well it's not all junk, but it's nothing required either.
   AreaHasJunk:
   - Text: "{0} isn't worth your time."
   - Text: It isn't worth your time.

@@ -35,6 +35,14 @@ namespace Randomizer.SMZ3.Contracts
             Playthrough playthrough);
 
         /// <summary>
+        /// Retrieves the usefulness of particular locations
+        /// </summary>
+        /// <param name="locations">The location to check</param>
+        /// <param name="allWorlds">All worlds that are a part of the seed</param>
+        /// <returns>How useful the locations are</returns>
+        LocationUsefulness GetUsefulness(List<Location> locations, List<World> allWorlds);
+
+        /// <summary>
         /// Retrieves the text that could be displayed on one of the hint tiles in a player's
         /// world
         /// </summary>
@@ -43,5 +51,14 @@ namespace Randomizer.SMZ3.Contracts
         /// <param name="worlds">All of the worlds in the game</param>
         /// <returns>The text that could be displayed on the hint tile</returns>
         string? GetHintTileText(PlayerHintTile tile, World hintPlayerWorld, List<World> worlds);
+
+        /// <summary>
+        /// Returns the most useful location out of the provided locations
+        /// </summary>
+        /// <param name="allWorlds">All worlds to check</param>
+        /// <param name="locationsToCheck">The locations to check</param>
+        /// <returns>The most useful location and its usefulness</returns>
+        public (Location Location, LocationUsefulness Usefulness)? FindMostValueableLocation(List<World> allWorlds,
+            List<Location> locationsToCheck);
     }
 }

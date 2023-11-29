@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Randomizer.Data.Configuration;
 using Randomizer.Data.Configuration.ConfigFiles;
@@ -138,6 +140,48 @@ namespace Randomizer.SMZ3.Generation
             }
 
             hintPlayerWorld.HintTiles = worldHintTiles;
+        }
+
+        public (Location Location, LocationUsefulness Usefulness)? FindMostValueableLocation(List<World> allWorlds,
+            List<Location> locationsToCheck)
+        {
+            var importantLocations = GetImportantLocations(allWorlds);
+
+            locationsToCheck = locationsToCheck.Where(l => s_importantLocations.Contains(l.Id) || l.Item.Progression ||
+                                                      l.Item.Type.IsInAnyCategory(ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard) ||
+                                                      l.Item.Type is ItemType.Super or ItemType.PowerBomb or ItemType.ProgressiveSword or ItemType.SilverArrows).ToList();
+
+            if (!locationsToCheck.Any())
+            {
+                return null;
+            }
+
+            var locationUsefulness = new ConcurrentBag<(Location Location, LocationUsefulness Usefulness)>();
+
+            Parallel.ForEach(locationsToCheck, location =>
+            {
+                var usefulness =
+                    CheckIfLocationsAreImportant(allWorlds, importantLocations, new List<Location>() { location });
+                locationUsefulness.Add((location, usefulness));
+            });
+
+            return locationUsefulness.MaxBy(x => (int)x.Usefulness);
+        }
+
+        public LocationUsefulness GetUsefulness(List<Location> locations, List<World> allWorlds)
+        {
+            var importantLocations = GetImportantLocations(allWorlds);
+
+            locations = locations.Where(l => s_importantLocations.Contains(l.Id) || l.Item.Progression ||
+                                             l.Item.Type.IsInAnyCategory(ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard) ||
+                                             l.Item.Type is ItemType.Super or ItemType.PowerBomb or ItemType.ProgressiveSword or ItemType.SilverArrows).ToList();
+
+            if (!locations.Any())
+            {
+                return LocationUsefulness.Useless;
+            }
+
+            return CheckIfLocationsAreImportant(allWorlds, importantLocations, locations);
         }
 
         /// <summary>
