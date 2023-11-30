@@ -53,22 +53,16 @@ public class ViewedMap : IZeldaStateCheck
                 .FirstOrDefault(x => x.StartingRooms != null && x.StartingRooms.Contains(currentState.OverworldScreen) && x.IsOverworld);
             if (currentRegion is LightWorldNorthWest or LightWorldNorthEast or LightWorldSouth or LightWorldDeathMountainEast or LightWorldDeathMountainWest && !_lightWorldUpdated)
             {
-                tracker.AutoTracker.LatestViewAction = new AutoTrackerViewedAction(UpdateLightWorldRewards);
-                if (tracker.Options.AutoSaveLookAtEvents)
-                {
-                    tracker.AutoTracker.LatestViewAction.Invoke();
-                }
+                tracker.AutoTracker.SetLatestViewAction("UpdateLightWorldRewards", UpdateLightWorldRewards);
+                return true;
             }
             else if (currentRegion is DarkWorldNorthWest or DarkWorldNorthEast or DarkWorldSouth or DarkWorldMire or DarkWorldDeathMountainEast or DarkWorldDeathMountainWest && !_darkWorldUpdated)
             {
-                tracker.AutoTracker.LatestViewAction = new AutoTrackerViewedAction(UpdateDarkWorldRewards);
-                if (tracker.Options.AutoSaveLookAtEvents)
-                {
-                    tracker.AutoTracker.LatestViewAction.Invoke();
-                }
+                tracker.AutoTracker.SetLatestViewAction("UpdateDarkWorldRewards", UpdateDarkWorldRewards);
+                return true;
             }
 
-            return true;
+            return false;
         }
         return false;
     }

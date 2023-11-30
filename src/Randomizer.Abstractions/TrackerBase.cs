@@ -665,6 +665,17 @@ public abstract class TrackerBase
     public abstract void MarkLocation(Location location, Item item, float? confidence = null, bool autoTracked = false);
 
     /// <summary>
+    /// Marks an item at the specified location.
+    /// </summary>
+    /// <param name="location">The location to mark.</param>
+    /// <param name="item">The item that is found at <paramref name="location"/>.</param>
+    /// <param name="confidence">The speech recognition confidence.</param>
+    /// <param name="autoTracked">If the marked location was auto tracked</param>
+    /// <param name="metadata">The metadata of the item</param>
+    public abstract void MarkLocation(Location location, ItemType item, float? confidence = null,
+        bool autoTracked = false, ItemData? metadata = null);
+
+    /// <summary>
     /// Pegs a Peg World peg.
     /// </summary>
     /// <param name="confidence">The speech recognition confidence.</param>

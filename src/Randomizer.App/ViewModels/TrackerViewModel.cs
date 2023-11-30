@@ -108,14 +108,14 @@ namespace Randomizer.App.ViewModels
         private IEnumerable<MarkedLocationViewModel> GetDummyMarkedLocations()
         {
             var world = new World(new Config(), "", 0, "");
-            var item = new Item(ItemType.XRay, world, "X-Ray Scope");
+            var item = new Item(ItemType.XRay, world);
             yield return new MarkedLocationViewModel(
                 _syncer.World.LightWorldSouth.Library,
                 item,
                 null,
                 _syncer);
 
-            item = new Item(ItemType.XRay, world, "Bow");
+            item = new Item(ItemType.XRay, world);
             yield return new MarkedLocationViewModel(
                 _syncer.World.FindLocation(LocationId.KingZora),
                 item,

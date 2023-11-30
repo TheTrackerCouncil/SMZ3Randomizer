@@ -920,6 +920,46 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 },
                 new ItemData()
                 {
+                    Item = "Small Key",
+                    Name = new("Small Key"),
+                    InternalItemType = ItemType.Key,
+                    Multiple = false,
+                    Hints = new("It opens doors."),
+                    Image = "key.png",
+                    PedestalHints = new("A small key to somewhere"),
+                },
+                new ItemData()
+                {
+                    Item = "Big Key",
+                    Name = new("Big Key"),
+                    InternalItemType = ItemType.BigKey,
+                    Multiple = false,
+                    Hints = new("It opens doors."),
+                    Image = "lttp_big_key.png",
+                    PedestalHints = new("A big key to somewhere"),
+                },
+                new ItemData()
+                {
+                    Item = "Map",
+                    Name = new("Map"),
+                    InternalItemType = ItemType.Map,
+                    Multiple = false,
+                    Hints = new("It helps you find a place."),
+                    Image = "map_full.png",
+                    PedestalHints = new("A piece of paper with some floor plans"),
+                },
+                new ItemData()
+                {
+                    Item = "Compass",
+                    Name = new("Compass"),
+                    InternalItemType = ItemType.Compass,
+                    Multiple = false,
+                    Hints = new("It points you to the boss."),
+                    Image = "compass.png",
+                    PedestalHints = new("A tool that points toward the boss"),
+                },
+                new ItemData()
+                {
                     Item = "Grappling Beam",
                     Name = new("Grappling Beam", "Grapple Beam", "Grapple"),
                     InternalItemType = ItemType.Grapple,
