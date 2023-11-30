@@ -43,20 +43,12 @@ public class ViewedMedallion : IZeldaStateCheck
 
         if (!_mireUpdated && currentState.OverworldScreen == 112 && x is >= 172 and <= 438 && y is >= 3200 and <= 3432)
         {
-            tracker.AutoTracker.LatestViewAction = new AutoTrackerViewedAction(MarkMiseryMireMedallion);
-            if (tracker.Options.AutoSaveLookAtEvents)
-            {
-                tracker.AutoTracker.LatestViewAction.Invoke();
-            }
+            tracker.AutoTracker.SetLatestViewAction("MarkMiseryMireMedallion", MarkMiseryMireMedallion);
             return true;
         }
         else if (!_turtleRockUpdated && currentState.OverworldScreen == 71 && x is >= 3708 and <= 4016 && y is >= 128 and <= 368)
         {
-            tracker.AutoTracker.LatestViewAction = new AutoTrackerViewedAction(MarkTurtleRockMedallion);
-            if (tracker.Options.AutoSaveLookAtEvents)
-            {
-                tracker.AutoTracker.LatestViewAction.Invoke();
-            }
+            tracker.AutoTracker.SetLatestViewAction("MarkTurtleRockMedallion", MarkTurtleRockMedallion);
             return true;
         }
 

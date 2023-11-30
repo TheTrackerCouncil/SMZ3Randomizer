@@ -350,14 +350,22 @@ public class AutoTracker : AutoTrackerBase
         _sendActions.Enqueue(action);
     }
 
-    public override void SetLatestViewAction(Action action)
+    public override void SetLatestViewAction(string key, Action action)
     {
         if (TrackerBase.Options.AutoSaveLookAtEvents)
         {
+            if (LatestViewActionKey == key)
+            {
+                return;
+            }
+
+            LatestViewActionKey = key;
+
             Task.Factory.StartNew(() =>
             {
                 Thread.Sleep(TimeSpan.FromSeconds(0.5));
                 action.Invoke();
+                LatestViewActionKey = null;
             });
         }
         else

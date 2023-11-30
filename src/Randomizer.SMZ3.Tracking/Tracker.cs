@@ -52,6 +52,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     private readonly ITrackerStateService _stateService;
     private readonly IWorldService _worldService;
     private readonly ITrackerTimerService _timerService;
+    private readonly IMetadataService _metadataService;
     private readonly SpeechRecognitionServiceBase _recognizer;
     private bool _disposed;
     private string? _lastSpokenText;
@@ -80,6 +81,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     /// <param name="worldService"></param>
     /// <param name="timerService"></param>
     /// <param name="speechRecognitionService"></param>
+    /// <param name="metadataService"></param>
     public Tracker(IWorldAccessor worldAccessor,
         TrackerModuleFactory moduleFactory,
         IChatClient chatClient,
@@ -92,7 +94,8 @@ public sealed class Tracker : TrackerBase, IDisposable
         ITrackerStateService stateService,
         IWorldService worldService,
         ITrackerTimerService timerService,
-        SpeechRecognitionServiceBase speechRecognitionService)
+        SpeechRecognitionServiceBase speechRecognitionService,
+        IMetadataService metadataService)
     {
         if (trackerOptions.Options == null)
             throw new InvalidOperationException("Tracker options have not yet been activated.");
@@ -130,6 +133,7 @@ public sealed class Tracker : TrackerBase, IDisposable
 
         // Initialize the speech recognition engine
         _recognizer = speechRecognitionService;
+        _metadataService = metadataService;
         if (OperatingSystem.IsWindows())
         {
             _recognizer.SpeechRecognized += Recognizer_SpeechRecognized;
@@ -1014,7 +1018,7 @@ public sealed class Tracker : TrackerBase, IDisposable
             {
                 if (stateResponse)
                 {
-                    GiveLocationComment(item, location, isTracking: true, confidence);
+                    GiveLocationComment(item.Type, location, isTracking: true, confidence, item.Metadata);
                 }
 
                 if (tryClear)
@@ -1930,10 +1934,28 @@ public sealed class Tracker : TrackerBase, IDisposable
     /// <param name="autoTracked">If the marked location was auto tracked</param>
     public override void MarkLocation(Location location, Item item, float? confidence = null, bool autoTracked = false)
     {
-        var locationName = location.Metadata.Name;
-        GiveLocationComment(item, location, isTracking: false, confidence);
+        MarkLocation(location, item.Type, confidence, autoTracked, item.Metadata);
+    }
 
-        if (item.Type == ItemType.Nothing)
+    /// <summary>
+    /// Marks an item at the specified location.
+    /// </summary>
+    /// <param name="location">The location to mark.</param>
+    /// <param name="item">
+    /// The item that is found at <paramref name="location"/>.
+    /// </param>
+    /// <param name="confidence">The speech recognition confidence.</param>
+    /// <param name="autoTracked">If the marked location was auto tracked</param>
+    /// <param name="metadata">The metadata of the item</param>
+    public override void MarkLocation(Location location, ItemType item, float? confidence = null, bool autoTracked = false, ItemData? metadata = null)
+    {
+        var locationName = location.Metadata.Name;
+
+        metadata ??= _metadataService.Item(item);
+
+        GiveLocationComment(location.Item.Type, location, isTracking: false, confidence, metadata);
+
+        if (item == ItemType.Nothing)
         {
             Clear(location);
             Say(Responses.LocationMarkedAsBullshit.Format(locationName));
@@ -1941,8 +1963,8 @@ public sealed class Tracker : TrackerBase, IDisposable
         else if (location.State.MarkedItem != null)
         {
             var oldType = location.State.MarkedItem;
-            location.State.MarkedItem = item.Type;
-            Say(Responses.LocationMarkedAgain.Format(locationName, item.Name, oldType.GetDescription()));
+            location.State.MarkedItem = item;
+            Say(x => x.LocationMarkedAgain, locationName, metadata?.Name ?? item.GetDescription(), oldType.GetDescription());
             if (!autoTracked)
             {
                 AddUndo(() => location.State.MarkedItem = oldType);
@@ -1950,8 +1972,8 @@ public sealed class Tracker : TrackerBase, IDisposable
         }
         else
         {
-            location.State.MarkedItem = item.Type;
-            Say(Responses.LocationMarked.Format(locationName, item.Name));
+            location.State.MarkedItem = item;
+            Say(x => x.LocationMarked, locationName, metadata?.Name ?? item.GetDescription());
             if (!autoTracked)
             {
                 AddUndo(() => location.State.MarkedItem = null);
@@ -2385,8 +2407,10 @@ public sealed class Tracker : TrackerBase, IDisposable
         return null;
     }
 
-    private void GiveLocationComment(Item item, Location location, bool isTracking, float? confidence)
+    private void GiveLocationComment(ItemType item, Location location, bool isTracking, float? confidence, ItemData? metadata)
     {
+        metadata ??= _metadataService.Item(item);
+
         // If the plando config specifies a specific line for this location, say it
         if (World.Config.PlandoConfig?.TrackerLocationLines.ContainsKey(location.ToString()) == true)
         {
@@ -2394,7 +2418,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         }
         // Give some sass if the user tracks or marks the wrong item at a
         // location unless the user is clearing a useless item like missiles
-        else if (location.Item.Type != ItemType.Nothing && item.Type != location.Item.Type && (item.Type != ItemType.Nothing || location.Item.Metadata.IsProgression(World.Config)))
+        else if (location.Item.Type != ItemType.Nothing && !item.IsEquivalentTo(location.Item.Type) && (item != ItemType.Nothing || location.Item.Metadata.IsProgression(World.Config)))
         {
             if (confidence == null || confidence < Options.MinimumSassConfidence)
                 return;
@@ -2402,18 +2426,18 @@ public sealed class Tracker : TrackerBase, IDisposable
             var actualItemName = ItemService.GetName(location.Item.Type);
             if (HintsEnabled) actualItemName = "another item";
 
-            Say(Responses.LocationHasDifferentItem?.Format(item.Metadata.NameWithArticle, actualItemName));
+            Say(Responses.LocationHasDifferentItem?.Format(metadata?.NameWithArticle ?? item.GetDescription(), actualItemName));
         }
         else
         {
-            if (item.Type == location.VanillaItem && item.Type != ItemType.Nothing)
+            if (item == location.VanillaItem && item != ItemType.Nothing)
             {
                 Say(x => x.TrackedVanillaItem);
                 return;
             }
 
             var locationInfo = location.Metadata;
-            var isJunk = item.Metadata.IsJunk(World.Config);
+            var isJunk = metadata?.IsJunk(World.Config) ?? true;
             if (isJunk)
             {
                 if (!isTracking && locationInfo.WhenMarkingJunk?.Count > 0)

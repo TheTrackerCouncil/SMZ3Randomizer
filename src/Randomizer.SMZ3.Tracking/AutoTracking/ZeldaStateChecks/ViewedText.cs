@@ -53,11 +53,11 @@ public class ViewedText : IZeldaStateCheck
 
         if (currentState.CurrentRoom == 261 && !_greenPendantUpdated && currentState.IsWithinRegion(2650, 8543, 2692, 8594))
         {
-            tracker.AutoTracker.SetLatestViewAction(MarkGreenPendantDungeons);
+            tracker.AutoTracker.SetLatestViewAction("MarkGreenPendantDungeons", MarkGreenPendantDungeons);
         }
         else if (currentState.CurrentRoom == 284 && !_redCrystalsUpdated && currentState.IsWithinRegion(6268, 9070, 6308, 9122))
         {
-            tracker.AutoTracker.SetLatestViewAction(MarkRedCrystalDungeons);
+            tracker.AutoTracker.SetLatestViewAction("MarkRedCrystalDungeons", MarkRedCrystalDungeons);
         }
         else if (_hintTiles.TryGetValue(currentState.CurrentRoom, out var hintTile) &&
                  !_viewedHintTileRooms.Contains(hintTile.Room) && currentState.IsWithinRegion(hintTile.TopLeftX,
@@ -65,7 +65,7 @@ public class ViewedText : IZeldaStateCheck
         {
             _lastHintTile = hintTile;
             tracker.LastViewedHintTile = World.HintTiles.First(x => x.HintTileCode == _lastHintTile.HintTileKey);
-            tracker.AutoTracker.SetLatestViewAction(MarkHintTileAsViewed);
+            tracker.AutoTracker.SetLatestViewAction("MarkHintTileAsViewed", MarkHintTileAsViewed);
         }
 
         return false;

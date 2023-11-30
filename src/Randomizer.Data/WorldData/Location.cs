@@ -84,7 +84,7 @@ namespace Randomizer.Data.WorldData
             _trackerLogic = trackerLogic ?? (_ => true);
             Metadata = metadata?.Location(id) ?? new LocationInfo(id, name);
             State = trackerState?.LocationStates.First(x => x.LocationId == id && x.WorldId == World.Id) ?? new TrackerLocationState();
-            Item = new Item(ItemType.Nothing, region.World, "");
+            Item = new Item(ItemType.Nothing, region.World);
         }
 
         /// <summary>

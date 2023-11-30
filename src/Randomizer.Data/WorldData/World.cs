@@ -93,11 +93,6 @@ namespace Randomizer.Data.WorldData
             Rooms = Regions.SelectMany(x => x.Rooms).ToImmutableList();
             State = trackerState ?? new TrackerState();
             ItemPools = new WorldItemPools(this);
-
-            /*if (metadata != null && trackerState != null)
-            {
-                LoadAdditionalData(metadata, trackerState);
-            }*/
         }
 
         public Config Config { get; }
@@ -250,49 +245,6 @@ namespace Randomizer.Data.WorldData
             {
                 var newType = bottleTypes.Random(rnd);
                 bottleItem.UpdateItemType(newType);
-            }
-        }
-
-        private void LoadAdditionalData(IMetadataService metadata, TrackerState trackerState)
-        {
-            foreach (var itemMetadata in metadata.Items.Where(m => !LocationItems.Any(i => i.Is(m.InternalItemType, m.Item))))
-            {
-                var itemState = trackerState.ItemStates.FirstOrDefault(s =>
-                    s.ItemName == itemMetadata.Item && s.Type == itemMetadata.InternalItemType);
-
-                if (itemState == null)
-                {
-                    itemState = new TrackerItemState
-                    {
-                        ItemName = itemMetadata.Item,
-                        Type = itemMetadata.InternalItemType,
-                        TrackerState = trackerState,
-                        WorldId = Id
-                    };
-                    trackerState.ItemStates.Add(itemState);
-                }
-
-                TrackerItems.Add(new Item(itemMetadata.InternalItemType, this, itemMetadata.Item, itemMetadata, itemState));
-            }
-
-            foreach (var bossMetadata in metadata.Bosses.Where(m => !GoldenBosses.Any(b => b.Is(m.Type, m.Boss))))
-            {
-                var bossState = trackerState.BossStates.FirstOrDefault(s =>
-                    s.BossName == bossMetadata.Boss && s.Type == bossMetadata.Type);
-
-                if (bossState == null)
-                {
-                    bossState = new TrackerBossState
-                    {
-                        BossName = bossMetadata.Boss,
-                        Type = bossMetadata.Type,
-                        TrackerState = trackerState,
-                        WorldId = Id,
-                    };
-                    trackerState.BossStates.Add(bossState);
-                }
-
-                TrackerBosses.Add(new Boss(bossMetadata.Type, this, bossMetadata.Boss, bossMetadata, bossState));
             }
         }
     }

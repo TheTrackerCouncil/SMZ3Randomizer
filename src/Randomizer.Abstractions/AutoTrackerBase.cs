@@ -62,6 +62,11 @@ public abstract class AutoTrackerBase
     public AutoTrackerViewedAction? LatestViewAction { get; set; }
 
     /// <summary>
+    /// The unique key for the auto tracker viewed action to avoid duplicates
+    /// </summary>
+    public string? LatestViewActionKey { get; set; }
+
+    /// <summary>
     /// If a connector is currently enabled
     /// </summary>
     public abstract bool IsEnabled { get; }
@@ -100,8 +105,9 @@ public abstract class AutoTrackerBase
     /// <summary>
     /// Sets the latest view action to use by voice command, or if specified in the options, automatically execute it
     /// </summary>
-    /// <param name="action"></param>
-    public abstract void SetLatestViewAction(Action action);
+    /// <param name="key">Unique key for the action type</param>
+    /// <param name="action">The viewed action</param>
+    public abstract void SetLatestViewAction(string key, Action action);
 
     /// <summary>
     /// Invokes the AutoTrackerEnabled event

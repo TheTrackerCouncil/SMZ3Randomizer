@@ -79,5 +79,78 @@ namespace Randomizer.Shared.Enums
 
             return true;
         }
+
+        /// <summary>
+        /// Returns if the two item types are the same or have the same category (Eastern Palace Big Key & Big Key)
+        /// </summary>
+        /// <param name="itemType">The type of item</param>
+        /// <param name="other">The type to compare to</param>
+        /// <returns>If the two items are equivalent</returns>
+        public static bool IsEquivalentTo(this ItemType itemType, ItemType? other)
+        {
+            if (itemType == other)
+            {
+                return true;
+            }
+            else if (other == null)
+            {
+                return false;
+            }
+            else if (itemType.IsInCategory(ItemCategory.Bottle) && other.Value.IsInCategory(ItemCategory.Bottle))
+            {
+                return true;
+            }
+            else if (itemType.IsInCategory(ItemCategory.SmallKey) && other.Value.IsInCategory(ItemCategory.SmallKey))
+            {
+                return true;
+            }
+            else if (itemType.IsInCategory(ItemCategory.BigKey) && other.Value.IsInCategory(ItemCategory.BigKey))
+            {
+                return true;
+            }
+            else if (itemType.IsInCategory(ItemCategory.Map) && other.Value.IsInCategory(ItemCategory.Map))
+            {
+                return true;
+            }
+            else if (itemType.IsInCategory(ItemCategory.Compass) && other.Value.IsInCategory(ItemCategory.Compass))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Returns the generic form of the item type
+        /// </summary>
+        /// /// &lt;param name="itemType"&gt;The type of item&lt;/param&gt;
+        public static ItemType GetGenericType(this ItemType itemType)
+        {
+            if (!itemType.IsInAnyCategory(ItemCategory.Bottle, ItemCategory.Compass, ItemCategory.Map,
+                    ItemCategory.SmallKey, ItemCategory.BigKey))
+            {
+                return itemType;
+            }
+            else if (itemType.IsInCategory(ItemCategory.Bottle))
+            {
+                return ItemType.Bottle;
+            }
+            else if (itemType.IsInCategory(ItemCategory.Map))
+            {
+                return ItemType.Map;
+            }
+            else if (itemType.IsInCategory(ItemCategory.Compass))
+            {
+                return ItemType.Compass;
+            }
+            else if (itemType.IsInCategory(ItemCategory.SmallKey))
+            {
+                return ItemType.Key;
+            }
+            else
+            {
+                return ItemType.BigKey;
+            }
+        }
     }
 }
