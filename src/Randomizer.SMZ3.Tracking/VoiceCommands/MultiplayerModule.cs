@@ -123,10 +123,7 @@ public class MultiplayerModule : TrackerModule
             _multiplayerGameService.LocalPlayer.HasForfeited) return;
         if (args.DidComplete)
         {
-            if (args.SendItemsOnComplete)
-                TrackerBase.Say(x => x.Multiplayer.OtherPlayerBeatGame, args.PhoneticName);
-            else
-                TrackerBase.Say(x => x.Multiplayer.OtherPlayerBeatGameNoItems, args.PhoneticName);
+            TrackerBase.Say(x => x.Multiplayer.OtherPlayerBeatGame, args.PhoneticName);
         }
         else if (args.DidForfeit)
         {

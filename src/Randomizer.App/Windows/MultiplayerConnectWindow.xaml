@@ -97,11 +97,6 @@
                       Content="Async/multi-session game"
                       IsEnabled="{Binding IsCreatingGame}"
                       ToolTip="Saves the game to a database on the server so that the game can be continued even when the server does not receive updates from any players."/>
-            <CheckBox IsChecked="{Binding SendItemsOnComplete}"
-                      Margin="5 5 0 0"
-                      Content="Auto send items on beating the game"
-                      IsEnabled="{Binding IsCreatingGame}"
-                      ToolTip="If items in a player's world should be automatically distributed to other players after beating both Ganon and Mother Brain and entering the Triforce room or entering the ship."/>
             <CheckBox IsChecked="{Binding DeathLink}"
                       Margin="5 5 0 0"
                       Content="Death link (experimental)"
