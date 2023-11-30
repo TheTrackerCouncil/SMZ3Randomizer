@@ -2074,7 +2074,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     {
         if (region != CurrentRegion)
         {
-            if (resetTime && History.GetHistory().Count == 0)
+            if (resetTime && !History.GetHistory().Any(x => x is { LocationId: not null, IsUndone: false }))
             {
                 ResetTimer(true);
             }
