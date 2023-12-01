@@ -46,6 +46,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to write logging information.</param>
         /// <param name="randomizerConfigService">Service for retrieving the randomizer config for the world</param>
+        /// <param name="gameHintService">Service for getting hints for how important locations are</param>
         public SpoilerModule(TrackerBase tracker, IItemService itemService, ILogger<SpoilerModule> logger, IWorldService worldService, IRandomizerConfigService randomizerConfigService, IGameHintService gameHintService)
             : base(tracker, itemService, worldService, logger)
         {

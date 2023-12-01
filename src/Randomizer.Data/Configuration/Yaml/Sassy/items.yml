@@ -663,6 +663,10 @@
     "20":
     - Text: Okay, you have enough missiles now
     "21":
+    "40":
+    - Text: Someone must have a lot of time on their hands to get all of the missle packs
+    - Text: Why do you even need 200 missles?
+    - Text: I guess this many missles will be useful if you miss Phantoon a lot
     "69":
     - Text: Nice
     "70":
@@ -699,9 +703,13 @@
     - Text: Don't you have enough super missiles now?
     - Text: That's a lot of soup!
     - Text: Who needs the charge beam now?
-    - Text: Do you think 50 soup can replace the hole of content in your heart?
+    - Text: Do you think 50 soup can replace the hole of con-tent in your heart?
       Weight: 0.5
-    "13":
+    "11":
+    "16":
+    - Text: Good job consuming all of the soup.
+    - Text: I think I feel a bit bad for mother brain with you having 80 soup.
+    - Text: I can't believe you got all 80 super missiles. Now get all of the missile packs.
 - Item: Power Bomb
   Name:
   - Text: Explosive Hamburger
@@ -734,4 +742,8 @@
     - Text: Can you even eat that many burgs?
     - Text: You should have enough now, I think
     "5":
+    "10":
+    - Text: How small does a burger have to be for you to eat 50 of them?
+    - Text: Picked up enough power bombs to destroy Zebes with
+    - Text: You could have stopped at 10 or 15 power bombs, you know. 20 max.
 

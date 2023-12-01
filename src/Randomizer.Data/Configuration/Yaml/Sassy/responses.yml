@@ -865,6 +865,8 @@ Chat:
   - Text: The council would like to inform you that trying to sneak content past them is a serious crime. This has been added to your file. Don't worry about who this "council" is.
   - Text: The racing council regrets to inform you that your application for additional content has been denied and also if anybody has any job openings to please let them know.
   - Text: Ouch. The chat did not think that was some hashtag content. I can see the metrics dropping.
+  - Text: Almost con-tent means it wasn't con-tent!
+    Weight: 0.5
   PollComplete:
   - Text: And the results are now in.
   - Text: Beep boop bop. Those are my poll noises
