@@ -704,7 +704,7 @@ public class MultiplayerClientService
         }
 
         Players?.Add(playerState);
-        PlayerUpdated?.Invoke(playerState, previous, playerState.Guid == CurrentGameGuid);
+        PlayerUpdated?.Invoke(playerState, previous, playerState.Guid == CurrentPlayerGuid);
     }
 
     private bool VerifyConnection()

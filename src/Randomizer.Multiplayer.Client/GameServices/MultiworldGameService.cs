@@ -13,12 +13,10 @@ namespace Randomizer.Multiplayer.Client.GameServices;
 public class MultiworldGameService : MultiplayerGameTypeService
 {
     private ITrackerStateService _trackerStateService;
-    private ILogger<MultiworldGameService> _logger;
 
-    public MultiworldGameService(Smz3Randomizer randomizer, Smz3MultiplayerRomGenerator multiplayerRomGenerator,  MultiplayerClientService client, ITrackerStateService trackerStateService, ILogger<MultiworldGameService> logger) : base(randomizer, multiplayerRomGenerator, client)
+    public MultiworldGameService(Smz3Randomizer randomizer, Smz3MultiplayerRomGenerator multiplayerRomGenerator,  MultiplayerClientService client, ITrackerStateService trackerStateService, ILogger<MultiplayerGameTypeService> logger) : base(randomizer, multiplayerRomGenerator, client, logger)
     {
         _trackerStateService = trackerStateService;
-        _logger = logger;
     }
 
     /// <summary>

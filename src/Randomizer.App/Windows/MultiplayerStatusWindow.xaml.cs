@@ -27,6 +27,7 @@ namespace Randomizer.App.Windows
         private readonly MultiplayerGameService _multiplayerGameService;
         private readonly RomGenerationService _romGenerationService;
         private readonly SpriteService _spriteService;
+        private string _previousError = "";
 
         public MultiplayerStatusWindow(MultiplayerClientService multiplayerClientService,
             MultiplayerGameService multiplayerGameService, RomGenerationService romGenerationService, SpriteService spriteService)
@@ -154,11 +155,10 @@ namespace Randomizer.App.Windows
         {
             if (!Dispatcher.CheckAccess())
             {
-                MultiplayerClientServiceError(error, exception);
+                Dispatcher.Invoke(() => MultiplayerClientServiceError(error, exception));
                 return;
             }
-
-            Dispatcher.Invoke(() => DisplayError(error));
+            DisplayError(error);
         }
 
         private void MultiplayerClientServiceOnPlayerListUpdated()
@@ -184,6 +184,11 @@ namespace Randomizer.App.Windows
 
         protected void UpdatePlayerList()
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(UpdatePlayerList);
+                return;
+            }
             Model.UpdateList(_multiplayerClientService.Players ?? new List<MultiplayerPlayerState>(), _multiplayerClientService.LocalPlayer);
             CheckPlayerConfigs();
         }
@@ -255,8 +260,14 @@ namespace Randomizer.App.Windows
             ParentPanel.CopyTextToClipboard(_multiplayerClientService.GameUrl ?? "");
         }
 
-        private MessageBoxResult DisplayError(string message)
+        private MessageBoxResult? DisplayError(string message)
         {
+            if (message == _previousError)
+            {
+                return null;
+            }
+
+            _previousError = message;
             return DisplayMessage(message, MessageBoxButton.OK, MessageBoxImage.Error);
         }
 

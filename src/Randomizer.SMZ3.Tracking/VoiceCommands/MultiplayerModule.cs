@@ -88,7 +88,14 @@ public class MultiplayerModule : TrackerModule
         if (TrackerBase.AutoTracker?.HasValidState != true) return;
         if (args.PlayerId == null || args.ItemsToGive == null || args.ItemsToGive.Count == 0 || args.IsLocalPlayer) return;
         var items = args.ItemsToGive.Select(x => ItemService.FirstOrDefault(x)).NonNull().ToList();
+
+        Logger.LogInformation("Giving player {Count} items", items.Count());
         TrackerBase.GameService!.TryGiveItems(items, args.PlayerId.Value);
+
+        if ((args.DidForfeit || args.DidComplete) && WorldService.Worlds.Any(x => x.Id == args.PlayerId))
+        {
+            WorldService.Worlds.First(x => x.Id == args.PlayerId).HasCompleted = true;
+        }
 
         foreach (var locationState in args.UpdatedLocationStates)
         {

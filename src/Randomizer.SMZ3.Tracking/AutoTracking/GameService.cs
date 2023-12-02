@@ -542,7 +542,8 @@ public class GameService : TrackerModule, IGameService
 
         var otherCollectedItems = WorldService.Worlds.SelectMany(x => x.Locations)
             .Where(x => x.State.ItemWorldId == TrackerBase.World.Id && x.State.WorldId != TrackerBase.World.Id &&
-                        x.State.Autotracked).Select(x => (x.State.Item, x.State.WorldId)).ToList();
+                        x.State.Autotracked && (!x.World.HasCompleted || !x.Item.Type.IsInCategory(ItemCategory.IgnoreOnMultiplayerCompletion)))
+            .Select(x => (x.State.Item, x.State.WorldId)).ToList();
 
         foreach (var item in previouslyGiftedItems)
         {
