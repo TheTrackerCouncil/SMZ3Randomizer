@@ -99,6 +99,7 @@ namespace Randomizer.Data.WorldData
         public string Player { get; }
         public string Guid { get; }
         public int Id { get; }
+        public bool HasCompleted { get; set; }
         public bool IsLocalWorld { get; set; }
         public IEnumerable<Region> Regions { get; }
         public IEnumerable<Room> Rooms { get; }

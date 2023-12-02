@@ -1,4 +1,5 @@
-﻿using Randomizer.Data.Options;
+﻿using Microsoft.Extensions.Logging;
+using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Multiplayer.Client.EventHandlers;
@@ -18,14 +19,17 @@ namespace Randomizer.Multiplayer.Client.GameServices;
 /// </summary>
 public abstract class MultiplayerGameTypeService : IDisposable
 {
-    protected MultiplayerGameTypeService(Smz3Randomizer randomizer, Smz3MultiplayerRomGenerator multiplayerRomGenerator, MultiplayerClientService client)
+    protected MultiplayerGameTypeService(Smz3Randomizer randomizer, Smz3MultiplayerRomGenerator multiplayerRomGenerator, MultiplayerClientService client, ILogger<MultiplayerGameTypeService> logger)
     {
         Randomizer = randomizer;
         Client = client;
         MultiplayerRomGenerator = multiplayerRomGenerator;
+        Logger = logger;
     }
 
     public TrackerState? TrackerState { get; set; }
+
+    protected ILogger<MultiplayerGameTypeService> Logger { get; set; }
 
     protected Smz3Randomizer Randomizer { get; init; }
 
@@ -365,11 +369,14 @@ public abstract class MultiplayerGameTypeService : IDisposable
     {
         if (TrackerState == null || isLocalPlayer || player.Locations == null || player.Items == null || player.Bosses == null || player.Dungeons == null) return null;
 
+        var didEndGame = player.HasForfeited || player.HasCompleted;
+
         // Gather data for locations that have been cleared
-        var clearedLocationIds = player.Locations.Where(x => x.Tracked || player.HasForfeited || player.HasCompleted).Select(x => x.LocationId).ToList();
+        var clearedLocationIds = player.Locations.Where(x => x.Tracked || didEndGame).Select(x => x.LocationId).ToList();
         var updatedLocationStates = TrackerState.LocationStates.Where(x =>
             x.WorldId == player.WorldId && !x.Autotracked && clearedLocationIds.Contains(x.LocationId)).ToList();
-        var itemsToGive = updatedLocationStates.Where(x => x.ItemWorldId == LocalPlayerId).Select(x => x.Item).ToList();
+        var itemsToGive = updatedLocationStates.Where(x => x.ItemWorldId == LocalPlayerId).Select(x => x.Item)
+            .Where(x => !x.IsInCategory(ItemCategory.IgnoreOnMultiplayerCompletion)).ToList();
 
         // Gather items that have been updated
         var trackedItems = player.Items.Where(x => x.TrackingValue > 0).Select(x => x.Item).ToList();
@@ -487,7 +494,14 @@ public abstract class MultiplayerGameTypeService : IDisposable
         if (Client.LocalPlayer != null && TrackerState != null)
         {
             var world = GetPlayerWorldState(Client.LocalPlayer, TrackerState);
-            await Client.UpdatePlayerWorld(Client.LocalPlayer, world);
+            try
+            {
+                await Client.UpdatePlayerWorld(Client.LocalPlayer, world);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, "Unable to update player world");
+            }
         }
     }
 

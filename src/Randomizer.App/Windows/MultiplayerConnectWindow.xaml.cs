@@ -37,6 +37,7 @@ namespace Randomizer.App.Windows
         private readonly ILogger _logger;
         private readonly string _version;
         private readonly ICommunicator _communicator;
+        private string _previousError = "";
 
         public MultiplayerConnectWindow(MultiplayerClientService multiplayerClientService, ILogger<MultiplayerConnectWindow> logger, ICommunicator communicator)
         {
@@ -57,6 +58,11 @@ namespace Randomizer.App.Windows
 
         private void MultiplayerClientServiceError(string error, Exception? exception)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => MultiplayerClientServiceError(error, exception));
+                return;
+            }
             DisplayError(error);
         }
 
@@ -80,6 +86,7 @@ namespace Randomizer.App.Windows
             if (!Dispatcher.CheckAccess())
             {
                 Dispatcher.Invoke(MultiplayerClientServiceGameJoined);
+                return;
             }
             DialogResult = true;
             Close();
@@ -182,6 +189,12 @@ namespace Randomizer.App.Windows
 
         private void DisplayError(string message)
         {
+            if (message == _previousError)
+            {
+                return;
+            }
+
+            _previousError = message;
             if (Dispatcher.CheckAccess())
             {
                 MessageBox.Show(this, message, "SMZ3 Cas' Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);

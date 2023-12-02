@@ -345,35 +345,35 @@ namespace Randomizer.Shared
         HeartContainerRefill = 0x3F,
 
         [Description("Three Bombs")]
-        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.Plentiful)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.Plentiful, ItemCategory.IgnoreOnMultiplayerCompletion)]
         ThreeBombs = 0x28,
 
         [Description("Single Arrow")]
-        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.IgnoreOnMultiplayerCompletion)]
         Arrow = 0x43,
 
         [Description("Ten Arrows")]
-        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.IgnoreOnMultiplayerCompletion)]
         TenArrows = 0x44,
 
         [Description("One Rupee")]
-        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.IgnoreOnMultiplayerCompletion)]
         OneRupee = 0x34,
 
         [Description("Five Rupees")]
-        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.IgnoreOnMultiplayerCompletion)]
         FiveRupees = 0x35,
 
         [Description("Twenty Rupees")]
-        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.Plentiful)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.Plentiful, ItemCategory.IgnoreOnMultiplayerCompletion)]
         TwentyRupees = 0x36,
 
         [Description("Twenty Rupees")]
-        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.IgnoreOnMultiplayerCompletion)]
         TwentyRupees2 = 0x47,
 
         [Description("Fifty Rupees")]
-        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.IgnoreOnMultiplayerCompletion)]
         FiftyRupees = 0x41,
 
         [Description("One Hundred Rupees")]
