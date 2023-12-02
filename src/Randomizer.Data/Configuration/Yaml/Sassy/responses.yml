@@ -635,7 +635,7 @@ Hints:
   - Text: If you could use {2} on {0}, it would say <break strength='weak'/> '{1}'.
   - Text: If the item there was on the Master Sword Pedestal, it would say <break strength='weak'/> '{1}'.
   - Text: "'{1}' is what {2} would tell you."
-  - Text: Let me consult {2}. <break strength='1s'/> {1}.
+  - Text: Let me consult {2}. <break time='1s'/> {1}.
   AreaAlreadyCleared:
   - Text: You already got everything in {0}.
   - Text: If there was anything good in {0} you already got it.

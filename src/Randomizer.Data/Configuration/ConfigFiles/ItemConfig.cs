@@ -1109,9 +1109,9 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 new ItemData()
                 {
                     Item = "Missile",
-                    Name = new("Missile", new("Missiles", 0), new("Missile pack", 0.2)),
+                    Name = new("Missile", new("Missiles", 0), new("Missile pack", 0.2), new("Miss-aisle", 0.2)),
                     InternalItemType = ItemType.Missile,
-                    Plural = new("Missiles", new("Missile packs", 0)),
+                    Plural = new("Missiles", new("Missile packs", 0), new("Miss-aisles", 0.2)),
                     Multiple = true,
                     CounterMultiplier = 5,
                     Hints = new("You probably already have a lot of it.", "It allows you to carry more of something"),

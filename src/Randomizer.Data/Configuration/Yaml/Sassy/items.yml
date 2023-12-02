@@ -649,24 +649,28 @@
   WhenTracked:
     "1":
     - Text: I have to count so manny of these
-    - Text: Missles. Good. Now you can get things done when I don't give you any beams
+    - Text: Missiles. Good. Now you can get things done when I don't give you any beams
     - Text: Time to blow some things up
+    - Text: Picked up your first miss-aisles. Or is that missiles? Whatever. Explosive arrows.
+      Weight: 0.2
+    - Text: I hope you don't miss with these miss-aisles.
+      Weight: 0.2
     "2":
-    - Text: Ten missles. Neat.
-    - Text: The second missle pack is always special
+    - Text: Ten missiles. Neat.
+    - Text: The second missile pack is always special
     - Text: More Missiles
     "3":
     "4":
     - Text: You need some of these, right?
-    - Text: Sometimes it feels like you only find missles in the game
+    - Text: Sometimes it feels like you only find missiles in the game
     "5":
     "20":
     - Text: Okay, you have enough missiles now
     "21":
     "40":
-    - Text: Someone must have a lot of time on their hands to get all of the missle packs
-    - Text: Why do you even need 200 missles?
-    - Text: I guess this many missles will be useful if you miss Phantoon a lot
+    - Text: Someone must have a lot of time on their hands to get all of the missile packs
+    - Text: Why do you even need 200 missiles?
+    - Text: I guess this many missiles will be useful if you miss Phantoon a lot
     "69":
     - Text: Nice
     "70":
