@@ -131,7 +131,7 @@ public class ViewedText : IZeldaStateCheck
 
         _tracker.UpdateHintTile(hintTile);
 
-        if (hintTile.State.HintState == HintState.Viewed)
+        if (hintTile.State.HintState == HintState.Viewed && hintTile.Locations?.Any() == true)
         {
             var locations = hintTile.Locations!.Select(x => World.FindLocation(x)).ToList();
             _pendingHintTiles.Add(hintTile, locations);
