@@ -78,6 +78,9 @@
     "2":
     - Text: You now have the bare mininum to kill Crocomire. Don't miss.
       Weight: 0.03
+    "16":
+    - Text: Okay, now I think you have enough super missiles for Crocomire
+      Weight: 0.1
 - Item: Fire Rod
   Name:
   - Text: Spicy Rod

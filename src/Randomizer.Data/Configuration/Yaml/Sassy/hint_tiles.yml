@@ -3,6 +3,10 @@
   - Text: 'I guess you''re too lazy to go there yourself? Fine. It says {0}'
   - Text: 'Can''t read it yourself? It says {0}'
   - Text: 'From what I''ve heard, it says {0}'
+  - Text: It says visit Shaktool.<break time='1s'/>Fine, it says {0}.
+    Weight: 0.2
+  - Text: It says it's time to go visit peg world.<break time='1s'/>Fine, it says {0}.
+    Weight: 0.2
 NoPreviousHintTile:
   - Text: You need to look at a hint tile before I can do that.
 ClearHintTileFailed:

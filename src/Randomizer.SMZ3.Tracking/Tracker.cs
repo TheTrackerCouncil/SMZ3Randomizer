@@ -59,7 +59,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     private readonly bool _alternateTracker;
     private readonly HashSet<SchrodingersString> _saidLines = new();
     private IEnumerable<ItemType>? _previousMissingItems;
-    private List<Location> _lastMarkedLocations;
+    private List<Location> _lastMarkedLocations = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Tracker"/> class.

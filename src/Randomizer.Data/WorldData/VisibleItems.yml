@@ -47,6 +47,22 @@
     BottomRightY: 7544
     Locations:
       - LumberjackTree
+  - Room: 0
+    OverworldScreen: 129
+    TopLeftX: 816
+    TopLeftY: 625
+    BottomRightX: 872
+    BottomRightY: 719
+    Locations:
+      - ZorasLedge
+  - Room: 263
+    OverworldScreen: 0
+    TopLeftX: 3700
+    TopLeftY: 8660
+    BottomRightX: 3708
+    BottomRightY: 8674
+    Locations:
+      - Library
 MetroidItems:
   - Room: 14
     TopLeftX: 37
@@ -55,3 +71,11 @@ MetroidItems:
     BottomRightY: 153
     Locations:
       - UpperNorfairCrocomireEscape
+  - Room: 189
+    TopLeftX: 100
+    TopLeftY: 500
+    BottomRightX: 155
+    BottomRightY: 535
+    Locations:
+      - CrateriaGauntletShaftRight
+      - CrateriaGauntletShaftLeft

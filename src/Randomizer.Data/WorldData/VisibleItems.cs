@@ -14,8 +14,8 @@ public class VisibleItems
         .WithNamingConvention(PascalCaseNamingConvention.Instance)
         .Build();
 
-    public List<VisibleItemZelda> ZeldaItems { get; set; }
-    public List<VisibleItemMetroid> MetroidItems { get; set; }
+    public List<VisibleItemZelda> ZeldaItems { get; set; } = new();
+    public List<VisibleItemMetroid> MetroidItems { get; set; } = new();
 
     public static VisibleItems GetVisibleItems()
     {

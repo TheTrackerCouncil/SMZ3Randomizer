@@ -10,7 +10,6 @@ using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Contracts;
-using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Text;
 
 namespace Randomizer.SMZ3.FileData.Patches;
@@ -235,7 +234,10 @@ public class ZeldaTextsPatch : RomPatch
         else if (hints.TryGetValue(key, out var hint))
         {
             var hintText = _gameHintService.GetHintTileText(hint, _data.World, _data.Worlds);
-            _stringTable.SetHintText(key, Dialog.GetGameSafeString(hintText));
+            if (!string.IsNullOrEmpty(hintText))
+            {
+                _stringTable.SetHintText(key, Dialog.GetGameSafeString(hintText));
+            }
         }
     }
 
