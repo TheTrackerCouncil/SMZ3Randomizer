@@ -82,5 +82,10 @@
         /// This is one of the bottle item types
         /// </summary>
         Bottle,
+
+        /// <summary>
+        /// If this should not be given out when completing multiplayer games
+        /// </summary>
+        IgnoreOnMultiplayerCompletion,
     }
 }
