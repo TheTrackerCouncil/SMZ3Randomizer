@@ -39,6 +39,11 @@ public class HintTileConfig : IMergeable<HintTileConfig>, IConfigFile<HintTileCo
     public SchrodingersString ViewedHintTile { get; set; } = new("Recorded that hint tile");
 
     /// <summary>
+    /// The response for asking about a hint tile when there aren't any generated hint tiles (plando or no hints)
+    /// </summary>
+    public SchrodingersString NoHintTiles { get; set; } = new("I'm sorry, but there are no hint tiles on file for this seed.");
+
+    /// <summary>
     /// Returns default hint tile information
     /// </summary>
     /// <returns></returns>

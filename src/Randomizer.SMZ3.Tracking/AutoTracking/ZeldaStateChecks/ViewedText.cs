@@ -59,7 +59,7 @@ public class ViewedText : IZeldaStateCheck
         {
             tracker.AutoTracker.SetLatestViewAction("MarkRedCrystalDungeons", MarkRedCrystalDungeons);
         }
-        else if (_hintTiles.TryGetValue(currentState.CurrentRoom, out var hintTile) &&
+        else if (World.HintTiles.Any() && _hintTiles.TryGetValue(currentState.CurrentRoom, out var hintTile) &&
                  !_viewedHintTileRooms.Contains(hintTile.Room) && currentState.IsWithinRegion(hintTile.TopLeftX,
                      hintTile.TopLeftY, hintTile.TopLeftX+15, hintTile.TopLeftY+1))
         {
