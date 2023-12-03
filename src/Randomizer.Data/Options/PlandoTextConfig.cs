@@ -83,4 +83,20 @@ public class PlandoTextConfig
 
     public string? HintTileSouthEastDarkworldCave { get; init; }
 
+    public bool HasHintTileText => !string.IsNullOrEmpty(HintTileEasternPalace) ||
+                                   !string.IsNullOrEmpty(HintTileTowerOfHeraFloor4) ||
+                                   !string.IsNullOrEmpty(HintTileSpectacleRock) ||
+                                   !string.IsNullOrEmpty(HintTileSwampEntrance) ||
+                                   !string.IsNullOrEmpty(HintTileThievesTownUpstairs) ||
+                                   !string.IsNullOrEmpty(HintTileMiseryMire) ||
+                                   !string.IsNullOrEmpty(HintTilePalaceOfDarkness) ||
+                                   !string.IsNullOrEmpty(HintTileDesertBonkTorchRoom) ||
+                                   !string.IsNullOrEmpty(HintTileCastleTower) ||
+                                   !string.IsNullOrEmpty(HintTileIceLargeRoom) ||
+                                   !string.IsNullOrEmpty(HintTileTurtleRock) ||
+                                   !string.IsNullOrEmpty(HintTileIceEntrance) ||
+                                   !string.IsNullOrEmpty(HintTileIceStalfosKnightsRoom) ||
+                                   !string.IsNullOrEmpty(HintTileTowerOfHeraEntrance) ||
+                                   !string.IsNullOrEmpty(HintTileSouthEastDarkworldCave);
+
 }

@@ -46,10 +46,18 @@ public class HintTileModule : TrackerModule
     {
         AddCommand("Hint Tile", GetHintTileRules(), (result) =>
         {
-            var hintTile = GetHintTileFromResult(result);
-            var text = _gameHintService.GetHintTileText(hintTile.PlayerHintTile, WorldService.World, WorldService.Worlds);
-            TrackerBase.Say(_hintTileConfig.RequestedHintTile, text);
-            TrackerBase.UpdateHintTile(hintTile.PlayerHintTile);
+            if (WorldService.World.HintTiles.Any())
+            {
+                var hintTile = GetHintTileFromResult(result);
+                var text = _gameHintService.GetHintTileText(hintTile.PlayerHintTile, WorldService.World, WorldService.Worlds);
+                TrackerBase.Say(_hintTileConfig.RequestedHintTile, text);
+                TrackerBase.UpdateHintTile(hintTile.PlayerHintTile);
+            }
+            else
+            {
+                TrackerBase.Say(_hintTileConfig.NoHintTiles);
+            }
+
         });
 
         AddCommand("Clear Hint Tile", GetClearHintTileRules(), (result) =>

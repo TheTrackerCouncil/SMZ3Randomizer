@@ -84,7 +84,7 @@ public class ZeldaTextsPatch : RomPatch
         yield return SetText(0x308400, StringTable.TriforceRoom,
             _gameLines.TriforceRoom, _plandoText.TriforceRoom, true);
 
-        if (data.World.HintTiles.Any())
+        if (data.World.HintTiles.Any() || _plandoText.HasHintTileText)
         {
             SetHintText();
         }
