@@ -110,3 +110,8 @@
     "1":
       - Text: Tracked bottle of hyper realistic blood
         Weight: 0.2
+- Item: Missile
+  WhenTracked:
+    "1":
+      - Text: I'd much prefer you to find Missile from Ace Attorney instead
+        Weight: 0.5

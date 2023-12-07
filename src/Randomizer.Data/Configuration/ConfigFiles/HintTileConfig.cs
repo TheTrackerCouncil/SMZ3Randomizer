@@ -34,9 +34,24 @@ public class HintTileConfig : IMergeable<HintTileConfig>, IConfigFile<HintTileCo
     public SchrodingersString ClearHintTileFailed { get; set; } = new("I can't do anything with that hint tile");
 
     /// <summary>
-    /// The response for viewing a hint tile with multiple locations
+    /// The response for viewing a hint tile with multiple locations that are neither mandatory or useless
     /// </summary>
     public SchrodingersString ViewedHintTile { get; set; } = new("Recorded that hint tile");
+
+    /// <summary>
+    /// The response for viewing a hint tile for a place that's mandatory
+    /// </summary>
+    public SchrodingersString ViewedHintTileMandatory { get; set; } = new("Recorded that hint tile");
+
+    /// <summary>
+    /// The response for viewing a hint tile for a place that's useless
+    /// </summary>
+    public SchrodingersString ViewedHintTileUseless { get; set; } = new("Recorded that hint tile");
+
+    /// <summary>
+    /// The response for viewing a hint tile with multiple locations that have already been cleared
+    /// </summary>
+    public SchrodingersString ViewedHintTileAlreadyVisited { get; set; } = new(new SchrodingersString.Possibility("", 0));
 
     /// <summary>
     /// The response for asking about a hint tile when there aren't any generated hint tiles (plando or no hints)

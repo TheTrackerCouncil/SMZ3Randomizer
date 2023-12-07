@@ -16,6 +16,18 @@ ClearHintTileFailed:
 # action (like viewing hint tiles for multiple locations)
 ViewedHintTile:
 
+# The list of possibilities for viewing a hint tile where there is at least
+# one mandatory location there
+ViewedHintTileMandatory:
+
+# The list of possibilities for viewing a hint tile where there are no
+# useful or mandatory items there
+ViewedHintTileUseless:
+
+# The list of possibilities for viewing a hint tile for locations you have
+# already cleared
+ViewedHintTileAlreadyVisited:
+
 # List of each of the hint tiles and their names. For the name, you do not
 # need to include the words "hint tile" or "telepathic tile"
 HintTiles:
