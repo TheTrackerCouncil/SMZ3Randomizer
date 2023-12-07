@@ -34,7 +34,7 @@ public class HintTileConfig : IMergeable<HintTileConfig>, IConfigFile<HintTileCo
     public SchrodingersString ClearHintTileFailed { get; set; } = new("I can't do anything with that hint tile");
 
     /// <summary>
-    /// The response for viewing a hint tile with multiple locations that are neighter mandatory or useless
+    /// The response for viewing a hint tile with multiple locations that are neither mandatory or useless
     /// </summary>
     public SchrodingersString ViewedHintTile { get; set; } = new("Recorded that hint tile");
 
