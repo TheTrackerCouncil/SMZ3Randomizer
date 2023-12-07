@@ -156,6 +156,10 @@ namespace Randomizer.Data.WorldData
         public WorldItemPools ItemPools { get; }
         public IEnumerable<PlayerHintTile> HintTiles { get; set; } = new List<PlayerHintTile>();
 
+        public IEnumerable<LocationId> ActiveHintTileLocations => HintTiles
+            .Where(x => x.State?.HintState == HintState.Viewed && x.Locations?.Any() == true && x.WorldId == Id)
+            .SelectMany(x => x.Locations!);
+
         public Location? LastClearedLocation { get; set; }
 
         public Location? FindLocation(string name, StringComparison comparisonType = StringComparison.Ordinal)

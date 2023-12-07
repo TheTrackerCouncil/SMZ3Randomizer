@@ -21,3 +21,8 @@
 - LocationNumber: 51
   Name:
   - Text: good luck missiles
+  # Floating Island
+- LocationNumber: 260
+  WhenMarkingProgression:
+    - Text: Where's a ladder when you need one? Or do you need a stepladder? I don't know the difference.
+      Weight: 0.2

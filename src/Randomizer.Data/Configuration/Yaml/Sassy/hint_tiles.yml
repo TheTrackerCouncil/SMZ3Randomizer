@@ -16,6 +16,20 @@ ViewedHintTile:
   - Text: Hopefully you will remember that one later.
   - Text: Writing that down for you.
   - Text: Maybe this seed will move by faster thanks to that hint tile.
+ViewedHintTileMandatory:
+  - Text: You better be line to {0} quickly.
+  - Text: Hopefully you can get to {0} soon.
+  - Text: Oh fun, you get to visit {0} this seed.
+  - Text: I suppose it's better to know this now.
+ViewedHintTileUseless:
+  - Text: Good. I didn't want to go to {0} anyway.
+  - Text: Aww, but I wanted to go to {0}. Oh well, logging it as useless.
+  - Text: Who knows? Maybe you could get some heart containers or e-tanks there so you don't die.
+  - Text: Yay, more places to skip. I want this to be over with.
+ViewedHintTileAlreadyVisited:
+  - Text: I bet you wish you had seen that hint tile sooner.
+  - Text: A bit too late for that hint tile now, huh?
+  - Text: Whoops. You were supposed to see that one sooner.
 HintTiles:
   - HintTileKey: telepathic_tile_eastern_palace
     Name:

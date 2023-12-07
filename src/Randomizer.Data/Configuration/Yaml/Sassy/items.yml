@@ -233,6 +233,8 @@
     - Text: You now have two heart pieces
     - Text: Half way to this actually being somewhat useful
     - Text: Why do I track these again?
+    - Text: They say that a broken heart is right twice a day.<break time='500ms'/>Or something like that.
+      Weight: 0.2
     "3":
     - Text: You now have three heart pieces
     - Text: Three quarters of a heart is almost a working one, I think
@@ -273,6 +275,10 @@
   WhenTracked:
     "1":
     - Text: Toggled Mirror on.
+    - Text: Toggled Magic Mirror on
+    - Text: Toggled Magical Mirror on
+    - Text: You better not drop that mirror and get bad luck.
+      Weight: 0.1
     - Text: Mirror mirror on the wall. Who's the sassiest of them all?
       Weight: 0.1
 - Item: Book of Mudora
@@ -314,6 +320,8 @@
     "1":
     - Text: I'm sure you're happy if this is early in the seed
     - Text: Be sure to use these wisely
+    - Text: Got the blue bomber
+      Weight: 0.1
     "2":
     - Text: Have you been using them?
     - Text: Throw more of these please

@@ -333,6 +333,8 @@ ItemTrackedInIncorrectDungeon:
 - Text: "{1} shouldn't be in {0}."
 LocationMarked:
 - Text: Marked {1} at {0}.
+- Text: Writing down {1} at {0}
+- Text: Making a note that {1} is at {0}
 LocationMarkedAgain:
 - Text: Replaced {2} with {1} at {0}.
 - Text: Changed your mind? Marked {1} at {0}.

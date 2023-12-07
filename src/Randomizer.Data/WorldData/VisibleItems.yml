@@ -49,8 +49,8 @@
       - LumberjackTree
   - Room: 0
     OverworldScreen: 129
-    TopLeftX: 816
-    TopLeftY: 625
+    TopLeftX: 814
+    TopLeftY: 525
     BottomRightX: 872
     BottomRightY: 719
     Locations:
@@ -79,3 +79,10 @@ MetroidItems:
     Locations:
       - CrateriaGauntletShaftRight
       - CrateriaGauntletShaftLeft
+  - Room: 249
+    TopLeftX: 869
+    TopLeftY: 188
+    BottomRightX: 923
+    BottomRightY: 238
+    Locations:
+      - CrateriaSuper

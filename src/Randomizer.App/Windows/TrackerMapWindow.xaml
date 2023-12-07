@@ -26,7 +26,7 @@
         <ItemsControl.ItemTemplate>
           <DataTemplate>
             <Grid Width="{Binding Size}" Height="{Binding Size}" >
-              <Rectangle Width="{Binding Size}" Height="{Binding Size}" Visibility="{Binding IconVisibility}" MouseLeftButtonDown="Location_MouseLeftButtonDown" Tag="{Binding Tag}" ToolTip="{Binding Name}">
+              <Rectangle Width="20" Height="20" Margin="0 0 0 0" Visibility="{Binding IconVisibility}" MouseLeftButtonDown="Location_MouseLeftButtonDown" Tag="{Binding Tag}" ToolTip="{Binding Name}">
                 <Rectangle.Fill>
                   <ImageBrush ImageSource="{Binding IconImage}" />
                 </Rectangle.Fill>
@@ -46,7 +46,12 @@
                   </ContextMenu>
                 </Rectangle.ContextMenu>
               </Rectangle>
-              <Rectangle Width="{Binding Size}" Height="{Binding Size}" Visibility="{Binding IconVisibility}" IsHitTestVisible="False" >
+              <Rectangle Width="14" Height="14" Visibility="{Binding MarkedVisibility}" IsHitTestVisible="False" Margin="18 -18 0 0">
+                <Rectangle.Fill>
+                  <ImageBrush ImageSource="{Binding MarkedImage}" TileMode="None" Stretch="None" AlignmentX="Center" AlignmentY="Center"/>
+                </Rectangle.Fill>
+              </Rectangle>
+              <Rectangle Width="20" Height="20" Margin="0 0 0 0" Visibility="{Binding IconVisibility}" IsHitTestVisible="False" >
                 <Rectangle.Fill>
                   <ImageBrush ImageSource="{Binding NumberImage}" TileMode="None" Stretch="None" AlignmentX="Center" AlignmentY="Center"/>
                 </Rectangle.Fill>

@@ -11,6 +11,7 @@ using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data.Options;
+using Randomizer.Shared.Enums;
 using static Randomizer.Data.Configuration.ConfigTypes.TrackerMapLocation;
 using Randomizer.SMZ3.Tracking.Services;
 
@@ -39,7 +40,7 @@ namespace Randomizer.App.ViewModels
         /// </param>
         public TrackerMapLocationViewModel(TrackerMapLocation mapLocation, TrackerLocationSyncer syncer, double scaledRatio)
         {
-            Size = 20;
+            Size = 36;
             X = (mapLocation.X * scaledRatio) - (Size / 2);
             Y = (mapLocation.Y * scaledRatio) - (Size / 2);
             Syncer = syncer ?? throw new ArgumentNullException(nameof(syncer));
@@ -71,14 +72,81 @@ namespace Randomizer.App.ViewModels
 
                 Locations = Syncer.WorldService.AllLocations().Where(mapLocation.MatchesSMZ3Location).ToList();
                 var progression = Syncer.ItemService.GetProgression(!(Region is HyruleCastle || Region.World.Config.KeysanityForRegion(Region)));
-                var statuses = Locations.Select(x => x.GetStatus(progression));
+                var locationStatuses = Locations.Select(x => (Location: x, Status: x.GetStatus(progression))).ToList();
 
-                ClearableLocationsCount = statuses.Count(x => x == Shared.Enums.LocationStatus.Available);
-                RelevantLocationsCount = statuses.Count(x => x == Shared.Enums.LocationStatus.Relevant);
-                OutOfLogicLocationsCount = Syncer.ShowOutOfLogicLocations ? statuses.Count(x => x == Shared.Enums.LocationStatus.OutOfLogic) : 0;
-                UnclearedLocationsCount = statuses.Count(x => x != Shared.Enums.LocationStatus.Cleared);
-                ClearedLocationsCount = statuses.Count() - UnclearedLocationsCount;
+                ClearableLocationsCount = locationStatuses.Count(x => x.Status == LocationStatus.Available);
+                RelevantLocationsCount = locationStatuses.Count(x => x.Status == LocationStatus.Relevant);
+                OutOfLogicLocationsCount = Syncer.ShowOutOfLogicLocations ? locationStatuses.Count(x => x.Status == LocationStatus.OutOfLogic) : 0;
+                UnclearedLocationsCount = locationStatuses.Count(x => x.Status != LocationStatus.Cleared);
+                ClearedLocationsCount = locationStatuses.Count() - UnclearedLocationsCount;
 
+                // If there are any valid locations, see if anything was marked
+                if (ClearableLocationsCount > 0 || RelevantLocationsCount > 0)
+                {
+                    var hintTileLocations = Syncer.World.ActiveHintTileLocations.ToList();
+                    var markedLocations = locationStatuses
+                        .Where(x => x.Status is LocationStatus.Available or LocationStatus.Relevant &&
+                                    hintTileLocations.Contains(x.Location.Id)).ToList();
+
+                    // For hint tile locations, try to find the actual hint tile to use or look at the actual locations (hopefully should never happen)
+                    if (markedLocations.Any())
+                    {
+                        var activeLocationIds = markedLocations.Select(x => x.Location.Id);
+                        var hintTile = Syncer.World.HintTiles.FirstOrDefault(x => x.Locations?.Intersect(activeLocationIds).Any() == true);
+                        if (hintTile?.Usefulness is LocationUsefulness.Mandatory or LocationUsefulness.Sword
+                            or LocationUsefulness.NiceToHave)
+                        {
+                            IsMarkedGood = true;
+                            IsMarkedUseless = false;
+                        }
+                        else if (hintTile?.Usefulness == LocationUsefulness.Useless)
+                        {
+                            IsMarkedGood = false;
+                            IsMarkedUseless = true;
+                        }
+                        else if (markedLocations.Any(x => x.Location.Item.Type.IsPossibleProgression(x.Location.World.Config.ZeldaKeysanity, x.Location.World.Config.MetroidKeysanity)))
+                        {
+                            IsMarkedGood = true;
+                            IsMarkedUseless = false;
+                        }
+                        else
+                        {
+                            IsMarkedGood = false;
+                            IsMarkedUseless = true;
+                        }
+                    }
+                    // For marked items, we compare the marked items at the locations
+                    else
+                    {
+                        markedLocations = locationStatuses
+                            .Where(x => x.Status is LocationStatus.Available or LocationStatus.Relevant &&
+                                        x.Location.State.MarkedItem != null).ToList();
+
+                        if (markedLocations.Any())
+                        {
+                            if (markedLocations.Any(x => x.Location.State.MarkedItem!.Value.IsPossibleProgression(x.Location.World.Config.ZeldaKeysanity, x.Location.World.Config.MetroidKeysanity)))
+                            {
+                                IsMarkedGood = true;
+                                IsMarkedUseless = false;
+                            }
+                            else
+                            {
+                                IsMarkedGood = false;
+                                IsMarkedUseless = true;
+                            }
+                        }
+                        else
+                        {
+                            IsMarkedGood = false;
+                            IsMarkedUseless = false;
+                        }
+                    }
+                }
+                else
+                {
+                    IsMarkedGood = false;
+                    IsMarkedUseless = false;
+                }
             }
             else if (Type == MapLocationType.SMDoor)
             {
@@ -163,11 +231,18 @@ namespace Randomizer.App.ViewModels
 
         public int RelevantLocationsCount { get; set; }
 
+        public bool IsMarkedGood { get; set; }
+
+        public bool IsMarkedUseless { get; set; }
+
         /// <summary>
         /// Display the icon if there are available uncleared locations that
         /// match the number of total uncleared locations
         /// </summary>
         public Visibility IconVisibility { get; set; }
+
+        public Visibility MarkedVisibility =>
+            IsMarkedGood || IsMarkedUseless ? Visibility.Visible : Visibility.Collapsed;
 
         private MapLocationType Type { get; set; }
 
@@ -259,6 +334,23 @@ namespace Randomizer.App.ViewModels
                 {
                     return new BitmapImage(new Uri(System.IO.Path.Combine(
                         Sprite.SpritePath, "Maps", "blank.png")));
+                }
+            }
+        }
+
+        public ImageSource MarkedImage
+        {
+            get
+            {
+                if (IsMarkedGood)
+                {
+                    return new BitmapImage(new Uri(System.IO.Path.Combine(
+                        Sprite.SpritePath, "Maps", "marked_good.png")));
+                }
+                else
+                {
+                    return new BitmapImage(new Uri(System.IO.Path.Combine(
+                        Sprite.SpritePath, "Maps", "marked_useless.png")));
                 }
             }
         }

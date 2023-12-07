@@ -18,7 +18,7 @@
   - Text: That took so much effort to get, amazing.
   - Text: What's next?
   WhenMarkingJunk:
-  - Text: This island makes no sense!
+  - Text: That island makes no sense!
   - Text: Sky floating crap is kind of rare to see.
   - Text: Sky floating crap is kind of rare to see. Just kidding, it seems to happen all the time.
     Weight: 0.1
@@ -78,9 +78,10 @@
   - Text: Did you grab the book I had on reserve?
   WhenMarkingJunk:
   - Text: Don't you want to get something nice to read?
+  - Text: At least check out a book while you're there.
   WhenMarkingProgression:
   - Text: Hopefully the boots are not too hard to find.
-  - Text: At least this isnt that far out of the way.
+  - Text: At least this isn't that far out of the way.
   - Text: Well at least that means you'll be getting the boots.
 # Old Man
 - LocationNumber: 259

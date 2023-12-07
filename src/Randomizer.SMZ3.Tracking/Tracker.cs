@@ -2207,6 +2207,17 @@ public sealed class Tracker : TrackerBase, IDisposable
             if (locations.All(x => x.State.Autotracked || x.State.Cleared))
             {
                 hintTile.State.HintState = HintState.Cleared;
+                Say(Configs.HintTileConfig.ViewedHintTileAlreadyVisited, hintTile.LocationKey);
+            }
+            else if (hintTile.Usefulness == LocationUsefulness.Mandatory)
+            {
+                hintTile.State.HintState = HintState.Viewed;
+                Say(Configs.HintTileConfig.ViewedHintTileMandatory, hintTile.LocationKey);
+            }
+            else if (hintTile.Usefulness == LocationUsefulness.Useless)
+            {
+                hintTile.State.HintState = HintState.Viewed;
+                Say(Configs.HintTileConfig.ViewedHintTileUseless, hintTile.LocationKey);
             }
             else
             {

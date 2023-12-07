@@ -33,7 +33,11 @@ namespace Randomizer.App
             _logger = logger;
 
             // Set all events from the tracker to point to the two in this class
-            Tracker.MarkedLocationsUpdated += (_, _) => MarkedLocationUpdated?.Invoke(this, new(""));
+            Tracker.MarkedLocationsUpdated += (_, _) =>
+            {
+                TrackedLocationUpdated?.Invoke(this, new(""));
+                MarkedLocationUpdated?.Invoke(this, new(""));
+            };
             Tracker.LocationCleared += (_, e) =>
             {
                 TrackedLocationUpdated?.Invoke(this, new(e.Location.Name));
@@ -66,6 +70,7 @@ namespace Randomizer.App
             };
             Tracker.HintTileUpdated += (_, _) =>
             {
+                TrackedLocationUpdated?.Invoke(this, new(""));
                 HintTileUpdated?.Invoke(this, new PropertyChangedEventArgs(""));
             };
         }
