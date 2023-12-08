@@ -973,11 +973,18 @@ AutoTracker:
   - Text: At least use the net, make it interesting.
   EnterPendantDungeon:
   - Text: I hope dipping into this pendant dungeon will be worth it for you.
+    Weight: 0.1
   - Text: I hope you dont have to double or triple dip
-  - Text: Didn't you say that {0} had the {1}? You must be getting desperate.
+    Weight: 0.1
+  - Text: Doesn't {0} have the {1}? You must be getting desperate.
+    Weight: 0.1
+  - Text: Personally I hope this is a waste of time
+    Weight: 0.1
+  - Text: Are you lost? Why are you in a pendant dungeon?
+    Weight: 0.1
   EnteredGTEarly:
   - Text: Are you not capable of collecting everything required to finish this seed?
-  - Text: How did you get into Gannon's tower without all 7 crystals? Surely this isn't legal
+  - Text: How did you get into Gannon's tower without all of the crystals? Surely this isn't legal
   FakeFlippers:
   - Text: Good job on the tech. Was it a first try?
   - Text: How can you swim without the flippers?

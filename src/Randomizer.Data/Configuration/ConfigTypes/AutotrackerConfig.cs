@@ -111,7 +111,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Gets the phrases to respond with when entering a pendant dungeon
         /// </summary>
         public SchrodingersString EnterPendantDungeon { get; init; }
-            = new("Ouch. So it's come to this, then?");
+            = new("");
 
         /// <summary>
         /// Entered GT without all crystals
