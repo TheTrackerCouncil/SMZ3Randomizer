@@ -35,17 +35,15 @@ public class EnteredDungeon : IZeldaStateCheck
     /// <returns>True if the check was identified, false otherwise</returns>
     public bool ExecuteCheck(TrackerBase tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
     {
-        if (currentState.State == 0x07 && (prevState.State == 0x06 || prevState.State == 0x09 || prevState.State == 0x0F || prevState.State == 0x10 || prevState.State == 0x11))
+        if (currentState.State == 0x07 && prevState.State is 0x06 or 0x09 or 0x0F or 0x10 or 0x11)
         {
             // Get the region for the room
             var region = tracker.World.Regions
                 .OfType<Z3Region>()
-                .FirstOrDefault(x => x.StartingRooms.Count == 0 && x.StartingRooms.Contains(currentState.CurrentRoom) && !x.IsOverworld);
-            if (region == null) return false;
+                .FirstOrDefault(x => x.StartingRooms.Count > 0 && x.StartingRooms.Contains(currentState.CurrentRoom) && !x.IsOverworld);
 
             // Get the dungeon info for the room
-            var dungeon = region as IDungeon;
-            if (dungeon == null) return false;
+            if (region is not IDungeon dungeon) return false;
 
             if (!_worldAccessor.World.Config.ZeldaKeysanity && !_enteredDungeons.Contains(region) && dungeon.IsPendantDungeon)
             {
@@ -60,7 +58,7 @@ public class EnteredDungeon : IZeldaStateCheck
                 var clearedCrystalDungeonCount = tracker.World.Dungeons
                     .Count(x => x.DungeonState.Cleared && x.IsCrystalDungeon);
 
-                if (clearedCrystalDungeonCount < 7)
+                if (clearedCrystalDungeonCount < tracker.World.Config.GanonsTowerCrystalCount)
                 {
                     tracker.SayOnce(x => x.AutoTracker.EnteredGTEarly, clearedCrystalDungeonCount);
                 }
