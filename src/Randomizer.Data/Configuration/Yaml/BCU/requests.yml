@@ -24,3 +24,10 @@
   Response:
   - Text: Pfft. Hahahahaha.
   - Text: I'm interested in this.
+- Phrases:
+    - tell me a joke
+    - do you know any jokes?
+  Response:
+    - Text: slowbeef
+    - Text: The underscore beetus
+      Weight: 0.1
