@@ -5,19 +5,22 @@ using Randomizer.Data.Tracking;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
+using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks;
 
 public class VisibleItemMetroidCheck : IMetroidStateCheck
 {
-    private readonly Dictionary<int, List<VisibleItemMetroid>> _items;
-    private readonly HashSet<LocationId> _trackedLocationIds = new();
+    private readonly Dictionary<int, VisibleItemMetroid> _items;
+    private readonly HashSet<VisibleItemArea> _trackedAreas = new();
+    private readonly IWorldService _worldService;
 
-    public VisibleItemMetroidCheck()
+    public VisibleItemMetroidCheck(IWorldService worldService)
     {
+        _worldService = worldService;
         var visibleItems = VisibleItems.GetVisibleItems().MetroidItems;
-        _items = visibleItems.Select(x => x.Room)
-            .ToDictionary(s => s, s => visibleItems.Where(i => i.Room == s).ToList());
+        _items = visibleItems
+            .ToDictionary(s => s.Room, s => s);
     }
 
     public bool ExecuteCheck(TrackerBase tracker, AutoTrackerMetroidState currentState,
@@ -25,44 +28,61 @@ public class VisibleItemMetroidCheck : IMetroidStateCheck
     {
         if (_items.TryGetValue(currentState.CurrentRoom, out var visibleItems))
         {
-            var locations = visibleItems.Where(x =>
-                    currentState.IsSamusInArea(x.TopLeftX, x.BottomRightX, x.TopLeftY, x.BottomRightY))
-                .SelectMany(x => x.Locations)
-                .Where(x => !_trackedLocationIds.Contains(x))
-                .Select(x => tracker.World.FindLocation(x))
-                .ToList();
-
-            if (!locations.Any() || locations.All(x => x.State.Cleared || x.State.Autotracked ||  x.State.Item.IsEquivalentTo(x.State.MarkedItem)))
-            {
-                return false;
-            }
-
-            tracker.AutoTracker!.SetLatestViewAction($"VisibleItemMetroidCheck_{locations.First().Id}", () =>
-            {
-                var toClearLocations = locations.Where(x => x.State is { Cleared: false, Autotracked: false } &&
-                                                            !x.State.Item.IsEquivalentTo(x.State.MarkedItem)).ToList();
-                foreach (var location in toClearLocations)
-                {
-                    tracker.MarkLocation(location, location.Item.Type.GetGenericType());
-                    _trackedLocationIds.Add(location.Id);
-                }
-
-                if (toClearLocations.Any())
-                {
-                    tracker.UpdateLastMarkedLocations(toClearLocations);
-                }
-
-                if (_items[currentState.CurrentRoom]
-                    .SelectMany(x => x.Locations.Select(l => tracker.World.FindLocation(l)))
-                    .All(x => x.State.Cleared || x.State.Autotracked ||
-                              x.State.Item.IsEquivalentTo(x.State.MarkedItem)))
-                {
-                    _items.Remove(currentState.CurrentRoom);
-                }
-            });
-
+            CheckItems(visibleItems, currentState, tracker);
             return true;
         }
         return false;
+    }
+
+    private bool CheckItems(VisibleItemMetroid details, AutoTrackerMetroidState currentState, TrackerBase tracker)
+    {
+        var areas = details.Areas
+            .Where(x => !_trackedAreas.Contains(x) && currentState.IsSamusInArea(x.TopLeftX, x.BottomRightX, x.TopLeftY, x.BottomRightY))
+            .ToList();
+
+        if (!areas.Any())
+        {
+            return false;
+        }
+
+        tracker.AutoTracker!.SetLatestViewAction($"VisibleItemMetroidCheck_{areas.First().Locations.First()}", () =>
+        {
+            var toClearLocations = new List<Location>();
+
+            foreach (var area in areas)
+            {
+                var locations = area.Locations.Select(x => tracker.World.FindLocation(x)).ToList();
+
+                if (locations.All(x => x.State.Cleared || x.State.Autotracked || x.State.MarkedItem == x.State.Item))
+                {
+                    _trackedAreas.Add(area);
+                    continue;
+                }
+
+                toClearLocations.AddRange(locations.Where(x => x.State is { Cleared: false, Autotracked: false } &&
+                                                     !x.State.Item.IsEquivalentTo(x.State.MarkedItem)));
+            }
+
+            foreach (var location in toClearLocations)
+            {
+                tracker.MarkLocation(location, location.Item.Type.GetGenericType());
+            }
+
+            if (toClearLocations.Any())
+            {
+                tracker.UpdateLastMarkedLocations(toClearLocations);
+            }
+
+            // Remove room if all items have been collected or marked
+            if (_items[currentState.CurrentRoom].Areas
+                .SelectMany(x => x.Locations.Select(l => tracker.World.FindLocation(l)))
+                .All(x => x.State.Cleared || x.State.Autotracked ||
+                          x.State.Item.IsEquivalentTo(x.State.MarkedItem)))
+            {
+                _items.Remove(currentState.CurrentRoom);
+            }
+        });
+
+        return true;
     }
 }
