@@ -6,68 +6,72 @@ using Randomizer.Data.Tracking;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
+using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks;
 
 public class VisibleItemZeldaCheck : IZeldaStateCheck
 {
-    private readonly Dictionary<int, List<VisibleItemZelda>> _overworldVisibleItems;
-    private readonly Dictionary<int, List<VisibleItemZelda>> _underworldVisibleItems;
-    private readonly HashSet<LocationId> _trackedLocationIds = new();
+    private readonly Dictionary<int, VisibleItemZelda> _overworldVisibleItems;
+    private readonly Dictionary<int, VisibleItemZelda> _underworldVisibleItems;
+    private readonly HashSet<VisibleItemArea> _trackedAreas = new();
+    private readonly IWorldService _worldService;
 
-    public VisibleItemZeldaCheck()
+    public VisibleItemZeldaCheck(IWorldService worldService)
     {
+        _worldService = worldService;
         var visibleItems = VisibleItems.GetVisibleItems().ZeldaItems;
         _overworldVisibleItems = visibleItems.Where(x => x.OverworldScreen > 0)
-            .Select(x => (int)x.OverworldScreen!)
-            .ToDictionary(s => s, s => visibleItems.Where(i => i.OverworldScreen == s).ToList());
+            .ToDictionary(s => (int)s.OverworldScreen!, s => s);
         _underworldVisibleItems = visibleItems.Where(x => x.OverworldScreen is null or 0)
-            .Select(x => (int)x.Room!)
-            .ToDictionary(r => r, r => visibleItems.Where(i => i.Room == r).ToList());
+            .ToDictionary(s => (int)s.Room!, s => s);
     }
 
     public bool ExecuteCheck(TrackerBase tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
     {
         if (currentState.OverworldScreen > 0 && _overworldVisibleItems.TryGetValue(currentState.OverworldScreen, out var visibleItems))
         {
-            var locations = visibleItems.Where(x =>
-                    currentState.IsWithinRegion(x.TopLeftX, x.TopLeftY, x.BottomRightX, x.BottomRightY))
-                .SelectMany(x => x.Locations)
-                .Where(x => !_trackedLocationIds.Contains(x))
-                .Select(x => tracker.World.FindLocation(x))
-                .ToList();
-
-            return CheckItems(locations, _overworldVisibleItems, currentState, tracker);
+            return CheckItems(visibleItems, _overworldVisibleItems, currentState, tracker);
         }
         else if (currentState.OverworldScreen == 0 && _underworldVisibleItems.TryGetValue(currentState.CurrentRoom, out visibleItems))
         {
-            var locations = visibleItems.Where(x =>
-                    currentState.IsWithinRegion(x.TopLeftX, x.TopLeftY, x.BottomRightX, x.BottomRightY))
-                .SelectMany(x => x.Locations)
-                .Where(x => !_trackedLocationIds.Contains(x))
-                .Select(x => tracker.World.FindLocation(x))
-                .ToList();
-
-            return CheckItems(locations, _underworldVisibleItems, currentState, tracker);
+            return CheckItems(visibleItems, _underworldVisibleItems, currentState, tracker);
         }
         return false;
     }
 
-    private bool CheckItems(List<Location> locations, Dictionary<int, List<VisibleItemZelda>> items, AutoTrackerZeldaState currentState, TrackerBase tracker)
+    private bool CheckItems(VisibleItemZelda details, Dictionary<int, VisibleItemZelda> itemsDictionary, AutoTrackerZeldaState currentState, TrackerBase tracker)
     {
-        if (!locations.Any() || locations.All(x => x.State.Cleared || x.State.Autotracked || x.State.MarkedItem == x.State.Item))
+        var areas = details.Areas
+            .Where(x => !_trackedAreas.Contains(x) && currentState.IsWithinRegion(x.TopLeftX, x.TopLeftY, x.BottomRightX, x.BottomRightY))
+            .ToList();
+
+        if (!areas.Any())
         {
             return false;
         }
 
-        tracker.AutoTracker!.SetLatestViewAction($"VisibleItemZeldaCheck_{locations.First().Id}", () =>
+        tracker.AutoTracker!.SetLatestViewAction($"VisibleItemZeldaCheck_{areas.First().Locations.First()}", () =>
         {
-            var toClearLocations = locations.Where(x => x.State is { Cleared: false, Autotracked: false } &&
-                                                        !x.State.Item.IsEquivalentTo(x.State.MarkedItem)).ToList();
+            var toClearLocations = new List<Location>();
+
+            foreach (var area in areas)
+            {
+                var locations = area.Locations.Select(x => tracker.World.FindLocation(x)).ToList();
+
+                if (locations.All(x => x.State.Cleared || x.State.Autotracked || x.State.MarkedItem == x.State.Item))
+                {
+                    _trackedAreas.Add(area);
+                    continue;
+                }
+
+                toClearLocations.AddRange(locations.Where(x => x.State is { Cleared: false, Autotracked: false } &&
+                                                               !x.State.Item.IsEquivalentTo(x.State.MarkedItem)));
+            }
+
             foreach (var location in toClearLocations)
             {
                 tracker.MarkLocation(location, location.Item.Type.GetGenericType());
-                _trackedLocationIds.Add(location.Id);
             }
 
             if (toClearLocations.Any())
@@ -75,14 +79,14 @@ public class VisibleItemZeldaCheck : IZeldaStateCheck
                 tracker.UpdateLastMarkedLocations(toClearLocations);
             }
 
-            // Remove
+            // Remove overworld/dungeon room if all items have been collected or marked
             var key = currentState.OverworldScreen == 0 ? currentState.CurrentRoom : currentState.OverworldScreen;
-            if (items[key]
+            if (itemsDictionary[key].Areas
                 .SelectMany(x => x.Locations.Select(l => tracker.World.FindLocation(l)))
                 .All(x => x.State.Cleared || x.State.Autotracked ||
                           x.State.Item.IsEquivalentTo(x.State.MarkedItem)))
             {
-                items.Remove(key);
+                itemsDictionary.Remove(key);
             }
         });
 

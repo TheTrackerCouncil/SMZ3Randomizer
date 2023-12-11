@@ -1,88 +1,121 @@
 ﻿ZeldaItems:
   - Room: 0
     OverworldScreen: 48
-    TopLeftX: 60
-    TopLeftY: 3620
-    BottomRightX: 228
-    BottomRightY: 3850
-    Locations:
-      - DesertLedge
+    Areas:
+      - TopLeftX: 60
+        TopLeftY: 3620
+        BottomRightX: 228
+        BottomRightY: 3850
+        Locations:
+          - DesertLedge
   - Room: 0
     OverworldScreen: 53
-    TopLeftX: 2820
-    TopLeftY: 3256
-    BottomRightX: 3080
-    BottomRightY: 3480
-    Locations:
-      - LakeHyliaIsland
+    Areas:
+      - TopLeftX: 2820
+        TopLeftY: 3256
+        BottomRightX: 3096
+        BottomRightY: 3480
+        Locations:
+          - LakeHyliaIsland
   - Room: 0
     OverworldScreen: 3
-    TopLeftX: 1944
-    TopLeftY: 230
-    BottomRightX: 2209
-    BottomRightY: 466
-    Locations:
-      - SpectacleRock
+    Areas:
+      - TopLeftX: 1944
+        TopLeftY: 230
+        BottomRightX: 2209
+        BottomRightY: 466
+        Locations:
+          - SpectacleRock
   - Room: 234
     OverworldScreen: 0
-    TopLeftX: 5192
-    TopLeftY: 7408
-    BottomRightX: 5288
-    BottomRightY: 7465
-    Locations:
-      - SpectacleRockCave
+    Areas:
+      - TopLeftX: 5192
+        TopLeftY: 7424
+        BottomRightX: 5288
+        BottomRightY: 7465
+        Locations:
+          - SpectacleRockCave
   - Room: 0
     OverworldScreen: 5
-    TopLeftX: 3395
-    TopLeftY: 142
-    BottomRightX: 3450
-    BottomRightY: 161
-    Locations:
-      - FloatingIsland
+    Areas:
+      - TopLeftX: 3395
+        TopLeftY: 142
+        BottomRightX: 3450
+        BottomRightY: 161
+        Locations:
+          - FloatingIsland
   - Room: 226
     OverworldScreen: 0
-    TopLeftX: 1408
-    TopLeftY: 7490
-    BottomRightX: 1456
-    BottomRightY: 7544
-    Locations:
-      - LumberjackTree
+    Areas:
+      - TopLeftX: 1408
+        TopLeftY: 7490
+        BottomRightX: 1456
+        BottomRightY: 7544
+        Locations:
+          - LumberjackTree
   - Room: 0
     OverworldScreen: 129
-    TopLeftX: 814
-    TopLeftY: 525
-    BottomRightX: 872
-    BottomRightY: 719
-    Locations:
-      - ZorasLedge
+    Areas:
+      - TopLeftX: 814
+        TopLeftY: 525
+        BottomRightX: 872
+        BottomRightY: 719
+        Locations:
+          - ZorasLedge
   - Room: 263
     OverworldScreen: 0
-    TopLeftX: 3700
-    TopLeftY: 8660
-    BottomRightX: 3708
-    BottomRightY: 8674
-    Locations:
-      - Library
+    Areas:
+      - TopLeftX: 3700
+        TopLeftY: 8660
+        BottomRightX: 3708
+        BottomRightY: 8674
+        Locations:
+          - Library
 MetroidItems:
   - Room: 14
-    TopLeftX: 37
-    TopLeftY: 106
-    BottomRightX: 91
-    BottomRightY: 153
-    Locations:
-      - UpperNorfairCrocomireEscape
+    Areas:
+    - TopLeftX: 37
+      TopLeftY: 106
+      BottomRightX: 91
+      BottomRightY: 153
+      Locations:
+        - UpperNorfairCrocomireEscape
   - Room: 189
-    TopLeftX: 100
-    TopLeftY: 500
-    BottomRightX: 155
-    BottomRightY: 535
-    Locations:
-      - CrateriaGauntletShaftRight
-      - CrateriaGauntletShaftLeft
+    Areas:
+      - TopLeftX: 100
+        TopLeftY: 500
+        BottomRightX: 155
+        BottomRightY: 535
+        Locations:
+          - CrateriaGauntletShaftRight
+          - CrateriaGauntletShaftLeft
   - Room: 249
-    TopLeftX: 869
-    TopLeftY: 188
-    BottomRightX: 923
-    BottomRightY: 238
-    Locations:
-      - CrateriaSuper
+    Areas:
+      - TopLeftX: 869
+        TopLeftY: 188
+        BottomRightX: 923
+        BottomRightY: 238
+        Locations:
+          - CrateriaSuper
+  - Room: 201
+    Areas:
+      - TopLeftX: 104
+        TopLeftY: 775
+        BottomRightX: 332
+        BottomRightY: 975
+        Locations:
+          - OuterMaridiaMainStreetBottom
+      - TopLeftX: 205
+        TopLeftY: 550
+        BottomRightX: 251
+        BottomRightY: 665
+        Locations:
+          - OuterMaridiaMainStreetTop
+  - Room: 167
+    Areas:
+      - TopLeftX: 1079
+        TopLeftY: 124
+        BottomRightX: 1115
+        BottomRightY: 169
+        Locations:
+          - InnerMaridiaAqueductLeft

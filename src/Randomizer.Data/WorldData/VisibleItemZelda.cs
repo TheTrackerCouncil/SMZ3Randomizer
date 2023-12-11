@@ -7,9 +7,5 @@ public class VisibleItemZelda
 {
     public int? Room { get; set; }
     public int? OverworldScreen { get; set; }
-    public int TopLeftX { get; set; }
-    public int TopLeftY { get; set; }
-    public int BottomRightX { get; set; }
-    public int BottomRightY { get; set; }
-    public List<LocationId> Locations { get; set; } = new();
+    public List<VisibleItemArea> Areas { get; set; } = new();
 }
