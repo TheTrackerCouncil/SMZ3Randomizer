@@ -46,14 +46,14 @@
                   </ContextMenu>
                 </Rectangle.ContextMenu>
               </Rectangle>
-              <Rectangle Width="14" Height="14" Visibility="{Binding MarkedVisibility}" IsHitTestVisible="False" Margin="18 -18 0 0">
-                <Rectangle.Fill>
-                  <ImageBrush ImageSource="{Binding MarkedImage}" TileMode="None" Stretch="None" AlignmentX="Center" AlignmentY="Center"/>
-                </Rectangle.Fill>
-              </Rectangle>
               <Rectangle Width="20" Height="20" Margin="0 0 0 0" Visibility="{Binding IconVisibility}" IsHitTestVisible="False" >
                 <Rectangle.Fill>
                   <ImageBrush ImageSource="{Binding NumberImage}" TileMode="None" Stretch="None" AlignmentX="Center" AlignmentY="Center"/>
+                </Rectangle.Fill>
+              </Rectangle>
+              <Rectangle Width="16" Height="16" Visibility="{Binding MarkedVisibility}" IsHitTestVisible="False" Margin="14 -14 0 0">
+                <Rectangle.Fill>
+                  <ImageBrush ImageSource="{Binding MarkedImage}" TileMode="None" Stretch="None" AlignmentX="Center" AlignmentY="Center"/>
                 </Rectangle.Fill>
               </Rectangle>
             </Grid>
