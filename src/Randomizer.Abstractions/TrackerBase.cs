@@ -3,6 +3,7 @@ using Randomizer.Data;
 using Randomizer.Data.Configuration;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data.Options;
 using Randomizer.Data.Tracking;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
@@ -199,6 +200,11 @@ public abstract class TrackerBase
     /// Gets a string describing tracker's mood.
     /// </summary>
     public string Mood { get; protected set; } = "";
+
+    /// <summary>
+    /// Gets the config used to generate the local seed.
+    /// </summary>
+    public Config? LocalConfig { get; protected set; }
 
     /// <summary>
     /// Get if the Tracker has been updated since it was last saved

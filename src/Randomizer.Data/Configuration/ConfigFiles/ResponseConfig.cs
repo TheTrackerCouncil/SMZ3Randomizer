@@ -535,6 +535,22 @@ namespace Randomizer.Data.Configuration.ConfigFiles
             = new SchrodingersString("Cleared {0}.");
 
         /// <summary>
+        /// Gets the phrases to respond with when marking an item at a location that was preconfigured.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the location.
+        /// </remarks>
+        public SchrodingersString? LocationMarkedPreConfigured { get; init; }
+
+        /// <summary>
+        /// Gets the phrases to respond with when tracking an item at a location that was preconfigured.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the location.
+        /// </remarks>
+        public SchrodingersString? TrackedPreConfigured { get; init; }
+
+        /// <summary>
         /// Gets the phrases to respond with when marking or tracking an item at
         /// a location, when the seed contains a different item at the same
         /// location.

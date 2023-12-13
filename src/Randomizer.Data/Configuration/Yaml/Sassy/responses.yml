@@ -338,6 +338,17 @@ LocationMarkedAsBullshit:
 - Text: Ignoring {0}
 - Text: I hope you didn't waste time going there.
   Weight: 0.2
+LocationMarkedPreConfigured:
+- Text: But you already knew that, didn't you?
+- Text: But you already knew that, right?
+- Text: What a surprise.
+- Text: I wonder who put that there.
+- Text: Wink.
+TrackedPreConfigured:
+- Text: What a surprise.
+- Text: I wonder who put that there.
+- Text: Wow, who knew that would be there.
+- Text: Wink.
 LocationHasDifferentItem:
 - Text: That looks more like something else to me, but whatever.
 - Text: Do you even know what you're talking about? Oh well.

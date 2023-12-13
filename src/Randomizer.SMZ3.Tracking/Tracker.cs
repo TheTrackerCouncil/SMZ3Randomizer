@@ -193,6 +193,9 @@ public sealed class Tracker : TrackerBase, IDisposable
         RomPath = romPath;
         var trackerState = _stateService.LoadState(_worldAccessor.Worlds, rom);
 
+        var configs = Config.FromConfigString(rom.Settings);
+        LocalConfig = configs.First(x => x.IsLocalConfig);
+
         if (trackerState != null)
         {
             _timerService.SetSavedTime(TimeSpan.FromSeconds(trackerState.SecondsElapsed));
@@ -1005,6 +1008,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         Action? undoClear = null;
         Action? undoTrackDungeonTreasure = null;
 
+
         // If this was not gifted to the player, try to clear the location
         if (!giftedItem && item.Type != ItemType.Nothing)
         {
@@ -1019,6 +1023,7 @@ public sealed class Tracker : TrackerBase, IDisposable
                 if (stateResponse)
                 {
                     GiveLocationComment(item.Type, location, isTracking: true, confidence, item.Metadata);
+                    GivePreConfiguredLocationSass(location);
                 }
 
                 if (tryClear)
@@ -1118,6 +1123,21 @@ public sealed class Tracker : TrackerBase, IDisposable
         RestartIdleTimers();
 
         return didTrack;
+    }
+
+    /// <summary>
+    /// Makes Tracker respond to a location if it was pre-configured by the user.
+    /// </summary>
+    /// <param name="location">The location at which an item was marked or tracked.</param>
+    /// <param name="marking"><see langword="true"/> if marking, <see langword="false"/> if tracking.</param>
+    private void GivePreConfiguredLocationSass(Location location, bool marking = false)
+    {
+        // "What a surprise."
+        if (LocalConfig != null && LocalConfig.LocationItems.ContainsKey(location.Id))
+        {
+            // I guess we're not storing the other options? We could respond to those, too, if we had those here.
+            Say(x => marking ? x.LocationMarkedPreConfigured : x.TrackedPreConfigured, location.Metadata.Name);
+        }
     }
 
     /// <summary>
@@ -1979,6 +1999,8 @@ public sealed class Tracker : TrackerBase, IDisposable
                 AddUndo(() => location.State.MarkedItem = null);
             }
         }
+
+        GivePreConfiguredLocationSass(location);
 
         IsDirty = true;
 
