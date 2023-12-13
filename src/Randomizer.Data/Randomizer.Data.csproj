@@ -23,7 +23,12 @@
     <None Remove="Configuration\Yaml\Sassy\items.yml" />
     <None Remove="Configuration\Yaml\Sassy\locations.yml" />
     <None Remove="Configuration\Yaml\Sassy\regions.yml" />
+    <None Remove="Configuration\Yaml\Sassy\requests.Jealous.yml" />
+    <None Remove="Configuration\Yaml\Sassy\requests.NonCommittal.yml" />
+    <None Remove="Configuration\Yaml\Sassy\requests.Rude.yml" />
+    <None Remove="Configuration\Yaml\Sassy\requests.Sassy.yml" />
     <None Remove="Configuration\Yaml\Sassy\requests.yml" />
+    <None Remove="Configuration\Yaml\Sassy\responses.Rude.yml" />
     <None Remove="Configuration\Yaml\Sassy\responses.yml" />
     <None Remove="Configuration\Yaml\Sassy\rewards.yml" />
     <None Remove="Configuration\Yaml\Sassy\rooms.yml" />
@@ -48,7 +53,12 @@
     <EmbeddedResource Include="Configuration\Yaml\Sassy\items.yml" />
     <EmbeddedResource Include="Configuration\Yaml\Sassy\locations.yml" />
     <EmbeddedResource Include="Configuration\Yaml\Sassy\regions.yml" />
+    <EmbeddedResource Include="Configuration\Yaml\Sassy\requests.Jealous.yml" />
+    <EmbeddedResource Include="Configuration\Yaml\Sassy\requests.NonCommittal.yml" />
+    <EmbeddedResource Include="Configuration\Yaml\Sassy\requests.Rude.yml" />
+    <EmbeddedResource Include="Configuration\Yaml\Sassy\requests.Sassy.yml" />
     <EmbeddedResource Include="Configuration\Yaml\Sassy\requests.yml" />
+    <EmbeddedResource Include="Configuration\Yaml\Sassy\responses.Rude.yml" />
     <EmbeddedResource Include="Configuration\Yaml\Sassy\responses.yml" />
     <EmbeddedResource Include="Configuration\Yaml\Sassy\rewards.yml" />
     <EmbeddedResource Include="Configuration\Yaml\Sassy\rooms.yml" />

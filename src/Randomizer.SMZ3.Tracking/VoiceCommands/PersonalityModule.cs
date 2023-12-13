@@ -30,11 +30,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         [SupportedOSPlatform("windows")]
         public override void AddCommands()
         {
-            AddCommand("Ask about tracker's mood", GetMoodRule(), (_) =>
-            {
-                TrackerBase.Say(TrackerBase.Responses.Moods[TrackerBase.Mood]);
-            });
-
             AddCommand("Hey, ya missed pal", GetYaMissedRule(), (_) =>
             {
                 TrackerBase.Say("Here Mike. This will explain everything.", wait: true);
@@ -58,14 +53,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// secret and should not be displayed to the user.
         /// </summary>
         public override bool IsSecret => true;
-
-        [SupportedOSPlatform("windows")]
-        private GrammarBuilder GetMoodRule()
-        {
-            return new GrammarBuilder()
-                .Append("Hey tracker,")
-                .OneOf("how are you?", "how are you doing?", "how are you feeling?");
-        }
 
         [SupportedOSPlatform("windows")]
         private GrammarBuilder GetYaMissedRule()
