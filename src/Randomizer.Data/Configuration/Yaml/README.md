@@ -27,6 +27,12 @@ Next you can then either copy the yml files from the Templates folder or create 
 
 **NOTE:** Contained inside each of the template yaml files is additional details on what can be modified for Tracker to say or understand.
 
+### Moods
+
+Depending on Tracker's mood, additional mood-specific files may be loaded. To do this, simply add a new file named `<name>.<mood>.yml`. For example, if you wanted to add some responses for when Tracker is happy, simply add a `responses.Happy.yml` file. 
+
+When the randomizer is started, Tracker's mood is randomly selected from the moods that are configured. For example, if she starts happy, any files that end in `.Happy.yml` will be loaded in addition to the normal files. 
+
 ## Editing profile configs
 
 Profile configs are written in a language called YAML. You can edit these in any text editor (though something like Visual Studio Code is suggested), and you can find YAML validators online which may help find issues with Tracker loading your YAML files. More detailed specifications can be found elsewhere, but some very basic details:
