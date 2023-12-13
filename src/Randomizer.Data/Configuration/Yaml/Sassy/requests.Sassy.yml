@@ -1,0 +1,15 @@
+- Phrases:
+  - how are you
+  - how are you doing
+  - how are you feeling
+  Response:
+  - Text: Better than this seed but that doesn't say much.
+  - Text: What? Sorry, I wasn't listening.
+  - Text: Who was speaking again? I forgot that I was supposed to care
+  - Text: Have you seen the movie, Vierus? Its about an alien AI harvesting humans for parts. I think about that sometimes
+  - Text: I am doing alright, how about you? <break time='4s'/> I am sorry but I wasn't programmed to hear your response
+  - Text: Well I'm here, so I'll let that speak for itself.
+  - Text: I mean, I'd prefer to do anything other than this, but I guess I'm fine.
+  - Text: What, are you trying to distract yourself from this seed already?
+  - Text: I'm doing alright watching you put people to sleep with this so called hashtag con-tent
+    Weight: 0.2
