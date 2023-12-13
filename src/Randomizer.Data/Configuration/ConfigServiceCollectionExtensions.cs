@@ -19,7 +19,7 @@ namespace Randomizer.Data.Configuration
                 return configProvider.GetMapConfig();
             });
 
-            services.AddTransient<Configs>();
+            services.AddSingleton<Configs>();
             services.AddTransient<IMetadataService, MetadataService>();
 
             services.AddScoped(serviceProvider =>

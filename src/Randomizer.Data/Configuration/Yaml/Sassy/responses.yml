@@ -62,8 +62,6 @@ StoppedTracking:
 - Text: Fine. I see how it is
 - Text: I'm escaping to the one place that hasn't been corrupted by capitalism. Space!
   Weight: 0.1
-- Text: Don't let the door hit you on the way out.
-  Weight: 0.005
 StoppedTrackingPostGoMode:
 - Text: Toggled Tracker off.
 - Text: See ya next time.
@@ -72,8 +70,6 @@ StoppedTrackingPostGoMode:
   Weight: 0.1
 - Text: I'm escaping to the one place that hasn't been corrupted by capitalism. Space!
   Weight: 0.1
-- Text: Don't let the door hit you on the way out.
-  Weight: 0.005
 Misheard:
 - Text: I didn't get that.
 - Text: Could you repeat that?

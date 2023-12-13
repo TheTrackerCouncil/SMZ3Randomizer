@@ -218,7 +218,7 @@ namespace Randomizer.Data.Configuration
         {
             return GetBuiltInMoods(profiles)
                 .Concat(GetFileSystemMoods(profiles))
-                .Distinct()
+                .Distinct(StringComparer.InvariantCultureIgnoreCase)
                 .ToImmutableList();
         }
 

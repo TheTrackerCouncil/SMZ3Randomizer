@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using Microsoft.Extensions.Logging;
+
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data.Options;
@@ -20,12 +23,14 @@ namespace Randomizer.Data.Configuration
         /// </summary>
         /// <param name="optionsFactory">The tracker options for determining the selected tracker profiles</param>
         /// <param name="provider">The config provider for loading configs</param>
-        public Configs(OptionsFactory optionsFactory, ConfigProvider provider)
+        public Configs(OptionsFactory optionsFactory, ConfigProvider provider, ILogger<Configs> logger)
         {
             var options = optionsFactory.Create();
             var profiles = options.GeneralOptions.SelectedProfiles.NonNull().ToArray();
             var moods = provider.GetAvailableMoods(profiles);
             CurrentMood = moods.Random(Random.Shared);
+            logger.LogInformation("Tracker is feeling {Mood} today", CurrentMood);
+
             Bosses = provider.GetBossConfig(profiles, CurrentMood);
             Dungeons = provider.GetDungeonConfig(profiles, CurrentMood);
             Items = provider.GetItemConfig(profiles, CurrentMood);
