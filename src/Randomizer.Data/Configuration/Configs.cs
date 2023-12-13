@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data.Options;
+using Randomizer.Shared;
 
 namespace Randomizer.Data.Configuration
 {
@@ -22,21 +23,28 @@ namespace Randomizer.Data.Configuration
         public Configs(OptionsFactory optionsFactory, ConfigProvider provider)
         {
             var options = optionsFactory.Create();
-            var profiles = options.GeneralOptions.SelectedProfiles.ToArray();
-            Bosses = provider.GetBossConfig(profiles);
-            Dungeons = provider.GetDungeonConfig(profiles);
-            Items = provider.GetItemConfig(profiles);
-            Locations = provider.GetLocationConfig(profiles);
-            Regions = provider.GetRegionConfig(profiles);
-            Requests = provider.GetRequestConfig(profiles);
-            Responses = provider.GetResponseConfig(profiles);
-            Rooms = provider.GetRoomConfig(profiles);
-            Rewards = provider.GetRewardConfig(profiles);
-            UILayouts = provider.GetUIConfig(profiles);
-            GameLines = provider.GetGameConfig(profiles);
-            MsuConfig = provider.GetMsuConfig(profiles);
-            HintTileConfig = provider.GetHintTileConfig(profiles);
+            var profiles = options.GeneralOptions.SelectedProfiles.NonNull().ToArray();
+            var moods = provider.GetAvailableMoods(profiles);
+            CurrentMood = moods.Random(Random.Shared);
+            Bosses = provider.GetBossConfig(profiles, CurrentMood);
+            Dungeons = provider.GetDungeonConfig(profiles, CurrentMood);
+            Items = provider.GetItemConfig(profiles, CurrentMood);
+            Locations = provider.GetLocationConfig(profiles, CurrentMood);
+            Regions = provider.GetRegionConfig(profiles, CurrentMood);
+            Requests = provider.GetRequestConfig(profiles, CurrentMood);
+            Responses = provider.GetResponseConfig(profiles, CurrentMood);
+            Rooms = provider.GetRoomConfig(profiles, CurrentMood);
+            Rewards = provider.GetRewardConfig(profiles, CurrentMood);
+            UILayouts = provider.GetUIConfig(profiles, CurrentMood);
+            GameLines = provider.GetGameConfig(profiles, CurrentMood);
+            MsuConfig = provider.GetMsuConfig(profiles, CurrentMood);
+            HintTileConfig = provider.GetHintTileConfig(profiles, CurrentMood);
         }
+
+        /// <summary>
+        /// Gets the current mood.
+        /// </summary>
+        public string? CurrentMood { get; }
 
         /// <summary>
         /// Gets a collection of trackable items.
