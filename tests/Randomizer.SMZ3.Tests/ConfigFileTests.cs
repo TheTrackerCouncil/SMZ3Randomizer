@@ -24,7 +24,7 @@ namespace Randomizer.SMZ3.Tests
         public void BossConfigDoesNotContainDebugWeights()
         {
             var provider = new ConfigProvider(null);
-            var config = provider.GetBossConfig("BCU", "Sassy");
+            var config = provider.GetBossConfig(["BCU", "Sassy"], null);
 
             var strings = EnumerateSchrodingersStrings(config);
             foreach (var value in strings)
@@ -37,7 +37,7 @@ namespace Randomizer.SMZ3.Tests
         public void DungeonConfigDoesNotContainDebugWeights()
         {
             var provider = new ConfigProvider(null);
-            var config = provider.GetDungeonConfig("BCU", "Sassy");
+            var config = provider.GetDungeonConfig(["BCU", "Sassy"], null);
 
             var strings = EnumerateSchrodingersStrings(config);
             foreach (var value in strings)
@@ -50,7 +50,7 @@ namespace Randomizer.SMZ3.Tests
         public void ItemConfigDoesNotContainDebugWeights()
         {
             var provider = new ConfigProvider(null);
-            var config = provider.GetItemConfig("BCU", "Sassy");
+            var config = provider.GetDungeonConfig(["BCU", "Sassy"], null);
 
             var strings = EnumerateSchrodingersStrings(config);
             foreach (var value in strings)
@@ -63,7 +63,7 @@ namespace Randomizer.SMZ3.Tests
         public void LocationConfigDoesNotContainDebugWeights()
         {
             var provider = new ConfigProvider(null);
-            var config = provider.GetLocationConfig("BCU", "Sassy");
+            var config = provider.GetDungeonConfig(["BCU", "Sassy"], null);
 
             var strings = EnumerateSchrodingersStrings(config);
             foreach (var value in strings)
@@ -76,7 +76,7 @@ namespace Randomizer.SMZ3.Tests
         public void RegionConfigDoesNotContainDebugWeights()
         {
             var provider = new ConfigProvider(null);
-            var config = provider.GetRegionConfig("BCU", "Sassy");
+            var config = provider.GetDungeonConfig(["BCU", "Sassy"], null);
 
             var strings = EnumerateSchrodingersStrings(config);
             foreach (var value in strings)
@@ -89,7 +89,7 @@ namespace Randomizer.SMZ3.Tests
         public void RequestConfigDoesNotContainDebugWeights()
         {
             var provider = new ConfigProvider(null);
-            var config = provider.GetRequestConfig("BCU", "Sassy");
+            var config = provider.GetDungeonConfig(["BCU", "Sassy"], null);
 
             var strings = EnumerateSchrodingersStrings(config);
             foreach (var value in strings)
@@ -102,7 +102,7 @@ namespace Randomizer.SMZ3.Tests
         public void ResponseConfigDoesNotContainDebugWeights()
         {
             var provider = new ConfigProvider(null);
-            var config = provider.GetResponseConfig("BCU", "Sassy");
+            var config = provider.GetDungeonConfig(["BCU", "Sassy"], null);
 
             var strings = EnumerateSchrodingersStrings(config);
             foreach (var value in strings)
@@ -115,7 +115,7 @@ namespace Randomizer.SMZ3.Tests
         public void RewardConfigDoesNotContainDebugWeights()
         {
             var provider = new ConfigProvider(null);
-            var config = provider.GetRewardConfig("BCU", "Sassy");
+            var config = provider.GetDungeonConfig(["BCU", "Sassy"], null);
 
             var strings = EnumerateSchrodingersStrings(config);
             foreach (var value in strings)
@@ -128,7 +128,7 @@ namespace Randomizer.SMZ3.Tests
         public void RoomConfigDoesNotContainDebugWeights()
         {
             var provider = new ConfigProvider(null);
-            var config = provider.GetRoomConfig("BCU", "Sassy");
+            var config = provider.GetDungeonConfig(["BCU", "Sassy"], null);
 
             var strings = EnumerateSchrodingersStrings(config);
             foreach (var value in strings)
@@ -141,7 +141,7 @@ namespace Randomizer.SMZ3.Tests
         public void GameLinesConfigHasValidStrings()
         {
             var provider = new ConfigProvider(null);
-            var config = provider.GetGameConfig("BCU", "Sassy");
+            var config = provider.GetDungeonConfig(["BCU", "Sassy"], null);
             var strings = EnumerateSchrodingersStrings(config);
             foreach (var value in strings)
             {

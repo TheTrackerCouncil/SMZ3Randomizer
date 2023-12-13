@@ -256,6 +256,9 @@ namespace Randomizer.Data.Configuration
 
         protected virtual IReadOnlyList<string> GetFileSystemMoods(IReadOnlyCollection<string> profiles)
         {
+            if (!Directory.Exists(_basePath))
+                return ImmutableList.Create<string>();
+
             return Directory.EnumerateFiles(_basePath, "*.yml", SearchOption.AllDirectories)
                 .Select(path =>
                 {
