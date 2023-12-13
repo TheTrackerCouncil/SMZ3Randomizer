@@ -143,7 +143,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         World = _worldAccessor.World;
         Options = _trackerOptions.Options;
 
-        Mood = Responses.Moods.Keys.Random(Rng.Current) ?? Responses.Moods.Keys.First();
+        Mood = configs.CurrentMood ?? "";
     }
 
     ~Tracker()

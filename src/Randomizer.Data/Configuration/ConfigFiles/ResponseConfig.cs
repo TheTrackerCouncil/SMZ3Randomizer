@@ -735,14 +735,6 @@ namespace Randomizer.Data.Configuration.ConfigFiles
         public Dictionary<string, SchrodingersString> Idle { get; init; } = new();
 
         /// <summary>
-        /// Get the phrases to respond with when asking tracker about her mood.
-        /// </summary>
-        public Dictionary<string, SchrodingersString> Moods { get; init; } = new()
-        {
-            ["non-committal"] = new("Can it wait for a bit? I'm in the middle of some calibrations.")
-        };
-
-        /// <summary>
         /// Gets the configured phrases for hints.
         /// </summary>
         public HintsConfig Hints { get; init; } = new();

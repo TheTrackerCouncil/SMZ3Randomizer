@@ -1,26 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Shared;
+
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
+
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Randomizer.Data.Configuration
 {
     /// <summary>
     /// Provides tracker configuration data.
     /// </summary>
-    public class ConfigProvider
+    public partial class ConfigProvider
     {
         private static readonly JsonSerializerOptions s_options = new()
         {
@@ -90,104 +96,104 @@ namespace Randomizer.Data.Configuration
         /// </summary>
         /// <param name="profiles">The selected tracker profile(s) to load</param>
         /// <returns></returns>
-        public virtual BossConfig GetBossConfig(params string?[] profiles) =>
-            LoadYamlConfigs<BossConfig, BossInfo>("bosses.yml", profiles);
+        public virtual BossConfig GetBossConfig(IReadOnlyCollection<string> profiles, string? mood) =>
+            LoadYamlConfigs<BossConfig, BossInfo>("bosses.yml", profiles, mood);
 
         /// <summary>
         /// Returns the configs with additional information for dungeons
         /// </summary>
         /// <param name="profiles">The selected tracker profile(s) to load</param>
         /// <returns></returns>
-        public virtual DungeonConfig GetDungeonConfig(params string?[] profiles) =>
-            LoadYamlConfigs<DungeonConfig, DungeonInfo>("dungeons.yml", profiles);
+        public virtual DungeonConfig GetDungeonConfig(IReadOnlyCollection<string> profiles, string? mood) =>
+            LoadYamlConfigs<DungeonConfig, DungeonInfo>("dungeons.yml", profiles, mood);
 
         /// <summary>
         /// Returns the configs with additional information for items
         /// </summary>
         /// <param name="profiles">The selected tracker profile(s) to load</param>
         /// <returns></returns>
-        public virtual ItemConfig GetItemConfig(params string?[] profiles) =>
-            LoadYamlConfigs<ItemConfig, ItemData>("items.yml", profiles);
+        public virtual ItemConfig GetItemConfig(IReadOnlyCollection<string> profiles, string? mood) =>
+            LoadYamlConfigs<ItemConfig, ItemData>("items.yml", profiles, mood);
 
         /// <summary>
         /// Returns the configs with additional information for locations
         /// </summary>
         /// <param name="profiles">The selected tracker profile(s) to load</param>
         /// <returns></returns>
-        public virtual LocationConfig GetLocationConfig(params string?[] profiles) =>
-            LoadYamlConfigs<LocationConfig, LocationInfo>("locations.yml", profiles);
+        public virtual LocationConfig GetLocationConfig(IReadOnlyCollection<string> profiles, string? mood) =>
+            LoadYamlConfigs<LocationConfig, LocationInfo>("locations.yml", profiles, mood);
 
         /// <summary>
         /// Returns the configs with additional information for regions
         /// </summary>
         /// <param name="profiles">The selected tracker profile(s) to load</param>
         /// <returns></returns>
-        public virtual RegionConfig GetRegionConfig(params string?[] profiles) =>
-            LoadYamlConfigs<RegionConfig, RegionInfo>("regions.yml", profiles);
+        public virtual RegionConfig GetRegionConfig(IReadOnlyCollection<string> profiles, string? mood) =>
+            LoadYamlConfigs<RegionConfig, RegionInfo>("regions.yml", profiles, mood);
 
         /// <summary>
         /// Returns the configs with additional requests
         /// </summary>
         /// <param name="profiles">The selected tracker profile(s) to load</param>
         /// <returns></returns>
-        public virtual RequestConfig GetRequestConfig(params string?[] profiles) =>
-            LoadYamlConfigs<RequestConfig, BasicVoiceRequest>("requests.yml", profiles);
+        public virtual RequestConfig GetRequestConfig(IReadOnlyCollection<string> profiles, string? mood) =>
+            LoadYamlConfigs<RequestConfig, BasicVoiceRequest>("requests.yml", profiles, mood);
 
         /// <summary>
         /// Returns the configs with tracker responses
         /// </summary>
         /// <param name="profiles">The selected tracker profile(s) to load</param>
         /// <returns></returns>
-        public virtual ResponseConfig GetResponseConfig(params string?[] profiles) =>
-            LoadYamlConfigs<ResponseConfig, ResponseConfig>("responses.yml", profiles);
+        public virtual ResponseConfig GetResponseConfig(IReadOnlyCollection<string> profiles, string? mood) =>
+            LoadYamlConfigs<ResponseConfig, ResponseConfig>("responses.yml", profiles, mood);
 
         /// <summary>
         /// Returns the configs with additional information for rooms
         /// </summary>
         /// <param name="profiles">The selected tracker profile(s) to load</param>
         /// <returns></returns>
-        public virtual RoomConfig GetRoomConfig(params string?[] profiles) =>
-            LoadYamlConfigs<RoomConfig, RoomInfo>("rooms.yml", profiles);
+        public virtual RoomConfig GetRoomConfig(IReadOnlyCollection<string> profiles, string? mood) =>
+            LoadYamlConfigs<RoomConfig, RoomInfo>("rooms.yml", profiles, mood);
 
         /// <summary>
         /// Returns the configs with additional information for rewards
         /// </summary>
         /// <param name="profiles">The selected tracker profile(s) to load</param>
         /// <returns></returns>
-        public virtual RewardConfig GetRewardConfig(params string?[] profiles) =>
-            LoadYamlConfigs<RewardConfig, RewardInfo>("rewards.yml", profiles);
+        public virtual RewardConfig GetRewardConfig(IReadOnlyCollection<string> profiles, string? mood) =>
+            LoadYamlConfigs<RewardConfig, RewardInfo>("rewards.yml", profiles, mood);
 
         /// <summary>
         /// Returns the configs with UI layouts
         /// </summary>
         /// <param name="profiles">The selected tracker profile(s) to load</param>
         /// <returns></returns>
-        public virtual UIConfig GetUIConfig(params string?[] profiles) =>
-            LoadYamlConfigs<UIConfig, UILayout>("ui.yml", profiles);
+        public virtual UIConfig GetUIConfig(IReadOnlyCollection<string> profiles, string? mood) =>
+            LoadYamlConfigs<UIConfig, UILayout>("ui.yml", profiles, mood);
 
         /// <summary>
         /// Returns the configs with in game text
         /// </summary>
         /// <param name="profiles">The selected tracker profile(s) to load</param>
         /// <returns></returns>
-        public virtual GameLinesConfig GetGameConfig(params string?[] profiles) =>
-            LoadYamlConfigs<GameLinesConfig, GameLinesConfig>("game.yml", profiles);
+        public virtual GameLinesConfig GetGameConfig(IReadOnlyCollection<string> profiles, string? mood) =>
+            LoadYamlConfigs<GameLinesConfig, GameLinesConfig>("game.yml", profiles, mood);
 
         /// <summary>
         /// Returns the configs with msus
         /// </summary>
         /// <param name="profiles">The selected tracker profile(s) to load</param>
         /// <returns></returns>
-        public virtual MsuConfig GetMsuConfig(params string?[] profiles) =>
-            LoadYamlConfigs<MsuConfig, MsuConfig>("msu.yml", profiles);
+        public virtual MsuConfig GetMsuConfig(IReadOnlyCollection<string> profiles, string? mood) =>
+            LoadYamlConfigs<MsuConfig, MsuConfig>("msu.yml", profiles, mood);
 
         /// <summary>
         /// Returns the configs with hint tiles
         /// </summary>
         /// <param name="profiles">The selected tracker profile(s) to load</param>
         /// <returns></returns>
-        public virtual HintTileConfig GetHintTileConfig(params string?[] profiles) =>
-            LoadYamlConfigs<HintTileConfig, HintTileConfig>("hint_tiles.yml", profiles);
+        public virtual HintTileConfig GetHintTileConfig(IReadOnlyCollection<string> profiles, string? mood) =>
+            LoadYamlConfigs<HintTileConfig, HintTileConfig>("hint_tiles.yml", profiles, mood);
 
         /// <summary>
         /// Returns a collection of all possible config profiles to
@@ -198,9 +204,22 @@ namespace Randomizer.Data.Configuration
         {
             return Directory
                 .GetDirectories(_basePath)
-                .Select(x => (new DirectoryInfo(x)).Name)
+                .Select(x => new DirectoryInfo(x).Name)
                 .Where(x => x != "Templates")
                 .ToList();
+        }
+
+        /// <summary>
+        /// Returns a list of the moods available in the selected profiles.
+        /// </summary>
+        /// <param name="profiles">The names of profiles to query.</param>
+        /// <returns>A list of names of moods that are available in the selected profiles.</returns>
+        public virtual IReadOnlyList<string> GetAvailableMoods(IReadOnlyCollection<string> profiles)
+        {
+            return GetBuiltInMoods(profiles)
+                .Concat(GetFileSystemMoods(profiles))
+                .Distinct(StringComparer.InvariantCultureIgnoreCase)
+                .ToImmutableList();
         }
 
         /// <summary>
@@ -208,24 +227,70 @@ namespace Randomizer.Data.Configuration
         /// </summary>
         public virtual string ConfigDirectory => _basePath;
 
-        private T LoadYamlConfigs<T, T2>(string fileName, ICollection<string?>? profiles = null) where T : new()
+        protected virtual IReadOnlyList<string> GetBuiltInMoods(IReadOnlyCollection<string> profiles)
         {
-            var defaultMethod = typeof(T).GetMethod("Default");
-            if (defaultMethod == null)
-            {
-                throw new InvalidOperationException($"The class '{typeof(T).Name}' does not have a Default method.");
-            }
-            var config = (T)(defaultMethod.Invoke(null, null) ?? new T());
-            if (config == null)
-            {
-                throw new InvalidOperationException($"The class '{typeof(T).Name}' does not implement IConfigFile.");
-            }
+            return Assembly.GetExecutingAssembly()
+                .GetManifestResourceNames()
+                .Select(x =>
+                {
+                    foreach (var profile in profiles)
+                    {
+                        var expectedPrefix = $"Randomizer.Data.Configuration.Yaml.{profile}";
+                        if (x.StartsWith(expectedPrefix, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            var embeddedFileName = x.Substring(expectedPrefix.Length);
+                            var match = ProfileFileNameWithMoodRegex().Match(embeddedFileName);
+                            if (match.Success)
+                            {
+                                return match.Groups["mood"].Value;
+                            }
+                        }
+                    }
 
-            var mergeableConfig = (IMergeable<T2>)config;
-            if (mergeableConfig == null)
-            {
-                throw new InvalidOperationException($"The class '{typeof(T).Name}' does not implement IMergeable.");
-            }
+                    return null;
+                })
+                .NonNull()
+                .Distinct()
+                .ToImmutableList();
+        }
+
+        protected virtual IReadOnlyList<string> GetFileSystemMoods(IReadOnlyCollection<string> profiles)
+        {
+            if (!Directory.Exists(_basePath))
+                return ImmutableList.Create<string>();
+
+            return Directory.EnumerateFiles(_basePath, "*.yml", SearchOption.AllDirectories)
+                .Select(path =>
+                {
+                    foreach (var profile in profiles)
+                    {
+                        var expectedPrefix = Path.Combine(_basePath, profile);
+                        if (path.StartsWith(expectedPrefix, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            var embeddedFileName = Path.GetFileName(path);
+                            var match = ProfileFileNameWithMoodRegex().Match(embeddedFileName);
+                            if (match.Success)
+                            {
+                                return match.Groups["mood"].Value;
+                            }
+                        }
+                    }
+
+                    return null;
+                })
+                .NonNull()
+                .Distinct()
+                .ToImmutableList();
+        }
+
+        private T LoadYamlConfigs<T, T2>(string fileName, IReadOnlyCollection<string>? profiles = null, string? mood = null) where T : new()
+        {
+            var defaultMethod = typeof(T).GetMethod("Default")
+                ?? throw new InvalidOperationException($"The class '{typeof(T).Name}' does not have a Default method.");
+            var config = (T)(defaultMethod.Invoke(null, null)
+                ?? new T()) ?? throw new InvalidOperationException($"The class '{typeof(T).Name}' does not implement IConfigFile.");
+            var mergeableConfig = (IMergeable<T2>)config
+                ?? throw new InvalidOperationException($"The class '{typeof(T).Name}' does not implement IMergeable.");
 
             if (profiles == null || profiles.Count == 0) return config;
 
@@ -233,15 +298,40 @@ namespace Randomizer.Data.Configuration
             {
                 if (!string.IsNullOrEmpty(profile))
                 {
-                    var otherConfig = LoadYamlFile<T>(fileName, profile);
-                    if (otherConfig == null) continue;
-                    var otherMergeableConfig = (IMergeable<T2>)otherConfig;
-                    if (otherConfig == null) throw new InvalidOperationException($"The class '{typeof(T).Name}' does not implement IMergeable.");
-                    mergeableConfig.MergeFrom(otherMergeableConfig);
+                    TryMergeYamlFile(mergeableConfig, fileName, profile);
+
+                    var moodFileName = GetMoodFileName(fileName, mood);
+                    if (moodFileName != null)
+                    {
+                        TryMergeYamlFile(mergeableConfig, moodFileName, profile);
+                    }
                 }
             }
 
             return config;
+
+            void TryMergeYamlFile(IMergeable<T2> mergeableConfig, string fileName, string profile)
+            {
+                var otherConfig = LoadYamlFile<T>(fileName, profile);
+                if (otherConfig == null)
+                    return;
+
+                var otherMergeableConfig = (IMergeable<T2>)otherConfig;
+                if (otherConfig == null)
+                    throw new InvalidOperationException($"The class '{typeof(T).Name}' does not implement IMergeable.");
+
+                mergeableConfig.MergeFrom(otherMergeableConfig);
+            }
+        }
+
+        private string? GetMoodFileName(string fileName, string? mood)
+        {
+            if (string.IsNullOrEmpty(mood))
+                return null;
+
+            var extension = Path.GetExtension(fileName);
+            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+            return $"{fileNameWithoutExtension}.{mood}{extension}";
         }
 
         private T? LoadYamlFile<T>(string fileName, string profile)
@@ -249,9 +339,7 @@ namespace Randomizer.Data.Configuration
             var path = Path.Combine(_basePath, profile, fileName);
             var yml = "";
             if (!File.Exists(path))
-            {
                 yml = LoadBuiltInYamlFile(fileName, profile);
-            }
             else
             {
                 yml = File.ReadAllText(path);
@@ -293,7 +381,7 @@ namespace Randomizer.Data.Configuration
 
         private string GetSourceDirectory()
         {
-            var currentDirectory = System.IO.Directory.GetCurrentDirectory();
+            var currentDirectory = Directory.GetCurrentDirectory();
             var directory = Directory.GetParent(currentDirectory);
             while (directory != null && directory.Name != "src")
             {
@@ -301,5 +389,8 @@ namespace Randomizer.Data.Configuration
             }
             return directory?.FullName ?? "";
         }
+
+        [GeneratedRegex("[^\\.]+\\.(?<mood>.+)\\.yml")]
+        private static partial Regex ProfileFileNameWithMoodRegex();
     }
 }
