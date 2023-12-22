@@ -130,6 +130,11 @@ public class MsuConfig : IMergeable<MsuConfig>, IConfigFile<MsuConfig>
     public SchrodingersString? UnknownSong { get; init; } = new("Sorry, I could not get the song details");
 
     /// <summary>
+    /// Responses to songs, either by song number, msu name, or song name
+    /// </summary>
+    public Dictionary<string, SchrodingersString> SongResponses { get; init; } = new();
+
+    /// <summary>
     /// Returns default response information
     /// </summary>
     /// <returns></returns>
