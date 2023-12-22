@@ -18,7 +18,7 @@ using Xunit;
 public class MetaTests
 {
     [Fact]
-    public void ValidateVersionNumber()
+    public async void ValidateVersionNumber()
     {
         // Get csproj file for Randomizer.App
         var directory = new DirectoryInfo(Directory.GetCurrentDirectory());
@@ -29,7 +29,7 @@ public class MetaTests
         var projectPath = Path.Combine(directory!.FullName, "src", "Randomizer.App", "Randomizer.App.csproj");
 
         // Get version from csproj file
-        var version = File.ReadAllLines(projectPath)
+        var version = (await File.ReadAllLinesAsync(projectPath))
             .Where(x => x.Trim().StartsWith("<Version>", StringComparison.OrdinalIgnoreCase))
             .Select(x => x.Replace("<Version>", "", StringComparison.OrdinalIgnoreCase).Replace("</Version>", "").Trim())
             .First();
@@ -44,7 +44,9 @@ public class MetaTests
             .BuildServiceProvider();
 
         // Get latest version from GitHub and make sure the current version is newer
-        var latestRelease = serviceProvider.GetRequiredService<IGitHubReleaseService>().GetReleases("Vivelin", "SMZ3Randomizer")?.FirstOrDefault();
+        var releases = await serviceProvider.GetRequiredService<IGitHubReleaseService>()
+            .GetReleasesAsync("Vivelin", "SMZ3Randomizer");
+        var latestRelease = releases?.FirstOrDefault();
         latestRelease.Should().NotBeNull();
         latestRelease!.Tag.Should().NotBeEquivalentTo($"v{version}");
         serviceProvider.GetRequiredService<IGitHubReleaseCheckerService>()
