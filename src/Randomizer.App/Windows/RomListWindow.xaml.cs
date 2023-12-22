@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Navigation;
 using GitHubReleaseChecker;
@@ -69,31 +70,55 @@ namespace Randomizer.App.Windows
                 }
             }
 
-            if (Options.GeneralOptions.CheckForUpdatesOnStartup)
-            {
-                var version = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
-
-                try
-                {
-                    var newerGitHubRelease = _gitHubReleaseCheckerService
-                        .GetGitHubReleaseToUpdateTo("Vivelin", "SMZ3Randomizer", version ?? "", false);
-
-                    if (newerGitHubRelease != null && newerGitHubRelease.Url != Options.GeneralOptions.IgnoredUpdateUrl)
-                    {
-                        UpdateNotificationBorder.Visibility = Visibility.Visible;
-                        _gitHubReleaseUrl = newerGitHubRelease.Url;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error getting GitHub release");
-                }
-            }
-
             var soloPanel = _serviceProvider.GetService<SoloRomListPanel>();
             if (soloPanel != null)  SoloTab.Children.Add(soloPanel);
             var multiPanel = _serviceProvider.GetService<MultiRomListPanel>();
             if (multiPanel != null) MultiTab.Children.Add(multiPanel);
+
+            _ = CheckForUpdates();
+        }
+
+        private async Task CheckForUpdates()
+        {
+            if (!Options.GeneralOptions.CheckForUpdatesOnStartup) return;
+
+            var version = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
+
+            try
+            {
+                var gitHubRelease = await _gitHubReleaseCheckerService
+                    .GetGitHubReleaseToUpdateToAsync("TheTrackerCouncil", "SMZ3Randomizer", version ?? "", false);
+
+                if (gitHubRelease != null)
+                {
+                    if (gitHubRelease.Url != Options.GeneralOptions.IgnoredUpdateUrl)
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            UpdateNotificationBorder.Visibility = Visibility.Visible;
+                            _gitHubReleaseUrl = gitHubRelease.Url;
+                        });
+                    }
+                }
+                else
+                {
+                    gitHubRelease = await _gitHubReleaseCheckerService
+                        .GetGitHubReleaseToUpdateToAsync("Vivelin", "SMZ3Randomizer", version ?? "", false);
+
+                    if (gitHubRelease != null && gitHubRelease.Url != Options.GeneralOptions.IgnoredUpdateUrl)
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            UpdateNotificationBorder.Visibility = Visibility.Visible;
+                            _gitHubReleaseUrl = gitHubRelease.Url;
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting GitHub release");
+            }
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
