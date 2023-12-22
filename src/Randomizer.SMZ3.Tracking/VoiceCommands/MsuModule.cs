@@ -11,6 +11,7 @@ using MSURandomizerLibrary.Models;
 using MSURandomizerLibrary.Services;
 using Randomizer.Abstractions;
 using Randomizer.Data.Configuration.ConfigFiles;
+using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data.Options;
 using Randomizer.Data.Tracking;
 using Randomizer.SMZ3.Tracking.Services;
@@ -102,25 +103,37 @@ public class MsuModule : TrackerModule, IDisposable
         if (_currentMsu == null) return;
         _currentTrack =_currentMsu.GetTrackFor(_currentTrackNumber);
 
-        if (_currentTrack != null)
-        {
-            var output = GetOutputText();
-            TrackerBase.UpdateTrack(_currentMsu, _currentTrack, output);
+        Logger.LogInformation("Current Track: {Track}", _currentTrack?.GetDisplayText() ?? "Unknown");
 
-            if (!string.IsNullOrEmpty(TrackerBase.Options.MsuTrackOutputPath))
-            {
-                try
-                {
-                    _ = File.WriteAllTextAsync(TrackerBase.Options.MsuTrackOutputPath, output);
-                }
-                catch (Exception ex)
-                {
-                    Logger.LogError(ex, "Unable to write current track details to {Path}", TrackerBase.Options.MsuTrackOutputPath);
-                }
-            }
+        if (_currentTrack == null) return;
+
+        var output = GetOutputText();
+        TrackerBase.UpdateTrack(_currentMsu, _currentTrack, output);
+
+        // Respond if we have lines to the song number, song name, or msu name
+        if (_msuConfig.SongResponses.TryGetValue(_currentTrack.MsuName ?? "", out var response))
+        {
+            TrackerBase.Say(response);
+        }
+        else if (_msuConfig.SongResponses.TryGetValue(_currentTrack.SongName, out response))
+        {
+            TrackerBase.Say(response);
+        }
+        else if (_msuConfig.SongResponses.TryGetValue(_currentTrackNumber.ToString(), out response))
+        {
+            TrackerBase.Say(response);
         }
 
-        Logger.LogInformation("Current Track: {Track}", _currentTrack?.GetDisplayText() ?? "Unknown");
+        if (string.IsNullOrEmpty(TrackerBase.Options.MsuTrackOutputPath)) return;
+        try
+        {
+            _ = File.WriteAllTextAsync(TrackerBase.Options.MsuTrackOutputPath, output);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Unable to write current track details to {Path}", TrackerBase.Options.MsuTrackOutputPath);
+        }
+
     }
 
     private string GetOutputText()

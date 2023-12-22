@@ -42,6 +42,7 @@
     <EmbeddedResource Include="Configuration\Yaml\BCU\game.yml" />
     <EmbeddedResource Include="Configuration\Yaml\BCU\items.yml" />
     <EmbeddedResource Include="Configuration\Yaml\BCU\locations.yml" />
+    <EmbeddedResource Include="Configuration\Yaml\BCU\msu.yml" />
     <EmbeddedResource Include="Configuration\Yaml\BCU\regions.yml" />
     <EmbeddedResource Include="Configuration\Yaml\BCU\requests.yml" />
     <EmbeddedResource Include="Configuration\Yaml\BCU\responses.yml" />
@@ -67,6 +68,7 @@
     <EmbeddedResource Include="Options\ItemSettingOptions.yml" />
     <EmbeddedResource Include="Configuration\Yaml\Sassy\hint_tiles.yml" />
     <EmbeddedResource Include="WorldData\VisibleItems.yml" />
+    <None Remove="Configuration\Yaml\Sassy\msu.yml" />
   </ItemGroup>
 
   <ItemGroup>
