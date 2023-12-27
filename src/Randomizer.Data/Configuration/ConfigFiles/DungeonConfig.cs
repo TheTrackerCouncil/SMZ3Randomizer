@@ -34,7 +34,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Name = new("Eastern Palace"),
                     Abbreviation = "EP",
                     Boss = new("Armos Knights"),
-                    Type = typeof(Data.WorldData.Regions.Zelda.EasternPalace),
+                    TypeName = "EasternPalace",
                     LocationId = LocationId.EasternPalaceArmosKnights,
                 },
                 new DungeonInfo()
@@ -43,7 +43,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Name = new("Desert Palace"),
                     Abbreviation = "DP",
                     Boss = new("Lanmolas"),
-                    Type = typeof(Data.WorldData.Regions.Zelda.DesertPalace),
+                    TypeName = "DesertPalace",
                     LocationId = LocationId.DesertPalaceLanmolas,
                 },
                 new DungeonInfo()
@@ -52,7 +52,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Name = new("Tower of Hera"),
                     Abbreviation = "TH",
                     Boss = new("Moldorm"),
-                    Type = typeof(Data.WorldData.Regions.Zelda.TowerOfHera),
+                    TypeName = "TowerOfHera",
                     LocationId = LocationId.TowerOfHeraMoldorm,
                 },
                 new DungeonInfo()
@@ -61,7 +61,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Name = new("Palace of Darkness", "Dark Palace"),
                     Abbreviation = "PD",
                     Boss = new("Helmasaur King", "Helmasaur"),
-                    Type = typeof(Data.WorldData.Regions.Zelda.PalaceOfDarkness),
+                    TypeName = "PalaceOfDarkness",
                     LocationId = LocationId.PalaceOfDarknessHelmasaurKing,
                 },
                 new DungeonInfo()
@@ -70,7 +70,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Name = new("Swamp Palace"),
                     Abbreviation = "SP",
                     Boss = new("Arrghus"),
-                    Type = typeof(Data.WorldData.Regions.Zelda.SwampPalace),
+                    TypeName = "SwampPalace",
                     LocationId = LocationId.SwampPalaceArrghus,
                 },
                 new DungeonInfo()
@@ -79,7 +79,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Name = new("Skull Woods"),
                     Abbreviation = "SW",
                     Boss = new(new("Mothula", 0), "MOTHyula"),
-                    Type = typeof(Data.WorldData.Regions.Zelda.SkullWoods),
+                    TypeName = "SkullWoods",
                     LocationId = LocationId.SkullWoodsMothula,
                 },
                 new DungeonInfo()
@@ -88,7 +88,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Name = new("Thieves' Town"),
                     Abbreviation = "TT",
                     Boss = new("Blind"),
-                    Type = typeof(Data.WorldData.Regions.Zelda.ThievesTown),
+                    TypeName = "ThievesTown",
                     LocationId = LocationId.ThievesTownBlind,
                 },
                 new DungeonInfo()
@@ -97,7 +97,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Name = new("Ice Palace"),
                     Abbreviation = "IP",
                     Boss = new("Kholdstare"),
-                    Type = typeof(Data.WorldData.Regions.Zelda.IcePalace),
+                    TypeName = "IcePalace",
                     LocationId = LocationId.IcePalaceKholdstare,
                 },
                 new DungeonInfo()
@@ -106,7 +106,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Name = new("Misery Mire"),
                     Abbreviation = "MM",
                     Boss = new("Vitreous"),
-                    Type = typeof(Data.WorldData.Regions.Zelda.MiseryMire),
+                    TypeName = "MiseryMire",
                     LocationId = LocationId.MiseryMireVitreous,
                 },
                 new DungeonInfo()
@@ -115,7 +115,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Name = new("Turtle Rock"),
                     Abbreviation = "TR",
                     Boss = new("Trinexx"),
-                    Type = typeof(Data.WorldData.Regions.Zelda.TurtleRock),
+                    TypeName = "TurtleRock",
                     LocationId = LocationId.TurtleRockTrinexx,
                 },
                 new DungeonInfo()
@@ -124,7 +124,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Name = new(new("Ganon's Tower", 0), "Gannon's Tower"),
                     Abbreviation = "GT",
                     Boss = new("Ganon", "Gannon", "Gannondorf", new("Gaynon", 0)),
-                    Type = typeof(Data.WorldData.Regions.Zelda.GanonsTower),
+                    TypeName = "GanonsTower",
                 },
                 new DungeonInfo()
                 {
@@ -132,7 +132,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Name = new("Hyrule Castle"),
                     Abbreviation = "HC",
                     Boss = new("Ball and Chain Soldier"),
-                    Type = typeof(Data.WorldData.Regions.Zelda.HyruleCastle),
+                    TypeName = "HyruleCastle",
                 },
                 new DungeonInfo()
                 {
@@ -140,7 +140,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Name = new("Agahnim's Tower", "Castle Tower"),
                     Abbreviation = "AT",
                     Boss = new(new("Agahnim", 0), "Aganihm"),
-                    Type = typeof(Data.WorldData.Regions.Zelda.CastleTower),
+                    TypeName = "CastleTower",
                 },
             };
         }

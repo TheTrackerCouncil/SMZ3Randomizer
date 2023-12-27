@@ -1,0 +1,114 @@
+- Dungeon: Eastern Palace
+  Name:
+  - Text: Eastern Palace
+  Abbreviation: EP
+  Boss:
+  - Text: Armos Knights
+  TypeName: EasternPalace
+  LocationId: EasternPalaceArmosKnights
+- Dungeon: Desert Palace
+  Name:
+  - Text: Desert Palace
+  Abbreviation: DP
+  Boss:
+  - Text: Lanmolas
+  TypeName: DesertPalace
+  LocationId: DesertPalaceLanmolas
+- Dungeon: Tower of Hera
+  Name:
+  - Text: Tower of Hera
+  Abbreviation: TH
+  Boss:
+  - Text: Moldorm
+  TypeName: TowerOfHera
+  LocationId: TowerOfHeraMoldorm
+- Dungeon: Palace of Darkness
+  Name:
+  - Text: Palace of Darkness
+  - Text: Dark Palace
+  Abbreviation: PD
+  Boss:
+  - Text: Helmasaur King
+  - Text: Helmasaur
+  TypeName: PalaceOfDarkness
+  LocationId: PalaceOfDarknessHelmasaurKing
+- Dungeon: Swamp Palace
+  Name:
+  - Text: Swamp Palace
+  Abbreviation: SP
+  Boss:
+  - Text: Arrghus
+  TypeName: SwampPalace
+  LocationId: SwampPalaceArrghus
+- Dungeon: Skull Woods
+  Name:
+  - Text: Skull Woods
+  Abbreviation: SW
+  Boss:
+  - Text: Mothula
+    Weight: 0
+  - Text: MOTHyula
+  TypeName: SkullWoods
+  LocationId: SkullWoodsMothula
+- Dungeon: Thieves' Town
+  Name:
+  - Text: Thieves' Town
+  Abbreviation: TT
+  Boss:
+  - Text: Blind
+  TypeName: ThievesTown
+  LocationId: ThievesTownBlind
+- Dungeon: Ice Palace
+  Name:
+  - Text: Ice Palace
+  Abbreviation: IP
+  Boss:
+  - Text: Kholdstare
+  TypeName: IcePalace
+  LocationId: IcePalaceKholdstare
+- Dungeon: Misery Mire
+  Name:
+  - Text: Misery Mire
+  Abbreviation: MM
+  Boss:
+  - Text: Vitreous
+  TypeName: MiseryMire
+  LocationId: MiseryMireVitreous
+- Dungeon: Turtle Rock
+  Name:
+  - Text: Turtle Rock
+  Abbreviation: TR
+  Boss:
+  - Text: Trinexx
+  TypeName: TurtleRock
+  LocationId: TurtleRockTrinexx
+- Dungeon: Ganon's Tower
+  Name:
+  - Text: Ganon's Tower
+    Weight: 0
+  - Text: Gannon's Tower
+  Abbreviation: GT
+  Boss:
+  - Text: Ganon
+  - Text: Gannon
+  - Text: Gannondorf
+  - Text: Gaynon
+    Weight: 0
+  TypeName: GanonsTower
+- Dungeon: Hyrule Castle
+  Name:
+  - Text: Hyrule Castle
+  Abbreviation: HC
+  Boss:
+  - Text: Ball and Chain Soldier
+  TypeName: HyruleCastle
+- Dungeon: Castle Tower
+  Name:
+  - Text: Agahnim's Tower
+  - Text: Castle Tower
+  Abbreviation: AT
+  Boss:
+  - Text: Agahnim
+    Weight: 0
+  - Text: Aganihm
+  TypeName: CastleTower

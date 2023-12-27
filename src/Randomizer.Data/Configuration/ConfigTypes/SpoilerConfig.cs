@@ -37,96 +37,78 @@ namespace Randomizer.Data.Configuration
         /// <summary>
         /// Gets the phrases to respond with when asking about an item that is
         /// already at the highest stage.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the item.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString TrackedAllItemsAlready { get; init; }
             = new("You already have every {0}.");
 
         /// <summary>
         /// Gets the phrases to respond with when asking about an item that has
         /// already been tracked.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the item, including "a",
         /// "an" or "the".
-        /// </remarks>
+        /// </summary>
         public SchrodingersString TrackedItemAlready { get; init; }
             = new("You already have {0}.");
 
         /// <summary>
         /// Gets the phrases to respond with when asking about an item that has
         /// been marked.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the". <c>{1}</c> is a placeholder for the name of the location.
         /// <c>{2}</c> is a placeholder for the name of the region.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString MarkedItem { get; init; }
             = new("You've marked {0} at {1} <break strength='weak'/> in {2}");
 
         /// <summary>
         /// Gets the phrases to respond with when asking about a location whose
         /// item has already been marked.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the location. <c>{1}</c>
         /// is a placeholder for the name of the marked item, with "a", "an" or
         /// "the".
-        /// </remarks>
+        /// </summary>
         public SchrodingersString MarkedLocation { get; init; }
              = new("You've marked {1} at {0}.");
 
         /// <summary>
         /// Gets the phrases to respond with when the location that was asked
         /// about did not have an item.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the location.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString EmptyLocation { get; init; }
             = new("{0} does not have an item. Did you forget to generate a seed first?");
 
         /// <summary>
         /// Gets the phrases to respond with when the item could not be found.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the".
-        /// </remarks>
+        /// </summary>
         public SchrodingersString ItemNotFound { get; init; }
             = new("I cannot find {0}.");
 
         /// <summary>
         /// Gets the phrases to respond with when no instances of an item could
         /// be found anymore.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the plural name of the item.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString ItemsNotFound { get; init; }
             = new("I cannot find any more {0}.");
 
         /// <summary>
         /// Gets the phrases to respond with when all locations that have the item are cleared.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the".
-        /// </remarks>
+        /// </summary>
         public SchrodingersString LocationsCleared { get; init; }
             = new("You already cleared every location that has {0}.");
 
         /// <summary>
         /// Gets the phrases that spoil the item that is at the requested
         /// location.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the location. <c>{1}</c>
         /// is a placeholder for the name of the item, with "a", "an" or "the".
-        /// </remarks>
+        /// </summary>
         public SchrodingersString LocationHasItem { get; init; }
             = new("{0} has {1}");
 
@@ -134,12 +116,10 @@ namespace Randomizer.Data.Configuration
         /// Gets the phrases that spoil the item that is at the requested
         /// when in a multiworld game and the item belongs to another player
         /// location.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the location. <c>{1}</c>
         /// is a placeholder for the name of the item, with "a", "an" or "the".
         /// <c>2 is a placeholder for the name of the player the item belongs to</c>
-        /// </remarks>
+        /// </summary>
         public SchrodingersString LocationHasItemOtherWorld { get; init; }
             = new("{0} has {1} belonging to {2}");
 
@@ -147,158 +127,132 @@ namespace Randomizer.Data.Configuration
         /// Gets the phrases that spoil the item that is at the requested
         /// when in a multiworld game and the item belongs to the local player
         /// location.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the location. <c>{1}</c>
         /// is a placeholder for the name of the item, with "a", "an" or "the".
-        /// </remarks>
+        /// </summary>
         public SchrodingersString LocationHasItemOwnWorld { get; init; }
             = new("{0} has {1} belonging to you");
 
         /// <summary>
         /// Gets the phrases that spoil the item that is at the requested
         /// location, when the item does not exist in the item data.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the location. <c>{1}</c>
         /// is a placeholder for the name of the item, with "a", "an" or "the".
-        /// </remarks>
+        /// </summary>
         public SchrodingersString LocationHasUnknownItem { get; init; }
             = new("{0} has {1}");
 
         /// <summary>
         /// Gets the phrases that spoil the location that has the requested
         /// item.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the". <c>{1}</c> is a placeholder for the name of the location.
         /// <c>{2}</c> is a placeholder for the name of the region.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString ItemIsAtLocation { get; init; }
             = new("{0} is at {1} <break strength='weak'/> in {2}.");
 
         /// <summary>
         /// Gets the phrases that spoil the location that has the requested
         /// item and that location is in another world.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the". <c>{1}</c> is a placeholder for the name of the location.
         /// <c>{2}</c> is a placeholder for the name of the region. <c>3</c> is
         /// a placeholder for the name of the player for that location's world.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString ItemIsAtLocationOtherWorld { get; init; }
             = new("{0} is at {1} <break strength='weak'/> in {2} in {3}'s world.");
 
         /// <summary>
         /// Gets the phrases that spoil the location that has the requested
         /// item and that location is in the local world.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the". <c>{1}</c> is a placeholder for the name of the location.
         /// <c>{2}</c> is a placeholder for the name of the region.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString ItemIsAtLocationOwnWorld { get; init; }
             = new("{0} is at {1} <break strength='weak'/> in {2} in your world.");
 
         /// <summary>
         /// Gets the phrases that spoil one of the locations that has the
         /// requested item.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the". <c>{1}</c> is a placeholder for the name of the location.
         /// <c>{2}</c> is a placeholder for the name of the region.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString ItemsAreAtLocation { get; init; }
             = new("There is {0} at {1} <break strength='weak'/> in {2}");
 
         /// <summary>
         /// Gets the phrases that spoil one of the locations that has the
         /// requested item and that location is in another world.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the". <c>{1}</c> is a placeholder for the name of the location.
         /// <c>{2}</c> is a placeholder for the name of the region. <c>3</c> is
         /// a placeholder for the name of the player for that location's world.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString ItemsAreAtLocationOtherWorld { get; init; }
             = new("There is {0} at {1} <break strength='weak'/> in {2} in {3}'s world.");
 
         /// <summary>
         /// Gets the phrases that spoil one of the locations that has the
         /// requested item and that location is in the local world.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the". <c>{1}</c> is a placeholder for the name of the location.
         /// <c>{2}</c> is a placeholder for the name of the region.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString ItemsAreAtLocationOwnWorld { get; init; }
             = new("There is {0} at {1} <break strength='weak'/> in {2} in your world.");
 
         /// <summary>
         /// Gets the phrases that spoil the location that has the requested
         /// item, but the location is out of logic.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the". <c>{1}</c> is a placeholder for the name of the location.
         /// <c>{2}</c> is a placeholder for the name of the region.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString ItemIsAtOutOfLogicLocation { get; init; }
             = new("{0} is at {1} <break strength='weak'/> in {2}, but it is out of logic.");
 
         /// <summary>
         /// Gets the phrases that spoil the location that has the requested
         /// item, but the location is out of logic and in another player's world.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the". <c>{1}</c> is a placeholder for the name of the location.
         /// <c>{2}</c> is a placeholder for the name of the region.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString ItemIsAtOutOfLogicLocationOtherWorld { get; init; }
             = new("{0} is at {1} <break strength='weak'/> in {2} in {3}'s world, but it is out of logic.");
 
         /// <summary>
         /// Gets the phrases that spoil the location that has the requested
         /// item, but the location is out of logic and is in the local world.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the". <c>{1}</c> is a placeholder for the name of the location.
         /// <c>{2}</c> is a placeholder for the name of the region.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString ItemIsAtOutOfLogicLocationOwnWorld { get; init; }
             = new("{0} is at {1} <break strength='weak'/> in {2} in your world, but it is out of logic.");
 
         /// <summary>
         /// Gets the phrases that spoil one of the locations that has the
         /// requested item, but the location is out of logic.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the". <c>{1}</c> is a placeholder for the name of the location.
         /// <c>{2}</c> is a placeholder for the name of the region.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString ItemsAreAtOutOfLogicLocation { get; init; }
             = new("There is {0} at {1} <break strength='weak'/> in {2}, but you cannot get it yet.");
 
-        
+
         /// <summary>
         /// Gets the phrases that spoil one of the locations that has the
         /// requested item, but the location is out of logic and in another
         /// player's world.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the". <c>{1}</c> is a placeholder for the name of the location.
         /// <c>{2}</c> is a placeholder for the name of the region.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString ItemsAreAtOutOfLogicLocationOtherWorld { get; init; }
             = new("There is {0} at {1} <break strength='weak'/> in {2} in {3}'s, but you cannot get it yet.");
 
@@ -306,22 +260,18 @@ namespace Randomizer.Data.Configuration
         /// Gets the phrases that spoil one of the locations that has the
         /// requested item, but the location is out of logic and is in the
         /// local world.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the". <c>{1}</c> is a placeholder for the name of the location.
         /// <c>{2}</c> is a placeholder for the name of the region.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString ItemsAreAtOutOfLogicLocationOwnWorld { get; init; }
             = new("There is {0} at {1} <break strength='weak'/> in {2} in your world, but you cannot get it yet.");
 
         /// <summary>
         /// Gets the phrases that mention all the items in an area.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the room or region.
         /// <c>{1}</c> is a placeholder for the names of the items left.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString ItemsInArea { get; init; }
             = new("{0} has {1}");
 

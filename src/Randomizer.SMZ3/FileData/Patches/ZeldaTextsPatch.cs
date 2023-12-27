@@ -277,6 +277,6 @@ public class ZeldaTextsPatch : RomPatch
         }
     }
 
-    private RegionInfo? GetRegionInfo(Region region) => _regions.FirstOrDefault(x => x.Type == region.GetType());
+    private RegionInfo? GetRegionInfo(Region region) => _regions.FirstOrDefault(x => x.TypeName == region.GetType().Name);
     private ItemData? GetItemData(Item item) => _items.FirstOrDefault(x => x.InternalItemType == item.Type);
 }

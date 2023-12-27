@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
+using YamlDotNet.Serialization;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {
@@ -52,6 +53,11 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// </summary>
         [MergeKey]
         public int LocationNumber { get; init; }
+
+        /// <summary>
+        /// The corresponding LocationId for the location.
+        /// </summary>
+        public LocationId LocationId { get; init; }
 
         /// <summary>
         /// Gets the possible names for the location.

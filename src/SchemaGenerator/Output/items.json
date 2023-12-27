@@ -1,0 +1,139 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ListOfItemData",
+  "type": "array",
+  "description": "Config file for additional item information",
+  "items": {
+    "$ref": "#/definitions/ItemData"
+  },
+  "definitions": {
+    "ItemData": {
+      "type": "object",
+      "description": "Represents a trackable item.",
+      "additionalProperties": false,
+      "properties": {
+        "Item": {
+          "type": "string",
+          "description": "Unique key to connect the ItemData with other configs"
+        },
+        "Name": {
+          "description": "Gets the possible names for the item.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/SchrodingersString"
+            }
+          ]
+        },
+        "Article": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Gets the grammatical article for the item (e.g. \"a\" or \"the\")."
+        },
+        "Plural": {
+          "description": "Gets the possible plural names for the item.",
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/SchrodingersString"
+            }
+          ]
+        },
+        "Multiple": {
+          "type": "boolean",
+          "description": "Indicates whether the item can be tracked more than once."
+        },
+        "CounterMultiplier": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Gets the number the item counter should be multiplied with, in the case of items that can be tracked more than once.",
+          "format": "int32"
+        },
+        "Stages": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "description": "Gets the stages and their names of a progressive item.",
+          "additionalProperties": {
+            "$ref": "#/definitions/SchrodingersString"
+          }
+        },
+        "WhenTracked": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "description": "Gets the phrases to respond with when tracking this item, or null to use the generic item responses. The dictionary key represents the current TrackingState",
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/definitions/SchrodingersString"
+              }
+            ]
+          }
+        },
+        "Image": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Gets or sets the path to the image to be displayed on the tracker."
+        },
+        "Hints": {
+          "description": "Gets the possible hints for the item, if any are defined.",
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/SchrodingersString"
+            }
+          ]
+        },
+        "PedestalHints": {
+          "description": "Gets the possible hints for the item, if any are defined.",
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/SchrodingersString"
+            }
+          ]
+        }
+      }
+    },
+    "SchrodingersString": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Possibility"
+      }
+    },
+    "Possibility": {
+      "type": "object",
+      "description": "Represents one possibility of a SchrodingersString.",
+      "additionalProperties": false,
+      "properties": {
+        "Text": {
+          "type": "string",
+          "description": "Gets a string."
+        },
+        "Weight": {
+          "type": "number",
+          "description": "Gets the weight associated with the item.",
+          "format": "double",
+          "default": 1.0
+        }
+      }
+    }
+  }
+}

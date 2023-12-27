@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {
@@ -191,6 +190,10 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         public SchrodingersString GTKeyIsItemTwentyTwo { get; init; }
             = new("How unfortunate.");
 
+        /// <summary>
+        /// Responses based on what number the GT key was. Tracker will use the responses for the largest number less
+        /// than the number of the GT key.
+        /// </summary>
         public Dictionary<int, SchrodingersString> GTKeyResponses { get; init; } = new()
         {
             [1] = new SchrodingersString("You sure are lucky today."),

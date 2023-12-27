@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {
@@ -25,6 +26,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         }
 
         [MergeKey]
+        [JsonIgnore]
         public string Key => Phrases[0].ToLower();
 
         /// <summary>

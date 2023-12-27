@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NJsonSchema;
 using Randomizer.CrossPlatform;
+using Randomizer.Data.Configuration.ConfigFiles;
+using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data.Options;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
@@ -15,6 +20,7 @@ using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Generation;
 using Serilog;
 using Serilog.Events;
+using YamlDotNet.Serialization;
 
 namespace Randomizer.Tools
 {
@@ -29,7 +35,7 @@ namespace Randomizer.Tools
 
         public static void Main(string[] args)
         {
-            Log.Logger = new LoggerConfiguration()
+            /*Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
                 .WriteTo.Console(LogEventLevel.Information)
                 //.WriteTo.Debug()
@@ -66,7 +72,35 @@ namespace Randomizer.Tools
                     SwordOnlyDarkRooms = false,
                     LightWorldSouthFakeFlippers = false
                 },
-            }));
+            }));*/
+
+            var objects = new List<(object, string)>()
+            {
+                (BossConfig.Default(), "bosses.yml"),
+                (DungeonConfig.Default(), "dungeons.yml"),
+                (GameLinesConfig.Default(), "game.yml"),
+                (HintTileConfig.Default(), "hint_tiles.yml"),
+                (ItemConfig.Default(), "items.yml"),
+                (LocationConfig.Default(), "locations.yml"),
+                (MsuConfig.Default(), "msu.yml"),
+                (RegionConfig.Default(), "regions.yml"),
+                (RequestConfig.Default(), "requests.yml"),
+                (ResponseConfig.Default(), "responses.yml"),
+                (RewardConfig.Default(), "rewards.yml"),
+                (RoomConfig.Default(), "rooms.yml"),
+                (UIConfig.Default(), "ui.yml")
+            };
+
+            foreach (var obj in objects)
+            {
+                var serializer = new SerializerBuilder()
+                    .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitDefaults)
+                    .DisableAliases()
+                    .Build();
+                var yamlText = serializer.Serialize(obj.Item1);
+                File.WriteAllText($"/home/matt/Documents/yaml/{obj.Item2}", yamlText);
+            }
+
         }
 
         private static string GenerateStats(Config config, int count = 10000)

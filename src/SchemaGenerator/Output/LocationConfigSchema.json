@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ListOfLocationInfo",
+  "type": "array",
+  "items": {
+    "$ref": "#/definitions/LocationInfo"
+  },
+  "definitions": {
+    "LocationInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "LocationNumber": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "Name": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "Hints": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/SchrodingersString"
+            }
+          ]
+        },
+        "WhenTrackingJunk": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/SchrodingersString"
+            }
+          ]
+        },
+        "WhenTrackingProgression": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/SchrodingersString"
+            }
+          ]
+        },
+        "WhenMarkingJunk": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/SchrodingersString"
+            }
+          ]
+        },
+        "WhenMarkingProgression": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/SchrodingersString"
+            }
+          ]
+        },
+        "OutOfLogic": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/SchrodingersString"
+            }
+          ]
+        }
+      }
+    },
+    "SchrodingersString": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Possibility"
+      }
+    },
+    "Possibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Text": {
+          "type": "string"
+        },
+        "Weight": {
+          "type": "number",
+          "format": "double",
+          "default": 1.0
+        }
+      }
+    }
+  }
+}

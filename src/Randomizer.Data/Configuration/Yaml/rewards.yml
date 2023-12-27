@@ -1,0 +1,33 @@
+- Reward: Unknown
+  Name:
+  - Text: Unknown
+- Reward: Crystal
+  Name:
+  - Text: Crystal
+  - Text: Blue Crystal
+  Article: a
+  RewardType: CrystalBlue
+- Reward: Red Crystal
+  Name:
+  - Text: Red Crystal
+  Article: a
+  RewardType: CrystalRed
+- Reward: Green Pendant
+  Name:
+  - Text: Green Pendant
+  Article: the
+  RewardType: PendantGreen
+- Reward: Red Pendant
+  Name:
+  - Text: Red Pendant
+  Article: the
+  RewardType: PendantRed
+- Reward: Blue Pendant
+  Name:
+  - Text: Blue Pendant
+  Article: the
+  RewardType: PendantBlue
+- Reward: Agahnim
+  Name:
+  - Text: Agahnim
+  RewardType: Agahnim

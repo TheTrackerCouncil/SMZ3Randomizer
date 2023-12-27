@@ -1,0 +1,210 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "GameLinesConfig",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "GanonIntro": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "BlindIntro": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "TriforceRoom": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "HintLocationIsMandatory": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "HintLocationHasUsefulItem": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "HintDungeonMedallion": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "HintLocationHasSword": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "HintLocationEmpty": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "HintLocationHasItem": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "KingZora": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "BottleMerchant": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "ChoiceYes": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "ChoiceNo": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "GanonSilversHint": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "GanonNoSilvers": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "SahasrahlaReveal": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "BombShopReveal": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "TavernMan": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "SchrodingersString": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Possibility"
+      }
+    },
+    "Possibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Text": {
+          "type": "string"
+        },
+        "Weight": {
+          "type": "number",
+          "format": "double",
+          "default": 1.0
+        }
+      }
+    }
+  }
+}

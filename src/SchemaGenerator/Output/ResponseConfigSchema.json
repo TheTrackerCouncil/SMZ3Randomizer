@@ -1,0 +1,1052 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ResponseConfig",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "StartedTracking": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "StartingTrackingAlternate": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "StoppedTracking": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "StoppedTrackingPostGoMode": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "Misheard": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "TrackedItem": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "TrackedTwoItems": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "TrackedThreeItems": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "TrackedManyItems": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "TrackedItemByStage": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "TrackedItemMultiple": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "TrackedProgressiveItem": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "TrackedOlderProgressiveItem": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "TrackedTooManyOfAnItem": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "TrackedAlreadyTrackedItem": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "TrackedVanillaItem": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "TrackedExactAmountDuplicate": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "TrackedMultipleItems": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "ClearedMultipleItems": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "TrackedNothing": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "TrackedNothingOutOfLogic": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/SchrodingersString"
+      }
+    },
+    "UntrackedItem": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "TrackedOutOfLogicItem": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "TrackedOutOfLogicItemTooManyMissing": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "UntrackedNothing": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "UntrackedProgressiveItem": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "UntrackedItemMultiple": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "UntrackedItemMultipleLast": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "ShaktoolAvailable": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "PegWorldAvailable": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "PegWorldModeOn": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "PegWorldModePegged": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "PegWorldModeDone": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "DungeonRewardMarked": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "RemainingDungeonsMarked": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "NoRemainingDungeons": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "DungeonCleared": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "DungeonAlreadyCleared": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "DungeonClearedWithInaccessibleItems": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "DungeonClearedWithTooManyInaccessibleItems": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "DungeonBossCleared": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "DungeonBossAlreadyCleared": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "DungeonBossUncleared": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "DungeonBossNotYetCleared": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "DungeonBossClearedAddContent": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "DungeonRequirementMarked": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "DungeonRequirementInvalid": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "DungeonRequirementMismatch": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "DungeonTreasureTracked": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/SchrodingersString"
+      }
+    },
+    "DungeonTooManyTreasuresTracked": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "ItemTrackedInIncorrectDungeon": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "LocationMarked": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "LocationMarkedAgain": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "LocationMarkedAsBullshit": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "LocationMarkedPreConfigured": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "TrackedPreConfigured": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "LocationHasDifferentItem": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "LocationCleared": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "LocationsCleared": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "NoMarkedLocations": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "LocationsClearedSameRegion": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "GoModePrompts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "GoModeToggledOff": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "AreaDoesNotHaveItem": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "AreaHasMoreThanOneItem": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "TrackedUselessItem": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "Error": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "ActionUndone": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "NothingToUndo": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "UndoExpired": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "TrackerSettingChanged": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "BossDefeated": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "BossAlreadyDefeated": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "BossUndefeated": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "BossNotYetDefeated": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      ]
+    },
+    "TimerResumed": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "TimerReset": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "TimerPaused": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "Muted": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "Unmuted": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "BeatGame": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "Idle": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/SchrodingersString"
+      }
+    },
+    "Hints": {
+      "$ref": "#/definitions/HintsConfig"
+    },
+    "Spoilers": {
+      "$ref": "#/definitions/SpoilerConfig"
+    },
+    "Chat": {
+      "$ref": "#/definitions/ChatConfig"
+    },
+    "AutoTracker": {
+      "$ref": "#/definitions/AutoTrackerConfig"
+    },
+    "Map": {
+      "$ref": "#/definitions/MapResponseConfig"
+    },
+    "Cheats": {
+      "$ref": "#/definitions/CheatsConfig"
+    },
+    "Multiplayer": {
+      "$ref": "#/definitions/MultiplayerConfig"
+    }
+  },
+  "definitions": {
+    "SchrodingersString": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Possibility"
+      }
+    },
+    "Possibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Text": {
+          "type": "string"
+        },
+        "Weight": {
+          "type": "number",
+          "format": "double",
+          "default": 1.0
+        }
+      }
+    },
+    "HintsConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "EnabledHints": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "DisabledHints": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "PromptEnableItemHints": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "PromptEnableLocationHints": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "NoApplicableHints": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "PlaythroughImpossible": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemNotInLogic": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemInSuperMetroid": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemInALttP": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemRequiresOtherItem": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemRequiresManyOtherItems": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemNotInArea": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemInSphereZero": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemInEarlySphere": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemInLateSphere": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemInPreviouslyVisitedDungeon": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemInUnvisitedDungeon": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemInPreviouslyVisitedRegion": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemInUnvisitedRegion": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemHasBadVanillaLocationName": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemIsInVanillaJunkLocation": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "LocationAlreadyCleared": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "LocationAlreadyClearedSpoiler": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "LocationHasJunkItem": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "LocationHasUsefulItem": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "LocationHasSuperMetroidItem": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "LocationHasZeldaItem": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "AreaSuggestion": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "BookHint": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "AreaAlreadyCleared": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "AreaHasSomethingMandatory": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "AreaHasSomethingGood": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "AreaHasJunk": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "AreaHasJunkAndCrystal": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "AreaWorthComplicated": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemInUnknownWorld": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemInPlayerWorld": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemInPlayerWorldALttP": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemInPlayerWorldSuperMetroid": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemInPlayerWorldRegionRoomPrefixHint": {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      }
+    },
+    "SpoilerConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "EnabledSpoilers": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "DisabledSpoilers": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "PromptEnableItemSpoilers": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "PromptEnableLocationSpoilers": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "TrackedAllItemsAlready": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "TrackedItemAlready": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "MarkedItem": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "MarkedLocation": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "EmptyLocation": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemNotFound": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemsNotFound": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "LocationsCleared": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "LocationHasItem": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "LocationHasItemOtherWorld": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "LocationHasItemOwnWorld": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "LocationHasUnknownItem": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemIsAtLocation": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemIsAtLocationOtherWorld": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemIsAtLocationOwnWorld": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemsAreAtLocation": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemsAreAtLocationOtherWorld": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemsAreAtLocationOwnWorld": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemIsAtOutOfLogicLocation": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemIsAtOutOfLogicLocationOtherWorld": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemIsAtOutOfLogicLocationOwnWorld": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemsAreAtOutOfLogicLocation": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemsAreAtOutOfLogicLocationOtherWorld": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemsAreAtOutOfLogicLocationOwnWorld": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ItemsInArea": {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      }
+    },
+    "ChatConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "RecognizedGreetings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "WhenConnected": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "WhenDisconnected": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "NoConnection": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "GreetingResponses": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "GreetedTwice": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/SchrodingersString"
+            }
+          ]
+        },
+        "GreetedChannel": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/SchrodingersString"
+            }
+          ]
+        },
+        "StartedGuessingGame": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ClosedGuessingGame": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ModeratorClosedGuessingGame": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ClosedGuessingGameWhileClosed": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ClosedGuessingGameBeforeStarting": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ModeratorClosedGuessingGameWhileClosed": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ModeratorClosedGuessingGameBeforeStarting": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "DeclareGuessingGameWinners": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "DeclareGuessingGameClosestButNotOverWinner": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "NobodyWonGuessingGame": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "TrackerGuess": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "TrackerGuessWon": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "TrackerGuessOnlyWinner": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "TrackerGuessFailed": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/SchrodingersString"
+            }
+          ]
+        },
+        "UserNamePronunciation": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "AskChatAboutContent": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "AskChatAboutContentYes": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "AskChatAboutContentNo": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "PollComplete": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "PollOpened": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "PollError": {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      }
+    },
+    "AutoTrackerConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "WhenConnected": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "WhenDisconnected": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "GameStarted": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "GameStartedMultiplayer": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "NearKraidsAwfulSon": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "NearShaktool": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "NearCrocomire": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "AtCrumbleShaft": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "FallFromMoldorm": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "FallFromGTMoldorm": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "FallFromGanon": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "HeraPot": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "IceBreaker": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "SpeckyClip": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "DiverDown": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "EnterHyruleCastleTower": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "EnterPendantDungeon": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "EnteredGTEarly": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "FakeFlippers": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "MockBall": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "SkipSporeSpawn": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "RidleyFace": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "LookedAtNothing": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "LightWorldAllCrystals": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "DarkWorldNoMedallions": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "GTKeyIsItemOne": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "GTKeyIsItemTwoToSeven": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "GTKeyIsItemEightToFifteen": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "GTKeyIsItemSixteenToTwentyOne": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "GTKeyIsItemTwentyTwo": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "GTKeyResponses": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/SchrodingersString"
+          }
+        },
+        "SwitchedToSMZ3Rom": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "SwitchedToOtherRom": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/SchrodingersString"
+          }
+        }
+      }
+    },
+    "MapResponseConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "UpdateMap": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ShowDarkRoomMap": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "NotInDarkRoom": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "HideDarkRoomMap": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "NoPrevDarkRoomMap": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "HasLamp": {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      }
+    },
+    "CheatsConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "EnabledCheats": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "DisabledCheats": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "PromptEnableCheats": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "PromptEnableAutoTracker": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "CheatPerformed": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "CheatFailed": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "CheatInvalidItem": {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      }
+    },
+    "MultiplayerConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "OtherPlayerTrackedItem": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "OtherPlayerClearedDungeonWithReward": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "OtherPlayerClearedDungeonWithoutReward": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "OtherPlayerDefeatedBoss": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "OtherPlayedDied": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "OtherPlayedDiedDeathLink": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "OtherPlayerBeatGame": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "OtherPlayerBeatGameNoItems": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "OtherPlayerForfeitGame": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "GiftedUsefulItemToOtherPlayer": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ReceivedUsefulItemFromOtherPlayer": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "ReceivedJunkItemFromOtherPlayer": {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      }
+    }
+  }
+}

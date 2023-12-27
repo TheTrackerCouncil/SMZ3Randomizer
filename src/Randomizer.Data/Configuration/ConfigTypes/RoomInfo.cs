@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Newtonsoft.Json;
 using Randomizer.Data.WorldData;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
@@ -44,10 +45,10 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         public string Room { get; init; } = "";
 
         /// <summary>
-        /// The Randomzier.SMZ3 type matching this region
+        /// The name of the type matching this room
         /// </summary>
-
-        public Type? Type { get; init; }
+        [JsonIgnore]
+        public string? TypeName { get; init; }
 
         /// <summary>
         /// Gets the possible names for the room.
@@ -92,7 +93,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// more than one matching room in <paramref name="world"/>.
         /// </exception>
         public Room GetRoom(World world)
-            => world.Rooms.Single(x => x.GetType() == Type);
+            => world.Rooms.Single(x => x.GetType().Name == TypeName);
 
         /// <summary>
         /// Determines whether the room is accessible with the specified set of

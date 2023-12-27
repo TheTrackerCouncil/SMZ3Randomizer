@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
 
@@ -46,9 +47,9 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         public string Region { get; set; } = "";
 
         /// <summary>
-        /// Gets Randomizer.SMZ3 type for the region
+        /// Gets the class typename for the region
         /// </summary>
-        public Type? Type { get; set; }
+        public string? TypeName { get; set; }
 
         /// <summary>
         /// Gets the possible names for the region.
@@ -63,6 +64,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// The name of the map to display for this region
         /// </summary>
+        [JsonIgnore]
         public string MapName { get; init; } = "";
 
         /// <summary>
@@ -78,7 +80,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// is more than one matching region in <paramref name="world"/>.
         /// </exception>
         public Region GetRegion(World world)
-            => world.Regions.Single(x => x.GetType() == Type);
+            => world.Regions.Single(x => x.GetType().Name == TypeName);
 
         /// <summary>
         /// Returns a string representation of the region.

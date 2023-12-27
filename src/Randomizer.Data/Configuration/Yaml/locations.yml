@@ -1,0 +1,1730 @@
+- LocationNumber: 0
+  LocationId: CrateriaPowerBomb
+  Name:
+    - Text: Chozo Ruins entrance
+    - Text: that room opposite the Gauntlet
+    - Text: Power Bomb (Crateria surface)
+      Weight: 0
+- LocationNumber: 1
+  LocationId: CrateriaWestOceanFloodedCavern
+  Name:
+    - Text: Flooded Cavern (under water)
+    - Text: West Ocean (under water)
+    - Text: that room before Wrecked Ship that's underwater
+    - Text: Missile (outside Wrecked Ship bottom)
+      Weight: 0
+- LocationNumber: 2
+  LocationId: CrateriaWestOceanSky
+  Name:
+    - Text: Sky Missile
+    - Text: that spot all the way up in the sky after Wrecked Ship
+    - Text: Missile (outside Wrecked Ship top)
+      Weight: 0
+- LocationNumber: 3
+  LocationId: CrateriaWestOceanMorphBallMaze
+  Name:
+    - Text: Morph Ball Maze
+    - Text: Missile (outside Wrecked Ship middle)
+      Weight: 0
+- LocationNumber: 4
+  LocationId: CrateriaMoat
+  Name:
+    - Text: The Moat
+    - Text: Interior Lake
+    - Text: that room between Crateria and Wrecked Ship with the item on the water
+    - Text: Missile (Crateria moat)
+      Weight: 0
+- LocationNumber: 5
+  LocationId: CrateriaGauntletEnergyTank
+  Name:
+    - Text: Gauntlet (Chozo)
+    - Text: the room in the middle of the Gauntlet
+    - Text: Energy Tank, Gauntlet
+      Weight: 0
+- LocationNumber: 6
+  LocationId: CrateriaPit
+  Name:
+    - Text: Mother Brain's reliquary
+    - Text: Pit Room
+    - Text: the spot underneath the place Mother Brain used to be
+    - Text: Missile (Crateria bottom)
+      Weight: 0
+- LocationNumber: 7
+  LocationId: CrateriaBombTorizo
+  Name:
+    - Text: Bozo
+    - Text: Bomb Torizo room
+    - Text: Bombs
+      Weight: 0
+- LocationNumber: 8
+  LocationId: CrateriaTerminator
+  Name:
+    - Text: Terminator Room
+    - Text: Fungal Slope
+    - Text: that room in Crateria with the mushrooms
+    - Text: Energy Tank, Terminator
+      Weight: 0
+- LocationNumber: 9
+  LocationId: CrateriaGauntletShaftRight
+  Name:
+    - Text: Gauntlet Shaft Right
+    - Text: that spot on the right side after the Gauntlet
+    - Text: Missile (Crateria gauntlet right)
+      Weight: 0
+- LocationNumber: 10
+  LocationId: CrateriaGauntletShaftLeft
+  Name:
+    - Text: Gauntlet Shaft Left
+    - Text: that spot on the left side after the Gauntlet
+    - Text: Missile (Crateria gauntlet left)
+      Weight: 0
+- LocationNumber: 11
+  LocationId: CrateriaSuper
+  Name:
+    - Text: Old Tourian launchpad
+    - Text: Super Missile (Crateria)
+      Weight: 0
+- LocationNumber: 12
+  LocationId: CrateriaFinalMissile
+  Name:
+    - Text: Final Missile Bombway
+    - Text: The Final Missile
+    - Text: Dental Plan Missiles
+    - Text: the room in Crateria on the other side of the entrance to Zelda
+    - Text: Missile (Crateria middle)
+      Weight: 0
+- LocationNumber: 13
+  LocationId: GreenBrinstarMainShaft
+  Name:
+    - Text: Hell
+    - Text: Etecoon shaft
+    - Text: that room where the animals are wall jumping
+    - Text: Power Bomb (green Brinstar bottom)
+      Weight: 0
+- LocationNumber: 14
+  LocationId: PinkBrinstarSporeSpawnSuper
+  Name:
+    - Text: Spore Spawn's item
+    - Text: Super Missile (pink Brinstar)
+      Weight: 0
+- LocationNumber: 15
+  LocationId: GreenBrinstarEarlySupersBottom
+  Name:
+    - Text: Mockball Room (Fail item)
+    - Text: that spot you get to when failing the mock ball in Green Brinstar
+    - Text: Missile (green Brinstar below super missile)
+      Weight: 0
+- LocationNumber: 16
+  LocationId: GreenBrinstarEarlySupersTop
+  Name:
+    - Text: Mockball Room Attic
+    - Text: that spot on your way out of the mockball room
+    - Text: Super Missile (green Brinstar top)
+      Weight: 0
+- LocationNumber: 17
+  LocationId: GreenBrinstarReserveTankChozo
+  Name:
+    - Text: Mockball Chozo
+    - Text: the room after you use the Speed Booster in Green Brinstar
+    - Text: the room after you use the mockball glitch in Green Brinstar
+    - Text: Reserve Tank, Brinstar
+      Weight: 0
+- LocationNumber: 18
+  LocationId: GreenBrinstarReserveTankHidden
+  Name:
+    - Text: Mockball Back room hidden item
+    - Text: the room behind the room after you use the Speed Booster in Green Brinstar
+    - Text: the room behind the room after you use the mockball glitch in Green Brinstar
+    - Text: Missile (green Brinstar behind missile)
+      Weight: 0
+    - Text: Ron Popeil missiles
+    - Text: Mockball Hall Hidden Room Hidden Item
+- LocationNumber: 19
+  LocationId: GreenBrinstarReserveTankVisible
+  Name:
+    - Text: Mockball Back room
+    - Text: that spot in the wall in the room behind the room after you use the Speed Booster in Green Brinstar
+    - Text: that spot in the wall in the room behind the room after you use the mockball glitch in Green Brinstar
+    - Text: Missile (green Brinstar behind reserve tank)
+      Weight: 0
+    - Text: Mockball Hall Hidden Room Main Item
+- LocationNumber: 21
+  LocationId: PinkBrinstarPinkShaftTop
+  Name:
+    - Text: Pink Shaft (top)
+    - Text: Big Pink (top)
+    - Text: that spot in Pink Brinstar on the other side of the grapple ceiling
+    - Text: Missile (pink Brinstar top)
+      Weight: 0
+- LocationNumber: 22
+  LocationId: PinkBrinstarPinkShaftBottom
+  Name:
+    - Text: Pink Shaft (bottom)
+    - Text: Big Pink (bottom)
+    - Text: that spot on the bottom of Pink Brinstar
+    - Text: Missile (pink Brinstar bottom)
+      Weight: 0
+- LocationNumber: 23
+  LocationId: PinkBrinstarPinkShaftChozo
+  Name:
+    - Text: Pink Shaft (Chozo)
+    - Text: the room underneath Pink Brinstar
+    - Text: Charge Beam
+      Weight: 0
+- LocationNumber: 24
+  LocationId: PinkBrinstarPowerBomb
+  Name:
+    - Text: 'Mission: Impossible'
+    - Text: Pink Brinstar Power Bomb Room
+    - Text: Power Bomb (pink Brinstar)
+      Weight: 0
+- LocationNumber: 25
+  LocationId: GreenBrinstarGreenHillZone
+  Name:
+    - Text: Green Hill Zone
+    - Text: Jungle slope
+    - Text: Missile (green Brinstar pipe)
+      Weight: 0
+- LocationNumber: 26
+  LocationId: BlueBrinstarMorphBallRight
+  Name:
+    - Text: Morph Ball (Corridor No. 1)
+    - Text: Morphing Ball
+    - Text: the only place you can get to in Super Metroid without any items
+- LocationNumber: 27
+  LocationId: BlueBrinstarMorphBallLeft
+  Name:
+    - Text: Power Bomb wall (Corridor No. 1)
+    - Text: that spot behind the Morph Ball
+    - Text: Power Bomb (blue Brinstar)
+      Weight: 0
+- LocationNumber: 28
+  LocationId: BlueBrinstarFirstMissile
+  Name:
+    - Text: that spot all the way to the right of Blue Brinstar
+    - Text: Missile (blue Brinstar middle)
+      Weight: 0
+- LocationNumber: 29
+  LocationId: BlueBrinstarEnergyTankCeiling
+  Name:
+    - Text: Blue Brinstar Ceiling
+    - Text: that spot in the ceiling in Blue Brinstar
+    - Text: Energy Tank, Brinstar Ceiling
+      Weight: 0
+- LocationNumber: 30
+  LocationId: GreenBrinstarEtecoonEnergyTank
+  Name:
+    - Text: that spot next to the false floor in Green Brinstar
+    - Text: Highway to Hell
+    - Text: Energy Tank, Etecoons
+      Weight: 0
+- LocationNumber: 31
+  LocationId: GreenBrinstarEtecoonSuper
+  Name:
+    - Text: that room after the false floor in Green Brinstar
+    - Text: Super Missile (green Brinstar bottom)
+      Weight: 0
+- LocationNumber: 33
+  LocationId: PinkBrinstarWaterwayEnergyTank
+  Name:
+    - Text: Waterway
+    - Text: Energy Tank, Waterway
+      Weight: 0
+- LocationNumber: 34
+  LocationId: BlueBrinstarEnergyTankRight
+  Name:
+    - Text: that Chozo room at the bottom of Blue Brinstar
+    - Text: Missile (blue Brinstar bottom)
+      Weight: 0
+- LocationNumber: 35
+  LocationId: PinkBrinstarHoptank
+  Name:
+    - Text: Hoptank Room
+    - Text: Wave Beam Glitch room
+    - Text: the room where everyone does the Wave Beam Glitch
+    - Text: Energy Tank, Brinstar Gate
+      Weight: 0
+- LocationNumber: 36
+  LocationId: BlueBrinstarDoubleMissileVisible
+  Name:
+    - Text: Billy Mays Room Main Item
+    - Text: Missile (blue Brinstar top)
+      Weight: 0
+    - Text: Blue Brinstar Top Main Item
+    - Text: the visible spot in the Billy Mays Room
+- LocationNumber: 37
+  LocationId: BlueBrinstarDoubleMissileHidden
+  Name:
+    - Text: Billy Mays Room Hidden item
+    - Text: But wait, there's more!
+    - Text: Missile (blue Brinstar behind missile)
+      Weight: 0
+    - Text: Blue Brinstar Top Hidden Item
+    - Text: the hidden spot in the Billy Mays Room
+- LocationNumber: 38
+  LocationId: RedBrinstarXRayScope
+  Name:
+    - Text: The Chozo room after the dark room with all the spikes
+    - Text: X-Ray Scope
+    - Text: X-Ray
+      Weight: 0
+- LocationNumber: 39
+  LocationId: RedBrinstarBetaPowerBomb
+  Name:
+    - Text: Beta Power Bomb Room
+    - Text: Power Bomb (red Brinstar sidehopper room)
+    - Text: the room underneath the flower in Red Brinstar
+    - Text: the room underneath the Samus Eater in Red Brinstar
+- LocationNumber: 40
+  LocationId: RedBrinstarAlphaPowerBombRight
+  Name:
+    - Text: Alpha Power Bomb Room
+    - Text: Power Bomb (red Brinstar spike room)
+    - Text: the Chozo room in Red Brinstar with the jumping enemies you can freeze
+    - Text: the Chozo room in Red Brinstar with the Boyons
+- LocationNumber: 41
+  LocationId: RedBrinstarAlphaPowerBombLeft
+  Name:
+    - Text: Alpha Power Bomb Room (Behind the wall)
+    - Text: Missile (red Brinstar spike room)
+    - Text: the room behind the wall in the Chozo room in Red Brinstar
+- LocationNumber: 42
+  LocationId: RedBrinstarSpazer
+  Name:
+    - Text: ~ S p A z E r ~
+    - Text: Spazer
+    - Text: the Chozo room above the entrance to Maridia in Red Brinstar
+- LocationNumber: 43
+  LocationId: KraidsLairEnergyTank
+  Name:
+    - Text: Energy Tank, Kraid
+    - Text: the room that opens up on your way out after defeating Kraid
+- LocationNumber: 44
+  LocationId: KraidsLairKihunter
+  Name:
+    - Text: Warehouse Kihunter Room
+    - Text: Missile (Kraid)
+    - Text: the room before the long corridor leading to Kraid with the hidden item in the wall
+- LocationNumber: 48
+  LocationId: KraidsLairVariaSuit
+  Name:
+    - Text: Kraid's Reliquary
+    - Text: the room after Kraid
+    - Text: Varia Suit
+      Weight: 0
+- LocationNumber: 49
+  LocationId: UpperNorfairCathedral
+  Name:
+    - Text: Lava Room (Submerged in wall)
+    - Text: Cathedral
+    - Text: the room in Upper Norfair with the item in the lava
+    - Text: Missile (lava room)
+      Weight: 0
+- LocationNumber: 50
+  LocationId: UpperNorfairIceBeam
+  Name:
+    - Text: Ice Beam Room
+    - Text: Ice Beam
+    - Text: the room in Upper Norfair after the Speed Booster gates
+- LocationNumber: 51
+  LocationId: UpperNorfairCrumbleShaft
+  Name:
+    - Text: Crumble Shaft
+    - Text: the room with all the crumbling platforms
+    - Text: Missile (below Ice Beam)
+      Weight: 0
+- LocationNumber: 52
+  LocationId: UpperNorfairCrocomire
+  Name:
+    - Text: Crocomire's Pit
+    - Text: Energy Tank, Crocomire
+      Weight: 0
+    - Text: the room where you fight Crocomire
+- LocationNumber: 53
+  LocationId: UpperNorfairHiJumpBoots
+  Name:
+    - Text: Hi-Jump Boots Room
+    - Text: Hi-Jump Boots
+    - Text: the Chozo room after the room in Upper Norfair where you have to wait a long time for an enemy before you can leave again
+- LocationNumber: 54
+  LocationId: UpperNorfairCrocomireEscape
+  Name:
+    - Text: Crocomire Escape
+    - Text: Missile (above Crocomire)
+      Weight: 0
+    - Text: the room with the item beyond a Super Missile gate you can peak at in Upper Norfair
+- LocationNumber: 55
+  LocationId: UpperNorfairHiJumpEnergyTankLeft
+  Name:
+    - Text: Hi-Jump Lobby (Back)
+    - Text: the spot on your way out of the room in the Upper Norfair where you have to wait a long time for an enemy before you can leave again
+    - Text: Missile (Hi-Jump Boots)
+      Weight: 0
+- LocationNumber: 56
+  LocationId: UpperNorfairHiJumpEnergyTankRight
+  Name:
+    - Text: Hi-Jump Lobby (Entrance)
+    - Text: the room in the Upper Norfair where you have to wait a long time for an enemy before you can leave again
+    - Text: Energy Tank (Hi-Jump Boots)
+      Weight: 0
+- LocationNumber: 57
+  LocationId: UpperNorfairPostCrocomirePowerBomb
+  Name:
+    - Text: Post Crocomire Power Bomb Room
+    - Text: the room directly on the other side of Crocomire's room
+    - Text: Power Bomb (Crocomire)
+      Weight: 0
+- LocationNumber: 58
+  LocationId: UpperNorfairPostCrocomireMissile
+  Name:
+    - Text: Cosine Room
+    - Text: Post Crocomire Missile Room
+    - Text: the wavy room below Crocomire
+    - Text: Missile (below Crocomire)
+      Weight: 0
+- LocationNumber: 59
+  LocationId: UpperNorfairPostCrocomireJump
+  Name:
+    - Text: Indiana Jones Room
+    - Text: Pantry
+    - Text: Post Crocomire Jump Room
+    - Text: the big empty room after Crocomire that use the Speed Booster to get
+    - Text: Missile (Grappling Beam)
+      Weight: 0
+- LocationNumber: 60
+  LocationId: UpperNorfairGrappleBeam
+  Name:
+    - Text: Grapple Beam Room
+    - Text: Grappling Beam
+    - Text: the Chozo room after the big empty room past Crocomire
+- LocationNumber: 61
+  LocationId: UpperNorfairReserveTankChozo
+  Name:
+    - Text: Reserve Tank, Norfair
+    - Text: Bubble Mountain Hidden Hall Main Item
+    - Text: the hidden room on the left side of Bubble Mountain
+- LocationNumber: 62
+  LocationId: UpperNorfairReserveTankHidden
+  Name:
+    - Text: Missile (Norfair Reserve Tank)
+    - Text: Bubble Mountain Hidden Hall Hidden Item
+    - Text: the hidden spot in the hidden room on the left side of Bubble Mountain
+- LocationNumber: 63
+  LocationId: UpperNorfairGreenBubblesMissile
+  Name:
+    - Text: Bubble Mountain Missile Room
+    - Text: the room on the left side of Bubble Mountain
+    - Text: Missile (bubble Norfair green door)
+      Weight: 0
+- LocationNumber: 64
+  LocationId: UpperNorfairBubbleMountain
+  Name:
+    - Text: Bubble Mountain
+    - Text: the spot near the spikes on the bottom of Bubble Mountain
+    - Text: Missile (bubble Norfair)
+      Weight: 0
+- LocationNumber: 65
+  LocationId: UpperNorfairSpeedBoosterHall
+  Name:
+    - Text: Speed Booster Hall (Ceiling)
+    - Text: the spot in the ceiling on the right side of Bubble Mountain
+    - Text: Missile (Speed Booster)
+      Weight: 0
+- LocationNumber: 66
+  LocationId: UpperNorfairSpeedBooster
+  Name:
+    - Text: Speed Booster Room
+    - Text: Speed Booster
+    - Text: the room to the right of Bubble Mountain
+    - Text: the Chozo room in Bubble Mountain
+- LocationNumber: 67
+  LocationId: UpperNorfairDoubleChamber
+  Name:
+    - Text: Double Chamber
+    - Text: Grapple Crossing
+    - Text: Missile (Wave Beam)
+      Weight: 0
+- LocationNumber: 68
+  LocationId: UpperNorfairWaveBeam
+  Name:
+    - Text: Wave Beam Room
+    - Text: Wave Beam
+- LocationNumber: 70
+  LocationId: LowerNorfairGoldenTorizoVisible
+  Name:
+    - Text: Gold Torizo (Drop down)
+    - Text: the spot before you drop down to fight Gold Torizo
+    - Text: Missile (Gold Torizo)
+      Weight: 0
+- LocationNumber: 71
+  LocationId: LowerNorfairGoldenTorizoHidden
+  Name:
+    - Text: Golden Torizo (Ceiling)
+    - Text: the spot where Gold Torizo hides before the fight
+    - Text: Super Missile (Gold Torizo)
+      Weight: 0
+- LocationNumber: 73
+  LocationId: LowerNorfairMickeyMouse
+  Name:
+    - Text: Mickey Mouse Clubhouse
+    - Text: Mickey Mouse room
+    - Text: the room that looks like Mickey Mouse
+    - Text: Missile (Mickey Mouse room)
+      Weight: 0
+- LocationNumber: 74
+  LocationId: LowerNorfairSpringBallMaze
+  Name:
+    - Text: Spring Ball Maze Room
+    - Text: the room right before the Spring Ball Maze
+    - Text: Missile (lower Norfair above fire flea room)
+      Weight: 0
+- LocationNumber: 75
+  LocationId: LowerNorfairEscapePowerBomb
+  Name:
+    - Text: Escape Power Bomb Room
+    - Text: the room in lower Norfair that you hope doesn't have anything because you need to go through a morph ball maze
+    - Text: Power Bomb (lower Norfair above fire flea room)
+      Weight: 0
+- LocationNumber: 76
+  LocationId: LowerNorfairWasteland
+  Name:
+    - Text: Power Bomb of Shame
+    - Text: the room to the left before the spiky elevator to Ridley
+    - Text: Power Bomb (Power Bombs of shame)
+      Weight: 0
+- LocationNumber: 77
+  LocationId: LowerNorfairThreeMusketeers
+  Name:
+    - Text: Three Musketeer's Room
+    - Text: FrankerZ Missiles
+    - Text: Missile (lower Norfair near Wave Beam)
+      Weight: 0
+- LocationNumber: 78
+  LocationId: LowerNorfairRidleyTank
+  Name:
+    - Text: Ridley's Reliquary
+    - Text: the room after Ridley
+    - Text: Energy Tank, Ridley
+      Weight: 0
+  Hints:
+    - Text: I hear Ridley is about to open one of Kraid's Christmas presents again.
+- LocationNumber: 79
+  LocationId: LowerNorfairScrewAttack
+  Name:
+    - Text: Screw Attack
+    - Text: the Chozo below the portal to Misery Mire
+- LocationNumber: 80
+  LocationId: LowerNorfairFireflea
+  Name:
+    - Text: Fireflea Room
+    - Text: the dark room in lower Norfair with the fire flies
+    - Text: Energy Tank, Firefleas
+      Weight: 0
+- LocationNumber: 128
+  LocationId: WreckedShipMainShaft
+  Name:
+    - Text: Main Shaft (Side room)
+    - Text: the room behind the bombeable wall on the left side of Wrecked Ship
+    - Text: Missile (Wrecked Ship middle)
+      Weight: 0
+- LocationNumber: 129
+  LocationId: WreckedShipBowlingAlleyTop
+  Name:
+    - Text: Post Chozo Concert (Speed Booster Item)
+    - Text: Bowling Alley (Speed Booster Item)
+    - Text: the spot that requires the Speed Booster in Wrecked Ship
+    - Text: Reserve Tank, Wrecked Ship
+      Weight: 0
+    - Text: Wrecked Ship, Reserve Tank
+      Weight: 0
+- LocationNumber: 130
+  LocationId: WreckedShipBowlingAlleyBottom
+  Name:
+    - Text: Post Chozo Concert (Breakable Chozo)
+    - Text: the breakable Chozo in Wrecked Ship
+    - Text: Missile (Gravity Suit)
+      Weight: 0
+- LocationNumber: 131
+  LocationId: WreckedShipAssemblyLine
+  Name:
+    - Text: Attic (Assembly Line)
+    - Text: the room with the conveyors and robots
+    - Text: Missile (Wrecked Ship top)
+      Weight: 0
+- LocationNumber: 132
+  LocationId: WreckedShipEnergyTank
+  Name:
+    - Text: Wrecked Pool
+    - Text: Ruined Pool
+    - Text: Wrecked Ship Bullshit Room
+    - Text: that room in Wrecked Ship with all the water where you always reset
+    - Text: Energy Tank, Wrecked Ship
+      Weight: 0
+- LocationNumber: 133
+  LocationId: WreckedShipWestSuper
+  Name:
+    - Text: Left Super Missile Chamber
+    - Text: the room that opens up on the left side after defeating Phantoon
+    - Text: Super Missile (Wrecked Ship left)
+      Weight: 0
+- LocationNumber: 134
+  LocationId: WreckedShipEastSuper
+  Name:
+    - Text: Right Super Missile Chamber
+    - Text: the room that opens up on the right side after defeating Phantoon
+    - Text: Right Super, Wrecked Ship
+      Weight: 0
+- LocationNumber: 135
+  LocationId: WreckedShipGravitySuit
+  Name:
+    - Text: Post Chozo Concert (Gravity Suit Chamber)
+    - Text: the room after the Chozo concert
+    - Text: Gravity Suit
+      Weight: 0
+- LocationNumber: 136
+  LocationId: OuterMaridiaMainStreetBottom
+  Name:
+    - Text: Main Street (Ceiling Shinespark)
+    - Text: Main Street Missiles
+    - Text: the spot in the ceiling in Maridia that requires Shinespark
+    - Text: Missile (green Maridia shinespark)
+      Weight: 0
+- LocationNumber: 137
+  LocationId: OuterMaridiaMainStreetTop
+  Name:
+    - Text: Main Street (Crab Supers)
+    - Text: the tiny room where you watch crabs walking into the wall
+    - Text: Super Missile (green Maridia)
+      Weight: 0
+- LocationNumber: 138
+  LocationId: OuterMaridiaMamaTurtleVisible
+  Name:
+    - Text: Mama Turtle Room
+    - Text: the room with the turtles
+    - Text: Energy Tank, Mama turtle
+      Weight: 0
+- LocationNumber: 139
+  LocationId: OuterMaridiaMamaTurtleHidden
+  Name:
+    - Text: Mama Turtle Room (Wall item)
+    - Text: the spot in the wall in the turtle room
+    - Text: Missile (green Maridia tatori)
+      Weight: 0
+- LocationNumber: 140
+  LocationId: InnerMaridiaWateringHoleLeft
+  Name:
+    - Text: Watering Hole Left
+    - Text: the left side of the pit with two items in the northeast of Maridia
+    - Text: Super Missile (yellow Maridia)
+      Weight: 0
+- LocationNumber: 141
+  LocationId: InnerMaridiaWateringHoleRight
+  Name:
+    - Text: Watering Hole Right
+    - Text: the right side of the pit with two items in the northeast of Maridia
+    - Text: Missile (yellow Maridia super missile)
+      Weight: 0
+- LocationNumber: 142
+  LocationId: InnerMaridiaPseudoPlasmaSpark
+  Name:
+    - Text: Pseudo Plasma Spark Room
+    - Text: the room leading up to the pit with two items in the northeast of Maridia
+    - Text: Missile (yellow Maridia false wall)
+      Weight: 0
+- LocationNumber: 143
+  LocationId: InnerMaridiaPlasma
+  Name:
+    - Text: Plasma Beam
+    - Text: Plasma Chamber
+    - Text: Plasma Beam room
+    - Text: the room in Maridia near the forgotten highway to Wrecked Ship
+- LocationNumber: 144
+  LocationId: InnerMaridiaWestSandHoleLeft
+  Name:
+    - Text: Left Sand Pit Left
+    - Text: the left side of the left sand pit
+    - Text: Missile (left Maridia sand pit room)
+      Weight: 0
+- LocationNumber: 145
+  LocationId: InnerMaridiaWestSandHoleRight
+  Name:
+    - Text: Left Sand Pit Right
+    - Text: the right side of the left sand pit
+    - Text: Reserve Tank, Maridia
+      Weight: 0
+- LocationNumber: 146
+  LocationId: InnerMaridiaEastSandHoleLeft
+  Name:
+    - Text: Right Sand Pit Left
+    - Text: the left side of the right sand pit
+    - Text: Missile (right Maridia sand pit room)
+      Weight: 0
+- LocationNumber: 147
+  LocationId: InnerMaridiaEastSandHoleRight
+  Name:
+    - Text: Right Sand Pit Right
+    - Text: the right side of the right sand pit
+    - Text: Power Bomb (right Maridia sand pit room)
+      Weight: 0
+- LocationNumber: 148
+  LocationId: InnerMaridiaAqueductLeft
+  Name:
+    - Text: Aqueduct (Left item)
+    - Text: Missile (pink Maridia)
+      Weight: 0
+- LocationNumber: 149
+  LocationId: InnerMaridiaAqueductRight
+  Name:
+    - Text: Aqueduct (Right item)
+    - Text: Super Missile (pink Maridia)
+      Weight: 0
+- LocationNumber: 150
+  LocationId: InnerMaridiaSpringBall
+  Name:
+    - Text: Shaktool
+    - Text: Shak's Stash
+    - Text: Shaktool's item
+    - Text: the room that everyone's favorite diggy boy helps you get to
+    - Text: the room after everyone's favorite diggy boy
+    - Text: Spring Ball
+      Weight: 0
+- LocationNumber: 151
+  LocationId: InnerMaridiaPreciousRoom
+  Name:
+    - Text: The Precious Room
+    - Text: Pre-Draygon Room
+    - Text: the wall in the room before Draygon
+    - Text: Missile (Draygon)
+      Weight: 0
+- LocationNumber: 152
+  LocationId: InnerMaridiaBotwoon
+  Name:
+    - Text: Sandy Path
+    - Text: the room after Botwoon
+    - Text: Energy Tank, Botwoon
+      Weight: 0
+- LocationNumber: 154
+  LocationId: InnerMaridiaSpaceJump
+  Name:
+    - Text: Draygon's Reliquary
+    - Text: the room after Draygon
+    - Text: Space Jump
+      Weight: 0
+- LocationNumber: 256
+  LocationId: EtherTablet
+  Name:
+    - Text: Ether Tablet
+- LocationNumber: 257
+  LocationId: SpectacleRock
+  Name:
+    - Text: Spectacle Rock
+- LocationNumber: 258
+  LocationId: SpectacleRockCave
+  Name:
+    - Text: Spectacle Rock Cave
+- LocationNumber: 259
+  LocationId: OldMan
+  Name:
+    - Text: Old Man
+- LocationNumber: 260
+  LocationId: FloatingIsland
+  Name:
+    - Text: Floating Island
+- LocationNumber: 261
+  LocationId: SpiralCave
+  Name:
+    - Text: Spiral Cave
+- LocationNumber: 262
+  LocationId: ParadoxCaveUpperLeft
+  Name:
+    - Text: Paradox Cave Upper (Left)
+- LocationNumber: 263
+  LocationId: ParadoxCaveUpperRight
+  Name:
+    - Text: Paradox Cave Upper (Right)
+- LocationNumber: 264
+  LocationId: ParadoxCaveLowerFarLeft
+  Name:
+    - Text: Paradox Cave Lower (Far Left)
+- LocationNumber: 265
+  LocationId: ParadoxCaveLowerLeft
+  Name:
+    - Text: Paradox Cave Lower (Left)
+- LocationNumber: 266
+  LocationId: ParadoxCaveLowerMiddle
+  Name:
+    - Text: Paradox Cave Lower (Middle)
+- LocationNumber: 267
+  LocationId: ParadoxCaveLowerRight
+  Name:
+    - Text: Paradox Cave Lower (Right)
+- LocationNumber: 268
+  LocationId: ParadoxCaveLowerFarRight
+  Name:
+    - Text: Paradox Cave Lower (Far Right)
+- LocationNumber: 269
+  LocationId: MimicCave
+  Name:
+    - Text: Mimic Cave
+- LocationNumber: 270
+  LocationId: MasterSwordPedestal
+  Name:
+    - Text: Master Sword Pedestal
+    - Text: Pedestal
+    - Text: Ped
+  Hints:
+    - Text: I hope you don't need it.
+- LocationNumber: 271
+  LocationId: Mushroom
+  Name:
+    - Text: Mushroom
+- LocationNumber: 272
+  LocationId: LostWoodsHideout
+  Name:
+    - Text: Lost Woods Hideout
+- LocationNumber: 273
+  LocationId: LumberjackTree
+  Name:
+    - Text: Lumberjack Tree
+    - Text: Lumberjack Ledge
+- LocationNumber: 274
+  LocationId: PegasusRocks
+  Name:
+    - Text: Bonk Rocks
+    - Text: Pegasus Rocks
+- LocationNumber: 275
+  LocationId: GraveyardLedge
+  Name:
+    - Text: Graveyard Ledge
+- LocationNumber: 276
+  LocationId: KingsTomb
+  Name:
+    - Text: King's Tomb
+- LocationNumber: 277
+  LocationId: KakarikoWellTop
+  Name:
+    - Text: Kakariko Well Back cave
+    - Text: Kakariko Well Top
+- LocationNumber: 278
+  LocationId: KakarikoWellLeft
+  Name:
+    - Text: Kakariko Well Left
+- LocationNumber: 279
+  LocationId: KakarikoWellMiddle
+  Name:
+    - Text: Kakariko Well Middle
+- LocationNumber: 280
+  LocationId: KakarikoWellRight
+  Name:
+    - Text: Kakariko Well Right
+- LocationNumber: 281
+  LocationId: KakarikoWellBottom
+  Name:
+    - Text: Kakariko Well Bottom
+- LocationNumber: 282
+  LocationId: BlindsHideoutTop
+  Name:
+    - Text: Blind's Hideout Back Room
+    - Text: Blind's Hideout Top
+- LocationNumber: 283
+  LocationId: BlindsHideoutFarLeft
+  Name:
+    - Text: Blind's Hideout Far Left
+- LocationNumber: 284
+  LocationId: BlindsHideoutLeft
+  Name:
+    - Text: Blind's Hideout Left
+- LocationNumber: 285
+  LocationId: BlindsHideoutRight
+  Name:
+    - Text: Blind's Hideout Right
+- LocationNumber: 286
+  LocationId: BlindsHideoutFarRight
+  Name:
+    - Text: Blind's Hideout Far Right
+- LocationNumber: 287
+  LocationId: BottleMerchant
+  Name:
+    - Text: Bottle Merchant
+  Hints:
+    - Text: You know it's a scam, right?
+- LocationNumber: 289
+  LocationId: SickKid
+  Name:
+    - Text: Sick Kid
+    - Text: Bug Catching Kid's House
+- LocationNumber: 290
+  LocationId: KakarikoTavern
+  Name:
+    - Text: Kakariko Tavern
+    - Text: Inn back room
+- LocationNumber: 291
+  LocationId: MagicBat
+  Name:
+    - Text: Magic Bat
+- LocationNumber: 292
+  LocationId: KingZora
+  Name:
+    - Text: Zora
+    - Text: King Zora
+  Hints:
+    - Text: You know it's a scam, right?
+- LocationNumber: 293
+  LocationId: ZorasLedge
+  Name:
+    - Text: Zora's Ledge
+- LocationNumber: 295
+  LocationId: WaterfallFairyRight
+  Name:
+    - Text: Waterfall Fairy Right
+- LocationNumber: 296
+  LocationId: PotionShop
+  Name:
+    - Text: Potion Shop
+    - Text: Mushroom Item
+- LocationNumber: 297
+  LocationId: SahasrahlasHutLeft
+  Name:
+    - Text: Sahasrahla's Hut Left
+- LocationNumber: 298
+  LocationId: SahasrahlasHutMiddle
+  Name:
+    - Text: Sahasrahla's Hut Middle
+- LocationNumber: 299
+  LocationId: SahasrahlasHutRight
+  Name:
+    - Text: Sahasrahla's Hut Right
+- LocationNumber: 300
+  LocationId: Sahasrahla
+  Name:
+    - Text: Sahasrahla
+- LocationNumber: 301
+  LocationId: MazeRace
+  Name:
+    - Text: Maze Race
+    - Text: Racing Game
+- LocationNumber: 307
+  LocationId: MiniMoldormCaveFarLeft
+  Name:
+    - Text: Mini Moldorm Cave Far Left
+- LocationNumber: 308
+  LocationId: MiniMoldormCaveLeft
+  Name:
+    - Text: Mini Moldorm Cave Left
+- LocationNumber: 309
+  LocationId: MiniMoldormCaveNpc
+  Name:
+    - Text: Mini Moldorm Cave NPC
+- LocationNumber: 310
+  LocationId: MiniMoldormCaveRight
+  Name:
+    - Text: Mini Moldorm Cave Right
+- LocationNumber: 314
+  LocationId: BombosTablet
+  Name:
+    - Text: Bombos Tablet
+- LocationNumber: 315
+  LocationId: FloodgateChest
+  Name:
+    - Text: Floodgate Chest
+- LocationNumber: 316
+  LocationId: SunkenTreasure
+  Name:
+    - Text: Sunken Treasure
+- LocationNumber: 317
+  LocationId: LakeHyliaIsland
+  Name:
+    - Text: Lake Hylia Island
+- LocationNumber: 318
+  LocationId: Hobo
+  Name:
+    - Text: Under the bridge
+    - Text: the guy under the bridge
+    - Text: Hobo
+- LocationNumber: 319
+  LocationId: IceRodCave
+  Name:
+    - Text: Ice Cave
+    - Text: Ice Rod Cave
+- LocationNumber: 320
+  LocationId: SpikeCave
+  Name:
+    - Text: Spike Cave
+- LocationNumber: 321
+  LocationId: HookshotCaveTopRight
+  Name:
+    - Text: Hookshot Cave (Top Right)
+- LocationNumber: 322
+  LocationId: HookshotCaveTopLeft
+  Name:
+    - Text: Hookshot Cave (Top Left)
+- LocationNumber: 323
+  LocationId: HookshotCaveBottomLeft
+  Name:
+    - Text: Hookshot Cave (Bottom Left)
+- LocationNumber: 324
+  LocationId: HookshotCaveBottomRight
+  Name:
+    - Text: Hookshot Cave (Bottom Right)
+- LocationNumber: 325
+  LocationId: SuperbunnyCaveTop
+  Name:
+    - Text: Superbunny Cave (Top)
+- LocationNumber: 326
+  LocationId: SuperbunnyCaveBottom
+  Name:
+    - Text: Superbunny Cave (Bottom)
+- LocationNumber: 327
+  LocationId: BumperCave
+  Name:
+    - Text: Bumper Cave Ledge
+    - Text: Bumper Cave
+    - Text: Bumper Ledge
+- LocationNumber: 328
+  LocationId: ChestGame
+  Name:
+    - Text: Chest Game
+- LocationNumber: 329
+  LocationId: CShapedHouse
+  Name:
+    - Text: C-Shaped House
+- LocationNumber: 330
+  LocationId: Brewery
+  Name:
+    - Text: Brewery
+- LocationNumber: 331
+  LocationId: HammerPegs
+  Name:
+    - Text: Peg World
+    - Text: Hammer Pegs
+- LocationNumber: 332
+  LocationId: Blacksmith
+  Name:
+    - Text: Blacksmith
+- LocationNumber: 333
+  LocationId: PurpleChest
+  Name:
+    - Text: Purple Chest turn-in
+    - Text: Purple Chest
+- LocationNumber: 334
+  LocationId: Catfish
+  Name:
+    - Text: Catfish
+    - Text: Scatfish
+    - Text: Lake of Ill Omen
+  Hints:
+    - Text: You know it's a scam, right?
+- LocationNumber: 335
+  LocationId: Pyramid
+  Name:
+    - Text: Pyramid of Power
+    - Text: Pyramid
+    - Text: Pyramid Ledge
+- LocationNumber: 336
+  LocationId: PyramidFairyLeft
+  Name:
+    - Text: Cursed Fairy Left
+    - Text: Pyramid Fairy Left
+- LocationNumber: 337
+  LocationId: PyramidFairyRight
+  Name:
+    - Text: Cursed Fairy Right
+    - Text: Pyramid Fairy Right
+- LocationNumber: 338
+  LocationId: DiggingGame
+  Name:
+    - Text: Digging Game
+- LocationNumber: 339
+  LocationId: Stumpy
+  Name:
+    - Text: Haunted Grove
+    - Text: Stumpy
+- LocationNumber: 340
+  LocationId: HypeCaveTop
+  Name:
+    - Text: Hype Cave Top
+- LocationNumber: 341
+  LocationId: HypeCaveMiddleRight
+  Name:
+    - Text: Hype Cave Middle Right
+- LocationNumber: 342
+  LocationId: HypeCaveMiddleLeft
+  Name:
+    - Text: Hype Cave Middle Left
+- LocationNumber: 343
+  LocationId: HypeCaveBottom
+  Name:
+    - Text: Hype Cave Bottom
+- LocationNumber: 344
+  LocationId: HypeCaveNpc
+  Name:
+    - Text: Hype Cave NPC
+- LocationNumber: 345
+  LocationId: MireShedLeft
+  Name:
+    - Text: Mire Shed (Left)
+- LocationNumber: 346
+  LocationId: MireShedRight
+  Name:
+    - Text: Mire Shed (Right)
+- LocationNumber: 347
+  LocationId: Sanctuary
+  Name:
+    - Text: Sanctuary
+- LocationNumber: 348
+  LocationId: SewersSecretRoomLeft
+  Name:
+    - Text: Secret Room (Left)
+    - Text: Back of Escape (Left)
+    - Text: Sewers Secret Room (Left)
+      Weight: 0
+- LocationNumber: 349
+  LocationId: SewersSecretRoomMiddle
+  Name:
+    - Text: Secret Room (Middle)
+    - Text: Back of Escape (Middle)
+    - Text: Sewers Secret Room (Middle)
+      Weight: 0
+- LocationNumber: 350
+  LocationId: SewersSecretRoomRight
+  Name:
+    - Text: Secret Room (Right)
+    - Text: Back of Escape (Right)
+    - Text: Sewers Secret Room (Right)
+      Weight: 0
+- LocationNumber: 351
+  LocationId: SewersDarkCross
+  Name:
+    - Text: Dark Cross
+- LocationNumber: 352
+  LocationId: HyruleCastleMapChest
+  Name:
+    - Text: Hyrule Castle Map Chest
+- LocationNumber: 353
+  LocationId: HyruleCastleBoomerangChest
+  Name:
+    - Text: Boomerang Chest
+    - Text: Hyrule Castle Boomerang Chest
+      Weight: 0
+- LocationNumber: 354
+  LocationId: HyruleCastleZeldasCell
+  Name:
+    - Text: Zelda's Cell
+    - Text: Hyrule Castle Zelda's Cell
+      Weight: 0
+- LocationNumber: 355
+  LocationId: LinksUncle
+  Name:
+    - Text: Link's Uncle
+- LocationNumber: 356
+  LocationId: SecretPassage
+  Name:
+    - Text: Secret Passage
+    - Text: Hyrule Castle Secret Passage
+      Weight: 0
+- LocationNumber: 357
+  LocationId: CastleTowerFoyer
+  Name:
+    - Text: Castle Tower Foyer
+- LocationNumber: 358
+  LocationId: CastleTowerDarkMaze
+  Name:
+    - Text: Castle Tower (Dark Maze)
+- LocationNumber: 359
+  LocationId: EasternPalaceCannonballChest
+  Name:
+    - Text: Cannonball Chest
+    - Text: Eastern Palace Cannonball Chest
+      Weight: 0
+- LocationNumber: 360
+  LocationId: EasternPalaceMapChest
+  Name:
+    - Text: Eastern Palace Map Chest
+- LocationNumber: 361
+  LocationId: EasternPalaceCompassChest
+  Name:
+    - Text: Eastern Palace Compass Chest
+- LocationNumber: 362
+  LocationId: EasternPalaceBigChest
+  Name:
+    - Text: Eastern Palace Big Chest
+- LocationNumber: 363
+  LocationId: EasternPalaceBigKeyChest
+  Name:
+    - Text: Eastern Palace Big Key Chest
+- LocationNumber: 364
+  LocationId: EasternPalaceArmosKnights
+  Name:
+    - Text: Armos Knights
+  Hints:
+    - Text: One of the dungeon bosses has it.
+- LocationNumber: 365
+  LocationId: DesertPalaceBigChest
+  Name:
+    - Text: Desert Palace Big Chest
+    - Text: Dessert Palace Big Chest
+- LocationNumber: 366
+  LocationId: DesertPalaceTorch
+  Name:
+    - Text: Torch
+    - Text: Desert Palace Torch
+      Weight: 0
+    - Text: Dessert Palace Torch
+      Weight: 0
+- LocationNumber: 367
+  LocationId: DesertPalaceMapChest
+  Name:
+    - Text: Desert Palace Map Chest
+    - Text: Dessert Palace Map Chest
+- LocationNumber: 368
+  LocationId: DesertPalaceBigKeyChest
+  Name:
+    - Text: Desert Palace Big Key Chest
+    - Text: Dessert Palace Big Key Chest
+- LocationNumber: 369
+  LocationId: DesertPalaceCompassChest
+  Name:
+    - Text: Desert Palace Compass Chest
+    - Text: Dessert Palace Compass Chest
+- LocationNumber: 370
+  LocationId: DesertPalaceLanmolas
+  Name:
+    - Text: Lanmolas
+  Hints:
+    - Text: One of the dungeon bosses has it.
+- LocationNumber: 371
+  LocationId: TowerOfHeraBasementCage
+  Name:
+    - Text: Basement Cage
+    - Text: Tower of Hera Basement Cage
+      Weight: 0
+- LocationNumber: 372
+  LocationId: TowerOfHeraMapChest
+  Name:
+    - Text: Tower of Hera Map Chest
+- LocationNumber: 373
+  LocationId: TowerOfHeraBigKeyChest
+  Name:
+    - Text: Tower of Hera Big Key Chest
+- LocationNumber: 374
+  LocationId: TowerOfHeraCompassChest
+  Name:
+    - Text: Tower of Hera Compass Chest
+- LocationNumber: 375
+  LocationId: TowerOfHeraBigChest
+  Name:
+    - Text: Tower of Hera Big Chest
+- LocationNumber: 376
+  LocationId: TowerOfHeraMoldorm
+  Name:
+    - Text: Moldorm
+  Hints:
+    - Text: One of the dungeon bosses has it.
+- LocationNumber: 377
+  LocationId: PalaceOfDarknessShooterRoom
+  Name:
+    - Text: Shooter Room
+    - Text: Palace of Darkness Shooter Room
+      Weight: 0
+- LocationNumber: 378
+  LocationId: PalaceOfDarknessBigKeyChest
+  Name:
+    - Text: Palace of Darkness Big Key Chest
+- LocationNumber: 379
+  LocationId: PalaceOfDarknessStalfosBasement
+  Name:
+    - Text: Stalfos Basement
+    - Text: Palace of Darkness Stalfos Basement
+      Weight: 0
+- LocationNumber: 380
+  LocationId: PalaceOfDarknessTheArenaBridge
+  Name:
+    - Text: The Arena (Bridge)
+    - Text: Palace of Darkness The Arena (Bridge)
+      Weight: 0
+- LocationNumber: 381
+  LocationId: PalaceOfDarknessTheArenaLedge
+  Name:
+    - Text: The Arena (Ledge)
+    - Text: Palace of Darkness The Arena (Ledge)
+      Weight: 0
+- LocationNumber: 382
+  LocationId: PalaceOfDarknessMapChest
+  Name:
+    - Text: Palace of Darkness Map Chest
+- LocationNumber: 383
+  LocationId: PalaceOfDarknessCompassChest
+  Name:
+    - Text: Palace of Darkness Compass Chest
+- LocationNumber: 384
+  LocationId: PalaceOfDarknessHarmlessHellway
+  Name:
+    - Text: Harmless Hellway
+    - Text: Palace of Darkness Harmless Hellway
+      Weight: 0
+- LocationNumber: 385
+  LocationId: PalaceOfDarknessDarkBasementLeft
+  Name:
+    - Text: Dark Basement Left
+- LocationNumber: 386
+  LocationId: PalaceOfDarknessDarkBasementRight
+  Name:
+    - Text: Dark Basement Right
+- LocationNumber: 387
+  LocationId: PalaceOfDarknessDarkMazeTop
+  Name:
+    - Text: Dark Maze Top
+- LocationNumber: 388
+  LocationId: PalaceOfDarknessDarkMazeBottom
+  Name:
+    - Text: Dark Maze Bottom
+- LocationNumber: 389
+  LocationId: PalaceOfDarknessBigChest
+  Name:
+    - Text: Palace of Darkness Big Chest
+- LocationNumber: 390
+  LocationId: PalaceOfDarknessHelmasaurKing
+  Name:
+    - Text: Helmasaur King
+  Hints:
+    - Text: One of the dungeon bosses has it.
+- LocationNumber: 391
+  LocationId: SwampPalaceEntrance
+  Name:
+    - Text: Swamp Palace Entrance
+- LocationNumber: 392
+  LocationId: SwampPalaceMapChest
+  Name:
+    - Text: Swamp Palace Map Chest
+- LocationNumber: 393
+  LocationId: SwampPalaceBigChest
+  Name:
+    - Text: Swamp Palace Big Chest
+- LocationNumber: 394
+  LocationId: SwampPalaceCompassChest
+  Name:
+    - Text: Swamp Palace Compass Chest
+- LocationNumber: 395
+  LocationId: SwampPalaceWestChest
+  Name:
+    - Text: Swamp Palace West Chest
+- LocationNumber: 396
+  LocationId: SwampPalaceBigKeyChest
+  Name:
+    - Text: Swamp Palace Big Key Chest
+- LocationNumber: 397
+  LocationId: SwampPalaceFloodedRoomLeft
+  Name:
+    - Text: Flooded Room Left
+- LocationNumber: 398
+  LocationId: SwampPalaceFloodedRoomRight
+  Name:
+    - Text: Flooded Room Right
+- LocationNumber: 399
+  LocationId: SwampPalaceWaterfallRoom
+  Name:
+    - Text: Waterfall Room
+    - Text: Swamp Palace Waterfall Room
+      Weight: 0
+- LocationNumber: 400
+  LocationId: SwampPalaceArrghus
+  Name:
+    - Text: Arrghus
+  Hints:
+    - Text: One of the dungeon bosses has it.
+- LocationNumber: 401
+  LocationId: SkullWoodsPotPrison
+  Name:
+    - Text: Pot Prison
+    - Text: Skull Woods Pot Prison
+      Weight: 0
+    - Text: Skill Woods Pot Prison
+      Weight: 0
+- LocationNumber: 402
+  LocationId: SkullWoodsCompassChest
+  Name:
+    - Text: Skull Woods Compass Chest
+    - Text: Skill Woods Compass Chest
+- LocationNumber: 403
+  LocationId: SkullWoodsBigChest
+  Name:
+    - Text: Skull Woods Big Chest
+    - Text: Skill Woods Big Chest
+- LocationNumber: 404
+  LocationId: SkullWoodsMapChest
+  Name:
+    - Text: Skull Woods Map Chest
+    - Text: Skill Woods Map Chest
+- LocationNumber: 405
+  LocationId: SkullWoodsPinballRoom
+  Name:
+    - Text: Pinball Room
+    - Text: the room with all the bumpers and gib-does
+    - Text: Skull Woods Pinball Room
+      Weight: 0
+    - Text: Skill Woods Pinball Room
+      Weight: 0
+- LocationNumber: 406
+  LocationId: SkullWoodsBigKeyChest
+  Name:
+    - Text: Skull Woods Big Key Chest
+    - Text: Skill Woods Big Key Chest
+- LocationNumber: 407
+  LocationId: SkullWoodsBridgeRoom
+  Name:
+    - Text: Bridge Room
+    - Text: Skull Woods Bridge Room
+      Weight: 0
+    - Text: Skill Woods Bridge Room
+      Weight: 0
+- LocationNumber: 408
+  LocationId: SkullWoodsMothula
+  Name:
+    - Text: Mothula
+  Hints:
+    - Text: One of the dungeon bosses has it.
+- LocationNumber: 409
+  LocationId: ThievesTownMapChest
+  Name:
+    - Text: Thieves' Town Map Chest
+- LocationNumber: 410
+  LocationId: ThievesTownAmbushChest
+  Name:
+    - Text: Ambush Chest
+    - Text: Thieves' Town Ambush Chest
+      Weight: 0
+- LocationNumber: 411
+  LocationId: ThievesTownCompassChest
+  Name:
+    - Text: Thieves' Town Compass Chest
+- LocationNumber: 412
+  LocationId: ThievesTownBigKeyChest
+  Name:
+    - Text: Thieves' Town Big Key Chest
+- LocationNumber: 413
+  LocationId: ThievesTownAttic
+  Name:
+    - Text: Attic
+    - Text: Thieves' Town Attic
+      Weight: 0
+- LocationNumber: 414
+  LocationId: ThievesTownBlindsCell
+  Name:
+    - Text: Blind's Cell
+    - Text: Thieves' Town Blind's Cell
+      Weight: 0
+- LocationNumber: 415
+  LocationId: ThievesTownBigChest
+  Name:
+    - Text: Thieves' Town Big Chest
+- LocationNumber: 416
+  LocationId: ThievesTownBlind
+  Name:
+    - Text: Blind
+  Hints:
+    - Text: One of the dungeon bosses has it.
+    - Text: It will explain everything.
+- LocationNumber: 417
+  LocationId: IcePalaceCompassChest
+  Name:
+    - Text: Ice Palace Compass Chest
+- LocationNumber: 418
+  LocationId: IcePalaceSpikeRoom
+  Name:
+    - Text: Spike Room
+    - Text: Ice Palace Spike Room
+      Weight: 0
+- LocationNumber: 419
+  LocationId: IcePalaceMapChest
+  Name:
+    - Text: Ice Palace Map Chest
+- LocationNumber: 420
+  LocationId: IcePalaceBigKeyChest
+  Name:
+    - Text: Ice Palace Big Key Chest
+- LocationNumber: 421
+  LocationId: IcePalaceIcedTRoom
+  Name:
+    - Text: Iced T Room
+    - Text: Ice Palace Iced T Room
+      Weight: 0
+- LocationNumber: 422
+  LocationId: IcePalaceFreezorChest
+  Name:
+    - Text: Freezor Chest
+    - Text: Ice Palace Freezor Chest
+      Weight: 0
+- LocationNumber: 423
+  LocationId: IcePalaceBigChest
+  Name:
+    - Text: Ice Palace Big Chest
+- LocationNumber: 424
+  LocationId: IcePalaceKholdstare
+  Name:
+    - Text: Kholdstare
+  Hints:
+    - Text: One of the dungeon bosses has it.
+- LocationNumber: 425
+  LocationId: MiseryMireMainLobby
+  Name:
+    - Text: Misery Mire Main Lobby
+- LocationNumber: 426
+  LocationId: MiseryMireMapChest
+  Name:
+    - Text: Misery Mire Map Chest
+- LocationNumber: 427
+  LocationId: MiseryMireBridgeChest
+  Name:
+    - Text: Bridge Chest
+    - Text: Misery Mire Bridge Chest
+      Weight: 0
+- LocationNumber: 428
+  LocationId: MiseryMireSpikeChest
+  Name:
+    - Text: Spike Chest
+    - Text: Misery Mire Spike Chest
+      Weight: 0
+- LocationNumber: 429
+  LocationId: MiseryMireCompassChest
+  Name:
+    - Text: Misery Mire Compass Chest
+- LocationNumber: 430
+  LocationId: MiseryMireBigKeyChest
+  Name:
+    - Text: Misery Mire Big Key Chest
+    - Text: Misery Mire Cutscene Chest
+- LocationNumber: 431
+  LocationId: MiseryMireBigChest
+  Name:
+    - Text: Misery Mire Big Chest
+- LocationNumber: 432
+  LocationId: MiseryMireVitreous
+  Name:
+    - Text: Vitreous
+  Hints:
+    - Text: One of the dungeon bosses has it.
+- LocationNumber: 433
+  LocationId: TurtleRockCompassChest
+  Name:
+    - Text: Turtle Rock Compass Chest
+- LocationNumber: 434
+  LocationId: TurtleRockRollerRoomLeft
+  Name:
+    - Text: Roller Room Left
+- LocationNumber: 435
+  LocationId: TurtleRockRollerRoomRight
+  Name:
+    - Text: Roller Room Right
+- LocationNumber: 436
+  LocationId: TurtleRockChainChomps
+  Name:
+    - Text: Chain Chomps
+    - Text: Turtle Rock Chain Chomps
+      Weight: 0
+- LocationNumber: 437
+  LocationId: TurtleRockBigKeyChest
+  Name:
+    - Text: Turtle Rock Big Key Chest
+- LocationNumber: 438
+  LocationId: TurtleRockBigChest
+  Name:
+    - Text: Turtle Rock Big Chest
+- LocationNumber: 439
+  LocationId: TurtleRockCrystarollerRoom
+  Name:
+    - Text: Crystaroller Room
+    - Text: Turtle Rock Crystaroller Room
+      Weight: 0
+- LocationNumber: 440
+  LocationId: TurtleRockEyeBridgeTopRight
+  Name:
+    - Text: Laser Bridge Top Right
+    - Text: Eye Bridge Top Right
+- LocationNumber: 441
+  LocationId: TurtleRockEyeBridgeTopLeft
+  Name:
+    - Text: Laser Bridge Top Left
+    - Text: Eye Bridge Top Left
+- LocationNumber: 442
+  LocationId: TurtleRockEyeBridgeBottomRight
+  Name:
+    - Text: Laser Bridge Bottom Right
+    - Text: Eye Bridge Bottom Right
+- LocationNumber: 443
+  LocationId: TurtleRockEyeBridgeBottomLeft
+  Name:
+    - Text: Laser Bridge Bottom Left
+    - Text: Eye Bridge Bottom Left
+- LocationNumber: 444
+  LocationId: TurtleRockTrinexx
+  Name:
+    - Text: Trinexx
+  Hints:
+    - Text: One of the dungeon bosses has it.
+- LocationNumber: 445
+  LocationId: GanonsTowerBobsTorch
+  Name:
+    - Text: Bob's Torch
+- LocationNumber: 446
+  LocationId: GanonsTowerDMsRoomTopLeft
+  Name:
+    - Text: DMs Room Top Left
+- LocationNumber: 447
+  LocationId: GanonsTowerDMsRoomTopRight
+  Name:
+    - Text: DMs Room Top Right
+- LocationNumber: 448
+  LocationId: GanonsTowerDMsRoomBottomLeft
+  Name:
+    - Text: DMs Room Bottom Left
+- LocationNumber: 449
+  LocationId: GanonsTowerDMsRoomBottomRight
+  Name:
+    - Text: DMs Room Bottom Right
+- LocationNumber: 450
+  LocationId: GanonsTowerMapChest
+  Name:
+    - Text: Ganon's Tower Map Chest
+- LocationNumber: 451
+  LocationId: GanonsTowerFiresnakeRoom
+  Name:
+    - Text: Firesnake Room
+- LocationNumber: 452
+  LocationId: GanonsTowerRandomizerRoomTopLeft
+  Name:
+    - Text: Randomizer Room Top Left
+- LocationNumber: 453
+  LocationId: GanonsTowerRandomizerRoomTopRight
+  Name:
+    - Text: Randomizer Room Top Right
+- LocationNumber: 454
+  LocationId: GanonsTowerRandomizerRoomBottomLeft
+  Name:
+    - Text: Randomizer Room Bottom Left
+- LocationNumber: 455
+  LocationId: GanonsTowerRandomizerRoomBottomRight
+  Name:
+    - Text: Randomizer Room Bottom Right
+- LocationNumber: 456
+  LocationId: GanonsTowerHopeRoomLeft
+  Name:
+    - Text: Right Side First Room Left
+    - Text: Hope Room Left
+- LocationNumber: 457
+  LocationId: GanonsTowerHopeRoomRight
+  Name:
+    - Text: Right Side First Room Right
+    - Text: Hope Room Right
+- LocationNumber: 458
+  LocationId: GanonsTowerTileRoom
+  Name:
+    - Text: Tile Room
+    - Text: Ganon's Tower Tile Room
+      Weight: 0
+- LocationNumber: 459
+  LocationId: GanonsTowerCompassRoomTopLeft
+  Name:
+    - Text: Compass Room Top Left
+- LocationNumber: 460
+  LocationId: GanonsTowerCompassRoomTopRight
+  Name:
+    - Text: Compass Room Top Right
+- LocationNumber: 461
+  LocationId: GanonsTowerCompassRoomBottomLeft
+  Name:
+    - Text: Compass Room Bottom Left
+- LocationNumber: 462
+  LocationId: GanonsTowerCompassRoomBottomRight
+  Name:
+    - Text: Compass Room Bottom Right
+- LocationNumber: 463
+  LocationId: GanonsTowerBobsChest
+  Name:
+    - Text: Bob's Chest
+    - Text: Ganon's Tower Bob's Chest
+      Weight: 0
+- LocationNumber: 464
+  LocationId: GanonsTowerBigChest
+  Name:
+    - Text: Ganon's Tower Big Chest
+- LocationNumber: 465
+  LocationId: GanonsTowerBigKeyChest
+  Name:
+    - Text: Bottom Big Key Chest
+    - Text: Big Key Room Bottom Big Key Chest
+      Weight: 0
+- LocationNumber: 466
+  LocationId: GanonsTowerBigKeyRoomLeft
+  Name:
+    - Text: Big Key Room Left
+- LocationNumber: 467
+  LocationId: GanonsTowerBigKeyRoomRight
+  Name:
+    - Text: Big Key Room Right
+- LocationNumber: 468
+  LocationId: GanonsTowerMiniHelmasaurRoomLeft
+  Name:
+    - Text: Mini Helmasaur Room Left
+- LocationNumber: 469
+  LocationId: GanonsTowerMiniHelmasaurRoomRight
+  Name:
+    - Text: Mini Helmasaur Room Right
+- LocationNumber: 470
+  LocationId: GanonsTowerPreMoldormChest
+  Name:
+    - Text: Pre-Moldorm Chest
+    - Text: Ganon's Tower Pre-Moldorm Chest
+      Weight: 0
+- LocationNumber: 471
+  LocationId: GanonsTowerMoldormChest
+  Name:
+    - Text: Moldorm Chest
+    - Text: Ganon's Tower Moldorm Chest
+      Weight: 0
+- LocationNumber: 496
+  LocationId: Library
+  Name:
+    - Text: Library
+- LocationNumber: 497
+  LocationId: FluteSpot
+  Name:
+    - Text: Forest Clearing
+    - Text: Digging Spot
+    - Text: Flute Spot
+- LocationNumber: 498
+  LocationId: SouthOfGrove
+  Name:
+    - Text: 'Cave #45'
+    - Text: Cave 45
+    - Text: South of Grove
+- LocationNumber: 499
+  LocationId: LinksHouse
+  Name:
+    - Text: Link's House
+- LocationNumber: 500
+  LocationId: AginahsCave
+  Name:
+    - Text: Aginah's Cave
+      Weight: 0
+    - Text: Aggina's Cave
+- LocationNumber: 506
+  LocationId: ChickenHouse
+  Name:
+    - Text: Chicken House
+    - Text: Chicken Lady's House
+- LocationNumber: 507
+  LocationId: MiniMoldormCaveFarRight
+  Name:
+    - Text: Mini Moldorm Cave Far Right
+- LocationNumber: 508
+  LocationId: DesertLedge
+  Name:
+    - Text: Desert Ledge
+- LocationNumber: 509
+  LocationId: CheckerboardCave
+  Name:
+    - Text: Checkerboard Cave
+- LocationNumber: 510
+  LocationId: WaterfallFairyLeft
+  Name:
+    - Text: Waterfall Fairy Left

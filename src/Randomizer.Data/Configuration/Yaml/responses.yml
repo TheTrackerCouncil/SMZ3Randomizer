@@ -1,0 +1,460 @@
+StartedTracking:
+- Text: Tracker started
+StartingTrackingAlternate:
+- Text: Hello. I'm your substitude tracker for today.
+StoppedTracking:
+- Text: Tracker stopped
+StoppedTrackingPostGoMode:
+- Text: Tracker stopped
+Misheard:
+- Text: I didn't quite get that.
+TrackedItem:
+- Text: Toggled {0} on.
+TrackedTwoItems:
+- Text: Tracked {0} and {1}
+TrackedThreeItems:
+- Text: Tracked {0}, {1}, and {2}
+TrackedManyItems:
+- Text: Tracked {0}, {1}, and {2} other items
+TrackedItemByStage:
+- Text: Marked {0} as {1}.
+TrackedItemMultiple:
+- Text: Added more {0}.
+- Text: You now have {1} {0}.
+TrackedProgressiveItem:
+- Text: Upgraded {0} by one step.
+TrackedVanillaItem:
+- Text: ''
+TrackedExactAmountDuplicate:
+- Text: You already have {1} {0}.
+TrackedMultipleItems:
+- Text: Tracked {2} in {1}.
+ClearedMultipleItems:
+- Text: Cleared {0} items in {1}.
+TrackedNothing:
+- Text: There are no items left in {0}.
+TrackedNothingOutOfLogic:
+  1:
+  - Text: The only item left in {0} is out of logic.
+  2:
+  - Text: The only items left in {0} are out of logic.
+UntrackedItem:
+- Text: Toggled {0} off.
+UntrackedNothing:
+- Text: There's nothing to remove.
+UntrackedProgressiveItem:
+- Text: Decreased {0} by one step.
+UntrackedItemMultiple:
+- Text: Removed {1}.
+UntrackedItemMultipleLast:
+- Text: Removed your last {0}.
+DungeonRewardMarked:
+- Text: Marked {0} as {1}.
+RemainingDungeonsMarked:
+- Text: Marked remaining dungeons as {0}.
+NoRemainingDungeons:
+- Text: You already marked every dungeon.
+DungeonCleared:
+- Text: Cleared everything in {0}.
+DungeonAlreadyCleared:
+- Text: But you already got everything in {0}.
+DungeonClearedWithInaccessibleItems:
+- Text: Including some out of logic checks that require {2}, such as {1}.
+DungeonClearedWithTooManyInaccessibleItems:
+- Text: Are you sure you got everything?
+DungeonBossCleared:
+- Text: Cleared {0}.
+- Text: Marked {1} as defeated.
+DungeonBossAlreadyCleared:
+- Text: You already cleared {0}.
+- Text: You already defeated {1}.
+DungeonBossUncleared:
+- Text: Reset {0}.
+- Text: Marked {1} as still alive.
+DungeonBossNotYetCleared:
+- Text: You haven't cleared {0} yet.
+- Text: You never defeated {1} in the first place.
+DungeonBossClearedAddContent:
+- Text: That was some impressive work.
+DungeonRequirementMarked:
+- Text: Marked {0} as required for {1}
+DungeonRequirementInvalid:
+- Text: "{0} doesn't need medallions"
+DungeonTreasureTracked:
+  2:
+  - Text: '{1} items left in {0}.'
+  1:
+  - Text: One item left in {0}.
+  0:
+  - Text: Nothing left in {0}.
+  -1:
+  - Text: You already got everything in {0}.
+LocationMarked:
+- Text: Marked {1} at {0}.
+LocationMarkedAgain:
+- Text: Replaced {2} with {1} at {0}.
+LocationMarkedAsBullshit:
+- Text: Cleared {0}.
+LocationCleared:
+- Text: Cleared {0}.
+LocationsCleared:
+- Text: Cleared {0} locations.
+NoMarkedLocations:
+- Text: There are no marked locations to clear
+LocationsClearedSameRegion:
+- Text: Cleared {0} locations from {1}.
+GoModePrompts:
+- track Go Mode.
+Error:
+- Text: Oops. Something went wrong.
+NothingToUndo:
+- Text: There's nothing to undo.
+UndoExpired:
+- Text: There's nothing recent to undo.
+TrackerSettingChanged:
+- Text: Changed {0} to {1}.
+BossDefeated:
+- Text: Congratulations on defeating {0}.
+BossAlreadyDefeated:
+- Text: But you already marked {0} as defeated.
+BossUndefeated:
+- Text: Marking {0} as alive.
+BossNotYetDefeated:
+- Text: But you haven't defeated {0} yet.
+TimerResumed:
+- Text: Timer resumed.
+TimerReset:
+- Text: Timer reset
+TimerPaused:
+- Text: Timer paused
+Muted:
+- Text: Muting, say "Hey Tracker, Unmute Yourself" when you want me to talk again.
+Unmuted:
+- Text: Unmuted
+BeatGame:
+- Text: Good job.
+Idle: {}
+Hints:
+  EnabledHints:
+  - Text: Toggled hints on.
+  DisabledHints:
+  - Text: Toggled hints off.
+  PromptEnableItemHints:
+  - Text: If you want me to give a hint, say 'Hey tracker, enable hints'.
+  PromptEnableLocationHints:
+  - Text: If you want me to give a hint, say 'Hey tracker, enable hints'.
+  NoApplicableHints:
+  - Text: Reply hazy, try again.
+  - Text: Ask again later.
+  - Text: Better not tell you now.
+  - Text: Cannot predict now.
+  - Text: Concentrate and ask again.
+  PlaythroughImpossible:
+  - Text: Sorry, you're on your own with this one.
+  ItemNotInLogic:
+  - Text: You need something else before you can find {0}.
+  ItemInSuperMetroid:
+  - Text: You might find {0} on a strange planet.
+  ItemInALttP:
+  - Text: You might find {0} in a world of light and dark.
+  ItemRequiresOtherItem:
+  - Text: You need {1} before you can find {0}.
+  ItemRequiresManyOtherItems:
+  - Text: You need a lot of other items before you can find {0}.
+  ItemNotInArea:
+  - Text: You won't find {0} in {1}.
+  ItemInSphereZero:
+  - Text: How have you not found {0} yet?
+  ItemInEarlySphere:
+  - Text: '{0} can be found pretty early on.'
+  ItemInLateSphere:
+  - Text: Don't count on getting {0} any time soon.
+  ItemInPreviouslyVisitedDungeon:
+  - Text: How do you feel about double dipping?
+  ItemInUnvisitedDungeon:
+  - Text: It's in a dungeon you haven't visited yet.
+  ItemInPreviouslyVisitedRegion:
+  - Text: Deja voo, I've just been in this place before
+  ItemInUnvisitedRegion:
+  - Text: It's in a place you haven't been yet.
+  ItemHasBadVanillaLocationName:
+  - Text: It's in {1}. Good luck figuring out what that means.
+  ItemIsInVanillaJunkLocation:
+  - Text: In the regular game, you can find {1} there.
+  LocationAlreadyCleared:
+  - Text: Haven't you been there already?
+  LocationAlreadyClearedSpoiler:
+  - Text: Haven't you been there already? It was {1}.
+  LocationHasJunkItem:
+  - Text: There's nothing important there.
+  LocationHasUsefulItem:
+  - Text: It might be worth checking out.
+  LocationHasSuperMetroidItem:
+  - Text: '{0} has something for {1}.'
+  LocationHasZeldaItem:
+  - Text: '{0} has something for {1}.'
+  AreaSuggestion:
+  - Text: Have you been to {0} yet?
+  BookHint:
+  - Text: If the item there was on the Master Sword Pedestal, it would say '{1}'.
+  AreaAlreadyCleared:
+  - Text: You already got everything in {0}.
+  AreaHasSomethingMandatory:
+  - Text: '{0} has something mandatory.'
+  AreaHasSomethingGood:
+  - Text: '{0} has something nice but not required.'
+  AreaHasJunk:
+  - Text: "{0} isn't worth your time."
+  AreaHasJunkAndCrystal:
+  - Text: '{0} only has a crystal.'
+  AreaWorthComplicated:
+  - Text: It's complicated.
+  ItemInUnknownWorld:
+  - Text: '{0} can be found in another universe.'
+  ItemInPlayerWorld:
+  - Text: "{0} can be found in {1}'s universe."
+  ItemInPlayerWorldALttP:
+  - Text: "{0} can be found in {1}'s universe in a world of light and dark."
+  ItemInPlayerWorldSuperMetroid:
+  - Text: "{0} can be found in {1}'s universe on a strange planet."
+  ItemInPlayerWorldRegionRoomPrefixHint:
+  - Text: You can tell {0},
+Spoilers:
+  EnabledSpoilers:
+  - Text: Toggled spoilers on.
+  DisabledSpoilers:
+  - Text: Toggled spoilers off.
+  PromptEnableItemSpoilers:
+  - Text: If you want me to spoil it, say 'Hey tracker, enable spoilers'.
+  PromptEnableLocationSpoilers:
+  - Text: Why don't you go find out? Or just say 'Hey tracker, enable spoilers' and I might tell you.
+  TrackedAllItemsAlready:
+  - Text: You already have every {0}.
+  TrackedItemAlready:
+  - Text: You already have {0}.
+  MarkedItem:
+  - Text: You've marked {0} at {1} <break strength='weak'/> in {2}
+  MarkedLocation:
+  - Text: You've marked {1} at {0}.
+  EmptyLocation:
+  - Text: '{0} does not have an item. Did you forget to generate a seed first?'
+  ItemNotFound:
+  - Text: I cannot find {0}.
+  ItemsNotFound:
+  - Text: I cannot find any more {0}.
+  LocationsCleared:
+  - Text: You already cleared every location that has {0}.
+  LocationHasItem:
+  - Text: '{0} has {1}'
+  LocationHasItemOtherWorld:
+  - Text: '{0} has {1} belonging to {2}'
+  LocationHasItemOwnWorld:
+  - Text: '{0} has {1} belonging to you'
+  LocationHasUnknownItem:
+  - Text: '{0} has {1}'
+  ItemIsAtLocation:
+  - Text: "{0} is at {1} <break strength='weak'/> in {2}."
+  ItemIsAtLocationOtherWorld:
+  - Text: "{0} is at {1} <break strength='weak'/> in {2} in {3}'s world."
+  ItemIsAtLocationOwnWorld:
+  - Text: "{0} is at {1} <break strength='weak'/> in {2} in your world."
+  ItemsAreAtLocation:
+  - Text: There is {0} at {1} <break strength='weak'/> in {2}
+  ItemsAreAtLocationOtherWorld:
+  - Text: There is {0} at {1} <break strength='weak'/> in {2} in {3}'s world.
+  ItemsAreAtLocationOwnWorld:
+  - Text: There is {0} at {1} <break strength='weak'/> in {2} in your world.
+  ItemIsAtOutOfLogicLocation:
+  - Text: "{0} is at {1} <break strength='weak'/> in {2}, but it is out of logic."
+  ItemIsAtOutOfLogicLocationOtherWorld:
+  - Text: "{0} is at {1} <break strength='weak'/> in {2} in {3}'s world, but it is out of logic."
+  ItemIsAtOutOfLogicLocationOwnWorld:
+  - Text: "{0} is at {1} <break strength='weak'/> in {2} in your world, but it is out of logic."
+  ItemsAreAtOutOfLogicLocation:
+  - Text: There is {0} at {1} <break strength='weak'/> in {2}, but you cannot get it yet.
+  ItemsAreAtOutOfLogicLocationOtherWorld:
+  - Text: There is {0} at {1} <break strength='weak'/> in {2} in {3}'s, but you cannot get it yet.
+  ItemsAreAtOutOfLogicLocationOwnWorld:
+  - Text: There is {0} at {1} <break strength='weak'/> in {2} in your world, but you cannot get it yet.
+  ItemsInArea:
+  - Text: '{0} has {1}'
+Chat:
+  RecognizedGreetings: []
+  WhenConnected:
+  - Text: Hello chat.
+  WhenDisconnected:
+  - Text: Error with Twitch chat connection. Please save and restart tracker.
+  NoConnection:
+  - Text: I'm not currently connected to Twitch chat.
+  GreetingResponses:
+  - Text: Hey {0}
+  StartedGuessingGame:
+  - Text: The floor is now open for guesses.
+  ClosedGuessingGame:
+  - Text: The floor is now closed for guesses.
+  ModeratorClosedGuessingGame:
+  - Text: '{0} closed the floor for guesses.'
+  ClosedGuessingGameWhileClosed:
+  - Text: The floor is already closed.
+  ClosedGuessingGameBeforeStarting:
+  - Text: But we haven't even started yet.
+  ModeratorClosedGuessingGameWhileClosed:
+  - Text: The floor is already closed, {0}.
+  ModeratorClosedGuessingGameBeforeStarting:
+  - Text: But we haven't even started yet, {0}.
+  DeclareGuessingGameWinners:
+  - Text: The winners who guessed number {0} are {1}.
+  DeclareGuessingGameClosestButNotOverWinner:
+  - Text: The winners who guessed closest to the number of {0} without going over are {1}.
+  NobodyWonGuessingGame:
+  - Text: Nobody guessed {0}.
+  TrackerGuess:
+  - Text: My guess is {0}.
+  - Text: I'm joining with {0}.
+  - Text: I have a feeling it'll be {0}
+  TrackerGuessWon:
+  - Text: Hey, that's me.
+  TrackerGuessOnlyWinner:
+  - Text: Am I the only one who guessed {0}? I swear I wasn't cheating.
+  UserNamePronunciation:
+    Vivelin: vihvelin
+    MattEqualsCoder: matt equals coder
+    Axnollouse: Fragger
+  AskChatAboutContent:
+  - Text: Hmm. I'm not so sure about that. Let's ask the professionals in chat if that was some hashtag content.
+  AskChatAboutContentYes:
+  - Text: It's your lucky day. Chat has confirmed that was some hashtag content.
+  AskChatAboutContentNo:
+  - Text: I'm glad I asked. The chat has denied your request to increase your content levels.
+  PollComplete:
+  - Text: And the results are now in.
+  PollOpened:
+  - Text: I have opened a poll for {0} seconds.
+  PollError:
+  - Text: Sorry, I was unable to get the poll results.
+AutoTracker:
+  WhenConnected:
+  - Text: Auto tracker connected
+  WhenDisconnected:
+  - Text: Auto tracker disconnected
+  GameStarted:
+  - Text: Incoming PB for seed {0}
+  GameStartedMultiplayer:
+  - Text: Multiplayer game started! Good luck.
+  NearKraidsAwfulSon:
+  - Text: Oh no. Disaster imminent.
+  NearShaktool:
+  - Text: Finally, the moment we've all been waiting for since the start of this run. We get to see Shaktool.
+  NearCrocomire:
+  - Text: You currently have {0} out of {1} super missiles. Do you think you have enough?
+  AtCrumbleShaft:
+  - Text: ''
+  FallFromMoldorm:
+  - Text: Ha ha. Moldorm strikes again. Content increased by one step.
+  FallFromGTMoldorm:
+  - Text: Ha ha. Moldorm strikes again. Content increased by one step.
+  FallFromGanon:
+  - Text: Oops. Don't worry, I'm sure no one saw that.
+  HeraPot:
+  - Text: Good job on the tech. Was it a first try?
+  IceBreaker:
+  - Text: Good job on the tech. Was it a first try?
+  SpeckyClip:
+  - Text: Good job on the tech. Was it a first try?
+  DiverDown:
+  - Text: Good job on the tech. Was it a first try?
+  EnterHyruleCastleTower:
+  - Text: Ouch. So it's come to this, then?
+  EnterPendantDungeon:
+  - Text: ''
+  EnteredGTEarly:
+  - Text: How did you get here without all seven crystals?
+  FakeFlippers:
+  - Text: How can you swim without the flippers?
+  MockBall:
+  - Text: You just had to get these items early?
+  SkipSporeSpawn:
+  - Text: Skipping spore spawn again?
+  RidleyFace:
+  - Text: Oh hi there
+  LookedAtNothing:
+  - Text: What am I supposed to be looking at?
+  LightWorldAllCrystals:
+  - Text: That's a relief, I'm sure.
+  DarkWorldNoMedallions:
+  - Text: I hope you don't find any medallions soon.
+  GTKeyIsItemOne:
+  - Text: You sure are lucky today.
+  GTKeyIsItemTwoToSeven:
+  - Text: That wasn't too bad.
+  GTKeyIsItemEightToFifteen:
+  - Text: That could have been worse.
+  GTKeyIsItemSixteenToTwentyOne:
+  - Text: That was pretty rough.
+  GTKeyIsItemTwentyTwo:
+  - Text: How unfortunate.
+  GTKeyResponses:
+    1:
+    - Text: You sure are lucky today.
+    2:
+    - Text: That wasn't too bad.
+    8:
+    - Text: That could have been worse.
+    16:
+    - Text: That was pretty rough.
+    22:
+    - Text: How unfortunate.
+  SwitchedToSMZ3Rom:
+  - Text: Oh, I have to do work again?
+  SwitchedToOtherRom:
+    Unknown:
+    - Text: I can't help you with this game.
+Map:
+  UpdateMap:
+  - Text: Showing you the {0} map
+  ShowDarkRoomMap:
+  - Text: Showing you the {0} map
+  NotInDarkRoom:
+  - Text: I don't think I can help you here.
+  HideDarkRoomMap:
+  - Text: Did you make it through?
+  NoPrevDarkRoomMap:
+  - Text: I don't know which map to show you
+  HasLamp:
+  - Text: But you have the lamp
+Cheats:
+  EnabledCheats:
+  - Text: Toggled cheats on.
+  DisabledCheats:
+  - Text: Toggled cheats off.
+  PromptEnableCheats:
+  - Text: If you would like to cheat, say 'Hey tracker, enable cheats'
+  PromptEnableAutoTracker:
+  - Text: If you would like to cheat, please enable auto tracking
+  CheatPerformed:
+  - Text: Cheat code activated
+  CheatFailed:
+  - Text: Sorry, I can't perform that cheat for you at this time
+  CheatInvalidItem:
+  - Text: Invalid item requested
+Multiplayer:
+  OtherPlayerTrackedItem:
+  - Text: ''
+  OtherPlayerClearedDungeonWithReward:
+  - Text: ''
+  OtherPlayerClearedDungeonWithoutReward: []
+  OtherPlayerDefeatedBoss: []
+  OtherPlayedDied: []
+  OtherPlayedDiedDeathLink: []
+  OtherPlayerBeatGame:
+  - Text: You should congratulate {0} on finishing the game.
+  OtherPlayerBeatGameNoItems:
+  - Text: You should congratulate {0} on finishing the game.
+  OtherPlayerForfeitGame:
+  - Text: "{0} has forfeit. Distributing the items from {0}'s world."
+  GiftedUsefulItemToOtherPlayer:
+  - Text: ''
+  ReceivedUsefulItemFromOtherPlayer:
+  - Text: ''
+  ReceivedJunkItemFromOtherPlayer:
+  - Text: ''

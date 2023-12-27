@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "HintTileConfig",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "HintTiles": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/HintTile"
+      }
+    },
+    "RequestedHintTile": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "NoPreviousHintTile": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "ClearHintTileFailed": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "ViewedHintTile": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "ViewedHintTileMandatory": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "ViewedHintTileUseless": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "ViewedHintTileAlreadyVisited": {
+      "$ref": "#/definitions/SchrodingersString"
+    },
+    "NoHintTiles": {
+      "$ref": "#/definitions/SchrodingersString"
+    }
+  },
+  "definitions": {
+    "HintTile": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "HintTileKey": {
+          "type": "string"
+        },
+        "Room": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "TopLeftX": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "TopLeftY": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "Name": {
+          "$ref": "#/definitions/SchrodingersString"
+        }
+      }
+    },
+    "SchrodingersString": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Possibility"
+      }
+    },
+    "Possibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Text": {
+          "type": "string"
+        },
+        "Weight": {
+          "type": "number",
+          "format": "double",
+          "default": 1.0
+        }
+      }
+    }
+  }
+}

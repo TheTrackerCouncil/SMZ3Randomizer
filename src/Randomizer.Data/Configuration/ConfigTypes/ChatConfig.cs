@@ -35,31 +35,25 @@ namespace Randomizer.Data.Configuration.ConfigTypes
 
         /// <summary>
         /// Gets the phrases to respond with when greeted by someone in chat.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the display name of the person in
         /// chat to respond to.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString GreetingResponses { get; init; }
             = new("Hey {0}");
 
         /// <summary>
         /// Gets the phrases to respond with when greeting someone for the
         /// second time in chat.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the display name of the person in
         /// chat to respond to.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString? GreetedTwice { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when greeted by the broadcaster.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the display name of the person in
         /// chat to respond to.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString? GreetedChannel { get; init; }
 
         /// <summary>
@@ -79,11 +73,9 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// Gets the phrases to respond with when a moderator closed guesses for
         /// the GT big key guessing game.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the moderator that
         /// triggered the close.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString ModeratorClosedGuessingGame { get; init; }
             = new("{0} closed the floor for guesses.");
 
@@ -104,84 +96,68 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// Gets the phrases to respond with when a moderator closed the
         /// guessing game when it has already been closed.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the moderator that
         /// triggered the close.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString ModeratorClosedGuessingGameWhileClosed { get; init; }
             = new("The floor is already closed, {0}.");
 
         /// <summary>
         /// Gets the phrases to respond with when a moderator closed the
         /// guessing game when it hasn't even started yet.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the moderator that
         /// triggered the close.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString ModeratorClosedGuessingGameBeforeStarting { get; init; }
             = new("But we haven't even started yet, {0}.");
 
         /// <summary>
         /// Gets the phrases to respond with when the guessing game has
         /// concluded.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the correct number. <c>{1}</c> is a
         /// placeholder for the names of the winners.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString DeclareGuessingGameWinners { get; init; }
             = new("The winners who guessed number {0} are {1}.");
 
         /// <summary>
         /// Gets the phrases to respond with when the guessing game has
         /// concluded.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the correct number. <c>{1}</c> is a placeholder for the guessed number,
         /// <c>{2}</c> is a placeholder for the names of the winners.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString DeclareGuessingGameClosestButNotOverWinner { get; init; }
             = new("The winners who guessed closest to the number of {0} without going over are {1}.");
 
         /// <summary>
         /// Gets the phrases to respond with when the guessing game has
         /// concluded and nobody won.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the correct number.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString NobodyWonGuessingGame { get; init; }
             = new("Nobody guessed {0}.");
 
         /// <summary>
         /// Gets the phrases to respond with when Tracker submits her own guess
         /// for the guessing game.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the number that Tracker guessed.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString TrackerGuess { get; init; }
             = new("My guess is {0}.", "I'm joining with {0}.", "I have a feeling it'll be {0}");
 
         /// <summary>
         /// Gets the phrases to respond with when Tracker is among the list of
         /// winners that were just announced.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the correct number.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString TrackerGuessWon { get; init; }
             = new("Hey, that's me.");
 
         /// <summary>
         /// Gets the phrases to respond with when Tracker is the only winner of
         /// the guessing game.
-        /// </summary>
-        /// <remarks>
         /// <c>{0}</c> is a placeholder for the correct number.
-        /// </remarks>
+        /// </summary>
         public SchrodingersString TrackerGuessOnlyWinner { get; init; }
             = new("Am I the only one who guessed {0}? I swear I wasn't cheating.");
 

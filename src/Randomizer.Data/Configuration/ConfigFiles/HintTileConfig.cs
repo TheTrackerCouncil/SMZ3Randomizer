@@ -17,10 +17,8 @@ public class HintTileConfig : IMergeable<HintTileConfig>, IConfigFile<HintTileCo
 
     /// <summary>
     /// The response for when asking for what a hint tile says
-    /// </summary>
-    /// <remarks>
     /// <c>{0}</c> is a placeholder for the hint tile text
-    /// </remarks>
+    /// </summary>
     public SchrodingersString RequestedHintTile { get; set; } = new("That hint tile says that {0}");
 
     /// <summary>

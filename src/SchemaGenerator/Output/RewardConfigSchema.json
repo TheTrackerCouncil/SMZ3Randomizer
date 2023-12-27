@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ListOfRewardInfo",
+  "type": "array",
+  "items": {
+    "$ref": "#/definitions/RewardInfo"
+  },
+  "definitions": {
+    "RewardInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Reward": {
+          "type": "string"
+        },
+        "Name": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "Article": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "RewardType": {
+          "$ref": "#/definitions/RewardType"
+        },
+        "NameWithArticle": {
+          "type": "string"
+        }
+      }
+    },
+    "SchrodingersString": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Possibility"
+      }
+    },
+    "Possibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Text": {
+          "type": "string"
+        },
+        "Weight": {
+          "type": "number",
+          "format": "double",
+          "default": 1.0
+        }
+      }
+    },
+    "RewardType": {
+      "type": "integer",
+      "description": "",
+      "x-enumNames": [
+        "None",
+        "Agahnim",
+        "PendantGreen",
+        "PendantRed",
+        "CrystalBlue",
+        "CrystalRed",
+        "PendantBlue"
+      ],
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    }
+  }
+}

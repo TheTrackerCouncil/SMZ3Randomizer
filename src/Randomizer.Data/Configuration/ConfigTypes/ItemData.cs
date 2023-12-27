@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Newtonsoft.Json;
 using Randomizer.Data.Options;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
@@ -78,6 +79,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Gets the name of the article, prefixed with "a", "the" or none,
         /// depending on the item.
         /// </summary>
+        [JsonIgnore]
         public string NameWithArticle => string.Join(" ",
             Article ?? (Multiple || HasStages ? "a" : "the"),
             Name);
@@ -85,6 +87,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// Gets the internal <see cref="ItemType"/> of the item.
         /// </summary>
+        [JsonIgnore]
         public ItemType InternalItemType { get; set; }
 
         /// <summary>
@@ -136,12 +139,14 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Gets the highest stage the item supports, or 1 if the item does not
         /// have stages, or 0 if the item has no limit.
         /// </summary>
+        [JsonIgnore]
         public int MaxStage => HasStages ? Stages.Max(x => x.Key) : Multiple ? 0 : 1;
 
         /// <summary>
         /// Indicates whether the item has stages.
         /// </summary>
         [MemberNotNullWhen(true, nameof(Stages))]
+        [JsonIgnore]
         public bool HasStages => Stages != null && Stages.Count > 0;
 
         /// <summary>

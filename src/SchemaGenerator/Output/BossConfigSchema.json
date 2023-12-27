@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ListOfBossInfo",
+  "type": "array",
+  "items": {
+    "$ref": "#/definitions/BossInfo"
+  },
+  "definitions": {
+    "BossInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Boss": {
+          "type": "string"
+        },
+        "Name": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "WhenTracked": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/SchrodingersString"
+            }
+          ]
+        },
+        "WhenDefeated": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/SchrodingersString"
+            }
+          ]
+        },
+        "Image": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Type": {
+          "$ref": "#/definitions/BossType"
+        },
+        "MemoryAddress": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int32"
+        },
+        "MemoryFlag": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int32"
+        }
+      }
+    },
+    "SchrodingersString": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Possibility"
+      }
+    },
+    "Possibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Text": {
+          "type": "string"
+        },
+        "Weight": {
+          "type": "number",
+          "format": "double",
+          "default": 1.0
+        }
+      }
+    },
+    "BossType": {
+      "type": "integer",
+      "description": "",
+      "x-enumNames": [
+        "None",
+        "Kraid",
+        "Phantoon",
+        "Draygon",
+        "Ridley"
+      ],
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    }
+  }
+}

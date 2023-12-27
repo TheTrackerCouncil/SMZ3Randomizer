@@ -1,4 +1,5 @@
-﻿using Randomizer.Shared;
+﻿using Newtonsoft.Json;
+using Randomizer.Shared;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {
@@ -41,12 +42,14 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// The SMZ3 reward type
         /// </summary>
+        [JsonIgnore]
         public RewardType RewardType { get; set; }
 
         /// <summary>
         /// Gets the name of the article, prefixed with "a", "the" or none,
         /// depending on the reward.
         /// </summary>
+        [JsonIgnore]
         public string NameWithArticle => string.Join(" ",
             Article ?? "", Name);
     }

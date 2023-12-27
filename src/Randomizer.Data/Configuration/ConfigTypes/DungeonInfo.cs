@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Newtonsoft.Json;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
@@ -60,6 +61,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// Gets the dungeon name abbreviation.
         /// </summary>
+        [JsonIgnore]
         public string Abbreviation { get; init; } = "";
 
         /// <summary>
@@ -68,15 +70,17 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         public SchrodingersString Boss { get; set; } = new();
 
         /// <summary>
-        /// Gets the type of region that represents this dungeon.
+        /// The name of the type of region that represents this dungeon
         /// </summary>
-        public Type? Type { get; init; }
+        [JsonIgnore]
+        public string? TypeName { get; init; }
 
         /// <summary>
         /// Gets the ID of the location that represents the item rewarded by
         /// defeating the boss, or <c>null</c> if the dungeon has item reward
         /// for beating the boss.
         /// </summary>
+        [JsonIgnore]
         public LocationId? LocationId { get; init; }
 
         /// <summary>
@@ -94,7 +98,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// otherwise, <c>false</c>.
         /// </returns>
         public bool Is(Region region)
-            => Type == region.GetType();
+            => TypeName == region.GetType().Name;
 
         /// <summary>
         /// Determines whether the specified area either represents this dungeon

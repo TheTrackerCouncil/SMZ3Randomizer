@@ -1,0 +1,141 @@
+- Room: Blue Brinstar Top
+  TypeName: BlueBrinstarTopRoom
+  Name:
+  - Text: Blue Brinstar Top
+  - Text: Billy Mays Room
+- Room: Mockball Hall Hidden Room
+  TypeName: MockballHallHiddenRoom
+  Name:
+  - Text: Mockball Hall Hidden Room
+- Room: Gauntlet Shaft
+  TypeName: GauntletShaftRoom
+  Name:
+  - Text: Gauntlet Shaft
+- Room: Left Sand Pit
+  TypeName: LeftSandPitRoom
+  Name:
+  - Text: Left Sand Pit
+- Room: Watering Hole
+  TypeName: WateringHoleRoom
+  Name:
+  - Text: Watering Hole
+- Room: Bubble Mountain Hidden Hall
+  TypeName: BubbleMountainHiddenHallRoom
+  Name:
+  - Text: Bubble Mountain Hidden Hall
+- Room: Castle Tower Dark Maze
+  TypeName: DarkMazeRoom
+  Name:
+  - Text: Castle Tower Dark Maze
+- Room: Castle Tower Foyer
+  TypeName: FoyerRoom
+  Name:
+  - Text: Castle Tower Foyer
+- Room: Mire Shed
+  TypeName: MireShedRoom
+  Name:
+  - Text: Mire Shed
+- Room: Pyramid Fairy
+  TypeName: PyramidFairyChamber
+  Name:
+  - Text: Pyramid Fairy
+  - Text: Cursed Fairy
+- Room: Hype Cave
+  TypeName: HypeCaveRoom
+  Name:
+  - Text: Hype Cave
+- Room: Hookshot Cave
+  TypeName: HookshotCaveRoom
+  Name:
+  - Text: Hookshot Cave
+- Room: Superbunny Cave
+  TypeName: SuperbunnyCaveRoom
+  Name:
+  - Text: Superbunny Cave
+- Room: Spike Cave
+  TypeName: SpikeCaveRoom
+  Name:
+  - Text: Spike Cave
+- Room: Ganon's Tower Big Key Room
+  TypeName: BigKeyRoomRoom
+  Name:
+  - Text: Ganon's Tower Big Key Room
+- Room: Ganon's Tower Compass Room
+  TypeName: CompassRoomRoom
+  Name:
+  - Text: Ganon's Tower Compass Room
+- Room: DM's Room
+  TypeName: DMsRoomRoom
+  Name:
+  - Text: DM's Room
+- Room: Ganon's Tower Hope Room
+  TypeName: HopeRoomRoom
+  Name:
+  - Text: Ganon's Tower Hope Room
+  - Text: Ganon's Tower Right Side First Room
+- Room: Ganon's Tower Mini Helmasaur Room
+  TypeName: MiniHelmasaurRoomRoom
+  Name:
+  - Text: Ganon's Tower Mini Helmasaur Room
+- Room: Ganon's Tower Randomizer Room
+  TypeName: RandomizerRoomRoom
+  Name:
+  - Text: Ganon's Tower Randomizer Room
+- Room: Back of Escape
+  TypeName: BackOfEscapeRoom
+  Name:
+  - Text: Back of Escape
+  - Text: Sewers
+- Room: Paradox Cave
+  TypeName: ParadoxCaveRoom
+  Name:
+  - Text: Paradox Cave
+- Room: Sahasrahla's Hut
+  TypeName: SahasrahlasHideoutRoom
+  Name:
+  - Text: Sahasrahla's Hut
+- Room: Waterfall Fairy
+  TypeName: WaterfallFairyChamber
+  Name:
+  - Text: Waterfall Fairy
+- Room: Zora's Domain
+  TypeName: ZorasDomainArea
+  Name:
+  - Text: Zora's Domain
+- Room: Blind's Hideout
+  TypeName: BlindsHideoutRoom
+  Name:
+  - Text: Blind's Hideout
+- Room: Kakariko Well
+  TypeName: KakarikoWellArea
+  Name:
+  - Text: Kakariko Well
+- Room: Mini Moldorm Cave
+  TypeName: MiniMoldormCaveRoom
+  Name:
+  - Text: Mini Moldorm Cave
+- Room: Swamp Ruins
+  TypeName: SwampRuinsRoom
+  Name:
+  - Text: Swamp Ruins
+- Room: Palace of Darkness Dark Basement
+  TypeName: DarkBasementRoom
+  Name:
+  - Text: Palace of Darkness Dark Basement
+- Room: Palace of Darkness Dark Maze
+  TypeName: DarkMazeRoom
+  Name:
+  - Text: Palace of Darkness Dark Maze
+- Room: Swamp Palace Flooded Room
+  TypeName: FloodedRoomRoom
+  Name:
+  - Text: Swamp Palace Flooded Room
+- Room: Eye Bridge
+  TypeName: LaserBridgeRoom
+  Name:
+  - Text: Eye Bridge
+  - Text: Laser Bridge
+- Room: Turtle Rock Roller Room
+  TypeName: RollerRoomRoom
+  Name:
+  - Text: Turtle Rock Roller Room

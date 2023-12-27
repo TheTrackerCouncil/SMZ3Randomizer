@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ListOfRegionInfo",
+  "type": "array",
+  "items": {
+    "$ref": "#/definitions/RegionInfo"
+  },
+  "definitions": {
+    "RegionInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Region": {
+          "type": "string"
+        },
+        "Type": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Name": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "Hints": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/SchrodingersString"
+            }
+          ]
+        },
+        "MapName": {
+          "type": "string"
+        },
+        "WhenDiedInRoom": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "additionalProperties": {
+            "$ref": "#/definitions/SchrodingersString"
+          }
+        },
+        "OutOfLogic": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/SchrodingersString"
+            }
+          ]
+        }
+      }
+    },
+    "SchrodingersString": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Possibility"
+      }
+    },
+    "Possibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Text": {
+          "type": "string"
+        },
+        "Weight": {
+          "type": "number",
+          "format": "double",
+          "default": 1.0
+        }
+      }
+    }
+  }
+}

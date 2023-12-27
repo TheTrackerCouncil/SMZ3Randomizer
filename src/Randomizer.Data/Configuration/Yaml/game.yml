@@ -1,0 +1,97 @@
+GanonIntro:
+- Text: >-
+    But how?! I placed
+
+    all of the items
+
+    randomly about
+
+    Hyrule and another
+
+    planet, and yet
+
+    you still got here?
+BlindIntro:
+- Text: >-
+    I'm actually a
+
+    bedsheet and three
+
+    floating heads.
+
+    Observe:
+TriforceRoom:
+- Text: >2-
+
+         G G
+HintLocationIsMandatory:
+- Text: '{0} is on the way of the hero.'
+- Text: '{0} is mandatory.'
+HintLocationHasUsefulItem:
+- Text: "{0} has something nice, but it's not vital."
+- Text: "{0} may be useful, but it's not required."
+HintDungeonMedallion:
+- Text: '{0} requires {1}'
+- Text: You will need to find {1} to enter {0}
+HintLocationHasSword:
+- Text: '{0} has a sword'
+- Text: You can find a sword in {0}.
+HintLocationEmpty:
+- Text: '{0} is barren.'
+- Text: '{0} has nothing useful.'
+HintLocationHasItem:
+- Text: '{0} has {1}.'
+- Text: You can find {1} at {0}.
+KingZora:
+- Text: You got 500 rupees to buy {0}?
+- Text: Carrying around 500 rupees in pocket change? I'll give you {0} for it!
+BottleMerchant:
+- Text: I'll take 100 rupees if you want {0}.
+- Text: Gimme 100 rupees, and I'll give you {0}.
+ChoiceYes:
+- Text: Yeah!
+- Text: Duh!
+- Text: Sure
+- Text: Okay.
+- Text: Of course!
+ChoiceNo:
+- Text: Nah.
+- Text: Nope.
+- Text: No way!
+GanonSilversHint:
+- Text: Did {0} find the silvers in {1}?
+GanonNoSilvers:
+- Text: Silver arrows? What are those?
+SahasrahlaReveal:
+- Text: >-
+    Want something
+
+    for free? Go
+
+    earn the green
+
+    pendant in
+
+    {0}
+
+    and I'll give
+
+    you something.
+BombShopReveal:
+- Text: >
+    Bring me the
+
+    crystals from
+
+    {0}
+
+    and
+
+    {1}
+
+    so I can make
+
+    a big bomb!
+TavernMan:
+- Text: What. Did you want me to say something funny?
+- Text: Why are you even talking to me? Get to work.

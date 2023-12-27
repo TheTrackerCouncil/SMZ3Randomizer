@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ListOfRegionInfo",
+  "type": "array",
+  "description": "Config file for additional region information",
+  "items": {
+    "$ref": "#/definitions/RegionInfo"
+  },
+  "definitions": {
+    "RegionInfo": {
+      "type": "object",
+      "description": "Represents extra information about a region in SMZ3.",
+      "additionalProperties": false,
+      "properties": {
+        "Region": {
+          "type": "string",
+          "description": "Unique key to connect the Region with other configs"
+        },
+        "TypeName": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Gets the class typename for the region"
+        },
+        "Name": {
+          "description": "Gets the possible names for the region.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/SchrodingersString"
+            }
+          ]
+        },
+        "Hints": {
+          "description": "Gets the possible hints for the region, if any are defined.",
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/SchrodingersString"
+            }
+          ]
+        },
+        "WhenDiedInRoom": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "description": "Text for Tracker to say when dying in a room or screen in the region",
+          "additionalProperties": {
+            "$ref": "#/definitions/SchrodingersString"
+          }
+        },
+        "OutOfLogic": {
+          "description": "Gets the phrases to reply with when the location is out of logic",
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/SchrodingersString"
+            }
+          ]
+        }
+      }
+    },
+    "SchrodingersString": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Possibility"
+      }
+    },
+    "Possibility": {
+      "type": "object",
+      "description": "Represents one possibility of a SchrodingersString.",
+      "additionalProperties": false,
+      "properties": {
+        "Text": {
+          "type": "string",
+          "description": "Gets a string."
+        },
+        "Weight": {
+          "type": "number",
+          "description": "Gets the weight associated with the item.",
+          "format": "double",
+          "default": 1.0
+        }
+      }
+    }
+  }
+}

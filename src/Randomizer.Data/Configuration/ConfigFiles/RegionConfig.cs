@@ -29,7 +29,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 new RegionInfo()
                 {
                     Region = "Blue Brinstar",
-                    Type = typeof(Data.WorldData.Regions.SuperMetroid.Brinstar.BlueBrinstar),
+                    TypeName = "BlueBrinstar",
                     Name = new("Blue Brinstar"),
                     Hints = new("Samus might have been there before."),
                     MapName = "Brinstar"
@@ -37,56 +37,56 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 new RegionInfo()
                 {
                     Region = "Green Brinstar",
-                    Type = typeof(Data.WorldData.Regions.SuperMetroid.Brinstar.GreenBrinstar),
+                    TypeName = "GreenBrinstar",
                     Name = new("Green Brinstar"),
                     MapName = "Brinstar"
                 },
                 new RegionInfo()
                 {
                     Region = "Kraid's Lair",
-                    Type = typeof(Data.WorldData.Regions.SuperMetroid.Brinstar.KraidsLair),
+                    TypeName = "KraidsLair",
                     Name = new("Kraid's Lair"),
                     MapName = "Brinstar"
                 },
                 new RegionInfo()
                 {
                     Region = "Pink Brinstar",
-                    Type = typeof(Data.WorldData.Regions.SuperMetroid.Brinstar.PinkBrinstar),
+                    TypeName = "PinkBrinstar",
                     Name = new("Pink Brinstar"),
                     MapName = "Brinstar"
                 },
                 new RegionInfo()
                 {
                     Region = "Red Brinstar",
-                    Type = typeof(Data.WorldData.Regions.SuperMetroid.Brinstar.RedBrinstar),
+                    TypeName = "RedBrinstar",
                     Name = new("Red Brinstar"),
                     MapName = "Brinstar"
                 },
                 new RegionInfo()
                 {
                     Region = "Central Crateria",
-                    Type = typeof(Data.WorldData.Regions.SuperMetroid.Crateria.CentralCrateria),
+                    TypeName = "CentralCrateria",
                     Name = new("Central Crateria"),
                     MapName = "Crateria"
                 },
                 new RegionInfo()
                 {
                     Region = "East Crateria",
-                    Type = typeof(Data.WorldData.Regions.SuperMetroid.Crateria.EastCrateria),
+                    TypeName = "EastCrateria",
                     Name = new("East Crateria"),
                     MapName = "Crateria"
                 },
                 new RegionInfo()
                 {
                     Region = "West Crateria",
-                    Type = typeof(Data.WorldData.Regions.SuperMetroid.Crateria.WestCrateria),
+                    TypeName = "WestCrateria",
                     Name = new("West Crateria"),
                     MapName = "Crateria"
                 },
                 new RegionInfo()
                 {
                     Region = "Inner Maridia",
-                    Type = typeof(Data.WorldData.Regions.SuperMetroid.Maridia.InnerMaridia),
+                    TypeName = "InnerMaridia",
                     Name = new("Inner Maridia"),
                     Hints = new("You should go see Shaktool when you're in the area.", "It's in a wet place."),
                     MapName = "Maridia"
@@ -94,7 +94,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 new RegionInfo()
                 {
                     Region = "Outer Maridia",
-                    Type = typeof(Data.WorldData.Regions.SuperMetroid.Maridia.OuterMaridia),
+                    TypeName = "OuterMaridia",
                     Name = new("Outer Maridia"),
                     Hints = new("It's in a wet place."),
                     MapName = "Maridia"
@@ -102,7 +102,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 new RegionInfo()
                 {
                     Region = "Lower Norfair, East",
-                    Type = typeof(Data.WorldData.Regions.SuperMetroid.Norfair.LowerNorfairEast),
+                    TypeName = "LowerNorfairEast",
                     Name = new("Lower Norfair, East"),
                     Hints = new("I heard Ridley hangs out around there."),
                     MapName = "Norfair"
@@ -110,49 +110,49 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 new RegionInfo()
                 {
                     Region = "Lower Norfair, West",
-                    Type = typeof(Data.WorldData.Regions.SuperMetroid.Norfair.LowerNorfairWest),
+                    TypeName = "LowerNorfairWest",
                     Name = new("Lower Norfair, West"),
                     MapName = "Norfair"
                 },
                 new RegionInfo()
                 {
                     Region = "Upper Norfair, Crocomire",
-                    Type = typeof(Data.WorldData.Regions.SuperMetroid.Norfair.UpperNorfairCrocomire),
+                    TypeName = "UpperNorfairCrocomire",
                     Name = new("Upper Norfair, Crocomire"),
                     MapName = "Norfair"
                 },
                 new RegionInfo()
                 {
                     Region = "Upper Norfair, East",
-                    Type = typeof(Data.WorldData.Regions.SuperMetroid.Norfair.UpperNorfairEast),
+                    TypeName = "UpperNorfairEast",
                     Name = new("Upper Norfair, East"),
                     MapName = "Norfair"
                 },
                 new RegionInfo()
                 {
                     Region = "Upper Norfair, West",
-                    Type = typeof(Data.WorldData.Regions.SuperMetroid.Norfair.UpperNorfairWest),
+                    TypeName = "UpperNorfairWest",
                     Name = new("Upper Norfair, West"),
                     MapName = "Norfair"
                 },
                 new RegionInfo()
                 {
                     Region = "Wrecked Ship",
-                    Type = typeof(Data.WorldData.Regions.SuperMetroid.WreckedShip),
+                    TypeName = "WreckedShip",
                     Name = new("Wrecked Ship"),
                     MapName = "Wrecked Ship"
                 },
                 new RegionInfo()
                 {
                     Region = "Castle Tower",
-                    Type = typeof(Data.WorldData.Regions.Zelda.CastleTower),
+                    TypeName = "CastleTower",
                     Name = new("Castle Tower", "Agahnim's Tower", "Hyrule Castle Tower"),
                     MapName = "Light World"
                 },
                 new RegionInfo()
                 {
                     Region = "Dark World Mire",
-                    Type = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DarkWorldMire),
+                    TypeName = "DarkWorldMire",
                     Name = new("Dark World Mire"),
                     Hints = new("It's in a wet place."),
                     MapName = "Dark World"
@@ -160,14 +160,14 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 new RegionInfo()
                 {
                     Region = "Dark World North East",
-                    Type = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DarkWorldNorthEast),
+                    TypeName = "DarkWorldNorthEast",
                     Name = new("Dark World North East"),
                     MapName = "Dark World"
                 },
                 new RegionInfo()
                 {
                     Region = "Dark World North West",
-                    Type = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DarkWorldNorthWest),
+                    TypeName = "DarkWorldNorthWest",
                     Name = new("Dark World North West"),
                     Hints = new("Check around the villages."),
                     MapName = "Dark World"
@@ -175,42 +175,42 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 new RegionInfo()
                 {
                     Region = "Dark World South",
-                    Type = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DarkWorldSouth),
+                    TypeName = "DarkWorldSouth",
                     Name = new("Dark World South"),
                     MapName = "Dark World"
                 },
                 new RegionInfo()
                 {
                     Region = "Dark World Death Mountain East",
-                    Type = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainEast),
+                    TypeName = "DarkWorldDeathMountainEast",
                     Name = new("Dark World Death Mountain East"),
                     MapName = "Dark World"
                 },
                 new RegionInfo()
                 {
                     Region = "Dark World Death Mountain West",
-                    Type = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainWest),
+                    TypeName = "DarkWorldDeathMountainWest",
                     Name = new("Dark World Death Mountain West"),
                     MapName = "Dark World"
                 },
                 new RegionInfo()
                 {
                     Region = "Desert Palace",
-                    Type = typeof(Data.WorldData.Regions.Zelda.DesertPalace),
+                    TypeName = "DesertPalace",
                     Name = new("Desert Palace"),
                     MapName = "Light World"
                 },
                 new RegionInfo()
                 {
                     Region = "Eastern Palace",
-                    Type = typeof(Data.WorldData.Regions.Zelda.EasternPalace),
+                    TypeName = "EasternPalace",
                     Name = new("Eastern Palace"),
                     MapName = "Light World"
                 },
                 new RegionInfo()
                 {
                     Region = "Ganon's Tower",
-                    Type = typeof(Data.WorldData.Regions.Zelda.GanonsTower),
+                    TypeName = "GanonsTower",
                     Name = new("Ganon's Tower"),
                     Hints = new("I hope you don't need it."),
                     MapName = "Dark World"
@@ -218,42 +218,42 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 new RegionInfo()
                 {
                     Region = "Hyrule Castle",
-                    Type = typeof(Data.WorldData.Regions.Zelda.HyruleCastle),
+                    TypeName = "HyruleCastle",
                     Name = new("Hyrule Castle"),
                     MapName = "Light World"
                 },
                 new RegionInfo()
                 {
                     Region = "Ice Palace",
-                    Type = typeof(Data.WorldData.Regions.Zelda.IcePalace),
+                    TypeName = "IcePalace",
                     Name = new("Ice Palace"),
                     MapName = "Dark World"
                 },
                 new RegionInfo()
                 {
                     Region = "Light World Death Mountain East",
-                    Type = typeof(Data.WorldData.Regions.Zelda.LightWorld.DeathMountain.LightWorldDeathMountainEast),
+                    TypeName = "LightWorldDeathMountainEast",
                     Name = new("Light World Death Mountain East"),
                     MapName = "Light World"
                 },
                 new RegionInfo()
                 {
                     Region = "Light World Death Mountain West",
-                    Type = typeof(Data.WorldData.Regions.Zelda.LightWorld.DeathMountain.LightWorldDeathMountainWest),
+                    TypeName = "LightWorldDeathMountainWest",
                     Name = new("Light World Death Mountain West"),
                     MapName = "Light World"
                 },
                 new RegionInfo()
                 {
                     Region = "Light World North East",
-                    Type = typeof(Data.WorldData.Regions.Zelda.LightWorld.LightWorldNorthEast),
+                    TypeName = "LightWorldNorthEast",
                     Name = new("Light World North East"),
                     MapName = "Light World"
                 },
                 new RegionInfo()
                 {
                     Region = "Light World North West",
-                    Type = typeof(Data.WorldData.Regions.Zelda.LightWorld.LightWorldNorthWest),
+                    TypeName = "LightWorldNorthWest",
                     Name = new("Light World North West"),
                     Hints = new("Check around the villages."),
                     MapName = "Light World"
@@ -261,14 +261,14 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 new RegionInfo()
                 {
                     Region = "Light World South",
-                    Type = typeof(Data.WorldData.Regions.Zelda.LightWorld.LightWorldSouth),
+                    TypeName = "LightWorldSouth",
                     Name = new("Light World South"),
                     MapName = "Light World"
                 },
                 new RegionInfo()
                 {
                     Region = "Misery Mire",
-                    Type = typeof(Data.WorldData.Regions.Zelda.MiseryMire),
+                    TypeName = "MiseryMire",
                     Name = new("Misery Mire"),
                     Hints = new("It's in a wet place.", "You need a medallion to get in there."),
                     MapName = "Dark World"
@@ -276,21 +276,21 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 new RegionInfo()
                 {
                     Region = "Palace of Darkness",
-                    Type = typeof(Data.WorldData.Regions.Zelda.PalaceOfDarkness),
+                    TypeName = "PalaceOfDarkness",
                     Name = new("Palace of Darkness"),
                     MapName = "Dark World"
                 },
                 new RegionInfo()
                 {
                     Region = "Skull Woods",
-                    Type = typeof(Data.WorldData.Regions.Zelda.SkullWoods),
+                    TypeName = "SkullWoods",
                     Name = new("Skull Woods"),
                     MapName = "Dark World"
                 },
                 new RegionInfo()
                 {
                     Region = "Swamp Palace",
-                    Type = typeof(Data.WorldData.Regions.Zelda.SwampPalace),
+                    TypeName = "SwampPalace",
                     Name = new("Swamp Palace"),
                     Hints = new("It's in a wet place."),
                     MapName = "Dark World"
@@ -298,21 +298,21 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 new RegionInfo()
                 {
                     Region = "Thieves' Town",
-                    Type = typeof(Data.WorldData.Regions.Zelda.ThievesTown),
+                    TypeName = "ThievesTown",
                     Name = new("Thieves' Town"),
                     MapName = "Dark World"
                 },
                 new RegionInfo()
                 {
                     Region = "Tower of Hera",
-                    Type = typeof(Data.WorldData.Regions.Zelda.TowerOfHera),
+                    TypeName = "TowerOfHera",
                     Name = new("Tower of Hera"),
                     MapName = "Light World"
                 },
                 new RegionInfo()
                 {
                     Region = "Turtle Rock",
-                    Type = typeof(Data.WorldData.Regions.Zelda.TurtleRock),
+                    TypeName = "TurtleRock",
                     Name = new("Turtle Rock", new("Tortoise Rock", 0.1)),
                     Hints = new("You need a medallion to get in there."),
                     MapName = "Dark World"

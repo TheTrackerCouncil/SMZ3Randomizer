@@ -1,0 +1,432 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ListOfItemData",
+  "type": "array",
+  "items": {
+    "$ref": "#/definitions/ItemData"
+  },
+  "definitions": {
+    "ItemData": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Item": {
+          "type": "string"
+        },
+        "Name": {
+          "$ref": "#/definitions/SchrodingersString"
+        },
+        "Article": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Plural": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/SchrodingersString"
+            }
+          ]
+        },
+        "NameWithArticle": {
+          "type": "string"
+        },
+        "InternalItemType": {
+          "$ref": "#/definitions/ItemType"
+        },
+        "Multiple": {
+          "type": "boolean"
+        },
+        "CounterMultiplier": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int32"
+        },
+        "Stages": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "additionalProperties": {
+            "$ref": "#/definitions/SchrodingersString"
+          }
+        },
+        "WhenTracked": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/definitions/SchrodingersString"
+              }
+            ]
+          }
+        },
+        "Image": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Hints": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/SchrodingersString"
+            }
+          ]
+        },
+        "PedestalHints": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/SchrodingersString"
+            }
+          ]
+        },
+        "MaxStage": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "HasStages": {
+          "type": "boolean"
+        }
+      }
+    },
+    "SchrodingersString": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Possibility"
+      }
+    },
+    "Possibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Text": {
+          "type": "string"
+        },
+        "Weight": {
+          "type": "number",
+          "format": "double",
+          "default": 1.0
+        }
+      }
+    },
+    "ItemType": {
+      "type": "integer",
+      "description": "",
+      "x-enumNames": [
+        "Nothing",
+        "Firerod",
+        "Icerod",
+        "Hammer",
+        "Hookshot",
+        "Bow",
+        "BlueBoomerang",
+        "Powder",
+        "BeeContent",
+        "Bombos",
+        "Ether",
+        "Quake",
+        "Lamp",
+        "Shovel",
+        "Flute",
+        "Somaria",
+        "Bottle",
+        "HeartPiece",
+        "Byrna",
+        "Cape",
+        "Mirror",
+        "Book",
+        "Flippers",
+        "MoonPearl",
+        "Bugnet",
+        "Key",
+        "Compass",
+        "ThreeBombs",
+        "Mushroom",
+        "RedBoomerang",
+        "BottleWithRedPotion",
+        "BottleWithGreenPotion",
+        "BottleWithBluePotion",
+        "RedContent",
+        "GreenContent",
+        "BlueContent",
+        "BigKey",
+        "Map",
+        "OneRupee",
+        "FiveRupees",
+        "TwentyRupees",
+        "BottleWithBee",
+        "BottleWithFairy",
+        "HeartContainer",
+        "HeartContainerRefill",
+        "OneHundredRupees",
+        "FiftyRupees",
+        "Arrow",
+        "TenArrows",
+        "ThreeHundredRupees",
+        "TwentyRupees2",
+        "BottleWithGoldBee",
+        "Boots",
+        "HalfMagic",
+        "BombUpgrade5",
+        "BombUpgrade10",
+        "ArrowUpgrade5",
+        "ArrowUpgrade10",
+        "SilverArrows",
+        "ProgressiveSword",
+        "ProgressiveShield",
+        "ProgressiveTunic",
+        "ProgressiveGlove",
+        "MapGT",
+        "MapTR",
+        "MapTT",
+        "MapTH",
+        "MapIP",
+        "MapSW",
+        "MapMM",
+        "MapPD",
+        "MapSP",
+        "MapDP",
+        "MapEP",
+        "MapHC",
+        "CompassGT",
+        "CompassTR",
+        "CompassTT",
+        "CompassTH",
+        "CompassIP",
+        "CompassSW",
+        "CompassMM",
+        "CompassPD",
+        "CompassSP",
+        "CompassDP",
+        "CompassEP",
+        "BigKeyGT",
+        "BigKeyTR",
+        "BigKeyTT",
+        "BigKeyTH",
+        "BigKeyIP",
+        "BigKeySW",
+        "BigKeyMM",
+        "BigKeyPD",
+        "BigKeySP",
+        "BigKeyDP",
+        "BigKeyEP",
+        "KeyHC",
+        "KeyDP",
+        "KeyCT",
+        "KeySP",
+        "KeyPD",
+        "KeyMM",
+        "KeySW",
+        "KeyIP",
+        "KeyTH",
+        "KeyTT",
+        "KeyTR",
+        "KeyGT",
+        "Grapple",
+        "XRay",
+        "Varia",
+        "SpringBall",
+        "Morph",
+        "ScrewAttack",
+        "Gravity",
+        "HiJump",
+        "SpaceJump",
+        "Bombs",
+        "SpeedBooster",
+        "Charge",
+        "Ice",
+        "Wave",
+        "Spazer",
+        "Plasma",
+        "ETank",
+        "ReserveTank",
+        "Missile",
+        "Super",
+        "PowerBomb",
+        "CardCrateriaL1",
+        "CardCrateriaL2",
+        "CardCrateriaBoss",
+        "CardBrinstarL1",
+        "CardBrinstarL2",
+        "CardBrinstarBoss",
+        "CardNorfairL1",
+        "CardNorfairL2",
+        "CardNorfairBoss",
+        "CardMaridiaL1",
+        "CardMaridiaL2",
+        "CardMaridiaBoss",
+        "CardWreckedShipL1",
+        "CardWreckedShipBoss",
+        "CardLowerNorfairL1",
+        "CardLowerNorfairBoss"
+      ],
+      "enum": [
+        0,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        29,
+        30,
+        31,
+        33,
+        36,
+        37,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        50,
+        51,
+        52,
+        53,
+        54,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        67,
+        68,
+        70,
+        71,
+        72,
+        75,
+        78,
+        81,
+        82,
+        83,
+        84,
+        88,
+        94,
+        95,
+        96,
+        97,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        124,
+        125,
+        127,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        140,
+        141,
+        146,
+        147,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        156,
+        157,
+        160,
+        163,
+        164,
+        165,
+        166,
+        167,
+        168,
+        169,
+        170,
+        171,
+        172,
+        173,
+        176,
+        177,
+        178,
+        179,
+        180,
+        181,
+        182,
+        183,
+        184,
+        185,
+        186,
+        187,
+        188,
+        189,
+        190,
+        191,
+        192,
+        193,
+        194,
+        195,
+        196,
+        208,
+        209,
+        210,
+        211,
+        212,
+        213,
+        214,
+        215,
+        216,
+        217,
+        218,
+        219,
+        220,
+        221,
+        222,
+        223
+      ]
+    }
+  }
+}

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using Newtonsoft.Json;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
 
@@ -37,7 +39,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         }
 
         /// <summary>
-        /// The identifier for merging configs
+        /// The unique identifier for the boss used for merging configs
         /// </summary>
         [MergeKey]
         public string Boss { get; set; } = "";
@@ -64,16 +66,22 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// </summary>
         public string? Image { get; init; }
 
+        /// <summary>
+        /// The Super Metroid boss type related to this boss, if any
+        /// </summary>
+        [JsonIgnore]
         public BossType Type { get; set; }
 
         /// <summary>
         /// Memory offset for detecting if this boss was defeated
         /// </summary>
+        [JsonIgnore]
         public int? MemoryAddress { get; set; }
 
         /// <summary>
         /// Bit to check to determine if this boss was defeated
         /// </summary>
+        [JsonIgnore]
         public int? MemoryFlag { get; set; }
 
         /// <summary>
