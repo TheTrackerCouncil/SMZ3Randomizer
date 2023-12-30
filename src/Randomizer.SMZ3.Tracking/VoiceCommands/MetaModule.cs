@@ -177,21 +177,21 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 {
                     case ThresholdSetting_Recognition:
                         TrackerBase.Options.MinimumRecognitionConfidence += adjustment;
-                        TrackerBase.Say(TrackerBase.Responses.TrackerSettingChanged.Format(
+                        TrackerBase.Say(TrackerBase.Responses.TrackerSettingChanged?.Format(
                             "recognition threshold", $"{TrackerBase.Options.MinimumRecognitionConfidence:P0}"));
                         Logger.LogInformation("Temporarily changed recognition threshold to {newValue}", TrackerBase.Options.MinimumRecognitionConfidence);
                         break;
 
                     case ThresholdSetting_Execution:
                         TrackerBase.Options.MinimumExecutionConfidence += adjustment;
-                        TrackerBase.Say(TrackerBase.Responses.TrackerSettingChanged.Format(
+                        TrackerBase.Say(TrackerBase.Responses.TrackerSettingChanged?.Format(
                             "execution threshold", $"{TrackerBase.Options.MinimumExecutionConfidence:P0}"));
                         Logger.LogInformation("Temporarily changed execution threshold to {newValue}", TrackerBase.Options.MinimumExecutionConfidence);
                         break;
 
                     case ThresholdSetting_Sass:
                         TrackerBase.Options.MinimumSassConfidence += adjustment;
-                        TrackerBase.Say(TrackerBase.Responses.TrackerSettingChanged.Format(
+                        TrackerBase.Say(TrackerBase.Responses.TrackerSettingChanged?.Format(
                             "sass threshold", $"{TrackerBase.Options.MinimumSassConfidence:P0}"));
                         Logger.LogInformation("Temporarily changed sass threshold to {newValue}", TrackerBase.Options.MinimumSassConfidence);
                         break;

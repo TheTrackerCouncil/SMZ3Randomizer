@@ -18,23 +18,11 @@
     <EmbeddedResource Include="maps.json" />
     <EmbeddedResource Include="Options\ItemSettingOptions.yml" />
     <EmbeddedResource Include="WorldData\VisibleItems.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\bosses.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\dungeons.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\game.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\hint_tiles.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\items.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\locations.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\msu.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\regions.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\responses.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\rewards.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\rooms.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\requests.yml" />
     <None Remove="Configuration\Yaml\ui.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\ui.yml" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MattEqualsCoder.GitHubReleaseChecker" Version="1.1.2" />
     <PackageReference Include="MattEqualsCoder.MSURandomizer.Library" Version="1.2.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="YamlDotNet" Version="13.1.1" />

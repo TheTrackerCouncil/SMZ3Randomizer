@@ -19,6 +19,7 @@ public static class Program
     {
         Log.Logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
+            .WriteTo.Debug()
             .WriteTo.File(LogPath, rollingInterval: RollingInterval.Day, retainedFileCountLimit: 30)
             .CreateLogger();
 
@@ -34,6 +35,16 @@ public static class Program
 
         var optionsFile = new FileInfo("randomizer-options.yml");
         var randomizerOptions = s_services.GetRequiredService<OptionsFactory>().LoadFromFile(optionsFile.FullName, optionsFile.FullName, true);
+
+        var configSource = randomizerOptions.GeneralOptions.ConfigSources.FirstOrDefault();
+        if (configSource == null)
+        {
+            configSource = new ConfigSource() { Owner = "MattEqualsCoder", Repo = "SMZ3CasConfigs" };
+            randomizerOptions.GeneralOptions.ConfigSources.Add(configSource);
+        }
+        s_services.GetRequiredService<IGitHubConfigDownloaderService>()
+            .DownloadFromSourceAsync(configSource).Wait();
+
         randomizerOptions.Save();
         var launcher = s_services.GetRequiredService<RomLauncherService>();
 

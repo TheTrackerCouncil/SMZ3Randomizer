@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
+using YamlDotNet.Serialization;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {
@@ -56,38 +57,38 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// Gets the possible names of the dungeon.
         /// </summary>
-        public SchrodingersString Name { get; set; } = new();
+        public SchrodingersString? Name { get; set; }
 
         /// <summary>
         /// Gets the dungeon name abbreviation.
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, YamlIgnore]
         public string Abbreviation { get; init; } = "";
 
         /// <summary>
         /// Gets the possible names of the dungeon boss.
         /// </summary>
-        public SchrodingersString Boss { get; set; } = new();
+        public SchrodingersString? Boss { get; set; }
 
         /// <summary>
         /// The name of the type of region that represents this dungeon
         /// </summary>
-        [JsonIgnore]
-        public string? TypeName { get; init; }
+        [JsonIgnore, YamlIgnore]
+        public Type? Type { get; init; }
 
         /// <summary>
         /// Gets the ID of the location that represents the item rewarded by
         /// defeating the boss, or <c>null</c> if the dungeon has item reward
         /// for beating the boss.
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, YamlIgnore]
         public LocationId? LocationId { get; init; }
 
         /// <summary>
         /// Returns a string representation of the dungeon.
         /// </summary>
         /// <returns>A string representing the dungeon.</returns>
-        public override string ToString() => Name[0];
+        public override string ToString() => Dungeon;
 
         /// <summary>
         /// Determines whether the specified region represents this dungeon.
@@ -98,7 +99,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// otherwise, <c>false</c>.
         /// </returns>
         public bool Is(Region region)
-            => TypeName == region.GetType().Name;
+            => Type == region.GetType();
 
         /// <summary>
         /// Determines whether the specified area either represents this dungeon

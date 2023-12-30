@@ -31,6 +31,7 @@ namespace Randomizer.Data.Configuration
 
         private static readonly IDeserializer s_deserializer = new DeserializerBuilder()
             .WithNamingConvention(PascalCaseNamingConvention.Instance)
+            .IgnoreUnmatchedProperties()
             .Build();
 
         private readonly string _basePath;
@@ -294,15 +295,22 @@ namespace Randomizer.Data.Configuration
 
         private T LoadYamlConfigs<T, T2>(string fileName, IReadOnlyCollection<string>? profiles = null, string? mood = null) where T : new()
         {
-            var config = LoadBuiltInYamlFile<T>(fileName);
+            T? config = new();
+            var defaultMethod = typeof(T).GetMethod("Default");
+            if (defaultMethod != null)
+            {
+                config = (T?)defaultMethod.Invoke(null, null);
+            }
 
             if (config == null)
             {
-                throw new FileNotFoundException($"Build in config for {fileName} not found");
+                throw new InvalidOperationException($"Could not create default instance of '{{typeof(T).Name}}'");
             }
 
             var mergeableConfig = (IMergeable<T2>)config
-                ?? throw new InvalidOperationException($"The class '{typeof(T).Name}' does not implement IMergeable.");
+                                  ?? throw new InvalidOperationException($"The class '{typeof(T).Name}' does not implement IMergeable.");
+
+            TryMergeYamlFile(fileName, "Default");
 
             if (profiles == null || profiles.Count == 0) return config;
 
@@ -310,21 +318,21 @@ namespace Randomizer.Data.Configuration
             {
                 if (!string.IsNullOrEmpty(profile))
                 {
-                    TryMergeYamlFile(profile);
+                    TryMergeYamlFile(fileName, profile);
 
                     var moodFileName = GetMoodFileName(fileName, mood);
                     if (moodFileName != null)
                     {
-                        TryMergeYamlFile(profile);
+                        TryMergeYamlFile(moodFileName, profile);
                     }
                 }
             }
 
             return config;
 
-            void TryMergeYamlFile(string profile)
+            void TryMergeYamlFile(string file, string profile)
             {
-                var otherConfig = LoadYamlFile<T>(fileName, profile);
+                var otherConfig = LoadYamlFile<T>(file, profile);
                 if (otherConfig == null)
                     return;
 
@@ -368,6 +376,14 @@ namespace Randomizer.Data.Configuration
                 _logger?.LogError(ex, "Unable to load config file {Path}", path);
                 throw new YamlDotNet.Core.SemanticErrorException("Unable to load config file " + path, ex);
             }
+
+            if (obj is IHasPostLoadFunction loadFunction)
+            {
+                loadFunction.OnPostLoad();
+            }
+
+            _logger?.LogInformation("Loaded config file {Path}", path);
+
             return obj;
         }
 

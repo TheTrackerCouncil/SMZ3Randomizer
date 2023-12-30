@@ -1,7 +1,4 @@
-﻿using System;
-using Randomizer.Data.Configuration.ConfigTypes;
-
-namespace Randomizer.Data.Configuration
+﻿namespace Randomizer.Data.Configuration.ConfigTypes
 {
     /// <summary>
     /// Provides the phrases for hints.
@@ -11,66 +8,57 @@ namespace Randomizer.Data.Configuration
         /// <summary>
         /// Gets the phrases to respond with when hints are turned on.
         /// </summary>
-        public SchrodingersString EnabledHints { get; init; }
-            = new("Toggled hints on.");
+        public SchrodingersString? EnabledHints { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when hints are turned off.
         /// </summary>
-        public SchrodingersString DisabledHints { get; init; }
-            = new("Toggled hints off.");
+        public SchrodingersString? DisabledHints { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when asked about an item and hints
         /// are turned off.
         /// </summary>
-        public SchrodingersString PromptEnableItemHints { get; init; }
-            = new("If you want me to give a hint, say 'Hey tracker, enable hints'.");
+        public SchrodingersString? PromptEnableItemHints { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when asked about a location and
         /// hints are turned off.
         /// </summary>
-        public SchrodingersString PromptEnableLocationHints { get; init; }
-            = new("If you want me to give a hint, say 'Hey tracker, enable hints'.");
+        public SchrodingersString? PromptEnableLocationHints { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when there are no applicable hints
         /// for the item or location that was asked about.
         /// </summary>
-        public SchrodingersString NoApplicableHints { get; init; }
-            = new("Reply hazy, try again.", "Ask again later.", "Better not tell you now.", "Cannot predict now.", "Concentrate and ask again.");
+        public SchrodingersString? NoApplicableHints { get; init; }
 
         /// <summary>
-        /// Gets the phrases to rspond with when asked about hints on a seed
+        /// Gets the phrases to respond with when asked about hints on a seed
         /// where a complete playthrough is likely impossible.
         /// </summary>
-        public SchrodingersString PlaythroughImpossible { get; init; }
-            = new("Sorry, you're on your own with this one.");
+        public SchrodingersString? PlaythroughImpossible { get; init; }
 
         /// <summary>
         /// Gets the hints for items that are not in logic.
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the".
         /// </summary>
-        public SchrodingersString ItemNotInLogic { get; init; }
-            = new("You need something else before you can find {0}.");
+        public SchrodingersString? ItemNotInLogic { get; init; }
 
         /// <summary>
         /// Gets the hints for items that are only found in Super Metroid.
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the".
         /// </summary>
-        public SchrodingersString ItemInSuperMetroid { get; init; }
-            = new("You might find {0} on a strange planet.");
+        public SchrodingersString? ItemInSuperMetroid { get; init; }
 
         /// <summary>
         /// Gets the hints for items that are only found in A Link to the Past.
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the".
         /// </summary>
-        public SchrodingersString ItemInALttP { get; init; }
-            = new("You might find {0} in a world of light and dark.");
+        public SchrodingersString? ItemInALttP { get; init; }
 
         /// <summary>
         /// Gets the hints for items that are not in logic and mention one or
@@ -79,8 +67,7 @@ namespace Randomizer.Data.Configuration
         /// or "the". <c>{1}</c> is a placeholder for the name(s) of the missing
         /// item(s).
         /// </summary>
-        public SchrodingersString ItemRequiresOtherItem { get; init; }
-            = new("You need {1} before you can find {0}.");
+        public SchrodingersString? ItemRequiresOtherItem { get; init; }
 
         /// <summary>
         /// Gets the hints for items that are not in logic and require too many
@@ -88,8 +75,7 @@ namespace Randomizer.Data.Configuration
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the".
         /// </summary>
-        public SchrodingersString ItemRequiresManyOtherItems { get; init; }
-            = new("You need a lot of other items before you can find {0}.");
+        public SchrodingersString? ItemRequiresManyOtherItems { get; init; }
 
         /// <summary>
         /// Gets the hints for items that are not found in the specified region
@@ -98,32 +84,28 @@ namespace Randomizer.Data.Configuration
         /// or "the". <c>{1}</c> is a placeholder for the name of the
         /// region/area.
         /// </summary>
-        public SchrodingersString ItemNotInArea { get; init; }
-            = new("You won't find {0} in {1}.");
+        public SchrodingersString? ItemNotInArea { get; init; }
 
         /// <summary>
         /// Gets the hints for items that are in playthrough sphere zero.
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the".
         /// </summary>
-        public SchrodingersString ItemInSphereZero { get; init; }
-            = new("How have you not found {0} yet?");
+        public SchrodingersString? ItemInSphereZero { get; init; }
 
         /// <summary>
         /// Gets the hints for items that are in an early sphere.
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the".
         /// </summary>
-        public SchrodingersString ItemInEarlySphere { get; init; }
-            = new("{0} can be found pretty early on.");
+        public SchrodingersString? ItemInEarlySphere { get; init; }
 
         /// <summary>
         /// Gets the hints for items that are in a late sphere.
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the".
         /// </summary>
-        public SchrodingersString ItemInLateSphere { get; init; }
-            = new("Don't count on getting {0} any time soon.");
+        public SchrodingersString? ItemInLateSphere { get; init; }
 
         /// <summary>
         /// Gets the hints for items that are in a dungeon that has been visited
@@ -131,8 +113,7 @@ namespace Randomizer.Data.Configuration
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the".
         /// </summary>
-        public SchrodingersString ItemInPreviouslyVisitedDungeon { get; init; }
-            = new("How do you feel about double dipping?");
+        public SchrodingersString? ItemInPreviouslyVisitedDungeon { get; init; }
 
         /// <summary>
         /// Gets the hints for items that are in a dungeon that has not yet been
@@ -140,8 +121,7 @@ namespace Randomizer.Data.Configuration
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the".
         /// </summary>
-        public SchrodingersString ItemInUnvisitedDungeon { get; init; }
-            = new("It's in a dungeon you haven't visited yet.");
+        public SchrodingersString? ItemInUnvisitedDungeon { get; init; }
 
         /// <summary>
         /// Gets the hints for items that are in a region that has been visited
@@ -149,8 +129,7 @@ namespace Randomizer.Data.Configuration
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the".
         /// </summary>
-        public SchrodingersString ItemInPreviouslyVisitedRegion { get; init; }
-            = new("Deja voo, I've just been in this place before");
+        public SchrodingersString? ItemInPreviouslyVisitedRegion { get; init; }
 
         /// <summary>
         /// Gets the hints for items that are in a region that has not been
@@ -158,8 +137,7 @@ namespace Randomizer.Data.Configuration
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
         /// or "the".
         /// </summary>
-        public SchrodingersString ItemInUnvisitedRegion { get; init; }
-            = new("It's in a place you haven't been yet.");
+        public SchrodingersString? ItemInUnvisitedRegion { get; init; }
 
         /// <summary>
         /// Gets the hints for items that are in locations that have a bad name
@@ -168,8 +146,7 @@ namespace Randomizer.Data.Configuration
         /// or "the". <c>{1}</c> is a placeholder for the name of the location
         /// in the original randomizer code.
         /// </summary>
-        public SchrodingersString ItemHasBadVanillaLocationName { get; init; }
-            = new("It's in {1}. Good luck figuring out what that means.");
+        public SchrodingersString? ItemHasBadVanillaLocationName { get; init; }
 
         /// <summary>
         /// Gets the hints for items that are in locations which have junk items
@@ -178,37 +155,32 @@ namespace Randomizer.Data.Configuration
         /// or "the". <c>{1}</c> is a placeholder for the name of the vanilla
         /// item in the same location.
         /// </summary>
-        public SchrodingersString ItemIsInVanillaJunkLocation { get; init; }
-            = new("In the regular game, you can find {1} there.");
+        public SchrodingersString? ItemIsInVanillaJunkLocation { get; init; }
 
         /// <summary>
         /// Gets the hints for locations that have been cleared already.
         /// <c>{0}</c> is placeholder for the name of the location.
         /// </summary>
-        public SchrodingersString LocationAlreadyCleared { get; init; }
-            = new("Haven't you been there already?");
+        public SchrodingersString? LocationAlreadyCleared { get; init; }
 
         /// <summary>
         /// Gets the hints for locations that have been cleared already.
         /// <c>{0}</c> is placeholder for the name of the location. <c>{1}</c>
         /// is a placeholder for the name of the item at the location.
         /// </summary>
-        public SchrodingersString LocationAlreadyClearedSpoiler { get; init; }
-            = new("Haven't you been there already? It was {1}.");
+        public SchrodingersString? LocationAlreadyClearedSpoiler { get; init; }
 
         /// <summary>
         /// Gets the hints for locations that don't have anything useful.
         /// <c>{0}</c> is placeholder for the name of the location.
         /// </summary>
-        public SchrodingersString LocationHasJunkItem { get; init; }
-            = new("There's nothing important there.");
+        public SchrodingersString? LocationHasJunkItem { get; init; }
 
         /// <summary>
         /// Gets the hints for locations that might have something useful.
         /// <c>{0}</c> is placeholder for the name of the location.
         /// </summary>
-        public SchrodingersString LocationHasUsefulItem { get; init; }
-            = new("It might be worth checking out.");
+        public SchrodingersString? LocationHasUsefulItem { get; init; }
 
         /// <summary>
         /// Gets the hints for locations that have an item from Super Metroid.
@@ -216,8 +188,7 @@ namespace Randomizer.Data.Configuration
         /// is a placeholder for the name of the sprite that replaces Samus, or
         /// "Samus".
         /// </summary>
-        public SchrodingersString LocationHasSuperMetroidItem { get; init; }
-            = new("{0} has something for {1}.");
+        public SchrodingersString? LocationHasSuperMetroidItem { get; init; }
 
         /// <summary>
         /// Gets the hints for locations that have an item from A Link to the
@@ -226,16 +197,14 @@ namespace Randomizer.Data.Configuration
         /// is a placeholder for the name of the sprite that replaces Link, or
         /// "Link".
         /// </summary>
-        public SchrodingersString LocationHasZeldaItem { get; init; }
-            = new("{0} has something for {1}.");
+        public SchrodingersString? LocationHasZeldaItem { get; init; }
 
         /// <summary>
         /// Gets the suggestions for areas to visit.
         /// <c>{0}</c> is a placeholder for the name of the area that has a
         /// progression item.
         /// </summary>
-        public SchrodingersString AreaSuggestion { get; init; }
-            = new("Have you been to {0} yet?");
+        public SchrodingersString? AreaSuggestion { get; init; }
 
         /// <summary>
         /// Gets the hint that describes an item by the text that would be shown
@@ -245,47 +214,41 @@ namespace Randomizer.Data.Configuration
         /// Book of Mudora. <c>{2}</c> is the name of the Book of Mudora,
         /// including "the".
         /// </summary>
-        public SchrodingersString BookHint { get; init; }
-            = new("If the item there was on the Master Sword Pedestal, it would say '{1}'.");
+        public SchrodingersString? BookHint { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when asking for hints about an area
         /// that was already cleared.
         /// <c>{0}</c> is a placeholder for the name of the area.
         /// </summary>
-        public SchrodingersString AreaAlreadyCleared { get; init; }
-            = new("You already got everything in {0}.");
+        public SchrodingersString? AreaAlreadyCleared { get; init; }
 
         /// <summary>
         /// Gets the hint to give for an area that has one or more useful
         /// items.
         /// <c>{0}</c> is a placeholder for the name of the area.
         /// </summary>
-        public SchrodingersString AreaHasSomethingMandatory { get; init; }
-            = new("{0} has something mandatory.");
+        public SchrodingersString? AreaHasSomethingMandatory { get; init; }
 
         /// <summary>
         /// Gets the hint to give for an area that might have one or more useful
         /// items.
         /// <c>{0}</c> is a placeholder for the name of the area.
         /// </summary>
-        public SchrodingersString AreaHasSomethingGood { get; init; }
-            = new("{0} has something nice but not required.");
+        public SchrodingersString? AreaHasSomethingGood { get; init; }
 
         /// <summary>
         /// Gets the hint to give for an area that only has junk items left.
         /// <c>{0}</c> is a placeholder for the name of the area.
         /// </summary>
-        public SchrodingersString AreaHasJunk { get; init; }
-            = new("{0} isn't worth your time.");
+        public SchrodingersString? AreaHasJunk { get; init; }
 
         /// <summary>
         /// Gets the hint to give for an area that only has junk items left, but
         /// also has a crystal as reward for beating the boss.
         /// <c>{0}</c> is a placeholder for the name of the area.
         /// </summary>
-        public SchrodingersString AreaHasJunkAndCrystal { get; init; }
-            = new("{0} only has a crystal.");
+        public SchrodingersString? AreaHasJunkAndCrystal { get; init; }
 
         /// <summary>
         /// Gets the hint to give for an area whose worth is complicated, e.g.
@@ -293,16 +256,14 @@ namespace Randomizer.Data.Configuration
         /// pendant might result in something good.
         /// <c>{0}</c> is a placeholder for the name of the area.
         /// </summary>
-        public SchrodingersString AreaWorthComplicated { get; init; }
-            = new("It's complicated.");
+        public SchrodingersString? AreaWorthComplicated { get; init; }
 
         /// <summary>
         /// Gets the hint to give for an item that is in another world,
         /// but does not mention the specific player
         /// <c>{0}</c> is a placeholder for the name of the item.
         /// </summary>
-        public SchrodingersString ItemInUnknownWorld { get; init; }
-            = new("{0} can be found in another universe.");
+        public SchrodingersString? ItemInUnknownWorld { get; init; }
 
         /// <summary>
         /// Gets the hint to give for an item that is in another world,
@@ -310,8 +271,7 @@ namespace Randomizer.Data.Configuration
         /// <c>{0}</c> is a placeholder for the name of the item.
         /// <c>{1}</c> is a placeholder for the name of the player.
         /// </summary>
-        public SchrodingersString ItemInPlayerWorld { get; init; }
-            = new("{0} can be found in {1}'s universe.");
+        public SchrodingersString? ItemInPlayerWorld { get; init; }
 
         /// <summary>
         /// Gets the hint to give for an item that is in another
@@ -319,8 +279,7 @@ namespace Randomizer.Data.Configuration
         /// <c>{0}</c> is a placeholder for the name of the item.
         /// <c>{1}</c> is a placeholder for the name of the player.
         /// </summary>
-        public SchrodingersString ItemInPlayerWorldALttP { get; init; }
-            = new("{0} can be found in {1}'s universe in a world of light and dark.");
+        public SchrodingersString? ItemInPlayerWorldALttP { get; init; }
 
         /// <summary>
         /// Gets the hint to give for an item that is in another
@@ -328,15 +287,13 @@ namespace Randomizer.Data.Configuration
         /// <c>{0}</c> is a placeholder for the name of the item.
         /// <c>{1}</c> is a placeholder for the name of the player.
         /// </summary>
-        public SchrodingersString ItemInPlayerWorldSuperMetroid { get; init; }
-            = new("{0} can be found in {1}'s universe on a strange planet.");
+        public SchrodingersString? ItemInPlayerWorldSuperMetroid { get; init; }
 
         /// <summary>
         /// When giving a hint for a specific region or room, this states which player
         /// the hint belongs to
         /// <c>{0}</c> is a placeholder for the name of the player.
         /// </summary>
-        public SchrodingersString ItemInPlayerWorldRegionRoomPrefixHint { get; init; }
-            = new("You can tell {0},");
+        public SchrodingersString? ItemInPlayerWorldRegionRoomPrefixHint { get; init; }
     }
 }

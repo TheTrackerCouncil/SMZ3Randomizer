@@ -7,6 +7,7 @@ using Randomizer.Data.Options;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
 using Randomizer.Shared.Models;
+using YamlDotNet.Serialization;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {
@@ -32,7 +33,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// The internal <see cref="ItemType"/> of the item.
         /// </param>
         /// <param name="hints">List of hints to provide for this item</param>
-        public ItemData(SchrodingersString name, ItemType internalItemType, SchrodingersString hints)
+        public ItemData(SchrodingersString? name, ItemType internalItemType, SchrodingersString? hints)
         {
             Item = internalItemType.GetDescription();
             Name = name;
@@ -63,7 +64,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// Gets the possible names for the item.
         /// </summary>
-        public SchrodingersString Name { get; set; } = new();
+        public SchrodingersString? Name { get; set; }
 
         /// <summary>
         /// Gets the grammatical article for the item (e.g. "a" or "the").
@@ -79,7 +80,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Gets the name of the article, prefixed with "a", "the" or none,
         /// depending on the item.
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, YamlIgnore]
         public string NameWithArticle => string.Join(" ",
             Article ?? (Multiple || HasStages ? "a" : "the"),
             Name);
@@ -87,7 +88,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// Gets the internal <see cref="ItemType"/> of the item.
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, YamlIgnore]
         public ItemType InternalItemType { get; set; }
 
         /// <summary>
@@ -99,6 +100,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Gets the number the item counter should be multiplied with, in the
         /// case of items that can be tracked more than once.
         /// </summary>
+        [JsonIgnore, YamlIgnore]
         public int? CounterMultiplier { get; set; }
 
         /// <summary>
@@ -139,14 +141,14 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Gets the highest stage the item supports, or 1 if the item does not
         /// have stages, or 0 if the item has no limit.
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, YamlIgnore]
         public int MaxStage => HasStages ? Stages.Max(x => x.Key) : Multiple ? 0 : 1;
 
         /// <summary>
         /// Indicates whether the item has stages.
         /// </summary>
         [MemberNotNullWhen(true, nameof(Stages))]
-        [JsonIgnore]
+        [JsonIgnore, YamlIgnore]
         public bool HasStages => Stages != null && Stages.Count > 0;
 
         /// <summary>
@@ -203,7 +205,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Returns a string representing the item.
         /// </summary>
         /// <returns>A string representing the item.</returns>
-        public override string ToString() => Name[0];
+        public override string ToString() => Item;
 
         /// <summary>
         /// Retrieves the item-specific phrases to respond with when tracking
@@ -253,8 +255,8 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <c>true</c> if the item is considered good; otherwise, <c>false</c>.
         /// </returns>
         /// <remarks>
-        /// This method only considers the item's value on its own. Call <see
-        /// cref="Tracker.IsWorth(ItemData)"/> to include items that this item
+        /// This method only considers the item's value on its own. Call
+        /// TrackerBase.IsWorth(ItemData) to include items that this item
         /// might logically lead to.
         /// </remarks>
         public bool IsGood(Config? config) => !IsJunk(config);
@@ -268,9 +270,8 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <c>true</c> if the item is considered junk; otherwise, <c>false</c>.
         /// </returns>
         /// <remarks>
-        /// This method only considers the item's value on its own. Call <see
-        /// cref="Tracker.IsWorth(ItemData)"/> to include items that this item
-        /// might logically lead to.
+        /// This method only considers the item's value on its own. Call TrackerBase.IsWorth(ItemData)
+        /// to include items that this item might logically lead to.
         /// </remarks>
         public bool IsJunk(Config? config)
         {
@@ -295,9 +296,8 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <c>true</c> if the item is considered progression; otherwise, <c>false</c>.
         /// </returns>
         /// <remarks>
-        /// This method only considers the item's value on its own. Call <see
-        /// cref="Tracker.IsWorth(ItemData)"/> to include items that this item
-        /// might logically lead to.
+        /// This method only considers the item's value on its own. Call TrackerBase.IsWorth(ItemData) to include
+        /// items that this item might logically lead to.
         /// </remarks>
         public bool IsProgression(Config? config)
         {

@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {
@@ -19,6 +23,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// The type of object this location represents
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public UIGridLocationType Type { get; set; }
 
         /// <summary>

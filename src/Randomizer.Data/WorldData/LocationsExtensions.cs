@@ -41,6 +41,8 @@ namespace Randomizer.Data.WorldData
         /// </summary>
         /// <param name="locations">The locations to filter.</param>
         /// <param name="items">The available items.</param>
+        /// <param name="rewards">Current pendants/crystals the player currently has</param>
+        /// <param name="bosses">The current metroid bosses defeated</param>
         /// <returns>
         /// A collection of locations that can be accessed with
         /// <paramref name="items"/> from the same world as the locations
@@ -62,6 +64,8 @@ namespace Randomizer.Data.WorldData
         /// </summary>
         /// <param name="locations">The locations to filter.</param>
         /// <param name="items">The available items.</param>
+        /// <param name="rewards">Current pendants/crystals the player currently has</param>
+        /// <param name="bosses">The current metroid bosses defeated</param>
         /// <returns>
         /// A collection of locations that can be accessed with <paramref name="items"/>.
         /// </returns>
@@ -77,6 +81,8 @@ namespace Randomizer.Data.WorldData
         /// <param name="locations">The locations to assign the item to.</param>
         /// <param name="item">The item to assign to a location.</param>
         /// <param name="items">The available items.</param>
+        /// <param name="rewards">Current pendants/crystals the player currently has</param>
+        /// <param name="bosses">The current metroid bosses defeated</param>
         /// <returns>
         /// A collection of locations that <paramref name="item"/> can be
         /// assigned to based on the available items.

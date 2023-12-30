@@ -1,3 +1,4 @@
+using GitHubReleaseChecker;
 using Microsoft.Extensions.DependencyInjection;
 using MSURandomizerLibrary;
 using Randomizer.Abstractions;
@@ -46,6 +47,9 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IGameDbService, GameDbService>();
         services.AddTransient<SourceRomValidationService>();
         services.AddTransient<ConsoleTrackerDisplayService>();
+
+        services.AddGitHubReleaseCheckerServices();
+        services.AddTransient<IGitHubConfigDownloaderService, GitHubConfigDownloaderService>();
 
         return services;
     }

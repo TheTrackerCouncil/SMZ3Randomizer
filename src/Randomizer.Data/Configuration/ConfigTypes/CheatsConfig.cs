@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Randomizer.Data.Configuration.ConfigTypes
+﻿namespace Randomizer.Data.Configuration.ConfigTypes
 {
     /// <summary>
     /// Provides the phrases for cheats
@@ -11,46 +8,39 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// Gets the phrases to respond with when cheats are turned on.
         /// </summary>
-        public SchrodingersString EnabledCheats { get; init; }
-            = new("Toggled cheats on.");
+        public SchrodingersString? EnabledCheats { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when cheats are turned off.
         /// </summary>
-        public SchrodingersString DisabledCheats { get; init; }
-            = new("Toggled cheats off.");
+        public SchrodingersString? DisabledCheats { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond when a cheat command is given and cheats
         /// are turned off
         /// </summary>
-        public SchrodingersString PromptEnableCheats { get; init; }
-            = new("If you would like to cheat, say 'Hey tracker, enable cheats'");
+        public SchrodingersString? PromptEnableCheats { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond when a cheat command is given and auto
         /// tracker is not connected
         /// </summary>
-        public SchrodingersString PromptEnableAutoTracker { get; init; }
-            = new("If you would like to cheat, please enable auto tracking");
+        public SchrodingersString? PromptEnableAutoTracker { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when connected to to emulator.
         /// </summary>
-        public SchrodingersString CheatPerformed { get; init; }
-            = new("Cheat code activated");
+        public SchrodingersString? CheatPerformed { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond when the player can't perform a certain cheat.
         /// </summary>
-        public SchrodingersString CheatFailed { get; init; }
-            = new("Sorry, I can't perform that cheat for you at this time");
+        public SchrodingersString? CheatFailed { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when the player tries to cheat
         /// themselves an item that does not exist.
         /// </summary>
-        public SchrodingersString CheatInvalidItem { get; init; }
-            = new("Invalid item requested");
+        public SchrodingersString? CheatInvalidItem { get; init; }
     }
 }

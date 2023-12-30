@@ -111,15 +111,15 @@ public class MsuModule : TrackerModule, IDisposable
         TrackerBase.UpdateTrack(_currentMsu, _currentTrack, output);
 
         // Respond if we have lines to the song number, song name, or msu name
-        if (_msuConfig.SongResponses.TryGetValue(_currentTrack.MsuName ?? "", out var response))
+        if (_msuConfig.SongResponses?.TryGetValue(_currentTrack.MsuName ?? "", out var response) == true)
         {
             TrackerBase.Say(response);
         }
-        else if (_msuConfig.SongResponses.TryGetValue(_currentTrack.SongName, out response))
+        else if (_msuConfig.SongResponses?.TryGetValue(_currentTrack.SongName, out response) == true)
         {
             TrackerBase.Say(response);
         }
-        else if (_msuConfig.SongResponses.TryGetValue(_currentTrackNumber.ToString(), out response))
+        else if (_msuConfig.SongResponses?.TryGetValue(_currentTrackNumber.ToString(), out response) == true)
         {
             TrackerBase.Say(response);
         }
@@ -191,10 +191,19 @@ public class MsuModule : TrackerModule, IDisposable
     [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
     private GrammarBuilder GetLocationSongRules()
     {
+        if (_msuConfig.TrackLocations == null)
+        {
+            return new GrammarBuilder();
+        }
+
         var msuLocations = new Choices();
 
         foreach (var track in _msuConfig.TrackLocations)
         {
+            if (track.Value == null)
+            {
+                continue;
+            }
             foreach (var name in track.Value)
             {
                 msuLocations.Add(new SemanticResultValue(name, track.Key));
@@ -220,10 +229,20 @@ public class MsuModule : TrackerModule, IDisposable
     [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
     private GrammarBuilder GetLocationMsuRules()
     {
+        if (_msuConfig.TrackLocations == null)
+        {
+            return new GrammarBuilder();
+        }
+
         var msuLocations = new Choices();
 
         foreach (var track in _msuConfig.TrackLocations)
         {
+            if (track.Value == null)
+            {
+                continue;
+            }
+
             foreach (var name in track.Value)
             {
                 msuLocations.Add(new SemanticResultValue(name, track.Key));
@@ -273,10 +292,20 @@ public class MsuModule : TrackerModule, IDisposable
     [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
     private GrammarBuilder GetCurrentSongRules()
     {
+        if (_msuConfig.TrackLocations == null)
+        {
+            return new GrammarBuilder();
+        }
+
         var msuLocations = new Choices();
 
         foreach (var track in _msuConfig.TrackLocations)
         {
+            if (track.Value == null)
+            {
+                continue;
+            }
+
             foreach (var name in track.Value)
             {
                 msuLocations.Add(new SemanticResultValue(name, track.Key));

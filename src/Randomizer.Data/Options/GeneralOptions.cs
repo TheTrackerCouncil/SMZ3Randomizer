@@ -184,6 +184,11 @@ namespace Randomizer.Data.Options
         /// </summary>
         public GanonsTowerGuessingGameStyle GanonsTowerGuessingGameStyle { get; set; }
 
+        /// <summary>
+        /// The list of config sources
+        /// </summary>
+        public List<ConfigSource> ConfigSources { get; set; } = new();
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public bool Validate()

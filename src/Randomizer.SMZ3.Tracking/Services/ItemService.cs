@@ -62,7 +62,7 @@ public class ItemService : IItemService
     /// </returns>
     public Item? FirstOrDefault(string name)
         => LocalPlayersItems().FirstOrDefault(x => x.Name == name)
-           ?? LocalPlayersItems().FirstOrDefault(x => x.Metadata.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
+           ?? LocalPlayersItems().FirstOrDefault(x => x.Metadata.Name?.Contains(name, StringComparison.OrdinalIgnoreCase) == true)
            ?? LocalPlayersItems().FirstOrDefault(x => x.Metadata.GetStage(name) != null);
 
     /// <summary>

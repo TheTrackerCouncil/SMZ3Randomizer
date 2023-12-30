@@ -90,7 +90,7 @@ namespace Randomizer.SMZ3.Generation
         /// <returns>A collection of strings to use for the in game hints</returns>
         public void GetInGameHints(World hintPlayerWorld, List<World> allWorlds, Playthrough playthrough, int seed)
         {
-            if (hintPlayerWorld.Config.UniqueHintCount <= 0)
+            if (hintPlayerWorld.Config.UniqueHintCount <= 0 || _hintTileConfig.HintTiles == null)
             {
                 return;
             }
@@ -525,19 +525,19 @@ namespace Randomizer.SMZ3.Generation
 
         private string GetDungeonName(World hintPlayerWorld, IDungeon dungeon, Region region)
         {
-            var dungeonName = _metadataService.Dungeon(dungeon).Name.ToString();
+            var dungeonName = _metadataService.Dungeon(dungeon).Name?.ToString() ?? dungeon.DungeonName;
             return $"{dungeonName}{GetMultiworldSuffix(hintPlayerWorld, region.World)}";
         }
 
         private string GetRoomName(World hintPlayerWorld, Room room)
         {
-            var roomName = _metadataService.Room(room)?.Name.ToString() ?? room.Name;
+            var roomName = _metadataService.Room(room)?.Name?.ToString() ?? room.Name;
             return $"{roomName}{GetMultiworldSuffix(hintPlayerWorld, room.World)}";
         }
 
         private string GetRegionName(World hintPlayerWorld, Region region)
         {
-            var dungeonName = _metadataService.Region(region).Name.ToString();
+            var dungeonName = _metadataService.Region(region).Name?.ToString() ?? region.Name;
             return $"{dungeonName}{GetMultiworldSuffix(hintPlayerWorld, region.World)}";
         }
 
@@ -630,7 +630,7 @@ namespace Randomizer.SMZ3.Generation
             if (tile.Type == HintTileType.Requirement && tile.MedallionType != null)
             {
                 var dungeon = _metadataService.Dungeons.FirstOrDefault(x => x.Dungeon == tile.LocationKey);
-                var dungeonName = dungeon?.Name.ToString() ?? tile.LocationKey;
+                var dungeonName = dungeon?.Name?.ToString() ?? tile.LocationKey;
                 var itemName = GetItemName(tile.MedallionType.Value);
                 return _gameLines.HintDungeonMedallion?.Format(dungeonName, itemName);
             }

@@ -1,14 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using Randomizer.Shared;
-using static Randomizer.Data.Configuration.ConfigTypes.SchrodingersString;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data.WorldData.Regions.SuperMetroid;
+using Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar;
+using Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria;
+using Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia;
+using Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair;
+using Randomizer.Data.WorldData.Regions.Zelda;
+using Randomizer.Data.WorldData.Regions.Zelda.DarkWorld;
+using Randomizer.Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain;
+using Randomizer.Data.WorldData.Regions.Zelda.LightWorld;
+using Randomizer.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain;
 
 namespace Randomizer.Data.Configuration.ConfigFiles
 {
     /// <summary>
     /// Config file for additional region information
     /// </summary>
+    [Description("Config file for region names and various tracker responses when dying in particular locations")]
     public class RegionConfig : List<RegionInfo>, IMergeable<RegionInfo>, IConfigFile<RegionConfig>
     {
         /// <summary>
@@ -26,297 +35,264 @@ namespace Randomizer.Data.Configuration.ConfigFiles
         {
             return new RegionConfig
             {
-                new RegionInfo()
+                new()
                 {
                     Region = "Blue Brinstar",
-                    TypeName = "BlueBrinstar",
-                    Name = new("Blue Brinstar"),
-                    Hints = new("Samus might have been there before."),
+                    Type = typeof(BlueBrinstar),
                     MapName = "Brinstar"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Green Brinstar",
-                    TypeName = "GreenBrinstar",
-                    Name = new("Green Brinstar"),
+                    Type = typeof(GreenBrinstar),
                     MapName = "Brinstar"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Kraid's Lair",
-                    TypeName = "KraidsLair",
-                    Name = new("Kraid's Lair"),
+                    Type = typeof(KraidsLair),
                     MapName = "Brinstar"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Pink Brinstar",
-                    TypeName = "PinkBrinstar",
-                    Name = new("Pink Brinstar"),
+                    Type = typeof(PinkBrinstar),
                     MapName = "Brinstar"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Red Brinstar",
-                    TypeName = "RedBrinstar",
-                    Name = new("Red Brinstar"),
+                    Type = typeof(RedBrinstar),
                     MapName = "Brinstar"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Central Crateria",
-                    TypeName = "CentralCrateria",
-                    Name = new("Central Crateria"),
+                    Type = typeof(CentralCrateria),
                     MapName = "Crateria"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "East Crateria",
-                    TypeName = "EastCrateria",
-                    Name = new("East Crateria"),
+                    Type = typeof(EastCrateria),
                     MapName = "Crateria"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "West Crateria",
-                    TypeName = "WestCrateria",
-                    Name = new("West Crateria"),
+                    Type = typeof(WestCrateria),
                     MapName = "Crateria"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Inner Maridia",
-                    TypeName = "InnerMaridia",
-                    Name = new("Inner Maridia"),
-                    Hints = new("You should go see Shaktool when you're in the area.", "It's in a wet place."),
+                    Type = typeof(InnerMaridia),
                     MapName = "Maridia"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Outer Maridia",
-                    TypeName = "OuterMaridia",
-                    Name = new("Outer Maridia"),
-                    Hints = new("It's in a wet place."),
+                    Type = typeof(OuterMaridia),
                     MapName = "Maridia"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Lower Norfair, East",
-                    TypeName = "LowerNorfairEast",
-                    Name = new("Lower Norfair, East"),
-                    Hints = new("I heard Ridley hangs out around there."),
+                    Type = typeof(LowerNorfairEast),
                     MapName = "Norfair"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Lower Norfair, West",
-                    TypeName = "LowerNorfairWest",
-                    Name = new("Lower Norfair, West"),
+                    Type = typeof(LowerNorfairWest),
                     MapName = "Norfair"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Upper Norfair, Crocomire",
-                    TypeName = "UpperNorfairCrocomire",
-                    Name = new("Upper Norfair, Crocomire"),
+                    Type = typeof(UpperNorfairCrocomire),
                     MapName = "Norfair"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Upper Norfair, East",
-                    TypeName = "UpperNorfairEast",
-                    Name = new("Upper Norfair, East"),
+                    Type = typeof(UpperNorfairEast),
                     MapName = "Norfair"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Upper Norfair, West",
-                    TypeName = "UpperNorfairWest",
-                    Name = new("Upper Norfair, West"),
+                    Type = typeof(UpperNorfairWest),
                     MapName = "Norfair"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Wrecked Ship",
-                    TypeName = "WreckedShip",
-                    Name = new("Wrecked Ship"),
+                    Type = typeof(WreckedShip),
                     MapName = "Wrecked Ship"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Castle Tower",
-                    TypeName = "CastleTower",
-                    Name = new("Castle Tower", "Agahnim's Tower", "Hyrule Castle Tower"),
+                    Type = typeof(CastleTower),
                     MapName = "Light World"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Dark World Mire",
-                    TypeName = "DarkWorldMire",
-                    Name = new("Dark World Mire"),
-                    Hints = new("It's in a wet place."),
+                    Type = typeof(DarkWorldMire),
                     MapName = "Dark World"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Dark World North East",
-                    TypeName = "DarkWorldNorthEast",
-                    Name = new("Dark World North East"),
+                    Type = typeof(DarkWorldNorthEast),
                     MapName = "Dark World"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Dark World North West",
-                    TypeName = "DarkWorldNorthWest",
-                    Name = new("Dark World North West"),
-                    Hints = new("Check around the villages."),
+                    Type = typeof(DarkWorldNorthWest),
                     MapName = "Dark World"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Dark World South",
-                    TypeName = "DarkWorldSouth",
-                    Name = new("Dark World South"),
+                    Type = typeof(DarkWorldSouth),
                     MapName = "Dark World"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Dark World Death Mountain East",
-                    TypeName = "DarkWorldDeathMountainEast",
-                    Name = new("Dark World Death Mountain East"),
+                    Type = typeof(DarkWorldDeathMountainEast),
                     MapName = "Dark World"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Dark World Death Mountain West",
-                    TypeName = "DarkWorldDeathMountainWest",
-                    Name = new("Dark World Death Mountain West"),
+                    Type = typeof(DarkWorldDeathMountainWest),
                     MapName = "Dark World"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Desert Palace",
-                    TypeName = "DesertPalace",
-                    Name = new("Desert Palace"),
+                    Type = typeof(DesertPalace),
                     MapName = "Light World"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Eastern Palace",
-                    TypeName = "EasternPalace",
-                    Name = new("Eastern Palace"),
+                    Type = typeof(EasternPalace),
                     MapName = "Light World"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Ganon's Tower",
-                    TypeName = "GanonsTower",
-                    Name = new("Ganon's Tower"),
-                    Hints = new("I hope you don't need it."),
+                    Type = typeof(GanonsTower),
                     MapName = "Dark World"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Hyrule Castle",
-                    TypeName = "HyruleCastle",
-                    Name = new("Hyrule Castle"),
+                    Type = typeof(HyruleCastle),
                     MapName = "Light World"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Ice Palace",
-                    TypeName = "IcePalace",
-                    Name = new("Ice Palace"),
+                    Type = typeof(IcePalace),
                     MapName = "Dark World"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Light World Death Mountain East",
-                    TypeName = "LightWorldDeathMountainEast",
-                    Name = new("Light World Death Mountain East"),
+                    Type = typeof(LightWorldDeathMountainEast),
                     MapName = "Light World"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Light World Death Mountain West",
-                    TypeName = "LightWorldDeathMountainWest",
-                    Name = new("Light World Death Mountain West"),
+                    Type = typeof(LightWorldDeathMountainWest),
                     MapName = "Light World"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Light World North East",
-                    TypeName = "LightWorldNorthEast",
-                    Name = new("Light World North East"),
+                    Type = typeof(LightWorldNorthEast),
                     MapName = "Light World"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Light World North West",
-                    TypeName = "LightWorldNorthWest",
-                    Name = new("Light World North West"),
-                    Hints = new("Check around the villages."),
+                    Type = typeof(LightWorldNorthWest),
                     MapName = "Light World"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Light World South",
-                    TypeName = "LightWorldSouth",
-                    Name = new("Light World South"),
+                    Type = typeof(LightWorldSouth),
                     MapName = "Light World"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Misery Mire",
-                    TypeName = "MiseryMire",
-                    Name = new("Misery Mire"),
-                    Hints = new("It's in a wet place.", "You need a medallion to get in there."),
+                    Type = typeof(MiseryMire),
                     MapName = "Dark World"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Palace of Darkness",
-                    TypeName = "PalaceOfDarkness",
-                    Name = new("Palace of Darkness"),
+                    Type = typeof(PalaceOfDarkness),
                     MapName = "Dark World"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Skull Woods",
-                    TypeName = "SkullWoods",
-                    Name = new("Skull Woods"),
+                    Type = typeof(SkullWoods),
                     MapName = "Dark World"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Swamp Palace",
-                    TypeName = "SwampPalace",
-                    Name = new("Swamp Palace"),
-                    Hints = new("It's in a wet place."),
+                    Type = typeof(SwampPalace),
                     MapName = "Dark World"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Thieves' Town",
-                    TypeName = "ThievesTown",
-                    Name = new("Thieves' Town"),
+                    Type = typeof(ThievesTown),
                     MapName = "Dark World"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Tower of Hera",
-                    TypeName = "TowerOfHera",
-                    Name = new("Tower of Hera"),
+                    Type = typeof(TowerOfHera),
                     MapName = "Light World"
                 },
-                new RegionInfo()
+                new()
                 {
                     Region = "Turtle Rock",
-                    TypeName = "TurtleRock",
-                    Name = new("Turtle Rock", new("Tortoise Rock", 0.1)),
-                    Hints = new("You need a medallion to get in there."),
+                    Type = typeof(TurtleRock),
                     MapName = "Dark World"
                 },
+            };
+        }
+
+        public static object Example()
+        {
+            return new RegionConfig()
+            {
+                new()
+                {
+                    Region = "Turtle Rock",
+                    Name = new("Turtle Rock", new("Tortoise Rock", 0.1)),
+                    Hints = new("A hint tracker will give when asking for where an item is"),
+                    WhenDiedInRoom = new Dictionary<int, SchrodingersString>()
+                    {
+                        { 15 , new SchrodingersString("Message when dying in room/screen 15 of the region ")}
+                    },
+                    OutOfLogic = new SchrodingersString("Message tracker will state when getting items out of logic in this region")
+                }
             };
         }
     }

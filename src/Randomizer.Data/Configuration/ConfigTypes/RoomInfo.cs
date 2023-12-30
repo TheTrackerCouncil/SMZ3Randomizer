@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using Newtonsoft.Json;
 using Randomizer.Data.WorldData;
+using YamlDotNet.Serialization;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {
@@ -47,13 +48,13 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// The name of the type matching this room
         /// </summary>
-        [JsonIgnore]
-        public string? TypeName { get; init; }
+        [JsonIgnore, YamlIgnore]
+        public Type? Type { get; init; }
 
         /// <summary>
         /// Gets the possible names for the room.
         /// </summary>
-        public SchrodingersString Name { get; set; } = new();
+        public SchrodingersString? Name { get; set; }
 
         /// <summary>
         /// Gets the possible hints for the room, if any are defined.
@@ -93,7 +94,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// more than one matching room in <paramref name="world"/>.
         /// </exception>
         public Room GetRoom(World world)
-            => world.Rooms.Single(x => x.GetType().Name == TypeName);
+            => world.Rooms.Single(x => x.GetType() == Type);
 
         /// <summary>
         /// Determines whether the room is accessible with the specified set of
@@ -116,6 +117,6 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Returns a string representation of the room.
         /// </summary>
         /// <returns>A string representation of this room.</returns>
-        public override string ToString() => Name[0];
+        public override string ToString() => Room;
     }
 }

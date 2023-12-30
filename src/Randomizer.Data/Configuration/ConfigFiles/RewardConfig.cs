@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using Randomizer.Shared;
 using Randomizer.Data.Configuration.ConfigTypes;
 
@@ -8,12 +8,13 @@ namespace Randomizer.Data.Configuration.ConfigFiles
     /// <summary>
     /// Config file for additional reward information
     /// </summary>
+    [Description("Config file for dungeon reward names")]
     public class RewardConfig : List<RewardInfo>, IMergeable<RewardInfo>, IConfigFile<RewardConfig>
     {
         /// <summary>
         /// Constructor
         /// </summary>
-        public RewardConfig() : base()
+        public RewardConfig()
         {
         }
 
@@ -25,55 +26,60 @@ namespace Randomizer.Data.Configuration.ConfigFiles
         {
             return new RewardConfig
             {
-                new RewardInfo()
+                new()
                 {
                     Reward = "Unknown",
-                    Name = new("Unknown"),
                     Article = null,
                     RewardType = RewardType.None,
                 },
-                new RewardInfo()
+                new()
                 {
                     Reward = "Crystal",
-                    Name = new("Crystal", "Blue Crystal"),
                     Article = "a",
                     RewardType = RewardType.CrystalBlue,
                 },
-                new RewardInfo()
+                new()
                 {
                     Reward = "Red Crystal",
-                    Name = new("Red Crystal"),
                     Article = "a",
                     RewardType = RewardType.CrystalRed,
                 },
-                new RewardInfo()
+                new()
                 {
                     Reward = "Green Pendant",
-                    Name = new("Green Pendant"),
                     Article = "the",
                     RewardType = RewardType.PendantGreen,
                 },
-                new RewardInfo()
+                new()
                 {
                     Reward = "Red Pendant",
-                    Name = new("Red Pendant"),
                     Article = "the",
                     RewardType = RewardType.PendantRed,
                 },
-                new RewardInfo()
+                new()
                 {
                     Reward = "Blue Pendant",
-                    Name = new("Blue Pendant"),
                     Article = "the",
                     RewardType = RewardType.PendantBlue,
                 },
-                new RewardInfo()
+                new()
                 {
                     Reward = "Agahnim",
-                    Name = new("Agahnim"),
                     Article = null,
                     RewardType = RewardType.Agahnim,
                 },
+            };
+        }
+
+        public static object Example()
+        {
+            return new RewardConfig
+            {
+                new()
+                {
+                    Reward = "Red Crystal",
+                    Name = new("Red Crystal", new SchrodingersString.Possibility("Blood red crystal", 0.1)),
+                }
             };
         }
     }

@@ -17,7 +17,9 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// cref="TrackerMapLocation"/> class using the specified JSON file
         /// name.
         /// </summary>
+        /// <param name="type">The type of location this is</param>
         /// <param name="region">The region that this location belongs to</param>
+        /// <param name="regionTypeName">The name of the C# type for the region</param>
         /// <param name="name">The name of this location</param>
         /// <param name="x">The x location to place this location on the map</param>
         /// <param name="y">The y location to place this location on the map</param>
@@ -87,15 +89,15 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         {
             var room = world.Rooms.SingleOrDefault(x => x.Name.Equals(Name, StringComparison.OrdinalIgnoreCase));
             if (room?.Metadata != null)
-                return room.Metadata.Name[0] ?? Name;
+                return room.Metadata.Name?[0] ?? Name;
 
             var dungeon = world.Dungeons.SingleOrDefault(x => x.DungeonName.Equals(Name, StringComparison.OrdinalIgnoreCase));
             if (dungeon?.DungeonMetadata != null)
-                return dungeon?.DungeonMetadata.Name[0] ?? Name;
+                return dungeon?.DungeonMetadata.Name?[0] ?? Name;
 
             var location = world.Locations.SingleOrDefault(x => x.Name.Equals(Name, StringComparison.OrdinalIgnoreCase));
             if (location?.Metadata != null)
-                return location.Metadata.Name[0] ?? Name;
+                return location.Metadata.Name?[0] ?? Name;
 
             return Name;
         }

@@ -1,22 +1,24 @@
 ﻿using Newtonsoft.Json;
-using Randomizer.Data.Configuration;
-using Randomizer.Data.Configuration.ConfigTypes;
+using YamlDotNet.Serialization;
 
-namespace Randomizer.Data.WorldData;
+namespace Randomizer.Data.Configuration.ConfigTypes;
 
 public class HintTile : IMergeable<ItemData>
 {
     [MergeKey]
     public required string HintTileKey { get; set; }
 
-    [JsonIgnore]
+    [JsonIgnore, YamlIgnore]
     public required int Room { get; set; }
 
-    [JsonIgnore]
+    [JsonIgnore, YamlIgnore]
     public required int TopLeftX { get; set; }
 
-    [JsonIgnore]
+    [JsonIgnore, YamlIgnore]
     public required int TopLeftY { get; set; }
 
-    public SchrodingersString Name { get; set; } = new();
+    /// <summary>
+    /// Possible names for the hint tile
+    /// </summary>
+    public SchrodingersString? Name { get; set; }
 }

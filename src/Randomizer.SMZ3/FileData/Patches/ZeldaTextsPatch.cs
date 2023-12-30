@@ -243,7 +243,7 @@ public class ZeldaTextsPatch : RomPatch
 
     private string GetRegionName(Region region)
     {
-        return Dialog.GetGameSafeString(GetRegionInfo(region)?.Name.ToString() ?? region.Name);
+        return Dialog.GetGameSafeString(GetRegionInfo(region)?.Name?.ToString() ?? region.Name);
     }
 
     private string GetItemName(GetPatchesRequest data, Item item)
@@ -277,6 +277,6 @@ public class ZeldaTextsPatch : RomPatch
         }
     }
 
-    private RegionInfo? GetRegionInfo(Region region) => _regions.FirstOrDefault(x => x.TypeName == region.GetType().Name);
+    private RegionInfo? GetRegionInfo(Region region) => _regions.FirstOrDefault(x => x.Type == region.GetType());
     private ItemData? GetItemData(Item item) => _items.FirstOrDefault(x => x.InternalItemType == item.Type);
 }

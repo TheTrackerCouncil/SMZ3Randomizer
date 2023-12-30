@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using Randomizer.Shared;
 using static Randomizer.Data.Configuration.ConfigTypes.SchrodingersString;
 using Randomizer.Data.Configuration.ConfigTypes;
-using System.Linq;
-using Randomizer.Data;
+using Randomizer.Data.WorldData.Regions.Zelda;
 
 namespace Randomizer.Data.Configuration.ConfigFiles
 {
     /// <summary>
     /// Config file for additional dungeon information
     /// </summary>
+    [Description("Config file for the various Zelda dungeons with collectable treasure in them")]
     public class DungeonConfig : List<DungeonInfo>, IMergeable<DungeonInfo>, IConfigFile<DungeonConfig>
     {
         /// <summary>
@@ -28,119 +28,106 @@ namespace Randomizer.Data.Configuration.ConfigFiles
         {
             return new DungeonConfig
             {
-                new DungeonInfo()
+                new()
                 {
                     Dungeon = "Eastern Palace",
-                    Name = new("Eastern Palace"),
                     Abbreviation = "EP",
-                    Boss = new("Armos Knights"),
-                    TypeName = "EasternPalace",
+                    Type = typeof(EasternPalace),
                     LocationId = LocationId.EasternPalaceArmosKnights,
                 },
-                new DungeonInfo()
+                new()
                 {
                     Dungeon = "Desert Palace",
-                    Name = new("Desert Palace"),
                     Abbreviation = "DP",
-                    Boss = new("Lanmolas"),
-                    TypeName = "DesertPalace",
+                    Type = typeof(DesertPalace),
                     LocationId = LocationId.DesertPalaceLanmolas,
                 },
-                new DungeonInfo()
+                new()
                 {
                     Dungeon = "Tower of Hera",
-                    Name = new("Tower of Hera"),
                     Abbreviation = "TH",
-                    Boss = new("Moldorm"),
-                    TypeName = "TowerOfHera",
+                    Type = typeof(TowerOfHera),
                     LocationId = LocationId.TowerOfHeraMoldorm,
                 },
-                new DungeonInfo()
+                new()
                 {
                     Dungeon = "Palace of Darkness",
-                    Name = new("Palace of Darkness", "Dark Palace"),
                     Abbreviation = "PD",
-                    Boss = new("Helmasaur King", "Helmasaur"),
-                    TypeName = "PalaceOfDarkness",
+                    Type = typeof(PalaceOfDarkness),
                     LocationId = LocationId.PalaceOfDarknessHelmasaurKing,
                 },
-                new DungeonInfo()
+                new()
                 {
                     Dungeon = "Swamp Palace",
-                    Name = new("Swamp Palace"),
                     Abbreviation = "SP",
-                    Boss = new("Arrghus"),
-                    TypeName = "SwampPalace",
+                    Type = typeof(SwampPalace),
                     LocationId = LocationId.SwampPalaceArrghus,
                 },
-                new DungeonInfo()
+                new()
                 {
                     Dungeon = "Skull Woods",
-                    Name = new("Skull Woods"),
                     Abbreviation = "SW",
-                    Boss = new(new("Mothula", 0), "MOTHyula"),
-                    TypeName = "SkullWoods",
+                    Type = typeof(SkullWoods),
                     LocationId = LocationId.SkullWoodsMothula,
                 },
-                new DungeonInfo()
+                new()
                 {
                     Dungeon = "Thieves' Town",
-                    Name = new("Thieves' Town"),
                     Abbreviation = "TT",
-                    Boss = new("Blind"),
-                    TypeName = "ThievesTown",
+                    Type = typeof(ThievesTown),
                     LocationId = LocationId.ThievesTownBlind,
                 },
-                new DungeonInfo()
+                new()
                 {
                     Dungeon = "Ice Palace",
-                    Name = new("Ice Palace"),
                     Abbreviation = "IP",
-                    Boss = new("Kholdstare"),
-                    TypeName = "IcePalace",
+                    Type = typeof(IcePalace),
                     LocationId = LocationId.IcePalaceKholdstare,
                 },
-                new DungeonInfo()
+                new()
                 {
                     Dungeon = "Misery Mire",
-                    Name = new("Misery Mire"),
                     Abbreviation = "MM",
-                    Boss = new("Vitreous"),
-                    TypeName = "MiseryMire",
+                    Type = typeof(MiseryMire),
                     LocationId = LocationId.MiseryMireVitreous,
                 },
-                new DungeonInfo()
+                new()
                 {
                     Dungeon = "Turtle Rock",
-                    Name = new("Turtle Rock"),
                     Abbreviation = "TR",
-                    Boss = new("Trinexx"),
-                    TypeName = "TurtleRock",
+                    Type = typeof(TurtleRock),
                     LocationId = LocationId.TurtleRockTrinexx,
                 },
-                new DungeonInfo()
+                new()
                 {
                     Dungeon = "Ganon's Tower",
-                    Name = new(new("Ganon's Tower", 0), "Gannon's Tower"),
                     Abbreviation = "GT",
-                    Boss = new("Ganon", "Gannon", "Gannondorf", new("Gaynon", 0)),
-                    TypeName = "GanonsTower",
+                    Type = typeof(GanonsTower),
                 },
-                new DungeonInfo()
+                new()
                 {
                     Dungeon = "Hyrule Castle",
-                    Name = new("Hyrule Castle"),
                     Abbreviation = "HC",
-                    Boss = new("Ball and Chain Soldier"),
-                    TypeName = "HyruleCastle",
+                    Type = typeof(HyruleCastle),
                 },
-                new DungeonInfo()
+                new()
                 {
                     Dungeon = "Castle Tower",
-                    Name = new("Agahnim's Tower", "Castle Tower"),
                     Abbreviation = "AT",
-                    Boss = new(new("Agahnim", 0), "Aganihm"),
-                    TypeName = "CastleTower",
+                    Type = typeof(CastleTower),
+                },
+            };
+        }
+
+        public static object Example()
+        {
+            return new DungeonConfig()
+            {
+                new()
+                {
+                    Dungeon = "Palace of Darkness",
+                    Name = new("Palace of Darkness", new Possibility("Dark Palace", 0.1)),
+                    Boss = new ("Helmasaur King", new Possibility("The Helmasaur King", 0.1)),
                 },
             };
         }

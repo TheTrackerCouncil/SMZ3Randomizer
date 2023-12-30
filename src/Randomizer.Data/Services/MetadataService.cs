@@ -81,7 +81,7 @@ namespace Randomizer.Data.Services
         /// A new <see cref="RegionInfo"/> for the specified region.
         /// </returns>
         public RegionInfo Region(string name)
-            => Regions.Single(x => x.TypeName == name || x.Region == name);
+            => Regions.Single(x => x.Type?.Name == name || x.Region == name);
 
         /// <summary>
         /// Returns extra information for the specified region.
@@ -93,7 +93,7 @@ namespace Randomizer.Data.Services
         /// A new <see cref="RegionInfo"/> for the specified region.
         /// </returns>
         public RegionInfo Region(Type type)
-            => Regions.Single(x => x.TypeName == type.Name);
+            => Regions.Single(x => x.Type == type);
 
         /// <summary>
         /// Returns extra information for the specified region.
@@ -128,7 +128,7 @@ namespace Randomizer.Data.Services
         /// <c>null</c> if <paramref name="name"/> is not a valid dungeon.
         /// </returns>
         public DungeonInfo? Dungeon(string name)
-            => Dungeons.SingleOrDefault(x => x.TypeName == name || x.Dungeon == name);
+            => Dungeons.SingleOrDefault(x => x.Type?.Name == name || x.Dungeon == name);
 
         /// <summary>
         /// Returns extra information for the specified dungeon.
@@ -141,7 +141,7 @@ namespace Randomizer.Data.Services
         /// <c>null</c> if <paramref name="type"/> is not a valid dungeon.
         /// </returns>
         public DungeonInfo Dungeon(Type type)
-            => Dungeons.Single(x => type.Name == x.TypeName);
+            => Dungeons.Single(x => type == x.Type);
 
         /// <summary>
         /// Returns extra information for the specified dungeon.
@@ -190,7 +190,7 @@ namespace Randomizer.Data.Services
         /// A new <see cref="RoomInfo"/> for the specified room.
         /// </returns>
         public RoomInfo Room(string name)
-            => Rooms.Single(x => x.TypeName == name || x.Room == name);
+            => Rooms.Single(x => x.Type?.Name == name || x.Room == name);
 
         /// <summary>
         /// Returns extra information for the specified room.
@@ -202,7 +202,7 @@ namespace Randomizer.Data.Services
         /// A new <see cref="RoomInfo"/> for the specified room.
         /// </returns>
         public RoomInfo? Room(Type type)
-            => Rooms.SingleOrDefault(x => x.TypeName == type.Name);
+            => Rooms.SingleOrDefault(x => x.Type == type);
 
         /// <summary>
         /// Returns extra information for the specified room.

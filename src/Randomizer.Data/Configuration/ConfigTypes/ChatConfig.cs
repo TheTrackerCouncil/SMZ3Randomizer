@@ -12,34 +12,29 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Gets a collection of greetings that tracker recognizes and responds
         /// to.
         /// </summary>
-        public List<string> RecognizedGreetings { get; init; }
-            = new List<string>();
+        public List<string>? RecognizedGreetings { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when connected to chat.
         /// </summary>
-        public SchrodingersString WhenConnected { get; init; }
-            = new("Hello chat.");
+        public SchrodingersString? WhenConnected { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when disconnected to chat.
         /// </summary>
-        public SchrodingersString WhenDisconnected { get; init; }
-            = new("Error with Twitch chat connection. Please save and restart tracker.");
+        public SchrodingersString? WhenDisconnected { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when disconnected to chat.
         /// </summary>
-        public SchrodingersString NoConnection { get; init; }
-            = new("I'm not currently connected to Twitch chat.");
+        public SchrodingersString? NoConnection { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when greeted by someone in chat.
         /// <c>{0}</c> is a placeholder for the display name of the person in
         /// chat to respond to.
         /// </summary>
-        public SchrodingersString GreetingResponses { get; init; }
-            = new("Hey {0}");
+        public SchrodingersString? GreetingResponses { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when greeting someone for the
@@ -60,15 +55,13 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Gets the phrases to respond with when starting the GT big key
         /// guessing game.
         /// </summary>
-        public SchrodingersString StartedGuessingGame { get; init; }
-            = new("The floor is now open for guesses.");
+        public SchrodingersString? StartedGuessingGame { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when closing guesses for the GT big
         /// key guessing game.
         /// </summary>
-        public SchrodingersString ClosedGuessingGame { get; init; }
-            = new("The floor is now closed for guesses.");
+        public SchrodingersString? ClosedGuessingGame { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when a moderator closed guesses for
@@ -76,22 +69,19 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <c>{0}</c> is a placeholder for the name of the moderator that
         /// triggered the close.
         /// </summary>
-        public SchrodingersString ModeratorClosedGuessingGame { get; init; }
-            = new("{0} closed the floor for guesses.");
+        public SchrodingersString? ModeratorClosedGuessingGame { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when the guessing game is closed
         /// subsequent times.
         /// </summary>
-        public SchrodingersString ClosedGuessingGameWhileClosed { get; init; }
-            = new("The floor is already closed.");
+        public SchrodingersString? ClosedGuessingGameWhileClosed { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when the guessing game is closed
         /// before it was started.
         /// </summary>
-        public SchrodingersString ClosedGuessingGameBeforeStarting { get; init; }
-            = new("But we haven't even started yet.");
+        public SchrodingersString? ClosedGuessingGameBeforeStarting { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when a moderator closed the
@@ -99,8 +89,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <c>{0}</c> is a placeholder for the name of the moderator that
         /// triggered the close.
         /// </summary>
-        public SchrodingersString ModeratorClosedGuessingGameWhileClosed { get; init; }
-            = new("The floor is already closed, {0}.");
+        public SchrodingersString? ModeratorClosedGuessingGameWhileClosed { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when a moderator closed the
@@ -108,8 +97,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <c>{0}</c> is a placeholder for the name of the moderator that
         /// triggered the close.
         /// </summary>
-        public SchrodingersString ModeratorClosedGuessingGameBeforeStarting { get; init; }
-            = new("But we haven't even started yet, {0}.");
+        public SchrodingersString? ModeratorClosedGuessingGameBeforeStarting { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when the guessing game has
@@ -117,8 +105,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <c>{0}</c> is a placeholder for the correct number. <c>{1}</c> is a
         /// placeholder for the names of the winners.
         /// </summary>
-        public SchrodingersString DeclareGuessingGameWinners { get; init; }
-            = new("The winners who guessed number {0} are {1}.");
+        public SchrodingersString? DeclareGuessingGameWinners { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when the guessing game has
@@ -126,40 +113,35 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <c>{0}</c> is a placeholder for the correct number. <c>{1}</c> is a placeholder for the guessed number,
         /// <c>{2}</c> is a placeholder for the names of the winners.
         /// </summary>
-        public SchrodingersString DeclareGuessingGameClosestButNotOverWinner { get; init; }
-            = new("The winners who guessed closest to the number of {0} without going over are {1}.");
+        public SchrodingersString? DeclareGuessingGameClosestButNotOverWinner { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when the guessing game has
         /// concluded and nobody won.
         /// <c>{0}</c> is a placeholder for the correct number.
         /// </summary>
-        public SchrodingersString NobodyWonGuessingGame { get; init; }
-            = new("Nobody guessed {0}.");
+        public SchrodingersString? NobodyWonGuessingGame { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when Tracker submits her own guess
         /// for the guessing game.
         /// <c>{0}</c> is a placeholder for the number that Tracker guessed.
         /// </summary>
-        public SchrodingersString TrackerGuess { get; init; }
-            = new("My guess is {0}.", "I'm joining with {0}.", "I have a feeling it'll be {0}");
+        public SchrodingersString? TrackerGuess { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when Tracker is among the list of
         /// winners that were just announced.
         /// <c>{0}</c> is a placeholder for the correct number.
         /// </summary>
-        public SchrodingersString TrackerGuessWon { get; init; }
-            = new("Hey, that's me.");
+        public SchrodingersString? TrackerGuessWon { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when Tracker is the only winner of
         /// the guessing game.
         /// <c>{0}</c> is a placeholder for the correct number.
         /// </summary>
-        public SchrodingersString TrackerGuessOnlyWinner { get; init; }
-            = new("Am I the only one who guessed {0}? I swear I wasn't cheating.");
+        public SchrodingersString? TrackerGuessOnlyWinner { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when the chest that Tracker guessed
@@ -171,49 +153,37 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Gets a dictionary that contains usernames and their replacement for
         /// text-to-speech pronunciation purposes.
         /// </summary>
-        public Dictionary<string, string> UserNamePronunciation { get; init; }
-            = new Dictionary<string, string>()
-            {
-                ["Vivelin"] = "vihvelin",
-                ["MattEqualsCoder"] = "matt equals coder",
-                ["Axnollouse"] = "Fragger"
-            };
+        public Dictionary<string, string>? UserNamePronunciation { get; init; }
 
         /// <summary>
         /// Gets the phrases for when asking the chat if content should be
         /// increased or not
         /// </summary>
-        public SchrodingersString AskChatAboutContent { get; init; }
-            = new("Hmm. I'm not so sure about that. Let's ask the professionals in chat if that was some hashtag content.");
+        public SchrodingersString? AskChatAboutContent { get; init; }
 
         /// <summary>
         /// Gets the phrases for when chat decided to increase content
         /// </summary>
-        public SchrodingersString AskChatAboutContentYes { get; init; }
-            = new("It's your lucky day. Chat has confirmed that was some hashtag content.");
+        public SchrodingersString? AskChatAboutContentYes { get; init; }
 
         /// <summary>
         /// Gets the phrases for when chat decided not to increase content
         /// </summary>
-        public SchrodingersString AskChatAboutContentNo { get; init; }
-            = new("I'm glad I asked. The chat has denied your request to increase your content levels.");
+        public SchrodingersString? AskChatAboutContentNo { get; init; }
 
         /// <summary>
         /// Gets the phrases for when the poll is complete
         /// </summary>
-        public SchrodingersString PollComplete { get; init; }
-            = new("And the results are now in.");
+        public SchrodingersString? PollComplete { get; init; }
 
         /// <summary>
         /// Gets the phrases for when the poll is opened
         /// </summary>
-        public SchrodingersString PollOpened { get; init; }
-            = new("I have opened a poll for {0} seconds.");
+        public SchrodingersString? PollOpened { get; init; }
 
         /// <summary>
         /// Gets the phrases for when the poll outcome could not be determined
         /// </summary>
-        public SchrodingersString PollError { get; init; }
-            = new("Sorry, I was unable to get the poll results.");
+        public SchrodingersString? PollError { get; init; }
     }
 }
