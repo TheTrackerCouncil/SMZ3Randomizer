@@ -45,6 +45,7 @@ public static class TrackerServiceCollectionExtensions
         {
             // services.AddScoped<ISpeechRecognitionService, AlwaysOnSpeechRecognitionService>();
             services.AddScoped<ISpeechRecognitionService, PushToTalkSpeechRecognitionService>();
+            services.AddTransient<IMicrophoneService, MicrophoneService>();
             services.AddSingleton<IGlobalHook, TaskPoolGlobalHook>();
         }
         else
