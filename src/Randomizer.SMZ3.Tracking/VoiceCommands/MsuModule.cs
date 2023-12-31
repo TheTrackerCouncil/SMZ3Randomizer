@@ -46,7 +46,15 @@ public class MsuModule : TrackerModule, IDisposable
     /// <param name="msuSelectorService"></param>
     /// <param name="msuTypeService"></param>
     /// <param name="msuConfig"></param>
-    public MsuModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<MsuModule> logger, IMsuLookupService msuLookupService, IMsuSelectorService msuSelectorService, IMsuTypeService msuTypeService, MsuConfig msuConfig)
+    public MsuModule(
+        TrackerBase tracker,
+        IItemService itemService,
+        IWorldService worldService,
+        ILogger<MsuModule> logger,
+        IMsuLookupService msuLookupService,
+        IMsuSelectorService msuSelectorService,
+        IMsuTypeService msuTypeService,
+        MsuConfig msuConfig)
         : base(tracker, itemService, worldService, logger)
     {
         _msuSelectorService = msuSelectorService;
@@ -142,33 +150,63 @@ public class MsuModule : TrackerModule, IDisposable
             return "";
 
         var options = TrackerBase.Options;
-        if (options.MsuTrackDisplayStyle == MsuTrackDisplayStyle.Horizontal)
+        switch (options.MsuTrackDisplayStyle)
         {
-            return _currentTrack.GetDisplayText(includeMsu: true);
-        }
-        else
-        {
-            var lines = new List<string>();
+            case MsuTrackDisplayStyle.Horizontal:
+                {
+                    if (!string.IsNullOrEmpty(_currentTrack.DisplayAlbum) || !string.IsNullOrEmpty(_currentTrack.DisplayArtist))
+                    {
+                        return new MsuDisplayTextBuilder(_currentTrack, _currentMsu)
+                            .AddAlbum("{0} - ")
+                            .AddTrackTitle("{0}")
+                            .AddArtist(" ({0})")
+                            .ToString();
+                    }
+                    else
+                    {
+                        return new MsuDisplayTextBuilder(_currentTrack, _currentMsu)
+                            .AddTrackTitle("{0}")
+                            .AddMsuName(" from {0}")
+                            .ToString();
+                    }
+                }
 
-            var creator = string.IsNullOrEmpty(_currentTrack.MsuCreator)
-                ? _currentMsu.DisplayCreator
-                : _currentTrack.MsuCreator;
-            var msu = string.IsNullOrEmpty(_currentTrack.MsuName)
-                ? _currentMsu.DisplayName
-                : _currentTrack.MsuName;
-            lines.Add(string.IsNullOrEmpty(creator)
-                ? $"MSU: {msu}"
-                : $"MSU: {msu} by {creator}");
+            case MsuTrackDisplayStyle.Vertical:
+                {
+                    var lines = new List<string>();
 
-            if (!string.IsNullOrEmpty(_currentTrack.DisplayAlbum))
-                lines.Add($"Album: {_currentTrack.DisplayAlbum}");
+                    var creator = string.IsNullOrEmpty(_currentTrack.MsuCreator)
+                        ? _currentMsu.DisplayCreator
+                        : _currentTrack.MsuCreator;
+                    var msu = string.IsNullOrEmpty(_currentTrack.MsuName)
+                        ? _currentMsu.DisplayName
+                        : _currentTrack.MsuName;
+                    lines.Add(string.IsNullOrEmpty(creator)
+                        ? $"MSU: {msu}"
+                        : $"MSU: {msu} by {creator}");
 
-            lines.Add($"Song: {_currentTrack.SongName}");
+                    if (!string.IsNullOrEmpty(_currentTrack.DisplayAlbum))
+                        lines.Add($"Album: {_currentTrack.DisplayAlbum}");
 
-            if (!string.IsNullOrEmpty(_currentTrack.DisplayArtist))
-                lines.Add($"Artist: {_currentTrack.DisplayArtist}");
+                    lines.Add($"Song: {_currentTrack.SongName}");
 
-            return string.Join("\r\n", lines);
+                    if (!string.IsNullOrEmpty(_currentTrack.DisplayArtist))
+                        lines.Add($"Artist: {_currentTrack.DisplayArtist}");
+
+                    return string.Join("\r\n", lines);
+                }
+
+            case MsuTrackDisplayStyle.HorizonalWithMsu:
+                return new MsuDisplayTextBuilder(_currentTrack, _currentMsu)
+                    .AddAlbum("{0}: ")
+                    .AddTrackTitle("{0}")
+                    .AddArtist(" - {0}")
+                    .AddMsuNameAndCreator(" (MSU: {0})")
+                    .ToString();
+
+            case MsuTrackDisplayStyle.SentenceStyle:
+            default:
+                return _currentTrack.GetDisplayText(includeMsu: true);
         }
     }
 
