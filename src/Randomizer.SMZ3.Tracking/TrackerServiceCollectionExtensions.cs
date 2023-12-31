@@ -11,6 +11,7 @@ using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 using Randomizer.Data.Options;
 using Randomizer.SMZ3.Tracking.Services.Speech;
+using SharpHook;
 
 namespace Randomizer.SMZ3.Tracking;
 
@@ -42,7 +43,9 @@ public static class TrackerServiceCollectionExtensions
 
         if (OperatingSystem.IsWindows())
         {
-            services.AddScoped<ISpeechRecognitionService, AlwaysOnSpeechRecognitionService>();
+            // services.AddScoped<ISpeechRecognitionService, AlwaysOnSpeechRecognitionService>();
+            services.AddScoped<ISpeechRecognitionService, PushToTalkSpeechRecognitionService>();
+            services.AddSingleton<IGlobalHook, TaskPoolGlobalHook>();
         }
         else
         {
