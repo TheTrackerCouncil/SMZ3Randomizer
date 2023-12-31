@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.Versioning;
@@ -10,6 +11,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
 using NAudio.Wave;
+
+using Randomizer.Shared;
 
 using SharpHook;
 using SharpHook.Native;
@@ -127,11 +130,14 @@ public partial class PushToTalkSpeechRecognitionService : SpeechRecognitionServi
 
         if (disposing)
         {
-            RecognitionEngine.SpeechRecognized -= RecognitionEngine_SpeechRecognized;
-            _hook.KeyPressed -= Hook_KeyPressed;
-            _hook.KeyReleased -= Hook_KeyReleased;
-            _hook.Dispose();
-            _hookRunner?.GetAwaiter().GetResult();
+            using (_logger.TimeDebug("Disposed in {ElapsedMs} ms"))
+            {
+                RecognitionEngine.SpeechRecognized -= RecognitionEngine_SpeechRecognized;
+                _hook.KeyPressed -= Hook_KeyPressed;
+                _hook.KeyReleased -= Hook_KeyReleased;
+                _hook.Dispose();
+                _hookRunner?.GetAwaiter().GetResult();
+            }
         }
     }
 
