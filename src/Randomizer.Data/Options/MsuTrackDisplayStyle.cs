@@ -8,7 +8,7 @@ public enum MsuTrackDisplayStyle
     /// Original horizontal style: displays the current track without MSU pack
     /// info if artist information is available.
     /// </summary>
-    [Description("Original: \"album - track (artist)\" or \"track - MSU pack name\"")]
+    [Description("Original: \"Cave Story+ - Pulse (Danny Baranowsky)\" or \"Track #5 from Sound of Silence\"")]
     Horizontal,
 
     /// <summary>
@@ -20,13 +20,13 @@ public enum MsuTrackDisplayStyle
     /// <summary>
     /// Horizontal style: displays the current track with MSU pack info.
     /// </summary>
-    [Description("Single line: \"album: track - artist (MSU: name by creator)\"")]
+    [Description("Single line: \"Cave Story+: Pulse - Danny Baranowsky (MSU: DBstyle by Vivelin)\"")]
     HorizonalWithMsu,
 
     /// <summary>
     /// Expanded sentence-style: displays track and MSU pack info in a single
     /// (long) line.
     /// </summary>
-    [Description("Sentence: \"track by artist from album album from MSU pack name by creator\"")]
+    [Description("Sentence: \"Pulse by Danny Baranowsky from album Cave Story+ from MSU pack DBstyle by Vivelin\"")]
     SentenceStyle,
 }
