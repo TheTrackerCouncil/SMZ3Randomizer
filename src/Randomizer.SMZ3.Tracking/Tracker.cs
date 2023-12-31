@@ -30,6 +30,7 @@ using Randomizer.Data.WorldData;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Data.Tracking;
+using Randomizer.SMZ3.Tracking.Services.Speech;
 
 namespace Randomizer.SMZ3.Tracking;
 
@@ -53,7 +54,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     private readonly IWorldService _worldService;
     private readonly ITrackerTimerService _timerService;
     private readonly IMetadataService _metadataService;
-    private readonly SpeechRecognitionServiceBase _recognizer;
+    private readonly ISpeechRecognitionService _recognizer;
     private bool _disposed;
     private string? _lastSpokenText;
     private readonly bool _alternateTracker;
@@ -94,7 +95,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         ITrackerStateService stateService,
         IWorldService worldService,
         ITrackerTimerService timerService,
-        SpeechRecognitionServiceBase speechRecognitionService,
+        ISpeechRecognitionService speechRecognitionService,
         IMetadataService metadataService)
     {
         if (trackerOptions.Options == null)
@@ -176,7 +177,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     public override bool InitializeMicrophone()
     {
         if (MicrophoneInitialized) return true;
-        MicrophoneInitialized = _recognizer.InitializeMicrophone();
+        MicrophoneInitialized = _recognizer.Initialize();
         return MicrophoneInitialized;
     }
 
@@ -470,7 +471,10 @@ public sealed class Tracker : TrackerBase, IDisposable
         bool loadError;
         try
         {
-            Syntax = _moduleFactory.LoadAll(this, _recognizer.RecognitionEngine, out loadError);
+            var recognitionEngine = _recognizer is SpeechRecognitionServiceBase recognitionBase
+                ? recognitionBase.RecognitionEngine
+                : null;
+            Syntax = _moduleFactory.LoadAll(this, recognitionEngine, out loadError);
         }
         catch (Exception e)
         {
@@ -608,9 +612,9 @@ public sealed class Tracker : TrackerBase, IDisposable
         if (MicrophoneInitialized && !VoiceRecognitionEnabled && OperatingSystem.IsWindows())
         {
             _logger.LogInformation("Starting speech recognition");
-            _recognizer.SetInputToDefaultAudioDevice();
-            _recognizer.RecognizeAsyncStop();
-            _recognizer.RecognizeAsync(RecognizeMode.Multiple);
+            _recognizer.ResetInputDevice();
+            _recognizer.StopRecognition();
+            _recognizer.StartRecognition();
             VoiceRecognitionEnabled = true;
         }
     }
@@ -623,7 +627,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         if (VoiceRecognitionEnabled)
         {
             VoiceRecognitionEnabled = false;
-            _recognizer.RecognizeAsyncStop();
+            _recognizer.StopRecognition();
             _logger.LogInformation("Stopped speech recognition");
         }
     }
@@ -2387,7 +2391,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         {
             if (disposing)
             {
-                _recognizer.Dispose();
+                (_recognizer as IDisposable)?.Dispose();
                 (_communicator as IDisposable)?.Dispose();
 
                 foreach (var timer in _idleTimers.Values)

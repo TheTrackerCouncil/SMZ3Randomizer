@@ -10,6 +10,7 @@ using Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 using Randomizer.Data.Options;
+using Randomizer.SMZ3.Tracking.Services.Speech;
 
 namespace Randomizer.SMZ3.Tracking;
 
@@ -41,11 +42,11 @@ public static class TrackerServiceCollectionExtensions
 
         if (OperatingSystem.IsWindows())
         {
-            services.AddScoped<SpeechRecognitionServiceBase, SpeechRecognitionServiceEnabled>();
+            services.AddScoped<ISpeechRecognitionService, AlwaysOnSpeechRecognitionService>();
         }
         else
         {
-            services.AddScoped<SpeechRecognitionServiceBase, SpeechRecognitionServiceDisabled>();
+            services.AddScoped<ISpeechRecognitionService, NullSpeechRecognitionService>();
         }
 
         var assemblies = new[] { Assembly.GetExecutingAssembly() };
