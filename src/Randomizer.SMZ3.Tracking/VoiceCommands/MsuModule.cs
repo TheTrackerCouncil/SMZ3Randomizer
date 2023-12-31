@@ -144,23 +144,7 @@ public class MsuModule : TrackerModule, IDisposable
         var options = TrackerBase.Options;
         if (options.MsuTrackDisplayStyle == MsuTrackDisplayStyle.Horizontal)
         {
-            if (!string.IsNullOrEmpty(_currentTrack.DisplayAlbum) || !string.IsNullOrEmpty(_currentTrack.DisplayArtist))
-            {
-                var album = string.IsNullOrEmpty(_currentTrack.DisplayAlbum)
-                    ? ""
-                    : $"{_currentTrack.DisplayAlbum} - ";
-                var artist = string.IsNullOrEmpty(_currentTrack.DisplayArtist)
-                    ? ""
-                    : $" ({_currentTrack.DisplayArtist})";
-                return $"{album}{_currentTrack.SongName}{artist}";
-            }
-            else
-            {
-                var msu = string.IsNullOrEmpty(_currentTrack.MsuName)
-                    ? _currentMsu.DisplayName
-                    : _currentTrack.MsuName;
-                return $"{_currentTrack.SongName} from {msu}";
-            }
+            return _currentTrack.GetDisplayText(includeMsu: true);
         }
         else
         {
