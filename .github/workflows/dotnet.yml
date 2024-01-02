@@ -16,7 +16,7 @@ jobs:
     - name: Download config repo
       uses: actions/checkout@v2
       with:
-        repository: TheTrackerCouncil/dashboard
+        repository: TheTrackerCouncil/SMZ3CasConfigs
         path: configs
         ref: main
     - name: Setup .NET
