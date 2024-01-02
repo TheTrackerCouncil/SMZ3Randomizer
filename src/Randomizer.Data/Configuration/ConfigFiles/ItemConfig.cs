@@ -851,7 +851,8 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 new()
                 {
                     Item = "Half Magic",
-                    Name = new("Half Magic", new SchrodingersString.Possibility("50% Off Magic", 0.1)),
+                    Name = new("Half Magic", new SchrodingersString.Possibility("50% off magic coupon", 0.1)),
+                    ArticledName = new ("the Half Magic", new SchrodingersString.Possibility("the 50% off magic coupon")),
                     Hints = new("It's green", "It's an upgrade"),
                     PedestalHints = new("The ability to do more magical things"),
                     Stages = new Dictionary<int, SchrodingersString>()
@@ -869,6 +870,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 {
                     Item = "Custom Item",
                     Name = new("Custom Item", new SchrodingersString.Possibility("Another custom item", 0.1)),
+                    ArticledName = new ("a custom item"),
                     Multiple = true,
                     WhenTracked = new Dictionary<int, SchrodingersString?>()
                     {

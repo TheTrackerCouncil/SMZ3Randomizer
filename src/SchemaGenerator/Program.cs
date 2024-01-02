@@ -227,7 +227,7 @@ public static class Program
             {
                 property.SetValue(example, GetPopulatedSchrodingersString(property.Name, populateEmpty));
             }
-            else if (property.PropertyType.GetInterfaces().Any(x => x.Name.StartsWith("IMergeable")))
+            else if (property.PropertyType.GetInterfaces().Any(x => x.Name.StartsWith("IMergeable")) && property.PropertyType.GetInterfaces().All(x => x.Name != "IList"))
             {
                 var value = property.GetValue(example);
                 if (value != null)

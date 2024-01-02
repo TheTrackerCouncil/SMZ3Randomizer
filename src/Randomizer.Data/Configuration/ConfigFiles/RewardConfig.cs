@@ -79,6 +79,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 {
                     Reward = "Red Crystal",
                     Name = new("Red Crystal", new SchrodingersString.Possibility("Blood red crystal", 0.1)),
+                    ArticledName = new("a Red Crystal", new SchrodingersString.Possibility("a blood red crystal", 0.1)),
                 }
             };
         }
