@@ -98,7 +98,14 @@ namespace Randomizer.App.Windows
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = true;
+            if (Options.DownloadConfigsOnStartup && !Options.ConfigSources.Any())
+            {
+                _ = UpdateConfigsAsync(true);
+            }
+            else
+            {
+                DialogResult = true;
+            }
         }
 
         private async void TwitchLoginButton_Click(object sender, RoutedEventArgs e)
@@ -308,7 +315,7 @@ namespace Randomizer.App.Windows
             _ = UpdateConfigsAsync();
         }
 
-        private async Task UpdateConfigsAsync()
+        private async Task UpdateConfigsAsync(bool close = false)
         {
             var configSource = Options.ConfigSources.FirstOrDefault();
             if (configSource == null)
@@ -317,6 +324,11 @@ namespace Randomizer.App.Windows
                 Options.ConfigSources.Add(configSource);
             }
             await _gitHubConfigDownloaderService.DownloadFromSourceAsync(configSource);
+
+            if (close)
+            {
+                DialogResult = true;
+            }
         }
     }
 }
