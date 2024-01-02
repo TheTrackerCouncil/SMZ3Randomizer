@@ -89,7 +89,7 @@ namespace Randomizer.Data.WorldData.Regions
         /// <summary>
         /// Name of the map to display when in this region
         /// </summary>
-        public string MapName { get; set; }
+        public string MapName { get; set; } = "";
 
         /// <summary>
         /// Determines whether the specified item is specific to this region.

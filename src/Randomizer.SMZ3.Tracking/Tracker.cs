@@ -2111,7 +2111,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         }
 
         CurrentRegion = region;
-        if (updateMap && region != null)
+        if (updateMap && !string.IsNullOrEmpty(region?.MapName))
         {
             UpdateMap(region.MapName);
         }
