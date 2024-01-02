@@ -67,6 +67,11 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         public SchrodingersString? Name { get; set; }
 
         /// <summary>
+        /// Gets the possible names for the item with an article before it
+        /// </summary>
+        public SchrodingersString? ArticledName { get; set; }
+
+        /// <summary>
         /// Gets the grammatical article for the item (e.g. "a" or "the").
         /// </summary>
         public string? Article { get; set; }
@@ -81,9 +86,13 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// depending on the item.
         /// </summary>
         [JsonIgnore, YamlIgnore]
-        public string NameWithArticle => string.Join(" ",
-            Article ?? (Multiple || HasStages ? "a" : "the"),
-            Name);
+        public string NameWithArticle => ArticledName?.Any() == true
+            ? ArticledName.ToString() ?? DefaultNameWithArticle
+            : DefaultNameWithArticle;
+
+        [JsonIgnore, YamlIgnore]
+        private string DefaultNameWithArticle =>
+            string.Join(" ", Article ?? (Multiple || HasStages ? "a" : "the"), Name);
 
         /// <summary>
         /// Gets the internal <see cref="ItemType"/> of the item.

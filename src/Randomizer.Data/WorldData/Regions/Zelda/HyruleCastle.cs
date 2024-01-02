@@ -79,13 +79,16 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
             StartingRooms = new List<int> { 96, 97, 98 };
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Hyrule Castle");
-            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Hyrule Castle", "HC", "Ball and Chain Soldier");
+            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Hyrule Castle",  "Ball and Chain Soldier");
             DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
+            MapName = "Light World";
         }
 
         public override string Name => "Hyrule Castle";
 
         public int SongIndex { get; init; } = 0;
+        public string Abbreviation => "HC";
+        public LocationId? BossLocationId => null;
 
         public DungeonInfo DungeonMetadata { get; set; }
 

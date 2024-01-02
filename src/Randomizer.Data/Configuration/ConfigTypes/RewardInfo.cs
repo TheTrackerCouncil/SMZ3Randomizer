@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Linq;
+using Newtonsoft.Json;
 using Randomizer.Shared;
 using YamlDotNet.Serialization;
 
@@ -36,6 +37,11 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         public SchrodingersString? Name { get; set; }
 
         /// <summary>
+        /// Gets the possible names for the reward with an article before it
+        /// </summary>
+        public SchrodingersString? ArticledName { get; set; }
+
+        /// <summary>
         /// Gets the grammatical article for the item (e.g. "a" or "the").
         /// </summary>
         public string? Article { get; set; }
@@ -51,7 +57,12 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// depending on the reward.
         /// </summary>
         [JsonIgnore, YamlIgnore]
-        public string NameWithArticle => string.Join(" ",
+        public string NameWithArticle => ArticledName?.Any() == true
+            ? ArticledName.ToString() ?? DefaultNameWithArticle
+            : DefaultNameWithArticle;
+
+        [JsonIgnore, YamlIgnore]
+        private string DefaultNameWithArticle => string.Join(" ",
             Article ?? "", Name);
     }
 }

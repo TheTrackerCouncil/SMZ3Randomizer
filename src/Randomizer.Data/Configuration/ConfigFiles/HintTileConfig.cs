@@ -14,7 +14,7 @@ public class HintTileConfig : IMergeable<HintTileConfig>, IConfigFile<HintTileCo
     /// <summary>
     /// The list of hint tiles and their details
     /// </summary>
-    public List<HintTile>? HintTiles { get; set; }
+    public HintTileList? HintTiles { get; set; }
 
     /// <summary>
     /// The response for when asking for what a hint tile says
@@ -65,7 +65,7 @@ public class HintTileConfig : IMergeable<HintTileConfig>, IConfigFile<HintTileCo
     {
         return new HintTileConfig()
         {
-            HintTiles = new List<HintTile>()
+            HintTiles = new HintTileList()
             {
                 new()
                 {
@@ -181,7 +181,7 @@ public class HintTileConfig : IMergeable<HintTileConfig>, IConfigFile<HintTileCo
         return new Dictionary<string, object>()
         {
             {
-                "HintTiles", new List<HintTile>()
+                "HintTiles", new HintTileList()
                 {
                     new()
                     {

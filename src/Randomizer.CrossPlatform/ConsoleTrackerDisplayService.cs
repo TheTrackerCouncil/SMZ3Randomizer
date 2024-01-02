@@ -249,7 +249,7 @@ public class ConsoleTrackerDisplayService
     private string GetDungeonDetails(IDungeon dungeon)
     {
         var state = dungeon.DungeonState.Cleared ? "\u2713" : "\u274c";
-        var abbreviation = dungeon.DungeonMetadata.Abbreviation;
+        var abbreviation = dungeon.Abbreviation;
 
         var reward = dungeon is IHasReward
             ? dungeon.MarkedReward switch

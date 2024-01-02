@@ -35,6 +35,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
             StartingRooms = new List<int>() { 79, 85, 86, 87, 91, 93, 94, 101, 109, 110, 111 };
             IsOverworld = true;
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Dark World North East");
+            MapName = "Dark World";
         }
 
         public override string Name => "Dark World North East";

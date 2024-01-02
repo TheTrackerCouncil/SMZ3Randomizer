@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Randomizer.Data.Configuration;
-using Randomizer.Data.WorldData.Regions;
-using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.Data.Options;
 using Randomizer.Data.Configuration.ConfigTypes;
@@ -101,9 +98,10 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             MemoryFlag = 0xB;
             StartingRooms = new List<int> { 86, 87, 88, 89, 103, 104 };
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Skull Woods");
-            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Skull Woods", "SW", "Mothula");
+            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Skull Woods", "Mothula");
             DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
             Reward = new Reward(DungeonState.Reward ?? RewardType.None, world, this, metadata, DungeonState);
+            MapName = "Dark World";
         }
 
         public override string Name => "Skull Woods";
@@ -114,6 +112,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             = new List<string>() { "Skill Woods" };
 
         public int SongIndex { get; init; } = 6;
+        public string Abbreviation => "SW";
+        public LocationId? BossLocationId => LocationId.SkullWoodsMothula;
 
         public Reward Reward { get; set; }
 

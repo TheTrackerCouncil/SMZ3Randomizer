@@ -185,6 +185,11 @@ namespace Randomizer.Data.Options
         public GanonsTowerGuessingGameStyle GanonsTowerGuessingGameStyle { get; set; }
 
         /// <summary>
+        /// Option to download new configs on startup
+        /// </summary>
+        public bool DownloadConfigsOnStartup { get; set; } = true;
+
+        /// <summary>
         /// The list of config sources
         /// </summary>
         public List<ConfigSource> ConfigSources { get; set; } = new();

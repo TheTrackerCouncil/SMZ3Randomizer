@@ -77,9 +77,10 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             MemoryFlag = 0xB;
             StartingRooms = new List<int> { 119 };
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Tower of Hera");
-            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Tower of Hera", "TH", "Moldorm");
+            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Tower of Hera", "Moldorm");
             DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
             Reward = new Reward(DungeonState.Reward ?? RewardType.None, world, this, metadata, DungeonState);
+            MapName = "Light World";
         }
 
         public override string Name => "Tower of Hera";
@@ -87,6 +88,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
         public RewardType DefaultRewardType => RewardType.PendantRed;
 
         public int SongIndex { get; init; } = 8;
+        public string Abbreviation => "TH";
+        public LocationId? BossLocationId => LocationId.TowerOfHeraMoldorm;
 
         public Reward Reward { get; set; }
 

@@ -21,6 +21,8 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
             MemoryRegionId = 3;
             Boss = new Boss(Shared.Enums.BossType.Phantoon, world, this, metadata, trackerState);
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Wrecked Ship");
+            MapName = "Wrecked Ship";
+
         }
 
         public override string Name => "Wrecked Ship";

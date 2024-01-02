@@ -97,9 +97,10 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             MemoryFlag = 0xB;
             StartingRooms = new List<int> { 40 };
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Swamp Palace");
-            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Swamp Palace", "SP", "Arrghus");
+            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Swamp Palace", "Arrghus");
             DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
             Reward = new Reward(DungeonState.Reward ?? RewardType.None, world, this, metadata, DungeonState);
+            MapName = "Dark World";
         }
 
         public override string Name => "Swamp Palace";
@@ -107,6 +108,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
         public RewardType DefaultRewardType => RewardType.CrystalBlue;
 
         public int SongIndex { get; init; } = 3;
+        public string Abbreviation => "SP";
+        public LocationId? BossLocationId => LocationId.SwampPalaceArrghus;
 
         public Reward Reward { get; set; }
 

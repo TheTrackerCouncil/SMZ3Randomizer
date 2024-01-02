@@ -3,7 +3,7 @@ using YamlDotNet.Serialization;
 
 namespace Randomizer.Data.Configuration.ConfigTypes;
 
-public class HintTile : IMergeable<ItemData>
+public class HintTile : IMergeable<HintTile>
 {
     [MergeKey]
     public required string HintTileKey { get; set; }

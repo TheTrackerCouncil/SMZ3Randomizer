@@ -90,10 +90,11 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             MemoryFlag = 0xB;
             StartingRooms = new List<int> { 35, 36, 213, 214 };
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Turtle Rock");
-            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Turtle Rock", "TR", "Trinexx");
+            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Turtle Rock", "Trinexx");
             DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
             Reward = new Reward(DungeonState.Reward ?? RewardType.None, world, this, metadata, DungeonState);
             Medallion = DungeonState.RequiredMedallion ?? ItemType.Nothing;
+            MapName = "Dark World";
         }
 
         public override string Name => "Turtle Rock";
@@ -103,6 +104,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
         public ItemType DefaultMedallion => ItemType.Quake;
 
         public int SongIndex { get; init; } = 10;
+        public string Abbreviation => "TR";
+        public LocationId? BossLocationId => LocationId.TurtleRockTrinexx;
 
         public Reward Reward { get; set; }
 

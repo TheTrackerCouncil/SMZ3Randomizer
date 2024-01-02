@@ -20,9 +20,10 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
             StartingRooms = new List<int>() { 224 };
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Castle Tower");
-            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Castle Tower", "AT", "Agahnim");
+            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Castle Tower", "Agahnim");
             DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
             Reward = new Reward(RewardType.Agahnim, world, this, metadata, DungeonState);
+            MapName = "Light World";
         }
 
         public override string Name => "Castle Tower";
@@ -33,6 +34,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             = new List<string>() { "Agahnim's Tower", "Hyrule Castle Tower" };
 
         public int SongIndex { get; init; } = 2;
+        public string Abbreviation => "AT";
+        public LocationId? BossLocationId => null;
 
         public Reward Reward { get; set; }
 

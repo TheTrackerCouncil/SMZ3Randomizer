@@ -13,7 +13,7 @@ public class MsuConfig : IMergeable<MsuConfig>, IConfigFile<MsuConfig>
     /// <summary>
     /// Names for various tracks when asking "what's the current song for"
     /// </summary>
-    public Dictionary<int, SchrodingersString?>? TrackLocations;
+    public Dictionary<int, SchrodingersString?>? TrackLocations { get; init; }
 
     /// <summary>
     /// Gets the phrases for what song is playing

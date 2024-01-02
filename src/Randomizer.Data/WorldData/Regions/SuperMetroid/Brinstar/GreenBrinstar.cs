@@ -19,6 +19,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             MockballHallHidden = new MockballHallHiddenRoom(this, metadata, trackerState);
             MemoryRegionId = 1;
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Green Brinstar");
+            MapName = "Brinstar";
         }
 
         public override string Name => "Green Brinstar";

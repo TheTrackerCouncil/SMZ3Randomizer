@@ -20,6 +20,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             MemoryRegionId = 2;
             Boss = new Boss(Shared.Enums.BossType.Ridley, world, this, metadata, trackerState);
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Lower Norfair East");
+            MapName = "Norfair";
         }
 
         public override string Name => "Lower Norfair, East";

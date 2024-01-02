@@ -1916,9 +1916,9 @@ public sealed class Tracker : TrackerBase, IDisposable
         Action? undoUnclear = null;
         Action? undoUntrackTreasure = null;
         Action? undoUntrack = null;
-        if (dungeon.DungeonMetadata.LocationId != null)
+        if (dungeon.BossLocationId != null)
         {
-            var rewardLocation = _worldService.Location(dungeon.DungeonMetadata.LocationId.Value);
+            var rewardLocation = _worldService.Location(dungeon.BossLocationId.Value);
             if (rewardLocation.Item.Type != ItemType.Nothing)
             {
                 var item = rewardLocation.Item;
@@ -2095,17 +2095,6 @@ public sealed class Tracker : TrackerBase, IDisposable
     /// <param name="updateMap">Set to true to update the map for the player to match the region</param>
     /// <param name="resetTime">If the time should be reset if this is the first region update</param>
     public override void UpdateRegion(Region region, bool updateMap = false, bool resetTime = false)
-    {
-        UpdateRegion(region.Metadata, updateMap, resetTime);
-    }
-
-    /// <summary>
-    /// Updates the region that the player is in
-    /// </summary>
-    /// <param name="region">The region the player is in</param>
-    /// <param name="updateMap">Set to true to update the map for the player to match the region</param>
-    /// <param name="resetTime">If the time should be reset if this is the first region update</param>
-    public override void UpdateRegion(RegionInfo? region, bool updateMap = false, bool resetTime = false)
     {
         if (region != CurrentRegion)
         {

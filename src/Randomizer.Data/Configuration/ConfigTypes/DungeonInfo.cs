@@ -21,14 +21,10 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Initializes a new instance of the <see cref="DungeonInfo"/> class.
         /// </summary>
         /// <param name="name">The name of the dungeon.</param>
-        /// <param name="abbreviation">
-        /// The abbreviation of the dungeon name.
-        /// </param>
         /// <param name="boss">The name of the boss.</param>
-        public DungeonInfo(SchrodingersString name, string abbreviation, SchrodingersString boss)
+        public DungeonInfo(SchrodingersString name,SchrodingersString boss)
         {
             Name = name;
-            Abbreviation = abbreviation;
             Boss = boss;
         }
 
@@ -36,15 +32,11 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Initializes a new instance of the <see cref="DungeonInfo"/> class.
         /// </summary>
         /// <param name="name">The name of the dungeon.</param>
-        /// <param name="abbreviation">
-        /// The abbreviation of the dungeon name.
-        /// </param>
         /// <param name="boss">The name of the boss.</param>
-        public DungeonInfo(string name, string abbreviation, string boss)
+        public DungeonInfo(string name, string boss)
         {
             Dungeon = name;
             Name = new (name);
-            Abbreviation = abbreviation;
             Boss = new (boss);
         }
 
@@ -60,12 +52,6 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         public SchrodingersString? Name { get; set; }
 
         /// <summary>
-        /// Gets the dungeon name abbreviation.
-        /// </summary>
-        [JsonIgnore, YamlIgnore]
-        public string Abbreviation { get; init; } = "";
-
-        /// <summary>
         /// Gets the possible names of the dungeon boss.
         /// </summary>
         public SchrodingersString? Boss { get; set; }
@@ -75,14 +61,6 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// </summary>
         [JsonIgnore, YamlIgnore]
         public Type? Type { get; init; }
-
-        /// <summary>
-        /// Gets the ID of the location that represents the item rewarded by
-        /// defeating the boss, or <c>null</c> if the dungeon has item reward
-        /// for beating the boss.
-        /// </summary>
-        [JsonIgnore, YamlIgnore]
-        public LocationId? LocationId { get; init; }
 
         /// <summary>
         /// Returns a string representation of the dungeon.

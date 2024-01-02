@@ -166,10 +166,11 @@ public static class Program
 
         // Hint Tiles Template
         var hintTileConfig = configProvider.GetHintTileConfig(new List<string>(), null);
-        var templateHintTileconfig = new HintTileConfig() { HintTiles = hintTileConfig.HintTiles?.Select(x => new HintTile() { HintTileKey = x.HintTileKey, TopLeftX = 0, TopLeftY = 0, Room = 0 }).ToList()};
-        PopulateExample(templateHintTileconfig, true);
+        var templateHintTileConfig = new HintTileConfig() { HintTiles = new HintTileList()};
+        templateHintTileConfig.HintTiles.AddRange(hintTileConfig.HintTiles!.Select(x => new HintTile() { HintTileKey = x.HintTileKey, TopLeftX = 0, TopLeftY = 0, Room = 0 }));
+        PopulateExample(templateHintTileConfig, true);
         var exampleHintTileConfig = HintTileConfig.Example();
-        WriteTemplate(templatePath, "hint_tiles", templateHintTileconfig, exampleHintTileConfig);
+        WriteTemplate(templatePath, "hint_tiles", templateHintTileConfig, exampleHintTileConfig);
 
         // MSU Template
         var msuConfig = configProvider.GetMsuConfig(new List<string>(), null);

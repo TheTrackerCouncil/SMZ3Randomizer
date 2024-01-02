@@ -25,6 +25,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
             MemoryRegionId = 4;
             Boss = new Boss(Shared.Enums.BossType.Draygon, world, this, metadata, trackerState);
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Inner Maridia");
+            MapName = "Maridia";
         }
 
         public override string Name => "Inner Maridia";

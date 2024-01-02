@@ -119,9 +119,10 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             MemoryFlag = 0xB;
             StartingRooms = new List<int> { 74 };
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Palace of Darkness");
-            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Palace of Darkness", "PD", "Helmasaur King");
+            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Palace of Darkness", "Helmasaur King");
             DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
             Reward = new Reward(DungeonState.Reward ?? RewardType.None, world, this, metadata, DungeonState);
+            MapName = "Dark World";
         }
 
         public override string Name => "Palace of Darkness";
@@ -131,6 +132,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
         public override string Area => "Dark Palace";
 
         public int SongIndex { get; init; } = 4;
+        public string Abbreviation => "PD";
+        public LocationId? BossLocationId => LocationId.PalaceOfDarknessHelmasaurKing;
 
         public Reward Reward { get; set; }
 

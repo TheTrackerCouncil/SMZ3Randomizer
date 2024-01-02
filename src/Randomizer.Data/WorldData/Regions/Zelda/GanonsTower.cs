@@ -116,13 +116,16 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             MiniHelmasaurRoom = new MiniHelmasaurRoomRoom(this, metadata, trackerState);
             StartingRooms = new List<int> { 0xC };
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Ganon's Tower");
-            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Ganon's Tower", "GT", "Ganon");
+            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Ganon's Tower", "Ganon");
             DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
+            MapName = "Dark World";
         }
 
         public override string Name => "Ganon's Tower";
 
         public int SongIndex { get; init; } = 11;
+        public string Abbreviation => "GT";
+        public LocationId? BossLocationId => null;
 
         public DungeonInfo DungeonMetadata { get; set; }
 

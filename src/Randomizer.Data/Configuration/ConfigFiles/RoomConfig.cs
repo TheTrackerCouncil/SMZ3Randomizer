@@ -188,7 +188,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 new()
                 {
                     Room = "Palace of Darkness Dark Maze",
-                    Type = typeof(CastleTower.DarkMazeRoom),
+                    Type = typeof(PalaceOfDarkness.DarkMazeRoom),
                 },
                 new()
                 {

@@ -47,6 +47,11 @@ namespace Randomizer.Data.Configuration
             var parentDir = new DirectoryInfo(SolutionPath).Parent;
             var configRepo = parentDir?.GetDirectories().FirstOrDefault(x => x.Name == "SMZ3CasConfigs");
             _basePath = Path.Combine(configRepo?.FullName ?? "", "Profiles");
+
+            if (!Directory.Exists(_basePath))
+            {
+                _basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "Configs");
+            }
 #else
             _basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "Configs");
 #endif
