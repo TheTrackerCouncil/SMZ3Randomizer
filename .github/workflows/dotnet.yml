@@ -2,7 +2,7 @@ name: .NET Build + Test + Publish
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, external-configs ]
   pull_request:
     branches: [ main ]
 
@@ -13,6 +13,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Download config repo
+      uses: actions/checkout@v2
+      with:
+        repository: TheTrackerCouncil/dashboard
+        path: configs
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
