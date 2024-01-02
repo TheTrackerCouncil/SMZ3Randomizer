@@ -63,17 +63,7 @@ public partial class MsuTrackWindow : Window, IDisposable
 
         if (_options == null || _currentTrack == null || _currentMsu == null) return;
 
-        if (_options!.GeneralOptions.MsuTrackDisplayStyle == MsuTrackDisplayStyle.Horizontal)
-        {
-            MsuPanel.Visibility = Visibility.Collapsed;
-            AlbumPanel.Visibility = Visibility.Collapsed;
-            ArtistPanel.Visibility = Visibility.Collapsed;
-            SongPanel.Visibility = Visibility.Collapsed;
-            HorizontalTextBlock.Visibility = Visibility.Visible;
-            InfoTextBlock.Visibility = Visibility.Collapsed;
-            HorizontalTextBlock.Text = _outputText;
-        }
-        else
+        if (_options.GeneralOptions.MsuTrackDisplayStyle == MsuTrackDisplayStyle.Vertical)
         {
             MsuPanel.Visibility = Visibility.Visible;
             var creator = string.IsNullOrEmpty(_currentTrack.MsuCreator)
@@ -101,6 +91,16 @@ public partial class MsuTrackWindow : Window, IDisposable
 
             HorizontalTextBlock.Visibility = Visibility.Collapsed;
             InfoTextBlock.Visibility = Visibility.Collapsed;
+        }
+        else
+        {
+            MsuPanel.Visibility = Visibility.Collapsed;
+            AlbumPanel.Visibility = Visibility.Collapsed;
+            ArtistPanel.Visibility = Visibility.Collapsed;
+            SongPanel.Visibility = Visibility.Collapsed;
+            HorizontalTextBlock.Visibility = Visibility.Visible;
+            InfoTextBlock.Visibility = Visibility.Collapsed;
+            HorizontalTextBlock.Text = _outputText;
         }
 
         _cts.Cancel();
