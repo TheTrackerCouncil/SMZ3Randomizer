@@ -313,7 +313,7 @@ namespace Randomizer.App.Windows
             var configSource = Options.ConfigSources.FirstOrDefault();
             if (configSource == null)
             {
-                configSource = new ConfigSource() { Owner = "MattEqualsCoder", Repo = "SMZ3CasConfigs" };
+                configSource = new ConfigSource() { Owner = "TheTrackerCouncil", Repo = "SMZ3CasConfigs" };
                 Options.ConfigSources.Add(configSource);
             }
             await _gitHubConfigDownloaderService.DownloadFromSourceAsync(configSource);

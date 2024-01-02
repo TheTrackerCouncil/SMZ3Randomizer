@@ -39,7 +39,7 @@ public static class Program
         var configSource = randomizerOptions.GeneralOptions.ConfigSources.FirstOrDefault();
         if (configSource == null)
         {
-            configSource = new ConfigSource() { Owner = "MattEqualsCoder", Repo = "SMZ3CasConfigs" };
+            configSource = new ConfigSource() { Owner = "TheTrackerCouncil", Repo = "SMZ3CasConfigs" };
             randomizerOptions.GeneralOptions.ConfigSources.Add(configSource);
         }
         s_services.GetRequiredService<IGitHubConfigDownloaderService>()

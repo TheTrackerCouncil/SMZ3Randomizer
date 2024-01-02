@@ -196,7 +196,7 @@ namespace Randomizer.App
             var configSource = options.GeneralOptions.ConfigSources.FirstOrDefault();
             if (configSource == null)
             {
-                configSource = new ConfigSource() { Owner = "MattEqualsCoder", Repo = "SMZ3CasConfigs" };
+                configSource = new ConfigSource() { Owner = "TheTrackerCouncil", Repo = "SMZ3CasConfigs" };
                 options.GeneralOptions.ConfigSources.Add(configSource);
             }
             await _host!.Services.GetRequiredService<IGitHubConfigDownloaderService>().DownloadFromSourceAsync(configSource);
