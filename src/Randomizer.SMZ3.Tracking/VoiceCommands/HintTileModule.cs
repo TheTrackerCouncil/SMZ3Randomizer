@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Randomizer.Abstractions;
 using Randomizer.Data.Configuration;
 using Randomizer.Data.Configuration.ConfigFiles;
+using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared.Enums;
 using Randomizer.Shared.Models;
@@ -94,8 +95,17 @@ public class HintTileModule : TrackerModule
     {
         var hintTileNames = new Choices();
 
+        if (_hintTileConfig.HintTiles == null)
+        {
+            return hintTileNames;
+        }
+
         foreach (var hintTile in _hintTileConfig.HintTiles)
         {
+            if (hintTile.Name == null)
+            {
+                continue;
+            }
             foreach (var name in hintTile.Name)
                 hintTileNames.Add(new SemanticResultValue(name.Text, hintTile.HintTileKey));
         }
@@ -128,7 +138,7 @@ public class HintTileModule : TrackerModule
     private (HintTile HintTile, PlayerHintTile PlayerHintTile) GetHintTileFromResult(RecognitionResult result)
     {
         var key = (string)result.Semantics[_hintTileKey].Value;
-        var hintTile = _hintTileConfig.HintTiles.FirstOrDefault(x => x.HintTileKey == key) ??
+        var hintTile = _hintTileConfig.HintTiles?.FirstOrDefault(x => x.HintTileKey == key) ??
                        throw new Exception($"Could not find hint tile {key}");
         var playerHintTile = WorldService.World.HintTiles.FirstOrDefault(x => x.HintTileCode == key) ??
                              throw new Exception($"Could not find player hint tile {key}");

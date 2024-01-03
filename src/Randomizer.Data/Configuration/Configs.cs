@@ -23,6 +23,7 @@ namespace Randomizer.Data.Configuration
         /// </summary>
         /// <param name="optionsFactory">The tracker options for determining the selected tracker profiles</param>
         /// <param name="provider">The config provider for loading configs</param>
+        /// <param name="logger"></param>
         public Configs(OptionsFactory optionsFactory, ConfigProvider provider, ILogger<Configs> logger)
         {
             var options = optionsFactory.Create();

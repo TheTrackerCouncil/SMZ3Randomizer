@@ -52,6 +52,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain
             StartingRooms = new List<int>() { 3 };
             IsOverworld = true;
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Light World Death Mountain East");
+            MapName = "Light World";
         }
 
         public override string Name => "Light World Death Mountain West";

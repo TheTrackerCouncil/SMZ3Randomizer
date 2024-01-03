@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Randomizer.Abstractions;
+using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData.Regions.Zelda;
 using Randomizer.Data.WorldData;
@@ -425,12 +426,12 @@ public class AutoTracker : AutoTrackerBase
             _logger.LogInformation("Ignoring rom {RomName} ({RomHash})", e.RomName,e.RomHash);
 
             var key = "Unknown";
-            if (TrackerBase.Responses.AutoTracker.SwitchedToOtherRom.ContainsKey(e.RomHash!))
+            if (TrackerBase.Responses.AutoTracker.SwitchedToOtherRom?.ContainsKey(e.RomHash!) == true)
             {
                 key = e.RomHash!;
             }
 
-            TrackerBase.Say(x => x.AutoTracker.SwitchedToOtherRom[key]);
+            TrackerBase.Say(x => x.AutoTracker.SwitchedToOtherRom?[key]);
         }
 
         _previousRom = e.RomName;
@@ -899,12 +900,12 @@ public class AutoTracker : AutoTrackerBase
             var responseIndex = 1;
             for (var i = 1; i <= _numGTItems; i++)
             {
-                if (TrackerBase.Responses.AutoTracker.GTKeyResponses.ContainsKey(i))
+                if (TrackerBase.Responses.AutoTracker.GTKeyResponses?.ContainsKey(i) == true)
                 {
                     responseIndex = i;
                 }
             }
-            TrackerBase.Say(x => x.AutoTracker.GTKeyResponses[responseIndex], _numGTItems);
+            TrackerBase.Say(x => x.AutoTracker.GTKeyResponses?[responseIndex], _numGTItems);
             chatIntegrationModule?.GTItemTracked(_numGTItems, true);
             _foundGTKey = true;
         }

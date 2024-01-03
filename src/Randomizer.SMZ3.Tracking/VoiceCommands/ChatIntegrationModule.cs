@@ -165,7 +165,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 TrackerBase.Say(x => x.Chat.ClosedGuessingGame);
 
-                var chatMessage = TrackerBase.Responses.Chat.ClosedGuessingGame.ToString();
+                var chatMessage = TrackerBase.Responses.Chat.ClosedGuessingGame?.ToString();
                 if (chatMessage != null)
                 {
                     await ChatClient.SendMessageAsync(chatMessage, announce: true);
@@ -233,7 +233,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     TrackerBase.Say(x => x.Chat.NobodyWonGuessingGame, winningNumber);
                 }
 
-                var chatMessage = TrackerBase.Responses.Chat.NobodyWonGuessingGame.Format(winningNumber);
+                var chatMessage = TrackerBase.Responses.Chat.NobodyWonGuessingGame?.Format(winningNumber);
                 if (chatMessage != null)
                 {
                     await ChatClient.SendMessageAsync(chatMessage, announce: true);
@@ -248,7 +248,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 if (currentValue == winningNumber)
                 {
                     TrackerBase.Say(x => x.Chat.DeclareGuessingGameWinners, winningNumber, NaturalLanguage.Join(pronouncedNames));
-                    var chatMessage = TrackerBase.Responses.Chat.DeclareGuessingGameWinners.Format(winningNumber, NaturalLanguage.Join(winners));
+                    var chatMessage = TrackerBase.Responses.Chat.DeclareGuessingGameWinners?.Format(winningNumber, NaturalLanguage.Join(winners));
                     if (chatMessage != null)
                     {
                         await ChatClient.SendMessageAsync(chatMessage, announce: true);
@@ -257,7 +257,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 else
                 {
                     TrackerBase.Say(x => x.Chat.DeclareGuessingGameClosestButNotOverWinner, winningNumber, currentValue, NaturalLanguage.Join(pronouncedNames));
-                    var chatMessage = TrackerBase.Responses.Chat.DeclareGuessingGameClosestButNotOverWinner.Format(winningNumber, currentValue, NaturalLanguage.Join(winners));
+                    var chatMessage = TrackerBase.Responses.Chat.DeclareGuessingGameClosestButNotOverWinner?.Format(winningNumber, currentValue, NaturalLanguage.Join(winners));
                     if (chatMessage != null)
                     {
                         await ChatClient.SendMessageAsync(chatMessage, announce: true);
@@ -442,6 +442,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private void TryRespondToGreetings(ChatMessage message, string senderNamePronunciation)
         {
+            if (TrackerBase.Responses.Chat.RecognizedGreetings == null)
+            {
+                return;
+            }
+
             foreach (var recognizedGreeting in TrackerBase.Responses.Chat.RecognizedGreetings)
             {
                 if (Regex.IsMatch(message.Text, recognizedGreeting, RegexOptions.IgnoreCase | RegexOptions.Singleline))

@@ -66,7 +66,7 @@ namespace Randomizer.Data.WorldData
         /// <param name="type">The type to compare against</param>
         /// <param name="name">The name to compare against if the item type is set to Nothing</param>
         /// <see langword="true"/> if the item matches the given type or name
-        /// name="type"/> or <paramref name="world"/>; otherwise, <see
+        /// name="type"/> or <paramref name="type"/>; otherwise, <see
         /// langword="false"/>.
         public bool Is(BossType type, string name)
             => (Type != BossType.None && Type == type) || (Type == BossType.None && Name == name);

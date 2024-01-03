@@ -91,9 +91,10 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             MemoryFlag = 0xB;
             StartingRooms = new List<int> { 219 };
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Thieves' Town");
-            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Thieves' Town", "TT", "Blind");
+            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Thieves' Town", "Blind");
             DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
             Reward = new Reward(DungeonState.Reward ?? RewardType.None, world, this, metadata, DungeonState);
+            MapName = "Dark World";
         }
 
         public override string Name => "Thieves' Town";
@@ -101,6 +102,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
         public RewardType DefaultRewardType => RewardType.CrystalBlue;
 
         public int SongIndex { get; init; } = 9;
+        public string Abbreviation => "TT";
+        public LocationId? BossLocationId => LocationId.ThievesTownBlind;
 
         public Reward Reward { get; set; }
 

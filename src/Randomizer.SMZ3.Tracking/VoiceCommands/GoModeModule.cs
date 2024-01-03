@@ -38,6 +38,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
         public override void AddCommands()
         {
+            if (_responseConfig.GoModePrompts == null)
+            {
+                return;
+            }
+
             AddCommand("Toggle Go Mode", GetGoModeRule(_responseConfig.GoModePrompts), (result) =>
             {
                 TrackerBase.ToggleGoMode(result.Confidence);

@@ -184,7 +184,7 @@ public abstract class TrackerBase
     /// <summary>
     /// The region the player is currently in according to the Auto Tracker
     /// </summary>
-    public RegionInfo? CurrentRegion { get; protected set; }
+    public Region? CurrentRegion { get; protected set; }
 
     /// <summary>
     /// The map to display for the player
@@ -718,14 +718,6 @@ public abstract class TrackerBase
     /// <param name="updateMap">Set to true to update the map for the player to match the region</param>
     /// <param name="resetTime">If the time should be reset if this is the first region update</param>
     public abstract void UpdateRegion(Region region, bool updateMap = false, bool resetTime = false);
-
-    /// <summary>
-    /// Updates the region that the player is in
-    /// </summary>
-    /// <param name="region">The region the player is in</param>
-    /// <param name="updateMap">Set to true to update the map for the player to match the region</param>
-    /// <param name="resetTime">If the time should be reset if this is the first region update</param>
-    public abstract void UpdateRegion(RegionInfo? region, bool updateMap = false, bool resetTime = false);
 
     /// <summary>
     /// Updates the map to display for the user

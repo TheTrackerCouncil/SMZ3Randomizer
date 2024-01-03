@@ -82,9 +82,10 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             StartingRooms = new List<int>() { 99, 131, 132, 133 };
             Reward = new Reward(RewardType.None, world, this);
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Desert Palace");
-            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Desert Palace", "DP", "Lanmolas");
+            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Desert Palace", "Lanmolas");
             DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
             Reward = new Reward(DungeonState.Reward ?? RewardType.None, world, this, metadata, DungeonState);
+            MapName = "Light World";
         }
 
         public override string Name => "Desert Palace";
@@ -95,6 +96,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             = new List<string>() { "Dessert Palace" };
 
         public int SongIndex { get; init; } = 1;
+        public string Abbreviation => "DP";
+        public LocationId? BossLocationId => LocationId.DesertPalaceLanmolas;
 
         public Reward Reward { get; set; }
 

@@ -15,6 +15,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
             TheMoat = new TheMoatRoom(this, metadata, trackerState);
             MemoryRegionId = 0;
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("East Crateria");
+            MapName = "Crateria";
         }
 
         public override string Name => "East Crateria";

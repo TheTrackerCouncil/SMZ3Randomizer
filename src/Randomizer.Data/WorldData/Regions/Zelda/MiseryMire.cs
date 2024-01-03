@@ -103,10 +103,11 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             StartingRooms = new List<int> { 152 };
 
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Misery Mire");
-            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Misery Mire", "MM", "Vitreous");
+            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Misery Mire", "Vitreous");
             DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
             Reward = new Reward(DungeonState.Reward ?? RewardType.None, world, this, metadata, DungeonState);
             Medallion = DungeonState.RequiredMedallion ?? ItemType.Nothing;
+            MapName = "Dark World";
         }
 
         public override string Name => "Misery Mire";
@@ -116,6 +117,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
         public ItemType DefaultMedallion => ItemType.Ether;
 
         public int SongIndex { get; init; } = 5;
+        public string Abbreviation => "MM";
+        public LocationId? BossLocationId => LocationId.MiseryMireVitreous;
 
         public Reward Reward { get; set; }
 

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Randomizer.Shared;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using static Randomizer.Data.Configuration.ConfigTypes.SchrodingersString;
 using Randomizer.Data.Configuration.ConfigTypes;
-using System.Linq;
 using Randomizer.Shared.Enums;
 
 namespace Randomizer.Data.Configuration.ConfigFiles
@@ -11,6 +9,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
     /// <summary>
     /// Config file for additional boss information
     /// </summary>
+    [Description("Config file for the various Metroid Bosses and other things that should be beatable")]
     public class BossConfig : List<BossInfo>, IMergeable<BossInfo>, IConfigFile<BossConfig>
     {
         /// <summary>
@@ -28,82 +27,85 @@ namespace Randomizer.Data.Configuration.ConfigFiles
         {
             return new BossConfig
             {
-                new BossInfo()
+                new()
                 {
                     Boss = "Spore Spawn",
-                    Name = new("Spore Spawn"),
                     MemoryAddress = 1,
                     MemoryFlag = 0x2,
                 },
-                new BossInfo()
+                new()
                 {
                     Boss = "Botwoon",
-                    Name = new("Botwoon"),
                     MemoryAddress = 4,
                     MemoryFlag = 0x2,
                 },
-                new BossInfo()
+                new()
                 {
                     Boss = "Kraid",
-                    Name = new("Kraid"),
                     Type = BossType.Kraid,
                     MemoryAddress = 1,
                     MemoryFlag = 0x1,
                 },
-                new BossInfo()
+                new()
                 {
                     Boss = "Crocomire",
-                    Name = new("Crocomire"),
                     MemoryAddress = 2,
                     MemoryFlag = 0x2,
                 },
-                new BossInfo()
+                new()
                 {
                     Boss = "Phantoon",
-                    Name = new("Phantoon"),
                     Type = BossType.Phantoon,
                     MemoryAddress = 3,
                     MemoryFlag = 0x1,
                 },
-                new BossInfo()
+                new()
                 {
                     Boss = "Shaktool",
-                    Name = new("Shaktool", "The Shaktool"),
                 },
-                new BossInfo()
+                new()
                 {
                     Boss = "Draygon",
-                    Name = new("Draygon"),
                     Type = BossType.Draygon,
                     MemoryAddress = 4,
                     MemoryFlag = 0x1,
                 },
-                new BossInfo()
+                new()
                 {
                     Boss = "Ridley",
-                    Name = new("Ridley"),
                     Type = BossType.Ridley,
                     MemoryAddress = 2,
                     MemoryFlag = 0x1,
                 },
-                new BossInfo()
+                new()
                 {
                     Boss = "Mother Brain",
-                    Name = new("Mother Brain"),
                 },
-                new BossInfo()
+                new()
                 {
                     Boss = "Bomb Torizo",
-                    Name = new("Bomb Torizo", "Bozo", "Bomb Chozo"),
                     MemoryAddress = 0,
                     MemoryFlag = 0x4,
                 },
-                new BossInfo()
+                new()
                 {
                     Boss = "Golden Torizo",
-                    Name = new("Golden Torizo", "Golden Chozo"),
                     MemoryAddress = 2,
                     MemoryFlag = 0x4,
+                },
+            };
+        }
+
+        public static object Example()
+        {
+            return new BossConfig
+            {
+                new()
+                {
+                    Boss = "Bomb Torizo",
+                    Name = new("Bomb Torizo", "Bomb Chozo", new Possibility("Bozo", 0.1)),
+                    WhenTracked = new SchrodingersString("Message when clearing the boss", new Possibility("Another message when clearing the boss", 0.1)),
+                    WhenDefeated = new SchrodingersString("Message when defeating the boss", new Possibility("Another message when defeating the boss", 0.1)),
                 },
             };
         }

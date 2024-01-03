@@ -243,7 +243,7 @@ public class ZeldaTextsPatch : RomPatch
 
     private string GetRegionName(Region region)
     {
-        return Dialog.GetGameSafeString(GetRegionInfo(region)?.Name.ToString() ?? region.Name);
+        return Dialog.GetGameSafeString(GetRegionInfo(region)?.Name?.ToString() ?? region.Name);
     }
 
     private string GetItemName(GetPatchesRequest data, Item item)

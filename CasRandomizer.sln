@@ -47,6 +47,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Randomizer.CrossPlatform", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Randomizer.Abstractions", "src\Randomizer.Abstractions\Randomizer.Abstractions.csproj", "{C5CED4F3-F57F-4651-88FB-5774326654E7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchemaGenerator", "src\SchemaGenerator\SchemaGenerator.csproj", "{584FEE2F-7C89-4734-ACE3-973639D69E04}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -113,6 +115,10 @@ Global
 		{C5CED4F3-F57F-4651-88FB-5774326654E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5CED4F3-F57F-4651-88FB-5774326654E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5CED4F3-F57F-4651-88FB-5774326654E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{584FEE2F-7C89-4734-ACE3-973639D69E04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{584FEE2F-7C89-4734-ACE3-973639D69E04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{584FEE2F-7C89-4734-ACE3-973639D69E04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{584FEE2F-7C89-4734-ACE3-973639D69E04}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

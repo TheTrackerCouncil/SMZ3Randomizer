@@ -177,7 +177,7 @@ namespace Randomizer.App.Windows
                 var locationDetails = _locations.Single(x => x.LocationNumber == (int)location.Id); //TODO: Refactor into IWorldService
                 var name = locationDetails.ToString();
                 var toolTip = "";
-                if (locationDetails.Name.Count > 1)
+                if (locationDetails.Name?.Count > 1)
                 {
                     toolTip = "AKA: " + string.Join(", ", locationDetails.Name.Where(x => x.Text != name).Select(x => x.Text)) + "\n";
                 }

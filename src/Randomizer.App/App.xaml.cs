@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
@@ -144,6 +146,7 @@ namespace Randomizer.App
             services.AddGitHubReleaseCheckerServices();
             services.AddSingleton<IGameDbService, GameDbService>();
             services.AddTransient<SourceRomValidationService>();
+            services.AddTransient<IGitHubConfigDownloaderService, GitHubConfigDownloaderService>();
         }
 
         private void Application_Startup(object sender, StartupEventArgs e)
@@ -170,8 +173,34 @@ namespace Randomizer.App
 
             InitializeMsuRandomizer();
 
-            var mainWindow = _host.Services.GetRequiredService<RomListWindow>();
+            _ = StartAsync();
+        }
+
+        private async Task StartAsync()
+        {
+            await DownloadConfigsAsync();
+            var mainWindow = _host!.Services.GetRequiredService<RomListWindow>();
             mainWindow.Show();
+        }
+
+        private async Task DownloadConfigsAsync()
+        {
+            var options = _host!.Services.GetRequiredService<OptionsFactory>().Create();
+
+            if (string.IsNullOrEmpty(options.GeneralOptions.Z3RomPath) ||
+                !options.GeneralOptions.DownloadConfigsOnStartup)
+            {
+                return;
+            }
+
+            var configSource = options.GeneralOptions.ConfigSources.FirstOrDefault();
+            if (configSource == null)
+            {
+                configSource = new ConfigSource() { Owner = "TheTrackerCouncil", Repo = "SMZ3CasConfigs" };
+                options.GeneralOptions.ConfigSources.Add(configSource);
+            }
+            await _host!.Services.GetRequiredService<IGitHubConfigDownloaderService>().DownloadFromSourceAsync(configSource);
+            options.Save();
         }
 
         private void TaskSchedulerOnUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)

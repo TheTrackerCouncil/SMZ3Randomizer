@@ -16,6 +16,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             ScrewAttack = new ScrewAttackRoom(this, metadata, trackerState);
             MemoryRegionId = 2;
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Lower Norfair West");
+            MapName = "Norfair";
         }
 
         public override string Name => "Lower Norfair, West";

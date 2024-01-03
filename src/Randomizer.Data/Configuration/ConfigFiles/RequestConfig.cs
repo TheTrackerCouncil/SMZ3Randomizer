@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using Randomizer.Shared;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using static Randomizer.Data.Configuration.ConfigTypes.SchrodingersString;
 using Randomizer.Data.Configuration.ConfigTypes;
-using System.Reflection;
 
 namespace Randomizer.Data.Configuration.ConfigFiles
 {
     /// <summary>
     /// Config file for additional request information
     /// </summary>
+    [Description("Config file for custom tracker prompts that she will listen to and her responses to them.\r\n" +
+                 "Note that all prompts will automatically have \"Hey tracker\" added before them.")]
     public class RequestConfig : List<BasicVoiceRequest>, IMergeable<BasicVoiceRequest>, IConfigFile<RequestConfig>
     {
         /// <summary>
@@ -25,27 +25,22 @@ namespace Randomizer.Data.Configuration.ConfigFiles
         /// <returns></returns>
         public static RequestConfig Default()
         {
-            return new RequestConfig
+            return new RequestConfig();
+        }
+
+        public static object Example()
+        {
+            return new RequestConfig()
             {
-                new BasicVoiceRequest()
+                new()
                 {
-                    Phrases = new() { "how do I crystal flash?", "how do I perform a crystal flash?", "how does crystal flash work?", "how can I recover energy in Super Metroid?" },
-                    Response = new("To perform a crystal flash, you must have 50 or less energy and at least 10 missiles, super missiles and 11 power bombs. Then, enter Morph Ball form and use a power bomb and hold both aim up, aim down, down and fire buttons."),
+                    Phrases = new() { "first message tracker will listen for", "second message tracker will listen for" },
+                    Response = new("First response tracker will respond with when saying \"Hey tracker, first message tracker will listen for\" or \"Hey tracker, second message tracker will listen for\"", new Possibility("Another message tracker can respond with", 0.1)),
                 },
-                new BasicVoiceRequest()
+                new()
                 {
-                    Phrases = new() { "how do I use special beams?", "how do I use special charge beam attacks?" },
-                    Response = new("If you have the Charge Beam and one other beam currently active, you can select Power Bombs and charge up a beam to do a special charge beam attack."),
-                },
-                new BasicVoiceRequest()
-                {
-                    Phrases = new() { "how do I shinespark?", "how does shine spark work?" },
-                    Response = new("Run with Speed Booster and crouch while still holding a direction. It'll hurt though."),
-                },
-                new BasicVoiceRequest()
-                {
-                    Phrases = new() { "do you know any special tricks?" },
-                    Response = new("Ask me how to use special charge beam attacks.", "Ask me how to perform a crystal flash.", "You can drop five bombs if you enter Morph Ball form while charging a beam."),
+                    Phrases = new() { "another request" },
+                    Response = new("another response"),
                 },
             };
         }

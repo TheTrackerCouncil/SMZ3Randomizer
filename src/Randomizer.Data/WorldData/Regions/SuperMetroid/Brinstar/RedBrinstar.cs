@@ -19,6 +19,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             Spazer = new SpazerRoom(this, metadata, trackerState);
             MemoryRegionId = 1;
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Red Brinstar");
+            MapName = "Brinstar";
         }
 
         public override string Name => "Red Brinstar";

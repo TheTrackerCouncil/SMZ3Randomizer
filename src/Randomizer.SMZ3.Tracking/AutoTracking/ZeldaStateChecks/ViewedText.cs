@@ -8,7 +8,7 @@ using Randomizer.SMZ3.Contracts;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared.Enums;
 using Randomizer.Shared.Models;
-using HintTile = Randomizer.Data.WorldData.HintTile;
+using HintTile = Randomizer.Data.Configuration.ConfigTypes.HintTile;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks;
 
@@ -30,7 +30,7 @@ public class ViewedText : IZeldaStateCheck
     public ViewedText(IWorldAccessor worldAccessor, TrackerBase tracker, HintTileConfig hintTileConfig)
     {
         _worldAccessor = worldAccessor;
-        _hintTiles = hintTileConfig.HintTiles.ToDictionary(x => x.Room, x => x);
+        _hintTiles = hintTileConfig.HintTiles?.ToDictionary(x => x.Room, x => x) ?? new();
         _tracker = tracker;
         _tracker.LocationCleared += TrackerOnLocationCleared;
         _pendingHintTiles = _worldAccessor.World.HintTiles

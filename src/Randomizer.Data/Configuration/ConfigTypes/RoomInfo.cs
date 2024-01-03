@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Newtonsoft.Json;
 using Randomizer.Data.WorldData;
+using YamlDotNet.Serialization;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {
@@ -44,15 +46,15 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         public string Room { get; init; } = "";
 
         /// <summary>
-        /// The Randomzier.SMZ3 type matching this region
+        /// The name of the type matching this room
         /// </summary>
-
+        [JsonIgnore, YamlIgnore]
         public Type? Type { get; init; }
 
         /// <summary>
         /// Gets the possible names for the room.
         /// </summary>
-        public SchrodingersString Name { get; set; } = new();
+        public SchrodingersString? Name { get; set; }
 
         /// <summary>
         /// Gets the possible hints for the room, if any are defined.
@@ -115,6 +117,6 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Returns a string representation of the room.
         /// </summary>
         /// <returns>A string representation of this room.</returns>
-        public override string ToString() => Name[0];
+        public override string ToString() => Room;
     }
 }

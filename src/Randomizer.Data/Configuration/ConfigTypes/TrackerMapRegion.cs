@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Randomizer.Data.WorldData.Regions;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {
@@ -16,6 +17,10 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// The name of the region. Must match a <see cref="Region.Name"/>.
         /// </param>
         /// <param name="rooms">The rooms and locations in this region.</param>
+        /// <param name="doors">The Super Metroid doors in this region</param>
+        /// <param name="typeName">The C# class type name</param>
+        /// <param name="bossX">The location of the boss icon</param>
+        /// <param name="bossY">The location of the boss icon</param>
         public TrackerMapRegion(string name, IReadOnlyCollection<TrackerMapLocation> rooms, IReadOnlyCollection<TrackerMapSMDoor> doors, string typeName, int? bossX, int? bossY)
         {
             Name = name;

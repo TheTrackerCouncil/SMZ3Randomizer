@@ -1,4 +1,7 @@
-﻿using Randomizer.Shared;
+﻿using System.Linq;
+using Newtonsoft.Json;
+using Randomizer.Shared;
+using YamlDotNet.Serialization;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {
@@ -31,7 +34,12 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// Gets the possible names for the reward.
         /// </summary>
-        public SchrodingersString Name { get; set; } = new();
+        public SchrodingersString? Name { get; set; }
+
+        /// <summary>
+        /// Gets the possible names for the reward with an article before it
+        /// </summary>
+        public SchrodingersString? ArticledName { get; set; }
 
         /// <summary>
         /// Gets the grammatical article for the item (e.g. "a" or "the").
@@ -41,13 +49,20 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// The SMZ3 reward type
         /// </summary>
+        [JsonIgnore, YamlIgnore]
         public RewardType RewardType { get; set; }
 
         /// <summary>
         /// Gets the name of the article, prefixed with "a", "the" or none,
         /// depending on the reward.
         /// </summary>
-        public string NameWithArticle => string.Join(" ",
+        [JsonIgnore, YamlIgnore]
+        public string NameWithArticle => ArticledName?.Any() == true
+            ? ArticledName.ToString() ?? DefaultNameWithArticle
+            : DefaultNameWithArticle;
+
+        [JsonIgnore, YamlIgnore]
+        private string DefaultNameWithArticle => string.Join(" ",
             Article ?? "", Name);
     }
 }

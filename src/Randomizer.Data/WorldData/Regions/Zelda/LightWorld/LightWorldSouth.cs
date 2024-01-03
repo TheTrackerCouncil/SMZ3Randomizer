@@ -144,6 +144,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
             StartingRooms = new List<int>() { 40, 41, 42, 43, 44, 45, 48, 50, 51, 52, 53, 55, 58, 59, 60, 63 };
             IsOverworld = true;
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Light World South");
+            MapName = "Light World";
         }
 
         public override string Name => "Light World South";

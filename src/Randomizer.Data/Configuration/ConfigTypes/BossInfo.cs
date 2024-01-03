@@ -1,6 +1,6 @@
-﻿using System;
-using Randomizer.Shared;
+﻿using Newtonsoft.Json;
 using Randomizer.Shared.Enums;
+using YamlDotNet.Serialization;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {
@@ -37,7 +37,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         }
 
         /// <summary>
-        /// The identifier for merging configs
+        /// The unique identifier for the boss used for merging configs
         /// </summary>
         [MergeKey]
         public string Boss { get; set; } = "";
@@ -45,7 +45,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// Gets the name of the boss.
         /// </summary>
-        public SchrodingersString Name { get; set; } = new();
+        public SchrodingersString? Name { get; set; }
 
         /// <summary>
         /// Gets the phrases to respond with when the boss has been tracked (but
@@ -64,22 +64,28 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// </summary>
         public string? Image { get; init; }
 
+        /// <summary>
+        /// The Super Metroid boss type related to this boss, if any
+        /// </summary>
+        [JsonIgnore, YamlIgnore]
         public BossType Type { get; set; }
 
         /// <summary>
         /// Memory offset for detecting if this boss was defeated
         /// </summary>
+        [JsonIgnore, YamlIgnore]
         public int? MemoryAddress { get; set; }
 
         /// <summary>
         /// Bit to check to determine if this boss was defeated
         /// </summary>
+        [JsonIgnore, YamlIgnore]
         public int? MemoryFlag { get; set; }
 
         /// <summary>
         /// Returns a string representation of the boss.
         /// </summary>
         /// <returns>A string representing this boss.</returns>
-        public override string? ToString() => Name[0];
+        public override string? ToString() => Boss;
     }
 }

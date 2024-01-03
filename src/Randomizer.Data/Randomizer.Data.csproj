@@ -6,72 +6,23 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DocumentationFile>bin\Debug\net7.0\Randomizer.Data.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
-    <None Remove="Configuration\Yaml\BCU\bosses.yml" />
-    <None Remove="Configuration\Yaml\BCU\dungeons.yml" />
-    <None Remove="Configuration\Yaml\BCU\game.yml" />
-    <None Remove="Configuration\Yaml\BCU\items.yml" />
-    <None Remove="Configuration\Yaml\BCU\locations.yml" />
-    <None Remove="Configuration\Yaml\BCU\regions.yml" />
-    <None Remove="Configuration\Yaml\BCU\requests.yml" />
-    <None Remove="Configuration\Yaml\BCU\responses.yml" />
-    <None Remove="Configuration\Yaml\BCU\rewards.yml" />
-    <None Remove="Configuration\Yaml\BCU\rooms.yml" />
-    <None Remove="Configuration\Yaml\Sassy\bosses.yml" />
-    <None Remove="Configuration\Yaml\Sassy\dungeons.yml" />
-    <None Remove="Configuration\Yaml\Sassy\game.yml" />
-    <None Remove="Configuration\Yaml\Sassy\items.yml" />
-    <None Remove="Configuration\Yaml\Sassy\locations.yml" />
-    <None Remove="Configuration\Yaml\Sassy\regions.yml" />
-    <None Remove="Configuration\Yaml\Sassy\requests.Jealous.yml" />
-    <None Remove="Configuration\Yaml\Sassy\requests.NonCommittal.yml" />
-    <None Remove="Configuration\Yaml\Sassy\requests.Rude.yml" />
-    <None Remove="Configuration\Yaml\Sassy\requests.Sassy.yml" />
-    <None Remove="Configuration\Yaml\Sassy\requests.yml" />
-    <None Remove="Configuration\Yaml\Sassy\responses.Rude.yml" />
-    <None Remove="Configuration\Yaml\Sassy\responses.yml" />
-    <None Remove="Configuration\Yaml\Sassy\rewards.yml" />
-    <None Remove="Configuration\Yaml\Sassy\rooms.yml" />
-    <None Remove="Configuration\Yaml\Templates\rewards.yml" />
     <None Remove="maps.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Configuration\Yaml\BCU\bosses.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\BCU\dungeons.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\BCU\game.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\BCU\items.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\BCU\locations.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\BCU\msu.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\BCU\regions.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\BCU\requests.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\BCU\responses.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\BCU\rewards.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\BCU\rooms.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Sassy\bosses.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Sassy\dungeons.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Sassy\game.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Sassy\items.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Sassy\locations.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Sassy\regions.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Sassy\requests.Jealous.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Sassy\requests.NonCommittal.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Sassy\requests.Rude.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Sassy\requests.Sassy.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Sassy\requests.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Sassy\responses.Rude.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Sassy\responses.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Sassy\rewards.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Sassy\rooms.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Templates\rewards.yml" />
     <EmbeddedResource Include="maps.json" />
     <EmbeddedResource Include="Options\ItemSettingOptions.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Sassy\hint_tiles.yml" />
     <EmbeddedResource Include="WorldData\VisibleItems.yml" />
-    <None Remove="Configuration\Yaml\Sassy\msu.yml" />
+    <None Remove="Configuration\Yaml\ui.yml" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MattEqualsCoder.GitHubReleaseChecker" Version="1.1.2" />
     <PackageReference Include="MattEqualsCoder.MSURandomizer.Library" Version="1.2.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="YamlDotNet" Version="13.1.1" />

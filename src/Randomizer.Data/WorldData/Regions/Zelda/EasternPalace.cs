@@ -73,9 +73,10 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             MemoryFlag = 0xB;
             StartingRooms = new List<int> { 201 };
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Eastern Palace");
-            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Eastern Palace", "EP", "Armos Knights");
+            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Eastern Palace", "Armos Knights");
             DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
             Reward = new Reward(DungeonState.Reward ?? RewardType.None, world, this, metadata, DungeonState);
+            MapName = "Light World";
         }
 
         public override string Name => "Eastern Palace";
@@ -89,6 +90,10 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
         public TrackerDungeonState DungeonState { get; set; }
 
         public int SongIndex { get; init; } = 0;
+
+        public string Abbreviation => "EP";
+
+        public LocationId? BossLocationId => LocationId.EasternPalaceArmosKnights;
 
         public Region ParentRegion => World.LightWorldNorthEast;
 
