@@ -29,7 +29,7 @@ In addition to making IBJ completely optional, there is also:
     - [Samus Sprites](https://github.com/TheTrackerCouncil/SMZ3CasSprites/blob/main/Sprites/Samus/README.md)
     - [Ship Sprites](https://github.com/TheTrackerCouncil/SMZ3CasSprites/blob/main/Sprites/Ships/README.md)
 - Various Super Metroid patches were pulled from the VARIA Randomizer by theonlydude
-- [Diabetus](https://twitch.tv/the_betus) and [PinkKittyRose](https://www.twitch.tv/pinkkittyrose) and the members of their communities who stream and help test this fork.
+- [Diabetus](https://twitch.tv/the_betus) and [PinkKittyRose](https://www.twitch.tv/pinkkittyrose) and the members of their communities have helped test and stream with this fork
 
 The original repository can be found at <https://github.com/tewtal/SMZ3Randomizer>.
 
