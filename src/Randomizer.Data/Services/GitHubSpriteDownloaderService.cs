@@ -27,13 +27,13 @@ public class GitHubSpriteDownloaderService : IGitHubSpriteDownloaderService
     public async Task<IDictionary<string, string>?> GetSpritesToDownloadAsync(string owner, string repo, TimeSpan? timeout = null)
     {
         var sprites = await GetGitHubSpritesAsync(owner, repo, timeout);
-        var previousHashes = GetPreviousSpriteHashes();
-        var toDownload = new ConcurrentDictionary<string, string>();
-
         if (sprites == null)
         {
-            return null;
+            return new Dictionary<string, string>();
         }
+
+        var previousHashes = GetPreviousSpriteHashes();
+        var toDownload = new ConcurrentDictionary<string, string>();
 
         Parallel.ForEach(sprites, parallelOptions: new ParallelOptions() { MaxDegreeOfParallelism = 4 },
             spriteData =>
@@ -60,26 +60,25 @@ public class GitHubSpriteDownloaderService : IGitHubSpriteDownloaderService
             spritesToDownload = await GetSpritesToDownloadAsync(owner, repo, timeout);
         }
 
-        if (spritesToDownload?.Any() != true)
-        {
-            return;
-        }
-
+        var previousHashes = GetPreviousSpriteHashes();
         var added = new ConcurrentDictionary<string, string>();
 
-        await Parallel.ForEachAsync(spritesToDownload, parallelOptions: new ParallelOptions() { MaxDegreeOfParallelism = 4 },
-            async (spriteData, _) =>
-            {
-                var localPath = ConvertGitHubPath(spriteData.Key);
-                var currentHash = spriteData.Value;
-                var downloadUrl = GetGitHubRawUrl(spriteData.Key, owner, repo);
-                var successful = await DownloadFileAsync(localPath, downloadUrl);
-
-                if (successful)
+        if (spritesToDownload?.Any() == true)
+        {
+            await Parallel.ForEachAsync(spritesToDownload, parallelOptions: new ParallelOptions() { MaxDegreeOfParallelism = 4 },
+                async (spriteData, _) =>
                 {
-                    added[localPath] = currentHash;
-                }
-            });
+                    var localPath = ConvertGitHubPath(spriteData.Key);
+                    var currentHash = spriteData.Value;
+                    var downloadUrl = GetGitHubRawUrl(spriteData.Key, owner, repo);
+                    var successful = await DownloadFileAsync(localPath, downloadUrl);
+
+                    if (successful)
+                    {
+                        added[localPath] = currentHash;
+                    }
+                });
+        }
 
         if (File.Exists(Path.Combine(_spriteFolder, "sprites.json")))
         {
@@ -88,9 +87,10 @@ public class GitHubSpriteDownloaderService : IGitHubSpriteDownloaderService
 
         foreach (var addedSprite in added)
         {
-            _optionsFactory.Create().GeneralOptions.SpriteHashes[addedSprite.Key] = addedSprite.Value;
+            previousHashes[addedSprite.Key] = addedSprite.Value;
         }
 
+        _optionsFactory.Create().GeneralOptions.SpriteHashes = previousHashes;
         _optionsFactory.Create().Save();
     }
 

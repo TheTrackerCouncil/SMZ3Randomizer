@@ -210,12 +210,7 @@ namespace Randomizer.App
             var spriteDownloader = _host!.Services.GetRequiredService<IGitHubSpriteDownloaderService>();
             var toDownload = await spriteDownloader.GetSpritesToDownloadAsync("TheTrackerCouncil", "SMZ3CasSprites");
 
-            if (toDownload == null || toDownload.Count == 0)
-            {
-                return;
-            }
-
-            if (toDownload.Count <= 4)
+            if (toDownload == null || toDownload.Count <= 4)
             {
                 await spriteDownloader.DownloadSpritesAsync("TheTrackerCouncil", "SMZ3CasSprites", toDownload);
                 return;
