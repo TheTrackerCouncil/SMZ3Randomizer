@@ -2,7 +2,7 @@ name: .NET Build + Test + Publish
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, external-sprites ]
   pull_request:
     branches: [ main ]
 
