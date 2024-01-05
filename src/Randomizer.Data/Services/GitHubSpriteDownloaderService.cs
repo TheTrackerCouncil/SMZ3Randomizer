@@ -26,7 +26,7 @@ public class GitHubSpriteDownloaderService : IGitHubSpriteDownloaderService
 
     public async Task<IDictionary<string, string>?> GetSpritesToDownloadAsync(string owner, string repo, TimeSpan? timeout = null)
     {
-        var sprites = await GetGitHubSpritesAsync(owner, repo);
+        var sprites = await GetGitHubSpritesAsync(owner, repo, timeout);
         var previousHashes = GetPreviousSpriteHashes();
         var toDownload = new ConcurrentDictionary<string, string>();
 
