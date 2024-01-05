@@ -123,14 +123,18 @@ namespace Randomizer.Data.Options
             get
             {
 #if DEBUG
-                var directory = new DirectoryInfo(Directory.GetCurrentDirectory());
+                var parentDir = new DirectoryInfo(SolutionPath).Parent;
+                var spriteRepo = parentDir?.GetDirectories().FirstOrDefault(x => x.Name == "SMZ3CasSprites");
+                var path = Path.Combine(spriteRepo?.FullName ?? "", "Sprites");
 
-                while (directory != null && !directory.GetFiles("*.sln").Any())
+                if (!Directory.Exists(path))
                 {
-                    directory = directory.Parent;
+                    return Path.Combine(
+                        Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName ?? "")!,
+                        "Sprites");
                 }
 
-                return Path.Combine(directory!.FullName, "src", "Randomizer.Sprites");
+                return path;
 #else
 
             return Path.Combine(
@@ -139,6 +143,21 @@ namespace Randomizer.Data.Options
 #endif
             }
 
+        }
+
+        private static string SolutionPath
+        {
+            get
+            {
+                var directory = new DirectoryInfo(Directory.GetCurrentDirectory());
+
+                while (directory != null && !directory.GetFiles("*.sln").Any())
+                {
+                    directory = directory.Parent;
+                }
+
+                return Path.Combine(directory!.FullName);
+            }
         }
     }
 }

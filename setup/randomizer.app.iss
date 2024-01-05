@@ -50,7 +50,7 @@ Type: filesandordirs; Name: "{app}\Sprites"
 [Files]
 Source: "netcorecheck.exe"; Flags: dontcopy noencryption
 Source: "netcorecheck_x64.exe"; Flags: dontcopy noencryption
-Source: "..\src\Randomizer.Sprites\*"; DestDir: "{app}\Sprites"; Excludes: "\bin\*,obj\*,*.cs,*.csproj"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\sprites\Sprites\*"; DestDir: "{app}\Sprites"; Excludes: "\bin\*,obj\*,*.cs,*.csproj"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\src\Randomizer.App\bin\Release\net7.0-windows\win-x64\publish\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; Check: Is64BitInstallMode;
 Source: "..\src\Randomizer.App\bin\Release\net7.0-windows\win-x64\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: Is64BitInstallMode;
 Source: "..\src\Randomizer.App\bin\Release\net7.0-windows\win-x86\publish\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; Check: "not Is64BitInstallMode";

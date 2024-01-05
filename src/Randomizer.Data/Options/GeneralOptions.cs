@@ -194,6 +194,11 @@ namespace Randomizer.Data.Options
         /// </summary>
         public List<ConfigSource> ConfigSources { get; set; } = new();
 
+        /// <summary>
+        /// Dictionary of previously downloaded hashes
+        /// </summary>
+        public Dictionary<string, string> SpriteHashes { get; set; } = new();
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public bool Validate()

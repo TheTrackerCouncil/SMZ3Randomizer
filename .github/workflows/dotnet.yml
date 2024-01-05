@@ -2,7 +2,7 @@ name: .NET Build + Test + Publish
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, external-sprites ]
   pull_request:
     branches: [ main ]
 
@@ -12,15 +12,26 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Download config repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         repository: TheTrackerCouncil/SMZ3CasConfigs
         path: configs
         ref: main
+    - name: Download sprite repo
+      uses: actions/checkout@v4
+      with:
+        repository: TheTrackerCouncil/SMZ3CasSprites
+        path: sprites
+        ref: main
+    - name: Download git tree
+      if: ${{ github.event_name != 'pull_request' }}
+      shell: pwsh
+      run: |
+        Invoke-RestMethod -Uri https://api.github.com/repos/TheTrackerCouncil/SMZ3CasSprites/git/trees/main?recursive=1 -OutFile sprites/Sprites/sprites.json
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
     - name: Restore dependencies

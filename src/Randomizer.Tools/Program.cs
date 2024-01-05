@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Randomizer.CrossPlatform;
 using Randomizer.Data.Options;
+using Randomizer.Data.Services;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
 using Randomizer.SMZ3;
@@ -45,7 +46,11 @@ namespace Randomizer.Tools
 
             s_logger = s_services.GetRequiredService<ILogger<Smz3Randomizer>>();
 
-            s_logger.LogInformation("{Response}", GenerateStats(new Config()
+            s_logger.LogInformation("Starting");
+
+            s_services.GetRequiredService<IGitHubSpriteDownloaderService>().DownloadSpritesAsync("MattEqualsCoder", "SMZ3CasSprites").Wait();
+
+            /*s_logger.LogInformation("{Response}", GenerateStats(new Config()
             {
                 LogicConfig =
                 {
@@ -66,7 +71,7 @@ namespace Randomizer.Tools
                     SwordOnlyDarkRooms = false,
                     LightWorldSouthFakeFlippers = false
                 },
-            }));
+            }));*/
         }
 
         private static string GenerateStats(Config config, int count = 10000)
