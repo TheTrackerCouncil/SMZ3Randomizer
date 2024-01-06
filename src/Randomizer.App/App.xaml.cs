@@ -178,17 +178,16 @@ namespace Randomizer.App
 
         private async Task StartAsync()
         {
-            await DownloadConfigsAsync();
-            await DownloadSpritesAsync();
+            var options = _host!.Services.GetRequiredService<OptionsFactory>().Create();
+            await DownloadConfigsAsync(options);
+            await DownloadSpritesAsync(options);
             var mainWindow = _host!.Services.GetRequiredService<RomListWindow>();
             mainWindow.Show();
             _spriteDownloaderWindow?.Close();
         }
 
-        private async Task DownloadConfigsAsync()
+        private async Task DownloadConfigsAsync(RandomizerOptions options)
         {
-            var options = _host!.Services.GetRequiredService<OptionsFactory>().Create();
-
             if (string.IsNullOrEmpty(options.GeneralOptions.Z3RomPath) ||
                 !options.GeneralOptions.DownloadConfigsOnStartup)
             {
@@ -205,12 +204,18 @@ namespace Randomizer.App
             options.Save();
         }
 
-        private async Task DownloadSpritesAsync()
+        private async Task DownloadSpritesAsync(RandomizerOptions options)
         {
+            if (string.IsNullOrEmpty(options.GeneralOptions.Z3RomPath) ||
+                !options.GeneralOptions.DownloadSpritesOnStartup)
+            {
+                return;
+            }
+
             var spriteDownloader = _host!.Services.GetRequiredService<IGitHubSpriteDownloaderService>();
             var toDownload = await spriteDownloader.GetSpritesToDownloadAsync("TheTrackerCouncil", "SMZ3CasSprites");
 
-            if (toDownload == null || toDownload.Count <= 4)
+            if (toDownload is not { Count: > 4 })
             {
                 await spriteDownloader.DownloadSpritesAsync("TheTrackerCouncil", "SMZ3CasSprites", toDownload);
                 return;
