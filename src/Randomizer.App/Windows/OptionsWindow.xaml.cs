@@ -26,6 +26,7 @@ namespace Randomizer.App.Windows
         private readonly ILogger<OptionsWindow> _logger;
         private readonly ConfigProvider _trackerConfigProvider;
         private readonly IGitHubConfigDownloaderService _gitHubConfigDownloaderService;
+        private readonly IGitHubSpriteDownloaderService _gitHubSpriteDownloaderService;
         private GeneralOptions _options = new();
         private bool _canLogIn = true;
         private ICollection<string> _availableProfiles;
@@ -35,7 +36,8 @@ namespace Randomizer.App.Windows
             ConfigProvider configProvider,
             ILogger<OptionsWindow> logger,
             SourceRomValidationService sourceRomValidationService,
-            IGitHubConfigDownloaderService gitHubConfigDownloaderService)
+            IGitHubConfigDownloaderService gitHubConfigDownloaderService,
+            IGitHubSpriteDownloaderService gitHubSpriteDownloaderService)
         {
             InitializeComponent();
             _trackerConfigProvider = configProvider;
@@ -43,6 +45,7 @@ namespace Randomizer.App.Windows
             _logger = logger;
             _sourceRomValidationService = sourceRomValidationService;
             _gitHubConfigDownloaderService = gitHubConfigDownloaderService;
+            _gitHubSpriteDownloaderService = gitHubSpriteDownloaderService;
             _availableProfiles = configProvider.GetAvailableProfiles();
             PropertyChanged?.Invoke(this, new(nameof(DisabledProfiles)));
         }
@@ -98,14 +101,22 @@ namespace Randomizer.App.Windows
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
+            _ = DownloadUpdatesAndClose();
+        }
+
+        private async Task DownloadUpdatesAndClose()
+        {
             if (Options.DownloadConfigsOnStartup && !Options.ConfigSources.Any())
             {
-                _ = UpdateConfigsAsync(true);
+                await UpdateConfigsAsync();
             }
-            else
+
+            if (Options.DownloadSpritesOnStartup && !Options.SpriteHashes.Any())
             {
-                DialogResult = true;
+                await UpdateSpritesAsync();
             }
+
+            DialogResult = true;
         }
 
         private async void TwitchLoginButton_Click(object sender, RoutedEventArgs e)
@@ -315,7 +326,12 @@ namespace Randomizer.App.Windows
             _ = UpdateConfigsAsync();
         }
 
-        private async Task UpdateConfigsAsync(bool close = false)
+        private void UpdateSpritesButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            _ = UpdateSpritesAsync();
+        }
+
+        private async Task UpdateConfigsAsync()
         {
             var configSource = Options.ConfigSources.FirstOrDefault();
             if (configSource == null)
@@ -324,10 +340,18 @@ namespace Randomizer.App.Windows
                 Options.ConfigSources.Add(configSource);
             }
             await _gitHubConfigDownloaderService.DownloadFromSourceAsync(configSource);
+        }
 
-            if (close)
+        private async Task UpdateSpritesAsync()
+        {
+            var sprites = await _gitHubSpriteDownloaderService.GetSpritesToDownloadAsync("TheTrackerCouncil", "SMZ3CasSprites");
+
+            if (sprites?.Any() == true)
             {
-                DialogResult = true;
+                var spriteDownloaderWindow = new SpriteDownloaderWindow();
+                spriteDownloaderWindow.Show();
+                await _gitHubSpriteDownloaderService.DownloadSpritesAsync("TheTrackerCouncil", "SMZ3CasSprites");
+                spriteDownloaderWindow.Close();
             }
         }
     }

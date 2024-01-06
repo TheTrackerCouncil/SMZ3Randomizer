@@ -9,7 +9,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using Randomizer.App.ViewModels;
 using Randomizer.Data.Options;
-using Randomizer.Sprites;
+using Randomizer.Data.Services;
 
 namespace Randomizer.App.Windows;
 

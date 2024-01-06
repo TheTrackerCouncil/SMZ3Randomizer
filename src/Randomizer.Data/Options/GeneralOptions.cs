@@ -190,9 +190,19 @@ namespace Randomizer.Data.Options
         public bool DownloadConfigsOnStartup { get; set; } = true;
 
         /// <summary>
+        /// Option to download new sprites on startup
+        /// </summary>
+        public bool DownloadSpritesOnStartup { get; set; } = true;
+
+        /// <summary>
         /// The list of config sources
         /// </summary>
         public List<ConfigSource> ConfigSources { get; set; } = new();
+
+        /// <summary>
+        /// Dictionary of previously downloaded hashes
+        /// </summary>
+        public Dictionary<string, string> SpriteHashes { get; set; } = new();
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

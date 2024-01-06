@@ -9,7 +9,6 @@ using Microsoft.Extensions.Options;
 using MSURandomizerLibrary;
 using Randomizer.Data.Configuration;
 using Randomizer.Data.Services;
-using Randomizer.Sprites;
 
 namespace Randomizer.SMZ3.Tests;
 

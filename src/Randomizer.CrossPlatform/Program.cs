@@ -45,6 +45,9 @@ public static class Program
         s_services.GetRequiredService<IGitHubConfigDownloaderService>()
             .DownloadFromSourceAsync(configSource).Wait();
 
+        s_services.GetRequiredService<IGitHubSpriteDownloaderService>()
+            .DownloadSpritesAsync("TheTrackerCouncil", "SMZ3CasSprites").Wait();
+
         randomizerOptions.Save();
         var launcher = s_services.GetRequiredService<RomLauncherService>();
 

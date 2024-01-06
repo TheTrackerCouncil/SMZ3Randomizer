@@ -12,7 +12,6 @@ using Randomizer.Data.WorldData.Regions;
 using Randomizer.PatchBuilder;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Infrastructure;
-using Randomizer.Sprites;
 
 var serviceProvider = new ServiceCollection()
     .AddLogging(x =>
