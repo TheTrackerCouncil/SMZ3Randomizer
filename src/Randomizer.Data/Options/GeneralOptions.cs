@@ -246,7 +246,8 @@ namespace Randomizer.Data.Options
             AutoSaveLookAtEvents = AutoSaveLookAtEvents,
             GanonsTowerGuessingGameStyle = GanonsTowerGuessingGameStyle,
             SpeechRecognitionMode = SpeechRecognitionMode,
-            PushToTalkKey = PushToTalkKey
+            PushToTalkKey = PushToTalkKey,
+            PushToTalkDevice = PushToTalkDevice
         };
 
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)

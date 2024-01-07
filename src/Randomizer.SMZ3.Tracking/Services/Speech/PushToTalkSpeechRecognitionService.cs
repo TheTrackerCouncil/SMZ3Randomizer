@@ -59,6 +59,7 @@ public partial class PushToTalkSpeechRecognitionService : SpeechRecognitionServi
         _microphoneService = microphoneService;
         _logger = logger;
         _pushToTalkKey = (KeyCode?)trackerOptionsAccessor.Options?.PushToTalkKey ?? KeyCode.VcLeftControl;
+        _microphoneService.DesiredAudioDevice = trackerOptionsAccessor.Options?.PushToTalkDevice;
         _waveFormat = new WaveFormat();
     }
 

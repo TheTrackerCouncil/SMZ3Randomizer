@@ -18,4 +18,6 @@ public interface IMicrophoneService : IDisposable
     Stream? StopRecording();
 
     ICollection<string> GetDeviceNames();
+
+    string? DesiredAudioDevice { get; set; }
 }
