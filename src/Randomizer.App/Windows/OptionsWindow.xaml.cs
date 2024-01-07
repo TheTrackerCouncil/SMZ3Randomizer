@@ -25,6 +25,8 @@ namespace Randomizer.App.Windows
         private readonly IChatAuthenticationService _chatAuthenticationService;
         private readonly ILogger<OptionsWindow> _logger;
         private readonly ConfigProvider _trackerConfigProvider;
+        private readonly IGitHubConfigDownloaderService _gitHubConfigDownloaderService;
+        private readonly IGitHubSpriteDownloaderService _gitHubSpriteDownloaderService;
         private GeneralOptions _options = new();
         private bool _canLogIn = true;
         private ICollection<string> _availableProfiles;
@@ -33,13 +35,17 @@ namespace Randomizer.App.Windows
         public OptionsWindow(IChatAuthenticationService chatAuthenticationService,
             ConfigProvider configProvider,
             ILogger<OptionsWindow> logger,
-            SourceRomValidationService sourceRomValidationService)
+            SourceRomValidationService sourceRomValidationService,
+            IGitHubConfigDownloaderService gitHubConfigDownloaderService,
+            IGitHubSpriteDownloaderService gitHubSpriteDownloaderService)
         {
             InitializeComponent();
             _trackerConfigProvider = configProvider;
             _chatAuthenticationService = chatAuthenticationService;
             _logger = logger;
             _sourceRomValidationService = sourceRomValidationService;
+            _gitHubConfigDownloaderService = gitHubConfigDownloaderService;
+            _gitHubSpriteDownloaderService = gitHubSpriteDownloaderService;
             _availableProfiles = configProvider.GetAvailableProfiles();
             PropertyChanged?.Invoke(this, new(nameof(DisabledProfiles)));
         }
@@ -88,13 +94,28 @@ namespace Randomizer.App.Windows
         }
 
         public ICollection<string> EnabledProfiles =>
-            Options.SelectedProfiles.Where(x => !string.IsNullOrEmpty(x)).NonNull().ToList();
+            Options.SelectedProfiles.Where(x => !string.IsNullOrEmpty(x) && !"Default".Equals(x)).NonNull().ToList();
 
         public ICollection<string> DisabledProfiles =>
-            AvailableProfiles?.Where(x => Options.SelectedProfiles.Contains(x) == false && !string.IsNullOrEmpty(x)).NonNull().ToList() ?? new List<string>();
+            AvailableProfiles?.Where(x => Options.SelectedProfiles.Contains(x) == false && !string.IsNullOrEmpty(x) && !"Default".Equals(x)).NonNull().ToList() ?? new List<string>();
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
+            _ = DownloadUpdatesAndClose();
+        }
+
+        private async Task DownloadUpdatesAndClose()
+        {
+            if (Options.DownloadConfigsOnStartup && !Options.ConfigSources.Any())
+            {
+                await UpdateConfigsAsync();
+            }
+
+            if (Options.DownloadSpritesOnStartup && !Options.SpriteHashes.Any())
+            {
+                await UpdateSpritesAsync();
+            }
+
             DialogResult = true;
         }
 
@@ -297,6 +318,40 @@ namespace Randomizer.App.Windows
                 MessageBox.Show(this,
                     "The rom selected does not appear to be a valid ALttP Japanese v1.0 ROM. Generated SMZ3 ROMs may not work as expected.",
                     "SMZ3 Cas' Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void UpdateConfigsButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            _ = UpdateConfigsAsync();
+        }
+
+        private void UpdateSpritesButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            _ = UpdateSpritesAsync();
+        }
+
+        private async Task UpdateConfigsAsync()
+        {
+            var configSource = Options.ConfigSources.FirstOrDefault();
+            if (configSource == null)
+            {
+                configSource = new ConfigSource() { Owner = "TheTrackerCouncil", Repo = "SMZ3CasConfigs" };
+                Options.ConfigSources.Add(configSource);
+            }
+            await _gitHubConfigDownloaderService.DownloadFromSourceAsync(configSource);
+        }
+
+        private async Task UpdateSpritesAsync()
+        {
+            var sprites = await _gitHubSpriteDownloaderService.GetSpritesToDownloadAsync("TheTrackerCouncil", "SMZ3CasSprites");
+
+            if (sprites?.Any() == true)
+            {
+                var spriteDownloaderWindow = new SpriteDownloaderWindow();
+                spriteDownloaderWindow.Show();
+                await _gitHubSpriteDownloaderService.DownloadSpritesAsync("TheTrackerCouncil", "SMZ3CasSprites");
+                spriteDownloaderWindow.Close();
             }
         }
     }

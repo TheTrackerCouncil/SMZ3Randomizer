@@ -65,9 +65,33 @@
                                           OnPathUpdated="FileSystemInput_OnOnPathUpdated"
                                           />
               </controls:LabeledControl>
-              <CheckBox IsChecked="{Binding CheckForUpdatesOnStartup}"
-                        VerticalAlignment="Center"
-                        Margin="0">Check for updates on startup</CheckBox>
+
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*"></ColumnDefinition>
+                  <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Vertical">
+                  <CheckBox IsChecked="{Binding CheckForUpdatesOnStartup}"
+                            VerticalAlignment="Center"
+                            Margin="0">Check for updates on startup</CheckBox>
+                  <CheckBox IsChecked="{Binding DownloadConfigsOnStartup}"
+                            VerticalAlignment="Center"
+                            Margin="0">Download tracker config updates on startup</CheckBox>
+                  <CheckBox IsChecked="{Binding DownloadSpritesOnStartup}"
+                            VerticalAlignment="Center"
+                            Margin="0">Download sprite updates on startup</CheckBox>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Vertical">
+                  <Button Name="UpdateConfigsButton" Click="UpdateConfigsButton_OnClick" Margin="0 0 0 0">
+                    Update Configs
+                  </Button>
+                  <Button Name="UpdateSpritesButton" Click="UpdateSpritesButton_OnClick" Margin="0 5 0 0">
+                    Update Sprites
+                  </Button>
+                </StackPanel>
+              </Grid>
+
             </StackPanel>
           </Expander>
 

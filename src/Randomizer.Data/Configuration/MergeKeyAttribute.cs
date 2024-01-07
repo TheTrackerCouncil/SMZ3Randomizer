@@ -14,9 +14,6 @@ namespace Randomizer.Data.Configuration
         /// Initializes a new instance of the <see
         /// cref="MergeKeyAttribute"/> class with the specified categories.
         /// </summary>
-        /// <param name="type">
-        /// The type of merge to be performed on the config
-        /// </param>
         public MergeKeyAttribute() { }
     }
 }

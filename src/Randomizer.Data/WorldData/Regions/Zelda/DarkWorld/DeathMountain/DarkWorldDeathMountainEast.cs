@@ -17,6 +17,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain
             StartingRooms = new List<int>() { 69, 71 };
             IsOverworld = true;
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Dark World Death Mountain East");
+            MapName = "Dark World";
         }
 
         public override string Name => "Dark World Death Mountain East";

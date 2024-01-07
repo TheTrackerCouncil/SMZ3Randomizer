@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
+using YamlDotNet.Serialization;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {
@@ -25,6 +27,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         }
 
         [MergeKey]
+        [JsonIgnore, YamlIgnore]
         public string Key => Phrases[0].ToLower();
 
         /// <summary>
@@ -35,6 +38,6 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// Gets the possible responses to the request.
         /// </summary>
-        public SchrodingersString Response { get; set; } = new();
+        public SchrodingersString? Response { get; set; }
     }
 }

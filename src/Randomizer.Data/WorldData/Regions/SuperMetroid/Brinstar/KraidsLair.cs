@@ -17,6 +17,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             MemoryRegionId = 1;
             Boss = new Boss(Shared.Enums.BossType.Kraid, World, this, metadata, trackerState);
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Kraid's Lair");
+            MapName = "Brinstar";
         }
 
         public override string Name => "Kraid's Lair";

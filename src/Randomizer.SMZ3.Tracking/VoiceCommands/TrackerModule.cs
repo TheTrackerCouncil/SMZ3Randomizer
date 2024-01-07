@@ -420,9 +420,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var itemNames = new Choices();
             foreach (var item in ItemService.LocalPlayersItems().Where(where))
             {
-                foreach (var name in item.Metadata.Name)
+                if (item.Metadata.Name != null)
                 {
-                    itemNames.Add(new SemanticResultValue(name.ToString(), item.Name));
+                    foreach (var name in item.Metadata.Name)
+                    {
+                        itemNames.Add(new SemanticResultValue(name.ToString(), item.Name));
+                    }
+                }
+                else
+                {
+                    itemNames.Add(new SemanticResultValue(item.Metadata.Item, item.Name));
                 }
 
                 if (item.Metadata.Stages != null)
@@ -452,8 +459,15 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 if ((dungeon.DungeonState.HasReward || includeDungeonsWithoutReward))
                 {
-                    foreach (var name in dungeon.DungeonMetadata.Name)
-                        dungeonNames.Add(new SemanticResultValue(name.Text, dungeon.DungeonName));
+                    if (dungeon.DungeonMetadata.Name != null)
+                    {
+                        foreach (var name in dungeon.DungeonMetadata.Name)
+                            dungeonNames.Add(new SemanticResultValue(name.Text, dungeon.DungeonName));
+                    }
+                    else
+                    {
+                        dungeonNames.Add(new SemanticResultValue(dungeon.DungeonName, dungeon.DungeonName));
+                    }
                 }
             }
 
@@ -471,14 +485,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected virtual Choices GetBossNames()
         {
             var bossNames = new Choices();
-            foreach (var dungeon in TrackerBase.World.Dungeons)
+            foreach (var dungeon in TrackerBase.World.Dungeons.Where(x => x.DungeonMetadata.Boss != null))
             {
-                foreach (var name in dungeon.DungeonMetadata.Boss)
+                foreach (var name in dungeon.DungeonMetadata.Boss!)
                     bossNames.Add(new SemanticResultValue(name.Text, dungeon.DungeonName));
             }
-            foreach (var boss in TrackerBase.World.AllBosses)
+            foreach (var boss in TrackerBase.World.AllBosses.Where(x => x.Metadata.Name != null))
             {
-                foreach (var name in boss.Metadata.Name)
+                foreach (var name in boss.Metadata.Name!)
                     bossNames.Add(new SemanticResultValue(name.Text, boss.Name));
             }
             return bossNames;
@@ -498,8 +512,15 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             foreach (var location in TrackerBase.World.Locations)
             {
-                foreach (var name in location.Metadata.Name)
-                    locationNames.Add(new SemanticResultValue(name.Text, (int)location.Id));
+                if (location.Metadata.Name != null)
+                {
+                    foreach (var name in location.Metadata.Name)
+                        locationNames.Add(new SemanticResultValue(name.Text, (int)location.Id));
+                }
+                else
+                {
+                    locationNames.Add(new SemanticResultValue(location.Name, (int)location.Id));
+                }
             }
 
             return locationNames;
@@ -520,7 +541,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             foreach (var room in TrackerBase.World.Rooms)
             {
                 var roomName = room.GetType().FullName;
-                if (roomName == null) continue;
+                if (roomName == null || room.Metadata.Name == null) continue;
                 foreach (var name in room.Metadata.Name)
                     roomNames.Add(new SemanticResultValue(name.Text, roomName));
             }
@@ -543,7 +564,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             foreach (var region in TrackerBase.World.Regions)
             {
                 var regionName = region.GetType().FullName;
-                if (excludeDungeons && region is IDungeon || regionName == null)
+                if (excludeDungeons && region is IDungeon || regionName == null || region.Metadata.Name == null)
                     continue;
 
                 foreach (var name in region.Metadata.Name)
@@ -569,7 +590,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             foreach (var medallion in medallionTypes.Where(x => x == ItemType.Nothing || x.IsInCategory(ItemCategory.Medallion)))
             {
                 var item = ItemService.FirstOrDefault(medallion);
-                if (item?.Metadata != null)
+                if (item?.Metadata?.Name != null)
                 {
                     foreach (var name in item.Metadata.Name)
                         medallions.Add(new SemanticResultValue(medallion.ToString(), item.Name));

@@ -31,14 +31,14 @@ public class ZeldaDeath : IZeldaStateCheck
         var silent = tracker.GameService!.PlayerRecentlyKilled;
 
         // Say specific message for dying in the particular screen/room the player is in
-        if (!silent && tracker.CurrentRegion is { WhenDiedInRoom: not null })
+        if (!silent && tracker.CurrentRegion?.Metadata is { WhenDiedInRoom: not null })
         {
-            var region = tracker.CurrentRegion.GetRegion(tracker.World) as Z3Region;
-            if (region is { IsOverworld: true } && tracker.CurrentRegion.WhenDiedInRoom.TryGetValue(prevState.OverworldScreen, out var locationResponse))
+            var region = tracker.CurrentRegion as Z3Region;
+            if (region is { IsOverworld: true } && tracker.CurrentRegion?.Metadata.WhenDiedInRoom?.TryGetValue(prevState.OverworldScreen, out var locationResponse) == true)
             {
                 tracker.Say(locationResponse);
             }
-            else if (region is { IsOverworld: false } && tracker.CurrentRegion.WhenDiedInRoom.TryGetValue(prevState.CurrentRoom, out locationResponse))
+            else if (region is { IsOverworld: false } && tracker.CurrentRegion?.Metadata.WhenDiedInRoom?.TryGetValue(prevState.CurrentRoom, out locationResponse) == true)
             {
                 tracker.Say(locationResponse);
             }

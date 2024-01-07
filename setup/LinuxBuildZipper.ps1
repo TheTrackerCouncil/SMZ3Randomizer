@@ -22,12 +22,7 @@ else {
 if (Test-Path -LiteralPath "$folder\Sprites") {
     Remove-Item -LiteralPath "$folder\Sprites" -Recurse
 }
-Copy-Item "$parentFolder\src\Randomizer.Sprites\" -Destination "$folder\Sprites" -Recurse
-Remove-Item "$folder\Sprites\bin" -Recurse
-Remove-Item "$folder\Sprites\obj" -Recurse
-Get-ChildItem -Exclude *.png,*.rdc,*.ips,*.gif -Recurse -Path "$folder\Sprites" | Where-Object { !$_.PSisContainer } | ForEach-Object {
-    Remove-Item -Path $_.FullName -Recurse
-}
+Copy-Item "$parentFolder\sprites\Sprites\" -Destination "$folder\Sprites" -Recurse
 
 # Create dupes of Randomizer.CrossPlatform as SMZ3CasRandomizer
 Get-ChildItem -Filter "Randomizer.CrossPlatform*" -Path "$folder" | ForEach-Object {

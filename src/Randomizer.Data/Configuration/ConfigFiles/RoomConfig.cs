@@ -1,20 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using Randomizer.Shared;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using static Randomizer.Data.Configuration.ConfigTypes.SchrodingersString;
 using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar;
+using Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria;
+using Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia;
+using Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair;
+using Randomizer.Data.WorldData.Regions.Zelda;
+using Randomizer.Data.WorldData.Regions.Zelda.DarkWorld;
+using Randomizer.Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain;
+using Randomizer.Data.WorldData.Regions.Zelda.LightWorld;
+using Randomizer.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain;
 
 namespace Randomizer.Data.Configuration.ConfigFiles
 {
     /// <summary>
     /// Config file for additional room information
     /// </summary>
+    [Description("Config file for room names which contain multiple locations in them")]
     public class RoomConfig : List<RoomInfo>, IMergeable<RoomInfo>, IConfigFile<RoomConfig>
     {
         /// <summary>
         /// Constructor
         /// </summary>
-        public RoomConfig() : base()
+        public RoomConfig()
         {
         }
 
@@ -26,210 +35,190 @@ namespace Randomizer.Data.Configuration.ConfigFiles
         {
             return new RoomConfig
             {
-                new RoomInfo()
+                new()
                 {
                     Room = "Blue Brinstar Top",
-                    Type = typeof(Data.WorldData.Regions.SuperMetroid.Brinstar.BlueBrinstar.BlueBrinstarTopRoom),
-                    Name = new("Blue Brinstar Top", "Billy Mays Room"),
+                    Type = typeof(BlueBrinstar.BlueBrinstarTopRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Mockball Hall Hidden Room",
-                    Type = typeof(Data.WorldData.Regions.SuperMetroid.Brinstar.GreenBrinstar.MockballHallHiddenRoom),
-                    Name = new("Mockball Hall Hidden Room"),
+                    Type = typeof(GreenBrinstar.MockballHallHiddenRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Gauntlet Shaft",
-                    Type = typeof(Data.WorldData.Regions.SuperMetroid.Crateria.WestCrateria.GauntletShaftRoom),
-                    Name = new("Gauntlet Shaft"),
+                    Type = typeof(WestCrateria.GauntletShaftRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Left Sand Pit",
-                    Type = typeof(Data.WorldData.Regions.SuperMetroid.Maridia.InnerMaridia.LeftSandPitRoom),
-                    Name = new("Left Sand Pit"),
+                    Type = typeof(InnerMaridia.LeftSandPitRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Watering Hole",
-                    Type = typeof(Data.WorldData.Regions.SuperMetroid.Maridia.InnerMaridia.WateringHoleRoom),
-                    Name = new("Watering Hole"),
+                    Type = typeof(InnerMaridia.WateringHoleRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Bubble Mountain Hidden Hall",
-                    Type = typeof(Data.WorldData.Regions.SuperMetroid.Norfair.UpperNorfairEast.BubbleMountainHiddenHallRoom),
-                    Name = new("Bubble Mountain Hidden Hall"),
+                    Type = typeof(UpperNorfairEast.BubbleMountainHiddenHallRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Castle Tower Dark Maze",
-                    Type = typeof(Data.WorldData.Regions.Zelda.CastleTower.DarkMazeRoom),
-                    Name = new("Castle Tower Dark Maze"),
+                    Type = typeof(CastleTower.DarkMazeRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Castle Tower Foyer",
-                    Type = typeof(Data.WorldData.Regions.Zelda.CastleTower.FoyerRoom),
-                    Name = new("Castle Tower Foyer"),
+                    Type = typeof(CastleTower.FoyerRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Mire Shed",
-                    Type = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DarkWorldMire.MireShedRoom),
-                    Name = new("Mire Shed"),
+                    Type = typeof(DarkWorldMire.MireShedRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Pyramid Fairy",
-                    Type = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DarkWorldNorthEast.PyramidFairyChamber),
-                    Name = new("Pyramid Fairy", "Cursed Fairy"),
+                    Type = typeof(DarkWorldNorthEast.PyramidFairyChamber),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Hype Cave",
-                    Type = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DarkWorldSouth.HypeCaveRoom),
-                    Name = new("Hype Cave"),
+                    Type = typeof(DarkWorldSouth.HypeCaveRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Hookshot Cave",
-                    Type = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainEast.HookshotCaveRoom),
-                    Name = new("Hookshot Cave"),
+                    Type = typeof(DarkWorldDeathMountainEast.HookshotCaveRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Superbunny Cave",
-                    Type = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainEast.SuperbunnyCaveRoom),
-                    Name = new("Superbunny Cave"),
+                    Type = typeof(DarkWorldDeathMountainEast.SuperbunnyCaveRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Spike Cave",
-                    Type = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainWest.SpikeCaveRoom),
-                    Name = new("Spike Cave"),
+                    Type = typeof(DarkWorldDeathMountainWest.SpikeCaveRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Ganon's Tower Big Key Room",
-                    Type = typeof(Data.WorldData.Regions.Zelda.GanonsTower.BigKeyRoomRoom),
-                    Name = new("Ganon's Tower Big Key Room"),
+                    Type = typeof(GanonsTower.BigKeyRoomRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Ganon's Tower Compass Room",
-                    Type = typeof(Data.WorldData.Regions.Zelda.GanonsTower.CompassRoomRoom),
-                    Name = new("Ganon's Tower Compass Room"),
+                    Type = typeof(GanonsTower.CompassRoomRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "DM's Room",
-                    Type = typeof(Data.WorldData.Regions.Zelda.GanonsTower.DMsRoomRoom),
-                    Name = new("DM's Room"),
+                    Type = typeof(GanonsTower.DMsRoomRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Ganon's Tower Hope Room",
-                    Type = typeof(Data.WorldData.Regions.Zelda.GanonsTower.HopeRoomRoom),
-                    Name = new("Ganon's Tower Hope Room", "Ganon's Tower Right Side First Room"),
+                    Type = typeof(GanonsTower.HopeRoomRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Ganon's Tower Mini Helmasaur Room",
-                    Type = typeof(Data.WorldData.Regions.Zelda.GanonsTower.MiniHelmasaurRoomRoom),
-                    Name = new("Ganon's Tower Mini Helmasaur Room"),
+                    Type = typeof(GanonsTower.MiniHelmasaurRoomRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Ganon's Tower Randomizer Room",
-                    Type = typeof(Data.WorldData.Regions.Zelda.GanonsTower.RandomizerRoomRoom),
-                    Name = new("Ganon's Tower Randomizer Room"),
+                    Type = typeof(GanonsTower.RandomizerRoomRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Back of Escape",
-                    Type = typeof(Data.WorldData.Regions.Zelda.HyruleCastle.BackOfEscapeRoom),
-                    Name = new("Back of Escape", "Sewers"),
+                    Type = typeof(HyruleCastle.BackOfEscapeRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Paradox Cave",
-                    Type = typeof(Data.WorldData.Regions.Zelda.LightWorld.DeathMountain.LightWorldDeathMountainEast.ParadoxCaveRoom),
-                    Name = new("Paradox Cave"),
+                    Type = typeof(LightWorldDeathMountainEast.ParadoxCaveRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Sahasrahla's Hut",
-                    Type = typeof(Data.WorldData.Regions.Zelda.LightWorld.LightWorldNorthEast.SahasrahlasHideoutRoom),
-                    Name = new("Sahasrahla's Hut"),
+                    Type = typeof(LightWorldNorthEast.SahasrahlasHideoutRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Waterfall Fairy",
-                    Type = typeof(Data.WorldData.Regions.Zelda.LightWorld.LightWorldNorthEast.WaterfallFairyChamber),
-                    Name = new("Waterfall Fairy"),
+                    Type = typeof(LightWorldNorthEast.WaterfallFairyChamber),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Zora's Domain",
-                    Type = typeof(Data.WorldData.Regions.Zelda.LightWorld.LightWorldNorthEast.ZorasDomainArea),
-                    Name = new("Zora's Domain"),
+                    Type = typeof(LightWorldNorthEast.ZorasDomainArea),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Blind's Hideout",
-                    Type = typeof(Data.WorldData.Regions.Zelda.LightWorld.LightWorldNorthWest.BlindsHideoutRoom),
-                    Name = new("Blind's Hideout"),
+                    Type = typeof(LightWorldNorthWest.BlindsHideoutRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Kakariko Well",
-                    Type = typeof(Data.WorldData.Regions.Zelda.LightWorld.LightWorldNorthWest.KakarikoWellArea),
-                    Name = new("Kakariko Well"),
+                    Type = typeof(LightWorldNorthWest.KakarikoWellArea),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Mini Moldorm Cave",
-                    Type = typeof(Data.WorldData.Regions.Zelda.LightWorld.LightWorldSouth.MiniMoldormCaveRoom),
-                    Name = new("Mini Moldorm Cave"),
+                    Type = typeof(LightWorldSouth.MiniMoldormCaveRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Swamp Ruins",
-                    Type = typeof(Data.WorldData.Regions.Zelda.LightWorld.LightWorldSouth.SwampRuinsRoom),
-                    Name = new("Swamp Ruins"),
+                    Type = typeof(LightWorldSouth.SwampRuinsRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Palace of Darkness Dark Basement",
-                    Type = typeof(Data.WorldData.Regions.Zelda.PalaceOfDarkness.DarkBasementRoom),
-                    Name = new("Palace of Darkness Dark Basement"),
+                    Type = typeof(PalaceOfDarkness.DarkBasementRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Palace of Darkness Dark Maze",
-                    Type = typeof(Data.WorldData.Regions.Zelda.PalaceOfDarkness.DarkMazeRoom),
-                    Name = new("Palace of Darkness Dark Maze"),
+                    Type = typeof(PalaceOfDarkness.DarkMazeRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Swamp Palace Flooded Room",
-                    Type = typeof(Data.WorldData.Regions.Zelda.SwampPalace.FloodedRoomRoom),
-                    Name = new("Swamp Palace Flooded Room"),
+                    Type = typeof(SwampPalace.FloodedRoomRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Eye Bridge",
-                    Type = typeof(Data.WorldData.Regions.Zelda.TurtleRock.LaserBridgeRoom),
-                    Name = new("Eye Bridge", "Laser Bridge"),
+                    Type = typeof(TurtleRock.LaserBridgeRoom),
                 },
-                new RoomInfo()
+                new()
                 {
                     Room = "Turtle Rock Roller Room",
-                    Type = typeof(Data.WorldData.Regions.Zelda.TurtleRock.RollerRoomRoom),
-                    Name = new("Turtle Rock Roller Room"),
+                    Type = typeof(TurtleRock.RollerRoomRoom),
                 },
+            };
+        }
+
+        public static object Example()
+        {
+            return new RoomConfig()
+            {
+                new()
+                {
+                    Room = "Pyramid Fairy",
+                    Name = new("Pyramid Fairy", new Possibility("Cursed Fairy", 0.1)),
+                    Hints = new("Hint for when asking for where an item is, and it's in this room"),
+                    OutOfLogic = new("Tracker line with getting an item out of logic within this room")
+                }
             };
         }
     }

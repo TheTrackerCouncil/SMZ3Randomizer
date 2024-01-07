@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using Randomizer.Shared;
 using static Randomizer.Data.Configuration.ConfigTypes.SchrodingersString;
 using Randomizer.Data.Configuration.ConfigTypes;
-using System.Linq;
 
 namespace Randomizer.Data.Configuration.ConfigFiles
 {
     /// <summary>
     /// Config file for additional location information
     /// </summary>
+    [Description("Config file for location names and various tracker responses when clearing and marking locations")]
     public class LocationConfig : List<LocationInfo>, IMergeable<LocationInfo>, IConfigFile<LocationConfig>
     {
         /// <summary>
@@ -27,1604 +27,1617 @@ namespace Randomizer.Data.Configuration.ConfigFiles
         {
             return new LocationConfig
             {
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 0,
-                    Name = new("Chozo Ruins entrance", "that room opposite the Gauntlet", new("Power Bomb (Crateria surface)", 0)),
+                    LocationId = LocationId.CrateriaPowerBomb
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 1,
-                    Name = new("Flooded Cavern (under water)", "West Ocean (under water)", "that room before Wrecked Ship that's underwater", new("Missile (outside Wrecked Ship bottom)", 0)),
+                    LocationId = LocationId.CrateriaWestOceanFloodedCavern
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 2,
-                    Name = new("Sky Missile", "that spot all the way up in the sky after Wrecked Ship", new("Missile (outside Wrecked Ship top)", 0)),
+                    LocationId = LocationId.CrateriaWestOceanSky
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 3,
-                    Name = new("Morph Ball Maze", new("Missile (outside Wrecked Ship middle)", 0)),
+                    LocationId = LocationId.CrateriaWestOceanMorphBallMaze
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 4,
-                    Name = new("The Moat", "Interior Lake", "that room between Crateria and Wrecked Ship with the item on the water", new("Missile (Crateria moat)", 0)),
+                    LocationId = LocationId.CrateriaMoat
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 5,
-                    Name = new("Gauntlet (Chozo)", "the room in the middle of the Gauntlet", new("Energy Tank, Gauntlet", 0)),
+                    LocationId = LocationId.CrateriaGauntletEnergyTank
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 6,
-                    Name = new("Mother Brain's reliquary", "Pit Room", "the spot underneath the place Mother Brain used to be", new("Missile (Crateria bottom)", 0)),
+                    LocationId = LocationId.CrateriaPit
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 7,
-                    Name = new("Bozo", "Bomb Torizo room", new("Bombs", 0)),
+                    LocationId = LocationId.CrateriaBombTorizo
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 8,
-                    Name = new("Terminator Room", "Fungal Slope", "that room in Crateria with the mushrooms", new("Energy Tank, Terminator", 0)),
+                    LocationId = LocationId.CrateriaTerminator
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 9,
-                    Name = new("Gauntlet Shaft Right", "that spot on the right side after the Gauntlet", new("Missile (Crateria gauntlet right)", 0)),
+                    LocationId = LocationId.CrateriaGauntletShaftRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 10,
-                    Name = new("Gauntlet Shaft Left", "that spot on the left side after the Gauntlet", new("Missile (Crateria gauntlet left)", 0)),
+                    LocationId = LocationId.CrateriaGauntletShaftLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 11,
-                    Name = new("Old Tourian launchpad", new("Super Missile (Crateria)", 0)),
+                    LocationId = LocationId.CrateriaSuper
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 12,
-                    Name = new("Final Missile Bombway", "The Final Missile", "Dental Plan Missiles", "the room in Crateria on the other side of the entrance to Zelda", new("Missile (Crateria middle)", 0)),
+                    LocationId = LocationId.CrateriaFinalMissile
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 13,
-                    Name = new("Hell", "Etecoon shaft", "that room where the animals are wall jumping", new("Power Bomb (green Brinstar bottom)", 0)),
+                    LocationId = LocationId.GreenBrinstarMainShaft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 14,
-                    Name = new("Spore Spawn's item", new("Super Missile (pink Brinstar)", 0)),
+                    LocationId = LocationId.PinkBrinstarSporeSpawnSuper
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 15,
-                    Name = new("Mockball Room (Fail item)", "that spot you get to when failing the mock ball in Green Brinstar", new("Missile (green Brinstar below super missile)", 0)),
+                    LocationId = LocationId.GreenBrinstarEarlySupersBottom
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 16,
-                    Name = new("Mockball Room Attic", "that spot on your way out of the mockball room", new("Super Missile (green Brinstar top)", 0)),
+                    LocationId = LocationId.GreenBrinstarEarlySupersTop
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 17,
-                    Name = new("Mockball Chozo", "the room after you use the Speed Booster in Green Brinstar", "the room after you use the mockball glitch in Green Brinstar", new("Reserve Tank, Brinstar", 0)),
+                    LocationId = LocationId.GreenBrinstarReserveTankChozo
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 18,
-                    Name = new("Mockball Back room hidden item", "the room behind the room after you use the Speed Booster in Green Brinstar", "the room behind the room after you use the mockball glitch in Green Brinstar", new("Missile (green Brinstar behind missile)", 0), "Ron Popeil missiles", "Mockball Hall Hidden Room Hidden Item"),
+                    LocationId = LocationId.GreenBrinstarReserveTankHidden
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 19,
-                    Name = new("Mockball Back room", "that spot in the wall in the room behind the room after you use the Speed Booster in Green Brinstar", "that spot in the wall in the room behind the room after you use the mockball glitch in Green Brinstar", new("Missile (green Brinstar behind reserve tank)", 0), "Mockball Hall Hidden Room Main Item"),
+                    LocationId = LocationId.GreenBrinstarReserveTankVisible
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 21,
-                    Name = new("Pink Shaft (top)", "Big Pink (top)", "that spot in Pink Brinstar on the other side of the grapple ceiling", new("Missile (pink Brinstar top)", 0)),
+                    LocationId = LocationId.PinkBrinstarPinkShaftTop
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 22,
-                    Name = new("Pink Shaft (bottom)", "Big Pink (bottom)", "that spot on the bottom of Pink Brinstar", new("Missile (pink Brinstar bottom)", 0)),
+                    LocationId = LocationId.PinkBrinstarPinkShaftBottom
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 23,
-                    Name = new("Pink Shaft (Chozo)", "the room underneath Pink Brinstar", new("Charge Beam", 0)),
+                    LocationId = LocationId.PinkBrinstarPinkShaftChozo
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 24,
-                    Name = new("Mission: Impossible", "Pink Brinstar Power Bomb Room", new("Power Bomb (pink Brinstar)", 0)),
+                    LocationId = LocationId.PinkBrinstarPowerBomb
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 25,
-                    Name = new("Green Hill Zone", "Jungle slope", new("Missile (green Brinstar pipe)", 0)),
+                    LocationId = LocationId.GreenBrinstarGreenHillZone
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 26,
-                    Name = new("Morph Ball (Corridor No. 1)", "Morphing Ball", "the only place you can get to in Super Metroid without any items"),
+                    LocationId = LocationId.BlueBrinstarMorphBallRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 27,
-                    Name = new("Power Bomb wall (Corridor No. 1)", "that spot behind the Morph Ball", new("Power Bomb (blue Brinstar)", 0)),
+                    LocationId = LocationId.BlueBrinstarMorphBallLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 28,
-                    Name = new("that spot all the way to the right of Blue Brinstar", new("Missile (blue Brinstar middle)", 0)),
+                    LocationId = LocationId.BlueBrinstarFirstMissile
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 29,
-                    Name = new("Blue Brinstar Ceiling", "that spot in the ceiling in Blue Brinstar", new("Energy Tank, Brinstar Ceiling", 0)),
+                    LocationId = LocationId.BlueBrinstarEnergyTankCeiling
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 30,
-                    Name = new("that spot next to the false floor in Green Brinstar", "Highway to Hell", new("Energy Tank, Etecoons", 0)),
+                    LocationId = LocationId.GreenBrinstarEtecoonEnergyTank
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 31,
-                    Name = new("that room after the false floor in Green Brinstar", new("Super Missile (green Brinstar bottom)", 0)),
+                    LocationId = LocationId.GreenBrinstarEtecoonSuper
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 33,
-                    Name = new("Waterway", new("Energy Tank, Waterway", 0)),
+                    LocationId = LocationId.PinkBrinstarWaterwayEnergyTank
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 34,
-                    Name = new("that Chozo room at the bottom of Blue Brinstar", new("Missile (blue Brinstar bottom)", 0)),
+                    LocationId = LocationId.BlueBrinstarEnergyTankRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 35,
-                    Name = new("Hoptank Room", "Wave Beam Glitch room", "the room where everyone does the Wave Beam Glitch", new("Energy Tank, Brinstar Gate", 0)),
+                    LocationId = LocationId.PinkBrinstarHoptank
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 36,
-                    Name = new("Billy Mays Room Main Item", new("Missile (blue Brinstar top)", 0), "Blue Brinstar Top Main Item", "the visible spot in the Billy Mays Room"),
+                    LocationId = LocationId.BlueBrinstarDoubleMissileVisible
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 37,
-                    Name = new("Billy Mays Room Hidden item", "But wait, there's more!", new("Missile (blue Brinstar behind missile)", 0), "Blue Brinstar Top Hidden Item", "the hidden spot in the Billy Mays Room"),
+                    LocationId = LocationId.BlueBrinstarDoubleMissileHidden
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 38,
-                    Name = new("The Chozo room after the dark room with all the spikes", "X-Ray Scope", new("X-Ray", 0)),
+                    LocationId = LocationId.RedBrinstarXRayScope
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 39,
-                    Name = new("Beta Power Bomb Room", "Power Bomb (red Brinstar sidehopper room)", "the room underneath the flower in Red Brinstar", "the room underneath the Samus Eater in Red Brinstar"),
+                    LocationId = LocationId.RedBrinstarBetaPowerBomb
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 40,
-                    Name = new("Alpha Power Bomb Room", "Power Bomb (red Brinstar spike room)", "the Chozo room in Red Brinstar with the jumping enemies you can freeze", "the Chozo room in Red Brinstar with the Boyons"),
+                    LocationId = LocationId.RedBrinstarAlphaPowerBombRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 41,
-                    Name = new("Alpha Power Bomb Room (Behind the wall)", "Missile (red Brinstar spike room)", "the room behind the wall in the Chozo room in Red Brinstar"),
+                    LocationId = LocationId.RedBrinstarAlphaPowerBombLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 42,
-                    Name = new("~ S p A z E r ~", "Spazer", "the Chozo room above the entrance to Maridia in Red Brinstar"),
+                    LocationId = LocationId.RedBrinstarSpazer
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 43,
-                    Name = new("Energy Tank, Kraid", "the room that opens up on your way out after defeating Kraid"),
+                    LocationId = LocationId.KraidsLairEnergyTank
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 44,
-                    Name = new("Warehouse Kihunter Room", "Missile (Kraid)", "the room before the long corridor leading to Kraid with the hidden item in the wall"),
+                    LocationId = LocationId.KraidsLairKihunter
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 48,
-                    Name = new("Kraid's Reliquary", "the room after Kraid", new("Varia Suit", 0)),
+                    LocationId = LocationId.KraidsLairVariaSuit
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 49,
-                    Name = new("Lava Room (Submerged in wall)", "Cathedral", "the room in Upper Norfair with the item in the lava", new("Missile (lava room)", 0)),
+                    LocationId = LocationId.UpperNorfairCathedral
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 50,
-                    Name = new("Ice Beam Room", "Ice Beam", "the room in Upper Norfair after the Speed Booster gates"),
+                    LocationId = LocationId.UpperNorfairIceBeam
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 51,
-                    Name = new("Crumble Shaft", "the room with all the crumbling platforms", new("Missile (below Ice Beam)", 0)),
+                    LocationId = LocationId.UpperNorfairCrumbleShaft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 52,
-                    Name = new("Crocomire's Pit", new("Energy Tank, Crocomire", 0), "the room where you fight Crocomire"),
+                    LocationId = LocationId.UpperNorfairCrocomire
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 53,
-                    Name = new("Hi-Jump Boots Room", "Hi-Jump Boots", "the Chozo room after the room in Upper Norfair where you have to wait a long time for an enemy before you can leave again"),
+                    LocationId = LocationId.UpperNorfairHiJumpBoots
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 54,
-                    Name = new("Crocomire Escape", new("Missile (above Crocomire)", 0), "the room with the item beyond a Super Missile gate you can peak at in Upper Norfair"),
+                    LocationId = LocationId.UpperNorfairCrocomireEscape
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 55,
-                    Name = new("Hi-Jump Lobby (Back)", "the spot on your way out of the room in the Upper Norfair where you have to wait a long time for an enemy before you can leave again", new("Missile (Hi-Jump Boots)", 0)),
+                    LocationId = LocationId.UpperNorfairHiJumpEnergyTankLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 56,
-                    Name = new("Hi-Jump Lobby (Entrance)", "the room in the Upper Norfair where you have to wait a long time for an enemy before you can leave again", new("Energy Tank (Hi-Jump Boots)", 0)),
+                    LocationId = LocationId.UpperNorfairHiJumpEnergyTankRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 57,
-                    Name = new("Post Crocomire Power Bomb Room", "the room directly on the other side of Crocomire's room", new("Power Bomb (Crocomire)", 0)),
+                    LocationId = LocationId.UpperNorfairPostCrocomirePowerBomb
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 58,
-                    Name = new("Cosine Room", "Post Crocomire Missile Room", "the wavy room below Crocomire", new("Missile (below Crocomire)", 0)),
+                    LocationId = LocationId.UpperNorfairPostCrocomireMissile
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 59,
-                    Name = new("Indiana Jones Room", "Pantry", "Post Crocomire Jump Room", "the big empty room after Crocomire that use the Speed Booster to get", new("Missile (Grappling Beam)", 0)),
+                    LocationId = LocationId.UpperNorfairPostCrocomireJump
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 60,
-                    Name = new("Grapple Beam Room", "Grappling Beam", "the Chozo room after the big empty room past Crocomire"),
+                    LocationId = LocationId.UpperNorfairGrappleBeam
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 61,
-                    Name = new("Reserve Tank, Norfair", "Bubble Mountain Hidden Hall Main Item", "the hidden room on the left side of Bubble Mountain"),
+                    LocationId = LocationId.UpperNorfairReserveTankChozo
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 62,
-                    Name = new("Missile (Norfair Reserve Tank)", "Bubble Mountain Hidden Hall Hidden Item", "the hidden spot in the hidden room on the left side of Bubble Mountain"),
+                    LocationId = LocationId.UpperNorfairReserveTankHidden
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 63,
-                    Name = new("Bubble Mountain Missile Room", "the room on the left side of Bubble Mountain", new("Missile (bubble Norfair green door)", 0)),
+                    LocationId = LocationId.UpperNorfairGreenBubblesMissile
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 64,
-                    Name = new("Bubble Mountain", "the spot near the spikes on the bottom of Bubble Mountain", new("Missile (bubble Norfair)", 0)),
+                    LocationId = LocationId.UpperNorfairBubbleMountain
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 65,
-                    Name = new("Speed Booster Hall (Ceiling)", "the spot in the ceiling on the right side of Bubble Mountain", new("Missile (Speed Booster)", 0)),
+                    LocationId = LocationId.UpperNorfairSpeedBoosterHall
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 66,
-                    Name = new("Speed Booster Room", "Speed Booster", "the room to the right of Bubble Mountain", "the Chozo room in Bubble Mountain"),
+                    LocationId = LocationId.UpperNorfairSpeedBooster
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 67,
-                    Name = new("Double Chamber", "Grapple Crossing", new("Missile (Wave Beam)", 0)),
+                    LocationId = LocationId.UpperNorfairDoubleChamber
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 68,
-                    Name = new("Wave Beam Room", "Wave Beam"),
+                    LocationId = LocationId.UpperNorfairWaveBeam
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 70,
-                    Name = new("Gold Torizo (Drop down)", "the spot before you drop down to fight Gold Torizo", new("Missile (Gold Torizo)", 0)),
+                    LocationId = LocationId.LowerNorfairGoldenTorizoVisible
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 71,
-                    Name = new("Golden Torizo (Ceiling)", "the spot where Gold Torizo hides before the fight", new("Super Missile (Gold Torizo)", 0)),
+                    LocationId = LocationId.LowerNorfairGoldenTorizoHidden
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 73,
-                    Name = new("Mickey Mouse Clubhouse", "Mickey Mouse room", "the room that looks like Mickey Mouse", new("Missile (Mickey Mouse room)", 0)),
+                    LocationId = LocationId.LowerNorfairMickeyMouse
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 74,
-                    Name = new("Spring Ball Maze Room", "the room right before the Spring Ball Maze", new("Missile (lower Norfair above fire flea room)", 0)),
+                    LocationId = LocationId.LowerNorfairSpringBallMaze
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 75,
-                    Name = new("Escape Power Bomb Room", "the room in lower Norfair that you hope doesn't have anything because you need to go through a morph ball maze", new("Power Bomb (lower Norfair above fire flea room)", 0)),
+                    LocationId = LocationId.LowerNorfairEscapePowerBomb
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 76,
-                    Name = new("Power Bomb of Shame", "the room to the left before the spiky elevator to Ridley", new("Power Bomb (Power Bombs of shame)", 0)),
+                    LocationId = LocationId.LowerNorfairWasteland
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 77,
-                    Name = new("Three Musketeer's Room", "FrankerZ Missiles", new("Missile (lower Norfair near Wave Beam)", 0)),
+                    LocationId = LocationId.LowerNorfairThreeMusketeers
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 78,
-                    Name = new("Ridley's Reliquary", "the room after Ridley", new("Energy Tank, Ridley", 0)),
-                    Hints = new("I hear Ridley is about to open one of Kraid's Christmas presents again."),
+                    LocationId = LocationId.LowerNorfairRidleyTank
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 79,
-                    Name = new("Screw Attack", "the Chozo below the portal to Misery Mire"),
+                    LocationId = LocationId.LowerNorfairScrewAttack
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 80,
-                    Name = new("Fireflea Room", "the dark room in lower Norfair with the fire flies", new("Energy Tank, Firefleas", 0)),
+                    LocationId = LocationId.LowerNorfairFireflea
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 128,
-                    Name = new("Main Shaft (Side room)", "the room behind the bombeable wall on the left side of Wrecked Ship", new("Missile (Wrecked Ship middle)", 0)),
+                    LocationId = LocationId.WreckedShipMainShaft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 129,
-                    Name = new("Post Chozo Concert (Speed Booster Item)", "Bowling Alley (Speed Booster Item)", "the spot that requires the Speed Booster in Wrecked Ship", new("Reserve Tank, Wrecked Ship", 0), new("Wrecked Ship, Reserve Tank", 0)),
+                    LocationId = LocationId.WreckedShipBowlingAlleyTop
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 130,
-                    Name = new("Post Chozo Concert (Breakable Chozo)", "the breakable Chozo in Wrecked Ship", new("Missile (Gravity Suit)", 0)),
+                    LocationId = LocationId.WreckedShipBowlingAlleyBottom
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 131,
-                    Name = new("Attic (Assembly Line)", "the room with the conveyors and robots", new("Missile (Wrecked Ship top)", 0)),
+                    LocationId = LocationId.WreckedShipAssemblyLine
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 132,
-                    Name = new("Wrecked Pool", "Ruined Pool", "Wrecked Ship Bullshit Room", "that room in Wrecked Ship with all the water where you always reset", new("Energy Tank, Wrecked Ship", 0)),
+                    LocationId = LocationId.WreckedShipEnergyTank
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 133,
-                    Name = new("Left Super Missile Chamber", "the room that opens up on the left side after defeating Phantoon", new("Super Missile (Wrecked Ship left)", 0)),
+                    LocationId = LocationId.WreckedShipWestSuper
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 134,
-                    Name = new("Right Super Missile Chamber", "the room that opens up on the right side after defeating Phantoon", new("Right Super, Wrecked Ship", 0)),
+                    LocationId = LocationId.WreckedShipEastSuper
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 135,
-                    Name = new("Post Chozo Concert (Gravity Suit Chamber)", "the room after the Chozo concert", new("Gravity Suit", 0)),
+                    LocationId = LocationId.WreckedShipGravitySuit
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 136,
-                    Name = new("Main Street (Ceiling Shinespark)", "Main Street Missiles", "the spot in the ceiling in Maridia that requires Shinespark", new("Missile (green Maridia shinespark)", 0)),
+                    LocationId = LocationId.OuterMaridiaMainStreetBottom
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 137,
-                    Name = new("Main Street (Crab Supers)", "the tiny room where you watch crabs walking into the wall", new("Super Missile (green Maridia)", 0)),
+                    LocationId = LocationId.OuterMaridiaMainStreetTop
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 138,
-                    Name = new("Mama Turtle Room", "the room with the turtles", new("Energy Tank, Mama turtle", 0)),
+                    LocationId = LocationId.OuterMaridiaMamaTurtleVisible
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 139,
-                    Name = new("Mama Turtle Room (Wall item)", "the spot in the wall in the turtle room", new("Missile (green Maridia tatori)", 0)),
+                    LocationId = LocationId.OuterMaridiaMamaTurtleHidden
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 140,
-                    Name = new("Watering Hole Left", "the left side of the pit with two items in the northeast of Maridia", new("Super Missile (yellow Maridia)", 0)),
+                    LocationId = LocationId.InnerMaridiaWateringHoleLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 141,
-                    Name = new("Watering Hole Right", "the right side of the pit with two items in the northeast of Maridia", new("Missile (yellow Maridia super missile)", 0)),
+                    LocationId = LocationId.InnerMaridiaWateringHoleRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 142,
-                    Name = new("Pseudo Plasma Spark Room", "the room leading up to the pit with two items in the northeast of Maridia", new("Missile (yellow Maridia false wall)", 0)),
+                    LocationId = LocationId.InnerMaridiaPseudoPlasmaSpark
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 143,
-                    Name = new("Plasma Beam", "Plasma Chamber", "Plasma Beam room", "the room in Maridia near the forgotten highway to Wrecked Ship"),
+                    LocationId = LocationId.InnerMaridiaPlasma
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 144,
-                    Name = new("Left Sand Pit Left", "the left side of the left sand pit", new("Missile (left Maridia sand pit room)", 0)),
+                    LocationId = LocationId.InnerMaridiaWestSandHoleLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 145,
-                    Name = new("Left Sand Pit Right", "the right side of the left sand pit", new("Reserve Tank, Maridia", 0)),
+                    LocationId = LocationId.InnerMaridiaWestSandHoleRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 146,
-                    Name = new("Right Sand Pit Left", "the left side of the right sand pit", new("Missile (right Maridia sand pit room)", 0)),
+                    LocationId = LocationId.InnerMaridiaEastSandHoleLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 147,
-                    Name = new("Right Sand Pit Right", "the right side of the right sand pit", new("Power Bomb (right Maridia sand pit room)", 0)),
+                    LocationId = LocationId.InnerMaridiaEastSandHoleRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 148,
-                    Name = new("Aqueduct (Left item)", new("Missile (pink Maridia)", 0)),
+                    LocationId = LocationId.InnerMaridiaAqueductLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 149,
-                    Name = new("Aqueduct (Right item)", new("Super Missile (pink Maridia)", 0)),
+                    LocationId = LocationId.InnerMaridiaAqueductRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 150,
-                    Name = new("Shaktool", "Shak's Stash", "Shaktool's item", "the room that everyone's favorite diggy boy helps you get to", "the room after everyone's favorite diggy boy", new("Spring Ball", 0)),
+                    LocationId = LocationId.InnerMaridiaSpringBall
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 151,
-                    Name = new("The Precious Room", "Pre-Draygon Room", "the wall in the room before Draygon", new("Missile (Draygon)", 0)),
+                    LocationId = LocationId.InnerMaridiaPreciousRoom
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 152,
-                    Name = new("Sandy Path", "the room after Botwoon", new("Energy Tank, Botwoon", 0)),
+                    LocationId = LocationId.InnerMaridiaBotwoon
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 154,
-                    Name = new("Draygon's Reliquary", "the room after Draygon", new("Space Jump", 0)),
+                    LocationId = LocationId.InnerMaridiaSpaceJump
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 256,
-                    Name = new("Ether Tablet"),
+                    LocationId = LocationId.EtherTablet
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 257,
-                    Name = new("Spectacle Rock"),
+                    LocationId = LocationId.SpectacleRock
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 258,
-                    Name = new("Spectacle Rock Cave"),
+                    LocationId = LocationId.SpectacleRockCave
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 259,
-                    Name = new("Old Man"),
+                    LocationId = LocationId.OldMan
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 260,
-                    Name = new("Floating Island"),
+                    LocationId = LocationId.FloatingIsland
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 261,
-                    Name = new("Spiral Cave"),
+                    LocationId = LocationId.SpiralCave
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 262,
-                    Name = new("Paradox Cave Upper (Left)"),
+                    LocationId = LocationId.ParadoxCaveUpperLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 263,
-                    Name = new("Paradox Cave Upper (Right)"),
+                    LocationId = LocationId.ParadoxCaveUpperRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 264,
-                    Name = new("Paradox Cave Lower (Far Left)"),
+                    LocationId = LocationId.ParadoxCaveLowerFarLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 265,
-                    Name = new("Paradox Cave Lower (Left)"),
+                    LocationId = LocationId.ParadoxCaveLowerLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 266,
-                    Name = new("Paradox Cave Lower (Middle)"),
+                    LocationId = LocationId.ParadoxCaveLowerMiddle
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 267,
-                    Name = new("Paradox Cave Lower (Right)"),
+                    LocationId = LocationId.ParadoxCaveLowerRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 268,
-                    Name = new("Paradox Cave Lower (Far Right)"),
+                    LocationId = LocationId.ParadoxCaveLowerFarRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 269,
-                    Name = new("Mimic Cave"),
+                    LocationId = LocationId.MimicCave
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 270,
-                    Name = new("Master Sword Pedestal", "Pedestal", "Ped"),
-                    Hints = new("I hope you don't need it."),
+                    LocationId = LocationId.MasterSwordPedestal
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 271,
-                    Name = new("Mushroom"),
+                    LocationId = LocationId.Mushroom
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 272,
-                    Name = new("Lost Woods Hideout"),
+                    LocationId = LocationId.LostWoodsHideout
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 273,
-                    Name = new("Lumberjack Tree", "Lumberjack Ledge"),
+                    LocationId = LocationId.LumberjackTree
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 274,
-                    Name = new("Bonk Rocks", "Pegasus Rocks"),
+                    LocationId = LocationId.PegasusRocks
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 275,
-                    Name = new("Graveyard Ledge"),
+                    LocationId = LocationId.GraveyardLedge
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 276,
-                    Name = new("King's Tomb"),
+                    LocationId = LocationId.KingsTomb
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 277,
-                    Name = new("Kakariko Well Back cave", "Kakariko Well Top"),
+                    LocationId = LocationId.KakarikoWellTop
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 278,
-                    Name = new("Kakariko Well Left"),
+                    LocationId = LocationId.KakarikoWellLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 279,
-                    Name = new("Kakariko Well Middle"),
+                    LocationId = LocationId.KakarikoWellMiddle
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 280,
-                    Name = new("Kakariko Well Right"),
+                    LocationId = LocationId.KakarikoWellRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 281,
-                    Name = new("Kakariko Well Bottom"),
+                    LocationId = LocationId.KakarikoWellBottom
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 282,
-                    Name = new("Blind's Hideout Back Room", "Blind's Hideout Top"),
+                    LocationId = LocationId.BlindsHideoutTop
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 283,
-                    Name = new("Blind's Hideout Far Left"),
+                    LocationId = LocationId.BlindsHideoutFarLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 284,
-                    Name = new("Blind's Hideout Left"),
+                    LocationId = LocationId.BlindsHideoutLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 285,
-                    Name = new("Blind's Hideout Right"),
+                    LocationId = LocationId.BlindsHideoutRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 286,
-                    Name = new("Blind's Hideout Far Right"),
+                    LocationId = LocationId.BlindsHideoutFarRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 287,
-                    Name = new("Bottle Merchant"),
-                    Hints = new("You know it's a scam, right?"),
+                    LocationId = LocationId.BottleMerchant
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 289,
-                    Name = new("Sick Kid", "Bug Catching Kid's House"),
+                    LocationId = LocationId.SickKid
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 290,
-                    Name = new("Kakariko Tavern", "Inn back room"),
+                    LocationId = LocationId.KakarikoTavern
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 291,
-                    Name = new("Magic Bat"),
+                    LocationId = LocationId.MagicBat
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 292,
-                    Name = new("Zora", "King Zora"),
-                    Hints = new("You know it's a scam, right?"),
+                    LocationId = LocationId.KingZora
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 293,
-                    Name = new("Zora's Ledge"),
+                    LocationId = LocationId.ZorasLedge
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 295,
-                    Name = new("Waterfall Fairy Right"),
+                    LocationId = LocationId.WaterfallFairyRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 296,
-                    Name = new("Potion Shop", "Mushroom Item"),
+                    LocationId = LocationId.PotionShop
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 297,
-                    Name = new("Sahasrahla's Hut Left"),
+                    LocationId = LocationId.SahasrahlasHutLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 298,
-                    Name = new("Sahasrahla's Hut Middle"),
+                    LocationId = LocationId.SahasrahlasHutMiddle
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 299,
-                    Name = new("Sahasrahla's Hut Right"),
+                    LocationId = LocationId.SahasrahlasHutRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 300,
-                    Name = new("Sahasrahla"),
+                    LocationId = LocationId.Sahasrahla
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 301,
-                    Name = new("Maze Race", "Racing Game"),
+                    LocationId = LocationId.MazeRace
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 307,
-                    Name = new("Mini Moldorm Cave Far Left"),
+                    LocationId = LocationId.MiniMoldormCaveFarLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 308,
-                    Name = new("Mini Moldorm Cave Left"),
+                    LocationId = LocationId.MiniMoldormCaveLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 309,
-                    Name = new("Mini Moldorm Cave NPC"),
+                    LocationId = LocationId.MiniMoldormCaveNpc
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 310,
-                    Name = new("Mini Moldorm Cave Right"),
+                    LocationId = LocationId.MiniMoldormCaveRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 314,
-                    Name = new("Bombos Tablet"),
+                    LocationId = LocationId.BombosTablet
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 315,
-                    Name = new("Floodgate Chest"),
+                    LocationId = LocationId.FloodgateChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 316,
-                    Name = new("Sunken Treasure"),
+                    LocationId = LocationId.SunkenTreasure
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 317,
-                    Name = new("Lake Hylia Island"),
+                    LocationId = LocationId.LakeHyliaIsland
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 318,
-                    Name = new("Under the bridge", "the guy under the bridge", "Hobo"),
+                    LocationId = LocationId.Hobo
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 319,
-                    Name = new("Ice Cave", "Ice Rod Cave"),
+                    LocationId = LocationId.IceRodCave
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 320,
-                    Name = new("Spike Cave"),
+                    LocationId = LocationId.SpikeCave
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 321,
-                    Name = new("Hookshot Cave (Top Right)"),
+                    LocationId = LocationId.HookshotCaveTopRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 322,
-                    Name = new("Hookshot Cave (Top Left)"),
+                    LocationId = LocationId.HookshotCaveTopLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 323,
-                    Name = new("Hookshot Cave (Bottom Left)"),
+                    LocationId = LocationId.HookshotCaveBottomLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 324,
-                    Name = new("Hookshot Cave (Bottom Right)"),
+                    LocationId = LocationId.HookshotCaveBottomRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 325,
-                    Name = new("Superbunny Cave (Top)"),
+                    LocationId = LocationId.SuperbunnyCaveTop
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 326,
-                    Name = new("Superbunny Cave (Bottom)"),
+                    LocationId = LocationId.SuperbunnyCaveBottom
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 327,
-                    Name = new("Bumper Cave Ledge", "Bumper Cave", "Bumper Ledge"),
+                    LocationId = LocationId.BumperCave
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 328,
-                    Name = new("Chest Game"),
+                    LocationId = LocationId.ChestGame
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 329,
-                    Name = new("C-Shaped House"),
+                    LocationId = LocationId.CShapedHouse
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 330,
-                    Name = new("Brewery"),
+                    LocationId = LocationId.Brewery
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 331,
-                    Name = new("Peg World", "Hammer Pegs"),
+                    LocationId = LocationId.HammerPegs
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 332,
-                    Name = new("Blacksmith"),
+                    LocationId = LocationId.Blacksmith
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 333,
-                    Name = new("Purple Chest turn-in", "Purple Chest"),
+                    LocationId = LocationId.PurpleChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 334,
-                    Name = new("Catfish", "Scatfish", "Lake of Ill Omen"),
-                    Hints = new("You know it's a scam, right?"),
+                    LocationId = LocationId.Catfish
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 335,
-                    Name = new("Pyramid of Power", "Pyramid", "Pyramid Ledge"),
+                    LocationId = LocationId.Pyramid
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 336,
-                    Name = new("Cursed Fairy Left", "Pyramid Fairy Left"),
+                    LocationId = LocationId.PyramidFairyLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 337,
-                    Name = new("Cursed Fairy Right", "Pyramid Fairy Right"),
+                    LocationId = LocationId.PyramidFairyRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 338,
-                    Name = new("Digging Game"),
+                    LocationId = LocationId.DiggingGame
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 339,
-                    Name = new("Haunted Grove", "Stumpy"),
+                    LocationId = LocationId.Stumpy
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 340,
-                    Name = new("Hype Cave Top"),
+                    LocationId = LocationId.HypeCaveTop
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 341,
-                    Name = new("Hype Cave Middle Right"),
+                    LocationId = LocationId.HypeCaveMiddleRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 342,
-                    Name = new("Hype Cave Middle Left"),
+                    LocationId = LocationId.HypeCaveMiddleLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 343,
-                    Name = new("Hype Cave Bottom"),
+                    LocationId = LocationId.HypeCaveBottom
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 344,
-                    Name = new("Hype Cave NPC"),
+                    LocationId = LocationId.HypeCaveNpc
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 345,
-                    Name = new("Mire Shed (Left)"),
+                    LocationId = LocationId.MireShedLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 346,
-                    Name = new("Mire Shed (Right)"),
+                    LocationId = LocationId.MireShedRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 347,
-                    Name = new("Sanctuary"),
+                    LocationId = LocationId.Sanctuary
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 348,
-                    Name = new("Secret Room (Left)", "Back of Escape (Left)", new("Sewers Secret Room (Left)", 0)),
+                    LocationId = LocationId.SewersSecretRoomLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 349,
-                    Name = new("Secret Room (Middle)", "Back of Escape (Middle)", new("Sewers Secret Room (Middle)", 0)),
+                    LocationId = LocationId.SewersSecretRoomMiddle
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 350,
-                    Name = new("Secret Room (Right)", "Back of Escape (Right)", new("Sewers Secret Room (Right)", 0)),
+                    LocationId = LocationId.SewersSecretRoomRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 351,
-                    Name = new("Dark Cross"),
+                    LocationId = LocationId.SewersDarkCross
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 352,
-                    Name = new("Hyrule Castle Map Chest"),
+                    LocationId = LocationId.HyruleCastleMapChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 353,
-                    Name = new("Boomerang Chest", new("Hyrule Castle Boomerang Chest", 0)),
+                    LocationId = LocationId.HyruleCastleBoomerangChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 354,
-                    Name = new("Zelda's Cell", new("Hyrule Castle Zelda's Cell", 0)),
+                    LocationId = LocationId.HyruleCastleZeldasCell
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 355,
-                    Name = new("Link's Uncle"),
+                    LocationId = LocationId.LinksUncle
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 356,
-                    Name = new("Secret Passage", new("Hyrule Castle Secret Passage", 0)),
+                    LocationId = LocationId.SecretPassage
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 357,
-                    Name = new("Castle Tower Foyer"),
+                    LocationId = LocationId.CastleTowerFoyer
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 358,
-                    Name = new("Castle Tower (Dark Maze)"),
+                    LocationId = LocationId.CastleTowerDarkMaze
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 359,
-                    Name = new("Cannonball Chest", new("Eastern Palace Cannonball Chest", 0)),
+                    LocationId = LocationId.EasternPalaceCannonballChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 360,
-                    Name = new("Eastern Palace Map Chest"),
+                    LocationId = LocationId.EasternPalaceMapChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 361,
-                    Name = new("Eastern Palace Compass Chest"),
+                    LocationId = LocationId.EasternPalaceCompassChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 362,
-                    Name = new("Eastern Palace Big Chest"),
+                    LocationId = LocationId.EasternPalaceBigChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 363,
-                    Name = new("Eastern Palace Big Key Chest"),
+                    LocationId = LocationId.EasternPalaceBigKeyChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 364,
-                    Name = new("Armos Knights"),
-                    Hints = new("One of the dungeon bosses has it."),
+                    LocationId = LocationId.EasternPalaceArmosKnights
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 365,
-                    Name = new("Desert Palace Big Chest", "Dessert Palace Big Chest"),
+                    LocationId = LocationId.DesertPalaceBigChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 366,
-                    Name = new("Torch", new("Desert Palace Torch", 0), new("Dessert Palace Torch", 0)),
+                    LocationId = LocationId.DesertPalaceTorch
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 367,
-                    Name = new("Desert Palace Map Chest", "Dessert Palace Map Chest"),
+                    LocationId = LocationId.DesertPalaceMapChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 368,
-                    Name = new("Desert Palace Big Key Chest", "Dessert Palace Big Key Chest"),
+                    LocationId = LocationId.DesertPalaceBigKeyChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 369,
-                    Name = new("Desert Palace Compass Chest", "Dessert Palace Compass Chest"),
+                    LocationId = LocationId.DesertPalaceCompassChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 370,
-                    Name = new("Lanmolas"),
-                    Hints = new("One of the dungeon bosses has it."),
+                    LocationId = LocationId.DesertPalaceLanmolas
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 371,
-                    Name = new("Basement Cage", new("Tower of Hera Basement Cage", 0)),
+                    LocationId = LocationId.TowerOfHeraBasementCage
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 372,
-                    Name = new("Tower of Hera Map Chest"),
+                    LocationId = LocationId.TowerOfHeraMapChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 373,
-                    Name = new("Tower of Hera Big Key Chest"),
+                    LocationId = LocationId.TowerOfHeraBigKeyChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 374,
-                    Name = new("Tower of Hera Compass Chest"),
+                    LocationId = LocationId.TowerOfHeraCompassChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 375,
-                    Name = new("Tower of Hera Big Chest"),
+                    LocationId = LocationId.TowerOfHeraBigChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 376,
-                    Name = new("Moldorm"),
-                    Hints = new("One of the dungeon bosses has it."),
+                    LocationId = LocationId.TowerOfHeraMoldorm
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 377,
-                    Name = new("Shooter Room", new("Palace of Darkness Shooter Room", 0)),
+                    LocationId = LocationId.PalaceOfDarknessShooterRoom
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 378,
-                    Name = new("Palace of Darkness Big Key Chest"),
+                    LocationId = LocationId.PalaceOfDarknessBigKeyChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 379,
-                    Name = new("Stalfos Basement", new("Palace of Darkness Stalfos Basement", 0)),
+                    LocationId = LocationId.PalaceOfDarknessStalfosBasement
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 380,
-                    Name = new("The Arena (Bridge)", new("Palace of Darkness The Arena (Bridge)", 0)),
+                    LocationId = LocationId.PalaceOfDarknessTheArenaBridge
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 381,
-                    Name = new("The Arena (Ledge)", new("Palace of Darkness The Arena (Ledge)", 0)),
+                    LocationId = LocationId.PalaceOfDarknessTheArenaLedge
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 382,
-                    Name = new("Palace of Darkness Map Chest"),
+                    LocationId = LocationId.PalaceOfDarknessMapChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 383,
-                    Name = new("Palace of Darkness Compass Chest"),
+                    LocationId = LocationId.PalaceOfDarknessCompassChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 384,
-                    Name = new("Harmless Hellway", new("Palace of Darkness Harmless Hellway", 0)),
+                    LocationId = LocationId.PalaceOfDarknessHarmlessHellway
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 385,
-                    Name = new("Dark Basement Left"),
+                    LocationId = LocationId.PalaceOfDarknessDarkBasementLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 386,
-                    Name = new("Dark Basement Right"),
+                    LocationId = LocationId.PalaceOfDarknessDarkBasementRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 387,
-                    Name = new("Dark Maze Top"),
+                    LocationId = LocationId.PalaceOfDarknessDarkMazeTop
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 388,
-                    Name = new("Dark Maze Bottom"),
+                    LocationId = LocationId.PalaceOfDarknessDarkMazeBottom
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 389,
-                    Name = new("Palace of Darkness Big Chest"),
+                    LocationId = LocationId.PalaceOfDarknessBigChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 390,
-                    Name = new("Helmasaur King"),
-                    Hints = new("One of the dungeon bosses has it."),
+                    LocationId = LocationId.PalaceOfDarknessHelmasaurKing
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 391,
-                    Name = new("Swamp Palace Entrance"),
+                    LocationId = LocationId.SwampPalaceEntrance
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 392,
-                    Name = new("Swamp Palace Map Chest"),
+                    LocationId = LocationId.SwampPalaceMapChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 393,
-                    Name = new("Swamp Palace Big Chest"),
+                    LocationId = LocationId.SwampPalaceBigChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 394,
-                    Name = new("Swamp Palace Compass Chest"),
+                    LocationId = LocationId.SwampPalaceCompassChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 395,
-                    Name = new("Swamp Palace West Chest"),
+                    LocationId = LocationId.SwampPalaceWestChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 396,
-                    Name = new("Swamp Palace Big Key Chest"),
+                    LocationId = LocationId.SwampPalaceBigKeyChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 397,
-                    Name = new("Flooded Room Left"),
+                    LocationId = LocationId.SwampPalaceFloodedRoomLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 398,
-                    Name = new("Flooded Room Right"),
+                    LocationId = LocationId.SwampPalaceFloodedRoomRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 399,
-                    Name = new("Waterfall Room", new("Swamp Palace Waterfall Room", 0)),
+                    LocationId = LocationId.SwampPalaceWaterfallRoom
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 400,
-                    Name = new("Arrghus"),
-                    Hints = new("One of the dungeon bosses has it."),
+                    LocationId = LocationId.SwampPalaceArrghus
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 401,
-                    Name = new("Pot Prison", new("Skull Woods Pot Prison", 0), new("Skill Woods Pot Prison", 0)),
+                    LocationId = LocationId.SkullWoodsPotPrison
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 402,
-                    Name = new("Skull Woods Compass Chest", "Skill Woods Compass Chest"),
+                    LocationId = LocationId.SkullWoodsCompassChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 403,
-                    Name = new("Skull Woods Big Chest", "Skill Woods Big Chest"),
+                    LocationId = LocationId.SkullWoodsBigChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 404,
-                    Name = new("Skull Woods Map Chest", "Skill Woods Map Chest"),
+                    LocationId = LocationId.SkullWoodsMapChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 405,
-                    Name = new("Pinball Room", "the room with all the bumpers and gib-does", new("Skull Woods Pinball Room", 0), new("Skill Woods Pinball Room", 0)),
+                    LocationId = LocationId.SkullWoodsPinballRoom
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 406,
-                    Name = new("Skull Woods Big Key Chest", "Skill Woods Big Key Chest"),
+                    LocationId = LocationId.SkullWoodsBigKeyChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 407,
-                    Name = new("Bridge Room", new("Skull Woods Bridge Room", 0), new("Skill Woods Bridge Room", 0)),
+                    LocationId = LocationId.SkullWoodsBridgeRoom
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 408,
-                    Name = new("Mothula"),
-                    Hints = new("One of the dungeon bosses has it."),
+                    LocationId = LocationId.SkullWoodsMothula
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 409,
-                    Name = new("Thieves' Town Map Chest"),
+                    LocationId = LocationId.ThievesTownMapChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 410,
-                    Name = new("Ambush Chest", new("Thieves' Town Ambush Chest", 0)),
+                    LocationId = LocationId.ThievesTownAmbushChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 411,
-                    Name = new("Thieves' Town Compass Chest"),
+                    LocationId = LocationId.ThievesTownCompassChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 412,
-                    Name = new("Thieves' Town Big Key Chest"),
+                    LocationId = LocationId.ThievesTownBigKeyChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 413,
-                    Name = new("Attic", new("Thieves' Town Attic", 0)),
+                    LocationId = LocationId.ThievesTownAttic
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 414,
-                    Name = new("Blind's Cell", new("Thieves' Town Blind's Cell", 0)),
+                    LocationId = LocationId.ThievesTownBlindsCell
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 415,
-                    Name = new("Thieves' Town Big Chest"),
+                    LocationId = LocationId.ThievesTownBigChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 416,
-                    Name = new("Blind"),
-                    Hints = new("One of the dungeon bosses has it.", "It will explain everything."),
+                    LocationId = LocationId.ThievesTownBlind
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 417,
-                    Name = new("Ice Palace Compass Chest"),
+                    LocationId = LocationId.IcePalaceCompassChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 418,
-                    Name = new("Spike Room", new("Ice Palace Spike Room", 0)),
+                    LocationId = LocationId.IcePalaceSpikeRoom
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 419,
-                    Name = new("Ice Palace Map Chest"),
+                    LocationId = LocationId.IcePalaceMapChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 420,
-                    Name = new("Ice Palace Big Key Chest"),
+                    LocationId = LocationId.IcePalaceBigKeyChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 421,
-                    Name = new("Iced T Room", new("Ice Palace Iced T Room", 0)),
+                    LocationId = LocationId.IcePalaceIcedTRoom
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 422,
-                    Name = new("Freezor Chest", new("Ice Palace Freezor Chest", 0)),
+                    LocationId = LocationId.IcePalaceFreezorChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 423,
-                    Name = new("Ice Palace Big Chest"),
+                    LocationId = LocationId.IcePalaceBigChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 424,
-                    Name = new("Kholdstare"),
-                    Hints = new("One of the dungeon bosses has it."),
+                    LocationId = LocationId.IcePalaceKholdstare
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 425,
-                    Name = new("Misery Mire Main Lobby"),
+                    LocationId = LocationId.MiseryMireMainLobby
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 426,
-                    Name = new("Misery Mire Map Chest"),
+                    LocationId = LocationId.MiseryMireMapChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 427,
-                    Name = new("Bridge Chest", new("Misery Mire Bridge Chest", 0)),
+                    LocationId = LocationId.MiseryMireBridgeChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 428,
-                    Name = new("Spike Chest", new("Misery Mire Spike Chest", 0)),
+                    LocationId = LocationId.MiseryMireSpikeChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 429,
-                    Name = new("Misery Mire Compass Chest"),
+                    LocationId = LocationId.MiseryMireCompassChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 430,
-                    Name = new("Misery Mire Big Key Chest", "Misery Mire Cutscene Chest"),
+                    LocationId = LocationId.MiseryMireBigKeyChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 431,
-                    Name = new("Misery Mire Big Chest"),
+                    LocationId = LocationId.MiseryMireBigChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 432,
-                    Name = new("Vitreous"),
-                    Hints = new("One of the dungeon bosses has it."),
+                    LocationId = LocationId.MiseryMireVitreous
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 433,
-                    Name = new("Turtle Rock Compass Chest"),
+                    LocationId = LocationId.TurtleRockCompassChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 434,
-                    Name = new("Roller Room Left"),
+                    LocationId = LocationId.TurtleRockRollerRoomLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 435,
-                    Name = new("Roller Room Right"),
+                    LocationId = LocationId.TurtleRockRollerRoomRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 436,
-                    Name = new("Chain Chomps", new("Turtle Rock Chain Chomps", 0)),
+                    LocationId = LocationId.TurtleRockChainChomps
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 437,
-                    Name = new("Turtle Rock Big Key Chest"),
+                    LocationId = LocationId.TurtleRockBigKeyChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 438,
-                    Name = new("Turtle Rock Big Chest"),
+                    LocationId = LocationId.TurtleRockBigChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 439,
-                    Name = new("Crystaroller Room", new("Turtle Rock Crystaroller Room", 0)),
+                    LocationId = LocationId.TurtleRockCrystarollerRoom
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 440,
-                    Name = new("Laser Bridge Top Right", "Eye Bridge Top Right"),
+                    LocationId = LocationId.TurtleRockEyeBridgeTopRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 441,
-                    Name = new("Laser Bridge Top Left", "Eye Bridge Top Left"),
+                    LocationId = LocationId.TurtleRockEyeBridgeTopLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 442,
-                    Name = new("Laser Bridge Bottom Right", "Eye Bridge Bottom Right"),
+                    LocationId = LocationId.TurtleRockEyeBridgeBottomRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 443,
-                    Name = new("Laser Bridge Bottom Left", "Eye Bridge Bottom Left"),
+                    LocationId = LocationId.TurtleRockEyeBridgeBottomLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 444,
-                    Name = new("Trinexx"),
-                    Hints = new("One of the dungeon bosses has it."),
+                    LocationId = LocationId.TurtleRockTrinexx
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 445,
-                    Name = new("Bob's Torch"),
+                    LocationId = LocationId.GanonsTowerBobsTorch
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 446,
-                    Name = new("DMs Room Top Left"),
+                    LocationId = LocationId.GanonsTowerDMsRoomTopLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 447,
-                    Name = new("DMs Room Top Right"),
+                    LocationId = LocationId.GanonsTowerDMsRoomTopRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 448,
-                    Name = new("DMs Room Bottom Left"),
+                    LocationId = LocationId.GanonsTowerDMsRoomBottomLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 449,
-                    Name = new("DMs Room Bottom Right"),
+                    LocationId = LocationId.GanonsTowerDMsRoomBottomRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 450,
-                    Name = new("Ganon's Tower Map Chest"),
+                    LocationId = LocationId.GanonsTowerMapChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 451,
-                    Name = new("Firesnake Room"),
+                    LocationId = LocationId.GanonsTowerFiresnakeRoom
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 452,
-                    Name = new("Randomizer Room Top Left"),
+                    LocationId = LocationId.GanonsTowerRandomizerRoomTopLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 453,
-                    Name = new("Randomizer Room Top Right"),
+                    LocationId = LocationId.GanonsTowerRandomizerRoomTopRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 454,
-                    Name = new("Randomizer Room Bottom Left"),
+                    LocationId = LocationId.GanonsTowerRandomizerRoomBottomLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 455,
-                    Name = new("Randomizer Room Bottom Right"),
+                    LocationId = LocationId.GanonsTowerRandomizerRoomBottomRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 456,
-                    Name = new("Right Side First Room Left", "Hope Room Left"),
+                    LocationId = LocationId.GanonsTowerHopeRoomLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 457,
-                    Name = new("Right Side First Room Right", "Hope Room Right"),
+                    LocationId = LocationId.GanonsTowerHopeRoomRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 458,
-                    Name = new("Tile Room", new("Ganon's Tower Tile Room", 0)),
+                    LocationId = LocationId.GanonsTowerTileRoom
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 459,
-                    Name = new("Compass Room Top Left"),
+                    LocationId = LocationId.GanonsTowerCompassRoomTopLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 460,
-                    Name = new("Compass Room Top Right"),
+                    LocationId = LocationId.GanonsTowerCompassRoomTopRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 461,
-                    Name = new("Compass Room Bottom Left"),
+                    LocationId = LocationId.GanonsTowerCompassRoomBottomLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 462,
-                    Name = new("Compass Room Bottom Right"),
+                    LocationId = LocationId.GanonsTowerCompassRoomBottomRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 463,
-                    Name = new("Bob's Chest", new("Ganon's Tower Bob's Chest", 0)),
+                    LocationId = LocationId.GanonsTowerBobsChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 464,
-                    Name = new("Ganon's Tower Big Chest"),
+                    LocationId = LocationId.GanonsTowerBigChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 465,
-                    Name = new("Bottom Big Key Chest", new("Big Key Room Bottom Big Key Chest", 0)),
+                    LocationId = LocationId.GanonsTowerBigKeyChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 466,
-                    Name = new("Big Key Room Left"),
+                    LocationId = LocationId.GanonsTowerBigKeyRoomLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 467,
-                    Name = new("Big Key Room Right"),
+                    LocationId = LocationId.GanonsTowerBigKeyRoomRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 468,
-                    Name = new("Mini Helmasaur Room Left"),
+                    LocationId = LocationId.GanonsTowerMiniHelmasaurRoomLeft
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 469,
-                    Name = new("Mini Helmasaur Room Right"),
+                    LocationId = LocationId.GanonsTowerMiniHelmasaurRoomRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 470,
-                    Name = new("Pre-Moldorm Chest", new("Ganon's Tower Pre-Moldorm Chest", 0)),
+                    LocationId = LocationId.GanonsTowerPreMoldormChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 471,
-                    Name = new("Moldorm Chest", new("Ganon's Tower Moldorm Chest", 0)),
+                    LocationId = LocationId.GanonsTowerMoldormChest
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 496,
-                    Name = new("Library"),
+                    LocationId = LocationId.Library
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 497,
-                    Name = new("Forest Clearing", "Digging Spot", "Flute Spot"),
+                    LocationId = LocationId.FluteSpot
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 498,
-                    Name = new("Cave #45", "Cave 45", "South of Grove"),
+                    LocationId = LocationId.SouthOfGrove
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 499,
-                    Name = new("Link's House"),
+                    LocationId = LocationId.LinksHouse
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 500,
-                    Name = new(new("Aginah's Cave", 0), "Aggina's Cave"),
+                    LocationId = LocationId.AginahsCave
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 506,
-                    Name = new("Chicken House", "Chicken Lady's House"),
+                    LocationId = LocationId.ChickenHouse
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 507,
-                    Name = new("Mini Moldorm Cave Far Right"),
+                    LocationId = LocationId.MiniMoldormCaveFarRight
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 508,
-                    Name = new("Desert Ledge"),
+                    LocationId = LocationId.DesertLedge
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 509,
-                    Name = new("Checkerboard Cave"),
+                    LocationId = LocationId.CheckerboardCave
                 },
-                new LocationInfo()
+                new()
                 {
                     LocationNumber = 510,
-                    Name = new("Waterfall Fairy Left"),
+                    LocationId = LocationId.WaterfallFairyLeft
                 },
             };
         }
+
+        public static object Example()
+        {
+            return new LocationConfig()
+            {
+                new()
+                {
+                    LocationId = LocationId.GreenBrinstarGreenHillZone,
+                    LocationNumber = 25,
+                    Name =
+                        new SchrodingersString("Green Hill Zone", "Jungle Slope",
+                            new Possibility("Missile (green Brinstar pipe)", 0.1)),
+                    Hints =
+                        new SchrodingersString("Vague hint that could be said when asking where an item is"),
+                    WhenTrackingJunk =
+                        new SchrodingersString(
+                            "Message when tracking the location and there's nothing good there"),
+                    WhenTrackingProgression =
+                        new SchrodingersString(
+                            "Message when tracking the location and there's an item that's potentially progression there"),
+                    WhenMarkingJunk =
+                        new SchrodingersString("Message when marking a junk item at the location"),
+                    WhenMarkingProgression =
+                        new SchrodingersString(
+                            "Message when marking an item that's potentially progression at the location"),
+                    OutOfLogic =
+                        new SchrodingersString("Message when tracking an item at the location out of logic")
+                }
+            };
+        }
     }
-
-
 }

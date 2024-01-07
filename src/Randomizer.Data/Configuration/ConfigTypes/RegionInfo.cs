@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using Newtonsoft.Json;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
+using YamlDotNet.Serialization;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {
@@ -22,7 +25,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// </summary>
         /// <param name="name">The possible names for the region.</param>
         /// <param name="mapName">The map name to display for the region.</param>
-        public RegionInfo(SchrodingersString name, string mapName)
+        public RegionInfo(SchrodingersString? name, string mapName)
         {
             Name = name;
             MapName = mapName;
@@ -46,14 +49,15 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         public string Region { get; set; } = "";
 
         /// <summary>
-        /// Gets Randomizer.SMZ3 type for the region
+        /// Gets the class typename for the region
         /// </summary>
+        [JsonIgnore, YamlIgnore]
         public Type? Type { get; set; }
 
         /// <summary>
         /// Gets the possible names for the region.
         /// </summary>
-        public SchrodingersString Name { get; set; } = new();
+        public SchrodingersString? Name { get; set; }
 
         /// <summary>
         /// Gets the possible hints for the region, if any are defined.
@@ -63,6 +67,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// The name of the map to display for this region
         /// </summary>
+        [JsonIgnore, YamlIgnore]
         public string MapName { get; init; } = "";
 
         /// <summary>
@@ -84,7 +89,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Returns a string representation of the region.
         /// </summary>
         /// <returns>A string representation of this region.</returns>
-        public override string ToString() => Name[0];
+        public override string ToString() => Region;
 
         /// <summary>
         /// Text for Tracker to say when dying in a room or screen in the region

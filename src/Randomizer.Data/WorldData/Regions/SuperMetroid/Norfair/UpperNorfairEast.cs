@@ -20,6 +20,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             WaveBeam = new WaveBeamRoom(this, metadata, trackerState);
             MemoryRegionId = 2;
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Upper Norfair East");
+            MapName = "Norfair";
         }
 
         public override string Name => "Upper Norfair, East";

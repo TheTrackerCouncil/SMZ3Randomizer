@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Newtonsoft.Json;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
+using YamlDotNet.Serialization;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {
@@ -19,14 +21,10 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Initializes a new instance of the <see cref="DungeonInfo"/> class.
         /// </summary>
         /// <param name="name">The name of the dungeon.</param>
-        /// <param name="abbreviation">
-        /// The abbreviation of the dungeon name.
-        /// </param>
         /// <param name="boss">The name of the boss.</param>
-        public DungeonInfo(SchrodingersString name, string abbreviation, SchrodingersString boss)
+        public DungeonInfo(SchrodingersString name,SchrodingersString boss)
         {
             Name = name;
-            Abbreviation = abbreviation;
             Boss = boss;
         }
 
@@ -34,15 +32,11 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Initializes a new instance of the <see cref="DungeonInfo"/> class.
         /// </summary>
         /// <param name="name">The name of the dungeon.</param>
-        /// <param name="abbreviation">
-        /// The abbreviation of the dungeon name.
-        /// </param>
         /// <param name="boss">The name of the boss.</param>
-        public DungeonInfo(string name, string abbreviation, string boss)
+        public DungeonInfo(string name, string boss)
         {
             Dungeon = name;
             Name = new (name);
-            Abbreviation = abbreviation;
             Boss = new (boss);
         }
 
@@ -55,35 +49,24 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// Gets the possible names of the dungeon.
         /// </summary>
-        public SchrodingersString Name { get; set; } = new();
-
-        /// <summary>
-        /// Gets the dungeon name abbreviation.
-        /// </summary>
-        public string Abbreviation { get; init; } = "";
+        public SchrodingersString? Name { get; set; }
 
         /// <summary>
         /// Gets the possible names of the dungeon boss.
         /// </summary>
-        public SchrodingersString Boss { get; set; } = new();
+        public SchrodingersString? Boss { get; set; }
 
         /// <summary>
-        /// Gets the type of region that represents this dungeon.
+        /// The name of the type of region that represents this dungeon
         /// </summary>
+        [JsonIgnore, YamlIgnore]
         public Type? Type { get; init; }
-
-        /// <summary>
-        /// Gets the ID of the location that represents the item rewarded by
-        /// defeating the boss, or <c>null</c> if the dungeon has item reward
-        /// for beating the boss.
-        /// </summary>
-        public LocationId? LocationId { get; init; }
 
         /// <summary>
         /// Returns a string representation of the dungeon.
         /// </summary>
         /// <returns>A string representing the dungeon.</returns>
-        public override string ToString() => Name[0];
+        public override string ToString() => Dungeon;
 
         /// <summary>
         /// Determines whether the specified region represents this dungeon.

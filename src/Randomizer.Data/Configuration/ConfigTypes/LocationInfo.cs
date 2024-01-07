@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
+using YamlDotNet.Serialization;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {
@@ -21,10 +24,6 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Initializes a new instance of the <see cref="LocationInfo"/> class
         /// with the specified info.
         /// </summary>
-        /// <param name="id">
-        /// The ID of the location. Must match an existing <see
-        /// cref="Location.Id"/>.
-        /// </param>
         /// <param name="name">The possible names for the location.</param>
         public LocationInfo(SchrodingersString name)
         {
@@ -54,9 +53,15 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         public int LocationNumber { get; init; }
 
         /// <summary>
+        /// The corresponding LocationId for the location.
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public LocationId LocationId { get; init; }
+
+        /// <summary>
         /// Gets the possible names for the location.
         /// </summary>
-        public SchrodingersString Name { get; set; } = new();
+        public SchrodingersString? Name { get; set; }
 
         /// <summary>
         /// Gets the possible hints for the location, if any are defined.
@@ -92,6 +97,6 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Returns a string representation of the location.
         /// </summary>
         /// <returns>A string representation of this location.</returns>
-        public override string? ToString() => Name[0];
+        public override string? ToString() => LocationId.ToString();
     }
 }

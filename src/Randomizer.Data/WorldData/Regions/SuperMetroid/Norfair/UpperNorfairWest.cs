@@ -19,6 +19,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             HiJumpEnergyTank = new HiJumpEnergyTankRoom(this, metadata, trackerState);
             MemoryRegionId = 2;
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Upper Norfair West");
+            MapName = "Norfair";
         }
         public override string Name => "Upper Norfair, West";
         public override string Area => "Upper Norfair";

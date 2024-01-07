@@ -21,6 +21,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
             BombTorizo = new BombTorizoRoom(this, metadata, trackerState);
             MemoryRegionId = 0;
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Central Crateria");
+            MapName = "Crateria";
         }
 
         public override string Name => "Central Crateria";

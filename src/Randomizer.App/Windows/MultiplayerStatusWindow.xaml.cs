@@ -8,12 +8,12 @@ using System.Windows.Controls;
 using Randomizer.App.Controls;
 using Randomizer.App.ViewModels;
 using Randomizer.Data.Options;
+using Randomizer.Data.Services;
 using Randomizer.Shared.Multiplayer;
 using Randomizer.Multiplayer.Client;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Generation;
-using Randomizer.Sprites;
 
 namespace Randomizer.App.Windows
 {

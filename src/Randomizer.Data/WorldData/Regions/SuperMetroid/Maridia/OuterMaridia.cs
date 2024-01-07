@@ -15,6 +15,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
             MamaTurtle = new MamaTurtleRoom(this, metadata, trackerState);
             MemoryRegionId = 4;
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Outer Maridia");
+            MapName = "Maridia";
         }
 
         public override string Name => "Outer Maridia";

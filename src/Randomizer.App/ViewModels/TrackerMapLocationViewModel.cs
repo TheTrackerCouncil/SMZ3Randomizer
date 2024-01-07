@@ -169,7 +169,7 @@ namespace Randomizer.App.ViewModels
             Locations = new List<Location>() { location };
             Region = location.Region;
             Syncer = syncer;
-            Name = $"Clear {location.Metadata.Name[0]}";
+            Name = $"Clear {location.Metadata.Name?[0] ?? location.Name}";
         }
 
         /// <summary>

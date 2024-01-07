@@ -62,6 +62,10 @@ namespace Randomizer.Data.WorldData.Regions
         /// </summary>
         public int SongIndex { get; init; }
 
+        public string Abbreviation { get; }
+
+        public LocationId? BossLocationId { get; }
+
         /// <summary>
         /// The reward marked by the player
         /// </summary>

@@ -19,6 +19,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             GrappleBeam = new GrappleBeamRoom(this, metadata, trackerState);
             MemoryRegionId = 2;
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Upper Norfair Crocomire");
+            MapName = "Norfair";
         }
 
         public override string Name => "Upper Norfair, Crocomire";

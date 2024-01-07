@@ -98,9 +98,10 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             MemoryFlag = 0xB;
             StartingRooms = new List<int> { 14 };
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Ice Palace");
-            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Ice Palace", "IP", "Kholdstare");
+            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Ice Palace", "Kholdstare");
             DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
             Reward = new Reward(DungeonState.Reward ?? RewardType.None, world, this, metadata, DungeonState);
+            MapName = "Dark World";
         }
 
         public override string Name => "Ice Palace";
@@ -108,6 +109,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
         public RewardType DefaultRewardType => RewardType.CrystalRed;
 
         public int SongIndex { get; init; } = 7;
+        public string Abbreviation => "IP";
+        public LocationId? BossLocationId => LocationId.IcePalaceKholdstare;
 
         public Reward Reward { get; set; }
 

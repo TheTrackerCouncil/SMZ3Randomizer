@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,7 +28,6 @@ using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.AutoTracking;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 using Randomizer.SMZ3.Twitch;
-using Randomizer.Sprites;
 
 namespace Randomizer.App
 {
@@ -40,6 +41,7 @@ namespace Randomizer.App
 
         private IHost? _host;
         private ILogger<App>? _logger;
+        private SpriteDownloaderWindow? _spriteDownloaderWindow;
 
         public static void SaveWindowPositionAndSize<TWindow>(TWindow window)
             where TWindow : Window
@@ -115,9 +117,6 @@ namespace Randomizer.App
                 .AddOptionalModule<AutoTrackerModule>()
                 .AddOptionalModule<MapModule>();
             services.AddScoped<IGameService, GameService>();
-
-            services.AddSingleton<MsuUiService>();
-            services.AddScoped<TrackerLocationSyncer>();
             services.AddScoped<AutoTrackerBase, AutoTracker>();
             services.AddSingleton<ITrackerStateService, TrackerStateService>();
             services.AddMultiplayerServices();
@@ -128,22 +127,26 @@ namespace Randomizer.App
             services.AddScoped<IChatClient, TwitchChatClient>();
             services.AddSingleton<IChatAuthenticationService, TwitchAuthenticationService>();
 
-            // WPF
-            services.AddSingleton<OptionsFactory>();
-            services.AddSingleton<RomListWindow>();
-            services.AddTransient<SoloRomListPanel>();
-            services.AddTransient<MultiRomListPanel>();
-            services.AddWindows<App>();
-            services.AddTransient<SpriteWindow>();
-
-            // MSU Randomzer
+            // MSU Randomizer
             services.AddMsuRandomizerServices();
-            services.AddMsuRandomizerUIServices();
 
             // Misc
             services.AddGitHubReleaseCheckerServices();
             services.AddSingleton<IGameDbService, GameDbService>();
             services.AddTransient<SourceRomValidationService>();
+            services.AddTransient<IGitHubConfigDownloaderService, GitHubConfigDownloaderService>();
+            services.AddTransient<IGitHubSpriteDownloaderService, GitHubSpriteDownloaderService>();
+            services.AddSingleton<OptionsFactory>();
+
+            // WPF
+            services.AddScoped<TrackerLocationSyncer>();
+            services.AddSingleton<MsuUiService>();
+            services.AddSingleton<RomListWindow>();
+            services.AddTransient<SoloRomListPanel>();
+            services.AddTransient<MultiRomListPanel>();
+            services.AddWindows<App>();
+            services.AddTransient<SpriteWindow>();
+            services.AddMsuRandomizerUIServices();
         }
 
         private void Application_Startup(object sender, StartupEventArgs e)
@@ -170,8 +173,59 @@ namespace Randomizer.App
 
             InitializeMsuRandomizer();
 
-            var mainWindow = _host.Services.GetRequiredService<RomListWindow>();
+            _ = StartAsync();
+        }
+
+        private async Task StartAsync()
+        {
+            var options = _host!.Services.GetRequiredService<OptionsFactory>().Create();
+            await DownloadConfigsAsync(options);
+            await DownloadSpritesAsync(options);
+            var mainWindow = _host!.Services.GetRequiredService<RomListWindow>();
             mainWindow.Show();
+            _spriteDownloaderWindow?.Close();
+        }
+
+        private async Task DownloadConfigsAsync(RandomizerOptions options)
+        {
+            if (string.IsNullOrEmpty(options.GeneralOptions.Z3RomPath) ||
+                !options.GeneralOptions.DownloadConfigsOnStartup)
+            {
+                return;
+            }
+
+            var configSource = options.GeneralOptions.ConfigSources.FirstOrDefault();
+            if (configSource == null)
+            {
+                configSource = new ConfigSource() { Owner = "TheTrackerCouncil", Repo = "SMZ3CasConfigs" };
+                options.GeneralOptions.ConfigSources.Add(configSource);
+            }
+            await _host!.Services.GetRequiredService<IGitHubConfigDownloaderService>().DownloadFromSourceAsync(configSource);
+            options.Save();
+        }
+
+        private async Task DownloadSpritesAsync(RandomizerOptions options)
+        {
+            if (string.IsNullOrEmpty(options.GeneralOptions.Z3RomPath) ||
+                !options.GeneralOptions.DownloadSpritesOnStartup)
+            {
+                return;
+            }
+
+            var spriteDownloader = _host!.Services.GetRequiredService<IGitHubSpriteDownloaderService>();
+            var toDownload = await spriteDownloader.GetSpritesToDownloadAsync("TheTrackerCouncil", "SMZ3CasSprites");
+
+            if (toDownload is not { Count: > 4 })
+            {
+                await spriteDownloader.DownloadSpritesAsync("TheTrackerCouncil", "SMZ3CasSprites", toDownload);
+                return;
+            }
+            else
+            {
+                _spriteDownloaderWindow = new SpriteDownloaderWindow();
+                _spriteDownloaderWindow.Show();
+                await spriteDownloader.DownloadSpritesAsync("TheTrackerCouncil", "SMZ3CasSprites", toDownload);
+            }
         }
 
         private void TaskSchedulerOnUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)

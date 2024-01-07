@@ -21,15 +21,15 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         {
             if (area is IDungeon dungeon)
             {
-                return dungeon.DungeonMetadata.Name;
+                return dungeon.DungeonMetadata.Name ?? new SchrodingersString(dungeon.DungeonName);
             }
             else if (area is Region region)
             {
-                return region.Metadata.Name;
+                return region.Metadata.Name ?? new SchrodingersString(region.Name);
             }
             else if (area is Room room)
             {
-                return room.Metadata.Name;
+                return room.Metadata.Name ?? new SchrodingersString(room.Name);
             }
             else
             {

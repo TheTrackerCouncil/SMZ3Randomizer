@@ -18,12 +18,12 @@ using Microsoft.Win32;
 using MSURandomizerLibrary;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Options;
+using Randomizer.Data.Services;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.Generation;
-using Randomizer.Sprites;
 
 namespace Randomizer.App.Windows
 {
@@ -177,7 +177,7 @@ namespace Randomizer.App.Windows
                 var locationDetails = _locations.Single(x => x.LocationNumber == (int)location.Id); //TODO: Refactor into IWorldService
                 var name = locationDetails.ToString();
                 var toolTip = "";
-                if (locationDetails.Name.Count > 1)
+                if (locationDetails.Name?.Count > 1)
                 {
                     toolTip = "AKA: " + string.Join(", ", locationDetails.Name.Where(x => x.Text != name).Select(x => x.Text)) + "\n";
                 }

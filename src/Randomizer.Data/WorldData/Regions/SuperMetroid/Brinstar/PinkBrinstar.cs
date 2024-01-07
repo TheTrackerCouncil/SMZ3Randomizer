@@ -20,6 +20,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             GreenHillZone = new GreenHillZoneRoom(this, metadata, trackerState);
             MemoryRegionId = 1;
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Pink Brinstar");
+            MapName = "Brinstar";
         }
 
         public override string Name => "Pink Brinstar";

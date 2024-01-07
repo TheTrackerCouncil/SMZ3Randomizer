@@ -1,3 +1,4 @@
+using GitHubReleaseChecker;
 using Microsoft.Extensions.DependencyInjection;
 using MSURandomizerLibrary;
 using Randomizer.Abstractions;
@@ -10,7 +11,6 @@ using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.AutoTracking;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 using Randomizer.SMZ3.Twitch;
-using Randomizer.Sprites;
 
 namespace Randomizer.CrossPlatform;
 
@@ -30,7 +30,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<AutoTrackerBase, AutoTracker>();
         services.AddSingleton<ITrackerStateService, TrackerStateService>();
         services.AddMultiplayerServices();
-
         services.AddSingleton<SpriteService>();
 
         // Chat
@@ -42,9 +41,14 @@ public static class ServiceCollectionExtensions
         services.AddMsuRandomizerServices();
 
         // Misc
-        services.AddSingleton<OptionsFactory>();
+        services.AddGitHubReleaseCheckerServices();
         services.AddSingleton<IGameDbService, GameDbService>();
         services.AddTransient<SourceRomValidationService>();
+        services.AddTransient<IGitHubConfigDownloaderService, GitHubConfigDownloaderService>();
+        services.AddTransient<IGitHubSpriteDownloaderService, GitHubSpriteDownloaderService>();
+        services.AddSingleton<OptionsFactory>();
+
+        // Console
         services.AddTransient<ConsoleTrackerDisplayService>();
 
         return services;

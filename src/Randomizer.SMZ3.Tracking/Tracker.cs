@@ -122,9 +122,17 @@ public sealed class Tracker : TrackerBase, IDisposable
         History = historyService;
 
         // Initalize the timers used to trigger idle responses
-        _idleTimers = Responses.Idle.ToDictionary(
-            x => x.Key,
-            x => new Timer(IdleTimerElapsed, x.Key, Timeout.Infinite, Timeout.Infinite));
+        if (Responses.Idle != null)
+        {
+            _idleTimers = Responses.Idle.ToDictionary(
+                x => x.Key,
+                x => new Timer(IdleTimerElapsed, x.Key, Timeout.Infinite, Timeout.Infinite));
+        }
+        else
+        {
+            _idleTimers = new();
+        }
+
 
         // Initialize the text-to-speech
         if (s_random.NextDouble() <= 0.01)
@@ -175,6 +183,11 @@ public sealed class Tracker : TrackerBase, IDisposable
     /// </returns>
     public override string CorrectUserNamePronunciation(string userName)
     {
+        if (Responses.Chat.UserNamePronunciation == null)
+        {
+            return userName.Replace('_', ' ');
+        }
+
         var correctedUserName = Responses.Chat.UserNamePronunciation
             .SingleOrDefault(x => x.Key.Equals(userName, StringComparison.OrdinalIgnoreCase));
 
@@ -336,12 +349,12 @@ public sealed class Tracker : TrackerBase, IDisposable
             if (stateResponse && (confidence != null || dungeon.DungeonState.RemainingTreasure >= 1 || autoTracked))
             {
                 // Try to get the response based on the amount of items left
-                if (Responses.DungeonTreasureTracked.TryGetValue(dungeon.DungeonState.RemainingTreasure, out var response))
+                if (Responses.DungeonTreasureTracked?.TryGetValue(dungeon.DungeonState.RemainingTreasure, out var response) == true)
                     Say(response.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonState.RemainingTreasure));
                 // If we don't have a response for the exact amount and we
                 // have multiple left, get the one for 2 (considered
                 // generic)
-                else if (dungeon.DungeonState.RemainingTreasure >= 2 && Responses.DungeonTreasureTracked.TryGetValue(2, out response))
+                else if (dungeon.DungeonState.RemainingTreasure >= 2 && Responses.DungeonTreasureTracked?.TryGetValue(2, out response) == true)
                     Say(response.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonState.RemainingTreasure));
             }
 
@@ -357,7 +370,7 @@ public sealed class Tracker : TrackerBase, IDisposable
 
             return true;
         }
-        else if (stateResponse && confidence != null && Responses.DungeonTreasureTracked.TryGetValue(-1, out var response))
+        else if (stateResponse && confidence != null && Responses.DungeonTreasureTracked?.TryGetValue(-1, out var response) == true)
         {
             // Attempted to track treasure when all treasure items were
             // already cleared out
@@ -391,7 +404,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         {
             dungeon.DungeonState.MarkedReward = reward.Value;
             var rewardObj = ItemService.FirstOrDefault(reward.Value);
-            Say(Responses.DungeonRewardMarked.Format(dungeon.DungeonMetadata.Name, rewardObj?.Metadata.Name ?? reward.GetDescription()));
+            Say(Responses.DungeonRewardMarked?.Format(dungeon.DungeonMetadata.Name, rewardObj?.Metadata.Name ?? reward.GetDescription()));
         }
 
         OnDungeonUpdated(new DungeonTrackedEventArgs(dungeon, confidence, autoTracked));
@@ -412,7 +425,7 @@ public sealed class Tracker : TrackerBase, IDisposable
 
         if (unmarkedDungeons.Count > 0)
         {
-            Say(Responses.RemainingDungeonsMarked.Format(ItemService.GetName(reward)));
+            Say(Responses.RemainingDungeonsMarked?.Format(ItemService.GetName(reward)));
             unmarkedDungeons.ForEach(dungeon => dungeon.DungeonState.MarkedReward = reward);
             AddUndo(() => unmarkedDungeons.ForEach(dungeon => dungeon.DungeonState.MarkedReward = RewardType.None));
             OnDungeonUpdated(new DungeonTrackedEventArgs(null, confidence, false));
@@ -432,14 +445,14 @@ public sealed class Tracker : TrackerBase, IDisposable
     /// <param name="autoTracked">If the marked dungeon requirement was autotracked</param>
     public override void SetDungeonRequirement(IDungeon dungeon, ItemType? medallion = null, float? confidence = null, bool autoTracked = false)
     {
-        var region = World.Regions.SingleOrDefault(x => dungeon.DungeonMetadata.Name.Contains(x.Name, StringComparison.OrdinalIgnoreCase));
+        var region = World.Regions.SingleOrDefault(x => dungeon.DungeonMetadata.Name?.Contains(x.Name, StringComparison.OrdinalIgnoreCase) == true);
         if (region == null)
         {
             Say("Strange, I can't find that dungeon in this seed.");
         }
         else if (region is not INeedsMedallion)
         {
-            Say(Responses.DungeonRequirementInvalid.Format(dungeon.DungeonMetadata.Name));
+            Say(Responses.DungeonRequirementInvalid?.Format(dungeon.DungeonMetadata.Name));
             return;
         }
 
@@ -466,7 +479,7 @@ public sealed class Tracker : TrackerBase, IDisposable
             }
 
             dungeon.DungeonState.MarkedMedallion = medallion.Value;
-            Say(Responses.DungeonRequirementMarked.Format(medallion.ToString(), dungeon.DungeonMetadata.Name));
+            Say(Responses.DungeonRequirementMarked?.Format(medallion.ToString(), dungeon.DungeonMetadata.Name));
             OnDungeonUpdated(new DungeonTrackedEventArgs(dungeon, confidence, false));
         }
 
@@ -935,7 +948,7 @@ public sealed class Tracker : TrackerBase, IDisposable
                             }
                             else
                             {
-                                Say(Responses.TrackedItemByStage.Format(itemName, stageName));
+                                Say(Responses.TrackedItemByStage?.Format(itemName, stageName));
                             }
                         }
                         else
@@ -959,7 +972,7 @@ public sealed class Tracker : TrackerBase, IDisposable
                             else
                             {
                                 var stageName = item.Metadata.Stages[item.State.TrackingState].ToString();
-                                Say(Responses.TrackedProgressiveItem.Format(itemName, stageName));
+                                Say(Responses.TrackedProgressiveItem?.Format(itemName, stageName));
                             }
                         }
                         else
@@ -980,18 +993,18 @@ public sealed class Tracker : TrackerBase, IDisposable
                 else if (item.Counter == 1)
                 {
                     if (stateResponse)
-                        Say(Responses.TrackedItem.Format(itemName, item.Metadata.NameWithArticle));
+                        Say(Responses.TrackedItem?.Format(itemName, item.Metadata.NameWithArticle));
                 }
                 else if (item.Counter > 1)
                 {
                     if (stateResponse)
-                        Say(Responses.TrackedItemMultiple.Format(item.Metadata.Plural ?? $"{itemName}s", item.Counter, item.Name));
+                        Say(Responses.TrackedItemMultiple?.Format(item.Metadata.Plural ?? $"{itemName}s", item.Counter, item.Name));
                 }
                 else
                 {
                     _logger.LogWarning("Encountered multiple item with counter 0: {Item} has counter {Counter}", item, item.Counter);
                     if (stateResponse)
-                        Say(Responses.TrackedItem.Format(itemName, item.Metadata.NameWithArticle));
+                        Say(Responses.TrackedItem?.Format(itemName, item.Metadata.NameWithArticle));
                 }
             }
             else
@@ -1007,7 +1020,7 @@ public sealed class Tracker : TrackerBase, IDisposable
                         }
                         else
                         {
-                            Say(Responses.TrackedItem.Format(itemName, item.Metadata.NameWithArticle));
+                            Say(Responses.TrackedItem?.Format(itemName, item.Metadata.NameWithArticle));
                         }
                     }
                     else
@@ -1215,29 +1228,29 @@ public sealed class Tracker : TrackerBase, IDisposable
 
         if (!item.Untrack())
         {
-            Say(Responses.UntrackedNothing.Format(item.Name, item.Metadata.NameWithArticle));
+            Say(Responses.UntrackedNothing?.Format(item.Name, item.Metadata.NameWithArticle));
             return;
         }
 
         if (item.Metadata.HasStages)
         {
-            Say(Responses.UntrackedProgressiveItem.Format(item.Name, item.Metadata.NameWithArticle));
+            Say(Responses.UntrackedProgressiveItem?.Format(item.Name, item.Metadata.NameWithArticle));
         }
         else if (item.Metadata.Multiple)
         {
             if (item.State.TrackingState > 0)
             {
                 if (item.Metadata.CounterMultiplier > 1)
-                    Say(Responses.UntrackedItemMultiple.Format($"{item.Metadata.CounterMultiplier} {item.Metadata.Plural}", $"{item.Metadata.CounterMultiplier} {item.Metadata.Plural}"));
+                    Say(Responses.UntrackedItemMultiple?.Format($"{item.Metadata.CounterMultiplier} {item.Metadata.Plural}", $"{item.Metadata.CounterMultiplier} {item.Metadata.Plural}"));
                 else
-                    Say(Responses.UntrackedItemMultiple.Format(item.Name, item.Metadata.NameWithArticle));
+                    Say(Responses.UntrackedItemMultiple?.Format(item.Name, item.Metadata.NameWithArticle));
             }
             else
-                Say(Responses.UntrackedItemMultipleLast.Format(item.Name, item.Metadata.NameWithArticle));
+                Say(Responses.UntrackedItemMultipleLast?.Format(item.Name, item.Metadata.NameWithArticle));
         }
         else
         {
-            Say(Responses.UntrackedItem.Format(item.Name, item.Metadata.NameWithArticle));
+            Say(Responses.UntrackedItem?.Format(item.Name, item.Metadata.NameWithArticle));
         }
 
         IsDirty = true;
@@ -1370,7 +1383,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         var oldItemCount = item.State.TrackingState;
         if (newItemCount == oldItemCount)
         {
-            Say(Responses.TrackedExactAmountDuplicate.Format(item.Metadata.Plural, count));
+            Say(Responses.TrackedExactAmountDuplicate?.Format(item.Metadata.Plural, count));
             return;
         }
 
@@ -1381,11 +1394,11 @@ public sealed class Tracker : TrackerBase, IDisposable
         }
         else if (newItemCount > oldItemCount)
         {
-            Say(Responses.TrackedItemMultiple.Format(item.Metadata.Plural ?? $"{item.Name}s", item.Counter, item.Name));
+            Say(Responses.TrackedItemMultiple?.Format(item.Metadata.Plural ?? $"{item.Name}s", item.Counter, item.Name));
         }
         else
         {
-            Say(Responses.UntrackedItemMultiple.Format(item.Metadata.Plural ?? $"{item.Name}s", item.Metadata.Plural ?? $"{item.Name}s"));
+            Say(Responses.UntrackedItemMultiple?.Format(item.Metadata.Plural ?? $"{item.Name}s", item.Metadata.Plural ?? $"{item.Name}s"));
         }
 
         IsDirty = true;
@@ -1427,11 +1440,11 @@ public sealed class Tracker : TrackerBase, IDisposable
                 .Count(x => x.State.Cleared == false);
 
             if (outOfLogicLocations > 1)
-                Say(Responses.TrackedNothingOutOfLogic[2].Format(area.Name, outOfLogicLocations));
+                Say(Responses.TrackedNothingOutOfLogic?[2].Format(area.Name, outOfLogicLocations));
             else if (outOfLogicLocations > 0)
-                Say(Responses.TrackedNothingOutOfLogic[1].Format(area.Name, outOfLogicLocations));
+                Say(Responses.TrackedNothingOutOfLogic?[1].Format(area.Name, outOfLogicLocations));
             else
-                Say(Responses.TrackedNothing.Format(area.Name));
+                Say(Responses.TrackedNothing?.Format(area.Name));
         }
         else
         {
@@ -1641,7 +1654,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         {
             // Only use TTS if called from a voice command
             var locationName = location.Metadata.Name;
-            Say(Responses.LocationCleared.Format(locationName));
+            Say(Responses.LocationCleared?.Format(locationName));
         }
 
         ItemType? prevMarkedItem = null;
@@ -1767,7 +1780,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         if (dungeon.DungeonState.Cleared)
         {
             if (!autoTracked)
-                Say(Responses.DungeonBossAlreadyCleared.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss));
+                Say(Responses.DungeonBossAlreadyCleared?.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss));
             else
                 OnDungeonUpdated(new DungeonTrackedEventArgs(dungeon, confidence, autoTracked));
 
@@ -1779,7 +1792,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         var addedEvent = History.AddEvent(
             HistoryEventType.BeatBoss,
             true,
-            dungeon.DungeonMetadata.Boss.ToString() ?? $"boss of {dungeon.DungeonMetadata.Name}"
+            dungeon.DungeonMetadata.Boss?.ToString() ?? $"boss of {dungeon.DungeonMetadata.Name}"
         );
 
         // If all treasures have been retrieved and the boss is defeated, clear all locations in the dungeon
@@ -1805,7 +1818,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         }
 
         dungeon.DungeonState.Cleared = true;
-        Say(Responses.DungeonBossCleared.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss));
+        Say(Responses.DungeonBossCleared?.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss));
         IsDirty = true;
         RestartIdleTimers();
         OnDungeonUpdated(new DungeonTrackedEventArgs(dungeon, confidence, autoTracked));
@@ -1908,21 +1921,21 @@ public sealed class Tracker : TrackerBase, IDisposable
     {
         if (!dungeon.DungeonState.Cleared)
         {
-            Say(Responses.DungeonBossNotYetCleared.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss));
+            Say(Responses.DungeonBossNotYetCleared?.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss));
             return;
         }
 
         ItemService.ResetProgression();
         dungeon.DungeonState.Cleared = false;
-        Say(Responses.DungeonBossUncleared.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss));
+        Say(Responses.DungeonBossUncleared?.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss));
 
         // Try to untrack the associated boss reward item
         Action? undoUnclear = null;
         Action? undoUntrackTreasure = null;
         Action? undoUntrack = null;
-        if (dungeon.DungeonMetadata.LocationId != null)
+        if (dungeon.BossLocationId != null)
         {
-            var rewardLocation = _worldService.Location(dungeon.DungeonMetadata.LocationId.Value);
+            var rewardLocation = _worldService.Location(dungeon.BossLocationId.Value);
             if (rewardLocation.Item.Type != ItemType.Nothing)
             {
                 var item = rewardLocation.Item;
@@ -1995,7 +2008,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         if (item == ItemType.Nothing)
         {
             Clear(location);
-            Say(Responses.LocationMarkedAsBullshit.Format(locationName));
+            Say(Responses.LocationMarkedAsBullshit?.Format(locationName));
         }
         else if (location.State.MarkedItem != null)
         {
@@ -2100,17 +2113,6 @@ public sealed class Tracker : TrackerBase, IDisposable
     /// <param name="resetTime">If the time should be reset if this is the first region update</param>
     public override void UpdateRegion(Region region, bool updateMap = false, bool resetTime = false)
     {
-        UpdateRegion(region.Metadata, updateMap, resetTime);
-    }
-
-    /// <summary>
-    /// Updates the region that the player is in
-    /// </summary>
-    /// <param name="region">The region the player is in</param>
-    /// <param name="updateMap">Set to true to update the map for the player to match the region</param>
-    /// <param name="resetTime">If the time should be reset if this is the first region update</param>
-    public override void UpdateRegion(RegionInfo? region, bool updateMap = false, bool resetTime = false)
-    {
         if (region != CurrentRegion)
         {
             if (resetTime && !History.GetHistory().Any(x => x is { LocationId: not null, IsUndone: false }))
@@ -2121,12 +2123,12 @@ public sealed class Tracker : TrackerBase, IDisposable
             History.AddEvent(
                 HistoryEventType.EnteredRegion,
                 true,
-                region?.Name.ToString() ?? "new region"
+                region?.Name?.ToString() ?? "new region"
             );
         }
 
         CurrentRegion = region;
-        if (updateMap && region != null)
+        if (updateMap && !string.IsNullOrEmpty(region?.MapName))
         {
             UpdateMap(region.MapName);
         }
@@ -2549,7 +2551,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     private void IdleTimerElapsed(object? state)
     {
         var key = (string)state!;
-        Say(Responses.Idle[key]);
+        Say(Responses.Idle?[key]);
     }
 
     [SupportedOSPlatform("windows")]

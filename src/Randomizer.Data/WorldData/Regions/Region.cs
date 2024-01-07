@@ -87,6 +87,11 @@ namespace Randomizer.Data.WorldData.Regions
         protected IList<ItemType> RegionItems { get; init; } = new List<ItemType>();
 
         /// <summary>
+        /// Name of the map to display when in this region
+        /// </summary>
+        public string MapName { get; set; } = "";
+
+        /// <summary>
         /// Determines whether the specified item is specific to this region.
         /// </summary>
         /// <param name="item">The item to test.</param>

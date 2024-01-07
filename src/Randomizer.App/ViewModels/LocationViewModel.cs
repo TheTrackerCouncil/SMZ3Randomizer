@@ -14,9 +14,9 @@ namespace Randomizer.App.ViewModels
             _syncer = syncer;
         }
 
-        public string Name => _location.Metadata.Name[0];
+        public string Name => _location.Metadata.Name?[0] ?? _location.Name;
 
-        public string Area => _location.Region.Metadata.Name[0];
+        public string Area => _location.Region.Metadata.Name?[0] ?? _location.Region.Name;
 
         public bool InLogic => _location.IsAvailable(_syncer.ItemService.GetProgression(false));
 

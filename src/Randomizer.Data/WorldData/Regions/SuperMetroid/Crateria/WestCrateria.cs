@@ -16,6 +16,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
             Terminator = new TerminatorRoom(this, metadata, trackerState);
             MemoryRegionId = 0;
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("West Crateria");
+            MapName = "Crateria";
         }
 
         public override string Name => "West Crateria";
