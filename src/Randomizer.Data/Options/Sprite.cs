@@ -127,7 +127,7 @@ namespace Randomizer.Data.Options
                 var spriteRepo = parentDir?.GetDirectories().FirstOrDefault(x => x.Name == "SMZ3CasSprites");
                 var path = Path.Combine(spriteRepo?.FullName ?? "", "Sprites");
 
-                if (!Directory.Exists(path))
+                if (!Directory.Exists(path) || path == "Sprites")
                 {
                     return Path.Combine(
                         Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName ?? "")!,
