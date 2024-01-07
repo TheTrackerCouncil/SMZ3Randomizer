@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 
 using Microsoft.Extensions.Logging;
@@ -27,6 +29,8 @@ public class MicrophoneService : IMicrophoneService
 
     public string? DeviceName => _activeInputDevice?.DeviceFriendlyName;
 
+    public string? DesiredAudioDevice { get; set; }
+
     public virtual bool CanRecord()
     {
         var inputDevice = GetInputDevice();
@@ -37,6 +41,13 @@ public class MicrophoneService : IMicrophoneService
     {
         _manualResetEvent.Reset();
         _activeInputDevice = GetInputDevice();
+
+        if (_activeInputDevice == null)
+        {
+            _logger.LogWarning("Invalid input device");
+            return;
+        }
+
         _logger.LogDebug("Starting recording using input device {Id} {Name}", _activeInputDevice.ID, _activeInputDevice.FriendlyName);
 
         _activeCapture = new WasapiCapture(_activeInputDevice)
@@ -76,10 +87,42 @@ public class MicrophoneService : IMicrophoneService
         GC.SuppressFinalize(this);
     }
 
-    protected virtual MMDevice GetInputDevice()
+    public ICollection<string> GetDeviceNames()
     {
-        // TODO: Get requested input device from settings, or fall back to default
-        return WasapiCapture.GetDefaultCaptureDevice();
+        var toReturn = new List<string>();
+        var enumerator = new MMDeviceEnumerator();
+        foreach (var wasapi in enumerator.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active))
+        {
+            toReturn.Add(wasapi.DeviceFriendlyName);
+        }
+
+        return toReturn;
+    }
+
+    protected virtual MMDevice? GetInputDeviceByName(string? deviceName)
+    {
+        if (string.IsNullOrEmpty(deviceName) || "Default" == deviceName)
+        {
+            return WasapiCapture.GetDefaultCaptureDevice();
+        }
+
+        var enumerator = new MMDeviceEnumerator();
+        return enumerator
+            .EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active)
+            .FirstOrDefault(wasapi => wasapi.DeviceFriendlyName == deviceName);
+    }
+
+    protected virtual MMDevice? GetInputDevice()
+    {
+        try
+        {
+            return GetInputDeviceByName(DesiredAudioDevice) ?? WasapiCapture.GetDefaultCaptureDevice();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Audio device not found");
+            return null;
+        }
     }
 
     protected virtual void Dispose(bool disposing)

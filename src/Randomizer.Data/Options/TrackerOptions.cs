@@ -130,5 +130,10 @@ namespace Randomizer.Data
         /// Key to be used for push-to-talk mode
         /// </summary>
         public PushToTalkKey PushToTalkKey { get; set; } = PushToTalkKey.KeyLeftControl;
+
+        /// <summary>
+        /// Device to be used for push to talk mode
+        /// </summary>
+        public string PushToTalkDevice { get; set; } = "Default";
     }
 }

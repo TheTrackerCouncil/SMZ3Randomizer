@@ -245,7 +245,7 @@
                 </Grid>
               </controls:LabeledControl>
 
-              <controls:LabeledControl Text="Speech Recognition Mode:"
+              <controls:LabeledControl Text="Speech recognition mode:"
                                        ToolTip="Determines how tracker listens for voice lines">
                 <Grid>
                   <Grid.ColumnDefinitions>
@@ -268,6 +268,20 @@
 
                   <ComboBox SelectedItem="{Binding PushToTalkKey, Converter={StaticResource EnumDescriptionConverter}}"
                             ItemsSource="{Binding Source={app:EnumDescriptionBindingSource {x:Type options:PushToTalkKey}}}"
+                            MinWidth="75">
+                  </ComboBox>
+                </Grid>
+              </controls:LabeledControl>
+
+              <controls:LabeledControl Text="Push-to-talk device:"
+                                       ToolTip="Device used for push-to-talk mode.">
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+
+                  <ComboBox SelectedItem="{Binding PushToTalkDevice}"
+                            ItemsSource="{Binding PushToTalkDevices, ElementName=Self}"
                             MinWidth="75">
                   </ComboBox>
                 </Grid>

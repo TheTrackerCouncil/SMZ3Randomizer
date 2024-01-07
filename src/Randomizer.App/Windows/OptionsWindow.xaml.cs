@@ -13,6 +13,7 @@ using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Shared;
 using Randomizer.SMZ3.ChatIntegration;
+using Randomizer.SMZ3.Tracking.Services;
 using static System.Int32;
 
 namespace Randomizer.App.Windows
@@ -37,7 +38,8 @@ namespace Randomizer.App.Windows
             ILogger<OptionsWindow> logger,
             SourceRomValidationService sourceRomValidationService,
             IGitHubConfigDownloaderService gitHubConfigDownloaderService,
-            IGitHubSpriteDownloaderService gitHubSpriteDownloaderService)
+            IGitHubSpriteDownloaderService gitHubSpriteDownloaderService,
+            IMicrophoneService microphoneService)
         {
             InitializeComponent();
             _trackerConfigProvider = configProvider;
@@ -47,6 +49,7 @@ namespace Randomizer.App.Windows
             _gitHubConfigDownloaderService = gitHubConfigDownloaderService;
             _gitHubSpriteDownloaderService = gitHubSpriteDownloaderService;
             _availableProfiles = configProvider.GetAvailableProfiles();
+            PushToTalkDevices.AddRange(microphoneService.GetDeviceNames());
             PropertyChanged?.Invoke(this, new(nameof(DisabledProfiles)));
         }
 
@@ -82,6 +85,8 @@ namespace Randomizer.App.Windows
         }
 
         public bool IsValidToken => !string.IsNullOrEmpty(Options.TwitchOAuthToken);
+
+        public List<string> PushToTalkDevices { get; set; } = new() { "Default" };
 
         public ICollection<string> AvailableProfiles
         {

@@ -212,6 +212,11 @@ namespace Randomizer.Data.Options
         /// </summary>
         public Dictionary<string, string> SpriteHashes { get; set; } = new();
 
+        /// <summary>
+        /// Device to be used for push to talk mode
+        /// </summary>
+        public string PushToTalkDevice { get; set; } = "Default";
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public bool Validate()

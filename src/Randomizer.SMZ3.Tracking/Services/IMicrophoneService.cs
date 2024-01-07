@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 
 using NAudio.Wave;
@@ -14,4 +16,6 @@ public interface IMicrophoneService : IDisposable
     void StartRecording(WaveFormat waveFormat);
 
     Stream? StopRecording();
+
+    ICollection<string> GetDeviceNames();
 }

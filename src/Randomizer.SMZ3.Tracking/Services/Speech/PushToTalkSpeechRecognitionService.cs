@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.Versioning;
 using System.Speech.AudioFormat;
@@ -37,6 +37,7 @@ public partial class PushToTalkSpeechRecognitionService : SpeechRecognitionServi
     private bool _isEnabled;
     private bool _isListening;
     private KeyCode _pushToTalkKey;
+    private Stream? _prevStream;
 
     /// <summary>
     /// Initializes a new instance of the <see
@@ -53,6 +54,7 @@ public partial class PushToTalkSpeechRecognitionService : SpeechRecognitionServi
         TrackerOptionsAccessor trackerOptionsAccessor)
     {
         RecognitionEngine = new SpeechRecognitionEngine();
+        RecognitionEngine.RecognizeCompleted += RecognitionEngineOnRecognizeCompleted;
         _hook = hook;
         _microphoneService = microphoneService;
         _logger = logger;
@@ -67,7 +69,7 @@ public partial class PushToTalkSpeechRecognitionService : SpeechRecognitionServi
 
     /// <inheritdoc/>
     [NotNull]
-    public override SpeechRecognitionEngine? RecognitionEngine { get; }
+    public sealed override SpeechRecognitionEngine? RecognitionEngine { get; }
 
     /// <summary>
     /// Gets or sets a value indicating whether speech recognition should be
@@ -103,10 +105,13 @@ public partial class PushToTalkSpeechRecognitionService : SpeechRecognitionServi
     /// <inheritdoc/>
     public override bool Initialize()
     {
-        RecognitionEngine.SpeechRecognized += RecognitionEngine_SpeechRecognized;
-        _hook.KeyPressed += Hook_KeyPressed;
-        _hook.KeyReleased += Hook_KeyReleased;
-        _hookRunner = _hook.RunAsync();
+        if (_hookRunner == null)
+        {
+            RecognitionEngine.SpeechRecognized += RecognitionEngine_SpeechRecognized;
+            _hook.KeyPressed += Hook_KeyPressed;
+            _hook.KeyReleased += Hook_KeyReleased;
+            _hookRunner = _hook.RunAsync();
+        }
         return _microphoneService.CanRecord() && SpeechSupportsWaveFormat(_waveFormat);
     }
 
@@ -220,19 +225,27 @@ public partial class PushToTalkSpeechRecognitionService : SpeechRecognitionServi
             // Stop recording from input device and run recognition
             await Task.Run(() =>
             {
-                var recording = _microphoneService.StopRecording();
+                _prevStream = _microphoneService.StopRecording();
+
+                if (_prevStream == null)
+                {
+                    _logger.LogWarning("No audio recording found");
+                    return;
+                }
+
                 LogPushToTalkRecognitionStarted();
 
-                RecognitionEngine.SetInputToAudioStream(recording, GetAudioFormatInfo());
+                RecognitionEngine.SetInputToAudioStream(_prevStream, GetAudioFormatInfo());
                 RecognitionEngine.RecognizeAsync(RecognizeMode.Single);
-                RecognitionEngine.RecognizeCompleted += (sender, e) =>
-                {
-                    LogPushToTalkRecognitionStopped(e.AudioPosition);
-                    recording?.Dispose();
-                    recording = null;
-                };
             });
         }
+    }
+
+    private void RecognitionEngineOnRecognizeCompleted(object? sender, RecognizeCompletedEventArgs e)
+    {
+        LogPushToTalkRecognitionStopped(e.AudioPosition);
+        _prevStream?.Dispose();
+        _prevStream = null;
     }
 
     private void Hook_KeyPressed(object? sender, KeyboardHookEventArgs e)
@@ -242,6 +255,12 @@ public partial class PushToTalkSpeechRecognitionService : SpeechRecognitionServi
 
         if (e.Data.KeyCode == _pushToTalkKey)
         {
+            if (!_microphoneService.CanRecord())
+            {
+                _logger.LogWarning("Currently unable to record audio");
+                return;
+            }
+
             IsListening = true;
 
             // Start recording from input device
