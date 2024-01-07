@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using BunLabs;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MSURandomizerLibrary.Configs;
 using Randomizer.Abstractions;
@@ -95,8 +96,8 @@ public sealed class Tracker : TrackerBase, IDisposable
         ITrackerStateService stateService,
         IWorldService worldService,
         ITrackerTimerService timerService,
-        ISpeechRecognitionService speechRecognitionService,
-        IMetadataService metadataService)
+        IMetadataService metadataService,
+        IServiceProvider serviceProvider)
     {
         if (trackerOptions.Options == null)
             throw new InvalidOperationException("Tracker options have not yet been activated.");
@@ -133,7 +134,19 @@ public sealed class Tracker : TrackerBase, IDisposable
         }
 
         // Initialize the speech recognition engine
-        _recognizer = speechRecognitionService;
+        if (_trackerOptions.Options.SpeechRecognitionMode == SpeechRecognitionMode.Disabled ||
+            !OperatingSystem.IsWindows())
+        {
+            _recognizer = serviceProvider.GetRequiredService<NullSpeechRecognitionService>();
+        }
+        else if (_trackerOptions.Options.SpeechRecognitionMode == SpeechRecognitionMode.PushToTalk)
+        {
+            _recognizer = serviceProvider.GetRequiredService<PushToTalkSpeechRecognitionService>();
+        }
+        else
+        {
+            _recognizer = serviceProvider.GetRequiredService<AlwaysOnSpeechRecognitionService>();
+        }
         _metadataService = metadataService;
         if (OperatingSystem.IsWindows())
         {

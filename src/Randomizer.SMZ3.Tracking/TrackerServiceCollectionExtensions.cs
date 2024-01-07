@@ -43,14 +43,15 @@ public static class TrackerServiceCollectionExtensions
 
         if (OperatingSystem.IsWindows())
         {
-            // services.AddScoped<ISpeechRecognitionService, AlwaysOnSpeechRecognitionService>();
-            services.AddScoped<ISpeechRecognitionService, PushToTalkSpeechRecognitionService>();
+            services.AddScoped<AlwaysOnSpeechRecognitionService>();
+            services.AddScoped<PushToTalkSpeechRecognitionService>();
+            services.AddScoped<NullSpeechRecognitionService>();
             services.AddTransient<IMicrophoneService, MicrophoneService>();
             services.AddSingleton<IGlobalHook, TaskPoolGlobalHook>();
         }
         else
         {
-            services.AddScoped<ISpeechRecognitionService, NullSpeechRecognitionService>();
+            services.AddScoped<NullSpeechRecognitionService>();
         }
 
         var assemblies = new[] { Assembly.GetExecutingAssembly() };

@@ -71,7 +71,7 @@
             </StackPanel>
           </Expander>
 
-          <Expander>
+          <Expander IsExpanded="False">
             <Expander.Header>
               <TextBlock FontWeight="SemiBold">Tracker options</TextBlock>
             </Expander.Header>
@@ -216,6 +216,34 @@
 
                   <ComboBox SelectedItem="{Binding TrackerVoiceFrequency, Converter={StaticResource EnumDescriptionConverter}}"
                             ItemsSource="{Binding Source={app:EnumDescriptionBindingSource {x:Type enums:TrackerVoiceFrequency}}}"
+                            MinWidth="75">
+                  </ComboBox>
+                </Grid>
+              </controls:LabeledControl>
+
+              <controls:LabeledControl Text="Speech Recognition Mode:"
+                                       ToolTip="Determines how tracker listens for voice lines">
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+
+                  <ComboBox SelectedItem="{Binding SpeechRecognitionMode, Converter={StaticResource EnumDescriptionConverter}}"
+                            ItemsSource="{Binding Source={app:EnumDescriptionBindingSource {x:Type options:SpeechRecognitionMode}}}"
+                            MinWidth="75">
+                  </ComboBox>
+                </Grid>
+              </controls:LabeledControl>
+
+              <controls:LabeledControl Text="Push-to-talk key:"
+                                       ToolTip="Key to hold down for push-to-talk mode">
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+
+                  <ComboBox SelectedItem="{Binding PushToTalkKey, Converter={StaticResource EnumDescriptionConverter}}"
+                            ItemsSource="{Binding Source={app:EnumDescriptionBindingSource {x:Type options:PushToTalkKey}}}"
                             MinWidth="75">
                   </ComboBox>
                 </Grid>

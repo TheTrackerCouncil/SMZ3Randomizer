@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
 using NAudio.Wave;
-
+using Randomizer.Data.Options;
 using Randomizer.Shared;
 
 using SharpHook;
@@ -36,6 +36,7 @@ public partial class PushToTalkSpeechRecognitionService : SpeechRecognitionServi
     private Task? _hookRunner;
     private bool _isEnabled;
     private bool _isListening;
+    private KeyCode _pushToTalkKey;
 
     /// <summary>
     /// Initializes a new instance of the <see
@@ -44,15 +45,18 @@ public partial class PushToTalkSpeechRecognitionService : SpeechRecognitionServi
     /// <param name="hook"></param>
     /// <param name="microphoneService"></param>
     /// <param name="logger"></param>
+    /// <param name="trackerOptionsAccessor"></param>
     public PushToTalkSpeechRecognitionService(
         IGlobalHook hook,
         IMicrophoneService microphoneService,
-        ILogger<PushToTalkSpeechRecognitionService> logger)
+        ILogger<PushToTalkSpeechRecognitionService> logger,
+        TrackerOptionsAccessor trackerOptionsAccessor)
     {
         RecognitionEngine = new SpeechRecognitionEngine();
         _hook = hook;
         _microphoneService = microphoneService;
         _logger = logger;
+        _pushToTalkKey = (KeyCode?)trackerOptionsAccessor.Options?.PushToTalkKey ?? KeyCode.VcLeftControl;
         _waveFormat = new WaveFormat();
     }
 
@@ -208,7 +212,7 @@ public partial class PushToTalkSpeechRecognitionService : SpeechRecognitionServi
     private async void Hook_KeyReleased(object? sender, KeyboardHookEventArgs e)
     {
         if (!IsEnabled) return;
-        if (e.Data.KeyCode == KeyCode.VcLeftControl && IsListening)
+        if (e.Data.KeyCode == _pushToTalkKey && IsListening)
         {
             IsListening = false;
             LogPushToTalkFinished(e.Data.KeyCode);
@@ -236,7 +240,7 @@ public partial class PushToTalkSpeechRecognitionService : SpeechRecognitionServi
         if (!IsEnabled) return;
         if (IsListening) return;
 
-        if (e.Data.KeyCode == KeyCode.VcLeftControl)
+        if (e.Data.KeyCode == _pushToTalkKey)
         {
             IsListening = true;
 

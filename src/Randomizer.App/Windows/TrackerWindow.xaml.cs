@@ -695,7 +695,7 @@ namespace Randomizer.App.Windows
             // Show proper voice status bar icon and warn the user if no mic is available
             StatusBarConfidence.Visibility = TrackerBase.VoiceRecognitionEnabled ? Visibility.Visible : Visibility.Collapsed;
             StatusBarVoiceDisabled.Visibility = TrackerBase.VoiceRecognitionEnabled ? Visibility.Collapsed : Visibility.Visible;
-            if (!TrackerBase.MicrophoneInitialized)
+            if (!TrackerBase.MicrophoneInitialized && TrackerBase.Options.SpeechRecognitionMode != SpeechRecognitionMode.Disabled)
             {
                 ShowNoMicrophoneWarning();
             }
@@ -1098,6 +1098,11 @@ namespace Randomizer.App.Windows
         /// <param name="e"></param>
         private void StatusBarVoiceDisabled_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            if (TrackerBase.Options.SpeechRecognitionMode == SpeechRecognitionMode.Disabled)
+            {
+                return;
+            }
+
             if (!TrackerBase.MicrophoneInitialized)
             {
                 if (!TrackerBase.InitializeMicrophone())
