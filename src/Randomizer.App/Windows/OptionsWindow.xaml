@@ -280,8 +280,10 @@
                     <ColumnDefinition Width="*" />
                   </Grid.ColumnDefinitions>
 
-                  <ComboBox SelectedItem="{Binding PushToTalkDevice}"
+                  <ComboBox SelectedValue="{Binding PushToTalkDevice}"
                             ItemsSource="{Binding PushToTalkDevices, ElementName=Self}"
+                            SelectedValuePath="Key"
+                            DisplayMemberPath="Value"
                             MinWidth="75">
                   </ComboBox>
                 </Grid>

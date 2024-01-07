@@ -87,21 +87,21 @@ public class MicrophoneService : IMicrophoneService
         GC.SuppressFinalize(this);
     }
 
-    public ICollection<string> GetDeviceNames()
+    public Dictionary<string, string> GetDeviceDetails()
     {
-        var toReturn = new List<string>();
+        var toReturn = new Dictionary<string, string>();
         var enumerator = new MMDeviceEnumerator();
         foreach (var wasapi in enumerator.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active))
         {
-            toReturn.Add(wasapi.DeviceFriendlyName);
+            toReturn[wasapi.ID] = wasapi.DeviceFriendlyName;
         }
 
         return toReturn;
     }
 
-    protected virtual MMDevice? GetInputDeviceByName(string? deviceName)
+    protected virtual MMDevice? GetInputDeviceById(string? id)
     {
-        if (string.IsNullOrEmpty(deviceName) || "Default" == deviceName)
+        if (string.IsNullOrEmpty(id) || "Default" == id)
         {
             return WasapiCapture.GetDefaultCaptureDevice();
         }
@@ -109,14 +109,14 @@ public class MicrophoneService : IMicrophoneService
         var enumerator = new MMDeviceEnumerator();
         return enumerator
             .EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active)
-            .FirstOrDefault(wasapi => wasapi.DeviceFriendlyName == deviceName);
+            .FirstOrDefault(wasapi => wasapi.ID == id);
     }
 
     protected virtual MMDevice? GetInputDevice()
     {
         try
         {
-            return GetInputDeviceByName(DesiredAudioDevice) ?? WasapiCapture.GetDefaultCaptureDevice();
+            return GetInputDeviceById(DesiredAudioDevice) ?? WasapiCapture.GetDefaultCaptureDevice();
         }
         catch (Exception e)
         {
