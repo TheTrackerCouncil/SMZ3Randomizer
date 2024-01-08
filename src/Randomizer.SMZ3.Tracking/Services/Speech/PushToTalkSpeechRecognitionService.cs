@@ -33,7 +33,7 @@ public partial class PushToTalkSpeechRecognitionService : SpeechRecognitionServi
     private readonly ILogger<PushToTalkSpeechRecognitionService> _logger;
     private readonly WaveFormat _waveFormat;
 
-    private Task? _hookRunner;
+    private bool _hasInitialized;
     private bool _isEnabled;
     private bool _isListening;
     private KeyCode _pushToTalkKey;
@@ -106,12 +106,12 @@ public partial class PushToTalkSpeechRecognitionService : SpeechRecognitionServi
     /// <inheritdoc/>
     public override bool Initialize()
     {
-        if (_hookRunner == null)
+        if (!_hasInitialized)
         {
             RecognitionEngine.SpeechRecognized += RecognitionEngine_SpeechRecognized;
             _hook.KeyPressed += Hook_KeyPressed;
             _hook.KeyReleased += Hook_KeyReleased;
-            _hookRunner = _hook.RunAsync();
+            _hasInitialized = true;
         }
         return _microphoneService.CanRecord() && SpeechSupportsWaveFormat(_waveFormat);
     }
@@ -145,8 +145,6 @@ public partial class PushToTalkSpeechRecognitionService : SpeechRecognitionServi
                 RecognitionEngine.SpeechRecognized -= RecognitionEngine_SpeechRecognized;
                 _hook.KeyPressed -= Hook_KeyPressed;
                 _hook.KeyReleased -= Hook_KeyReleased;
-                _hook.Dispose();
-                _hookRunner?.GetAwaiter().GetResult();
             }
         }
     }
