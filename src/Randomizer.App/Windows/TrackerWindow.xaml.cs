@@ -1145,7 +1145,7 @@ namespace Randomizer.App.Windows
 
         private void ShowFallbackMicrophoneWarning()
         {
-            MessageBox.Show(this, "Could not locate requested audio input device. Falling back to default windows microphone", "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show(this, "Could not locate requested audio input device. Falling back to default windows microphone.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
         private void ShowModuleWarning()
