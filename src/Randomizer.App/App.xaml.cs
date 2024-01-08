@@ -28,6 +28,7 @@ using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.AutoTracking;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 using Randomizer.SMZ3.Twitch;
+using SharpHook;
 
 namespace Randomizer.App
 {
@@ -42,6 +43,8 @@ namespace Randomizer.App
         private IHost? _host;
         private ILogger<App>? _logger;
         private SpriteDownloaderWindow? _spriteDownloaderWindow;
+        private IGlobalHook? _hook;
+        private Task? _hookRunner;
 
         public static void SaveWindowPositionAndSize<TWindow>(TWindow window)
             where TWindow : Window
@@ -171,6 +174,9 @@ namespace Randomizer.App
 
             ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(int.MaxValue));
 
+            _hook = _host.Services.GetRequiredService<IGlobalHook>();
+            _hookRunner = _hook.RunAsync();
+
             InitializeMsuRandomizer();
 
             _ = StartAsync();
@@ -243,6 +249,11 @@ namespace Randomizer.App
 
         private async void Application_Exit(object sender, ExitEventArgs e)
         {
+            if (_hook != null)
+            {
+                _hook.Dispose();
+                _hookRunner?.GetAwaiter().GetResult();
+            }
             if (_host != null)
             {
                 await _host.StopAsync();

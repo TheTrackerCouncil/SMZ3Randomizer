@@ -13,6 +13,7 @@ using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Shared;
 using Randomizer.SMZ3.ChatIntegration;
+using Randomizer.SMZ3.Tracking.Services;
 using static System.Int32;
 
 namespace Randomizer.App.Windows
@@ -30,6 +31,8 @@ namespace Randomizer.App.Windows
         private GeneralOptions _options = new();
         private bool _canLogIn = true;
         private ICollection<string> _availableProfiles;
+
+        private Dictionary<string, string> _availableInputDevices = new() { { "Default", "Default" } };
         private SourceRomValidationService _sourceRomValidationService;
 
         public OptionsWindow(IChatAuthenticationService chatAuthenticationService,
@@ -37,8 +40,14 @@ namespace Randomizer.App.Windows
             ILogger<OptionsWindow> logger,
             SourceRomValidationService sourceRomValidationService,
             IGitHubConfigDownloaderService gitHubConfigDownloaderService,
-            IGitHubSpriteDownloaderService gitHubSpriteDownloaderService)
+            IGitHubSpriteDownloaderService gitHubSpriteDownloaderService,
+            IMicrophoneService microphoneService)
         {
+            foreach (var device in microphoneService.GetDeviceDetails())
+            {
+                _availableInputDevices[device.Key] = device.Value;
+            }
+
             InitializeComponent();
             _trackerConfigProvider = configProvider;
             _chatAuthenticationService = chatAuthenticationService;
@@ -82,6 +91,16 @@ namespace Randomizer.App.Windows
         }
 
         public bool IsValidToken => !string.IsNullOrEmpty(Options.TwitchOAuthToken);
+
+        public Dictionary<string, string> PushToTalkDevices
+        {
+            get => _availableInputDevices;
+            set
+            {
+                _availableInputDevices = value;
+                PropertyChanged?.Invoke(this, new(nameof(PushToTalkDevices)));
+            }
+        }
 
         public ICollection<string> AvailableProfiles
         {

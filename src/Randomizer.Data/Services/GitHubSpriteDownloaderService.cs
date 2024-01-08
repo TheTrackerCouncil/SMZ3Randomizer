@@ -60,6 +60,11 @@ public class GitHubSpriteDownloaderService : IGitHubSpriteDownloaderService
             spritesToDownload = await GetSpritesToDownloadAsync(owner, repo, timeout);
         }
 
+        if (!Directory.Exists(_spriteFolder))
+        {
+            Directory.CreateDirectory(_spriteFolder);
+        }
+
         var previousHashes = GetPreviousSpriteHashes();
         var added = new ConcurrentDictionary<string, string>();
 
@@ -117,6 +122,11 @@ public class GitHubSpriteDownloaderService : IGitHubSpriteDownloaderService
     {
         try
         {
+            var destinationFile = new FileInfo(destination);
+            if (destinationFile.Directory?.Exists == false)
+            {
+                destinationFile.Directory.Create();
+            }
             using var client = new HttpClient();
             var response = await client.GetAsync(new Uri(url));
             await using var fs = new FileStream(destination, FileMode.Create);

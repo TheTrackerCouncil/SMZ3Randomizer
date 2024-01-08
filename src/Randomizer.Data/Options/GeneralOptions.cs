@@ -185,6 +185,14 @@ namespace Randomizer.Data.Options
         public GanonsTowerGuessingGameStyle GanonsTowerGuessingGameStyle { get; set; }
 
         /// <summary>
+        /// SpeechRecognitionMode
+        /// </summary>
+        public SpeechRecognitionMode SpeechRecognitionMode { get; set; }
+
+        /// <summary>
+        /// Key to be used for push-to-talk mode
+        /// </summary>
+        public PushToTalkKey PushToTalkKey { get; set; } = PushToTalkKey.KeyLeftControl;
         /// Option to download new configs on startup
         /// </summary>
         public bool DownloadConfigsOnStartup { get; set; } = true;
@@ -203,6 +211,11 @@ namespace Randomizer.Data.Options
         /// Dictionary of previously downloaded hashes
         /// </summary>
         public Dictionary<string, string> SpriteHashes { get; set; } = new();
+
+        /// <summary>
+        /// Device to be used for push to talk mode
+        /// </summary>
+        public string PushToTalkDevice { get; set; } = "Default";
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -231,7 +244,10 @@ namespace Randomizer.Data.Options
             MsuTrackDisplayStyle = MsuTrackDisplayStyle,
             MsuTrackOutputPath = MsuTrackOutputPath,
             AutoSaveLookAtEvents = AutoSaveLookAtEvents,
-            GanonsTowerGuessingGameStyle = GanonsTowerGuessingGameStyle
+            GanonsTowerGuessingGameStyle = GanonsTowerGuessingGameStyle,
+            SpeechRecognitionMode = SpeechRecognitionMode,
+            PushToTalkKey = PushToTalkKey,
+            PushToTalkDevice = PushToTalkDevice
         };
 
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)

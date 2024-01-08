@@ -695,9 +695,13 @@ namespace Randomizer.App.Windows
             // Show proper voice status bar icon and warn the user if no mic is available
             StatusBarConfidence.Visibility = TrackerBase.VoiceRecognitionEnabled ? Visibility.Visible : Visibility.Collapsed;
             StatusBarVoiceDisabled.Visibility = TrackerBase.VoiceRecognitionEnabled ? Visibility.Collapsed : Visibility.Visible;
-            if (!TrackerBase.MicrophoneInitialized)
+            if (!TrackerBase.MicrophoneInitialized && TrackerBase.Options.SpeechRecognitionMode != SpeechRecognitionMode.Disabled)
             {
                 ShowNoMicrophoneWarning();
+            }
+            else if (TrackerBase.MicrophoneInitialized && !TrackerBase.MicrophoneInitializedAsDesiredDevice)
+            {
+                ShowFallbackMicrophoneWarning();
             }
 
             _locationSyncer = _serviceProvider.GetRequiredService<TrackerLocationSyncer>();
@@ -1098,12 +1102,21 @@ namespace Randomizer.App.Windows
         /// <param name="e"></param>
         private void StatusBarVoiceDisabled_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            if (TrackerBase.Options.SpeechRecognitionMode == SpeechRecognitionMode.Disabled)
+            {
+                return;
+            }
+
             if (!TrackerBase.MicrophoneInitialized)
             {
                 if (!TrackerBase.InitializeMicrophone())
                 {
                     ShowNoMicrophoneWarning();
                     return;
+                }
+                else if (!TrackerBase.MicrophoneInitializedAsDesiredDevice)
+                {
+                    ShowFallbackMicrophoneWarning();
                 }
             }
 
@@ -1128,6 +1141,11 @@ namespace Randomizer.App.Windows
         {
             MessageBox.Show(this, "There is a problem with your microphone. Please check your sound settings to ensure you have a microphone enabled.\n\n" +
                 "Voice recognition has been disabled. You can attempt to re-enable it by double clicking on the Voice Disabled text.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+
+        private void ShowFallbackMicrophoneWarning()
+        {
+            MessageBox.Show(this, "Could not locate requested audio input device. Falling back to default windows microphone.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
         private void ShowModuleWarning()

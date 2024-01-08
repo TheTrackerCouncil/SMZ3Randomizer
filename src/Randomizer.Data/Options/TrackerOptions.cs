@@ -120,5 +120,20 @@ namespace Randomizer.Data
         /// How winners should be determined for the GT guessing game
         /// </summary>
         public GanonsTowerGuessingGameStyle GanonsTowerGuessingGameStyle { get; set; }
+
+        /// <summary>
+        /// Speech recognition mode
+        /// </summary>
+        public SpeechRecognitionMode SpeechRecognitionMode { get; set; }
+
+        /// <summary>
+        /// Key to be used for push-to-talk mode
+        /// </summary>
+        public PushToTalkKey PushToTalkKey { get; set; } = PushToTalkKey.KeyLeftControl;
+
+        /// <summary>
+        /// Device to be used for push to talk mode
+        /// </summary>
+        public string PushToTalkDevice { get; set; } = "Default";
     }
 }

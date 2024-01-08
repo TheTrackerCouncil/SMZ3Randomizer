@@ -1,3 +1,21 @@
+## Changes in 9.6.1
+
+- **Advanced Tracker Mood Functionality**
+
+  Previously tracker moods were simply dictated how tracker would respond to "Hey tracker, how are you?" However, this functionality has been expanded so that all responses can be changed based on the mood. For each YAML file, such as responses.yml, you can now create responses.Sassy.yml, responses.Rude.yml, or any mood you want, and tracker will pick from all of the moods available.
+
+  Currently this is mostly being used to manage lines that were already there, but this will be expanded in the future.
+
+- **Miscellaneous Updates and Fixes**
+
+  - Tracker will now respond when you pick up items that were set to be at a particular location.
+  - Tracker can now have special responses to specific track numbers, MSU names, and MSU song names.
+  - The final batch of Link sprites have been added.
+  
+## Upcoming GitHub Organization and Repository Change
+
+In the coming weeks, the repo url will change to being under the new [The Tracker Council](https://github.com/TheTrackerCouncil) organization. When the repo is migrated over, the url for it will change, though old urls should redirect you. This change is being done as there are plans to split out some parts of the repo into other repos to add the ability to add new tracker lines and sprites without the need of pushing out a new version of SMZ3. It'll also make it easier for people to contribute their own sprites and tracker lines as things will be more organized.
+
 ## Changes in 9.6.0
 
 - **Automatic Visible Items and Hint Tile Tracking**

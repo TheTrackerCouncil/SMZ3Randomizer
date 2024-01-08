@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using BunLabs;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MSURandomizerLibrary.Configs;
 using Randomizer.Abstractions;
@@ -30,6 +31,7 @@ using Randomizer.Data.WorldData;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Data.Tracking;
+using Randomizer.SMZ3.Tracking.Services.Speech;
 
 namespace Randomizer.SMZ3.Tracking;
 
@@ -53,7 +55,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     private readonly IWorldService _worldService;
     private readonly ITrackerTimerService _timerService;
     private readonly IMetadataService _metadataService;
-    private readonly SpeechRecognitionServiceBase _recognizer;
+    private readonly ISpeechRecognitionService _recognizer;
     private bool _disposed;
     private string? _lastSpokenText;
     private readonly bool _alternateTracker;
@@ -94,8 +96,8 @@ public sealed class Tracker : TrackerBase, IDisposable
         ITrackerStateService stateService,
         IWorldService worldService,
         ITrackerTimerService timerService,
-        SpeechRecognitionServiceBase speechRecognitionService,
-        IMetadataService metadataService)
+        IMetadataService metadataService,
+        IServiceProvider serviceProvider)
     {
         if (trackerOptions.Options == null)
             throw new InvalidOperationException("Tracker options have not yet been activated.");
@@ -140,7 +142,19 @@ public sealed class Tracker : TrackerBase, IDisposable
         }
 
         // Initialize the speech recognition engine
-        _recognizer = speechRecognitionService;
+        if (_trackerOptions.Options.SpeechRecognitionMode == SpeechRecognitionMode.Disabled ||
+            !OperatingSystem.IsWindows())
+        {
+            _recognizer = serviceProvider.GetRequiredService<NullSpeechRecognitionService>();
+        }
+        else if (_trackerOptions.Options.SpeechRecognitionMode == SpeechRecognitionMode.PushToTalk)
+        {
+            _recognizer = serviceProvider.GetRequiredService<PushToTalkSpeechRecognitionService>();
+        }
+        else
+        {
+            _recognizer = serviceProvider.GetRequiredService<AlwaysOnSpeechRecognitionService>();
+        }
         _metadataService = metadataService;
         if (OperatingSystem.IsWindows())
         {
@@ -189,7 +203,8 @@ public sealed class Tracker : TrackerBase, IDisposable
     public override bool InitializeMicrophone()
     {
         if (MicrophoneInitialized) return true;
-        MicrophoneInitialized = _recognizer.InitializeMicrophone();
+        MicrophoneInitialized = _recognizer.Initialize(out var foundRequestedDevice);
+        MicrophoneInitializedAsDesiredDevice = foundRequestedDevice;
         return MicrophoneInitialized;
     }
 
@@ -483,7 +498,10 @@ public sealed class Tracker : TrackerBase, IDisposable
         bool loadError;
         try
         {
-            Syntax = _moduleFactory.LoadAll(this, _recognizer.RecognitionEngine, out loadError);
+            var recognitionEngine = _recognizer is SpeechRecognitionServiceBase recognitionBase
+                ? recognitionBase.RecognitionEngine
+                : null;
+            Syntax = _moduleFactory.LoadAll(this, recognitionEngine, out loadError);
         }
         catch (Exception e)
         {
@@ -621,9 +639,9 @@ public sealed class Tracker : TrackerBase, IDisposable
         if (MicrophoneInitialized && !VoiceRecognitionEnabled && OperatingSystem.IsWindows())
         {
             _logger.LogInformation("Starting speech recognition");
-            _recognizer.SetInputToDefaultAudioDevice();
-            _recognizer.RecognizeAsyncStop();
-            _recognizer.RecognizeAsync(RecognizeMode.Multiple);
+            _recognizer.ResetInputDevice();
+            _recognizer.StopRecognition();
+            _recognizer.StartRecognition();
             VoiceRecognitionEnabled = true;
         }
     }
@@ -636,7 +654,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         if (VoiceRecognitionEnabled)
         {
             VoiceRecognitionEnabled = false;
-            _recognizer.RecognizeAsyncStop();
+            _recognizer.StopRecognition();
             _logger.LogInformation("Stopped speech recognition");
         }
     }
@@ -2389,7 +2407,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         {
             if (disposing)
             {
-                _recognizer.Dispose();
+                (_recognizer as IDisposable)?.Dispose();
                 (_communicator as IDisposable)?.Dispose();
 
                 foreach (var timer in _idleTimers.Values)
