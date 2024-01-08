@@ -699,6 +699,10 @@ namespace Randomizer.App.Windows
             {
                 ShowNoMicrophoneWarning();
             }
+            else if (TrackerBase.MicrophoneInitialized && !TrackerBase.MicrophoneInitializedAsDesiredDevice)
+            {
+                ShowFallbackMicrophoneWarning();
+            }
 
             _locationSyncer = _serviceProvider.GetRequiredService<TrackerLocationSyncer>();
             _locationsWindow = _serviceProvider.GetRequiredService<TrackerLocationsWindow>();
@@ -1110,6 +1114,10 @@ namespace Randomizer.App.Windows
                     ShowNoMicrophoneWarning();
                     return;
                 }
+                else if (!TrackerBase.MicrophoneInitializedAsDesiredDevice)
+                {
+                    ShowFallbackMicrophoneWarning();
+                }
             }
 
             try
@@ -1133,6 +1141,11 @@ namespace Randomizer.App.Windows
         {
             MessageBox.Show(this, "There is a problem with your microphone. Please check your sound settings to ensure you have a microphone enabled.\n\n" +
                 "Voice recognition has been disabled. You can attempt to re-enable it by double clicking on the Voice Disabled text.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+
+        private void ShowFallbackMicrophoneWarning()
+        {
+            MessageBox.Show(this, "Could not locate requested audio input device. Falling back to default windows microphone", "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
         private void ShowModuleWarning()

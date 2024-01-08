@@ -31,16 +31,16 @@ public class MicrophoneService : IMicrophoneService
 
     public string? DesiredAudioDevice { get; set; }
 
-    public virtual bool CanRecord()
+    public virtual bool CanRecord(out bool foundRequestedDevice)
     {
-        var inputDevice = GetInputDevice();
+        var inputDevice = GetInputDevice(out foundRequestedDevice);
         return inputDevice != null;
     }
 
     public virtual void StartRecording(WaveFormat waveFormat)
     {
         _manualResetEvent.Reset();
-        _activeInputDevice = GetInputDevice();
+        _activeInputDevice = GetInputDevice(out _);
 
         if (_activeInputDevice == null)
         {
@@ -112,15 +112,26 @@ public class MicrophoneService : IMicrophoneService
             .FirstOrDefault(wasapi => wasapi.ID == id);
     }
 
-    protected virtual MMDevice? GetInputDevice()
+    protected virtual MMDevice? GetInputDevice(out bool foundRequestedDevice)
     {
         try
         {
-            return GetInputDeviceById(DesiredAudioDevice) ?? WasapiCapture.GetDefaultCaptureDevice();
+            var device = GetInputDeviceById(DesiredAudioDevice);
+
+            if (device == null)
+            {
+                _logger.LogWarning("Requested audio device {Id} not found", DesiredAudioDevice);
+                foundRequestedDevice = false;
+                return WasapiCapture.GetDefaultCaptureDevice();
+            }
+
+            foundRequestedDevice = true;
+            return device;
         }
         catch (Exception e)
         {
             _logger.LogError(e, "Audio device not found");
+            foundRequestedDevice = false;
             return null;
         }
     }

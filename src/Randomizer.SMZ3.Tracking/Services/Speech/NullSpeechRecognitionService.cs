@@ -22,8 +22,9 @@ public sealed class NullSpeechRecognitionService : ISpeechRecognitionService
     {
     }
 
-    public bool Initialize()
+    public bool Initialize(out bool foundRequestedDevice)
     {
+        foundRequestedDevice = true;
         return false;
     }
 }

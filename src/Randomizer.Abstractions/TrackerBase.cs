@@ -141,6 +141,11 @@ public abstract class TrackerBase
     public bool MicrophoneInitialized { get; protected set; }
 
     /// <summary>
+    /// If the speech recognition engine was fully initialized with the requested device
+    /// </summary>
+    public bool MicrophoneInitializedAsDesiredDevice { get; protected set; }
+
+    /// <summary>
     /// If voice recognition has been enabled or not
     /// </summary>
     public bool VoiceRecognitionEnabled { get; protected set; }

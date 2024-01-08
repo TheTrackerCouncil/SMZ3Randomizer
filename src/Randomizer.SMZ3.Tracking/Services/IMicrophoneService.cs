@@ -11,7 +11,7 @@ public interface IMicrophoneService : IDisposable
 {
     string? DeviceName { get; }
 
-    bool CanRecord();
+    bool CanRecord(out bool foundRequestedDevice);
 
     void StartRecording(WaveFormat waveFormat);
 

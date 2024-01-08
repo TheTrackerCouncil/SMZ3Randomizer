@@ -31,21 +31,24 @@ public class AlwaysOnSpeechRecognitionService : SpeechRecognitionServiceBase
 
     public override void StartRecognition() => _recognizer.RecognizeAsync(RecognizeMode.Multiple);
 
-    public override bool Initialize()
+    public override bool Initialize(out bool foundRequestedDevice)
     {
         try
         {
             if (waveInGetNumDevs() == 0)
             {
                 _logger.LogWarning("No microphone device found.");
+                foundRequestedDevice = false;
                 return false;
             }
             _recognizer.SetInputToDefaultAudioDevice();
+            foundRequestedDevice = true;
             return true;
         }
         catch (Exception e)
         {
             _logger.LogError(e, "Error initializing microphone");
+            foundRequestedDevice = true;
             return false;
         }
     }

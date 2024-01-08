@@ -203,7 +203,8 @@ public sealed class Tracker : TrackerBase, IDisposable
     public override bool InitializeMicrophone()
     {
         if (MicrophoneInitialized) return true;
-        MicrophoneInitialized = _recognizer.Initialize();
+        MicrophoneInitialized = _recognizer.Initialize(out var foundRequestedDevice);
+        MicrophoneInitializedAsDesiredDevice = foundRequestedDevice;
         return MicrophoneInitialized;
     }
 

@@ -104,7 +104,7 @@ public partial class PushToTalkSpeechRecognitionService : SpeechRecognitionServi
     }
 
     /// <inheritdoc/>
-    public override bool Initialize()
+    public override bool Initialize(out bool foundRequestedDevice)
     {
         if (!_hasInitialized)
         {
@@ -113,7 +113,7 @@ public partial class PushToTalkSpeechRecognitionService : SpeechRecognitionServi
             _hook.KeyReleased += Hook_KeyReleased;
             _hasInitialized = true;
         }
-        return _microphoneService.CanRecord() && SpeechSupportsWaveFormat(_waveFormat);
+        return _microphoneService.CanRecord(out foundRequestedDevice) && SpeechSupportsWaveFormat(_waveFormat);
     }
 
     /// <inheritdoc/>
@@ -254,7 +254,7 @@ public partial class PushToTalkSpeechRecognitionService : SpeechRecognitionServi
 
         if (e.Data.KeyCode == _pushToTalkKey)
         {
-            if (!_microphoneService.CanRecord())
+            if (!_microphoneService.CanRecord(out _))
             {
                 _logger.LogWarning("Currently unable to record audio");
                 return;

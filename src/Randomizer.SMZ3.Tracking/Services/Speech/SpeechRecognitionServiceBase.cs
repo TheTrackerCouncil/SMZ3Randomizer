@@ -39,7 +39,7 @@ public abstract class SpeechRecognitionServiceBase : ISpeechRecognitionService, 
     /// Initializes the microphone to the default Windows mic
     /// </summary>
     /// <returns>True if successful, false otherwise</returns>
-    public abstract bool Initialize();
+    public abstract bool Initialize(out bool foundRequestedDevice);
 
     /// <summary>
     /// Releases all resources used by the service.

@@ -20,7 +20,7 @@ public interface ISpeechRecognitionService
     /// <see langword="true"/> if initialization was successful; <see
     /// langword="false"/> to disable speech recognition.
     /// </returns>
-    bool Initialize();
+    bool Initialize(out bool foundRequestedDevice);
 
     /// <summary>
     /// Re-initializes the input device to ensure a valid microphone is being
