@@ -1,3 +1,33 @@
+## Changes in 9.7.0
+
+- **Push-to-talk**
+
+  Unfortunately due to technical limitations, the original voice recognition method used by tracker doesn't allow changing the microphone used. In order to allow people to change the microphone used by tracker, we have implemented an option to enable a push-to-talk mode. With this mode, you can either use the default windows microphone or specify a specific microphone, then set a button to use to initiate push-to-talk.
+
+  This only works with keyboard keys, so if you want to use a controller button, you would need to use an external program to bind your controller to the keyboard key used.
+
+- **Auto Updating Tracker Configs & Sprites**
+
+  The tracker YAML configs and all of the sprites used by the SMZ3 Cas' Randomizer have been moved to separate repositories to make them easier to manage as well as allow the SMZ3 Cas' Randomizer to automatically update the configs and sprites on launch. This means that basic tracker line changes and new sprites won't require new builds of the randomizer. Furthermore, the config files now utilize schemas so that if using Visual Studio Code and the YAML plugin, it'll highlight errors automatically.
+
+  You can find the repositories for the configs and sprites below:
+
+  - https://github.com/TheTrackerCouncil/SMZ3CasConfigs
+  - https://github.com/TheTrackerCouncil/SMZ3CasSprites
+
+  With these changes, we hope it'll be easier for people to edit and even contribute tracker lines and sprites. If anyone doesn't want the configs and sprites to be automatically updated, this can be disabled in the settings.
+
+  For anyone who previously created new tracker profiles, then you can read [this document](https://docs.google.com/document/d/1lwKHfxYujvY--pmsWLn5dIBxqDqTvM1znA_xwPTnRac/edit?usp=sharing) for information on how to update your profile configs to make use of the schemas as well as edit them for the new tracker mood setup from version 9.6.1.
+
+- **Two New MSU Display Styles**
+
+  For the MSU information window and output text file, two new styles were added to present more information. There is a new single line style that includes the MSU name and creator. Another style displays the all of the MSU information in sentence form.
+
+- **Miscellaneous Updates and Fixes**
+
+  - Config files that have extra fields in them will no longer error out when loaded.
+  - Various tracker line have been added and updated.
+
 ## Changes in 9.6.1
 
 - **Advanced Tracker Mood Functionality**
@@ -12,10 +42,6 @@
   - Tracker can now have special responses to specific track numbers, MSU names, and MSU song names.
   - The final batch of Link sprites have been added.
   
-## Upcoming GitHub Organization and Repository Change
-
-In the coming weeks, the repo url will change to being under the new [The Tracker Council](https://github.com/TheTrackerCouncil) organization. When the repo is migrated over, the url for it will change, though old urls should redirect you. This change is being done as there are plans to split out some parts of the repo into other repos to add the ability to add new tracker lines and sprites without the need of pushing out a new version of SMZ3. It'll also make it easier for people to contribute their own sprites and tracker lines as things will be more organized.
-
 ## Changes in 9.6.0
 
 - **Automatic Visible Items and Hint Tile Tracking**
