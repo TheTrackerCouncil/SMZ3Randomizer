@@ -34,7 +34,7 @@ public class ViewedText : IZeldaStateCheck
         _tracker = tracker;
         _tracker.LocationCleared += TrackerOnLocationCleared;
         _pendingHintTiles = _worldAccessor.World.HintTiles
-            .Where(x => x.State is { HintState: HintState.Viewed }).ToDictionary(h => h,
+            .Where(x => x.State is { HintState: HintState.Viewed } && x.Locations?.Any() == true).ToDictionary(h => h,
                 h => h.Locations!.Select(l => _worldAccessor.World.FindLocation(l)).ToList());
     }
 

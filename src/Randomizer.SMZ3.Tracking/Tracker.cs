@@ -82,8 +82,8 @@ public sealed class Tracker : TrackerBase, IDisposable
     /// <param name="stateService"></param>
     /// <param name="worldService"></param>
     /// <param name="timerService"></param>
-    /// <param name="speechRecognitionService"></param>
     /// <param name="metadataService"></param>
+    /// <param name="serviceProvider"></param>
     public Tracker(IWorldAccessor worldAccessor,
         TrackerModuleFactory moduleFactory,
         IChatClient chatClient,
