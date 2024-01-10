@@ -8,7 +8,12 @@ namespace Randomizer.SMZ3.Tracking.Services.Speech;
 /// </summary>
 public sealed class NullSpeechRecognitionService : ISpeechRecognitionService
 {
-    public event EventHandler<SpeechRecognizedEventArgs>? SpeechRecognized;
+
+    public event EventHandler<SpeechRecognizedEventArgs>? SpeechRecognized
+    {
+        add { throw new NotSupportedException(); }
+        remove { throw new NotSupportedException(); }
+    }
 
     public void ResetInputDevice()
     {
