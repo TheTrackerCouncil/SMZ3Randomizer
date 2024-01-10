@@ -193,6 +193,8 @@ namespace Randomizer.Data.Options
         /// Key to be used for push-to-talk mode
         /// </summary>
         public PushToTalkKey PushToTalkKey { get; set; } = PushToTalkKey.KeyLeftControl;
+
+        /// <summary>
         /// Option to download new configs on startup
         /// </summary>
         public bool DownloadConfigsOnStartup { get; set; } = true;
