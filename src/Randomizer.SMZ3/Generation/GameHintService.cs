@@ -171,7 +171,7 @@ namespace Randomizer.SMZ3.Generation
             return locationUsefulness.MaxBy(x => (int)x.Usefulness);
         }
 
-        public LocationUsefulness GetUsefulness(List<Location> locations, List<World> allWorlds, bool ignoreRewards)
+        public LocationUsefulness GetUsefulness(List<Location> locations, List<World> allWorlds, Reward? ignoredReward)
         {
             var importantLocations = GetImportantLocations(allWorlds);
 
@@ -184,7 +184,7 @@ namespace Randomizer.SMZ3.Generation
                 return LocationUsefulness.Useless;
             }
 
-            return CheckIfLocationsAreImportant(allWorlds, importantLocations, locations, ignoreRewards);
+            return CheckIfLocationsAreImportant(allWorlds, importantLocations, locations, ignoredReward);
         }
 
         /// <summary>
@@ -382,17 +382,14 @@ namespace Randomizer.SMZ3.Generation
         /// Checks how useful a location is based on if the seed can be completed if we remove those
         /// locations from the playthrough and if the items there are at least slightly useful
         /// </summary>
-        private LocationUsefulness CheckIfLocationsAreImportant(List<World> allWorlds, IEnumerable<Location> importantLocations, List<Location> locations, bool ignoreRewards = false)
+        private LocationUsefulness CheckIfLocationsAreImportant(List<World> allWorlds, IEnumerable<Location> importantLocations, List<Location> locations, Reward? ignoredReward = null)
         {
             var worldLocations = importantLocations.Except(locations).ToList();
             try
             {
                 var localWorld = allWorlds.First(x => x.Id == locations.First().World.Id);
                 var locationIds = locations.Select(x => x.Id).ToHashSet();
-                var rewards = ignoreRewards
-                    ? localWorld.Dungeons.Where(x => x.DungeonRewardType is RewardType.CrystalBlue or RewardType.CrystalRed && x.BossLocationId != null && locationIds.Contains(x.BossLocationId.Value)).Select(x => x.DungeonReward!).ToList()
-                    : null;
-                var spheres = _playthroughService.GenerateSpheres(worldLocations, rewards);
+                var spheres = _playthroughService.GenerateSpheres(worldLocations, ignoredReward);
                 var sphereLocations = spheres.SelectMany(x => x.Locations).ToList();
 
                 var canBeatGT = CheckSphereLocationCount(sphereLocations, locations, LocationId.GanonsTowerMoldormChest, allWorlds.Count);
@@ -428,7 +425,7 @@ namespace Randomizer.SMZ3.Generation
                     }
                     var currentCrystalCount = world.Dungeons.Count(d =>
                         d.IsCrystalDungeon && sphereLocations.Any(l =>
-                            l.World.Id == world.Id && l.Id == s_dungeonBossLocations[d.GetType()])) + (rewards?.Count ?? 0);
+                            l.World.Id == world.Id && l.Id == s_dungeonBossLocations[d.GetType()])) + (ignoredReward == null ? 0 : 1);
                     if (currentCrystalCount < numCrystalsNeeded)
                     {
                         return LocationUsefulness.Mandatory;

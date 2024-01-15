@@ -118,7 +118,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
             else if (TrackerBase.HintsEnabled)
             {
-                var usefulness = _gameHintService.GetUsefulness(locations.ToList(), WorldService.Worlds, !TrackerBase.World.Config.ZeldaKeysanity);
+                Reward? areaReward = null;
+                if (area is IHasReward { RewardType: RewardType.CrystalRed or RewardType.CrystalBlue } rewardArea)
+                {
+                    areaReward = rewardArea.Reward;
+                }
+                var usefulness = _gameHintService.GetUsefulness(locations.ToList(), WorldService.Worlds, areaReward);
                 if (usefulness == LocationUsefulness.Mandatory)
                 {
                     TrackerBase.Say(x => x.Hints.AreaHasSomethingMandatory, area.GetName());

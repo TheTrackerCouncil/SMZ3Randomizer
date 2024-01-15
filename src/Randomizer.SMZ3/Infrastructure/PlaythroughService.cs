@@ -68,15 +68,18 @@ public class PlaythroughService
     /// <param name="defaultRewards"></param>
     /// <returns>A list of the spheres</returns>
     /// <exception cref="RandomizerGenerationException">When not all locations are </exception>
-    public IEnumerable<Playthrough.Sphere> GenerateSpheres(IEnumerable<Location> allLocations, List<Reward>? defaultRewards = null)
+    public IEnumerable<Playthrough.Sphere> GenerateSpheres(IEnumerable<Location> allLocations, Reward? defaultReward = null)
     {
         var worlds = allLocations.Select(x => x.Region.World).Distinct();
-
-        defaultRewards ??= new List<Reward>();
 
         var spheres = new List<Playthrough.Sphere>();
         var locations = new List<Location>();
         var items = new List<Item>();
+        var defaultRewards = new List<Reward>();
+        if (defaultReward != null)
+        {
+            defaultRewards.Add(defaultReward);
+        }
 
         var allRewards = worlds.SelectMany(w => w.Regions).OfType<IHasReward>().Select(x => x.Reward);
         var regions = new List<Region>();
@@ -105,7 +108,7 @@ public class PlaythroughService
             var sphere = new Playthrough.Sphere();
 
             var tempProgression = new Progression(items, new List<Reward>(), new List<Boss>());
-            rewards = defaultRewards.Concat(allRewards.Where(x => x.Region.CanComplete(tempProgression))).ToList();
+            rewards = allRewards.Where(x => x.Region.CanComplete(tempProgression)).Concat(defaultRewards).ToList();
             bosses = bossRegions.Where(x => x.CanBeatBoss(tempProgression)).Select(x => x.Boss).ToList();
 
             var accessibleLocations = allLocations.Where(l => l.IsAvailable(new Progression(items.Where(i => i.World == l.World), rewards.Where(r => r.World == l.World), bosses.Where(b => b.World == l.World))));
