@@ -15,6 +15,7 @@ using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.Data.Options;
 using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.Contracts;
+using Randomizer.SMZ3.Infrastructure;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -37,6 +38,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private readonly IRandomizerConfigService _randomizerConfigService;
         private readonly bool _isMultiworld;
         private readonly IGameHintService _gameHintService;
+        private readonly PlaythroughService _playthroughService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SpoilerModule"/> class.
@@ -47,13 +49,15 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="logger">Used to write logging information.</param>
         /// <param name="randomizerConfigService">Service for retrieving the randomizer config for the world</param>
         /// <param name="gameHintService">Service for getting hints for how important locations are</param>
-        public SpoilerModule(TrackerBase tracker, IItemService itemService, ILogger<SpoilerModule> logger, IWorldService worldService, IRandomizerConfigService randomizerConfigService, IGameHintService gameHintService)
+        /// <param name="playthroughService"></param>
+        public SpoilerModule(TrackerBase tracker, IItemService itemService, ILogger<SpoilerModule> logger, IWorldService worldService, IRandomizerConfigService randomizerConfigService, IGameHintService gameHintService, PlaythroughService playthroughService)
             : base(tracker, itemService, worldService, logger)
         {
             TrackerBase.HintsEnabled = tracker.World.Config is { Race: false, DisableTrackerHints: false } && tracker.Options.HintsEnabled;
             TrackerBase.SpoilersEnabled = tracker.World.Config is { Race: false, DisableTrackerSpoilers: false } && tracker.Options.SpoilersEnabled;
             _randomizerConfigService = randomizerConfigService;
             _gameHintService = gameHintService;
+            _playthroughService = playthroughService;
             _isMultiworld = tracker.World.Config.MultiWorld;
         }
 
@@ -114,7 +118,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
             else if (TrackerBase.HintsEnabled)
             {
-                var usefulness = _gameHintService.GetUsefulness(locations.ToList(), WorldService.Worlds);
+                var usefulness = _gameHintService.GetUsefulness(locations.ToList(), WorldService.Worlds, !TrackerBase.World.Config.ZeldaKeysanity);
                 if (usefulness == LocationUsefulness.Mandatory)
                 {
                     TrackerBase.Say(x => x.Hints.AreaHasSomethingMandatory, area.GetName());
@@ -901,7 +905,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             if (TrackerBase.World.Config.Race) return;
 
-            Playthrough.TryGenerate(new[] { TrackerBase.World }, TrackerBase.World.Config, out _playthrough);
+            _playthroughService.TryGenerate(new[] { TrackerBase.World }, TrackerBase.World.Config, out _playthrough);
 
             if (!TrackerBase.World.Config.DisableTrackerHints)
             {

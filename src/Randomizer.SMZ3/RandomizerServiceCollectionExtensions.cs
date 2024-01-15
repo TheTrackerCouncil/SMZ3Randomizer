@@ -9,6 +9,7 @@ using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.FileData.Patches;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Infrastructure;
+using SQLitePCL;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -26,6 +27,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<SpritePatcherService>();
             services.AddSingleton<RomTextService>();
             services.AddTransient<RomLauncherService>();
+            services.AddTransient<PlaythroughService>();
             return services;
         }
 
