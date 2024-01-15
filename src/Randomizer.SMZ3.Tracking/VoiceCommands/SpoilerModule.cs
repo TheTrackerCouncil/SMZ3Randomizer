@@ -119,10 +119,25 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             else if (TrackerBase.HintsEnabled)
             {
                 Reward? areaReward = null;
-                if (area is IHasReward { RewardType: RewardType.CrystalRed or RewardType.CrystalBlue } rewardArea)
+                if (area is IHasReward rewardArea && rewardArea.RewardType != RewardType.Agahnim && rewardArea.RewardType != RewardType.None && area is IDungeon dungeon)
                 {
-                    areaReward = rewardArea.Reward;
+                    var bossLocation = area.Locations.First(x => x.Id == dungeon.BossLocationId);
+
+                    // For pendant dungeons, only factor it in if the player has not gotten it so that they get hints
+                    // that factor in Saha/Ped
+                    if (rewardArea.RewardType is RewardType.PendantBlue or RewardType.PendantGreen
+                        or RewardType.PendantRed && (bossLocation.State.Cleared || bossLocation.State.Autotracked))
+                    {
+                        areaReward = rewardArea.Reward;
+                    }
+                    // For crystal dungeons, always act like the player has them so that it only gives a hint based on
+                    // the actual items in the dungeon
+                    else if (rewardArea.RewardType is RewardType.CrystalBlue or RewardType.CrystalRed)
+                    {
+                        areaReward = rewardArea.Reward;
+                    }
                 }
+
                 var usefulness = _gameHintService.GetUsefulness(locations.ToList(), WorldService.Worlds, areaReward);
                 if (usefulness == LocationUsefulness.Mandatory)
                 {
@@ -138,10 +153,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         || region.RewardType == RewardType.CrystalRed)
                     {
                         TrackerBase.Say(x => x.Hints.AreaHasJunkAndCrystal, area.GetName());
-                    }
-                    else if (TrackerBase.IsWorth(region.RewardType))
-                    {
-                        TrackerBase.Say(x => x.Hints.AreaWorthComplicated, area.GetName());
                     }
                     else
                     {
