@@ -281,6 +281,20 @@ namespace Randomizer.Data.WorldData
         }
 
         /// <summary>
+        /// Returns if the item is potentially important, but not necessarily required
+        /// </summary>
+        /// <param name="keysanity">The keysanity mode. If not specified, it'll use the item's world</param>
+        /// <returns></returns>
+        public bool IsPotentiallyImportant(KeysanityMode? keysanity = null)
+        {
+            keysanity ??= Item.World.Config.KeysanityMode;
+            return Item.Progression
+                || (Item.IsDungeonItem && keysanity is KeysanityMode.Both or KeysanityMode.Zelda)
+                || (Item.IsKeycard && keysanity is KeysanityMode.Both or KeysanityMode.SuperMetroid);
+        }
+
+
+        /// <summary>
         /// Returns a string that represents the location.
         /// </summary>
         /// <returns>A string that represents this location.</returns>

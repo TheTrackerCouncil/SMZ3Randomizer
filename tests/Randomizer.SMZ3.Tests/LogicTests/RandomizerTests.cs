@@ -176,6 +176,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
                 .AddSingleton<IMetadataService, MetadataService>()
                 .AddSingleton<IGameHintService, GameHintService>()
                 .AddSingleton<IPatcherService, PatcherService>()
+                .AddTransient<PlaythroughService>()
                 .AddConfigs()
                 .BuildServiceProvider();
 
@@ -183,7 +184,8 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             return new Smz3Randomizer(filler, new WorldAccessor(),
                 serviceProvider.GetRequiredService<IGameHintService>(),
                 GetLogger<Smz3Randomizer>(),
-                serviceProvider.GetRequiredService<IPatcherService>());
+                serviceProvider.GetRequiredService<IPatcherService>(),
+                serviceProvider.GetRequiredService<PlaythroughService>());
         }
     }
 }

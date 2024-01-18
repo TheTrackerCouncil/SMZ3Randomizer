@@ -11,6 +11,7 @@ using Randomizer.Shared;
 using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.FileData;
+using Randomizer.SMZ3.Infrastructure;
 
 namespace Randomizer.SMZ3.Generation
 {
@@ -20,14 +21,16 @@ namespace Randomizer.SMZ3.Generation
         private readonly ILogger<Smz3Randomizer> _logger;
         private readonly IGameHintService _hintService;
         private readonly IPatcherService _patcherService;
+        private readonly PlaythroughService _playthroughService;
 
         public Smz3Randomizer(IFiller filler, IWorldAccessor worldAccessor, IGameHintService gameHintGenerator,
-            ILogger<Smz3Randomizer> logger, IPatcherService patcherService)
+            ILogger<Smz3Randomizer> logger, IPatcherService patcherService, PlaythroughService playthroughService)
         {
             Filler = filler;
             _worldAccessor = worldAccessor;
             _logger = logger;
             _patcherService = patcherService;
+            _playthroughService = playthroughService;
             _hintService = gameHintGenerator;
         }
 
@@ -99,7 +102,7 @@ namespace Randomizer.SMZ3.Generation
             Filler.SetRandom(rng);
             Filler.Fill(worlds, primaryConfig, cancellationToken);
 
-            var playthrough = Playthrough.Generate(worlds, primaryConfig);
+            var playthrough = _playthroughService.Generate(worlds, primaryConfig);
             var seedData = new SeedData
             (
                 guid: Guid.NewGuid().ToString("N"),

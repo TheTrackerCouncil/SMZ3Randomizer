@@ -14,6 +14,7 @@ using Randomizer.Shared;
 using Randomizer.Shared.Enums;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Contracts;
+using Randomizer.SMZ3.Infrastructure;
 
 namespace Randomizer.SMZ3.Generation
 {
@@ -62,12 +63,14 @@ namespace Randomizer.SMZ3.Generation
         private readonly IMetadataService _metadataService;
         private readonly GameLinesConfig _gameLines;
         private readonly HintTileConfig _hintTileConfig;
+        private readonly PlaythroughService _playthroughService;
         private Random _random;
 
-        public GameHintService(Configs configs, IMetadataService metadataService, ILogger<GameHintService> logger)
+        public GameHintService(Configs configs, IMetadataService metadataService, ILogger<GameHintService> logger, PlaythroughService playthroughService)
         {
             _gameLines = configs.GameLines;
             _logger = logger;
+            _playthroughService = playthroughService;
             _hintTileConfig = configs.HintTileConfig;
             _metadataService = metadataService;
             _random = new Random();
@@ -168,7 +171,7 @@ namespace Randomizer.SMZ3.Generation
             return locationUsefulness.MaxBy(x => (int)x.Usefulness);
         }
 
-        public LocationUsefulness GetUsefulness(List<Location> locations, List<World> allWorlds)
+        public LocationUsefulness GetUsefulness(List<Location> locations, List<World> allWorlds, Reward? ignoredReward)
         {
             var importantLocations = GetImportantLocations(allWorlds);
 
@@ -181,7 +184,7 @@ namespace Randomizer.SMZ3.Generation
                 return LocationUsefulness.Useless;
             }
 
-            return CheckIfLocationsAreImportant(allWorlds, importantLocations, locations);
+            return CheckIfLocationsAreImportant(allWorlds, importantLocations, locations, ignoredReward);
         }
 
         /// <summary>
@@ -379,12 +382,14 @@ namespace Randomizer.SMZ3.Generation
         /// Checks how useful a location is based on if the seed can be completed if we remove those
         /// locations from the playthrough and if the items there are at least slightly useful
         /// </summary>
-        private LocationUsefulness CheckIfLocationsAreImportant(List<World> allWorlds, IEnumerable<Location> importantLocations, List<Location> locations)
+        private LocationUsefulness CheckIfLocationsAreImportant(List<World> allWorlds, IEnumerable<Location> importantLocations, List<Location> locations, Reward? ignoredReward = null)
         {
             var worldLocations = importantLocations.Except(locations).ToList();
             try
             {
-                var spheres = Playthrough.GenerateSpheres(worldLocations);
+                var localWorld = allWorlds.First(x => x.Id == locations.First().World.Id);
+                var locationIds = locations.Select(x => x.Id).ToHashSet();
+                var spheres = _playthroughService.GenerateSpheres(worldLocations, ignoredReward);
                 var sphereLocations = spheres.SelectMany(x => x.Locations).ToList();
 
                 var canBeatGT = CheckSphereLocationCount(sphereLocations, locations, LocationId.GanonsTowerMoldormChest, allWorlds.Count);
@@ -420,7 +425,7 @@ namespace Randomizer.SMZ3.Generation
                     }
                     var currentCrystalCount = world.Dungeons.Count(d =>
                         d.IsCrystalDungeon && sphereLocations.Any(l =>
-                            l.World.Id == world.Id && l.Id == s_dungeonBossLocations[d.GetType()]));
+                            l.World.Id == world.Id && l.Id == s_dungeonBossLocations[d.GetType()])) + (ignoredReward == null ? 0 : 1);
                     if (currentCrystalCount < numCrystalsNeeded)
                     {
                         return LocationUsefulness.Mandatory;
@@ -595,7 +600,7 @@ namespace Randomizer.SMZ3.Generation
         {
             // Get the first accessible ammo locations to make sure early ammo isn't considered mandatory when there
             // are others available
-            var spheres = Playthrough.GenerateSpheres(allWorlds.SelectMany(x => x.Locations));
+            var spheres = _playthroughService.GenerateSpheres(allWorlds.SelectMany(x => x.Locations));
             var ammoItemTypes = new List<ItemType>()
             {
                 ItemType.Missile,

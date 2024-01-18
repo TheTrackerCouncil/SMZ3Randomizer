@@ -15,6 +15,7 @@ using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.Data.Options;
 using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.Contracts;
+using Randomizer.SMZ3.Infrastructure;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -37,6 +38,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private readonly IRandomizerConfigService _randomizerConfigService;
         private readonly bool _isMultiworld;
         private readonly IGameHintService _gameHintService;
+        private readonly PlaythroughService _playthroughService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SpoilerModule"/> class.
@@ -47,13 +49,15 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="logger">Used to write logging information.</param>
         /// <param name="randomizerConfigService">Service for retrieving the randomizer config for the world</param>
         /// <param name="gameHintService">Service for getting hints for how important locations are</param>
-        public SpoilerModule(TrackerBase tracker, IItemService itemService, ILogger<SpoilerModule> logger, IWorldService worldService, IRandomizerConfigService randomizerConfigService, IGameHintService gameHintService)
+        /// <param name="playthroughService"></param>
+        public SpoilerModule(TrackerBase tracker, IItemService itemService, ILogger<SpoilerModule> logger, IWorldService worldService, IRandomizerConfigService randomizerConfigService, IGameHintService gameHintService, PlaythroughService playthroughService)
             : base(tracker, itemService, worldService, logger)
         {
             TrackerBase.HintsEnabled = tracker.World.Config is { Race: false, DisableTrackerHints: false } && tracker.Options.HintsEnabled;
             TrackerBase.SpoilersEnabled = tracker.World.Config is { Race: false, DisableTrackerSpoilers: false } && tracker.Options.SpoilersEnabled;
             _randomizerConfigService = randomizerConfigService;
             _gameHintService = gameHintService;
+            _playthroughService = playthroughService;
             _isMultiworld = tracker.World.Config.MultiWorld;
         }
 
@@ -114,7 +118,27 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
             else if (TrackerBase.HintsEnabled)
             {
-                var usefulness = _gameHintService.GetUsefulness(locations.ToList(), WorldService.Worlds);
+                Reward? areaReward = null;
+                if (area is IHasReward rewardArea && rewardArea.RewardType != RewardType.Agahnim && rewardArea.RewardType != RewardType.None && area is IDungeon dungeon)
+                {
+                    var bossLocation = area.Locations.First(x => x.Id == dungeon.BossLocationId);
+
+                    // For pendant dungeons, only factor it in if the player has not gotten it so that they get hints
+                    // that factor in Saha/Ped
+                    if (rewardArea.RewardType is RewardType.PendantBlue or RewardType.PendantGreen
+                        or RewardType.PendantRed && (bossLocation.State.Cleared || bossLocation.State.Autotracked))
+                    {
+                        areaReward = rewardArea.Reward;
+                    }
+                    // For crystal dungeons, always act like the player has them so that it only gives a hint based on
+                    // the actual items in the dungeon
+                    else if (rewardArea.RewardType is RewardType.CrystalBlue or RewardType.CrystalRed)
+                    {
+                        areaReward = rewardArea.Reward;
+                    }
+                }
+
+                var usefulness = _gameHintService.GetUsefulness(locations.ToList(), WorldService.Worlds, areaReward);
                 if (usefulness == LocationUsefulness.Mandatory)
                 {
                     TrackerBase.Say(x => x.Hints.AreaHasSomethingMandatory, area.GetName());
@@ -129,10 +153,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         || region.RewardType == RewardType.CrystalRed)
                     {
                         TrackerBase.Say(x => x.Hints.AreaHasJunkAndCrystal, area.GetName());
-                    }
-                    else if (TrackerBase.IsWorth(region.RewardType))
-                    {
-                        TrackerBase.Say(x => x.Hints.AreaWorthComplicated, area.GetName());
                     }
                     else
                     {
@@ -901,7 +921,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             if (TrackerBase.World.Config.Race) return;
 
-            Playthrough.TryGenerate(new[] { TrackerBase.World }, TrackerBase.World.Config, out _playthrough);
+            _playthroughService.TryGenerate(new[] { TrackerBase.World }, TrackerBase.World.Config, out _playthrough);
 
             if (!TrackerBase.World.Config.DisableTrackerHints)
             {

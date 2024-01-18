@@ -39,8 +39,9 @@ namespace Randomizer.SMZ3.Contracts
         /// </summary>
         /// <param name="locations">The location to check</param>
         /// <param name="allWorlds">All worlds that are a part of the seed</param>
+        /// <param name="ignoredReward">Dungeon reward to ignore</param>
         /// <returns>How useful the locations are</returns>
-        LocationUsefulness GetUsefulness(List<Location> locations, List<World> allWorlds);
+        LocationUsefulness GetUsefulness(List<Location> locations, List<World> allWorlds, Reward? ignoredReward);
 
         /// <summary>
         /// Retrieves the text that could be displayed on one of the hint tiles in a player's

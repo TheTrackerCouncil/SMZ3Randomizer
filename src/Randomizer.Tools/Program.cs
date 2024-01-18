@@ -13,6 +13,7 @@ using Randomizer.Shared.Enums;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Generation;
+using Randomizer.SMZ3.Infrastructure;
 using Serilog;
 using Serilog.Events;
 
@@ -83,13 +84,14 @@ namespace Randomizer.Tools
             var treeJunk = 0;
 
             var hintService = s_services.GetRequiredService<IGameHintService>();
+            var playthroughService = s_services.GetRequiredService<PlaythroughService>();
 
             Parallel.For(0, count, new ParallelOptions() { MaxDegreeOfParallelism = 12 }, (_, _) =>
             {
                 try
                 {
                     var seed = s_services.GetRequiredService<Smz3Randomizer>().GenerateSeed(config);
-                    var playthrough = Playthrough.Generate(seed.WorldGenerationData.Select(x => x.World).ToList(), config);
+                    var playthrough = playthroughService.Generate(seed.WorldGenerationData.Select(x => x.World).ToList(), config);
                     stats.Add(new StatsDetails
                     {
                         NumSpheres = playthrough.Spheres.Count,
