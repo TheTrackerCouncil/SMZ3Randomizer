@@ -24,6 +24,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         private bool _isConnected;
         private readonly WebsocketClient _client;
         private EmulatorAction? _lastMessage;
+        private readonly List<byte> _pendingData = new();
 
         /// <summary>
         /// Constructor
@@ -40,6 +41,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             var url = new Uri($"ws://{ip}:8080");
 
             _client = new WebsocketClient(url);
+            _client.ErrorReconnectTimeout = TimeSpan.FromSeconds(5);
             _client.ReconnectTimeout = TimeSpan.FromSeconds(5);
 
             _client.ReconnectionHappened.Subscribe(info =>
@@ -110,6 +112,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             if (message.Type == EmulatorActionType.ReadBlock)
             {
                 _lastMessage = message;
+                _pendingData.Clear();
                 _client.Send(JsonSerializer.Serialize(new USB2SNESRequest()
                 {
                     Opcode = "GetAddress",
@@ -160,12 +163,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             // For text responses it should be the device info, so we need to attach ourselves to that device
             if (msg.MessageType == WebSocketMessageType.Text)
             {
-                _logger.LogTrace($"Receiving text data: {msg.Text}");
+                _logger.LogInformation("Receiving text data: {Text}", msg.Text);
 
                 var response = JsonSerializer.Deserialize<USB2SNESResponse>(msg.Text);
                 if (response == null || response.Results == null || response.Results.Count == 0)
                 {
-                    _logger.LogError("Invalid json response " + WebSocketMessageType.Text);
+                    _logger.LogError("Invalid json response {Text}", msg.Text);
                     return;
                 }
 
@@ -198,13 +201,26 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             // USB2SNES returns with NO context for what this is a response to...
             else if (msg.MessageType == WebSocketMessageType.Binary && msg.Binary != null)
             {
-                var data = new EmulatorMemoryData(msg.Binary);
-
                 if (_lastMessage != null)
                 {
-                    _logger.LogTrace($"Receiving {_lastMessage.Type} unknown binary data");
-                    MessageReceived?.Invoke(this, new(_lastMessage.Address, data));
-                    _lastMessage = null;
+                    if (msg.Binary.Length == _lastMessage.Length)
+                    {
+                        var data = new EmulatorMemoryData(msg.Binary);
+                        _logger.LogTrace($"Receiving {_lastMessage.Type} binary data");
+                        MessageReceived?.Invoke(this, new(_lastMessage.Address, data));
+                        _lastMessage = null;
+                    }
+                    else
+                    {
+                        _pendingData.AddRange(msg.Binary);
+                        if (_pendingData.Count == _lastMessage.Length)
+                        {
+                            var data = new EmulatorMemoryData(_pendingData.ToArray());
+                            _logger.LogTrace($"Receiving {_lastMessage.Type} binary data");
+                            MessageReceived?.Invoke(this, new(_lastMessage.Address, data));
+                            _lastMessage = null;
+                        }
+                    }
                 }
                 else
                 {
