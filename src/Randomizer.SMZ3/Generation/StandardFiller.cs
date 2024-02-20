@@ -180,7 +180,15 @@ namespace Randomizer.SMZ3.Generation
                 {
                     var itemType = (ItemType)value;
 
-                    if (progressionItems.Any(x => x.Type == itemType))
+                    if (niceItems.Any(x => x.Type == itemType))
+                    {
+                        placedItems.Add(FillItemAtLocation(niceItems, itemType, location));
+                    }
+                    else if (junkItems.Any(x => x.Type == itemType))
+                    {
+                        placedItems.Add(FillItemAtLocation(junkItems, itemType, location));
+                    }
+                    else if (progressionItems.Any(x => x.Type == itemType))
                     {
                         //var location = worlds[0].Locations.First(x => x.Id == locationId);
                         var itemsRequired = Logic.GetMissingRequiredItems(location, new Progression(), out _);
@@ -194,14 +202,6 @@ namespace Randomizer.SMZ3.Generation
                         {
                             throw new RandomizerGenerationException($"{itemType} was selected as the item for {location}, but it is required to get there.");
                         }
-                    }
-                    else if (niceItems.Any(x => x.Type == itemType))
-                    {
-                        placedItems.Add(FillItemAtLocation(niceItems, itemType, location));
-                    }
-                    else if (junkItems.Any(x => x.Type == itemType))
-                    {
-                        placedItems.Add(FillItemAtLocation(junkItems, itemType, location));
                     }
                 }
             }
