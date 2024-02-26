@@ -77,24 +77,25 @@ init:
     lda #$0000
     tcd
 
-    ; Check if MSU-1 is available
-    lda.w $2002 : cmp.w #$2D53 : bne .playspc
-
     ; Play MSU-1 track 99 if available
     sep #$30
-    lda.b #99 : sta $0332 : sta.w $2004 : stz.w $2005
-    - lda.w $2000 : bit.b #$40 : bne -          ; Wait for MSU-1 BUSY
-    lda.w $2000 : bit.b #$08 : bne .fallback    ; Check MSU-1 Track missing otherwise fall back to SPC
-    lda.b #1 : sta.w $2007                      ; Sets the track to not repeat
-    lda.b #$FF : sta.w $2006                    ; Set to max volume
-    bra .load_graphics
+    lda $2002 : cmp.b #'S' : bne +
+        stz.w $2006                                 ; Mute before waiting while MSU-1 is busy
+        lda.b #99 : sta $0332 : sta.w $2004 : stz.w $2005
+        - lda.w $2000 : bit.b #$40 : bne -          ; Wait for MSU-1 BUSY
+        lda.w $2000 : bit.b #$08 : bne .fallback    ; Check MSU-1 Track missing otherwise fall back to SPC
+        lda.b #1 : sta.w $2007                      ; Sets the track to not repeat
+        lda.b #$FF : sta.w $2006                    ; Set to max volume
+    +
+    bra .play_music
 
 .fallback
     ; Mute any currently playing MSU-1 track
+    stz $0332
     stz.w $2007 : stz.w $2006
     stz.w $2004 : stz.w $2005
 
-.playspc
+.play_music
     ; Start SPC song
     jsl playmusic
 
