@@ -64,6 +64,10 @@ namespace Randomizer.SMZ3.Generation
                 plandoName = Regex.Replace(plandoName, "(^Spoiler_Plando_|_[0-9]+$)", "");
             }
 
+            var seed = string.IsNullOrEmpty(config.Seed) ? plandoName : config.Seed;
+            var seedNumber = ISeededRandomizer.ParseSeed(ref seed);
+            var rng = new Random(seedNumber).Sanitize();
+
             var seedData = new SeedData
             (
                 guid: Guid.NewGuid().ToString("N"),
@@ -83,8 +87,8 @@ namespace Randomizer.SMZ3.Generation
                     World = world,
                     Worlds = worlds,
                     SeedGuid = seedData.Guid,
-                    Seed = 0,
-                    Random = new Random().Sanitize(),
+                    Seed = seedNumber,
+                    Random = rng,
                     PlandoConfig = config.PlandoConfig ?? new PlandoConfig()
                 });
 
