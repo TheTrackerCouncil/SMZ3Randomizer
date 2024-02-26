@@ -1,7 +1,7 @@
 ﻿using System;
 
 using FluentAssertions;
-
+using Randomizer.SMZ3.Contracts;
 using Xunit;
 
 namespace Randomizer.SMZ3.Tests
@@ -14,7 +14,7 @@ namespace Randomizer.SMZ3.Tests
         [InlineData("69217125", 69217125)]
         public void ParseSeedAcceptsRegularIntegers(string? input, int expected)
         {
-            var result = Generation.Smz3Randomizer.ParseSeed(ref input);
+            var result = ISeededRandomizer.ParseSeed(ref input);
 
             Assert.Equal(expected, result);
         }
@@ -24,7 +24,7 @@ namespace Randomizer.SMZ3.Tests
         [InlineData("0x69217125", 1763799333)]
         public void ParseSeedAcceptsHexadecimalSeeds(string? input, int expected)
         {
-            var result = Generation.Smz3Randomizer.ParseSeed(ref input);
+            var result = ISeededRandomizer.ParseSeed(ref input);
 
             Assert.Equal(expected, result);
         }
@@ -33,7 +33,7 @@ namespace Randomizer.SMZ3.Tests
         [InlineData("Cas'", 1498539627)]
         public void ParseSeedAcceptsAnyString(string? input, int expected)
         {
-            var result = Generation.Smz3Randomizer.ParseSeed(ref input);
+            var result = ISeededRandomizer.ParseSeed(ref input);
 
             Assert.Equal(expected, result);
         }
@@ -42,7 +42,7 @@ namespace Randomizer.SMZ3.Tests
         public void ParseSeedReplacesEmptyInputWithRandomSeed()
         {
             var input = string.Empty;
-            var result = Generation.Smz3Randomizer.ParseSeed(ref input);
+            var result = ISeededRandomizer.ParseSeed(ref input);
 
             Assert.True(int.TryParse(input, out var seed));
             Assert.Equal(seed, result);
