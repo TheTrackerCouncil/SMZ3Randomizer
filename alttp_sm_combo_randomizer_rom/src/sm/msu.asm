@@ -353,6 +353,7 @@ SM_MSU_Main:
     sta.w !CURRENT_MSU_TRACK
     sta.w !MSU_AUDIO_TRACK_LO
     stz.w !MSU_AUDIO_TRACK_HI
+    stz.w !MSU_AUDIO_VOLUME
     
 .CheckAudioStatus
     lda.w !MSU_STATUS : bit.b #!MSU_STATUS_AUDIO_BUSY : bne .CheckAudioStatus

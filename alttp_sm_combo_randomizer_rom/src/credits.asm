@@ -80,6 +80,7 @@ init:
     ; Play MSU-1 track 99 if available
     sep #$30
     lda $2002 : cmp.b #'S' : bne +
+        stz.w $2006                                 ; Mute before waiting while MSU-1 is busy
         lda.b #99 : sta $0332 : sta.w $2004 : stz.w $2005
         - lda.w $2000 : bit.b #$40 : bne -          ; Wait for MSU-1 BUSY
         lda.w $2000 : bit.b #$08 : bne .fallback    ; Check MSU-1 Track missing otherwise fall back to SPC
