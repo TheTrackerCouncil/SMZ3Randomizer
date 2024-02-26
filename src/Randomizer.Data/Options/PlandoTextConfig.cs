@@ -1,4 +1,6 @@
-﻿namespace Randomizer.Data.Options;
+﻿using YamlDotNet.Serialization;
+
+namespace Randomizer.Data.Options;
 
 public class PlandoTextConfig
 {
@@ -83,6 +85,7 @@ public class PlandoTextConfig
 
     public string? HintTileSouthEastDarkworldCave { get; init; }
 
+    [YamlIgnore]
     public bool HasHintTileText => !string.IsNullOrEmpty(HintTileEasternPalace) ||
                                    !string.IsNullOrEmpty(HintTileTowerOfHeraFloor4) ||
                                    !string.IsNullOrEmpty(HintTileSpectacleRock) ||

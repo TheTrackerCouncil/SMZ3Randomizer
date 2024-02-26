@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -67,6 +68,10 @@ public class RomGenerationService
     public SeedData GeneratePlandoSeed(RandomizerOptions options, PlandoConfig plandoConfig)
     {
         var config = options.ToConfig();
+        config.Seed = plandoConfig.Seed;
+        config.SettingsString = "";
+        config.ItemOptions = new Dictionary<string, int>();
+        config.LocationItems = new Dictionary<LocationId, int>();
         config.PlandoConfig = plandoConfig;
         config.KeysanityMode = plandoConfig.KeysanityMode;
         config.GanonsTowerCrystalCount = plandoConfig.GanonsTowerCrystalCount;

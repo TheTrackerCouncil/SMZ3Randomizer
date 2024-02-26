@@ -31,6 +31,7 @@ namespace Randomizer.Data.Options
         /// <param name="world">The world instance to export to a config.</param>
         public PlandoConfig(World world)
         {
+            Seed = world.Config.Seed;
             KeysanityMode = world.Config.KeysanityMode;
             GanonsTowerCrystalCount = world.Config.GanonCrystalCount;
             GanonCrystalCount = world.Config.GanonCrystalCount;
@@ -59,6 +60,8 @@ namespace Randomizer.Data.Options
         /// </summary>
         [YamlIgnore]
         public string FileName { get; set; } = "";
+
+        public string Seed { get; set; } = "";
 
         /// <summary>
         /// Gets or sets a value indicating whether Keysanity should be enabled.

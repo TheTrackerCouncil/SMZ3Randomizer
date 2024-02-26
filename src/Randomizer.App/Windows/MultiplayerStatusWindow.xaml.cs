@@ -206,6 +206,8 @@ namespace Randomizer.App.Windows
         {
             if (ParentPanel.ShowGenerateRomWindow(null, true) != true) return;
             var config = ParentPanel.Options.ToConfig();
+            config.Seed = ""; // Not currently supported in multiplayer
+            config.SettingsString = ""; // Not currently supported in multiplayer
             config.PlayerGuid = _multiplayerClientService.CurrentPlayerGuid!;
             config.PlayerName = _multiplayerClientService.LocalPlayer!.PlayerName;
             config.PhoneticName = _multiplayerClientService.LocalPlayer!.PhoneticName;
