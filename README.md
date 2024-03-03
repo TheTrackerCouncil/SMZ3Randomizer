@@ -9,7 +9,7 @@ it a more approachable and casual experience by removing some decidedly
 _uncas’_ elements such as IBJ (Infinite Bomb Jump).
 
 A Windows installer for latest version of the **SMZ3 Cas’ Randomizer** can be 
-found on the [GitHub releases] page.
+found on the [GitHub releases] page. You can also find information about limited cross-platform version that supports Linux [here](https://github.com/Vivelin/SMZ3Randomizer/tree/main/src/Randomizer.CrossPlatform/README.md).
 
 ## Features
 In addition to making IBJ completely optional, there is also:

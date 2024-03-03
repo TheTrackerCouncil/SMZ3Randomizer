@@ -2,9 +2,9 @@ name: .NET Build + Test + Publish
 
 on:
   push:
-    branches: [ main ]
+    branches: [ crossplatform-documentation ]
   pull_request:
-    branches: [ main ]
+    branches: [ crossplatform-documentation ]
 
 jobs:
   build:

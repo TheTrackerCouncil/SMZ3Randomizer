@@ -18,6 +18,9 @@ else {
     $version = (Get-Item "$folder\Randomizer.CrossPlatform.dll").VersionInfo.ProductVersion
 }
 
+# Copy the README.md
+Copy-Item "$parentFolder\src\Randomizer.CrossPlatform\README.md" -Destination "$folder"
+
 # Copy sprites to be bundled together
 if (Test-Path -LiteralPath "$folder\Sprites") {
     Remove-Item -LiteralPath "$folder\Sprites" -Recurse
