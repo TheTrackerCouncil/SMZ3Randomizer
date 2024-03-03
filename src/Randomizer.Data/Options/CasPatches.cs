@@ -73,6 +73,10 @@ namespace Randomizer.Data.Options
         [Description("Save your progress when dying in Metroid. Does not apply to Start+Select+L+R resets.")]
         public bool MetroidAutoSave { get; set; } = true;
 
+        [DisplayName("Sand Pit Platforms")]
+        [Description("Add platforms to make getting out of sand pits in Maridia easier.")]
+        public bool SandPitPlatforms { get; set; } = true;
+
         public CasPatches Clone()
         {
             return (CasPatches)MemberwiseClone();

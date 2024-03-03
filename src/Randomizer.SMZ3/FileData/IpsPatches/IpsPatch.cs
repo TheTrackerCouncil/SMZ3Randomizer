@@ -140,4 +140,10 @@ public static class IpsPatch
     /// </summary>
     /// <returns>A new stream that contains the IPS patch.</returns>
     public static Stream UnifiedAim() => GetStream("UnifiedAim.ips");
+
+    /// <summary>
+    /// Gets a stream for the IPS patch to add platforms around the Maridia sand pits
+    /// </summary>
+    /// <returns>A new stream that contains the IPS patch.</returns>
+    public static Stream SandPitPlatforms() => GetStream("SandPitPlatforms.ips");
 }
