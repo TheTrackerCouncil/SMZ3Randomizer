@@ -33,6 +33,7 @@
     <EmbeddedResource Include="FileData\IpsPatches\UnifiedAim.ips" />
     <EmbeddedResource Include="FileData\IpsPatches\zsm.ips" />
     <EmbeddedResource Include="Text\Scripts\StringTable.yaml" />
+    <EmbeddedResource Include="FileData\IpsPatches\SandPitPlatforms.ips" />
   </ItemGroup>
 
   <ItemGroup>

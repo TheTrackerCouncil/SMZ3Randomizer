@@ -239,6 +239,12 @@ public class RomGenerationService
             Rom.ApplySuperMetroidIps(rom, patch);
         }
 
+        if (options.PatchOptions.CasPatches.SandPitPlatforms)
+        {
+            using var patch = IpsPatch.SandPitPlatforms();
+            Rom.ApplySuperMetroidIps(rom, patch);
+        }
+
         if (options.PatchOptions.MetroidControls.RunButtonBehavior == RunButtonBehavior.AutoRun)
         {
             using var patch = IpsPatch.AutoRun();
