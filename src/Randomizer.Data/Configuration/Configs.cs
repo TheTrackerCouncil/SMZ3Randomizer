@@ -27,7 +27,7 @@ namespace Randomizer.Data.Configuration
         public Configs(OptionsFactory optionsFactory, ConfigProvider provider, ILogger<Configs> logger)
         {
             var options = optionsFactory.Create();
-            var profiles = options.GeneralOptions.SelectedProfiles.NonNull().ToArray();
+            var profiles = options.GeneralOptions.SelectedProfiles.NonNull().Where(x => x != "Default").ToArray();
             var moods = provider.GetAvailableMoods(profiles);
             CurrentMood = moods.Random(Random.Shared);
             logger.LogInformation("Tracker is feeling {Mood} today", CurrentMood);
