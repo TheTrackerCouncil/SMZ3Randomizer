@@ -78,7 +78,7 @@ namespace Randomizer.Data.Configuration
                 if (key == null) continue;
 
                 var firstObj = listOne.FirstOrDefault(x => key.Equals(keyProp.GetValue(x)));
-                if (firstObj != null && firstObj.GetType().GetInterfaces().Contains(typeof(IMergeable<T>)))
+                if (firstObj != null && firstObj.GetType().IsAssignableTo(typeof(IMergeable<T>)))
                 {
                     var firstMergeable = (IMergeable<T>)firstObj;
                     var secondMergeable = (IMergeable<T>)secondObj;
