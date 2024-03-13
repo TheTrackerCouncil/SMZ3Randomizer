@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -77,13 +78,13 @@ namespace Randomizer.Data.Configuration
                 if (key == null) continue;
 
                 var firstObj = listOne.FirstOrDefault(x => key.Equals(keyProp.GetValue(x)));
-                if (firstObj != null)
+                if (firstObj != null && firstObj.GetType().IsAssignableTo(typeof(IMergeable<T>)))
                 {
                     var firstMergeable = (IMergeable<T>)firstObj;
                     var secondMergeable = (IMergeable<T>)secondObj;
                     firstMergeable.MergeFrom(secondMergeable);
                 }
-                else
+                else if (firstObj == null)
                 {
                     listOne.Add(secondObj);
                 }

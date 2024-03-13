@@ -30,6 +30,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// The name of the layout
         /// </summary>
+        [MergeKey]
         public string Name { get; init; } = "";
 
         /// <summary>
