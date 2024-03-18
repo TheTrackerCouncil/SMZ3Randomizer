@@ -36,8 +36,6 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             config.CasPatches.RandomizedBottles = false;
 
             var seedData = randomizer.GenerateSeed(config, seed, default);
-            var locations = string.Join("\r\n", seedData.WorldGenerationData.LocalWorld.World.Locations.OrderBy(x => x.Id)
-                .Select(x => $"{x.Id} {x.Item.Type}"));
             var worldHash = GetHashForWorld(seedData.WorldGenerationData.LocalWorld.World);
 
             worldHash.Should().Be(expectedHash);
