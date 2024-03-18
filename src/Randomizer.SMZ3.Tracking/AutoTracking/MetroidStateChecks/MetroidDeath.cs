@@ -36,8 +36,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
         /// <returns>True if the check was identified, false otherwise</returns>
         public bool ExecuteCheck(TrackerBase tracker, AutoTrackerMetroidState currentState, AutoTrackerMetroidState prevState)
         {
-            if (currentState.Energy != 0 || currentState.ReserveTanks != 0 || prevState.Energy == 0 ||
+            if (currentState.Energy != 0 || prevState.Energy == 0 ||
                 currentState.CurrentRoom == 0 && currentState is { CurrentRegion: 0, SamusY: 0 })
+                return false;
+
+            if (currentState is { ReserveTanks: > 0, AutoReserveTanks: true })
                 return false;
 
             var silent = tracker.GameService!.PlayerRecentlyKilled;
