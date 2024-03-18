@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 
 using FluentAssertions;
@@ -28,12 +29,6 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         [InlineData("test", -787405869)] // Smz3Randomizer v5.0
         public void StandardFillerWithSameSeedGeneratesSameWorld(string seed, int expectedHash)
         {
-            // Apparently RNG in Linux is different than on Windows...
-            if (OperatingSystem.IsLinux())
-            {
-                expectedHash = 1752413809;
-            }
-
             var filler = new StandardFiller(GetLogger<StandardFiller>());
             var randomizer = GetRandomizer();
             var config = new Config();
@@ -56,7 +51,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
                 stringBuilder.Append(location.Id);
                 stringBuilder.Append(':');
                 stringBuilder.Append((int)location.Item.Type);
-                stringBuilder.AppendLine();
+                stringBuilder.Append("\r\n");
             }
             var serializedWorld = stringBuilder.ToString();
             return NonCryptographicHash.Fnv1a(serializedWorld);

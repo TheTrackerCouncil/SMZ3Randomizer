@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Speech.Recognition;
 using System.Timers;
 using Microsoft.Extensions.Logging;
@@ -34,6 +35,7 @@ public class MsuModule : TrackerModule, IDisposable
     private int _currentTrackNumber;
     private readonly HashSet<int> _validTrackNumbers;
     private Track? _currentTrack;
+    private bool _isSetup;
 
     /// <summary>
     /// Constructor
@@ -65,6 +67,11 @@ public class MsuModule : TrackerModule, IDisposable
         if (!File.Exists(tracker.RomPath))
         {
             throw new InvalidOperationException("No tracker rom file found");
+        }
+
+        if (string.IsNullOrEmpty(tracker.Rom?.MsuPaths))
+        {
+            return;
         }
 
         var romFileInfo = new FileInfo(tracker.RomPath);
@@ -101,6 +108,7 @@ public class MsuModule : TrackerModule, IDisposable
         }
 
         tracker.TrackNumberUpdated += TrackerOnTrackNumberUpdated;
+        _isSetup = true;
 
     }
 
@@ -378,6 +386,11 @@ public class MsuModule : TrackerModule, IDisposable
     [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
     public override void AddCommands()
     {
+        if (!_isSetup)
+        {
+            return;
+        }
+
         AddCommand("location song", GetLocationSongRules(), (result) =>
         {
             if (_currentMsu == null)
