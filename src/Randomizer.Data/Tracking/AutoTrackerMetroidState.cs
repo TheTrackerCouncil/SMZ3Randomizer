@@ -42,6 +42,8 @@ public class AutoTrackerMetroidState
     /// </summary>
     public int ReserveTanks => _data.ReadUInt16(0x7E09D6 - 0x7E0750);
 
+    public bool AutoReserveTanks => _data.ReadUInt16(0x7E09C0 - 0x7E0750) == 1;
+
     /// <summary>
     /// The max of health
     /// </summary>
