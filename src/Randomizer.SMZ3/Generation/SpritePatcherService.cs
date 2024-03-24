@@ -22,11 +22,11 @@ public class SpritePatcherService
     {
         var linkSprite = _spriteService.GetSprite(SpriteType.Link);
         ApplyRdcSpriteTo(linkSprite, bytes);
-        linkSpriteName = linkSprite.Name;
+        linkSpriteName = string.IsNullOrEmpty(linkSprite.Name) ? "Link" : linkSprite.Name;
 
         var samusSprite = _spriteService.GetSprite(SpriteType.Samus);
         ApplyRdcSpriteTo(samusSprite, bytes);
-        samusSpriteName = samusSprite.Name;
+        samusSpriteName = string.IsNullOrEmpty(samusSprite.Name) ? "Samus" : samusSprite.Name;
 
         var shipSprite = _spriteService.GetSprite(SpriteType.Ship);
         ApplyShipSpriteTo(shipSprite, bytes);
