@@ -9,11 +9,9 @@ namespace Randomizer.SMZ3.Tracking.Services.Speech;
 public sealed class NullSpeechRecognitionService : ISpeechRecognitionService
 {
 
-    public event EventHandler<SpeechRecognizedEventArgs>? SpeechRecognized
-    {
-        add { throw new NotSupportedException(); }
-        remove { throw new NotSupportedException(); }
-    }
+#pragma warning disable CS0067
+    public event EventHandler<SpeechRecognizedEventArgs>? SpeechRecognized;
+#pragma warning restore CS0067
 
     public void ResetInputDevice()
     {
