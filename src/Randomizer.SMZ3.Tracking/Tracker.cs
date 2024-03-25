@@ -155,12 +155,8 @@ public sealed class Tracker : TrackerBase, IDisposable
         {
             _recognizer = serviceProvider.GetRequiredService<AlwaysOnSpeechRecognitionService>();
         }
+        _recognizer.SpeechRecognized += Recognizer_SpeechRecognized;
         _metadataService = metadataService;
-        if (OperatingSystem.IsWindows())
-        {
-            _recognizer.SpeechRecognized += Recognizer_SpeechRecognized;
-        }
-
         InitializeMicrophone();
         World = _worldAccessor.World;
         Options = _trackerOptions.Options;
@@ -2555,11 +2551,13 @@ public sealed class Tracker : TrackerBase, IDisposable
         Say(Responses.Idle?[key]);
     }
 
-    [SupportedOSPlatform("windows")]
     private void Recognizer_SpeechRecognized(object? sender, SpeechRecognizedEventArgs e)
     {
-        RestartIdleTimers();
-        OnSpeechRecognized(new(e.Result.Confidence, e.Result.Text));
+        if (OperatingSystem.IsWindows())
+        {
+            RestartIdleTimers();
+            OnSpeechRecognized(new(e.Result.Confidence, e.Result.Text));
+        }
     }
 
     private void GiveLocationHint(IEnumerable<Location> accessibleBefore)
