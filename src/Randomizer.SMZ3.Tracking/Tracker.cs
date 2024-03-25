@@ -150,17 +150,14 @@ public sealed class Tracker : TrackerBase, IDisposable
         else if (_trackerOptions.Options.SpeechRecognitionMode == SpeechRecognitionMode.PushToTalk)
         {
             _recognizer = serviceProvider.GetRequiredService<PushToTalkSpeechRecognitionService>();
+            _recognizer.SpeechRecognized += Recognizer_SpeechRecognized;
         }
         else
         {
             _recognizer = serviceProvider.GetRequiredService<AlwaysOnSpeechRecognitionService>();
-        }
-        _metadataService = metadataService;
-        if (OperatingSystem.IsWindows())
-        {
             _recognizer.SpeechRecognized += Recognizer_SpeechRecognized;
         }
-
+        _metadataService = metadataService;
         InitializeMicrophone();
         World = _worldAccessor.World;
         Options = _trackerOptions.Options;
