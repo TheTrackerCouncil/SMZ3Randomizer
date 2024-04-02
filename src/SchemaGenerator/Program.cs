@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.DependencyInjection;
 using NJsonSchema.Generation;
+using NJsonSchema.NewtonsoftJson.Generation;
 using Randomizer.Data.Configuration;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Configuration.ConfigTypes;
@@ -66,7 +67,7 @@ public static class Program
     private static void CreateSchemas(string outputPath)
     {
         var schrodingersStringReplacement = new Regex("""[ \t]*"description": "Represents multiple possibilities of a string.",[ \t]*?\r?\n""");
-        var settings = new JsonSchemaGeneratorSettings()
+        var settings = new NewtonsoftJsonSchemaGeneratorSettings()
         {
             DefaultReferenceTypeNullHandling = ReferenceTypeNullHandling.Null,
             DefaultDictionaryValueReferenceTypeNullHandling = ReferenceTypeNullHandling.Null,

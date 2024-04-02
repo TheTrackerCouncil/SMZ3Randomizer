@@ -165,6 +165,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             {
                 _logger.LogInformation("Receiving text data: {Text}", msg.Text);
 
+                if (string.IsNullOrEmpty(msg.Text))
+                {
+                    _logger.LogError("No response from USB2SNEs");
+                    return;
+                }
+
                 var response = JsonSerializer.Deserialize<USB2SNESResponse>(msg.Text);
                 if (response == null || response.Results == null || response.Results.Count == 0)
                 {

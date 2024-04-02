@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -16,6 +15,7 @@ using MSURandomizerLibrary;
 using MSURandomizerLibrary.Models;
 using MSURandomizerLibrary.Services;
 using MSURandomizerUI;
+using NReco.Logging.File;
 using Randomizer.Abstractions;
 using Randomizer.App.Controls;
 using Randomizer.App.Windows;

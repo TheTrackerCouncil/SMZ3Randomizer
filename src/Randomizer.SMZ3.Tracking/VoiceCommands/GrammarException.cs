@@ -52,6 +52,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// The StreamingContext that contains contextual information about the
         /// source or destination.
         /// </param>
+        [Obsolete("Serialization constructors are deprecated in .NET8+", DiagnosticId = "SYSLIB0051")]
         protected GrammarException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

@@ -1,12 +1,12 @@
 $parentFolder = Split-Path -parent $PSScriptRoot
 
 # Get publish folder
-$folder = "$parentFolder\src\Randomizer.CrossPlatform\bin\Release\net7.0\linux-x64\publish"
-$winFolder = "$parentFolder\src\Randomizer.App\bin\Release\net7.0-windows\win-x86\publish"
+$folder = "$parentFolder\src\Randomizer.CrossPlatform\bin\Release\net8.0\linux-x64\publish"
+$winFolder = "$parentFolder\src\Randomizer.App\bin\Release\net8.0-windows\win-x86\publish"
 if (-not (Test-Path $folder))
 {
-    $folder = "$parentFolder\src\Randomizer.CrossPlatform\bin\Release\net7.0\publish\linux-x64"
-    $winFolder = "$parentFolder\src\Randomizer.App\bin\Release\net7.0-windows\publish\win-x86"
+    $folder = "$parentFolder\src\Randomizer.CrossPlatform\bin\Release\net8.0\publish\linux-x64"
+    $winFolder = "$parentFolder\src\Randomizer.App\bin\Release\net8.0-windows\publish\win-x86"
 }
 
 # Get version number from Randomizer.App
@@ -17,6 +17,7 @@ if (Test-Path "$winFolder\Randomizer.App.exe") {
 else {
     $version = (Get-Item "$folder\Randomizer.CrossPlatform.dll").VersionInfo.ProductVersion
 }
+$version = $version -replace "\+.*", ""
 
 # Copy the README.md
 Copy-Item "$parentFolder\src\Randomizer.CrossPlatform\README.md" -Destination "$folder"

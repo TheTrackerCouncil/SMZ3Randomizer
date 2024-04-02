@@ -22,6 +22,7 @@ namespace Randomizer.SMZ3.Generation
         {
         }
 
+        [Obsolete("Serialization constructors are deprecated in .NET8+", DiagnosticId = "SYSLIB0051")]
         protected PlandoConfigurationException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
