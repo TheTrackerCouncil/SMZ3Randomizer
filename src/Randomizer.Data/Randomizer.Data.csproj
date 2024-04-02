@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <PackageReference Include="MattEqualsCoder.GitHubReleaseChecker" Version="1.1.2" />
-    <PackageReference Include="MattEqualsCoder.MSURandomizer.Library" Version="1.2.2" />
+    <PackageReference Include="MattEqualsCoder.MSURandomizer.Library" Version="2.0.0-rc.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="YamlDotNet" Version="15.1.2" />
   </ItemGroup>
