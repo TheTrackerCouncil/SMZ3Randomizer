@@ -31,7 +31,7 @@ jobs:
       run: |
         Invoke-RestMethod -Uri https://api.github.com/repos/TheTrackerCouncil/SMZ3CasSprites/git/trees/main?recursive=1 -OutFile sprites/Sprites/sprites.json
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
     - name: Restore dependencies
@@ -75,7 +75,7 @@ jobs:
       run: "./MultiplayerServerZipper.ps1"
       shell: pwsh
     - name: Upload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: ${{ github.event_name != 'pull_request' }}
       with:
         path: "setup/Output/*"

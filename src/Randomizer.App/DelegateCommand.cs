@@ -14,7 +14,9 @@ namespace Randomizer.App
             _canExecute = canExecute;
         }
 
+#pragma warning disable 67
         public event EventHandler? CanExecuteChanged;
+#pragma warning restore 67
 
         public bool CanExecute(object? parameter)
             => _canExecute();
