@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -25,7 +25,7 @@
     <PackageReference Include="MattEqualsCoder.GitHubReleaseChecker" Version="1.1.2" />
     <PackageReference Include="MattEqualsCoder.MSURandomizer.Library" Version="1.2.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="YamlDotNet" Version="13.1.1" />
+    <PackageReference Include="YamlDotNet" Version="15.1.2" />
   </ItemGroup>
 
   <ItemGroup>

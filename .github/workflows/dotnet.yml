@@ -31,9 +31,9 @@ jobs:
       run: |
         Invoke-RestMethod -Uri https://api.github.com/repos/TheTrackerCouncil/SMZ3CasSprites/git/trees/main?recursive=1 -OutFile sprites/Sprites/sprites.json
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 7.0.x
+        dotnet-version: 8.0.x
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
@@ -42,21 +42,22 @@ jobs:
       run: dotnet test --no-build --verbosity normal
     - name: Publish Windows 64bit
       if: ${{ github.event_name != 'pull_request' }}
-      run: dotnet publish --os win --arch x64 -c Release src/Randomizer.App/Randomizer.App.csproj
+      run: dotnet publish --os win --arch x64 -c Release --self-contained false  src/Randomizer.App/Randomizer.App.csproj
     - name: Publish Windows 32bit
       if: ${{ github.event_name != 'pull_request' }}
-      run: dotnet publish --os win --arch x86 -c Release src/Randomizer.App/Randomizer.App.csproj
+      run: dotnet publish --os win --arch x86 -c Release --self-contained false  src/Randomizer.App/Randomizer.App.csproj
     - name: Publish Linux 64bit
       if: ${{ github.event_name != 'pull_request' }}
-      run: dotnet publish --os linux --arch x64 -c Release src/Randomizer.CrossPlatform/Randomizer.CrossPlatform.csproj
+      run: dotnet publish --os linux --arch x64 -c Release --self-contained false  src/Randomizer.CrossPlatform/Randomizer.CrossPlatform.csproj
     - name: Publish Multiplayer Server
       if: ${{ github.event_name != 'pull_request' }}
-      run: dotnet publish -c Release src/Randomizer.Multiplayer.Server/Randomizer.Multiplayer.Server.csproj
+      run: dotnet publish -c Release --self-contained false src/Randomizer.Multiplayer.Server/Randomizer.Multiplayer.Server.csproj
     - name: Get version number
       if: ${{ github.event_name != 'pull_request' }}
       id: version
       run: |
-        $version = (Get-Item "src\Randomizer.App\bin\Release\net7.0-windows\win-x86\publish\Randomizer.App.exe").VersionInfo.ProductVersion
+        $version = (Get-Item "src\Randomizer.App\bin\Release\net8.0-windows\win-x86\publish\Randomizer.App.exe").VersionInfo.ProductVersion
+        $version = $version -replace "\+.*", ""
         Write-Output "number=$version" >> $env:GITHUB_OUTPUT
       shell: pwsh
     - name: Building the Windows installer
@@ -74,7 +75,7 @@ jobs:
       run: "./MultiplayerServerZipper.ps1"
       shell: pwsh
     - name: Upload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: ${{ github.event_name != 'pull_request' }}
       with:
         path: "setup/Output/*"

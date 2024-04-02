@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Platforms>AnyCPU;x64</Platforms>
     <Version>2.0.0</Version>
     <Nullable>enable</Nullable>
@@ -38,8 +38,8 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="SharpYaml" Version="2.1.0" />
-    <PackageReference Include="YamlDotNet" Version="13.1.1" />
+    <PackageReference Include="SharpYaml" Version="2.1.1" />
+    <PackageReference Include="YamlDotNet" Version="15.1.2" />
   </ItemGroup>
 
   <ItemGroup>

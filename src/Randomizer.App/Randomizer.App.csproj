@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>chozo20.ico</ApplicationIcon>
     <Version>9.7.5</Version>
@@ -58,13 +58,13 @@
 
   <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.4.4" />
-    <PackageReference Include="FluentIcons.WPF" Version="1.1.221" />
-    <PackageReference Include="Material.Icons.WPF" Version="2.0.0" />
+    <PackageReference Include="FluentIcons.WPF" Version="1.1.233" />
+    <PackageReference Include="Material.Icons.WPF" Version="2.1.0" />
     <PackageReference Include="MattEqualsCoder.GitHubReleaseChecker" Version="1.1.2" />
     <PackageReference Include="MattEqualsCoder.MSURandomizer.UI" Version="1.2.2" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
-    <PackageReference Include="NReco.Logging.File" Version="1.1.6" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="NReco.Logging.File" Version="1.2.0" />
     <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
   </ItemGroup>
 
