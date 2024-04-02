@@ -2,7 +2,7 @@ name: .NET Build + Test + Publish
 
 on:
   push:
-    branches: [ dotnet-upgrade ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
