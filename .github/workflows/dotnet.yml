@@ -42,16 +42,16 @@ jobs:
       run: dotnet test --no-build --verbosity normal
     - name: Publish Windows 64bit
       if: ${{ github.event_name != 'pull_request' }}
-      run: dotnet publish --os win --arch x64 -c Release src/Randomizer.App/Randomizer.App.csproj
+      run: dotnet publish --os win --arch x64 -c Release --self-contained false  src/Randomizer.App/Randomizer.App.csproj
     - name: Publish Windows 32bit
       if: ${{ github.event_name != 'pull_request' }}
-      run: dotnet publish --os win --arch x86 -c Release src/Randomizer.App/Randomizer.App.csproj
+      run: dotnet publish --os win --arch x86 -c Release --self-contained false  src/Randomizer.App/Randomizer.App.csproj
     - name: Publish Linux 64bit
       if: ${{ github.event_name != 'pull_request' }}
-      run: dotnet publish --os linux --arch x64 -c Release src/Randomizer.CrossPlatform/Randomizer.CrossPlatform.csproj
+      run: dotnet publish --os linux --arch x64 -c Release --self-contained false  src/Randomizer.CrossPlatform/Randomizer.CrossPlatform.csproj
     - name: Publish Multiplayer Server
       if: ${{ github.event_name != 'pull_request' }}
-      run: dotnet publish -c Release src/Randomizer.Multiplayer.Server/Randomizer.Multiplayer.Server.csproj
+      run: dotnet publish -c Release --self-contained false src/Randomizer.Multiplayer.Server/Randomizer.Multiplayer.Server.csproj
     - name: Get version number
       if: ${{ github.event_name != 'pull_request' }}
       id: version
