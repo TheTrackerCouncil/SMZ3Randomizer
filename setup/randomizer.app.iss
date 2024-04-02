@@ -8,6 +8,7 @@
 #define MyAppURL "https://github.com/Vivelin/SMZ3Randomizer"
 #define MyAppExeName "Randomizer.App.exe"
 #define MyAppVersion GetStringFileInfo("..\src\Randomizer.App\bin\Release\net8.0-windows\win-x64\publish\" + MyAppExeName, "ProductVersion")
+#define MyAppVersion Copy(MyAppVersion, 0, Pos('+', MyAppVersion)-1)
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
