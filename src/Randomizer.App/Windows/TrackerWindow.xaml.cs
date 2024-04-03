@@ -719,7 +719,7 @@ namespace Randomizer.App.Windows
             if (_options.GeneralOptions.DisplayMsuTrackWindow)
             {
                 _msuTrackWindow = new MsuTrackWindow();
-                _msuTrackWindow.Init(_serviceProvider.GetRequiredService<MsuCurrentPlayingTrackControl>());
+                _msuTrackWindow.Init(_serviceProvider.GetRequiredService<MsuCurrentPlayingTrackControl>(), _options);
                 _msuTrackWindow.Show();
             }
 
@@ -978,6 +978,12 @@ namespace Randomizer.App.Windows
             if (_autoTrackerUSB2SNESMenuItem != null)
                 _autoTrackerUSB2SNESMenuItem.IsChecked =
                     TrackerBase.AutoTracker?.ConnectorType == SnesConnectorType.Usb2Snes;
+            if (_autoTrackerLuaCrowdControlMenuItem != null)
+                _autoTrackerLuaCrowdControlMenuItem.IsChecked =
+                    TrackerBase.AutoTracker?.ConnectorType == SnesConnectorType.LuaCrowdControl;
+            if (_autoTrackerLuaEmoTrackerMenuItem != null)
+                _autoTrackerLuaEmoTrackerMenuItem.IsChecked =
+                    TrackerBase.AutoTracker?.ConnectorType == SnesConnectorType.LuaEmoTracker;
         }
 
         private void UpdateStats(TrackerEventArgs e)
@@ -1262,7 +1268,7 @@ namespace Randomizer.App.Windows
             else
             {
                 _msuTrackWindow = new MsuTrackWindow();
-                _msuTrackWindow.Init(_serviceProvider.GetRequiredService<MsuCurrentPlayingTrackControl>());
+                _msuTrackWindow.Init(_serviceProvider.GetRequiredService<MsuCurrentPlayingTrackControl>(), _options);
                 _msuTrackWindow.Show();
             }
         }

@@ -1,29 +1,14 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media.Animation;
-using MSURandomizerLibrary.Configs;
 using MSURandomizerUI.Controls;
-using Randomizer.Abstractions;
 using Randomizer.Data.Options;
-using Randomizer.Data.Tracking;
-using Randomizer.SMZ3.Tracking;
 
 namespace Randomizer.App.Windows;
 
 public partial class MsuTrackWindow : Window, IDisposable
 {
-    private readonly DoubleAnimation _marquee = new();
-    private CancellationTokenSource _cts = new();
-    private TrackerBase? _tracker;
+    private MsuCurrentPlayingTrackControl? _panel;
     private RandomizerOptions? _options;
-    private Track? _currentTrack;
-    private Msu? _currentMsu;
-    private string? _outputText;
-    private bool _shuttingDown;
 
     public MsuTrackWindow()
     {
@@ -31,21 +16,28 @@ public partial class MsuTrackWindow : Window, IDisposable
         App.RestoreWindowPositionAndSize(this);
     }
 
-    public void Init(MsuCurrentPlayingTrackControl panel)
+    public void Init(MsuCurrentPlayingTrackControl panel, RandomizerOptions options)
     {
+        _panel = panel;
         MainDockPanel.Children.Add(panel);
+        _options = options;
+        _options.GeneralOptions.DisplayMsuTrackWindow = true;
+        _options.Save();
     }
-
 
     public void Close(bool isShuttingDown)
     {
-        _shuttingDown = isShuttingDown;
+        if (!isShuttingDown && _options != null)
+        {
+            _options.GeneralOptions.DisplayMsuTrackWindow = false;
+            _options.Save();
+        }
         Close();
     }
 
     public void Dispose()
     {
-        _cts.Dispose();
+        _panel?.Dispose();
     }
 }
 
