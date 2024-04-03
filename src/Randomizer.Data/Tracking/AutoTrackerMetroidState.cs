@@ -1,4 +1,6 @@
-﻿namespace Randomizer.Data.Tracking;
+﻿using SnesConnectorLibrary.Responses;
+
+namespace Randomizer.Data.Tracking;
 
 /// <summary>
 /// Used to retrieve certain states based on the memory in Metroid
@@ -6,13 +8,13 @@
 /// </summary>
 public class AutoTrackerMetroidState
 {
-    private readonly EmulatorMemoryData _data;
+    private readonly SnesData _data;
 
     /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="data"></param>
-    public AutoTrackerMetroidState(EmulatorMemoryData data)
+    public AutoTrackerMetroidState(SnesData data)
     {
         _data = data;
     }
@@ -20,79 +22,79 @@ public class AutoTrackerMetroidState
     /// <summary>
     /// The overall room number the player is in
     /// </summary>
-    public int CurrentRoom => _data.ReadUInt8(0x7E079B - 0x7E0750);
+    public int? CurrentRoom => _data.ReadUInt8(0x7E079B - 0x7E0750);
 
     /// <summary>
     /// The region room number the player is in
     /// </summary>
-    public int CurrentRoomInRegion => _data.ReadUInt8(0x7E079D - 0x7E0750);
+    public int? CurrentRoomInRegion => _data.ReadUInt8(0x7E079D - 0x7E0750);
 
     /// <summary>
     /// The current region the player is in
     /// </summary>
-    public int CurrentRegion => _data.ReadUInt8(0x7E079F - 0x7E0750);
+    public int? CurrentRegion => _data.ReadUInt8(0x7E079F - 0x7E0750);
 
     /// <summary>
     /// The amount of energy/health
     /// </summary>
-    public int Energy => _data.ReadUInt16(0x7E09C2 - 0x7E0750);
+    public int? Energy => _data.ReadUInt16(0x7E09C2 - 0x7E0750);
 
     /// <summary>
     /// The amount currently in reserve tanks
     /// </summary>
-    public int ReserveTanks => _data.ReadUInt16(0x7E09D6 - 0x7E0750);
+    public int? ReserveTanks => _data.ReadUInt16(0x7E09D6 - 0x7E0750);
 
     public bool AutoReserveTanks => _data.ReadUInt16(0x7E09C0 - 0x7E0750) == 1;
 
     /// <summary>
     /// The max of health
     /// </summary>
-    public int MaxEnergy => _data.ReadUInt16(0x7E09C4 - 0x7E0750);
+    public int? MaxEnergy => _data.ReadUInt16(0x7E09C4 - 0x7E0750);
 
     /// <summary>
     /// The max in reserve tanks
     /// </summary>
-    public int MaxReserveTanks => _data.ReadUInt16(0x7E09D4 - 0x7E0750);
+    public int? MaxReserveTanks => _data.ReadUInt16(0x7E09D4 - 0x7E0750);
 
     /// <summary>
     /// Samus's X Location
     /// </summary>
-    public int SamusX => _data.ReadUInt16(0x7E0AF6 - 0x7E0750);
+    public int? SamusX => _data.ReadUInt16(0x7E0AF6 - 0x7E0750);
 
     /// <summary>
     /// Samus's Y Location
     /// </summary>
-    public int SamusY => _data.ReadUInt16(0x7E0AFA - 0x7E0750);
+    public int? SamusY => _data.ReadUInt16(0x7E0AFA - 0x7E0750);
 
     /// <summary>
     /// Samus's current super missile count
     /// </summary>
-    public int SuperMissiles => _data.ReadUInt8(0x7E09CA - 0x7E0750);
+    public int? SuperMissiles => _data.ReadUInt8(0x7E09CA - 0x7E0750);
 
     /// <summary>
     /// Samus's max super missile count
     /// </summary>
-    public int MaxSuperMissiles => _data.ReadUInt8(0x7E09CC - 0x7E0750);
+    public int? MaxSuperMissiles => _data.ReadUInt8(0x7E09CC - 0x7E0750);
 
     /// <summary>
     /// Samus's current missile count
     /// </summary>
-    public int Missiles => _data.ReadUInt8(0x7E09C6 - 0x7E0750);
+    public int? Missiles => _data.ReadUInt8(0x7E09C6 - 0x7E0750);
 
     /// <summary>
     /// Samus's max missile count
     /// </summary>
-    public int MaxMissiles => _data.ReadUInt8(0x7E09C8 - 0x7E0750);
+    public int? MaxMissiles => _data.ReadUInt8(0x7E09C8 - 0x7E0750);
 
     /// <summary>
     /// Samus's current power bomb count
     /// </summary>
-    public int PowerBombs => _data.ReadUInt8(0x7E09CE - 0x7E0750);
+    public int? PowerBombs => _data.ReadUInt8(0x7E09CE - 0x7E0750);
 
     /// <summary>
     /// Samus's max power bomb count
     /// </summary>
-    public int MaxPowerBombs => _data.ReadUInt8(0x7E09D0 - 0x7E0750);
+    public int? MaxPowerBombs => _data.ReadUInt8(0x7E09D0 - 0x7E0750);
 
     public bool IsSamusInArea(int minX, int maxX, int minY, int maxY)
     {

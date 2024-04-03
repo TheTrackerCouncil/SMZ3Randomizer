@@ -4,18 +4,19 @@ using Microsoft.Extensions.Logging;
 using Randomizer.Abstractions;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.Data.Options;
+using SnesConnectorLibrary;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands;
 
 /// <summary>
 /// Module for creating the auto tracker and interacting with the auto tracker
 /// </summary>
-public class AutoTrackerModule : TrackerModule, IDisposable
+public class AutoTrackerVoiceModule : TrackerModule, IDisposable
 {
     private readonly AutoTrackerBase _autoTrackerBase;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AutoTrackerModule"/>
+    /// Initializes a new instance of the <see cref="AutoTrackerVoiceModule"/>
     /// class.
     /// </summary>
     /// <param name="tracker">The tracker instance.</param>
@@ -23,7 +24,7 @@ public class AutoTrackerModule : TrackerModule, IDisposable
     /// <param name="worldService">Service to get world information</param>
     /// <param name="logger">Used to write logging information.</param>
     /// <param name="autoTrackerBase">The auto tracker to associate with this module</param>
-    public AutoTrackerModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<AutoTrackerModule> logger, AutoTrackerBase autoTrackerBase)
+    public AutoTrackerVoiceModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<AutoTrackerVoiceModule> logger, AutoTrackerBase autoTrackerBase)
         : base(tracker, itemService, worldService, logger)
     {
         TrackerBase.AutoTracker = autoTrackerBase;
@@ -52,7 +53,7 @@ public class AutoTrackerModule : TrackerModule, IDisposable
     /// </summary>
     public void Dispose()
     {
-        _autoTrackerBase.SetConnector(EmulatorConnectorType.None, "");
+        _autoTrackerBase.SetConnector(new SnesConnectorSettings());
     }
 
     [SupportedOSPlatform("windows")]

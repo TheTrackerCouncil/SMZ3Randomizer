@@ -34,11 +34,11 @@ public class ZeldaDeath : IZeldaStateCheck
         if (!silent && tracker.CurrentRegion?.Metadata is { WhenDiedInRoom: not null })
         {
             var region = tracker.CurrentRegion as Z3Region;
-            if (region is { IsOverworld: true } && tracker.CurrentRegion?.Metadata.WhenDiedInRoom?.TryGetValue(prevState.OverworldScreen, out var locationResponse) == true)
+            if (region is { IsOverworld: true } && prevState.OverworldScreen != null && tracker.CurrentRegion?.Metadata.WhenDiedInRoom?.TryGetValue(prevState.OverworldScreen.Value, out var locationResponse) == true)
             {
                 tracker.Say(locationResponse);
             }
-            else if (region is { IsOverworld: false } && tracker.CurrentRegion?.Metadata.WhenDiedInRoom?.TryGetValue(prevState.CurrentRoom, out locationResponse) == true)
+            else if (region is { IsOverworld: false } && prevState.CurrentRoom != null && tracker.CurrentRegion?.Metadata.WhenDiedInRoom?.TryGetValue(prevState.CurrentRoom.Value, out locationResponse) == true)
             {
                 tracker.Say(locationResponse);
             }

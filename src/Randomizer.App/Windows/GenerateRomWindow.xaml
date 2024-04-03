@@ -10,6 +10,7 @@
         xmlns:options="clr-namespace:Randomizer.Data.Options;assembly=Randomizer.Data"
         xmlns:windows="clr-namespace:Randomizer.App.Windows"
         xmlns:enums="clr-namespace:Randomizer.Shared.Enums;assembly=Randomizer.Shared"
+        xmlns:msuRandomizerLibrary="clr-namespace:MSURandomizerLibrary;assembly=MSURandomizerLibrary"
         mc:Ignorable="d"
         Loaded="GenerateRomWindow_OnLoaded"
         Closing="Window_Closing"
@@ -360,6 +361,14 @@
                   </StackPanel>
                 </Grid>
 
+              </controls:LabeledControl>
+
+              <controls:LabeledControl Text="MSU shuffle style:">
+                <ComboBox SelectedItem="{Binding MsuShuffleStyle, Converter={StaticResource EnumDescriptionConverter}}"
+                          ItemsSource="{Binding Source={local:EnumDescriptionBindingSource {x:Type msuRandomizerLibrary:MsuShuffleStyle}}}"
+                          HorizontalAlignment="Left"
+                          IsEnabled="{Binding MsuShuffleStyleEnabled}"
+                          MinWidth="75" />
               </controls:LabeledControl>
 
             </StackPanel>

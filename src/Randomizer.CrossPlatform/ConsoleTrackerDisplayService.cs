@@ -45,7 +45,7 @@ public class ConsoleTrackerDisplayService
         _trackerBase = _serviceProvider.GetRequiredService<TrackerBase>();
         _trackerBase.Load(rom, romPath);
         _trackerBase.TryStartTracking();
-        _trackerBase.AutoTracker?.SetConnector(_options.AutoTrackerDefaultConnector, _options.AutoTrackerQUsb2SnesIp);
+        _trackerBase.AutoTracker?.SetConnector(_options.GeneralOptions.SnesConnectorSettings);
 
         if (_trackerBase.AutoTracker != null)
         {

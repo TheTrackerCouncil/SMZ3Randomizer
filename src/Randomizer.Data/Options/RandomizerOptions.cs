@@ -5,8 +5,10 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using MSURandomizerLibrary;
 using Randomizer.Data.Logic;
 using Randomizer.Shared.Enums;
+using SnesConnectorLibrary;
 using YamlDotNet.Serialization;
 
 namespace Randomizer.Data.Options
@@ -89,18 +91,6 @@ namespace Randomizer.Data.Options
                     : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "AutoTrackerScripts");
         }
 
-        [YamlIgnore]
-        public EmulatorConnectorType AutoTrackerDefaultConnector
-        {
-            get => GeneralOptions.AutoTrackerDefaultConnectionType;
-        }
-
-        [YamlIgnore]
-        public string? AutoTrackerQUsb2SnesIp
-        {
-            get => GeneralOptions.AutoTrackerQUsb2SnesIp;
-        }
-
         public static RandomizerOptions Load(string loadPath, string savePath, bool isYaml)
         {
             var fileText = File.ReadAllText(loadPath);
@@ -112,14 +102,38 @@ namespace Randomizer.Data.Options
                     .Build();
                 var options = serializer.Deserialize<RandomizerOptions>(fileText);
                 options.FilePath = savePath;
+
+                // Update from AutoTracker connector settings to SnesConnector settings
+                if (options.GeneralOptions.AutoTrackerDefaultConnectionType != EmulatorConnectorType.None)
+                {
+                    options.GeneralOptions.SnesConnectorSettings.ConnectorType =
+                        options.GeneralOptions.AutoTrackerDefaultConnectionType == EmulatorConnectorType.Lua
+                            ? SnesConnectorType.Lua
+                            : SnesConnectorType.Usb2Snes;
+                    options.GeneralOptions.SnesConnectorSettings.Usb2SnesAddress =
+                        options.GeneralOptions.AutoTrackerQUsb2SnesIp ?? "";
+                    options.GeneralOptions.AutoTrackerDefaultConnectionType = EmulatorConnectorType.None;
+                }
+
+                if (options.GeneralOptions.MsuTrackDisplayStyle != null)
+                {
+                    options.GeneralOptions.TrackDisplayFormat = options.GeneralOptions.MsuTrackDisplayStyle.Value
+                        switch
+                        {
+                            MsuTrackDisplayStyle.Horizontal => TrackDisplayFormat.Horizontal,
+                            MsuTrackDisplayStyle.Vertical => TrackDisplayFormat.Vertical,
+                            MsuTrackDisplayStyle.HorizonalWithMsu => TrackDisplayFormat.HorizonalWithMsu,
+                            MsuTrackDisplayStyle.SentenceStyle => TrackDisplayFormat.SentenceStyle,
+                            _ => TrackDisplayFormat.Vertical
+                        };
+                }
+
                 return options;
             }
             else
             {
                 var options = JsonSerializer.Deserialize<RandomizerOptions>(fileText, s_jsonOptions) ?? new();
                 options.FilePath = savePath;
-                options.GeneralOptions.AutoTrackerDefaultConnectionType =
-                    (EmulatorConnectorType)options.GeneralOptions.AutoTrackerDefaultConnector;
                 options.GeneralOptions.TrackerVoiceFrequency =
                     (TrackerVoiceFrequency)options.GeneralOptions.VoiceFrequency;
                 options.GeneralOptions.LaunchButtonOption =

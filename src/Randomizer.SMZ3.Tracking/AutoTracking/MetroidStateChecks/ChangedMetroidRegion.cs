@@ -23,18 +23,20 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
         /// <returns>True if the check was identified, false otherwise</returns>
         public bool ExecuteCheck(TrackerBase tracker, AutoTrackerMetroidState currentState, AutoTrackerMetroidState prevState)
         {
-            if (currentState.CurrentRegion != _previousMetroidRegionValue || tracker.CurrentRegion is Z3Region)
+            if ((currentState.CurrentRegion == _previousMetroidRegionValue &&
+                tracker.CurrentRegion is not Z3Region) || currentState.CurrentRegion == null)
             {
-                var startedAtShip = currentState.CurrentRoomInRegion == 0 && currentState.CurrentRegion == 0 && currentState.IsSamusInArea(1125, 1175, 1050, 1100);
-                var newRegion = tracker.World.Regions.Select(x => x as SMRegion).FirstOrDefault(x => x != null && x.MemoryRegionId == currentState.CurrentRegion);
-                if (newRegion != null)
-                {
-                    tracker.UpdateRegion(newRegion, tracker.Options.AutoTrackerChangeMap, startedAtShip);
-                }
-                _previousMetroidRegionValue = currentState.CurrentRegion;
-                return true;
+                return false;
             }
-            return false;
+
+            var startedAtShip = currentState.CurrentRoomInRegion == 0 && currentState.CurrentRegion == 0 && currentState.IsSamusInArea(1125, 1175, 1050, 1100);
+            var newRegion = tracker.World.Regions.OfType<SMRegion>().FirstOrDefault(x => x.MemoryRegionId == currentState.CurrentRegion);
+            if (newRegion != null)
+            {
+                tracker.UpdateRegion(newRegion, tracker.Options.AutoTrackerChangeMap, startedAtShip);
+            }
+            _previousMetroidRegionValue = currentState.CurrentRegion.Value;
+            return true;
         }
     }
 }

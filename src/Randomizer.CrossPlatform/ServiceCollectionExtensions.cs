@@ -24,7 +24,7 @@ public static class ServiceCollectionExtensions
         services.AddTracker()
             .AddOptionalModule<PegWorldModeModule>()
             .AddOptionalModule<SpoilerModule>()
-            .AddOptionalModule<AutoTrackerModule>()
+            .AddOptionalModule<AutoTrackerVoiceModule>()
             .AddOptionalModule<MapModule>();
         services.AddScoped<IGameService, GameService>();
         services.AddScoped<AutoTrackerBase, AutoTracker>();

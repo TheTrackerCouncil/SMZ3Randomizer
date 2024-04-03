@@ -11,6 +11,9 @@ using Randomizer.SMZ3.Tracking.VoiceCommands;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.Contracts;
+using SnesConnectorLibrary;
+using SnesConnectorLibrary.Requests;
+using SNI;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking;
 
@@ -21,6 +24,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking;
 public class GameService : TrackerModule, IGameService
 {
     private AutoTrackerBase? AutoTracker => TrackerBase.AutoTracker;
+    private ISnesConnectorService _snesConnectorService;
     private readonly ILogger<GameService> _logger;
     private readonly int _trackerPlayerId;
     private int _itemCounter;
@@ -35,11 +39,13 @@ public class GameService : TrackerModule, IGameService
     /// <param name="worldService">Service to get world information</param>
     /// <param name="logger">The logger to associate with this module</param>
     /// <param name="worldAccessor">The accesor to determine the tracker player id</param>
-    public GameService(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<GameService> logger, IWorldAccessor worldAccessor)
+    /// <param name="snesConnectorService"></param>
+    public GameService(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<GameService> logger, IWorldAccessor worldAccessor, ISnesConnectorService snesConnectorService)
         : base(tracker, itemService, worldService, logger)
     {
         TrackerBase.GameService = this;
         _logger = logger;
+        _snesConnectorService = snesConnectorService;
         _trackerPlayerId = worldAccessor.Worlds.Count > 0 ? worldAccessor.Worlds.Count : 0;
     }
 
@@ -52,25 +58,27 @@ public class GameService : TrackerModule, IGameService
     {
         if (IsInGame(Game.SM))
         {
-            // Zero out SM's NO_RESUME_AFTER_LO and NO_RESUME_AFTER_HI variables
-            AutoTracker?.WriteToMemory(new EmulatorAction()
+            _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
             {
-                Type = EmulatorActionType.WriteBytes,
-                Domain = MemoryDomain.WRAM,
-                Address = 0x7E033A, // As declared in sm/msu.asm
-                WriteValues = new List<byte>() { 0, 0, 0, 0 }
+                MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+                SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+                AddressFormat = AddressFormat.Snes9x,
+                SniMemoryMapping = MemoryMapping.ExHiRom,
+                Address = 0x7E033A,
+                Data = new List<byte>() { 0, 0, 0, 0 }
             });
         }
 
         if (IsInGame(Game.Zelda))
         {
-            // Zero out Z3's MSUResumeTime variable
-            AutoTracker?.WriteToMemory(new EmulatorAction()
+            _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
             {
-                Type = EmulatorActionType.WriteBytes,
-                Domain = MemoryDomain.WRAM,
-                Address = 0x7E1E6B, // As declared in z3/randomizer/ram.asm
-                WriteValues = new List<byte>() { 0, 0, 0, 0 }
+                MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+                SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+                AddressFormat = AddressFormat.Snes9x,
+                SniMemoryMapping = MemoryMapping.ExHiRom,
+                Address = 0x7E1E6B,
+                Data = new List<byte>() { 0, 0, 0, 0 }
             });
         }
     }
@@ -116,43 +124,79 @@ public class GameService : TrackerModule, IGameService
             return false;
         }
 
-        var tempItemCounter = _itemCounter;
-        EmulatorAction action;
-
-        // First give the player all of the requested items
-        // Batch them into chunks of 50 due to byte limit for QUSB2SNES
-        foreach (var batch in items.Chunk(50))
+        // Get the first block of memory
+        _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
         {
-            var bytes = new List<byte>();
-            foreach (var item in batch)
+            MemoryRequestType = SnesMemoryRequestType.RetrieveMemory,
+            SnesMemoryDomain = SnesMemoryDomain.CartridgeSave,
+            AddressFormat = AddressFormat.Snes9x,
+            SniMemoryMapping = MemoryMapping.ExHiRom,
+            Address = 0xA26000,
+            Length = 0x300,
+            OnResponse = (firstDataSet, firstPrevData) =>
             {
-                bytes.AddRange(Int16ToBytes(item.fromPlayerId));
-                bytes.AddRange(Int16ToBytes((int)item.type));
+                // Get the second block of memory
+                _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
+                {
+                    MemoryRequestType = SnesMemoryRequestType.RetrieveMemory,
+                    SnesMemoryDomain = SnesMemoryDomain.CartridgeSave,
+                    AddressFormat = AddressFormat.Snes9x,
+                    SniMemoryMapping = MemoryMapping.ExHiRom,
+                    Address = 0xA26300,
+                    Length = 0x300,
+                    OnResponse = (secondDataSet, secondPrevData) =>
+                    {
+                        // Determine number of gifted items by looking at both sets of data
+                        var data = firstDataSet.Raw.Concat(secondDataSet.Raw).ToArray();
+                        var itemCounter = 0;
+                        for (var i = 0; i < 0x150; i++)
+                        {
+                            var item = (ItemType)BitConverter.ToUInt16(data.AsSpan(i * 4 + 2, 2));
+                            if (item != ItemType.Nothing)
+                            {
+                                itemCounter++;
+                            }
+                        }
+
+                        // First give the player all of the requested items
+                        // Batch them into chunks of 50 due to byte limit for QUSB2SNES
+                        foreach (var batch in items.Chunk(50))
+                        {
+                            var bytes = new List<byte>();
+                            foreach (var item in batch)
+                            {
+                                bytes.AddRange(Int16ToBytes(item.fromPlayerId));
+                                bytes.AddRange(Int16ToBytes((int)item.type));
+                            }
+
+                            _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
+                            {
+                                MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+                                SnesMemoryDomain = SnesMemoryDomain.CartridgeSave,
+                                AddressFormat = AddressFormat.Snes9x,
+                                SniMemoryMapping = MemoryMapping.ExHiRom,
+                                Address = 0xA26000 + (itemCounter * 4),
+                                Data = bytes
+                            });
+
+                            itemCounter += batch.Length;
+                        }
+
+                        // Up the item counter to have them actually pick it up
+                        _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
+                        {
+                            MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+                            SnesMemoryDomain = SnesMemoryDomain.CartridgeSave,
+                            AddressFormat = AddressFormat.Snes9x,
+                            SniMemoryMapping = MemoryMapping.ExHiRom,
+                            Address = 0xA26602,
+                            Data = Int16ToBytes(itemCounter)
+                        });
+                    }
+                });
             }
+        });
 
-            action = new EmulatorAction()
-            {
-                Type = EmulatorActionType.WriteBytes,
-                Domain = MemoryDomain.CartRAM,
-                Address = 0xA26000 + (tempItemCounter * 4),
-                WriteValues = bytes
-            };
-            AutoTracker!.WriteToMemory(action);
-
-            tempItemCounter += batch.Length;
-        }
-
-        // Up the item counter to have them actually pick it up
-        action = new EmulatorAction()
-        {
-            Type = EmulatorActionType.WriteBytes,
-            Domain = MemoryDomain.CartRAM,
-            Address = 0xA26602,
-            WriteValues = Int16ToBytes(tempItemCounter)
-        };
-        AutoTracker!.WriteToMemory(action);
-
-        _itemCounter = tempItemCounter;
 
         return true;
     }
@@ -170,34 +214,41 @@ public class GameService : TrackerModule, IGameService
 
         if (AutoTracker!.CurrentGame == Game.Zelda)
         {
-            AutoTracker.WriteToMemory(new EmulatorAction()
+            _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
             {
-                Type = EmulatorActionType.WriteBytes,
-                Domain = MemoryDomain.WRAM,
+                MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+                SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+                AddressFormat = AddressFormat.Snes9x,
+                SniMemoryMapping = MemoryMapping.ExHiRom,
                 Address = 0x7EF372,
-                WriteValues = new List<byte>() { 0xA0 }
+                Data = new List<byte>() { 0xA0 }
             });
 
             return true;
         }
         else if (AutoTracker.CurrentGame == Game.SM && AutoTracker.MetroidState != null)
         {
-            var maxHealth = AutoTracker.MetroidState.MaxEnergy;
-            var maxReserves = AutoTracker.MetroidState.MaxReserveTanks;
-            AutoTracker.WriteToMemory(new EmulatorAction()
+            var maxHealth = AutoTracker.MetroidState.MaxEnergy ?? 100;
+            var maxReserves = AutoTracker.MetroidState.MaxReserveTanks ?? 0;
+
+            _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
             {
-                Type = EmulatorActionType.WriteBytes,
-                Domain = MemoryDomain.WRAM,
+                MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+                SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+                AddressFormat = AddressFormat.Snes9x,
+                SniMemoryMapping = MemoryMapping.ExHiRom,
                 Address = 0x7E09C2,
-                WriteValues = Int16ToBytes(maxHealth)
+                Data = Int16ToBytes(maxHealth)
             });
 
-            AutoTracker.WriteToMemory(new EmulatorAction()
+            _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
             {
-                Type = EmulatorActionType.WriteBytes,
-                Domain = MemoryDomain.WRAM,
+                MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+                SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+                AddressFormat = AddressFormat.Snes9x,
+                SniMemoryMapping = MemoryMapping.ExHiRom,
                 Address = 0x7E09D6,
-                WriteValues = Int16ToBytes(maxReserves)
+                Data = Int16ToBytes(maxReserves)
             });
 
             return true;
@@ -217,12 +268,14 @@ public class GameService : TrackerModule, IGameService
             return false;
         }
 
-        AutoTracker!.WriteToMemory(new EmulatorAction()
+        _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
         {
-            Type = EmulatorActionType.WriteBytes,
-            Domain = MemoryDomain.WRAM,
+            MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+            SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+            AddressFormat = AddressFormat.Snes9x,
+            SniMemoryMapping = MemoryMapping.ExHiRom,
             Address = 0x7EF373,
-            WriteValues = new List<byte>() { 0x80 }
+            Data = new List<byte>() { 0x80 }
         });
 
         return true;
@@ -239,12 +292,14 @@ public class GameService : TrackerModule, IGameService
             return false;
         }
 
-        AutoTracker!.WriteToMemory(new EmulatorAction()
+        _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
         {
-            Type = EmulatorActionType.WriteBytes,
-            Domain = MemoryDomain.WRAM,
-            Address = 0x7EF375,
-            WriteValues = new List<byte>() { 0xFF }
+            MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+            SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+            AddressFormat = AddressFormat.Snes9x,
+            SniMemoryMapping = MemoryMapping.ExHiRom,
+            Address = 0x7EF373,
+            Data = new List<byte>() { 0xFF }
         });
 
         return true;
@@ -261,12 +316,14 @@ public class GameService : TrackerModule, IGameService
             return false;
         }
 
-        AutoTracker!.WriteToMemory(new EmulatorAction()
+        _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
         {
-            Type = EmulatorActionType.WriteBytes,
-            Domain = MemoryDomain.WRAM,
+            MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+            SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+            AddressFormat = AddressFormat.Snes9x,
+            SniMemoryMapping = MemoryMapping.ExHiRom,
             Address = 0x7EF376,
-            WriteValues = new List<byte>() { 0x80 }
+            Data = new List<byte>() { 0x80 }
         });
 
         return true;
@@ -288,12 +345,14 @@ public class GameService : TrackerModule, IGameService
         // Writing the target value to $7EF360 makes the rupee count start counting toward it.
         // Writing the target value to $7EF362 immediately sets the rupee count, but then it starts counting back toward where it was.
         // Writing the target value to both locations immediately sets the rupee count and keeps it there.
-        AutoTracker!.WriteToMemory(new EmulatorAction()
+        _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
         {
-            Type = EmulatorActionType.WriteBytes,
-            Domain = MemoryDomain.WRAM,
+            MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+            SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+            AddressFormat = AddressFormat.Snes9x,
+            SniMemoryMapping = MemoryMapping.ExHiRom,
             Address = 0x7EF360,
-            WriteValues = bytes.Concat(bytes).ToList()
+            Data = bytes.Concat(bytes).ToList()
         });
 
         return true;
@@ -311,12 +370,14 @@ public class GameService : TrackerModule, IGameService
         }
 
         var maxMissiles = AutoTracker!.MetroidState?.MaxMissiles ?? 0;
-        AutoTracker.WriteToMemory(new EmulatorAction()
+        _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
         {
-            Type = EmulatorActionType.WriteBytes,
-            Domain = MemoryDomain.WRAM,
+            MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+            SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+            AddressFormat = AddressFormat.Snes9x,
+            SniMemoryMapping = MemoryMapping.ExHiRom,
             Address = 0x7E09C6,
-            WriteValues = Int16ToBytes(maxMissiles)
+            Data = Int16ToBytes(maxMissiles)
         });
 
         return true;
@@ -334,12 +395,14 @@ public class GameService : TrackerModule, IGameService
         }
 
         var maxSuperMissiles = AutoTracker!.MetroidState?.MaxSuperMissiles ?? 0;
-        AutoTracker.WriteToMemory(new EmulatorAction()
+        _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
         {
-            Type = EmulatorActionType.WriteBytes,
-            Domain = MemoryDomain.WRAM,
+            MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+            SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+            AddressFormat = AddressFormat.Snes9x,
+            SniMemoryMapping = MemoryMapping.ExHiRom,
             Address = 0x7E09CA,
-            WriteValues = Int16ToBytes(maxSuperMissiles)
+            Data = Int16ToBytes(maxSuperMissiles)
         });
 
         return true;
@@ -357,12 +420,14 @@ public class GameService : TrackerModule, IGameService
         }
 
         var maxPowerBombs = AutoTracker!.MetroidState?.MaxPowerBombs ?? 0;
-        AutoTracker.WriteToMemory(new EmulatorAction()
+        _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
         {
-            Type = EmulatorActionType.WriteBytes,
-            Domain = MemoryDomain.WRAM,
+            MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+            SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+            AddressFormat = AddressFormat.Snes9x,
+            SniMemoryMapping = MemoryMapping.ExHiRom,
             Address = 0x7E09CE,
-            WriteValues = Int16ToBytes(maxPowerBombs)
+            Data = Int16ToBytes(maxPowerBombs)
         });
 
         return true;
@@ -385,21 +450,25 @@ public class GameService : TrackerModule, IGameService
             MarkRecentlyKilled();
 
             // Set health to 0
-            AutoTracker.WriteToMemory(new EmulatorAction()
+            _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
             {
-                Type = EmulatorActionType.WriteBytes,
-                Domain = MemoryDomain.WRAM,
+                MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+                SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+                AddressFormat = AddressFormat.Snes9x,
+                SniMemoryMapping = MemoryMapping.ExHiRom,
                 Address = 0x7EF36D,
-                WriteValues = new List<byte>() { 0x0 }
+                Data = new List<byte>() { 0x0 }
             });
 
             // Deal 1 heart of damage
-            AutoTracker.WriteToMemory(new EmulatorAction()
+            _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
             {
-                Type = EmulatorActionType.WriteBytes,
-                Domain = MemoryDomain.WRAM,
+                MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+                SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+                AddressFormat = AddressFormat.Snes9x,
+                SniMemoryMapping = MemoryMapping.ExHiRom,
                 Address = 0x7E0373,
-                WriteValues = new List<byte>() { 0x8 }
+                Data = new List<byte>() { 0x8 }
             });
 
             return true;
@@ -409,30 +478,36 @@ public class GameService : TrackerModule, IGameService
             MarkRecentlyKilled();
 
             // Empty reserves
-            AutoTracker.WriteToMemory(new EmulatorAction()
+            _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
             {
-                Type = EmulatorActionType.WriteBytes,
-                Domain = MemoryDomain.WRAM,
+                MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+                SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+                AddressFormat = AddressFormat.Snes9x,
+                SniMemoryMapping = MemoryMapping.ExHiRom,
                 Address = 0x7E09D6,
-                WriteValues = new List<byte>() { 0x0, 0x0 }
+                Data = new List<byte>() { 0x0, 0x0 }
             });
 
             // Set HP to 1 (to prevent saving with 0 energy)
-            AutoTracker.WriteToMemory(new EmulatorAction()
+            _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
             {
-                Type = EmulatorActionType.WriteBytes,
-                Domain = MemoryDomain.WRAM,
+                MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+                SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+                AddressFormat = AddressFormat.Snes9x,
+                SniMemoryMapping = MemoryMapping.ExHiRom,
                 Address = 0x7E09C2,
-                WriteValues = new List<byte>() { 0x1, 0x0 }
+                Data = new List<byte>() { 0x1, 0x0 }
             });
 
             // Deal 255 damage to player
-            AutoTracker.WriteToMemory(new EmulatorAction()
+            _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
             {
-                Type = EmulatorActionType.WriteBytes,
-                Domain = MemoryDomain.WRAM,
+                MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+                SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+                AddressFormat = AddressFormat.Snes9x,
+                SniMemoryMapping = MemoryMapping.ExHiRom,
                 Address = 0x7E0A50,
-                WriteValues = new List<byte>() { 0xFF }
+                Data = new List<byte>() { 0xFF }
             });
 
             return true;
@@ -454,51 +529,61 @@ public class GameService : TrackerModule, IGameService
         }
 
         // Set HP to 50 health
-        AutoTracker!.WriteToMemory(new EmulatorAction()
+        _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
         {
-            Type = EmulatorActionType.WriteBytes,
-            Domain = MemoryDomain.WRAM,
+            MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+            SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+            AddressFormat = AddressFormat.Snes9x,
+            SniMemoryMapping = MemoryMapping.ExHiRom,
             Address = 0x7E09C2,
-            WriteValues = new List<byte>() { 0x32, 0x0 }
+            Data = new List<byte>() { 0x32, 0x0 }
         });
 
         // Empty reserves
-        AutoTracker.WriteToMemory(new EmulatorAction()
+        _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
         {
-            Type = EmulatorActionType.WriteBytes,
-            Domain = MemoryDomain.WRAM,
+            MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+            SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+            AddressFormat = AddressFormat.Snes9x,
+            SniMemoryMapping = MemoryMapping.ExHiRom,
             Address = 0x7E09D6,
-            WriteValues = new List<byte>() { 0x0, 0x0 }
+            Data = new List<byte>() { 0x0, 0x0 }
         });
 
         // Fill missiles
-        var maxMissiles = AutoTracker.MetroidState?.MaxMissiles ?? 0;
-        AutoTracker.WriteToMemory(new EmulatorAction()
+        var maxMissiles = AutoTracker?.MetroidState?.MaxMissiles ?? 0;
+        _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
         {
-            Type = EmulatorActionType.WriteBytes,
-            Domain = MemoryDomain.WRAM,
+            MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+            SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+            AddressFormat = AddressFormat.Snes9x,
+            SniMemoryMapping = MemoryMapping.ExHiRom,
             Address = 0x7E09C6,
-            WriteValues = Int16ToBytes(maxMissiles)
+            Data = Int16ToBytes(maxMissiles)
         });
 
         // Fill super missiles
-        var maxSuperMissiles = AutoTracker.MetroidState?.MaxSuperMissiles ?? 0;
-        AutoTracker.WriteToMemory(new EmulatorAction()
+        var maxSuperMissiles = AutoTracker?.MetroidState?.MaxSuperMissiles ?? 0;
+        _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
         {
-            Type = EmulatorActionType.WriteBytes,
-            Domain = MemoryDomain.WRAM,
+            MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+            SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+            AddressFormat = AddressFormat.Snes9x,
+            SniMemoryMapping = MemoryMapping.ExHiRom,
             Address = 0x7E09CA,
-            WriteValues = Int16ToBytes(maxSuperMissiles)
+            Data = Int16ToBytes(maxSuperMissiles)
         });
 
         // Fill power bombs
-        var maxPowerBombs = AutoTracker.MetroidState?.MaxPowerBombs ?? 0;
-        AutoTracker.WriteToMemory(new EmulatorAction()
+        var maxPowerBombs = AutoTracker?.MetroidState?.MaxPowerBombs ?? 0;
+        _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
         {
-            Type = EmulatorActionType.WriteBytes,
-            Domain = MemoryDomain.WRAM,
+            MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+            SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+            AddressFormat = AddressFormat.Snes9x,
+            SniMemoryMapping = MemoryMapping.ExHiRom,
             Address = 0x7E09CE,
-            WriteValues = Int16ToBytes(maxPowerBombs)
+            Data = Int16ToBytes(maxPowerBombs)
         });
 
         return true;

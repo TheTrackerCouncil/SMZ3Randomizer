@@ -8,6 +8,8 @@
         xmlns:options="clr-namespace:Randomizer.Data.Options;assembly=Randomizer.Data"
         xmlns:app="clr-namespace:Randomizer.App"
         xmlns:enums="clr-namespace:Randomizer.Shared.Enums;assembly=Randomizer.Shared"
+        xmlns:snesConnectorLibrary="clr-namespace:SnesConnectorLibrary;assembly=SnesConnectorLibrary"
+        xmlns:msuRandomizerLibrary="clr-namespace:MSURandomizerLibrary;assembly=MSURandomizerLibrary"
         x:Name="Self"
         ResizeMode="NoResize"
         mc:Ignorable="d"
@@ -307,8 +309,8 @@
                     <ColumnDefinition Width="*" />
                   </Grid.ColumnDefinitions>
 
-                  <ComboBox SelectedItem="{Binding AutoTrackerDefaultConnectionType, Converter={StaticResource EnumDescriptionConverter}}"
-                            ItemsSource="{Binding Source={app:EnumDescriptionBindingSource {x:Type options:EmulatorConnectorType}}}"
+                  <ComboBox SelectedItem="{Binding SnesConnectorSettings.ConnectorType, Converter={StaticResource EnumDescriptionConverter}}"
+                            ItemsSource="{Binding Source={app:EnumDescriptionBindingSource {x:Type snesConnectorLibrary:SnesConnectorType}}}"
                             MinWidth="75">
                   </ComboBox>
                 </Grid>
@@ -316,13 +318,18 @@
 
               <controls:LabeledControl Text="QUSB2SNES Ip Address:"
                                        ToolTip="QUSB2SNES override IP address. Leave blank to use the default">
-                <TextBox Text="{Binding AutoTrackerQUsb2SnesIp}"/>
+                <TextBox Text="{Binding SnesConnectorSettings.Usb2SnesAddress}"/>
+              </controls:LabeledControl>
+
+              <controls:LabeledControl Text="Sni Ip Address:"
+                                       ToolTip="Sni override IP address. Leave blank to use the default">
+                <TextBox Text="{Binding SnesConnectorSettings.SniAddress}"/>
               </controls:LabeledControl>
 
               <controls:LabeledControl Text="Current song display style:"
                                        ToolTip="Changes the orientation of the information displayed in the current song window and the written text file with the current song.">
-                <ComboBox SelectedItem="{Binding MsuTrackDisplayStyle, Converter={StaticResource EnumDescriptionConverter}}"
-                          ItemsSource="{Binding Source={app:EnumDescriptionBindingSource {x:Type options:MsuTrackDisplayStyle}}}"
+                <ComboBox SelectedItem="{Binding TrackDisplayFormat, Converter={StaticResource EnumDescriptionConverter}}"
+                          ItemsSource="{Binding Source={app:EnumDescriptionBindingSource {x:Type msuRandomizerLibrary:TrackDisplayFormat}}}"
                           MinWidth="75">
                 </ComboBox>
               </controls:LabeledControl>

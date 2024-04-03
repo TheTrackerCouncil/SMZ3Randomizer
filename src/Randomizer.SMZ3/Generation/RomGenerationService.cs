@@ -363,6 +363,7 @@ public class RomGenerationService
             GeneratorVersion = Smz3Randomizer.Version.Major,
             MultiplayerGameDetails = multiplayerGameDetails,
             MsuRandomizationStyle = options.PatchOptions.MsuRandomizationStyle,
+            MsuShuffleStyle = options.PatchOptions.MsuShuffleStyle,
             MsuPaths = string.Join("|", options.PatchOptions.MsuPaths)
         };
         _dbContext.GeneratedRoms.Add(rom);
@@ -421,6 +422,7 @@ public class RomGenerationService
                 MsuPaths = options.PatchOptions.MsuPaths,
                 OutputMsuType = _msuTypeService.GetSMZ3MsuType(),
                 OutputPath = outputPath,
+                ShuffleStyle = options.PatchOptions.MsuShuffleStyle
             });
         }
 

@@ -16,6 +16,7 @@ using System.Windows.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MSURandomizerLibrary.Services;
+using MSURandomizerUI.Controls;
 using Randomizer.Abstractions;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data.Options;
@@ -31,6 +32,7 @@ using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
+using SnesConnectorLibrary;
 using WpfAnimatedGif;
 
 namespace Randomizer.App.Windows
@@ -63,6 +65,9 @@ namespace Randomizer.App.Windows
         private MenuItem? _autoTrackerDisableMenuItem;
         private MenuItem? _autoTrackerLuaMenuItem;
         private MenuItem? _autoTrackerUSB2SNESMenuItem;
+        private MenuItem? _autoTrackerSniMenuItem;
+        private MenuItem? _autoTrackerLuaCrowdControlMenuItem;
+        private MenuItem? _autoTrackerLuaEmoTrackerMenuItem;
         private UILayout _layout;
         private readonly UILayout _defaultLayout;
         private UILayout? _previousLayout;
@@ -714,7 +719,7 @@ namespace Randomizer.App.Windows
             if (_options.GeneralOptions.DisplayMsuTrackWindow)
             {
                 _msuTrackWindow = new MsuTrackWindow();
-                _msuTrackWindow.Init(TrackerBase, _options);
+                _msuTrackWindow.Init(_serviceProvider.GetRequiredService<MsuCurrentPlayingTrackControl>());
                 _msuTrackWindow.Show();
             }
 
@@ -850,20 +855,20 @@ namespace Randomizer.App.Windows
             };
             _autoTrackerDisableMenuItem.Click += (sender, e) =>
             {
-                TrackerBase.AutoTracker?.SetConnector(EmulatorConnectorType.None, "");
+                TrackerBase.AutoTracker?.SetConnector(new SnesConnectorSettings());
             };
             menu.Items.Add(_autoTrackerDisableMenuItem);
 
-            _autoTrackerLuaMenuItem = new MenuItem
+            _autoTrackerSniMenuItem = new MenuItem
             {
-                Header = "Lua Auto Tracker",
+                Header = "SNI Auto Tracker",
                 IsCheckable = true
             };
-            _autoTrackerLuaMenuItem.Click += (sender, e) =>
+            _autoTrackerSniMenuItem.Click += (sender, e) =>
             {
-                TrackerBase.AutoTracker?.SetConnector(EmulatorConnectorType.Lua, "");
+                TrackerBase.AutoTracker?.SetConnector(_options.GeneralOptions.SnesConnectorSettings, SnesConnectorType.Sni);
             };
-            menu.Items.Add(_autoTrackerLuaMenuItem);
+            menu.Items.Add(_autoTrackerSniMenuItem);
 
             _autoTrackerUSB2SNESMenuItem = new MenuItem
             {
@@ -872,9 +877,42 @@ namespace Randomizer.App.Windows
             };
             _autoTrackerUSB2SNESMenuItem.Click += (sender, e) =>
             {
-                TrackerBase.AutoTracker?.SetConnector(EmulatorConnectorType.USB2SNES, _options.AutoTrackerQUsb2SnesIp);
+                TrackerBase.AutoTracker?.SetConnector(_options.GeneralOptions.SnesConnectorSettings, SnesConnectorType.Usb2Snes);
             };
             menu.Items.Add(_autoTrackerUSB2SNESMenuItem);
+
+            _autoTrackerLuaMenuItem = new MenuItem
+            {
+                Header = "Lua Auto Tracker",
+                IsCheckable = true
+            };
+            _autoTrackerLuaMenuItem.Click += (sender, e) =>
+            {
+                TrackerBase.AutoTracker?.SetConnector(_options.GeneralOptions.SnesConnectorSettings, SnesConnectorType.Lua);
+            };
+            menu.Items.Add(_autoTrackerLuaMenuItem);
+
+            _autoTrackerLuaCrowdControlMenuItem = new MenuItem
+            {
+                Header = "Lua Auto Tracker (Crowd Control Script)",
+                IsCheckable = true
+            };
+            _autoTrackerLuaCrowdControlMenuItem.Click += (sender, e) =>
+            {
+                TrackerBase.AutoTracker?.SetConnector(_options.GeneralOptions.SnesConnectorSettings, SnesConnectorType.LuaCrowdControl);
+            };
+            menu.Items.Add(_autoTrackerLuaCrowdControlMenuItem);
+
+            _autoTrackerLuaEmoTrackerMenuItem = new MenuItem
+            {
+                Header = "Lua Auto Tracker (EmoTracker Script)",
+                IsCheckable = true
+            };
+            _autoTrackerLuaEmoTrackerMenuItem.Click += (sender, e) =>
+            {
+                TrackerBase.AutoTracker?.SetConnector(_options.GeneralOptions.SnesConnectorSettings, SnesConnectorType.LuaEmoTracker);
+            };
+            menu.Items.Add(_autoTrackerLuaEmoTrackerMenuItem);
 
             var folder = new MenuItem
             {
@@ -922,7 +960,7 @@ namespace Randomizer.App.Windows
             TrackerBase.AutoTracker.AutoTrackerConnected += (sender, e) => Dispatcher.Invoke(UpdateAutoTrackerMenu);
             TrackerBase.AutoTracker.AutoTrackerDisconnected += (sender, e) => Dispatcher.Invoke(UpdateAutoTrackerMenu);
 
-            TrackerBase.AutoTracker.SetConnector(_options.AutoTrackerDefaultConnector, _options.AutoTrackerQUsb2SnesIp);
+            TrackerBase.AutoTracker.SetConnector(_options.GeneralOptions.SnesConnectorSettings);
         }
 
         private void UpdateAutoTrackerMenu()
@@ -933,13 +971,13 @@ namespace Randomizer.App.Windows
             StatusBarAutoTrackerConnected.Visibility = TrackerBase.AutoTracker.IsEnabled && TrackerBase.AutoTracker.IsConnected ? Visibility.Visible : Visibility.Collapsed;
             if (_autoTrackerDisableMenuItem != null)
                 _autoTrackerDisableMenuItem.IsChecked =
-                    TrackerBase.AutoTracker?.ConnectorType == EmulatorConnectorType.None;
+                    TrackerBase.AutoTracker?.ConnectorType == SnesConnectorType.None;
             if (_autoTrackerLuaMenuItem != null)
                 _autoTrackerLuaMenuItem.IsChecked =
-                    TrackerBase.AutoTracker?.ConnectorType == EmulatorConnectorType.Lua;
+                    TrackerBase.AutoTracker?.ConnectorType == SnesConnectorType.Lua;
             if (_autoTrackerUSB2SNESMenuItem != null)
                 _autoTrackerUSB2SNESMenuItem.IsChecked =
-                    TrackerBase.AutoTracker?.ConnectorType == EmulatorConnectorType.USB2SNES;
+                    TrackerBase.AutoTracker?.ConnectorType == SnesConnectorType.Usb2Snes;
         }
 
         private void UpdateStats(TrackerEventArgs e)
@@ -1224,7 +1262,7 @@ namespace Randomizer.App.Windows
             else
             {
                 _msuTrackWindow = new MsuTrackWindow();
-                _msuTrackWindow.Init(TrackerBase, _options);
+                _msuTrackWindow.Init(_serviceProvider.GetRequiredService<MsuCurrentPlayingTrackControl>());
                 _msuTrackWindow.Show();
             }
         }

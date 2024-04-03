@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 using System.Speech.Recognition;
-using System.Timers;
 using Microsoft.Extensions.Logging;
 using MSURandomizerLibrary;
 using MSURandomizerLibrary.Configs;
@@ -12,9 +10,6 @@ using MSURandomizerLibrary.Models;
 using MSURandomizerLibrary.Services;
 using Randomizer.Abstractions;
 using Randomizer.Data.Configuration.ConfigFiles;
-using Randomizer.Data.Configuration.ConfigTypes;
-using Randomizer.Data.Options;
-using Randomizer.Data.Tracking;
 using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands;
@@ -24,18 +19,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands;
 /// </summary>
 public class MsuModule : TrackerModule, IDisposable
 {
-    private readonly IMsuSelectorService _msuSelectorService;
     private Msu? _currentMsu;
-    private readonly string? _msuPath;
-    private readonly ICollection<string>? _inputMsuPaths;
-    private readonly Timer? _timer;
-    private readonly MsuType? _msuType;
     private readonly MsuConfig _msuConfig;
+    private readonly IMsuMonitorService _msuMonitorService;
     private readonly string _msuKey = "MsuKey";
     private int _currentTrackNumber;
     private readonly HashSet<int> _validTrackNumbers;
     private Track? _currentTrack;
-    private bool _isSetup;
+    private readonly bool _isSetup;
 
     /// <summary>
     /// Constructor
@@ -45,8 +36,9 @@ public class MsuModule : TrackerModule, IDisposable
     /// <param name="worldService">Service to get world information</param>
     /// <param name="logger"></param>
     /// <param name="msuLookupService"></param>
-    /// <param name="msuSelectorService"></param>
+    /// <param name="msuMonitorService"></param>
     /// <param name="msuTypeService"></param>
+    /// <param name="msuUserOptionsService"></param>
     /// <param name="msuConfig"></param>
     public MsuModule(
         TrackerBase tracker,
@@ -54,15 +46,16 @@ public class MsuModule : TrackerModule, IDisposable
         IWorldService worldService,
         ILogger<MsuModule> logger,
         IMsuLookupService msuLookupService,
-        IMsuSelectorService msuSelectorService,
+        IMsuMonitorService msuMonitorService,
         IMsuTypeService msuTypeService,
+        IMsuUserOptionsService msuUserOptionsService,
         MsuConfig msuConfig)
         : base(tracker, itemService, worldService, logger)
     {
-        _msuSelectorService = msuSelectorService;
-        _msuType = msuTypeService.GetSMZ3MsuType();
+        _msuMonitorService = msuMonitorService;
+        var msuType = msuTypeService.GetSMZ3MsuType();
         _msuConfig = msuConfig;
-        _validTrackNumbers = _msuType!.ValidTrackNumbers;
+        _validTrackNumbers = msuType!.ValidTrackNumbers;
 
         if (!File.Exists(tracker.RomPath))
         {
@@ -75,20 +68,20 @@ public class MsuModule : TrackerModule, IDisposable
         }
 
         var romFileInfo = new FileInfo(tracker.RomPath);
-        _msuPath = romFileInfo.FullName.Replace(romFileInfo.Extension, ".msu");
+        var msuPath = romFileInfo.FullName.Replace(romFileInfo.Extension, ".msu");
 
-        if (!File.Exists(_msuPath))
+        if (!File.Exists(msuPath))
         {
             return;
         }
 
         try
         {
-            _currentMsu = msuLookupService.LoadMsu(_msuPath, _msuType, false, true, true);
+            _currentMsu = msuLookupService.LoadMsu(msuPath, msuType, false, true, true);
         }
         catch (Exception e)
         {
-            Logger.LogError(e, "Error loading MSU {Path}", _msuPath);
+            Logger.LogError(e, "Error loading MSU {Path}", msuPath);
             return;
         }
 
@@ -98,33 +91,39 @@ public class MsuModule : TrackerModule, IDisposable
             return;
         }
 
-        // Start reshuffling every minute if requested
+        msuUserOptionsService.MsuUserOptions.MsuCurrentSongOutputFilePath = TrackerBase.Options.MsuTrackOutputPath;
+        msuUserOptionsService.MsuUserOptions.TrackDisplayFormat = TrackerBase.Options.TrackDisplayFormat;
+        msuUserOptionsService.MsuUserOptions.MsuShuffleStyle =
+            tracker.Rom!.MsuShuffleStyle ?? MsuShuffleStyle.StandardShuffle;
+
         if (tracker.Rom!.MsuRandomizationStyle == MsuRandomizationStyle.Continuous)
         {
-            _inputMsuPaths = tracker.Rom!.MsuPaths?.Split("|");
-            _timer = new Timer(TimeSpan.FromSeconds(60));
-            _timer.Elapsed += TimerOnElapsed;
-            _timer.Start();
+            var inputMsus = tracker.Rom!.MsuPaths?.Split("|");
+            msuMonitorService.StartShuffle(new MsuSelectorRequest()
+            {
+                MsuPaths = inputMsus,
+                OutputMsuType = msuType,
+                OutputPath = msuPath,
+                PrevMsu = _currentMsu,
+                ShuffleStyle = msuUserOptionsService.MsuUserOptions.MsuShuffleStyle
+            });
+        }
+        else
+        {
+            msuMonitorService.StartMonitor(_currentMsu, msuType);
         }
 
-        tracker.TrackNumberUpdated += TrackerOnTrackNumberUpdated;
+        msuMonitorService.MsuTrackChanged += MsuMonitorServiceOnMsuTrackChanged;
+
         _isSetup = true;
 
     }
 
-    private void TrackerOnTrackNumberUpdated(object? sender, TrackNumberEventArgs e)
+    private void MsuMonitorServiceOnMsuTrackChanged(object sender, MsuTrackChangedEventArgs e)
     {
-        if (!_validTrackNumbers.Contains(e.TrackNumber)) return;
-        _currentTrackNumber = e.TrackNumber;
-        if (_currentMsu == null) return;
-        _currentTrack =_currentMsu.GetTrackFor(_currentTrackNumber);
-
-        Logger.LogInformation("Current Track: {Track}", _currentTrack?.GetDisplayText() ?? "Unknown");
-
-        if (_currentTrack == null) return;
-
-        var output = GetOutputText();
-        TrackerBase.UpdateTrack(_currentMsu, _currentTrack, output);
+        if (!_validTrackNumbers.Contains(e.Track.Number)) return;
+        _currentTrack = e.Track;
+        _currentTrackNumber = e.Track.Number;
 
         // Respond if we have lines to the song number, song name, or msu name
         if (_msuConfig.SongResponses?.TryGetValue(_currentTrack.MsuName ?? "", out var response) == true)
@@ -138,83 +137,6 @@ public class MsuModule : TrackerModule, IDisposable
         else if (_msuConfig.SongResponses?.TryGetValue(_currentTrackNumber.ToString(), out response) == true)
         {
             TrackerBase.Say(response);
-        }
-
-        if (string.IsNullOrEmpty(TrackerBase.Options.MsuTrackOutputPath)) return;
-        try
-        {
-            _ = File.WriteAllTextAsync(TrackerBase.Options.MsuTrackOutputPath, output);
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex, "Unable to write current track details to {Path}", TrackerBase.Options.MsuTrackOutputPath);
-        }
-
-    }
-
-    private string GetOutputText()
-    {
-        if (_currentMsu == null || _currentTrack == null)
-            return "";
-
-        var options = TrackerBase.Options;
-        switch (options.MsuTrackDisplayStyle)
-        {
-            case MsuTrackDisplayStyle.Horizontal:
-                {
-                    if (!string.IsNullOrEmpty(_currentTrack.DisplayAlbum) || !string.IsNullOrEmpty(_currentTrack.DisplayArtist))
-                    {
-                        return new MsuDisplayTextBuilder(_currentTrack, _currentMsu)
-                            .AddAlbum("{0} - ")
-                            .AddTrackTitle("{0}")
-                            .AddArtist(" ({0})")
-                            .ToString();
-                    }
-                    else
-                    {
-                        return new MsuDisplayTextBuilder(_currentTrack, _currentMsu)
-                            .AddTrackTitle("{0}")
-                            .AddMsuName(" from {0}")
-                            .ToString();
-                    }
-                }
-
-            case MsuTrackDisplayStyle.Vertical:
-                {
-                    var lines = new List<string>();
-
-                    var creator = string.IsNullOrEmpty(_currentTrack.MsuCreator)
-                        ? _currentMsu.DisplayCreator
-                        : _currentTrack.MsuCreator;
-                    var msu = string.IsNullOrEmpty(_currentTrack.MsuName)
-                        ? _currentMsu.DisplayName
-                        : _currentTrack.MsuName;
-                    lines.Add(string.IsNullOrEmpty(creator)
-                        ? $"MSU: {msu}"
-                        : $"MSU: {msu} by {creator}");
-
-                    if (!string.IsNullOrEmpty(_currentTrack.DisplayAlbum))
-                        lines.Add($"Album: {_currentTrack.DisplayAlbum}");
-
-                    lines.Add($"Song: {_currentTrack.SongName}");
-
-                    if (!string.IsNullOrEmpty(_currentTrack.DisplayArtist))
-                        lines.Add($"Artist: {_currentTrack.DisplayArtist}");
-
-                    return string.Join("\r\n", lines);
-                }
-
-            case MsuTrackDisplayStyle.HorizonalWithMsu:
-                return new MsuDisplayTextBuilder(_currentTrack, _currentMsu)
-                    .AddAlbum("{0}: ")
-                    .AddTrackTitle("{0}")
-                    .AddArtist(" - {0}")
-                    .AddMsuNameAndCreator(" (MSU: {0})")
-                    .ToString();
-
-            case MsuTrackDisplayStyle.SentenceStyle:
-            default:
-                return _currentTrack.GetDisplayText(includeMsu: true);
         }
     }
 
@@ -299,26 +221,6 @@ public class MsuModule : TrackerModule, IDisposable
 
     }
 
-    private string GetTrackText(Track track)
-    {
-        var parts = new List<string>() { track.SongName };
-        if (!string.IsNullOrEmpty(track.DisplayAlbum))
-        {
-            parts.Add($"from the album {track.DisplayAlbum}");
-        }
-        else if (!string.IsNullOrEmpty(track.DisplayArtist))
-        {
-            parts.Add($"by {track.DisplayArtist}");
-        }
-        if (!string.IsNullOrEmpty(track.MsuName) && TrackerBase.Rom!.MsuRandomizationStyle != null)
-        {
-            parts.Add($"from MSU Pack {track.MsuName}");
-            if (!string.IsNullOrEmpty(track.MsuCreator)) parts.Add($"by {track.MsuCreator}");
-        }
-
-        return string.Join("; ", parts);
-    }
-
     [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
     private GrammarBuilder GetCurrentSongRules()
     {
@@ -356,31 +258,10 @@ public class MsuModule : TrackerModule, IDisposable
             .OneOf("the current song from", "the current track from", "the current theme from");
     }
 
-    private void TimerOnElapsed(object? sender, ElapsedEventArgs e)
-    {
-        try
-        {
-            var response = _msuSelectorService.CreateShuffledMsu(new MsuSelectorRequest()
-            {
-                MsuPaths = _inputMsuPaths, OutputMsuType = _msuType, OutputPath = _msuPath, PrevMsu = _currentMsu
-            });
-            _currentMsu = response.Msu;
-        }
-        catch (Exception exception)
-        {
-            Logger.LogError(exception, "Error creating MSU");
-        }
-
-        TrackerBase.GameService?.TryCancelMsuResume();
-    }
-
     public void Dispose()
     {
-        if (_timer != null)
-        {
-            _timer.Stop();
-            _timer.Dispose();
-        }
+        _msuMonitorService.MsuTrackChanged -= MsuMonitorServiceOnMsuTrackChanged;
+        _msuMonitorService.Dispose();
     }
 
     [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
@@ -403,7 +284,7 @@ public class MsuModule : TrackerModule, IDisposable
             var track = _currentMsu.GetTrackFor(trackNumber);
             if (track != null)
             {
-                TrackerBase.Say(_msuConfig.CurrentSong, GetTrackText(track));
+                TrackerBase.Say(_msuConfig.CurrentSong, track.GetDisplayText(TrackDisplayFormat.SpeechStyle));
             }
             else
             {
@@ -438,7 +319,7 @@ public class MsuModule : TrackerModule, IDisposable
                 TrackerBase.Say(_msuConfig.UnknownSong);
                 return;
             }
-            TrackerBase.Say(_msuConfig.CurrentSong, GetTrackText(_currentTrack));
+            TrackerBase.Say(_msuConfig.CurrentSong, _currentTrack.GetDisplayText(TrackDisplayFormat.SpeechStyle));
         });
 
         AddCommand("current msu", GetCurrentMsuRules(), (_) =>

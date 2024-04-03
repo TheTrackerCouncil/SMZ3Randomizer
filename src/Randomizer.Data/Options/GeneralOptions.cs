@@ -4,7 +4,9 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Runtime.CompilerServices;
+using MSURandomizerLibrary;
 using Randomizer.Shared.Enums;
+using SnesConnectorLibrary;
 using YamlDotNet.Serialization;
 
 namespace Randomizer.Data.Options
@@ -63,12 +65,11 @@ namespace Randomizer.Data.Options
 
         public bool TrackerSpoilersEnabled { get; set; }
 
-        [YamlIgnore]
-        public int AutoTrackerDefaultConnector { get; set; } = (int)EmulatorConnectorType.None;
-
         public EmulatorConnectorType AutoTrackerDefaultConnectionType { get; set; }
 
         public string? AutoTrackerQUsb2SnesIp { get; set; }
+
+        public SnesConnectorSettings SnesConnectorSettings { get; set; } = new();
 
         public bool AutoTrackerChangeMap { get; set; }
         public int UndoExpirationTime { get; set; } = 3;
@@ -150,9 +151,14 @@ namespace Randomizer.Data.Options
         public string? SelectedLayout { get; set; }
 
         /// <summary>
+        /// How the current playing song should be displayed (Deprecated)
+        /// </summary>
+        public MsuTrackDisplayStyle? MsuTrackDisplayStyle { get; set; }
+
+        /// <summary>
         /// How the current playing song should be displayed
         /// </summary>
-        public MsuTrackDisplayStyle MsuTrackDisplayStyle { get; set; } = MsuTrackDisplayStyle.Vertical;
+        public TrackDisplayFormat TrackDisplayFormat { get; set; } = TrackDisplayFormat.Vertical;
 
         /// <summary>
         /// The file path to write the current track/song information to
@@ -243,7 +249,7 @@ namespace Randomizer.Data.Options
             VoiceFrequency = TrackerVoiceFrequency,
             TrackerProfiles = SelectedProfiles,
             UndoExpirationTime = UndoExpirationTime,
-            MsuTrackDisplayStyle = MsuTrackDisplayStyle,
+            TrackDisplayFormat = TrackDisplayFormat,
             MsuTrackOutputPath = MsuTrackOutputPath,
             AutoSaveLookAtEvents = AutoSaveLookAtEvents,
             GanonsTowerGuessingGameStyle = GanonsTowerGuessingGameStyle,

@@ -29,11 +29,11 @@ public class VisibleItemZeldaCheck : IZeldaStateCheck
 
     public bool ExecuteCheck(TrackerBase tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
     {
-        if (currentState.OverworldScreen > 0 && _overworldVisibleItems.TryGetValue(currentState.OverworldScreen, out var visibleItems))
+        if (currentState.OverworldScreen > 0 && _overworldVisibleItems.TryGetValue(currentState.OverworldScreen.Value, out var visibleItems))
         {
             return CheckItems(visibleItems, _overworldVisibleItems, currentState, tracker);
         }
-        else if (currentState.OverworldScreen == 0 && _underworldVisibleItems.TryGetValue(currentState.CurrentRoom, out visibleItems))
+        else if (currentState is { CurrentRoom: not null, OverworldScreen: 0 } && _underworldVisibleItems.TryGetValue(currentState.CurrentRoom.Value, out visibleItems))
         {
             return CheckItems(visibleItems, _underworldVisibleItems, currentState, tracker);
         }
@@ -81,12 +81,18 @@ public class VisibleItemZeldaCheck : IZeldaStateCheck
 
             // Remove overworld/dungeon room if all items have been collected or marked
             var key = currentState.OverworldScreen == 0 ? currentState.CurrentRoom : currentState.OverworldScreen;
-            if (itemsDictionary[key].Areas
+
+            if (key == null)
+            {
+                return;
+            }
+
+            if (itemsDictionary[key.Value].Areas
                 .SelectMany(x => x.Locations.Select(l => tracker.World.FindLocation(l)))
                 .All(x => x.State.Cleared || x.State.Autotracked ||
                           x.State.Item.IsEquivalentTo(x.State.MarkedItem)))
             {
-                itemsDictionary.Remove(key);
+                itemsDictionary.Remove(key.Value);
             }
         });
 

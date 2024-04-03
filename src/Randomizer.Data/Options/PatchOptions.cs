@@ -87,9 +87,26 @@ namespace Randomizer.Data.Options
                 {
                     _msuRandomizationStyle = value;
                     OnPropertyChanged(nameof(MsuRandomizationStyle));
+                    MsuShuffleStyleEnabled = value == MSURandomizerLibrary.MsuRandomizationStyle.Shuffled ||
+                                             value == MSURandomizerLibrary.MsuRandomizationStyle.Continuous;
                 }
             }
         }
+
+        private bool _msuShuffleStyleEnabled;
+
+        [YamlIgnore]
+        public bool MsuShuffleStyleEnabled
+        {
+            get => _msuShuffleStyleEnabled;
+            set
+            {
+                _msuShuffleStyleEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public MsuShuffleStyle MsuShuffleStyle { get; set; }
 
         public bool EnableExtendedSoundtrack { get; set; }
 
