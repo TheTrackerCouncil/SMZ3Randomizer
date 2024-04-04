@@ -65,7 +65,7 @@ public class ZeldaLocations(TrackerBase tracker, ISnesConnectorService snesConne
                     // Increment GT guessing game number
                     if (location.Region is GanonsTower gt && location != gt.BobsTorch)
                     {
-                        //IncrementGTItems(location);
+                        AutoTracker.IncrementGTItems(location);
                     }
 
                     TrackLocation(location);

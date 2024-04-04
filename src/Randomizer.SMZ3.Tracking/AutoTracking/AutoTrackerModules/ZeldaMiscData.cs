@@ -87,8 +87,8 @@ public class ZeldaMiscData(TrackerBase tracker, ISnesConnectorService snesConnec
             {
                 var loc = location.MemoryAddress ?? 0;
                 var flag = location.MemoryFlag ?? 0;
-                var currentCleared = data.CheckInt16Flag(loc * 2, flag);
-                var prevCleared = prevData.CheckInt16Flag(loc * 2, flag);
+                var currentCleared = data.CheckUInt8Flag(loc, flag);
+                var prevCleared = prevData.CheckUInt8Flag(loc, flag);
                 if (location.State.Autotracked == false && currentCleared && prevCleared)
                 {
                     TrackLocation(location);
