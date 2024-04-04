@@ -57,7 +57,6 @@ Source: "..\src\Randomizer.App\bin\Release\net8.0-windows\win-x64\publish\*"; De
 Source: "..\src\Randomizer.App\bin\Release\net8.0-windows\win-x86\publish\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; Check: "not Is64BitInstallMode";
 Source: "..\src\Randomizer.App\bin\Release\net8.0-windows\win-x86\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: "not Is64BitInstallMode";
 Source: "..\src\Randomizer.Data\maps.json"; DestDir: "{localappdata}\SMZ3CasRandomizer"; Flags: comparetimestamp
-Source: "..\src\Randomizer.SMZ3.Tracking\AutoTracking\LuaScripts\*"; DestDir: "{localappdata}\SMZ3CasRandomizer\AutoTrackerScripts"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\configs\Profiles\*"; DestDir: "{localappdata}\SMZ3CasRandomizer\Configs"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\configs\Schemas\*"; DestDir: "{localappdata}\SMZ3CasRandomizer\Schemas"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
