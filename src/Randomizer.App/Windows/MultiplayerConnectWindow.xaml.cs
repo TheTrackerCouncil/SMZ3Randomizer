@@ -47,6 +47,10 @@ namespace Randomizer.App.Windows
             DataContext = this;
 
             _version = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion ?? "";
+            if (_version.Contains('+'))
+            {
+                _version = _version[.._version.IndexOf('+')];
+            }
 
             _multiplayerClientService.Connected += MultiplayerClientServiceConnected;
             _multiplayerClientService.Error += MultiplayerClientServiceError;
