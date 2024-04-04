@@ -8,7 +8,6 @@ using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
-using Randomizer.Data.Options;
 using Randomizer.Data.Tracking;
 using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.Tracking.AutoTracking.AutoTrackerModules;
@@ -181,5 +180,13 @@ public class AutoTracker : AutoTrackerBase
         {
             chatIntegrationModule?.GTItemTracked(_numGTItems, false);
         }
+    }
+
+    public override void Dispose()
+    {
+        _snesConnectorService.Connected -= SnesConnectorServiceOnConnected;
+        _snesConnectorService.Disconnected -= SnesConnectorServiceOnDisconnected;
+        _snesConnectorService.Disconnect();
+        _snesConnectorService.ClearRequests();
     }
 }

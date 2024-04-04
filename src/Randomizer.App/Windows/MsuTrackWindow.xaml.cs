@@ -19,6 +19,7 @@ public partial class MsuTrackWindow : Window, IDisposable
     public void Init(MsuCurrentPlayingTrackControl panel, RandomizerOptions options)
     {
         _panel = panel;
+        panel.IsEmbedded = true;
         MainDockPanel.Children.Add(panel);
         _options = options;
         _options.GeneralOptions.DisplayMsuTrackWindow = true;

@@ -6,7 +6,7 @@ using SnesConnectorLibrary;
 
 namespace Randomizer.Abstractions;
 
-public abstract class AutoTrackerBase
+public abstract class AutoTrackerBase : IDisposable
 {
     /// <summary>
     /// The tracker associated with this auto tracker
@@ -144,4 +144,5 @@ public abstract class AutoTrackerBase
         AutoTrackerDisconnected?.Invoke(this, EventArgs.Empty);
     }
 
+    public abstract void Dispose();
 }

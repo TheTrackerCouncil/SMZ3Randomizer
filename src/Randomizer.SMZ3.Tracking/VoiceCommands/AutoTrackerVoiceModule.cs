@@ -53,7 +53,7 @@ public class AutoTrackerVoiceModule : TrackerModule, IDisposable
     /// </summary>
     public void Dispose()
     {
-        _autoTrackerBase.SetConnector(new SnesConnectorSettings());
+        _autoTrackerBase.Dispose();
     }
 
     [SupportedOSPlatform("windows")]

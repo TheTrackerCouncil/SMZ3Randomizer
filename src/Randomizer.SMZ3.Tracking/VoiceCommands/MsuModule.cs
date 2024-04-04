@@ -261,7 +261,7 @@ public class MsuModule : TrackerModule, IDisposable
     public void Dispose()
     {
         _msuMonitorService.MsuTrackChanged -= MsuMonitorServiceOnMsuTrackChanged;
-        _msuMonitorService.Dispose();
+        _msuMonitorService.Stop();
     }
 
     [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
