@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using MSURandomizerLibrary;
 using Randomizer.Data.Options;
 using Randomizer.Shared.Enums;
 
@@ -102,9 +103,14 @@ namespace Randomizer.Data
         public ICollection<string?> TrackerProfiles { get; set; } = new List<string?>() { "Sassy" };
 
         /// <summary>
+        /// The output style for the current song (Deprecated)
+        /// </summary>
+        public MsuTrackDisplayStyle? MsuTrackDisplayStyle { get; set; }
+
+        /// <summary>
         /// The output style for the current song
         /// </summary>
-        public MsuTrackDisplayStyle MsuTrackDisplayStyle { get; set; } = MsuTrackDisplayStyle.Vertical;
+        public TrackDisplayFormat TrackDisplayFormat { get; set; }
 
         /// <summary>
         /// The file to write the current song to

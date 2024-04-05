@@ -158,6 +158,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)
         {
+            _canSpeak = false;
             if (disposing && OperatingSystem.IsWindows())
             {
                 _tts.Dispose();

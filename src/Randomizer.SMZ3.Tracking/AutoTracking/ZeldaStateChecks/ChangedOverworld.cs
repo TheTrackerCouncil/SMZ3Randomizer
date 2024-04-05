@@ -20,16 +20,19 @@ public class ChangedOverworld : IZeldaStateCheck
     /// <returns>True if the check was identified, false otherwise</returns>
     public bool ExecuteCheck(TrackerBase tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
     {
-        if (currentState.State == 0x09 && (prevState.State != 0x09 || currentState.OverworldScreen != prevState.OverworldScreen))
+        if (currentState.State != 0x09 ||
+            (prevState.State == 0x09 && currentState.OverworldScreen == prevState.OverworldScreen) ||
+            currentState.OverworldScreen == null)
         {
-            var region = tracker.World.Regions.Where(x => x is Z3Region)
-                .Select(x => x as Z3Region)
-                .FirstOrDefault(x => x != null && x.StartingRooms != null && x.StartingRooms.Contains(currentState.OverworldScreen) && x.IsOverworld);
-            if (region == null) return false;
-
-            tracker.UpdateRegion(region, tracker.Options.AutoTrackerChangeMap);
-            return true;
+            return false;
         }
-        return false;
+
+        var region = tracker.World.Regions
+            .OfType<Z3Region>()
+            .FirstOrDefault(x => x.StartingRooms.Count != 0 && x.StartingRooms.Contains(currentState.OverworldScreen.Value) && x.IsOverworld);
+        if (region == null) return false;
+
+        tracker.UpdateRegion(region, tracker.Options.AutoTrackerChangeMap);
+        return true;
     }
 }

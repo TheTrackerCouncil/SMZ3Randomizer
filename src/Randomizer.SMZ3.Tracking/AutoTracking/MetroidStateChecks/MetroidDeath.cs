@@ -47,11 +47,14 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
 
             // Check if there is a special message for dying in this room
             var region = tracker.World.Regions.OfType<SMRegion>()
-                .FirstOrDefault(x => x.MemoryRegionId == currentState.CurrentRegion && x.Metadata.WhenDiedInRoom != null && x.Metadata.WhenDiedInRoom.ContainsKey(currentState.CurrentRoomInRegion));
+                .FirstOrDefault(x =>
+                    x.MemoryRegionId == currentState.CurrentRegion && x.Metadata.WhenDiedInRoom != null &&
+                    currentState.CurrentRoomInRegion != null &&
+                    x.Metadata.WhenDiedInRoom.ContainsKey(currentState.CurrentRoomInRegion.Value));
 
-            if (!silent && region is { Metadata.WhenDiedInRoom: not null })
+            if (!silent && region is { Metadata.WhenDiedInRoom: not null } && currentState.CurrentRoomInRegion != null)
             {
-                tracker.SayOnce(region.Metadata.WhenDiedInRoom[currentState.CurrentRoomInRegion]);
+                tracker.SayOnce(region.Metadata.WhenDiedInRoom[currentState.CurrentRoomInRegion.Value]);
             }
 
             tracker.TrackDeath(true);

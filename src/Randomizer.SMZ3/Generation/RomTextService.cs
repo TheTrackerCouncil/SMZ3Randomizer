@@ -9,20 +9,12 @@ using Randomizer.Data.Options;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Contracts;
+using SnesConnectorLibrary;
 
 namespace Randomizer.SMZ3.Generation;
 
-public class RomTextService
+public class RomTextService(ILogger<RomTextService> logger, IGameHintService gameHintService, ISnesConnectorService snesConnectorService)
 {
-    private readonly ILogger<RomTextService> _logger;
-    private readonly IGameHintService _gameHintService;
-
-    public RomTextService(ILogger<RomTextService> logger, IGameHintService gameHintService)
-    {
-        _logger = logger;
-        _gameHintService = gameHintService;
-    }
-
     public async Task<string> WriteSpoilerLog(RandomizerOptions options, SeedData seed, Config config, string folderPath, string fileSuffix)
     {
         var spoilerLog = GetSpoilerLog(options, seed, config.Race || config.DisableSpoilerLog);
@@ -45,23 +37,29 @@ public class RomTextService
 
     public void PrepareAutoTrackerFiles(RandomizerOptions options)
     {
+        // Cleanup old auto tracker scripts
+        if (Directory.Exists(Path.Combine(options.AutoTrackerScriptsOutputPath, "bizhawk")))
+        {
+            Directory.Delete(Path.Combine(options.AutoTrackerScriptsOutputPath, "bizhawk"), true);
+        }
+
+        if (Directory.Exists(Path.Combine(options.AutoTrackerScriptsOutputPath, "snes9xrr_32bit")))
+        {
+            Directory.Delete(Path.Combine(options.AutoTrackerScriptsOutputPath, "snes9xrr_32bit"), true);
+        }
+
+        if (Directory.Exists(Path.Combine(options.AutoTrackerScriptsOutputPath, "snex9xrr_64bit")))
+        {
+            Directory.Delete(Path.Combine(options.AutoTrackerScriptsOutputPath, "snex9xrr_64bit"), true);
+        }
+
         try
         {
-#if DEBUG
-            var autoTrackerSourcePath = Path.Combine(GetSourceDirectory(), "Randomizer.SMZ3.Tracking", "AutoTracking", "LuaScripts");
-#else
-            var autoTrackerSourcePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "AutoTrackerScripts");
-#endif
-            var autoTrackerDestPath = options.AutoTrackerScriptsOutputPath;
-
-            if (!autoTrackerSourcePath.Equals(autoTrackerDestPath, StringComparison.OrdinalIgnoreCase))
-            {
-                CopyDirectory(autoTrackerSourcePath, autoTrackerDestPath, true, true);
-            }
+            snesConnectorService.CreateLuaScriptsFolder(options.AutoTrackerScriptsOutputPath);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Unable to copy Auto Tracker Scripts");
+            logger.LogError(e, "Unable to copy Auto Tracker Scripts");
         }
     }
 
@@ -105,7 +103,7 @@ public class RomTextService
         {
             if (seed.WorldGenerationData.Count > 1)
             {
-                _logger.LogWarning("Attempting to export plando config for multi-world seed. Skipping.");
+                logger.LogWarning("Attempting to export plando config for multi-world seed. Skipping.");
                 return null;
             }
 
@@ -117,7 +115,7 @@ public class RomTextService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An unexpected error occurred while exporting the plando configuration for seed {Seed}. No plando config will be generated.", seed.Seed);
+            logger.LogError(ex, "An unexpected error occurred while exporting the plando configuration for seed {Seed}. No plando config will be generated.", seed.Seed);
             return null;
         }
     }
@@ -215,7 +213,7 @@ public class RomTextService
 
             foreach (var hint in worldGenerationData.World.HintTiles)
             {
-                var hintText = _gameHintService.GetHintTileText(hint, worldGenerationData.World,
+                var hintText = gameHintService.GetHintTileText(hint, worldGenerationData.World,
                     seed.WorldGenerationData.Worlds.ToList());
                 log.AppendLine($"{hint.HintTileCode} - {hintText}");
             }

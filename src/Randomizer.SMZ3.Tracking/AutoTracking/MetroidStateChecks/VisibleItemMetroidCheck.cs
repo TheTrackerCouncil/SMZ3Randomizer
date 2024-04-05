@@ -26,7 +26,12 @@ public class VisibleItemMetroidCheck : IMetroidStateCheck
     public bool ExecuteCheck(TrackerBase tracker, AutoTrackerMetroidState currentState,
         AutoTrackerMetroidState prevState)
     {
-        if (_items.TryGetValue(currentState.CurrentRoom, out var visibleItems))
+        if (currentState.CurrentRoom == null)
+        {
+            return false;
+        }
+
+        if (_items.TryGetValue(currentState.CurrentRoom.Value, out var visibleItems))
         {
             CheckItems(visibleItems, currentState, tracker);
             return true;
@@ -74,12 +79,12 @@ public class VisibleItemMetroidCheck : IMetroidStateCheck
             }
 
             // Remove room if all items have been collected or marked
-            if (_items[currentState.CurrentRoom].Areas
+            if (currentState.CurrentRoom != null && _items[currentState.CurrentRoom.Value].Areas
                 .SelectMany(x => x.Locations.Select(l => tracker.World.FindLocation(l)))
                 .All(x => x.State.Cleared || x.State.Autotracked ||
                           x.State.Item.IsEquivalentTo(x.State.MarkedItem)))
             {
-                _items.Remove(currentState.CurrentRoom);
+                _items.Remove(currentState.CurrentRoom.Value);
             }
         });
 

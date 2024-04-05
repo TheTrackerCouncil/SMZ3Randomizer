@@ -49,7 +49,7 @@ public class ViewedText : IZeldaStateCheck
     /// <returns>True if the check was identified, false otherwise</returns>
     public bool ExecuteCheck(TrackerBase tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
     {
-        if (tracker.AutoTracker == null || currentState.State != 14 || currentState.Substate != 2) return false;
+        if (tracker.AutoTracker == null || currentState.State != 14 || currentState.Substate != 2 || currentState.CurrentRoom == null) return false;
 
         if (currentState.CurrentRoom == 261 && !_greenPendantUpdated && currentState.IsWithinRegion(2650, 8543, 2692, 8594))
         {
@@ -59,7 +59,7 @@ public class ViewedText : IZeldaStateCheck
         {
             tracker.AutoTracker.SetLatestViewAction("MarkRedCrystalDungeons", MarkRedCrystalDungeons);
         }
-        else if (World.HintTiles.Any() && _hintTiles.TryGetValue(currentState.CurrentRoom, out var hintTile) &&
+        else if (World.HintTiles.Any() && _hintTiles.TryGetValue(currentState.CurrentRoom.Value, out var hintTile) &&
                  !_viewedHintTileRooms.Contains(hintTile.Room) && currentState.IsWithinRegion(hintTile.TopLeftX,
                      hintTile.TopLeftY, hintTile.TopLeftX+15, hintTile.TopLeftY+1))
         {

@@ -1,10 +1,12 @@
 using Randomizer.Data.Options;
 using Randomizer.Data.Tracking;
+using Randomizer.Data.WorldData;
 using Randomizer.Shared.Enums;
+using SnesConnectorLibrary;
 
 namespace Randomizer.Abstractions;
 
-public abstract class AutoTrackerBase
+public abstract class AutoTrackerBase : IDisposable
 {
     /// <summary>
     /// The tracker associated with this auto tracker
@@ -14,7 +16,7 @@ public abstract class AutoTrackerBase
     /// <summary>
     /// The type of connector that the auto tracker is currently using
     /// </summary>
-    public EmulatorConnectorType ConnectorType { get; protected set; }
+    public SnesConnectorType ConnectorType { get; protected set; }
 
     /// <summary>
     /// The game that the player is currently in
@@ -22,19 +24,21 @@ public abstract class AutoTrackerBase
     public Game CurrentGame { get; protected set; }
 
     /// <summary>
+    /// The game that the player was previous in
+    /// </summary>
+    public Game PreviousGame { get; protected set; }
+
+    /// <summary>
     /// The latest state that the player in LTTP (location, health, etc.)
     /// </summary>
-    public AutoTrackerZeldaState? ZeldaState { get; protected set; }
+    public AutoTrackerZeldaState? ZeldaState { get; set; }
 
     /// <summary>
     /// The latest state that the player in Super Metroid (location, health, etc.)
     /// </summary>
-    public AutoTrackerMetroidState? MetroidState { get; protected set;  }
+    public AutoTrackerMetroidState? MetroidState { get; set;  }
 
-    /// <summary>
-    /// Disables the current connector and creates the requested type
-    /// </summary>
-    public abstract void SetConnector(EmulatorConnectorType type, string? qusb2SnesIp);
+    public abstract void SetConnector(SnesConnectorSettings snesConnectorSettings, SnesConnectorType? connectorTypeOverride = null);
 
     /// <summary>
     /// Occurs when the tracker's auto tracker is enabled
@@ -82,14 +86,9 @@ public abstract class AutoTrackerBase
     public abstract bool HasValidState { get; }
 
     /// <summary>
-    /// If the auto tracker is currently sending messages
-    /// </summary>
-    protected bool IsSendingMessages { get; set; }
-
-    /// <summary>
     /// If the player currently has a fairy
     /// </summary>
-    public bool PlayerHasFairy { get; protected set; }
+    public bool PlayerHasFairy { get; set; }
 
     /// <summary>
     /// If the user is activately in an SMZ3 rom
@@ -97,17 +96,21 @@ public abstract class AutoTrackerBase
     public abstract bool IsInSMZ3 { get; }
 
     /// <summary>
-    /// Writes a particular action to the emulator memory
-    /// </summary>
-    /// <param name="action">The action to write to memory</param>
-    public abstract void WriteToMemory(EmulatorAction action);
-
-    /// <summary>
     /// Sets the latest view action to use by voice command, or if specified in the options, automatically execute it
     /// </summary>
     /// <param name="key">Unique key for the action type</param>
     /// <param name="action">The viewed action</param>
     public abstract void SetLatestViewAction(string key, Action action);
+
+    public abstract void UpdateGame(Game game);
+
+    public abstract void UpdateValidState(bool hasValidState);
+
+    public abstract void IncrementGTItems(Location location);
+
+    public bool HasStarted { get; set; }
+
+    public bool HasDefeatedBothBosses { get; set; }
 
     /// <summary>
     /// Invokes the AutoTrackerEnabled event
@@ -141,4 +144,5 @@ public abstract class AutoTrackerBase
         AutoTrackerDisconnected?.Invoke(this, EventArgs.Empty);
     }
 
+    public abstract void Dispose();
 }

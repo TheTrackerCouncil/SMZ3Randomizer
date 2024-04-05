@@ -29,7 +29,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private bool _cheatsEnabled;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AutoTrackerModule"/>
+        /// Initializes a new instance of the <see cref="AutoTrackerVoiceModule"/>
         /// class.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>

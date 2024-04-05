@@ -10,8 +10,11 @@ using Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 using Randomizer.Data.Options;
+using Randomizer.SMZ3.Tracking.AutoTracking;
+using Randomizer.SMZ3.Tracking.AutoTracking.AutoTrackerModules;
 using Randomizer.SMZ3.Tracking.Services.Speech;
 using SharpHook;
+using SnesConnectorLibrary;
 
 namespace Randomizer.SMZ3.Tracking;
 
@@ -40,6 +43,7 @@ public static class TrackerServiceCollectionExtensions
         services.AddScoped<IWorldService, WorldService>();
         services.AddScoped<IRandomizerConfigService, RandomizerConfigService>();
         services.AddScoped<TrackerBase, Tracker>();
+        services.AddSnesConnectorServices();
 
         if (OperatingSystem.IsWindows())
         {
@@ -70,6 +74,14 @@ public static class TrackerServiceCollectionExtensions
         foreach (var stateCheck in metroidStateChecks)
         {
             services.Add(new ServiceDescriptor(typeof(IMetroidStateCheck), stateCheck, ServiceLifetime.Transient));
+        }
+
+        var autoTrackerModules = assemblies
+            .SelectMany(a => a.GetTypes())
+            .Where(t => t != typeof(AutoTrackerModule) && t.IsAssignableTo(typeof(AutoTrackerModule)));
+        foreach (var module in autoTrackerModules)
+        {
+            services.Add(new ServiceDescriptor(typeof(AutoTrackerModule), module, ServiceLifetime.Transient));
         }
 
         return services;

@@ -43,27 +43,27 @@ public class ViewedMap : IZeldaStateCheck
     /// <returns>True if the check was identified, false otherwise</returns>
     public bool ExecuteCheck(TrackerBase tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
     {
-        if (tracker.AutoTracker == null || (_lightWorldUpdated && _darkWorldUpdated)) return false;
-
-        if (currentState.State == 14 && currentState.Substate == 7 && currentState.ReadUInt8(0xE0) == 0x80)
+        if (tracker.AutoTracker == null || (_lightWorldUpdated && _darkWorldUpdated) || currentState.State != 14 ||
+            currentState.Substate != 7 || currentState.ReadUInt8(0xE0) != 0x80 || currentState.OverworldScreen == null)
         {
-            _tracker = tracker;
-            var currentRegion = tracker.World.Regions
-                .OfType<Z3Region>()
-                .FirstOrDefault(x => x.StartingRooms != null && x.StartingRooms.Contains(currentState.OverworldScreen) && x.IsOverworld);
-            if (currentRegion is LightWorldNorthWest or LightWorldNorthEast or LightWorldSouth or LightWorldDeathMountainEast or LightWorldDeathMountainWest && !_lightWorldUpdated)
-            {
-                tracker.AutoTracker.SetLatestViewAction("UpdateLightWorldRewards", UpdateLightWorldRewards);
-                return true;
-            }
-            else if (currentRegion is DarkWorldNorthWest or DarkWorldNorthEast or DarkWorldSouth or DarkWorldMire or DarkWorldDeathMountainEast or DarkWorldDeathMountainWest && !_darkWorldUpdated)
-            {
-                tracker.AutoTracker.SetLatestViewAction("UpdateDarkWorldRewards", UpdateDarkWorldRewards);
-                return true;
-            }
-
             return false;
         }
+
+        _tracker = tracker;
+        var currentRegion = tracker.World.Regions
+            .OfType<Z3Region>()
+            .FirstOrDefault(x => x.StartingRooms.Contains(currentState.OverworldScreen.Value) && x.IsOverworld);
+        if (currentRegion is LightWorldNorthWest or LightWorldNorthEast or LightWorldSouth or LightWorldDeathMountainEast or LightWorldDeathMountainWest && !_lightWorldUpdated)
+        {
+            tracker.AutoTracker.SetLatestViewAction("UpdateLightWorldRewards", UpdateLightWorldRewards);
+            return true;
+        }
+        else if (currentRegion is DarkWorldNorthWest or DarkWorldNorthEast or DarkWorldSouth or DarkWorldMire or DarkWorldDeathMountainEast or DarkWorldDeathMountainWest && !_darkWorldUpdated)
+        {
+            tracker.AutoTracker.SetLatestViewAction("UpdateDarkWorldRewards", UpdateDarkWorldRewards);
+            return true;
+        }
+
         return false;
     }
 

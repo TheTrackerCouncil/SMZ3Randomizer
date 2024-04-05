@@ -35,40 +35,41 @@ public class EnteredDungeon : IZeldaStateCheck
     /// <returns>True if the check was identified, false otherwise</returns>
     public bool ExecuteCheck(TrackerBase tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
     {
-        if (currentState.State == 0x07 && prevState.State is 0x06 or 0x09 or 0x0F or 0x10 or 0x11)
+        if (currentState.State != 0x07 || prevState.State is not (0x06 or 0x09 or 0x0F or 0x10 or 0x11) || currentState.CurrentRoom == null)
         {
-            // Get the region for the room
-            var region = tracker.World.Regions
-                .OfType<Z3Region>()
-                .FirstOrDefault(x => x.StartingRooms.Count > 0 && x.StartingRooms.Contains(currentState.CurrentRoom) && !x.IsOverworld);
-
-            // Get the dungeon info for the room
-            if (region is not IDungeon dungeon) return false;
-
-            if (!_worldAccessor.World.Config.ZeldaKeysanity && !_enteredDungeons.Contains(region) && dungeon.IsPendantDungeon)
-            {
-                tracker.Say(tracker.Responses.AutoTracker.EnterPendantDungeon, dungeon.DungeonMetadata.Name, dungeon.DungeonReward?.Metadata.Name);
-            }
-            else if (!_worldAccessor.World.Config.ZeldaKeysanity && region is CastleTower)
-            {
-                tracker.Say(x => x.AutoTracker.EnterHyruleCastleTower);
-            }
-            else if (region is GanonsTower)
-            {
-                var clearedCrystalDungeonCount = tracker.World.Dungeons
-                    .Count(x => x.DungeonState.Cleared && x.IsCrystalDungeon);
-
-                if (clearedCrystalDungeonCount < tracker.World.Config.GanonsTowerCrystalCount)
-                {
-                    tracker.SayOnce(x => x.AutoTracker.EnteredGTEarly, clearedCrystalDungeonCount);
-                }
-            }
-
-            tracker.UpdateRegion(region, tracker.Options.AutoTrackerChangeMap);
-            _enteredDungeons.Add(region);
-            return true;
+            return false;
         }
 
-        return false;
+        // Get the region for the room
+        var region = tracker.World.Regions
+            .OfType<Z3Region>()
+            .FirstOrDefault(x => x.StartingRooms.Count > 0 && x.StartingRooms.Contains(currentState.CurrentRoom.Value) && !x.IsOverworld);
+
+        // Get the dungeon info for the room
+        if (region is not IDungeon dungeon) return false;
+
+        if (!_worldAccessor.World.Config.ZeldaKeysanity && !_enteredDungeons.Contains(region) && dungeon.IsPendantDungeon)
+        {
+            tracker.Say(tracker.Responses.AutoTracker.EnterPendantDungeon, dungeon.DungeonMetadata.Name, dungeon.DungeonReward?.Metadata.Name);
+        }
+        else if (!_worldAccessor.World.Config.ZeldaKeysanity && region is CastleTower)
+        {
+            tracker.Say(x => x.AutoTracker.EnterHyruleCastleTower);
+        }
+        else if (region is GanonsTower)
+        {
+            var clearedCrystalDungeonCount = tracker.World.Dungeons
+                .Count(x => x.DungeonState.Cleared && x.IsCrystalDungeon);
+
+            if (clearedCrystalDungeonCount < tracker.World.Config.GanonsTowerCrystalCount)
+            {
+                tracker.SayOnce(x => x.AutoTracker.EnteredGTEarly, clearedCrystalDungeonCount);
+            }
+        }
+
+        tracker.UpdateRegion(region, tracker.Options.AutoTrackerChangeMap);
+        _enteredDungeons.Add(region);
+        return true;
+
     }
 }
