@@ -4,13 +4,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
-
 using Microsoft.Extensions.Logging;
-
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
 
-namespace Randomizer.SMZ3.Tracking.Services;
+namespace Randomizer.Data.Services;
 
 public class MicrophoneService : IMicrophoneService
 {

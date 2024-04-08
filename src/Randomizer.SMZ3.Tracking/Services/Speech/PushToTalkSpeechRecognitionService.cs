@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 
 using NAudio.Wave;
 using Randomizer.Data.Options;
+using Randomizer.Data.Services;
 using Randomizer.Shared;
 
 using SharpHook;
