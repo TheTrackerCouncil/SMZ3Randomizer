@@ -13,7 +13,7 @@ public class OptionsWindowTrackerProfiles : INotifyPropertyChanged
 
     [DynamicFormFieldText]
     public string TrackerProfileDescription =>
-        "All selected profiles in the right column will be combined in the order from top to bottom. In case of overrides, such as Tracker item images, the top most will be used.";
+        "All checked profiles will be combined. In case of overrides, such as Tracker item images, the top most will be used.";
 
     [DynamicFormFieldEnableDisableReorder(nameof(AvailableProfiles))]
     public List<string> SelectedProfiles { get; set; } = new List<string>();
