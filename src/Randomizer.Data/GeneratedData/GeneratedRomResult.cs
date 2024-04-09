@@ -1,5 +1,6 @@
-﻿namespace Randomizer.SMZ3.Generation;
-using Randomizer.Shared.Models;
+﻿using Randomizer.Shared.Models;
+
+namespace Randomizer.Data.GeneratedData;
 
 public class GeneratedRomResult
 {

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Randomizer.Data.Configuration;
 using Randomizer.Data.Configuration.ConfigFiles;
+using Randomizer.Data.GeneratedData;
 using Randomizer.Data.Services;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;

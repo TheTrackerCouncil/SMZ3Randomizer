@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Randomizer.App.ViewModels;
 using Randomizer.App.Windows;
+using Randomizer.Data.Interfaces;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Shared.Models;
@@ -23,7 +24,7 @@ namespace Randomizer.App.Controls
         public MultiRomListPanel(IServiceProvider serviceProvider,
             OptionsFactory optionsFactory,
             ILogger<MultiRomListPanel> logger,
-            RomGenerationService romGenerationService,
+            IRomGenerationService romGenerationService,
             IGameDbService gameDbService,
             RomLauncherService romLauncherService) : base(serviceProvider, optionsFactory, logger, romGenerationService, gameDbService, romLauncherService)
         {

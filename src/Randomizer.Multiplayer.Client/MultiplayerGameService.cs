@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Randomizer.Data.GeneratedData;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Multiplayer.Client.EventHandlers;

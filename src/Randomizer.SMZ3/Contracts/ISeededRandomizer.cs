@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
+using Randomizer.Data.GeneratedData;
 using Randomizer.Data.Options;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Generation;

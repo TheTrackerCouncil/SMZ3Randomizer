@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Randomizer.Data.GeneratedData;
 using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;

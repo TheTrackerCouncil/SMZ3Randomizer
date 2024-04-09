@@ -18,20 +18,42 @@ public partial class SpriteWindow : Window
 {
     private readonly SpriteService _spriteService;
 
-    public SpriteWindow(SpriteService spriteService)
+    public SpriteWindow(SpriteService spriteService, OptionsFactory optionsFactory)
     {
         _spriteService = spriteService;
+        Options = optionsFactory.Create();
         InitializeComponent();
 
         DataContext = Model = new SpriteWindowViewModel();
 
     }
 
+    public void SetSpriteType(SpriteType type)
+    {
+        SpriteType = type;
+
+        if (type == SpriteType.Link)
+        {
+            Model.SearchText = Options.GeneralOptions.LinkSpriteSearchText;
+            Model.SpriteFilter = Options.GeneralOptions.LinkSpriteFilter;
+        }
+        else if (type == SpriteType.Samus)
+        {
+            Model.SearchText = Options.GeneralOptions.SamusSpriteSearchText;
+            Model.SpriteFilter = Options.GeneralOptions.SamusSpriteFilter;
+        }
+        else
+        {
+            Model.SearchText = Options.GeneralOptions.ShipSpriteSearchText;
+            Model.SpriteFilter = Options.GeneralOptions.ShipSpriteFilter;
+        }
+    }
+
     public SpriteWindowViewModel Model { get; } = new();
 
-    public RandomizerOptions Options { get; set; } = new();
+    private RandomizerOptions Options { get; set; } = new();
 
-    public SpriteType SpriteType { get; set; }
+    private SpriteType SpriteType { get; set; }
 
     private IEnumerable<Sprite>? _allSprites = new List<Sprite>();
 

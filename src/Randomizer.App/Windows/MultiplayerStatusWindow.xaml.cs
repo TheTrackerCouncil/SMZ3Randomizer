@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Randomizer.App.Controls;
 using Randomizer.App.ViewModels;
+using Randomizer.Data.Interfaces;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Shared.Multiplayer;
@@ -25,12 +26,12 @@ namespace Randomizer.App.Windows
     {
         private readonly MultiplayerClientService _multiplayerClientService;
         private readonly MultiplayerGameService _multiplayerGameService;
-        private readonly RomGenerationService _romGenerationService;
+        private readonly IRomGenerationService _romGenerationService;
         private readonly SpriteService _spriteService;
         private string _previousError = "";
 
         public MultiplayerStatusWindow(MultiplayerClientService multiplayerClientService,
-            MultiplayerGameService multiplayerGameService, RomGenerationService romGenerationService, SpriteService spriteService)
+            MultiplayerGameService multiplayerGameService, IRomGenerationService romGenerationService, SpriteService spriteService)
         {
             _multiplayerClientService = multiplayerClientService;
             _multiplayerGameService = multiplayerGameService;

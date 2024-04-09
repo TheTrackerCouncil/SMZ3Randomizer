@@ -6,7 +6,7 @@ using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared.Multiplayer;
 
-namespace Randomizer.SMZ3.Generation;
+namespace Randomizer.Data.GeneratedData;
 
 /// <summary>
 /// Class for housing all of the details for generating a rom for a particular world

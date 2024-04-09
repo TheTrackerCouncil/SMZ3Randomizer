@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Randomizer.Data.GeneratedData;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared.Enums;
 using Randomizer.Shared.Models;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using Randomizer.Data.GeneratedData;
 using Randomizer.Data.Options;
 using Randomizer.SMZ3.Generation;
 

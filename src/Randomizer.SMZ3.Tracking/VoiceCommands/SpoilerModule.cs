@@ -11,6 +11,7 @@ using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.Data.Configuration;
 using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data.GeneratedData;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.Data.Options;
 using Randomizer.Shared.Enums;

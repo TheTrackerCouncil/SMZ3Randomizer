@@ -17,6 +17,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 using MSURandomizerLibrary;
 using Randomizer.Data.Configuration.ConfigFiles;
+using Randomizer.Data.GeneratedData;
+using Randomizer.Data.Interfaces;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Data.WorldData;
@@ -33,14 +35,14 @@ namespace Randomizer.App.Windows
     public partial class GenerateRomWindow
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly RomGenerationService _romGenerator;
+        private readonly IRomGenerationService _romGenerator;
         private readonly LocationConfig _locations;
         private readonly MsuUiService _msuUiService;
         private readonly SpriteService _spriteService;
         private RandomizerOptions? _options;
 
         public GenerateRomWindow(IServiceProvider serviceProvider,
-            RomGenerationService romGenerator,
+            IRomGenerationService romGenerator,
             LocationConfig locations,
             MsuUiService msuUiService,
             SpriteService spriteService)
@@ -799,8 +801,6 @@ namespace Randomizer.App.Windows
         private void SamusSpriteButton_OnClick(object sender, RoutedEventArgs e)
         {
             var spriteWindow = _serviceProvider.GetRequiredService<SpriteWindow>();
-            spriteWindow.Options = Options;
-            spriteWindow.SpriteType = SpriteType.Samus;
             spriteWindow.Model.SearchText = Options.GeneralOptions.SamusSpriteSearchText;
             spriteWindow.Model.SpriteFilter = Options.GeneralOptions.SamusSpriteFilter;
             var result = spriteWindow.ShowDialog();
@@ -817,8 +817,6 @@ namespace Randomizer.App.Windows
         private void LinkSpriteButton_OnClick(object sender, RoutedEventArgs e)
         {
             var spriteWindow = _serviceProvider.GetRequiredService<SpriteWindow>();
-            spriteWindow.Options = Options;
-            spriteWindow.SpriteType = SpriteType.Link;
             spriteWindow.Model.SearchText = Options.GeneralOptions.LinkSpriteSearchText;
             spriteWindow.Model.SpriteFilter = Options.GeneralOptions.LinkSpriteFilter;
             var result = spriteWindow.ShowDialog();
@@ -835,8 +833,6 @@ namespace Randomizer.App.Windows
         private void ShipSpriteButton_OnClick(object sender, RoutedEventArgs e)
         {
             var spriteWindow = _serviceProvider.GetRequiredService<SpriteWindow>();
-            spriteWindow.Options = Options;
-            spriteWindow.SpriteType = SpriteType.Ship;
             spriteWindow.Model.SearchText = Options.GeneralOptions.ShipSpriteSearchText;
             spriteWindow.Model.SpriteFilter = Options.GeneralOptions.ShipSpriteFilter;
             var result = spriteWindow.ShowDialog();
