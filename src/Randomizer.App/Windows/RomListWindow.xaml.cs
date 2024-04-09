@@ -138,7 +138,6 @@ namespace Randomizer.App.Windows
         {
             using var scope = _serviceProvider.CreateScope();
             var optionsDialog = scope.ServiceProvider.GetRequiredService<OptionsWindow>();
-            optionsDialog.Options = Options.GeneralOptions;
             optionsDialog.ShowDialog();
 
             if (!string.IsNullOrEmpty(Options.GeneralOptions.RomOutputPath) && !Directory.Exists(Options.GeneralOptions.RomOutputPath))

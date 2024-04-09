@@ -140,6 +140,7 @@ namespace Randomizer.App
             services.AddTransient<IGitHubConfigDownloaderService, GitHubConfigDownloaderService>();
             services.AddTransient<IGitHubSpriteDownloaderService, GitHubSpriteDownloaderService>();
             services.AddSingleton<OptionsFactory>();
+            services.AddTransient<OptionsWindowService>();
 
             // WPF
             services.AddScoped<TrackerLocationSyncer>();

@@ -10,6 +10,7 @@ using Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 using Randomizer.Data.Options;
+using Randomizer.Data.Services;
 using Randomizer.SMZ3.Tracking.AutoTracking;
 using Randomizer.SMZ3.Tracking.AutoTracking.AutoTrackerModules;
 using Randomizer.SMZ3.Tracking.Services.Speech;
