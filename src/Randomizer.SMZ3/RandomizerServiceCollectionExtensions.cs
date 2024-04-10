@@ -29,6 +29,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<RomTextService>();
             services.AddTransient<RomLauncherService>();
             services.AddTransient<PlaythroughService>();
+            services.AddTransient<IStatGenerator, StatGenerator>();
             return services;
         }
 

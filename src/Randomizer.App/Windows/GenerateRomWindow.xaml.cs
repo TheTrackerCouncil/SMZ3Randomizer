@@ -337,10 +337,47 @@ namespace Randomizer.App.Windows
             }
         }
 
-        private void GenerateStatsButton_Click(object sender, RoutedEventArgs e)
+        private async Task GenerateStats()
         {
             var config = Options.ToConfig();
-            var randomizer = _serviceProvider.GetRequiredService<Smz3Randomizer>();
+            var statGenerator = _serviceProvider.GetRequiredService<IStatGenerator>();
+
+            const int numberOfSeeds = 5;
+            var progressDialog = new ProgressDialog(this, $"Generating {numberOfSeeds} seeds...");
+            var ct = progressDialog.CancellationToken;
+
+            statGenerator.StatProgressUpdated += (o, args) =>
+            {
+                progressDialog.Report(args.Current / (double)args.Total);
+            };
+
+            statGenerator.StatsCompleted += (sender, args) =>
+            {
+                if (Dispatcher.CheckAccess())
+                {
+                    progressDialog.Close();
+                    MessageBox.Show(this, args.Message, Title, MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        progressDialog.Close();
+                        MessageBox.Show(this, args.Message, Title, MessageBoxButton.OK, MessageBoxImage.Information);
+                    });
+                }
+            };
+
+            _ = statGenerator.GenerateStatsAsync(numberOfSeeds, config, ct);
+            progressDialog.StartTimer();
+            progressDialog.ShowDialog();
+        }
+
+        private void GenerateStatsButton_Click(object sender, RoutedEventArgs e)
+        {
+            _ = GenerateStats();
+            /*var config = Options.ToConfig();
+            var statGenerator = _serviceProvider.GetRequiredService<IStatGenerator>();
 
             const int numberOfSeeds = 1000;
             var progressDialog = new ProgressDialog(this, $"Generating {numberOfSeeds} seeds...");
@@ -348,6 +385,13 @@ namespace Randomizer.App.Windows
             var itemCounts = new ConcurrentDictionary<(int itemId, LocationId locationId), int>();
             var ct = progressDialog.CancellationToken;
             var finished = false;
+
+            statGenerator.StatProgressUpdated += (o, args) =>
+            {
+                progressDialog.Report(args.Current / (double)args.Total);
+            };
+
+            await
             ThreadPool.GetAvailableThreads(out _, out _);
             var genTask = Task.Run(() =>
             {
@@ -393,7 +437,7 @@ namespace Randomizer.App.Windows
             {
                 ReportStats(stats, itemCounts, numberOfSeeds);
                 WriteMegaSpoilerLog(itemCounts, numberOfSeeds);
-            }
+            }*/
         }
 
         private void AddToMegaSpoilerLog(ConcurrentDictionary<(int itemId, LocationId locationId), int> itemCounts, SeedData seed)
