@@ -82,8 +82,6 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         _model.Customizations.AimUpButton = _options.PatchOptions.MetroidControls.AimUp;
         _model.Customizations.AimDownButton = _options.PatchOptions.MetroidControls.AimDown;
 
-        _model.IsAdvancedMode = _options.IsAdvancedMode;
-
         UpdateMsuText();
         _ = LoadSprites();
         return _model;
@@ -181,8 +179,6 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         _options.PatchOptions.MetroidControls.ItemCancel = _model.Customizations.ItemCancelButton;
         _options.PatchOptions.MetroidControls.AimUp = _model.Customizations.AimUpButton;
         _options.PatchOptions.MetroidControls.AimDown = _model.Customizations.AimDownButton;
-
-        _options.IsAdvancedMode = _model.IsAdvancedMode;
 
         _options.Save();
     }
@@ -297,18 +293,20 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "SMZ3CasRandomizer", "Presets");
 
-        foreach (var file in Directory.EnumerateFiles(folder))
+        if (Directory.Exists(folder))
         {
-            try
+            foreach (var file in Directory.EnumerateFiles(folder))
             {
-                presets.Add(s_deserializer.Deserialize<RandomizerPreset>(File.ReadAllText(file)));
-            }
-            catch (Exception e)
-            {
-                logger.LogError(e, "Could not load preset {Path} file", file);
+                try
+                {
+                    presets.Add(s_deserializer.Deserialize<RandomizerPreset>(File.ReadAllText(file)));
+                }
+                catch (Exception e)
+                {
+                    logger.LogError(e, "Could not load preset {Path} file", file);
+                }
             }
         }
-
 
         return presets.OrderBy(x => x.Config != null).ThenBy(x => x.PresetName).ToList();
     }

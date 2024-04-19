@@ -43,13 +43,21 @@ public class GenerationWindowBasicViewModel : ViewModelBase
     public string ImportString
     {
         get => _importString;
-        set => SetField(ref _importString, value);
+        set
+        {
+            SetField(ref _importString, value);
+            OnPropertyChanged(nameof(CanApplyConfigString));
+        }
     }
 
     public string Seed
     {
         get => _seed;
-        set => SetField(ref _seed, value);
+        set
+        {
+            SetField(ref _seed, value);
+            OnPropertyChanged(nameof(CanClearSeed));
+        }
     }
 
     public string Summary
@@ -121,6 +129,10 @@ public class GenerationWindowBasicViewModel : ViewModelBase
     public bool CanApplyPreset => _selectedPreset?.Config != null;
 
     public bool CanDeletePreset => !string.IsNullOrEmpty(_selectedPreset?.FilePath);
+
+    public bool CanApplyConfigString => !string.IsNullOrEmpty(_importString);
+
+    public bool CanClearSeed => !string.IsNullOrEmpty(_seed);
 
     public void UpdateMsuDetails(List<string> msuPaths, MsuRandomizationStyle msuRandomizationStyle,
         MsuShuffleStyle msuShuffleStyle)

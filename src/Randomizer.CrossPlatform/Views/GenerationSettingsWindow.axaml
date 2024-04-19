@@ -24,19 +24,19 @@
             <avalonia:DynamicFormControl Data="{Binding GameSettings}" Grid.IsSharedSizeScope="True" />
           </ScrollViewer>
         </TabItem>
-        <TabItem Header="Logic/Patches" IsVisible="{Binding IsAdvancedMode}">
+        <TabItem Header="Logic/Patches">
           <ScrollViewer>
             <avalonia:DynamicFormControl Data="{Binding Logic}" Grid.IsSharedSizeScope="True" Margin="0 0 5 5"></avalonia:DynamicFormControl>
           </ScrollViewer>
         </TabItem>
-        <TabItem Header="Items/Locations" IsVisible="{Binding IsAdvancedMode}">
+        <TabItem Header="Items/Locations">
           <ScrollViewer>
             <StackPanel Orientation="Vertical" Margin="0 0 5 0">
               <views:GenerationSettingsItemPanel Data="{Binding}" Grid.IsSharedSizeScope="True" />
             </StackPanel>
           </ScrollViewer>
         </TabItem>
-        <TabItem Header="Advanced Customizations">
+        <TabItem Header="Interface/Controls">
           <ScrollViewer>
             <avalonia:DynamicFormControl Data="{Binding Customizations}" Grid.IsSharedSizeScope="True"></avalonia:DynamicFormControl>
           </ScrollViewer>
@@ -44,48 +44,37 @@
       </TabControl>
 
       <controls:HeaderFooter Grid.Row="1">
-        <Grid Margin="5">
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="265*" />
-            <ColumnDefinition Width="Auto" />
-          </Grid.ColumnDefinitions>
-          <StackPanel Orientation="Horizontal"
-                      HorizontalAlignment="Left" VerticalAlignment="Center">
-            <CheckBox VerticalAlignment="Center" Margin="0 0 0 0" IsChecked="{Binding IsAdvancedMode}">Advanced Mode</CheckBox>
-          </StackPanel>
-          <StackPanel Orientation="Horizontal"
-                      HorizontalAlignment="Right"
-                      Grid.Column="1"
-                      Margin="49,0,0,0">
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="5">
 
-            <Button x:Name="SubmitConfigsButton"
-                    IsVisible="{Binding IsMultiplayer, Mode=OneTime}"
-                    Margin="0 0 8 0">_Submit Settings
+          <Button x:Name="SubmitConfigsButton"
+                  IsVisible="{Binding IsMultiplayer, Mode=OneTime}"
+                  Margin="0 0 8 0">_Submit Settings
+          </Button>
+
+          <StackPanel Grid.Column="1" Orientation="Horizontal"
+                      HorizontalAlignment="Right">
+            <Button x:Name="GenerateGameButton" Click="GenerateGameButton_OnClick">_Generate</Button>
+            <Button x:Name="GenerateMenuButton"
+                    MinWidth="0"
+                    Width="23"
+                    Content="▼"
+                    FontSize="8"
+                    Click="GenerateMenuButton_OnClick"
+                    BorderThickness="0,1,1,1"
+                    Margin="0,0,0,0">
+              <Button.ContextMenu>
+                <ContextMenu>
+                  <MenuItem Header="Generate _Stats" Name="GenerateStatsMenuItem" Click="GenerateStatsMenuItem_OnClick"></MenuItem>
+                  <MenuItem Header="Save _Preset" Click="SavePresetMenuItem_OnClick"></MenuItem>
+                </ContextMenu>
+              </Button.ContextMenu>
             </Button>
-
-            <StackPanel Grid.Column="1" Orientation="Horizontal"
-                        HorizontalAlignment="Right">
-              <Button x:Name="GenerateGameButton" Click="GenerateGameButton_OnClick">_Generate</Button>
-              <Button x:Name="GenerateMenuButton"
-                      MinWidth="0"
-                      Width="23"
-                      Content="▼"
-                      FontSize="8"
-                      Click="GenerateMenuButton_OnClick"
-                      BorderThickness="0,1,1,1"
-                      Margin="0,0,0,0">
-                <Button.ContextMenu>
-                  <ContextMenu>
-                    <MenuItem Header="Generate _Stats" Name="GenerateStatsMenuItem" Click="GenerateStatsMenuItem_OnClick"></MenuItem>
-                    <MenuItem Header="Save _Preset" Click="SavePresetMenuItem_OnClick"></MenuItem>
-                  </ContextMenu>
-                </Button.ContextMenu>
-              </Button>
-            </StackPanel>
-
-            <Button x:Name="CancelButton" Click="CancelButton_OnClick" Margin="5 0 0 0">_Cancel</Button>
           </StackPanel>
-        </Grid>
+
+          <Button x:Name="CancelButton" Click="CancelButton_OnClick" Margin="5 0 0 0">_Cancel</Button>
+        </StackPanel>
       </controls:HeaderFooter>
 
     </Grid>

@@ -46,8 +46,18 @@
             <ColumnDefinition Width="Auto"></ColumnDefinition>
           </Grid.ColumnDefinitions>
           <TextBox Grid.Column="0" Text="{Binding Basic.ImportString}"></TextBox>
-          <Button Grid.Column="1" Margin="5 0 0 0" Name="ImportSeedButton" Click="ImportSeedButton_OnClick">Import Settings &amp; Seed Number</Button>
-          <Button Grid.Column="2" Margin="5 0 0 0" Name="ImportSettingsButton" Click="ImportSettingsButton_OnClick">Import Settings Only</Button>
+          <Button Grid.Column="1"
+                  Margin="5 0 0 0"
+                  Name="ImportSeedButton"
+                  Click="ImportSeedButton_OnClick"
+                  IsEnabled="{Binding Basic.CanApplyConfigString}"
+          >Import Settings &amp; Seed Number</Button>
+          <Button Grid.Column="2"
+                  Margin="5 0 0 0"
+                  Name="ImportSettingsButton"
+                  Click="ImportSettingsButton_OnClick"
+                  IsEnabled="{Binding Basic.CanApplyConfigString}"
+          >Import Settings Only</Button>
         </Grid>
 
         <TextBlock Margin="0 5 0 0">Seed</TextBlock>
@@ -57,7 +67,12 @@
             <ColumnDefinition Width="Auto"></ColumnDefinition>
           </Grid.ColumnDefinitions>
           <TextBox Grid.Column="0" Text="{Binding Basic.Seed}"></TextBox>
-          <Button Grid.Column="1" Margin="5 0 0 0" Name="ClearSeedButton" Click="ClearSeedButton_OnClick">Clear Seed</Button>
+          <Button Grid.Column="1"
+                  Margin="5 0 0 0"
+                  Name="ClearSeedButton"
+                  Click="ClearSeedButton_OnClick"
+                  IsEnabled="{Binding Basic.CanClearSeed}"
+          >Clear Seed</Button>
         </Grid>
 
         <TextBlock Margin="0 5 0 0">Summary</TextBlock>

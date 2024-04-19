@@ -4,8 +4,6 @@ namespace Randomizer.Data.ViewModels;
 
 public class GenerationWindowViewModel : ViewModelBase
 {
-    private bool _advancedMode;
-
     public GenerationWindowViewModel()
     {
 
@@ -26,15 +24,7 @@ public class GenerationWindowViewModel : ViewModelBase
     public GenerationWindowLogicViewModel Logic { get; set; } = new();
     public GenerationWindowItemsViewModel Items { get; set; } = new();
     public GenerationWindowCustomizationViewModel Customizations { get; set; } = new();
-
     public PlandoConfig? PlandoConfig { get; set; }
-
-    public bool IsAdvancedMode
-    {
-        get => _advancedMode;
-        set => SetField(ref _advancedMode, value);
-    }
-
     public bool IsPlando => PlandoConfig != null;
     public bool IsRandomizedGame => !IsPlando;
     public bool IsMultiplayer { get; private set; }
