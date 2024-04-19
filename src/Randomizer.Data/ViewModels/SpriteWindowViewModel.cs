@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Randomizer.Data.Options;
 
-namespace Randomizer.App.ViewModels;
+namespace Randomizer.Data.ViewModels;
 
 public class SpriteWindowViewModel : INotifyPropertyChanged
 {

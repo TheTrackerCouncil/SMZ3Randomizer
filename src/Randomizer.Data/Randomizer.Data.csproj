@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MattEqualsCoder.DynamicForms.Core" Version="0.0.2" />
+    <PackageReference Include="MattEqualsCoder.DynamicForms.Core" Version="0.0.3-beta.1" />
     <PackageReference Include="MattEqualsCoder.GitHubReleaseChecker" Version="1.1.2" />
     <PackageReference Include="MattEqualsCoder.MSURandomizer.Library" Version="2.0.0-rc.10" />
     <PackageReference Include="NAudio.Wasapi" Version="2.2.1" />

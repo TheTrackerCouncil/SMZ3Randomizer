@@ -45,7 +45,7 @@ namespace Randomizer.Data.Options
                 .ToDictionary(x => x.ToString(), x => ((INeedsMedallion)x).Medallion);
             Logic = world.Config.LogicConfig.Clone();
             StartingInventory = world.Config.ItemOptions;
-            var prizes = DropPrizes.GetPool(world.Config.ZeldaDrops);
+            var prizes = DropPrizes.GetPool(world.Config.CasPatches.ZeldaDrops);
             ZeldaPrizes.EnemyDrops = prizes.Take(56).ToList();
             ZeldaPrizes.TreePulls = prizes.Skip(56).Take(3).ToList();
             ZeldaPrizes.CrabBaseDrop = prizes.Skip(59).First();

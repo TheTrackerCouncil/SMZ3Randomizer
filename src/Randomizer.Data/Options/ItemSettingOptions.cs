@@ -35,6 +35,8 @@ public class ItemSettingOptions
     /// </summary>
     public List<ItemSettingOption> Options { get; set; } = null!;
 
+    public ItemSettingOption SelectedOption { get; set; } = new();
+
     /// <summary>
     /// Retrieves what item types the user has requested to start with in their inventory
     /// </summary>

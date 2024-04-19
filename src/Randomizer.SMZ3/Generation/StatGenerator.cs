@@ -52,9 +52,7 @@ public class StatGenerator(Smz3Randomizer randomizer): IStatGenerator
                 StatProgressUpdated?.Invoke(this, new StatUpdateEventaArgs(seedsGenerated, numberOfSeeds));
             });
 
-            finished = true;
-
-
+            finished = !ct.IsCancellationRequested;
         }, ct);
 
         if (!finished)

@@ -1,36 +1,36 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <OutputType>Exe</OutputType>
+        <OutputType>WinExe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     </PropertyGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="msu-randomizer-settings.yml" />
-      <EmbeddedResource Include="msu-randomizer-types.json" />
+        <AvaloniaResource Include="Assets\**"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
-        <HintPath>..\..\..\..\..\.nuget\packages\microsoft.extensions.dependencyinjection.abstractions\7.0.0\lib\net7.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
-      </Reference>
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Include="MattEqualsCoder.AvaloniaControls" Version="0.9.13" />
+        <PackageReference Include="MattEqualsCoder.DynamicForms.Avalonia" Version="0.0.3-beta.2" />
+        <PackageReference Include="MattEqualsCoder.MSURandomizer.Avalonia" Version="2.0.0-beta.15" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
+        <PackageReference Include="ReactiveUI.Fody" Version="19.5.41" />
+        <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
+        <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Randomizer.Data\Randomizer.Data.csproj" />
       <ProjectReference Include="..\Randomizer.SMZ3.Tracking\Randomizer.SMZ3.Tracking.csproj" />
       <ProjectReference Include="..\Randomizer.SMZ3.Twitch\Randomizer.SMZ3.Twitch.csproj" />
-      <ProjectReference Include="..\Randomizer.SMZ3\Randomizer.SMZ3.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Serilog" Version="3.0.1" />
-      <PackageReference Include="Serilog.Extensions.Logging" Version="7.0.0" />
-      <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
-      <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
-      <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+      <None Remove="msu-randomizer-settings.yml" />
+      <EmbeddedResource Include="msu-randomizer-settings.yml" />
     </ItemGroup>
-
 </Project>

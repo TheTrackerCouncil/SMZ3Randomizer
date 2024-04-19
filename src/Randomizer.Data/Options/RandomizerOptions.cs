@@ -60,14 +60,7 @@ namespace Randomizer.Data.Options
         [JsonIgnore, YamlIgnore]
         public string? FilePath { get; set; }
 
-        public bool EarlyItemsExpanded { get; set; } = false;
-
-        public bool CustomizationExpanded { get; set; } = false;
-        public bool LocationExpanded { get; set; } = false;
-        public bool LogicExpanded { get; set; } = false;
-
-        public bool CommonExpanded { get; set; } = false;
-        public bool MetroidControlsExpanded { get; set; } = false;
+        public bool IsAdvancedMode { get; set; }
 
         public double WindowWidth { get; set; } = 500d;
 
@@ -184,14 +177,12 @@ namespace Randomizer.Data.Options
                     CasPatches = PatchOptions.CasPatches.Clone(),
                     CopySeedAndRaceSettings = true,
                     Seed = SeedOptions.Seed,
-                    UniqueHintCount = SeedOptions.UniqueHintCount,
                     GanonsTowerCrystalCount = SeedOptions.GanonsTowerCrystalCount,
                     GanonCrystalCount = SeedOptions.GanonCrystalCount,
                     OpenPyramid = SeedOptions.OpenPyramid,
                     TourianBossCount = SeedOptions.TourianBossCount,
                     MetroidControls = PatchOptions.MetroidControls.Clone(),
                     ItemOptions = SeedOptions.ItemOptions,
-                    ZeldaDrops = PatchOptions.ZeldaDrops
                 };
                 return config;
             }
@@ -206,7 +197,6 @@ namespace Randomizer.Data.Options
                 var disableCheats = SeedOptions.DisableCheats;
                 var casPatches = PatchOptions.CasPatches.Clone();
                 var seed = SeedOptions.Seed;
-                var zeldaDrops = PatchOptions.ZeldaDrops;
 
                 if (SeedOptions.CopySeedAndRaceSettings)
                 {
@@ -217,7 +207,6 @@ namespace Randomizer.Data.Options
                     disableCheats = oldConfig.DisableCheats;
                     casPatches = oldConfig.CasPatches;
                     seed = oldConfig.Seed;
-                    zeldaDrops = oldConfig.ZeldaDrops;
                 }
 
                 return new Config()
@@ -242,7 +231,6 @@ namespace Randomizer.Data.Options
                     LogicConfig = oldConfig.LogicConfig,
                     CasPatches = casPatches,
                     SettingsString = SeedOptions.ConfigString,
-                    UniqueHintCount = oldConfig.UniqueHintCount,
                     CopySeedAndRaceSettings = SeedOptions.CopySeedAndRaceSettings,
                     GanonsTowerCrystalCount = oldConfig.GanonsTowerCrystalCount,
                     GanonCrystalCount = oldConfig.GanonCrystalCount,
@@ -250,7 +238,6 @@ namespace Randomizer.Data.Options
                     TourianBossCount = oldConfig.TourianBossCount,
                     MetroidControls = PatchOptions.MetroidControls.Clone(),
                     ItemOptions = oldConfig.ItemOptions,
-                    ZeldaDrops = zeldaDrops
                 };
             }
         }

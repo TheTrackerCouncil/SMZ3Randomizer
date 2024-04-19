@@ -10,6 +10,7 @@ using System.Windows.Threading;
 using Randomizer.App.ViewModels;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
+using Randomizer.Data.ViewModels;
 
 namespace Randomizer.App.Windows;
 

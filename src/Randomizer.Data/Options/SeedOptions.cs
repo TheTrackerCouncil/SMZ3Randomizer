@@ -37,7 +37,7 @@ namespace Randomizer.Data.Options
 
         public bool DisableCheats { get; set; }
 
-        public int UniqueHintCount { get; set; } = 8;
+        public int? UniqueHintCount { get; set; }
 
         public int GanonsTowerCrystalCount { get; set; } = 7;
         public int GanonCrystalCount { get; set; } = 7;

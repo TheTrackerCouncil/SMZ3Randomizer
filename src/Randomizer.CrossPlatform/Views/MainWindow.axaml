@@ -1,0 +1,83 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Randomizer.CrossPlatform.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:AvaloniaControls.Controls;assembly=AvaloniaControls"
+        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:views="clr-namespace:Randomizer.CrossPlatform.Views"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Randomizer.CrossPlatform.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Loaded="Control_OnLoaded"
+        Icon="/Assets/avalonia-logo.ico"
+        MinWidth="400"
+        MinHeight="250"
+        Title="Randomizer.CrossPlatform">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+  <LayoutTransformControl x:Name="MainLayout">
+    <Grid RowDefinitions="Auto, *">
+      <controls:HeaderFooter BorderSize="0 0 0 2" Grid.Row="0" IsVisible="{Binding DisplayNewVersionBanner}">
+        <StackPanel Orientation="Vertical">
+
+          <Grid ColumnDefinitions="*, Auto">
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="5">
+              <TextBlock>A new version of SMZ3 is now available!</TextBlock>
+              <controls:LinkControl Margin="5 0 0 0" Name="GitHubUrlLink" Click="GitHubUrlLink_OnClick">Click here to go to the download page.</controls:LinkControl>
+            </StackPanel>
+
+            <controls:ImageButton Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Name="CloseUpdateButton" Click="CloseUpdateButton_OnClick">
+              <avalonia:MaterialIcon Kind="Close" Width="12" Height="12" Background="Transparent"></avalonia:MaterialIcon>
+            </controls:ImageButton>
+          </Grid>
+
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 0 3 3">
+            <controls:LinkControl FontSize="10" Name="IgnoreVersionLink" Click="IgnoreVersionLink_OnClick">Ignore this Version</controls:LinkControl>
+            <controls:LinkControl FontSize="10" Margin="5 0 0 0" Name="DisableUpdatesLink" Click="DisableUpdatesLink_OnClick">Don't Check for Updates</controls:LinkControl>
+          </StackPanel>
+        </StackPanel>
+
+      </controls:HeaderFooter>
+      <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+        <Button Margin="0 5 5 0" Name="MenuButton" Click="OptionsMenuItem_OnClick">
+          <Button.Styles>
+            <Style Selector="Button">
+              <Setter Property="Background" Value="Transparent"></Setter>
+              <Setter Property="BorderBrush" Value="Transparent"></Setter>
+              <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="Gray" />
+              </Style>
+            </Style>
+
+          </Button.Styles>
+          <avalonia:MaterialIcon Kind="Settings" Width="25" Height="25"/>
+        </Button>
+        <Button Margin="0 5 5 0" Name="AboutButton" Click="OptionsMenuItem_OnClick">
+          <Button.Styles>
+            <Style Selector="Button">
+              <Setter Property="Background" Value="Transparent"></Setter>
+              <Setter Property="BorderBrush" Value="Transparent"></Setter>
+              <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="Gray" />
+              </Style>
+            </Style>
+
+          </Button.Styles>
+          <avalonia:MaterialIcon Kind="AboutCircle" Width="25" Height="25"/>
+        </Button>
+      </StackPanel>
+      <TabControl Grid.Row="1">
+        <TabItem Header="Singleplayer" Name="SingleplayerTabItem">
+        </TabItem>
+        <TabItem Header="Multiplayer">
+        </TabItem>
+      </TabControl>
+    </Grid>
+  </LayoutTransformControl>
+</Window>

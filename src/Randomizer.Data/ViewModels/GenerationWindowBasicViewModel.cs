@@ -1,14 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using MSURandomizerLibrary;
+using Randomizer.Data.Options;
 
 namespace Randomizer.Data.ViewModels;
 
 public class GenerationWindowBasicViewModel : ViewModelBase
 {
-    private ICollection<string> _presets;
-    private string _presetName = "";
+    private ICollection<RandomizerPreset> _presets;
+    private RandomizerPreset? _selectedPreset;
     private string _importString = "";
+    private string _seed = "";
     private string _summary = "";
     private string _linkSpriteName = "";
     private string _samusSpriteName = "";
@@ -21,22 +23,33 @@ public class GenerationWindowBasicViewModel : ViewModelBase
     private List<string> _msuPaths = new();
     private string _msuText = "Vanilla Music";
 
-    public ICollection<string> Presets
+    public ICollection<RandomizerPreset> Presets
     {
         get => _presets;
         set => SetField(ref _presets, value);
     }
 
-    public string PresetName
+    public RandomizerPreset? SelectedPreset
     {
-        get => _presetName;
-        set => SetField(ref _presetName, value);
+        get => _selectedPreset;
+        set
+        {
+            SetField(ref _selectedPreset, value);
+            OnPropertyChanged(nameof(CanApplyPreset));
+            OnPropertyChanged(nameof(CanDeletePreset));
+        }
     }
 
     public string ImportString
     {
         get => _importString;
         set => SetField(ref _importString, value);
+    }
+
+    public string Seed
+    {
+        get => _seed;
+        set => SetField(ref _seed, value);
     }
 
     public string Summary
@@ -104,6 +117,10 @@ public class GenerationWindowBasicViewModel : ViewModelBase
         get => _msuText;
         set => SetField(ref _msuText, value);
     }
+
+    public bool CanApplyPreset => _selectedPreset?.Config != null;
+
+    public bool CanDeletePreset => !string.IsNullOrEmpty(_selectedPreset?.FilePath);
 
     public void UpdateMsuDetails(List<string> msuPaths, MsuRandomizationStyle msuRandomizationStyle,
         MsuShuffleStyle msuShuffleStyle)
