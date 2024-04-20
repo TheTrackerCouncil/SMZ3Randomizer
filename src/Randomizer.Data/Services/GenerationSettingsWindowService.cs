@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DynamicForms.Library.Core.Attributes;
+using Google.Protobuf.Compiler;
 using Microsoft.Extensions.Logging;
 using MSURandomizerLibrary;
 using Randomizer.Data.Configuration.ConfigFiles;
@@ -183,6 +184,34 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         _options.Save();
     }
 
+    public bool LoadPlando(string file, out string? error)
+    {
+        error = null;
+        try
+        {
+            var configString = File.ReadAllText(file);
+            _model.PlandoConfig = s_deserializer.Deserialize<PlandoConfig>(configString);
+
+            _model.GameSettings.KeysanityMode = _model.PlandoConfig.KeysanityMode;
+            _model.GameSettings.CrystalsNeededForGT = _model.PlandoConfig.GanonsTowerCrystalCount;
+            _model.GameSettings.CrystalsNeededForGanon = _model.PlandoConfig.GanonCrystalCount;
+            _model.GameSettings.OpenPyramid = _model.PlandoConfig.OpenPyramid;
+            _model.GameSettings.BossesNeededForTourian = _model.PlandoConfig.TourianBossCount;
+
+            _model.Logic.LogicConfig.Copy(_model.PlandoConfig.Logic);
+
+
+
+            return true;
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Unable to parse plando file");
+            error = $"Unable to parse plando file: {e.Message}";
+            return false;
+        }
+    }
+
     public void SaveSpriteSettings(bool userAccepted, Sprite sprite, Dictionary<string, SpriteOptions> selectedSpriteOptions, string searchText, SpriteFilter filter)
     {
         if (sprite.SpriteType == SpriteType.Link)
@@ -289,7 +318,6 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         [
             new RandomizerPreset() { PresetName = "Select a preset to apply its settings", Config = null }
         ];
-
 
         presets.AddRange(RandomizerPreset.GetDefaultPresets());
 

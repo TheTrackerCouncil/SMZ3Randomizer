@@ -1,0 +1,76 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:AvaloniaControls.Controls;assembly=AvaloniaControls"
+             xmlns:viewModels="clr-namespace:Randomizer.CrossPlatform.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="viewModels:MultiRomListViewModel"
+             x:Class="Randomizer.CrossPlatform.Views.MultiRomListPanel">
+  <Grid RowDefinitions="*, Auto">
+    <ListBox Grid.Row="0" ItemsSource="{Binding Games}">
+      <ListBox.ItemTemplate>
+          <DataTemplate>
+            <Grid Margin="0,2">
+              <Grid.ContextMenu>
+                <ContextMenu>
+                  <MenuItem Header="Open _Folder"
+                            Name="OpenFolderMenuItem"
+                            Tag="{Binding}"
+                            Click="OpenFolderMenuItem_OnClick"
+                            IsVisible="{Binding IsGeneratedRomMenuItemVisibile}"
+                  ></MenuItem>
+                  <MenuItem Header="View _Spoiler Log"
+                            Tag="{Binding}"
+                            Name="ViewSpoilerLogMenuItem"
+                            Click="ViewSpoilerLogMenuItem_OnClick"
+                            IsVisible="{Binding IsGeneratedRomMenuItemVisibile}"
+                  ></MenuItem>
+                  <MenuItem Header="View _Progression Log"
+                            Name="ViewProgressionLogMenuItem"
+                            Tag="{Binding}"
+                            Click="ViewProgressionLogMenuItem_OnClick"
+                            IsVisible="{Binding IsGeneratedRomMenuItemVisibile}"
+                  ></MenuItem>
+                  <MenuItem Header="_Delete"
+                            Name="DeleteMenuItem"
+                            Tag="{Binding}"
+                            Click="DeleteMenuItem_OnClick"
+                  ></MenuItem>
+                </ContextMenu>
+              </Grid.ContextMenu>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="75" />
+              </Grid.ColumnDefinitions>
+              <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+              </Grid.RowDefinitions>
+              <TextBlock Text="{Binding TypeLabel}" Name="LabelTextBlock" Grid.Row="0" Grid.Column="0"/>
+              <TextBlock Text="{Binding TimeLabel}" Grid.Row="0" Grid.Column="1" TextAlignment="Right" Margin="0,0,8,0"/>
+              <TextBlock Text="{Binding StatusLabel}" Grid.Row="1" Grid.Column="0" />
+              <TextBlock Text="{Binding ElapsedLabel}" Grid.Row="1" Grid.Column="1" Margin="0,0,8,0" TextAlignment="Right" />
+              <DockPanel Grid.Column="2" Grid.Row="0" Grid.RowSpan="2">
+                <Button Margin="0,0,0,0"
+                        Name="ReconnectButton"
+                        Click="ReconnectButton_OnClick"
+                        Tag="{Binding Details}"
+                >Reconnect</Button>
+              </DockPanel>
+            </Grid>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+    </ListBox>
+    <controls:HeaderFooter Grid.Row="1">
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+        <Button x:Name="CreateMultiGameButton"
+                Click="CreateMultiGameButton_OnClick">Create game...</Button>
+        <Button x:Name="JoinMultiGameButton"
+                Click="JoinMultiGameButton_OnClick">Join game...</Button>
+      </StackPanel>
+    </controls:HeaderFooter>
+  </Grid>
+</UserControl>
+

@@ -1,14 +1,23 @@
 using System;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml;
+using AvaloniaControls;
+using AvaloniaControls.Controls;
+using AvaloniaControls.Models;
+using AvaloniaControls.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Randomizer.CrossPlatform.Services;
 using Randomizer.CrossPlatform.ViewModels;
+using Randomizer.Data.Options;
 using Randomizer.Shared.Models;
 
 namespace Randomizer.CrossPlatform.Views;
@@ -16,49 +25,38 @@ namespace Randomizer.CrossPlatform.Views;
 public partial class SoloRomListPanel : UserControl
 {
     private SoloRomListService? _service;
-    private IServiceProvider? _serviceProvider;
+    private SoloRomListViewModel _model;
 
     public SoloRomListPanel()
     {
+        if (Design.IsDesignMode)
+        {
+            _model = new SoloRomListViewModel();
+        }
+        else
+        {
+            _service = IControlServiceFactory.GetControlService<SoloRomListService>();
+            _model = _service?.GetViewModel(this) ?? new SoloRomListViewModel();
+        }
+
         InitializeComponent();
-        DataContext = new SoloRomListViewModel();
+        DataContext = _model;
     }
 
-    public SoloRomListPanel(SoloRomListService soloRomListService, IServiceProvider? serviceProvider)
-    {
-        InitializeComponent();
-        _service = soloRomListService;
-        _serviceProvider = serviceProvider;
-        DataContext = _service.GetViewModel(this);
-    }
 
     private void QuickPlayButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        _ = _service?.QuickPlay();
     }
 
     private void StartPlandoButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        _ = _service?.GeneratePlando();
     }
 
     private void GenerateRomButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (_serviceProvider == null)
-        {
-            return;
-        }
-
-        _service?.LookupMsus();
-        var window = _serviceProvider.GetRequiredService<GenerationSettingsWindow>();
-        window.ShowDialog((Window)TopLevel.GetTopLevel(this)!);
-        window.Closed += (o, args) =>
-        {
-            if (window.DialogResult)
-            {
-                _service?.UpdateList();
-            }
-        };
+        _ = _service?.GenerateRom();
     }
 
     private void LaunchButton_OnClick(object? sender, RoutedEventArgs e)

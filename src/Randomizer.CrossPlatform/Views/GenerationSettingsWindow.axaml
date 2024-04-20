@@ -19,7 +19,7 @@
         <TabItem Header="Basic">
           <views:GenerationSettingsBasicPanel DataContext="{Binding}" x:Name="BasicPanel" Displayed="BasicPanel_OnDisplayed"></views:GenerationSettingsBasicPanel>
         </TabItem>
-        <TabItem Header="Game Settings">
+        <TabItem Header="Game Settings" IsVisible="{Binding !IsPlando}">
           <ScrollViewer>
             <avalonia:DynamicFormControl Data="{Binding GameSettings}" Grid.IsSharedSizeScope="True" />
           </ScrollViewer>
@@ -29,7 +29,7 @@
             <avalonia:DynamicFormControl Data="{Binding Logic}" Grid.IsSharedSizeScope="True" Margin="0 0 5 5"></avalonia:DynamicFormControl>
           </ScrollViewer>
         </TabItem>
-        <TabItem Header="Items/Locations">
+        <TabItem Header="Items/Locations" IsVisible="{Binding !IsPlando}">
           <ScrollViewer>
             <StackPanel Orientation="Vertical" Margin="0 0 5 0">
               <views:GenerationSettingsItemPanel Data="{Binding}" Grid.IsSharedSizeScope="True" />

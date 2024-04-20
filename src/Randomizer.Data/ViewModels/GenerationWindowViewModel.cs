@@ -4,6 +4,8 @@ namespace Randomizer.Data.ViewModels;
 
 public class GenerationWindowViewModel : ViewModelBase
 {
+    private PlandoConfig? _plandoConfig;
+
     public GenerationWindowViewModel()
     {
 
@@ -24,7 +26,18 @@ public class GenerationWindowViewModel : ViewModelBase
     public GenerationWindowLogicViewModel Logic { get; set; } = new();
     public GenerationWindowItemsViewModel Items { get; set; } = new();
     public GenerationWindowCustomizationViewModel Customizations { get; set; } = new();
-    public PlandoConfig? PlandoConfig { get; set; }
+
+    public PlandoConfig? PlandoConfig
+    {
+        get => _plandoConfig;
+        set
+        {
+            SetField(ref _plandoConfig, value);
+            OnPropertyChanged(nameof(IsPlando));
+            Logic.IsNotPlando = false;
+        }
+    }
+
     public bool IsPlando => PlandoConfig != null;
     public bool IsRandomizedGame => !IsPlando;
     public bool IsMultiplayer { get; private set; }

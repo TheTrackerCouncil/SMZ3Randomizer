@@ -62,7 +62,7 @@ public static class ServiceCollectionExtensions
         services.AddWindows<Program>();
         services.AddTransient<OptionsWindowService>();
         services.AddTransient<SoloRomListPanel>();
-        services.AddTransient<SoloRomListService>();
+        services.AddTransient<MultiRomListPanel>();
         services.AddTransient<GenerationSettingsWindowService>();
 
         return services;

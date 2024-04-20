@@ -1,0 +1,125 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:AvaloniaControls.Controls;assembly=AvaloniaControls"
+        xmlns:viewModels="clr-namespace:Randomizer.CrossPlatform.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="225"
+        CanResize="False"
+        MinWidth="500" MaxWidth="500"
+        MinHeight="225" MaxHeight="225"
+        WindowStartupLocation="CenterOwner"
+        x:Class="Randomizer.CrossPlatform.Views.MultiplayerConnectWindow"
+        x:DataType="viewModels:MultiplayerConnectWindowViewModel"
+        Title="MultiplayerConnectWindow">
+  <LayoutTransformControl x:Name="MainLayout">
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="*" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+
+      <Grid Grid.Row="0"
+          Grid.IsSharedSizeScope="True">
+
+        <StackPanel Grid.Row="0" Orientation="Vertical"
+                     Margin="11,11,11,11">
+
+          <controls:LabeledControl Text="{Binding UrlLabelText}" IsTabStop="False">
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+              </Grid.ColumnDefinitions>
+              <TextBox
+                Grid.Column="0"
+                Name="ServerUrlTextBox"
+                Text="{Binding Url, Mode=TwoWay}"
+                IsEnabled="{Binding CanEnterInput}"
+                Margin="5 0 0 0"
+              />
+              <Button Grid.Column="1"
+                      x:Name="ServerListButton"
+                      MinWidth="0"
+                      Width="23"
+                      Content="▼"
+                      FontSize="8"
+                      BorderThickness="0,1,1,1"
+                      Margin="0,0,0,0"
+                      IsVisible="{Binding IsCreatingGame}"
+                      Click="ServerListButton_OnClick">
+                <Button.ContextMenu>
+                  <ContextMenu Name="ServerListContextMenu"></ContextMenu>
+                </Button.ContextMenu>
+              </Button>
+            </Grid>
+
+          </controls:LabeledControl>
+
+          <controls:LabeledControl Text="Display name:" IsTabStop="False">
+            <TextBox Name="PlayerNameTextBox"
+                     IsEnabled="{Binding CanEnterInput}"
+                     Text="{Binding DisplayName, Mode=TwoWay}"
+                     MaxLength="12"
+                     Margin="5 0 0 0 " />
+          </controls:LabeledControl>
+
+          <controls:LabeledControl Text="Phonetic name:" IsTabStop="False">
+            <TextBox Name="PhoneticNameTextBox"
+                     Text="{Binding PhoneticName}"
+                     IsEnabled="{Binding CanEnterInput}"
+                     MaxLength="30"
+                     Margin="5 0 0 0 " />
+          </controls:LabeledControl>
+
+          <controls:LabeledControl Text="Game mode:" IsTabStop="False">
+            <StackPanel Orientation="Vertical">
+              <controls:EnumComboBox Value="{Binding MultiplayerGameType}"
+                        EnumType="{Binding MultiplayerGameType, Converter={StaticResource TypeConverter}}"
+                        HorizontalAlignment="Left"
+                        MinWidth="75"
+                        Margin="5 0 0 0 "
+                        IsEnabled="{Binding IsCreatingGame}" />
+              <CheckBox IsChecked="{Binding AsyncGame}"
+                        Margin="5 5 0 0"
+                        Content="Async/multi-session game"
+                        IsEnabled="{Binding IsCreatingGame}"
+                        ToolTip.Tip="Saves the game to a database on the server so that the game can be continued even when the server does not receive updates from any players."/>
+              <CheckBox IsChecked="{Binding DeathLink}"
+                        Margin="5 5 0 0"
+                        Content="Death link (experimental)"
+                        IsEnabled="{Binding IsCreatingGame}"
+                        ToolTip.Tip="If one player dies, automatically kill all of the other players."/>
+              </StackPanel>
+          </controls:LabeledControl>
+
+        </StackPanel>
+      </Grid>
+
+      <controls:HeaderFooter Grid.Row="1" Padding="5">
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <TextBlock Grid.Column="0" Margin="0 3 0 0 " Text="{Binding StatusText}" />
+          <StackPanel Grid.Column="0"
+                      Orientation="Horizontal"
+                      HorizontalAlignment="Right">
+            <Button x:Name="NewGameButton"
+                    Click="NewGameButton_OnClick"
+                    Margin="0 0 5 0"
+                    IsEnabled="{Binding CanPressButton, Mode=TwoWay}">
+              <TextBlock Text="{Binding  GameButtonText}"></TextBlock>
+            </Button>
+            <Button x:Name="CancelButton"
+                    Click="CancelButton_OnClick">_Cancel
+            </Button>
+
+          </StackPanel>
+        </Grid>
+      </controls:HeaderFooter>
+    </Grid>
+  </LayoutTransformControl>
+</Window>
+

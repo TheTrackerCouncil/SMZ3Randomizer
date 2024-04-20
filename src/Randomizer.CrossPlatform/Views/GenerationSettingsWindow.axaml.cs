@@ -1,15 +1,13 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Interactivity;
 using AvaloniaControls.Controls;
 using AvaloniaControls.Models;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using Randomizer.Data.Interfaces;
-using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Data.ViewModels;
+using Randomizer.Shared.Models;
 
 namespace Randomizer.CrossPlatform.Views;
 
@@ -18,6 +16,7 @@ public partial class GenerationSettingsWindow : ScalableWindow
     private GenerationSettingsWindowService? _generationSettingsWindowService;
     private IServiceProvider? _serviceProvider;
     private IStatGenerator? _statGenerator;
+    private GenerationWindowViewModel? _model;
 
     public GenerationSettingsWindow()
     {
@@ -31,12 +30,30 @@ public partial class GenerationSettingsWindow : ScalableWindow
         _serviceProvider = serviceProvider;
         _statGenerator = statGenerator;
         InitializeComponent();
-        DataContext = BasicPanel.Data = _generationSettingsWindowService.GetViewModel();
+        DataContext = BasicPanel.Data = _model = _generationSettingsWindowService.GetViewModel();
         BasicPanel.SetServices(serviceProvider, generationSettingsWindowService);
-
     }
 
     public bool DialogResult { get; private set; }
+
+    public GeneratedRom? GeneratedRom { get; private set; }
+
+    public bool LoadPlando(string file, out string? error)
+    {
+        error = null;
+
+        if (_generationSettingsWindowService == null)
+        {
+            return false;
+        }
+
+        if (!_generationSettingsWindowService.LoadPlando(file, out error))
+        {
+            return false;
+        }
+
+        return true;
+    }
 
     private void GenerateMenuButton_OnClick(object sender, RoutedEventArgs e)
     {
@@ -76,6 +93,7 @@ public partial class GenerationSettingsWindow : ScalableWindow
                 if (generatedRom.Rom != null)
                 {
                     DialogResult = true;
+                    GeneratedRom = generatedRom.Rom;
                     Close();
                 }
             };
@@ -84,6 +102,7 @@ public partial class GenerationSettingsWindow : ScalableWindow
         if (generatedRom.Rom != null)
         {
             DialogResult = true;
+            GeneratedRom = generatedRom.Rom;
             Close();
         }
     }

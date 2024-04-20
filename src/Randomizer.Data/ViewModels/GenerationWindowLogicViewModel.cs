@@ -5,11 +5,15 @@ using Randomizer.Data.Options;
 
 namespace Randomizer.Data.ViewModels;
 
+[DynamicFormGroupBasic(DynamicFormLayout.Vertical, "Non Plando", visibleWhenTrue: nameof(IsNotPlando))]
+[DynamicFormGroupBasic(DynamicFormLayout.Vertical, "All")]
 public class GenerationWindowLogicViewModel : ViewModelBase
 {
-    [DynamicFormObject]
+    [DynamicFormObject(groupName: "Non Plando")]
     public LogicConfig LogicConfig { get; set; } = new();
 
-    [DynamicFormObject]
+    [DynamicFormObject(groupName: "All")]
     public CasPatches CasPatches { get; set; } = new();
+
+    public bool IsNotPlando { get; set; } = true;
 }

@@ -25,7 +25,7 @@ public partial class MainWindow : RestorableWindow
         DataContext = _model = new MainWindowViewModel();
     }
 
-    public MainWindow(MainWindowService service, IServiceProvider? serviceProvider, SoloRomListPanel soloRomListPanel)
+    public MainWindow(MainWindowService service, IServiceProvider? serviceProvider)
     {
         _service = service;
         _serviceProvider = serviceProvider;
@@ -43,8 +43,6 @@ public partial class MainWindow : RestorableWindow
         };
 
         _service.SpriteDownloadEnd += (sender, args) => _spriteDownloadWindow?.Close();
-
-        this.Find<TabItem>(nameof(SingleplayerTabItem))!.Content = soloRomListPanel;
     }
 
     protected override string RestoreFilePath => Path.Combine(Directories.AppDataFolder, "Windows", "main-window.json");
