@@ -316,5 +316,6 @@ namespace Randomizer.App.Controls
         {
             return MessageBox.Show(Window.GetWindow(this)!, message, "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+
     }
 }

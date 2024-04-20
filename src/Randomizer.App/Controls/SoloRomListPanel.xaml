@@ -105,8 +105,6 @@
                   Click="StartPlandoButton_Click">Start plando...</Button>
           <Button x:Name="GenerateRomButton"
                   Click="GenerateRomButton_Click">Generate custom game...</Button>
-          <Button x:Name="GenerateRomButtonOld"
-                  Click="GenerateRomOldButton_Click">Generate custom game (Old)...</Button>
         </StackPanel>
       </Grid>
     </Border>

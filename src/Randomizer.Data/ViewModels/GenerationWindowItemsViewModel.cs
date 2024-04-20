@@ -24,7 +24,7 @@ public class GenerationWindowItemsViewModel : ViewModelBase
 
     public string SelectedRegionName { get; set; } = "";
 
-    public Region? SelectedRegion => Regions[SelectedRegionName];
+    public Region? SelectedRegion => Regions.ContainsKey(SelectedRegionName) ? Regions[SelectedRegionName] : Regions.Values.FirstOrDefault();
 
     public List<LocationItemOption> LocationItemOptions = new();
 

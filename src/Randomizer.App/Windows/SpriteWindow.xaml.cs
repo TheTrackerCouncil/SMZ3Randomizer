@@ -35,16 +35,19 @@ public partial class SpriteWindow : Window
 
         if (type == SpriteType.Link)
         {
+            SelectedSprite = Options.PatchOptions.SelectedLinkSprite;
             Model.SearchText = Options.GeneralOptions.LinkSpriteSearchText;
             Model.SpriteFilter = Options.GeneralOptions.LinkSpriteFilter;
         }
         else if (type == SpriteType.Samus)
         {
+            SelectedSprite = Options.PatchOptions.SelectedSamusSprite;
             Model.SearchText = Options.GeneralOptions.SamusSpriteSearchText;
             Model.SpriteFilter = Options.GeneralOptions.SamusSpriteFilter;
         }
         else
         {
+            SelectedSprite = Options.PatchOptions.SelectedShipSprite;
             Model.SearchText = Options.GeneralOptions.ShipSpriteSearchText;
             Model.SpriteFilter = Options.GeneralOptions.ShipSpriteFilter;
         }

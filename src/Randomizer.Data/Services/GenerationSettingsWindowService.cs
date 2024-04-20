@@ -221,7 +221,10 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
 
         _options.Save();
 
-        UpdateSpriteDetails(sprite.SpriteType, sprite);
+        if (userAccepted)
+        {
+            UpdateSpriteDetails(sprite.SpriteType, sprite);
+        }
     }
 
     public void UpdateMsuText()
