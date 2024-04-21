@@ -10,6 +10,7 @@
         MinHeight="225" MaxHeight="225"
         WindowStartupLocation="CenterOwner"
         Closing="Window_OnClosing"
+        Icon="/Assets/chozo20.ico"
         x:Class="Randomizer.CrossPlatform.Views.MultiplayerConnectWindow"
         x:DataType="viewModels:MultiplayerConnectWindowViewModel"
         Title="SMZ3 Cas' Randomizer">

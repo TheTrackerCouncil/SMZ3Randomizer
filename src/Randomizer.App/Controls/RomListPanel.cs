@@ -295,18 +295,6 @@ namespace Randomizer.App.Controls
             return successful.HasValue && successful.Value;
         }
 
-        public bool ShowGenerateRomWindowOld(PlandoConfig? plandoConfig, bool isMulti)
-        {
-            using var scope = ServiceProvider.CreateScope();
-            var generateWindow = scope.ServiceProvider.GetRequiredService<GenerateRomWindow>();
-            generateWindow.Owner = Window.GetWindow(this);
-            generateWindow.Options = Options;
-            generateWindow.PlandoConfig = plandoConfig;
-            generateWindow.MultiplayerMode = isMulti;
-            var successful = generateWindow.ShowDialog();
-            return successful.HasValue && successful.Value;
-        }
-
         protected MessageBoxResult ShowWarningMessageBox(string message)
         {
             return MessageBox.Show(Window.GetWindow(this)!, message, "SMZ3 Cas’ Randomizer", MessageBoxButton.YesNo, MessageBoxImage.Warning);

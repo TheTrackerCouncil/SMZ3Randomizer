@@ -9,6 +9,7 @@
         VerticalContentAlignment="Center"
         HorizontalContentAlignment="Center"
         WindowStartupLocation="CenterOwner"
+        Icon="/Assets/chozo20.ico"
         x:Class="Randomizer.CrossPlatform.Views.SpriteDownloadWindow"
         Title="SMZ3 Cas' Randomizer">
   Downloading Sprites

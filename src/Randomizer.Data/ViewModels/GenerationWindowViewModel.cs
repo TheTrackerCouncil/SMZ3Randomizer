@@ -5,24 +5,7 @@ namespace Randomizer.Data.ViewModels;
 public class GenerationWindowViewModel : ViewModelBase
 {
     private PlandoConfig? _plandoConfig;
-
-    public GenerationWindowViewModel()
-    {
-
-    }
-
-    public void SetPlandoConfig(PlandoConfig plandoConfig)
-    {
-        PlandoConfig = plandoConfig;
-    }
-
-    public void SetMultiplayerEnabled()
-    {
-        IsMultiplayer = true;
-        GameSettings.IsMultiplayer = true;
-        OnPropertyChanged(nameof(IsSingleplayer));
-        OnPropertyChanged(nameof(CanSetSeed));
-    }
+    private bool _isMultiplayer;
 
     public GenerationWindowBasicViewModel Basic { get; set; } = new();
     public GenerationWindowGameSettingsViewModel GameSettings { get; set; } = new();
@@ -37,14 +20,26 @@ public class GenerationWindowViewModel : ViewModelBase
         {
             SetField(ref _plandoConfig, value);
             OnPropertyChanged(nameof(IsPlando));
+            OnPropertyChanged(nameof(IsRandomizedGame));
             OnPropertyChanged(nameof(CanSetSeed));
             Logic.IsNotPlando = false;
+        }
+    }
+
+    public bool IsMultiplayer
+    {
+        get => _isMultiplayer;
+        set
+        {
+            SetField(ref _isMultiplayer, value);
+            GameSettings.IsMultiplayer = value;
+            OnPropertyChanged(nameof(IsSingleplayer));
+            OnPropertyChanged(nameof(CanSetSeed));
         }
     }
 
     public bool CanSetSeed => !IsPlando && !IsMultiplayer;
     public bool IsPlando => PlandoConfig != null;
     public bool IsRandomizedGame => !IsPlando;
-    public bool IsMultiplayer { get; private set; }
     public bool IsSingleplayer => !IsMultiplayer;
 }

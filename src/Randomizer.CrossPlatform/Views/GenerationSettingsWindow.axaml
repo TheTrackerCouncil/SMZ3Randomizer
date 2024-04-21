@@ -12,6 +12,7 @@
         Height="700" Width="700"
         CanResize="False"
         WindowStartupLocation="CenterOwner"
+        Icon="/Assets/chozo20.ico"
         x:DataType="viewModels:GenerationWindowViewModel">
   <LayoutTransformControl x:Name="MainLayout">
     <Grid RowDefinitions="*, Auto">
@@ -61,6 +62,7 @@
                     Width="23"
                     Content="▼"
                     FontSize="8"
+                    IsVisible="{Binding IsSingleplayer}"
                     Click="GenerateMenuButton_OnClick"
                     BorderThickness="0,1,1,1"
                     Margin="0,0,0,0">

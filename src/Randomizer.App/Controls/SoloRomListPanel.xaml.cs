@@ -58,16 +58,6 @@ namespace Randomizer.App.Controls
             if (ShowGenerateRomWindow(null, false)) UpdateList();
         }
 
-        /// <summary>
-        /// Opens the page to generate a custom rom with new settings
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void GenerateRomOldButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (ShowGenerateRomWindowOld(null, false)) UpdateList();
-        }
-
         private async void StartPlandoButton_Click(object sender, RoutedEventArgs e)
         {
             using var scope = ServiceProvider.CreateScope();

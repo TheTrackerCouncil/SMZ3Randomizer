@@ -30,7 +30,7 @@ public partial class MainWindow : RestorableWindow
     {
         _service = service;
         _serviceProvider = serviceProvider;
-        GlobalScaleFactor = options.Create().GeneralOptions.UIScaleFactor;
+        GlobalScaleFactor = Math.Clamp(options.Create().GeneralOptions.UIScaleFactor, 1, 3);
         InitializeComponent();
         DataContext = _model = _service.InitializeModel(this);
 

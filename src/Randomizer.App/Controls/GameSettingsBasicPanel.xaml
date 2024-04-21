@@ -15,8 +15,8 @@
     <GroupBox Header="Common">
       <StackPanel Orientation="Vertical">
 
-        <TextBlock>Presets</TextBlock>
-        <Grid>
+        <TextBlock Visibility="{Binding IsRandomizedGame, Converter={StaticResource BoolToVisibilityConverter}}">Presets</TextBlock>
+        <Grid Visibility="{Binding IsRandomizedGame, Converter={StaticResource BoolToVisibilityConverter}}">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -41,8 +41,8 @@
           >Delete Preset</Button>
         </Grid>
 
-        <TextBlock Margin="0 5 0 0">Import Settings</TextBlock>
-        <Grid>
+        <TextBlock Margin="0 5 0 0" Visibility="{Binding IsRandomizedGame, Converter={StaticResource BoolToVisibilityConverter}}">Import Settings</TextBlock>
+        <Grid Visibility="{Binding IsRandomizedGame, Converter={StaticResource BoolToVisibilityConverter}}">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -57,6 +57,7 @@
                   Margin="5 0 0 0"
                   Name="ImportSeedButton"
                   Click="ImportSeedButton_OnClick"
+                  Visibility="{Binding IsSingleplayer, Converter={StaticResource BoolToVisibilityConverter}}"
                   IsEnabled="{Binding Basic.CanApplyConfigString, Mode=OneWay}"
           >Import Settings &amp; Seed Number</Button>
           <Button Grid.Column="2"
@@ -67,8 +68,8 @@
           >Import Settings Only</Button>
         </Grid>
 
-        <TextBlock Margin="0 5 0 0">Seed</TextBlock>
-        <Grid>
+        <TextBlock Margin="0 5 0 0" Visibility="{Binding CanSetSeed, Converter={StaticResource BoolToVisibilityConverter}}">Seed</TextBlock>
+        <Grid Visibility="{Binding CanSetSeed, Converter={StaticResource BoolToVisibilityConverter}}">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -87,7 +88,7 @@
         </Grid>
 
         <TextBlock Margin="0 5 0 0">Summary</TextBlock>
-        <TextBox Height="150" IsReadOnly="True" Text="{Binding Basic.Summary}"></TextBox>
+        <TextBox Height="150" IsReadOnly="True" Text="{Binding Basic.Summary}" VerticalScrollBarVisibility="Visible"></TextBox>
 
       </StackPanel>
 

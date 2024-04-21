@@ -23,7 +23,7 @@ public partial class GenerationSettingsWindow : Window
         _msuUiService = msuUiService;
         optionsFactory.Create();
         InitializeComponent();
-        DataContext = _service.GetViewModel();
+        DataContext = _model = _service.GetViewModel();
         BasicPanel.SetServices(serviceProvider, service);
         BasicPanel.DataContext = DataContext;
         ItemPanel.DataContext = DataContext;
@@ -31,13 +31,14 @@ public partial class GenerationSettingsWindow : Window
 
     public void SetPlandoConfig(PlandoConfig config)
     {
-        _model.SetPlandoConfig(config);
+        _service.LoadPlando(config);
     }
 
     public void SetMultiplayerEnabled()
     {
-        _model.SetMultiplayerEnabled();
+        _model.IsMultiplayer = true;
     }
+
     private void GenerationSettingsWindow_OnLoaded(object sender, RoutedEventArgs e)
     {
         _msuUiService.LookupMsus();
@@ -93,6 +94,14 @@ public partial class GenerationSettingsWindow : Window
     private async Task GenerateRom()
     {
         _service.SaveSettings();
+
+        if (_model.IsMultiplayer)
+        {
+            DialogResult = true;
+            Close();
+            return;
+        }
+
         var generatedRom = await _service.GenerateRom();
 
         if (!string.IsNullOrEmpty(generatedRom.GenerationError))

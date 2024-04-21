@@ -13,6 +13,7 @@ using AvaloniaControls.Models;
 using AvaloniaControls.Services;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using MSURandomizerLibrary.Services;
 using Randomizer.Abstractions;
 using Randomizer.CrossPlatform.ViewModels;
@@ -31,7 +32,8 @@ public class SoloRomListService(IRomGenerationService romGenerationService,
     RomLauncherService romLauncherService,
     OptionsFactory optionsFactory,
     IServiceProvider serviceProvider,
-    IMsuLookupService msuLookupService) : ControlService
+    IMsuLookupService msuLookupService,
+    ILogger<SoloRomListService> logger) : ControlService
 {
     private SoloRomListViewModel _model = new();
     private SoloRomListPanel _panel = null!;
@@ -178,6 +180,7 @@ public class SoloRomListService(IRomGenerationService romGenerationService,
             }
             catch (Exception e)
             {
+                logger.LogError(e, "Could not open spoiler file at {Path}", path);
                 OpenMessageWindow($"Could not open spoiler file at {path}");
             }
         }
@@ -228,6 +231,7 @@ public class SoloRomListService(IRomGenerationService romGenerationService,
             }
             catch (Exception e)
             {
+                logger.LogError(e, "Could not open progression history file at {Path}", path);
                 OpenMessageWindow($"Could not open progression history file at {path}");
             }
         }

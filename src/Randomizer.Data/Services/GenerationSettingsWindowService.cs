@@ -190,18 +190,7 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         try
         {
             var configString = File.ReadAllText(file);
-            _model.PlandoConfig = s_deserializer.Deserialize<PlandoConfig>(configString);
-
-            _model.GameSettings.KeysanityMode = _model.PlandoConfig.KeysanityMode;
-            _model.GameSettings.CrystalsNeededForGT = _model.PlandoConfig.GanonsTowerCrystalCount;
-            _model.GameSettings.CrystalsNeededForGanon = _model.PlandoConfig.GanonCrystalCount;
-            _model.GameSettings.OpenPyramid = _model.PlandoConfig.OpenPyramid;
-            _model.GameSettings.BossesNeededForTourian = _model.PlandoConfig.TourianBossCount;
-
-            _model.Logic.LogicConfig.Copy(_model.PlandoConfig.Logic);
-
-
-
+            LoadPlando(s_deserializer.Deserialize<PlandoConfig>(configString));
             return true;
         }
         catch (Exception e)
@@ -210,6 +199,19 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
             error = $"Unable to parse plando file: {e.Message}";
             return false;
         }
+    }
+
+    public void LoadPlando(PlandoConfig config)
+    {
+        _model.PlandoConfig = config;
+
+        _model.GameSettings.KeysanityMode = _model.PlandoConfig.KeysanityMode;
+        _model.GameSettings.CrystalsNeededForGT = _model.PlandoConfig.GanonsTowerCrystalCount;
+        _model.GameSettings.CrystalsNeededForGanon = _model.PlandoConfig.GanonCrystalCount;
+        _model.GameSettings.OpenPyramid = _model.PlandoConfig.OpenPyramid;
+        _model.GameSettings.BossesNeededForTourian = _model.PlandoConfig.TourianBossCount;
+
+        _model.Logic.LogicConfig.Copy(_model.PlandoConfig.Logic);
     }
 
     public void SaveSpriteSettings(bool userAccepted, Sprite sprite, Dictionary<string, SpriteOptions> selectedSpriteOptions, string searchText, SpriteFilter filter)

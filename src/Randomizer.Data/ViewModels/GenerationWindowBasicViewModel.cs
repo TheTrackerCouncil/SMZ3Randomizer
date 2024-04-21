@@ -7,7 +7,7 @@ namespace Randomizer.Data.ViewModels;
 
 public class GenerationWindowBasicViewModel : ViewModelBase
 {
-    private ICollection<RandomizerPreset> _presets;
+    private ICollection<RandomizerPreset> _presets = new List<RandomizerPreset>();
     private RandomizerPreset? _selectedPreset;
     private string _importString = "";
     private string _seed = "";

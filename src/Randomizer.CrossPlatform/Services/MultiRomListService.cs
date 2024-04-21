@@ -8,6 +8,7 @@ using AvaloniaControls;
 using AvaloniaControls.Controls;
 using AvaloniaControls.ControlServices;
 using AvaloniaControls.Models;
+using Microsoft.Extensions.Logging;
 using Randomizer.CrossPlatform.ViewModels;
 using Randomizer.CrossPlatform.Views;
 using Randomizer.Data.Options;
@@ -16,7 +17,7 @@ using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.CrossPlatform.Services;
 
-public class MultiRomListService(IServiceProvider serviceProvider, OptionsFactory optionsFactory, IGameDbService gameDbService) : ControlService
+public class MultiRomListService(OptionsFactory optionsFactory, IGameDbService gameDbService, ILogger<MultiRomListService> logger) : ControlService
 {
     private MultiRomListViewModel _model = new();
     private MultiRomListPanel _panel = null!;
@@ -111,6 +112,7 @@ public class MultiRomListService(IServiceProvider serviceProvider, OptionsFactor
             }
             catch (Exception e)
             {
+                logger.LogError(e, "Could not open spoiler file at {Path}", path);
                 DisplayError($"Could not open spoiler file at {path}");
             }
         }
@@ -161,6 +163,7 @@ public class MultiRomListService(IServiceProvider serviceProvider, OptionsFactor
             }
             catch (Exception e)
             {
+                logger.LogError(e, "Could not open progression history file at {Path}", path);
                 DisplayError($"Could not open progression history file at {path}");
             }
         }

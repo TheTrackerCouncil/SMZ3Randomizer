@@ -12,7 +12,7 @@ namespace Randomizer.Data.ViewModels;
 
 public class GenerationWindowItemsViewModel : ViewModelBase
 {
-    private List<GenerationWindowLocationViewModel> _locations;
+    private List<GenerationWindowLocationViewModel> _locations = new();
 
     public IDictionary<LocationId, int> LocationItems { get; set; } = new Dictionary<LocationId, int>();
 
@@ -163,30 +163,30 @@ public class GenerationWindowItemsViewModel : ViewModelBase
 
 public class GenerationWindowItemOptionsViewModel : ViewModelBase
 {
-    private ItemSettingOption _selectedOption;
+    private ItemSettingOption _selectedOption = null!;
 
-    public string Title { get; set; }
-    public List<ItemSettingOption> Options { get; set; }
+    public required  string Title { get; set; }
+    public required List<ItemSettingOption> Options { get; set; }
 
-    public ItemSettingOption SelectedOption
+    public required ItemSettingOption SelectedOption
     {
         get => _selectedOption;
         set => SetField(ref _selectedOption, value);
     }
 
-    public bool IsMetroid { get; set; }
+    public required bool IsMetroid { get; set; }
 }
 
 public class GenerationWindowLocationViewModel : ViewModelBase
 {
-    private LocationItemOption _selectedOption;
+    private LocationItemOption _selectedOption = null!;
 
-    public string LocationName { get; set; }
-    public LocationId LocationId { get; set;}
-    public Region Region { get; set; }
-    public List<LocationItemOption> Options { get; set; }
+    public required string LocationName { get; set; } = "";
+    public required LocationId LocationId { get; set;}
+    public required Region Region { get; set; }
+    public required List<LocationItemOption> Options { get; set; }
 
-    public LocationItemOption SelectedOption
+    public required  LocationItemOption SelectedOption
     {
         get => _selectedOption;
         set => SetField(ref _selectedOption, value);

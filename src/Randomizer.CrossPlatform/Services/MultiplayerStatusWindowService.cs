@@ -11,12 +11,12 @@ using AvaloniaControls.ControlServices;
 using AvaloniaControls.Models;
 using AvaloniaControls.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using MSURandomizerLibrary.Services;
 using Randomizer.CrossPlatform.ViewModels;
 using Randomizer.CrossPlatform.Views;
 using Randomizer.Data.Interfaces;
 using Randomizer.Data.Options;
-using Randomizer.Data.Services;
 using Randomizer.Multiplayer.Client;
 using Randomizer.Shared;
 using Randomizer.Shared.Multiplayer;
@@ -28,10 +28,10 @@ public class MultiplayerStatusWindowService(MultiplayerClientService multiplayer
     MultiplayerGameService multiplayerGameService,
     IRomGenerationService romGenerationService,
     RomLauncherService romLauncherService,
-    SpriteService spriteService,
     OptionsFactory optionsFactory,
     IServiceProvider serviceProvider,
-    IMsuLookupService msuLookupService) : ControlService, IDisposable
+    IMsuLookupService msuLookupService,
+    ILogger<MultiplayerStatusWindowService> logger) : ControlService, IDisposable
 {
     private MultiplayerStatusWindow _window = null!;
     private MultiplayerStatusWindowViewModel _model = new();
@@ -182,6 +182,7 @@ public class MultiplayerStatusWindowService(MultiplayerClientService multiplayer
             }
             catch (Exception e)
             {
+                logger.LogError(e, "Could not open spoiler file at {Path}", path);
                 DisplayError($"Could not open spoiler file at {path}");
             }
         }

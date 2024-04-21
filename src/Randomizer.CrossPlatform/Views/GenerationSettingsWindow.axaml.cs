@@ -40,7 +40,11 @@ public partial class GenerationSettingsWindow : ScalableWindow
 
     public void EnableMultiplayerMode()
     {
-        _model?.SetMultiplayerEnabled();
+        if (_model == null)
+        {
+            return;
+        }
+        _model.IsMultiplayer = true;
     }
 
     public bool LoadPlando(string file, out string? error)
