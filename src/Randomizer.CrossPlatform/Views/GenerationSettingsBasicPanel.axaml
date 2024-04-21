@@ -50,6 +50,7 @@
                   Margin="5 0 0 0"
                   Name="ImportSeedButton"
                   Click="ImportSeedButton_OnClick"
+                  IsVisible="{Binding IsSingleplayer}"
                   IsEnabled="{Binding Basic.CanApplyConfigString}"
           >Import Settings &amp; Seed Number</Button>
           <Button Grid.Column="2"
@@ -60,8 +61,8 @@
           >Import Settings Only</Button>
         </Grid>
 
-        <TextBlock Margin="0 5 0 0" IsVisible="{Binding !IsPlando}">Seed</TextBlock>
-        <Grid IsVisible="{Binding !IsPlando}">
+        <TextBlock Margin="0 5 0 0" IsVisible="{Binding CanSetSeed}">Seed</TextBlock>
+        <Grid IsVisible="{Binding CanSetSeed}">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="Auto"></ColumnDefinition>

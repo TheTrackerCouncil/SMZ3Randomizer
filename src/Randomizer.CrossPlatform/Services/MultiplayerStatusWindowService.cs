@@ -263,7 +263,7 @@ public class MultiplayerStatusWindowService(MultiplayerClientService multiplayer
     {
         if (!isLocalPlayer || multiplayerClientService.GameStatus != MultiplayerGameStatus.Created) return;
         await multiplayerClientService.Disconnect();
-        _window.Close();
+        Dispatcher.UIThread.Invoke(() => _window.Close());
     }
 
     private void MultiplayerClientServiceOnGameRejoined()

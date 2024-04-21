@@ -27,6 +27,7 @@ public class OptionsWindowViewModel
         RandomizerOptions.LaunchButtonOption = options.LaunchButtonOption;
         RandomizerOptions.LaunchApplication = options.LaunchApplication;
         RandomizerOptions.LaunchArguments = options.LaunchArguments;
+        RandomizerOptions.UIScaleFactor = options.UIScaleFactor;
         RandomizerOptions.CheckForUpdatesOnStartup = options.CheckForUpdatesOnStartup;
         RandomizerOptions.DownloadSpritesOnStartup = options.DownloadSpritesOnStartup;
         RandomizerOptions.DownloadConfigsOnStartup = options.DownloadConfigsOnStartup;
@@ -75,6 +76,7 @@ public class OptionsWindowViewModel
         options.LaunchButtonOption = RandomizerOptions.LaunchButtonOption;
         options.LaunchApplication = RandomizerOptions.LaunchApplication;
         options.LaunchArguments = RandomizerOptions.LaunchArguments;
+        options.UIScaleFactor = RandomizerOptions.UIScaleFactor;
         options.CheckForUpdatesOnStartup = RandomizerOptions.CheckForUpdatesOnStartup;
         options.DownloadSpritesOnStartup = RandomizerOptions.DownloadSpritesOnStartup;
         options.DownloadConfigsOnStartup = RandomizerOptions.DownloadConfigsOnStartup;

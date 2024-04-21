@@ -10,18 +10,19 @@ public partial class OptionsWindow : ScalableWindow
 {
     private OptionsWindowService? _service;
     private SpriteDownloadWindow? _spriteDownloadWindow;
+    private OptionsWindowViewModel _model;
 
     public OptionsWindow()
     {
         InitializeComponent();
-        DataContext = new OptionsWindowViewModel();
+        DataContext = _model = new OptionsWindowViewModel();
     }
 
     public OptionsWindow(OptionsWindowService service)
     {
         InitializeComponent();
         _service = service;
-        DataContext = _service.GetViewModel();
+        DataContext = _model = _service.GetViewModel();
 
         var initialMessageParent = MessageWindow.GlobalParentWindow;
         MessageWindow.GlobalParentWindow = this;
@@ -58,6 +59,7 @@ public partial class OptionsWindow : ScalableWindow
     private void OkButton_OnClick(object? sender, RoutedEventArgs e)
     {
         _service?.SaveViewModel();
+        GlobalScaleFactor = _model.RandomizerOptions.UIScaleFactor;
         Close();
     }
 }

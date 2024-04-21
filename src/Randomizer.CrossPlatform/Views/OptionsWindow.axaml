@@ -7,7 +7,7 @@
         xmlns:controls="clr-namespace:AvaloniaControls.Controls;assembly=AvaloniaControls"
         mc:Ignorable="d"
         x:Class="Randomizer.CrossPlatform.Views.OptionsWindow"
-        Title="OptionsWindow"
+        Title="SMZ3 Cas' Randomizer"
         Height="500"
         Width="600"
         CanResize="False"
@@ -15,8 +15,8 @@
         x:DataType="viewModels:OptionsWindowViewModel">
   <LayoutTransformControl x:Name="MainLayout">
     <Grid RowDefinitions="*, Auto">
-      <ScrollViewer Grid.Row="0" Padding="0 0 5 0">
-        <avalonia:DynamicFormControl Grid.Row="0" Data="{Binding }" Grid.IsSharedSizeScope="True" />
+      <ScrollViewer Grid.Row="0">
+        <avalonia:DynamicFormControl Data="{Binding }" Grid.IsSharedSizeScope="True" Margin="0 0 5 0"/>
       </ScrollViewer>
       <controls:HeaderFooter Grid.Row="1" Padding="10">
         <StackPanel Orientation="Horizontal"

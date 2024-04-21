@@ -8,7 +8,7 @@
         xmlns:views="clr-namespace:Randomizer.CrossPlatform.Views"
         mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="700"
         x:Class="Randomizer.CrossPlatform.Views.GenerationSettingsWindow"
-        Title="GenerationSettingsWindow"
+        Title="SMZ3 Cas' Randomizer"
         Height="700" Width="700"
         CanResize="False"
         WindowStartupLocation="CenterOwner"

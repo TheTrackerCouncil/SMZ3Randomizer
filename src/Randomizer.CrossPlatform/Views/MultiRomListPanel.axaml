@@ -8,7 +8,7 @@
              x:DataType="viewModels:MultiRomListViewModel"
              x:Class="Randomizer.CrossPlatform.Views.MultiRomListPanel">
   <Grid RowDefinitions="*, Auto">
-    <ListBox Grid.Row="0" ItemsSource="{Binding Games}">
+    <ListBox Grid.Row="0" ItemsSource="{Binding Games}" BorderThickness="0">
       <ListBox.ItemTemplate>
           <DataTemplate>
             <Grid Margin="0,2" Background="Transparent">

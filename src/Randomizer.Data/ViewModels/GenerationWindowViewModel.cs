@@ -19,6 +19,9 @@ public class GenerationWindowViewModel : ViewModelBase
     public void SetMultiplayerEnabled()
     {
         IsMultiplayer = true;
+        GameSettings.IsMultiplayer = true;
+        OnPropertyChanged(nameof(IsSingleplayer));
+        OnPropertyChanged(nameof(CanSetSeed));
     }
 
     public GenerationWindowBasicViewModel Basic { get; set; } = new();
@@ -34,10 +37,12 @@ public class GenerationWindowViewModel : ViewModelBase
         {
             SetField(ref _plandoConfig, value);
             OnPropertyChanged(nameof(IsPlando));
+            OnPropertyChanged(nameof(CanSetSeed));
             Logic.IsNotPlando = false;
         }
     }
 
+    public bool CanSetSeed => !IsPlando && !IsMultiplayer;
     public bool IsPlando => PlandoConfig != null;
     public bool IsRandomizedGame => !IsPlando;
     public bool IsMultiplayer { get; private set; }

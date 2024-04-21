@@ -8,7 +8,7 @@ namespace Randomizer.Data.ViewModels;
 [DynamicFormGroupGroupBox(DynamicFormLayout.Vertical, "Game Settings")]
 [DynamicFormGroupBasic(DynamicFormLayout.SideBySide, "Game Settings Top", parentGroup: "Game Settings")]
 [DynamicFormGroupBasic(DynamicFormLayout.TwoColumns, "Game Settings Bottom", parentGroup: "Game Settings")]
-[DynamicFormGroupGroupBox(DynamicFormLayout.TwoColumns, "Race Settings")]
+[DynamicFormGroupGroupBox(DynamicFormLayout.TwoColumns, "Race Settings", visibleWhenTrue: nameof(IsSingleplayer))]
 public class GenerationWindowGameSettingsViewModel : ViewModelBase
 {
     [DynamicFormFieldComboBox(label: "Keysanity:", groupName: "Game Settings Top")]
@@ -40,4 +40,8 @@ public class GenerationWindowGameSettingsViewModel : ViewModelBase
 
     [DynamicFormFieldCheckBox("Disable cheats", groupName: "Race Settings")]
     public bool DisableCheats { get; set; }
+
+    public bool IsMultiplayer { get; set; }
+
+    public bool IsSingleplayer => !IsMultiplayer;
 }

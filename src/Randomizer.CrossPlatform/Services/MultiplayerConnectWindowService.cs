@@ -34,6 +34,7 @@ public class MultiplayerConnectWindowService(MultiplayerClientService multiplaye
 
         _window = window;
         _model.IsCreatingGame = isCreatingGame;
+        _model.Url = _options.MultiplayerUrl;
         return _model;
     }
 
@@ -78,6 +79,7 @@ public class MultiplayerConnectWindowService(MultiplayerClientService multiplaye
         {
             logger.LogInformation("Connected to server successfully. Creating new game.");
             _options.MultiplayerUrl = _model.Url;
+            _options.Save();
             _ = multiplayerClientService.CreateGame(_model.DisplayName, _model.PhoneticName,
                 _model.MultiplayerGameType, GetVersion(), _model.AsyncGame, _model.SendItemsOnComplete,
                 _model.DeathLink);

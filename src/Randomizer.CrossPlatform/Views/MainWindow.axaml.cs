@@ -9,6 +9,7 @@ using AvaloniaControls.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Randomizer.CrossPlatform.Services;
 using Randomizer.CrossPlatform.ViewModels;
+using Randomizer.Data.Options;
 
 namespace Randomizer.CrossPlatform.Views;
 
@@ -25,10 +26,11 @@ public partial class MainWindow : RestorableWindow
         DataContext = _model = new MainWindowViewModel();
     }
 
-    public MainWindow(MainWindowService service, IServiceProvider? serviceProvider)
+    public MainWindow(MainWindowService service, IServiceProvider? serviceProvider, OptionsFactory options)
     {
         _service = service;
         _serviceProvider = serviceProvider;
+        GlobalScaleFactor = options.Create().GeneralOptions.UIScaleFactor;
         InitializeComponent();
         DataContext = _model = _service.InitializeModel(this);
 
@@ -118,5 +120,10 @@ public partial class MainWindow : RestorableWindow
         contextMenu.PlacementTarget = button;
         contextMenu.Open();
         e.Handled = true;
+    }
+
+    private void AboutButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        _serviceProvider?.GetRequiredService<AboutWindow>().ShowDialog(this);
     }
 }

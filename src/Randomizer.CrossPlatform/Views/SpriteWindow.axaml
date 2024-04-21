@@ -10,7 +10,7 @@
         WindowStartupLocation="CenterOwner"
         Loaded="Control_OnLoaded"
         Closing="Window_OnClosing"
-        Title="SpriteWindow"
+        Title="SMZ3 Cas' Randomizer"
         x:DataType="viewModels:SpriteWindowViewModel">
   <LayoutTransformControl x:Name="MainLayout">
     <Grid>

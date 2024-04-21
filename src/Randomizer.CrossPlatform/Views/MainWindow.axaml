@@ -11,9 +11,9 @@
         x:DataType="vm:MainWindowViewModel"
         Loaded="Control_OnLoaded"
         Icon="/Assets/chozo20.ico"
-        MinWidth="400"
+        MinWidth="500"
         MinHeight="250"
-        Title="Randomizer.CrossPlatform">
+        Title="SMZ3 Cas' Randomizer">
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -58,7 +58,7 @@
           </Button.Styles>
           <avalonia:MaterialIcon Kind="Settings" Width="25" Height="25"/>
         </Button>
-        <Button Margin="0 5 5 0" Name="AboutButton" Click="OptionsMenuItem_OnClick">
+        <Button Margin="0 5 5 0" Name="AboutButton" Click="AboutButton_OnClick">
           <Button.Styles>
             <Style Selector="Button">
               <Setter Property="Background" Value="Transparent"></Setter>

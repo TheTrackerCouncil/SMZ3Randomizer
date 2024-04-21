@@ -12,7 +12,7 @@
         Closing="Window_OnClosing"
         x:Class="Randomizer.CrossPlatform.Views.MultiplayerConnectWindow"
         x:DataType="viewModels:MultiplayerConnectWindowViewModel"
-        Title="MultiplayerConnectWindow">
+        Title="SMZ3 Cas' Randomizer">
   <LayoutTransformControl x:Name="MainLayout">
     <Grid>
       <Grid.RowDefinitions>

@@ -12,7 +12,7 @@
         Loaded="Control_OnLoaded"
         Closed="TopLevel_OnClosed"
         x:DataType="viewModels:MultiplayerStatusWindowViewModel"
-        Title="MultiplayerStatusWindow">
+        Title="SMZ3 Cas' Randomizer">
   <LayoutTransformControl x:Name="MainLayout">
     <Grid RowDefinitions="Auto,*,Auto">
       <controls:HeaderFooter Grid.Row="0" BorderSize="0 0 0 2" Padding="5">

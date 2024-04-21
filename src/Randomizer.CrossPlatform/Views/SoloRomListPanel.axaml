@@ -8,7 +8,7 @@
              x:Class="Randomizer.CrossPlatform.Views.SoloRomListPanel"
              x:DataType="viewModels:SoloRomListViewModel">
   <Grid RowDefinitions="*, Auto">
-    <ListBox Grid.Row="0" ItemsSource="{Binding Roms }">
+    <ListBox Grid.Row="0" ItemsSource="{Binding Roms }" BorderThickness="0">
       <ListBox.ItemTemplate>
           <DataTemplate>
             <Grid Margin="0,2" Background="Transparent">

@@ -76,6 +76,9 @@ public class OptionsWindowRandomizerOptions : INotifyPropertyChanged
     [DynamicFormFieldTextBox(label: "Launch arguments:")]
     public string? LaunchArguments { get; set; } = "";
 
+    [DynamicFormFieldSlider(1, 3, decimalPlaces: 1, incrementAmount: 0.1, label: "UI scaling:", platforms: DynamicFormPlatform.Linux)]
+    public double UIScaleFactor { get; set; } = 1;
+
     [DynamicFormFieldCheckBox(checkBoxText: "Check for updates on startup", groupName: "Bottom left")]
     public bool CheckForUpdatesOnStartup { get; set; }
 
