@@ -59,12 +59,12 @@ public class MultiplayerConnectWindowService(MultiplayerClientService multiplaye
 
     private void MultiplayerClientServiceOnGameJoined()
     {
-        _window.Close(true);
+        _window.Close(true, multiplayerClientService.DatabaseGameDetails);
     }
 
     private void MultiplayerClientServiceOnGameCreated()
     {
-        _window.Close(true);
+        _window.Close(true, multiplayerClientService.DatabaseGameDetails);
     }
 
     private void MultiplayerClientServiceOnError(string error, Exception? exception)
@@ -118,5 +118,6 @@ public class MultiplayerConnectWindowService(MultiplayerClientService multiplaye
         multiplayerClientService.Error -= MultiplayerClientServiceOnError;
         multiplayerClientService.GameCreated -= MultiplayerClientServiceOnGameCreated;
         multiplayerClientService.GameJoined -= MultiplayerClientServiceOnGameJoined;
+        GC.SuppressFinalize(this);
     }
 }

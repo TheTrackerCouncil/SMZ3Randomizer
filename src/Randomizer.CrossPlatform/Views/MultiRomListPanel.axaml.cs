@@ -29,12 +29,7 @@ public partial class MultiRomListPanel : UserControl
 
     private void OpenFolderMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (sender is not MenuItem menuItem)
-        {
-            return;
-        }
-
-        if (menuItem.Tag is not MultiplayerRomViewModel model)
+        if (sender is not MenuItem { Tag: MultiplayerRomViewModel model } )
         {
             return;
         }
@@ -44,12 +39,22 @@ public partial class MultiRomListPanel : UserControl
 
     private void ViewSpoilerLogMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        if (sender is not MenuItem { Tag: MultiplayerRomViewModel model } )
+        {
+            return;
+        }
+
+        _service?.OpenSpoilerLog(model);
     }
 
     private void ViewProgressionLogMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        if (sender is not MenuItem { Tag: MultiplayerRomViewModel model } )
+        {
+            return;
+        }
+
+        _service?.OpenProgressionHistory(model);
     }
 
     private void DeleteMenuItem_OnClick(object? sender, RoutedEventArgs e)
@@ -69,7 +74,17 @@ public partial class MultiRomListPanel : UserControl
 
     private void ReconnectButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        _service?.OpenStatusWindow();
+        if (sender is not Button button)
+        {
+            return;
+        }
+
+        if (button.Tag is not MultiplayerRomViewModel model)
+        {
+            return;
+        }
+
+        _service?.OpenStatusWindow(model);
     }
 
     private void CreateMultiGameButton_OnClick(object? sender, RoutedEventArgs e)

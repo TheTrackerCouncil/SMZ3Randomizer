@@ -1,24 +1,11 @@
-using System;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
-using Avalonia.Markup.Xaml;
-using AvaloniaControls;
-using AvaloniaControls.Controls;
-using AvaloniaControls.Models;
 using AvaloniaControls.Services;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Randomizer.CrossPlatform.Services;
 using Randomizer.CrossPlatform.ViewModels;
-using Randomizer.Data.Options;
-using Randomizer.Shared.Models;
 
 namespace Randomizer.CrossPlatform.Views;
 
@@ -91,12 +78,17 @@ public partial class SoloRomListPanel : UserControl
 
     private void OpenTrackerMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new NotImplementedException();
+        if (!GetRomFromControl<MenuItem>(sender, out var rom, out _))
+        {
+            return;
+        }
+
+        _service?.LaunchTracker(rom!);
     }
 
     private void OpenSpoilerMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (!GetRomFromControl<MenuItem>(sender, out var rom, out var menuItem))
+        if (!GetRomFromControl<MenuItem>(sender, out var rom, out _))
         {
             return;
         }
@@ -106,7 +98,7 @@ public partial class SoloRomListPanel : UserControl
 
     private void OpenProgressionMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (!GetRomFromControl<MenuItem>(sender, out var rom, out var menuItem))
+        if (!GetRomFromControl<MenuItem>(sender, out var rom, out _))
         {
             return;
         }
@@ -130,7 +122,7 @@ public partial class SoloRomListPanel : UserControl
 
     private void CopySeedMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (!GetRomFromControl<MenuItem>(sender, out var rom, out var menuItem))
+        if (!GetRomFromControl<MenuItem>(sender, out var rom, out _))
         {
             return;
         }
@@ -140,7 +132,7 @@ public partial class SoloRomListPanel : UserControl
 
     private void CopySettingsMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (!GetRomFromControl<MenuItem>(sender, out var rom, out var menuItem))
+        if (!GetRomFromControl<MenuItem>(sender, out var rom, out _))
         {
             return;
         }
@@ -150,7 +142,7 @@ public partial class SoloRomListPanel : UserControl
 
     private void DeleteRomMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (!GetRomFromControl<MenuItem>(sender, out var rom, out var textBox))
+        if (!GetRomFromControl<MenuItem>(sender, out var rom, out _))
         {
             return;
         }

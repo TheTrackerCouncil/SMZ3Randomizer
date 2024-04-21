@@ -38,6 +38,11 @@ public partial class GenerationSettingsWindow : ScalableWindow
 
     public GeneratedRom? GeneratedRom { get; private set; }
 
+    public void EnableMultiplayerMode()
+    {
+        _model?.SetMultiplayerEnabled();
+    }
+
     public bool LoadPlando(string file, out string? error)
     {
         error = null;
@@ -57,8 +62,7 @@ public partial class GenerationSettingsWindow : ScalableWindow
 
     private void GenerateMenuButton_OnClick(object sender, RoutedEventArgs e)
     {
-        if (GenerateMenuButton.ContextMenu == null) return;
-        GenerateMenuButton.ContextMenu.Open();
+        GenerateMenuButton.ContextMenu?.Open();
     }
 
     private void GenerateGameButton_OnClick(object sender, RoutedEventArgs e)
@@ -74,6 +78,14 @@ public partial class GenerationSettingsWindow : ScalableWindow
         }
 
         _generationSettingsWindowService.SaveSettings();
+
+        if (_model?.IsMultiplayer == true)
+        {
+            DialogResult = true;
+            Close();
+            return;
+        }
+
         var generatedRom = await _generationSettingsWindowService.GenerateRom();
 
         if (!string.IsNullOrEmpty(generatedRom.GenerationError))

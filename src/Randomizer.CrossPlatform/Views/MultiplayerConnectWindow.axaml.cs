@@ -1,13 +1,11 @@
-using System.IO;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using AvaloniaControls.Controls;
 using AvaloniaControls.Services;
 using Randomizer.CrossPlatform.Services;
 using Randomizer.CrossPlatform.ViewModels;
+using Randomizer.Shared.Models;
 
 namespace Randomizer.CrossPlatform.Views;
 
@@ -48,14 +46,16 @@ public partial class MultiplayerConnectWindow : ScalableWindow
         }
     }
 
-    public void Close(bool dialogResult)
+    public void Close(bool dialogResult, MultiplayerGameDetails? multiplayerGameDetails)
     {
         DialogResult = dialogResult;
-
+        MultiplayerGameDetails = multiplayerGameDetails;
         Dispatcher.UIThread.Invoke(Close);
     }
 
     public bool DialogResult { get; private set; }
+
+    public MultiplayerGameDetails? MultiplayerGameDetails { get; private set; }
 
     private void NewGameButton_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -72,5 +72,9 @@ public partial class MultiplayerConnectWindow : ScalableWindow
         ServerListButton.ContextMenu?.Open();
     }
 
+    private void Window_OnClosing(object? sender, WindowClosingEventArgs e)
+    {
+        _service?.Dispose();
+    }
 }
 

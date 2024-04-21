@@ -33,4 +33,8 @@
       <None Remove="msu-randomizer-settings.yml" />
       <EmbeddedResource Include="msu-randomizer-settings.yml" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Assets\" />
+    </ItemGroup>
 </Project>

@@ -10,7 +10,7 @@
         x:Class="Randomizer.CrossPlatform.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Loaded="Control_OnLoaded"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/chozo20.ico"
         MinWidth="400"
         MinHeight="250"
         Title="Randomizer.CrossPlatform">

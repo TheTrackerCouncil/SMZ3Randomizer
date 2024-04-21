@@ -243,7 +243,7 @@ public class SoloRomListService(IRomGenerationService romGenerationService,
 
         if (launchButtonOptions is LaunchButtonOptions.PlayAndTrack or LaunchButtonOptions.OpenFolderAndTrack or LaunchButtonOptions.TrackOnly)
         {
-            // LaunchTracker(rom);
+            LaunchTracker(rom);
         }
 
         if (launchButtonOptions is LaunchButtonOptions.OpenFolderAndTrack or LaunchButtonOptions.OpenFolderOnly)
@@ -255,6 +255,11 @@ public class SoloRomListService(IRomGenerationService romGenerationService,
         {
             PlayRom(rom);
         }
+    }
+
+    public void LaunchTracker(GeneratedRomViewModel rom)
+    {
+        // TODO: Do something here
     }
 
     public void LookupMsus()

@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -19,8 +20,10 @@ public partial class MultiplayerStatusWindow : RestorableWindow
 
     }
 
-    public MultiplayerStatusWindow(MultiplayerRomViewModel rom)
+    public MultiplayerStatusWindow(MultiplayerRomViewModel rom, Window? owner = null)
     {
+        Owner = owner;
+
         if (Design.IsDesignMode)
         {
             _model = new MultiplayerStatusWindowViewModel();
@@ -36,62 +39,74 @@ public partial class MultiplayerStatusWindow : RestorableWindow
     }
 
     protected override string RestoreFilePath => Path.Combine(Directories.AppDataFolder, "Windows", "multiplayer-status-window.json");
-    protected override int DefaultWidth => 800;
-    protected override int DefualtHeight => 600;
+    protected override int DefaultWidth => 500;
+    protected override int DefualtHeight => 250;
 
     private void CopyUrlButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        _ = Clipboard?.SetTextAsync(_model.GameUrl);
     }
 
     private void UpdateConfigButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        _ = _service?.SubmitConfig();
     }
 
     private void ForfeitButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        if (sender is not Button { Tag: MultiplayerPlayerStateViewModel player })
+            return;
+        _service?.Forfeit(player);
     }
 
     private void ReconnectButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        _service?.Reconnect();
     }
 
     private void StartGameButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        _service?.StartGame();
     }
 
-    private void OpenTrackerButton_OnClick(object? sender, RoutedEventArgs e)
+    private void LaunchButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        _service?.LaunchRom();
     }
 
     private void LaunchOptions_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        LaunchOptions.ContextMenu?.Open();
     }
 
     private void PlayMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        _service?.PlayRom();
     }
 
     private void OpenFolderMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        _service?.OpenFolder();
     }
 
     private void OpenTrackerMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        _service?.LaunchTracker();
     }
 
     private void ViewSpoilerLogMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        _service?.OpenSpoilerLog();
+    }
+
+    private void Control_OnLoaded(object? sender, RoutedEventArgs e)
+    {
+        _ = _service?.Connect();
+    }
+
+    private void TopLevel_OnClosed(object? sender, EventArgs e)
+    {
+        _service?.Dispose();
     }
 }
 

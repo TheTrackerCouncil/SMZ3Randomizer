@@ -9,6 +9,7 @@
         MinWidth="500" MaxWidth="500"
         MinHeight="225" MaxHeight="225"
         WindowStartupLocation="CenterOwner"
+        Closing="Window_OnClosing"
         x:Class="Randomizer.CrossPlatform.Views.MultiplayerConnectWindow"
         x:DataType="viewModels:MultiplayerConnectWindowViewModel"
         Title="MultiplayerConnectWindow">
