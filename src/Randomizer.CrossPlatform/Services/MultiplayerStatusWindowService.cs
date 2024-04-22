@@ -1,18 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Threading;
-using AvaloniaControls;
 using AvaloniaControls.Controls;
 using AvaloniaControls.ControlServices;
 using AvaloniaControls.Models;
 using AvaloniaControls.Services;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using MSURandomizerLibrary.Services;
 using Randomizer.CrossPlatform.ViewModels;
 using Randomizer.CrossPlatform.Views;
 using Randomizer.Data.Interfaces;
@@ -20,18 +14,14 @@ using Randomizer.Data.Options;
 using Randomizer.Multiplayer.Client;
 using Randomizer.Shared;
 using Randomizer.Shared.Multiplayer;
-using Randomizer.SMZ3.Infrastructure;
 
 namespace Randomizer.CrossPlatform.Services;
 
 public class MultiplayerStatusWindowService(MultiplayerClientService multiplayerClientService,
     MultiplayerGameService multiplayerGameService,
     IRomGenerationService romGenerationService,
-    RomLauncherService romLauncherService,
     OptionsFactory optionsFactory,
-    IServiceProvider serviceProvider,
-    IMsuLookupService msuLookupService,
-    ILogger<MultiplayerStatusWindowService> logger) : ControlService, IDisposable
+    SharedCrossplatformService sharedCrossplatformService) : ControlService, IDisposable
 {
     private MultiplayerStatusWindow _window = null!;
     private MultiplayerStatusWindowViewModel _model = new();
@@ -39,6 +29,10 @@ public class MultiplayerStatusWindowService(MultiplayerClientService multiplayer
 
     public MultiplayerStatusWindowViewModel GetViewModel(MultiplayerStatusWindow window, MultiplayerRomViewModel romModel)
     {
+        sharedCrossplatformService.LookupMsus();
+
+        sharedCrossplatformService.ParentControl = window;
+
         _options = optionsFactory.Create();
 
         multiplayerClientService.Error += MultiplayerClientServiceOnError;
@@ -72,11 +66,9 @@ public class MultiplayerStatusWindowService(MultiplayerClientService multiplayer
 
     public async Task SubmitConfig()
     {
-        LookupMsus();
-        var window = serviceProvider.GetRequiredService<GenerationSettingsWindow>();
-        window.EnableMultiplayerMode();
-        await window.ShowDialog(_window);
-        if (!window.DialogResult)
+        var options = await sharedCrossplatformService.OpenGenerationWindow(isMultiplayer: true);
+
+        if (options == null)
         {
             return;
         }
@@ -91,20 +83,6 @@ public class MultiplayerStatusWindowService(MultiplayerClientService multiplayer
         await multiplayerClientService.SubmitConfig(Config.ToConfigString(config));
     }
 
-    private void LookupMsus()
-    {
-        var msuDirectory = _options.GeneralOptions.MsuPath;
-        if (string.IsNullOrEmpty(msuDirectory) || !Directory.Exists(msuDirectory))
-        {
-            return;
-        }
-
-        ITaskService.Run(() =>
-        {
-            msuLookupService.LookupMsus(msuDirectory);
-        });
-    }
-
     public async Task Forfeit(MultiplayerPlayerStateViewModel player)
     {
         await multiplayerClientService.ForfeitPlayerGame(player.State.Guid);
@@ -117,28 +95,12 @@ public class MultiplayerStatusWindowService(MultiplayerClientService multiplayer
 
     public void OpenFolder()
     {
-        if (_model.GeneratedRom == null)
-        {
-            DisplayError("Game does not have a valid rom");
-            return;
-        }
-
-        if (!CrossPlatformTools.OpenDirectory(
-                Path.Combine(optionsFactory.Create().GeneralOptions.RomOutputPath, _model.GeneratedRom.RomPath), true))
-        {
-            DisplayError("Could not open rom folder");
-        }
+        sharedCrossplatformService.OpenFolder(_model.GeneratedRom);
     }
 
     public void PlayRom()
     {
-        if (_model.GeneratedRom == null)
-        {
-            DisplayError("Game does not have a valid rom");
-            return;
-        }
-
-        romLauncherService.LaunchRom(_model.GeneratedRom);
+        sharedCrossplatformService.PlayRom(_model.GeneratedRom);
     }
 
     public async Task StartGame()
@@ -158,63 +120,21 @@ public class MultiplayerStatusWindowService(MultiplayerClientService multiplayer
             DisplayError(error);
             await multiplayerClientService.UpdateGameStatus(MultiplayerGameStatus.Created);
         }
-
     }
 
     public void OpenSpoilerLog()
     {
-        if (_model.GeneratedRom == null)
-        {
-            DisplayError("Game does not have a valid rom");
-            return;
-        }
-
-        var path = Path.Combine(optionsFactory.Create().RomOutputPath, _model.GeneratedRom.SpoilerPath);
-        if (File.Exists(path))
-        {
-            try
-            {
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = path,
-                    UseShellExecute = true
-                });
-            }
-            catch (Exception e)
-            {
-                logger.LogError(e, "Could not open spoiler file at {Path}", path);
-                DisplayError($"Could not open spoiler file at {path}");
-            }
-        }
-        else
-        {
-            DisplayError($"Could not find spoiler file at {path}");
-        }
+        sharedCrossplatformService.OpenSpoilerLog(_model.GeneratedRom);
     }
 
     public void LaunchTracker()
     {
-        // TODO: Do something here
+        sharedCrossplatformService.LaunchTracker(_model.GeneratedRom);
     }
 
     public void LaunchRom()
     {
-        var launchButtonOptions = _options.GeneralOptions.LaunchButtonOption;
-
-        if (launchButtonOptions is LaunchButtonOptions.PlayAndTrack or LaunchButtonOptions.OpenFolderAndTrack or LaunchButtonOptions.TrackOnly)
-        {
-            LaunchTracker();
-        }
-
-        if (launchButtonOptions is LaunchButtonOptions.OpenFolderAndTrack or LaunchButtonOptions.OpenFolderOnly)
-        {
-            OpenFolder();
-        }
-
-        if (launchButtonOptions is LaunchButtonOptions.PlayAndTrack or LaunchButtonOptions.PlayOnly)
-        {
-            PlayRom();
-        }
+        sharedCrossplatformService.LaunchRom(_model.GeneratedRom);
     }
 
     private async void MultiplayerClientServiceOnGameStarted(List<MultiplayerPlayerGenerationData> playerGenerationData)
@@ -272,7 +192,7 @@ public class MultiplayerStatusWindowService(MultiplayerClientService multiplayer
         _model.IsConnected = true;
         _model.GameUrl = multiplayerClientService.GameUrl ?? "";
         _model.GameStatus = multiplayerClientService.GameStatus ?? MultiplayerGameStatus.Created;
-        UpdatePlayerList();;
+        UpdatePlayerList();
     }
 
     private void MultiplayerClientServiceOnError(string error, Exception? exception)

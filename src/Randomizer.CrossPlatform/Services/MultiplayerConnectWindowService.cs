@@ -1,9 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using AvaloniaControls.Controls;
 using AvaloniaControls.ControlServices;
 using AvaloniaControls.Models;
@@ -12,11 +10,14 @@ using Randomizer.CrossPlatform.ViewModels;
 using Randomizer.CrossPlatform.Views;
 using Randomizer.Data.Options;
 using Randomizer.Multiplayer.Client;
-using Tmds.DBus.Protocol;
+using Dispatcher = Avalonia.Threading.Dispatcher;
 
 namespace Randomizer.CrossPlatform.Services;
 
-public class MultiplayerConnectWindowService(MultiplayerClientService multiplayerClientService, OptionsFactory optionsFactory, ILogger<MultiplayerConnectWindowService> logger) : ControlService, IDisposable
+public class MultiplayerConnectWindowService(
+    MultiplayerClientService multiplayerClientService,
+    OptionsFactory optionsFactory,
+    ILogger<MultiplayerConnectWindowService> logger) : ControlService, IDisposable
 {
     private static readonly Regex s_illegalCharacters = new(@"[^A-Z0-9\-]", RegexOptions.IgnoreCase);
     private MultiplayerConnectWindowViewModel _model = new();
@@ -93,6 +94,12 @@ public class MultiplayerConnectWindowService(MultiplayerClientService multiplaye
 
     private void DisplayError(string error)
     {
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Dispatcher.UIThread.Invoke(() => DisplayError(error));
+            return;
+        }
+
         var window = new MessageWindow(new MessageWindowRequest()
         {
             Message = error,
@@ -101,6 +108,10 @@ public class MultiplayerConnectWindowService(MultiplayerClientService multiplaye
             Buttons = MessageWindowButtons.OK
         });
         window.ShowDialog(_window);
+        if (_model.IsConnecting)
+        {
+            _model.IsConnecting = false;
+        }
     }
 
     private string GetVersion()

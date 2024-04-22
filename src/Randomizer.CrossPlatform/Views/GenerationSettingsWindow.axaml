@@ -50,13 +50,17 @@
                     Margin="5">
 
           <Button x:Name="SubmitConfigsButton"
-                  IsVisible="{Binding IsMultiplayer, Mode=OneTime}"
+                  IsVisible="{Binding IsMultiplayer}"
+                  Click="GenerateGameButton_OnClick"
                   Margin="0 0 8 0">_Submit Settings
           </Button>
 
           <StackPanel Grid.Column="1" Orientation="Horizontal"
                       HorizontalAlignment="Right">
-            <Button x:Name="GenerateGameButton" Click="GenerateGameButton_OnClick">_Generate</Button>
+            <Button x:Name="GenerateGameButton"
+                    IsVisible="{Binding IsSingleplayer}"
+                    Click="GenerateGameButton_OnClick"
+            >_Generate</Button>
             <Button x:Name="GenerateMenuButton"
                     MinWidth="0"
                     Width="23"

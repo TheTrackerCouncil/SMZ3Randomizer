@@ -1,4 +1,3 @@
-using System.Data.SqlTypes;
 using System.Linq;
 using Avalonia.Controls;
 using AvaloniaControls.Extensions;
@@ -6,8 +5,6 @@ using GitHubReleaseChecker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using MSURandomizer;
-using MSURandomizerLibrary;
-using NAudio.MediaFoundation;
 using Randomizer.Abstractions;
 using Randomizer.CrossPlatform.Services;
 using Randomizer.CrossPlatform.Views;
@@ -40,6 +37,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ITrackerStateService, TrackerStateService>();
         services.AddMultiplayerServices();
         services.AddSingleton<SpriteService>();
+        services.AddTransient<SharedCrossplatformService>();
 
         // Chat
         services.AddSingleton<IChatApi, TwitchChatAPI>();
