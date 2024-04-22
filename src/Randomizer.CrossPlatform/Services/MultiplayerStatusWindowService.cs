@@ -232,7 +232,7 @@ public class MultiplayerStatusWindowService(MultiplayerClientService multiplayer
         {
             Message = message, Title = "SMZ3 Cas' Randomizer", Icon = icon, Buttons = buttons
         });
-        window.ShowDialog(_window);
+        window.ShowDialog(_window.Owner ?? _window);
     }
 
     public void Dispose()

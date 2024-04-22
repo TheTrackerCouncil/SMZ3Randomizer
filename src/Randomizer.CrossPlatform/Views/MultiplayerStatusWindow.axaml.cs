@@ -20,10 +20,8 @@ public partial class MultiplayerStatusWindow : RestorableWindow
 
     }
 
-    public MultiplayerStatusWindow(MultiplayerRomViewModel rom, Window? owner = null)
+    public MultiplayerStatusWindow(MultiplayerRomViewModel rom)
     {
-        Owner = owner;
-
         if (Design.IsDesignMode)
         {
             _model = new MultiplayerStatusWindowViewModel();

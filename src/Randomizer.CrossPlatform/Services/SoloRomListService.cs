@@ -165,6 +165,12 @@ public class SoloRomListService(IRomGenerationService romGenerationService,
             }
 
             _parentWindow = (Window)TopLevel.GetTopLevel(_panel)!;
+
+            if (_parentWindow.Owner is Window window)
+            {
+                _parentWindow = window;
+            }
+
             return _parentWindow;
         }
     }

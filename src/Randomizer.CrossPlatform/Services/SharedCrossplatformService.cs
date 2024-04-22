@@ -162,7 +162,7 @@ public class SharedCrossplatformService(
             var trackerWindow = scope.ServiceProvider.GetRequiredService<TrackerWindow>();
             trackerWindow.Closed += (_, _) => scope.Dispose();
             trackerWindow.Rom = rom;
-            trackerWindow.Show();
+            trackerWindow.Show(ParentWindow);
         }
         catch (YamlDotNet.Core.SemanticErrorException ex)
         {
@@ -349,6 +349,12 @@ public class SharedCrossplatformService(
             else
             {
                 _parentWindow = TopLevel.GetTopLevel(ParentControl) as Window ?? MessageWindow.GlobalParentWindow ?? throw new InvalidOperationException();
+
+                if (_parentWindow.Owner is Window window)
+                {
+                    _parentWindow = window;
+                }
+
                 return _parentWindow;
             }
         }

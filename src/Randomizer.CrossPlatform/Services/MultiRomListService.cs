@@ -30,8 +30,8 @@ public class MultiRomListService(IGameDbService gameDbService, SharedCrossplatfo
 
     public void OpenStatusWindow(MultiplayerRomViewModel model)
     {
-        var window = new MultiplayerStatusWindow(model, ParentWindow);
-        window.Show();
+        var window = new MultiplayerStatusWindow(model);
+        window.Show(ParentWindow);
     }
 
     public async Task OpenConnectWindow(bool isCreate)
