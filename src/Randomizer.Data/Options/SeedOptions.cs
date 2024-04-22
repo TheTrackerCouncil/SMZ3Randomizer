@@ -17,11 +17,8 @@ namespace Randomizer.Data.Options
     /// </summary>
     public class SeedOptions
     {
-        [JsonIgnore]
+        [YamlIgnore]
         public string Seed { get; set; } = "";
-
-        [JsonIgnore]
-        public string ConfigString { get; set; } = "";
 
         public KeysanityMode KeysanityMode { get; set; } = KeysanityMode.None;
 
@@ -43,12 +40,6 @@ namespace Randomizer.Data.Options
         public int GanonCrystalCount { get; set; } = 7;
         public bool OpenPyramid { get; set; } = false;
         public int TourianBossCount { get; set; } = 4;
-
-        [JsonIgnore, YamlIgnore]
-        public int MaxHints => 15;
-
-        [JsonIgnore, YamlIgnore]
-        public bool CopySeedAndRaceSettings { get; set; }
 
         public IDictionary<LocationId, int> LocationItems { get; set; } = new Dictionary<LocationId, int>();
 

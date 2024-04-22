@@ -71,8 +71,8 @@ namespace Randomizer.Data.Options
         [DynamicFormFieldComboBox(label: "Zelda item drops:", groupName: "Bottom")]
         public ZeldaDrops ZeldaDrops { get; set; }
 
-        [DynamicFormFieldSlider(0, 18, label: "Hint tiles:", groupName: "Bottom")]
-        public int HintTiles { get; set; } = 18;
+        [DynamicFormFieldSlider(0, 15, label: "Hint tiles:", groupName: "Bottom")]
+        public int HintTiles { get; set; } = 15;
 
         public CasPatches Clone()
         {
