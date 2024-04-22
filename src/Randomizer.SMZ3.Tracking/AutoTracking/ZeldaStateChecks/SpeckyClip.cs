@@ -26,7 +26,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
                 { LinkX: >= 3650, LinkX: <= 3696, LinkY: >= 1864, LinkY: <= 1872, CurrentRoom: 55 };
             if (inCorrectLocation && prevInWall && nowBelowWall)
             {
-                tracker.Say(x => x.AutoTracker.SpeckyClip);
+                tracker.SayOnce(x => x.AutoTracker.SpeckyClip);
                 return true;
             }
             return false;
