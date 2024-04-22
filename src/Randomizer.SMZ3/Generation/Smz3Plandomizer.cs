@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Microsoft.Extensions.Logging;
+using Randomizer.Data.GeneratedData;
 using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;

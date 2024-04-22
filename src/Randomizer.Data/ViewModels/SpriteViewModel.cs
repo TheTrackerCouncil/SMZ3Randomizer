@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Randomizer.Data.Options;
 
-namespace Randomizer.App.ViewModels;
+namespace Randomizer.Data.ViewModels;
 
 public class SpriteViewModel : INotifyPropertyChanged
 {
@@ -30,7 +30,7 @@ public class SpriteViewModel : INotifyPropertyChanged
         PanelWidth = s_Widths[sprite.SpriteType];
         ImageWidth = s_ImageDimensions[sprite.SpriteType].Item1;
         ImageHeight = s_ImageDimensions[sprite.SpriteType].Item2;
-        CanFavoriteAndHide = true;
+        CanFavoriteAndHide = !sprite.IsRandomSprite;
     }
 
     public Sprite Sprite { get; }

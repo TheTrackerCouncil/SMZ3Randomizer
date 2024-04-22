@@ -14,7 +14,7 @@ public class ZeldaPrizesPatch : RomPatch
         const int prizePackItems = 56;
         const int treePullItems = 3;
 
-        var prizes = DropPrizes.GetPool(data.Config.ZeldaDrops, data.Random).Cast<byte>();
+        var prizes = DropPrizes.GetPool(data.Config.CasPatches.ZeldaDrops, data.Random).Cast<byte>();
 
         /* prize pack drop order */
         (var patch, prizes) = GetDropPatch(0x6FA78, prizes, data.PlandoConfig.ZeldaPrizes.EnemyDrops, prizePackItems);

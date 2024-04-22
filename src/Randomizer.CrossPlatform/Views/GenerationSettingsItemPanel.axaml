@@ -1,0 +1,75 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Randomizer.Data.ViewModels;assembly=Randomizer.Data"
+             xmlns:controls="clr-namespace:AvaloniaControls.Controls;assembly=AvaloniaControls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Randomizer.CrossPlatform.Views.GenerationSettingsItemPanel"
+             Loaded="Control_OnLoaded"
+             x:DataType="viewModels:GenerationWindowViewModel">
+  <StackPanel Orientation="Vertical">
+
+    <controls:CardControl HeaderText="Items" Padding="5">
+      <StackPanel>
+        <TabControl>
+          <TabItem Header="Zelda Items" >
+            <StackPanel Name="ZeldaItemsStackPanel" Margin="5">
+              <ItemsControl ItemsSource="{Binding Items.ZeldaItemOptions}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <controls:LabeledControl Text="{Binding Title}">
+                      <ComboBox ItemsSource="{Binding Options}"
+                                SelectedItem="{Binding SelectedOption}"
+                                DisplayMemberBinding="{Binding Display}"></ComboBox>
+                    </controls:LabeledControl>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </StackPanel>
+          </TabItem>
+          <TabItem Header="Metroid Items">
+            <StackPanel Name="MetroidItemsStackPanel" Margin="5">
+              <ItemsControl ItemsSource="{Binding Items.MetroidItemOptions}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <controls:LabeledControl Text="{Binding Title}">
+                      <ComboBox ItemsSource="{Binding Options}"
+                                SelectedItem="{Binding SelectedOption}"
+                                DisplayMemberBinding="{Binding Display}"></ComboBox>
+                    </controls:LabeledControl>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </StackPanel>
+          </TabItem>
+        </TabControl>
+        <Button Click="ResetItemsButton_OnClick" Name="ResetItemsButton" Margin="5">Reset All</Button>
+      </StackPanel>
+    </controls:CardControl>
+
+    <controls:CardControl HeaderText="Locations" Padding="5" Margin="0 5 0 0">
+      <StackPanel Orientation="Vertical">
+        <ComboBox Name="LocationsRegionFilter"
+                  ItemsSource="{Binding Items.Regions.Keys}"
+                  SelectedItem="{Binding Items.SelectedRegionName}"
+                  SelectionChanged="LocationsRegionFilter_OnSelectionChanged" Margin="0 0 0 5" />
+        <ItemsControl ItemsSource="{Binding Items.CurrentLocationOptions}" Margin="0 0 0 5">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <controls:LabeledControl Text="{Binding LocationName}">
+                <ComboBox ItemsSource="{Binding Options}"
+                          DisplayMemberBinding="{Binding Text}"
+                          SelectedItem="{Binding SelectedOption}"></ComboBox>
+              </controls:LabeledControl>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Button Content="Reset All"
+                Click="ResetAllLocationsButton_OnClick"
+                Name="ResetAllLocationsButton" />
+      </StackPanel>
+    </controls:CardControl>
+  </StackPanel>
+</UserControl>
+

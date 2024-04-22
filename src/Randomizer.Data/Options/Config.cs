@@ -185,7 +185,7 @@ namespace Randomizer.Data.Options
         public bool DisableLowEnergyBeep { get; set; } = false;
         public MenuSpeed MenuSpeed { get; set; } = MenuSpeed.Default;
         public bool CasualSMPatches { get; set; } = false;
-        public ZeldaDrops ZeldaDrops { get; set; } = ZeldaDrops.Randomized;
+        public ZeldaDrops? ZeldaDrops { get; set; }
         public bool GenerateSeedOnly { get; private set; } = false;
 
         public string LinkName { get; set; } = "Link";
@@ -209,7 +209,7 @@ namespace Randomizer.Data.Options
         public PlandoConfig? PlandoConfig { get; set; }
         public MultiplayerPlayerGenerationData? MultiplayerPlayerGenerationData { get; set; }
         public ItemPlacementRule ItemPlacementRule { get; set; }
-        public int UniqueHintCount { get; set; } = 8;
+        public int? UniqueHintCount { get; set; }
         public bool ZeldaKeysanity => KeysanityMode == KeysanityMode.Both || KeysanityMode == KeysanityMode.Zelda;
         public bool MetroidKeysanity => KeysanityMode == KeysanityMode.Both || KeysanityMode == KeysanityMode.SuperMetroid;
         public bool KeysanityForRegion(Region region) => KeysanityMode == KeysanityMode.Both || (region is Z3Region && ZeldaKeysanity) || (region is SMRegion && MetroidKeysanity);

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Randomizer.Data.Interfaces;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.FileData.Patches;
@@ -23,11 +24,12 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSmz3Randomizer();
             services.AddPlandomizer();
             services.AddSmz3MultiplayerRomGenerator();
-            services.AddSingleton<RomGenerationService>();
+            services.AddSingleton<IRomGenerationService, RomGenerationService>();
             services.AddSingleton<SpritePatcherService>();
             services.AddSingleton<RomTextService>();
             services.AddTransient<RomLauncherService>();
             services.AddTransient<PlaythroughService>();
+            services.AddTransient<IStatGenerator, StatGenerator>();
             return services;
         }
 

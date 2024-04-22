@@ -8,6 +8,8 @@ using Microsoft.Extensions.Logging;
 using MSURandomizerLibrary;
 using MSURandomizerLibrary.Models;
 using MSURandomizerLibrary.Services;
+using Randomizer.Data.GeneratedData;
+using Randomizer.Data.Interfaces;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Shared;
@@ -17,7 +19,7 @@ using Randomizer.SMZ3.FileData.IpsPatches;
 
 namespace Randomizer.SMZ3.Generation;
 
-public class RomGenerationService
+public class RomGenerationService : IRomGenerationService
 {
     private readonly RandomizerContext _dbContext;
     private readonly Smz3Randomizer _randomizer;
@@ -51,18 +53,6 @@ public class RomGenerationService
         _msuSelectorService = msuSelectorService;
         _msuTypeService = msuTypeService;
         _romTextService = romTextService;
-    }
-
-    /// <summary>
-    /// Generates a seed for a rom based on the given randomizer options
-    /// </summary>
-    /// <param name="options">The randomizer generation options</param>
-    /// <param name="seed">The string seed to use for generating the rom</param>
-    /// <returns>The seed data</returns>
-    private SeedData GenerateSeed(RandomizerOptions options, string? seed = null)
-    {
-        var config = options.ToConfig();
-        return _randomizer.GenerateSeed(config, seed ?? config.Seed, CancellationToken.None);
     }
 
     public SeedData GeneratePlandoSeed(RandomizerOptions options, PlandoConfig plandoConfig)
@@ -268,40 +258,6 @@ public class RomGenerationService
         return rom;
     }
 
-    private async Task<GeneratedRom?> GenerateRomInternalAsync(SeedData seed, RandomizerOptions options, MultiplayerGameDetails? multiplayerGameDetails)
-    {
-        var bytes = GenerateRomBytes(options, seed);
-        var config = seed.Playthrough.Config;
-        var safeSeed = seed.Seed.ReplaceAny(Path.GetInvalidFileNameChars(), '_');
-
-        var folderPath = Path.Combine(options.RomOutputPath, $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{safeSeed}");
-        Directory.CreateDirectory(folderPath);
-
-        // For BizHawk shuffler support, the file name is checked when running the BizHawk Auto Tracking Lua script
-        // If the fom file name is changed, make sure to update the BizHawk emulator.lua script and the LuaConnector
-        var fileSuffix = $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{safeSeed}";
-        var romFileName = $"SMZ3_Cas_{fileSuffix}.sfc";
-        var romPath = Path.Combine(folderPath, romFileName);
-        ApplyMsuOptions(options, romPath);
-        await File.WriteAllBytesAsync(romPath, bytes);
-
-        var spoilerPath = await _romTextService.WriteSpoilerLog(options, seed, config, folderPath, fileSuffix);
-        await _romTextService.WritePlandoConfig(seed, folderPath, fileSuffix);
-        _romTextService.PrepareAutoTrackerFiles(options);
-
-        var rom = await SaveSeedToDatabaseAsync(options, seed, romPath, spoilerPath, multiplayerGameDetails);
-
-        try
-        {
-            options.Save();
-        }
-        catch (Exception)
-        {
-            // Do nothing
-        }
-
-        return rom;
-    }
 
     /// <summary>
     /// Generates a plando ROM and returns details about the rom
@@ -336,6 +292,41 @@ public class RomGenerationService
         {
             Rom = results
         };
+    }
+
+    private async Task<GeneratedRom?> GenerateRomInternalAsync(SeedData seed, RandomizerOptions options, MultiplayerGameDetails? multiplayerGameDetails)
+    {
+        var bytes = GenerateRomBytes(options, seed);
+        var config = seed.Playthrough.Config;
+        var safeSeed = seed.Seed.ReplaceAny(Path.GetInvalidFileNameChars(), '_');
+
+        var folderPath = Path.Combine(options.RomOutputPath, $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{safeSeed}");
+        Directory.CreateDirectory(folderPath);
+
+        // For BizHawk shuffler support, the file name is checked when running the BizHawk Auto Tracking Lua script
+        // If the rom file name is changed, make sure to update the BizHawk emulator.lua script and the LuaConnector
+        var fileSuffix = $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{safeSeed}";
+        var romFileName = $"SMZ3_Cas_{fileSuffix}.sfc";
+        var romPath = Path.Combine(folderPath, romFileName);
+        ApplyMsuOptions(options, romPath);
+        await File.WriteAllBytesAsync(romPath, bytes);
+
+        var spoilerPath = await _romTextService.WriteSpoilerLog(options, seed, config, folderPath, fileSuffix);
+        await _romTextService.WritePlandoConfig(seed, folderPath, fileSuffix);
+        _romTextService.PrepareAutoTrackerFiles(options);
+
+        var rom = await SaveSeedToDatabaseAsync(options, seed, romPath, spoilerPath, multiplayerGameDetails);
+
+        try
+        {
+            options.Save();
+        }
+        catch (Exception)
+        {
+            // Do nothing
+        }
+
+        return rom;
     }
 
     /// <summary>
@@ -377,7 +368,7 @@ public class RomGenerationService
         return rom;
     }
 
-    public bool ApplyMsuOptions(RandomizerOptions options, string romPath)
+    private bool ApplyMsuOptions(RandomizerOptions options, string romPath)
     {
         if (!options.PatchOptions.MsuPaths.Any())
         {
@@ -427,5 +418,18 @@ public class RomGenerationService
         }
 
         return true;
+    }
+
+
+    /// <summary>
+    /// Generates a seed for a rom based on the given randomizer options
+    /// </summary>
+    /// <param name="options">The randomizer generation options</param>
+    /// <param name="seed">The string seed to use for generating the rom</param>
+    /// <returns>The seed data</returns>
+    private SeedData GenerateSeed(RandomizerOptions options, string? seed = null)
+    {
+        var config = options.ToConfig();
+        return _randomizer.GenerateSeed(config, seed ?? config.Seed, CancellationToken.None);
     }
 }

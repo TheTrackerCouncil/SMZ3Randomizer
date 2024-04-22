@@ -125,8 +125,7 @@ namespace Randomizer.Data.Options
         public MenuSpeed MenuSpeed { get; set; }
             = MenuSpeed.Default;
 
-        public ZeldaDrops ZeldaDrops { get; set; }
-            = ZeldaDrops.Randomized;
+        public ZeldaDrops? ZeldaDrops { get; set; }
 
         public bool DisableLowEnergyBeep { get; set; }
 

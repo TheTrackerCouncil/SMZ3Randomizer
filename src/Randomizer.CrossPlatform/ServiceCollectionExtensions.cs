@@ -1,7 +1,13 @@
+using System.Linq;
+using Avalonia.Controls;
+using AvaloniaControls.Extensions;
 using GitHubReleaseChecker;
 using Microsoft.Extensions.DependencyInjection;
-using MSURandomizerLibrary;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using MSURandomizer;
 using Randomizer.Abstractions;
+using Randomizer.CrossPlatform.Services;
+using Randomizer.CrossPlatform.Views;
 using Randomizer.Data.Configuration;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
@@ -31,6 +37,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ITrackerStateService, TrackerStateService>();
         services.AddMultiplayerServices();
         services.AddSingleton<SpriteService>();
+        services.AddTransient<SharedCrossplatformService>();
 
         // Chat
         services.AddSingleton<IChatApi, TwitchChatAPI>();
@@ -38,7 +45,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IChatAuthenticationService, TwitchAuthenticationService>();
 
         // MSU Randomizer
-        services.AddMsuRandomizerServices();
+        services.AddMsuRandomizerAppServices();
 
         // Misc
         services.AddGitHubReleaseCheckerServices();
@@ -47,9 +54,27 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IGitHubConfigDownloaderService, GitHubConfigDownloaderService>();
         services.AddTransient<IGitHubSpriteDownloaderService, GitHubSpriteDownloaderService>();
         services.AddSingleton<OptionsFactory>();
+        services.AddSingleton<IMicrophoneService, NullMicrophoneService>();
 
-        // Console
-        services.AddTransient<ConsoleTrackerDisplayService>();
+        services.AddAvaloniaControlServices<Program>();
+        services.AddWindows<Program>();
+        services.AddTransient<OptionsWindowService>();
+        services.AddTransient<SoloRomListPanel>();
+        services.AddTransient<MultiRomListPanel>();
+        services.AddTransient<GenerationSettingsWindowService>();
+
+        return services;
+    }
+
+    public static IServiceCollection AddWindows<TAssembly>(this IServiceCollection services)
+    {
+        var windowTypes = typeof(TAssembly).Assembly.GetTypes()
+            .Where(x => x.IsSubclassOf(typeof(Window)));
+
+        foreach (var windowType in windowTypes)
+        {
+            services.TryAddTransient(windowType);
+        }
 
         return services;
     }

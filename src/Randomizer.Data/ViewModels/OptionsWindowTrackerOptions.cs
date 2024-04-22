@@ -12,52 +12,52 @@ namespace Randomizer.Data.ViewModels;
 [DynamicFormGroupBasic(DynamicFormLayout.TwoColumns, "Bottom")]
 public class OptionsWindowTrackerOptions
 {
-    [DynamicFormFieldColorPicker(labelText: "Tracker background color:")]
+    [DynamicFormFieldColorPicker(label: "Tracker background color:")]
     public byte[] TrackerBGColor { get; set; } = [0xFF, 0x21, 0x21, 0x21];
 
     [DynamicFormFieldCheckBox(checkBoxText: "Render shadows", alignment: DynamicFormAlignment.Right)]
     public bool TrackerShadows { get; set; } = true;
 
-    [DynamicFormFieldSlider(minimumValue: 0, maximumValue:100, decimalPlaces:1, incrementAmount:.1, suffix:"%", labelText: "Tracker recognition threshold:", platforms: DynamicFormPlatform.Windows)]
+    [DynamicFormFieldSlider(minimumValue: 0, maximumValue:100, decimalPlaces:1, incrementAmount:.1, suffix:"%", label: "Tracker recognition threshold:", platforms: DynamicFormPlatform.Windows)]
     public float TrackerRecognitionThreshold { get; set; }
 
-    [DynamicFormFieldSlider(minimumValue: 0, maximumValue:100, decimalPlaces:1, incrementAmount:.1, suffix:"%", labelText: "Tracker execution threshold:", platforms: DynamicFormPlatform.Windows)]
+    [DynamicFormFieldSlider(minimumValue: 0, maximumValue:100, decimalPlaces:1, incrementAmount:.1, suffix:"%", label: "Tracker execution threshold:", platforms: DynamicFormPlatform.Windows)]
     public float TrackerConfidenceThreshold { get; set; }
 
-    [DynamicFormFieldSlider(minimumValue: 0, maximumValue:100, decimalPlaces:1, incrementAmount:.1, suffix:"%", labelText: "Tracker spoiler threshold:", platforms: DynamicFormPlatform.Windows)]
+    [DynamicFormFieldSlider(minimumValue: 0, maximumValue:100, decimalPlaces:1, incrementAmount:.1, suffix:"%", label: "Tracker spoiler threshold:", platforms: DynamicFormPlatform.Windows)]
     public float TrackerConfidenceSassThreshold { get; set; }
 
-    [DynamicFormFieldComboBox(labelText: "Tracker voice frequency:", platforms: DynamicFormPlatform.Windows)]
+    [DynamicFormFieldComboBox(label: "Tracker voice frequency:", platforms: DynamicFormPlatform.Windows)]
     public TrackerVoiceFrequency TrackerVoiceFrequency { get; set; }
 
-    [DynamicFormFieldComboBox(labelText: "Speech recognition mode:", platforms: DynamicFormPlatform.Windows)]
+    [DynamicFormFieldComboBox(label: "Speech recognition mode:", platforms: DynamicFormPlatform.Windows)]
     public SpeechRecognitionMode SpeechRecognitionMode { get; set; }
 
-    [DynamicFormFieldComboBox(labelText: "Push-to-talk key:", platforms: DynamicFormPlatform.Windows)]
+    [DynamicFormFieldComboBox(label: "Push-to-talk key:", platforms: DynamicFormPlatform.Windows)]
     public PushToTalkKey PushToTalkKey { get; set; }
 
-    [DynamicFormFieldComboBox(labelText: "Push-to-talk device:", comboBoxOptionsProperty: nameof(AudioDevices), platforms: DynamicFormPlatform.Windows)]
+    [DynamicFormFieldComboBox(label: "Push-to-talk device:", comboBoxOptionsProperty: nameof(AudioDevices), platforms: DynamicFormPlatform.Windows)]
     public string PushToTalkDevice { get; set; } = "";
 
-    [DynamicFormFieldNumericUpDown(minValue: 0, labelText: "Undo expiration time:", platforms: DynamicFormPlatform.Windows)]
+    [DynamicFormFieldNumericUpDown(minValue: 0, label: "Undo expiration time:", platforms: DynamicFormPlatform.Windows)]
     public int UndoExpirationTime { get; set; } = 3;
 
-    [DynamicFormFieldFilePicker(FilePickerType.Folder, labelText: "Auto tracker scripts folder:", dialogText: "Select auto tracker scripts folder")]
+    [DynamicFormFieldFilePicker(FilePickerType.Folder, label: "Auto tracker scripts folder:", dialogText: "Select auto tracker scripts folder")]
     public string AutoTrackerScriptsOutputPath { get; set; } = "";
 
-    [DynamicFormFieldComboBox(labelText: "Auto tracker default connection:")]
+    [DynamicFormFieldComboBox(label: "Auto tracker default connection:")]
     public SnesConnectorType ConnectorType { get; set; }
 
-    [DynamicFormFieldTextBox(labelText: "QUSB2SNES IP address:")]
+    [DynamicFormFieldTextBox(label: "QUSB2SNES IP address:")]
     public string Usb2SnesAddress { get; set; } = "";
 
-    [DynamicFormFieldTextBox(labelText: "SNI IP address:")]
+    [DynamicFormFieldTextBox(label: "SNI IP address:")]
     public string SniAddress { get; set; } = "";
 
-    [DynamicFormFieldComboBox(labelText: "Current song display style:")]
+    [DynamicFormFieldComboBox(label: "Current song display style:")]
     public TrackDisplayFormat TrackDisplayFormat { get; set; } = TrackDisplayFormat.Vertical;
 
-    [DynamicFormFieldFilePicker(FilePickerType.OpenFile, labelText: "Current song output path:", dialogText: "Select song output file")]
+    [DynamicFormFieldFilePicker(FilePickerType.OpenFile, label: "Current song output path:", dialogText: "Select song output file")]
     public string? MsuTrackOutputPath { get; set; } = "";
 
     [DynamicFormFieldCheckBox(checkBoxText: "Auto tracker updates map automatically", groupName: "Bottom")]

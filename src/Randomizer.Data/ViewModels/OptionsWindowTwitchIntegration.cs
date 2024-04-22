@@ -18,21 +18,21 @@ public class OptionsWindowTwitchIntegration : INotifyPropertyChanged
     private string? _twitchChannel;
     private string? _twitchId;
 
-    [DynamicFormFieldTextBox(labelText: "Twitch user name:", order: 0, editableWhenTrue: nameof(CanEditTwitchText))]
+    [DynamicFormFieldTextBox(label: "Twitch user name:", order: 0, editableWhenTrue: nameof(CanEditTwitchText))]
     public string? TwitchUserName
     {
         get => _twitchUserName;
         set => SetField(ref _twitchUserName, value);
     }
 
-    [DynamicFormFieldTextBox(labelText: "Twitch channel:", order: 10, editableWhenTrue: nameof(CanEditTwitchText))]
+    [DynamicFormFieldTextBox(label: "Twitch channel:", order: 10, editableWhenTrue: nameof(CanEditTwitchText))]
     public string? TwitchChannel
     {
         get => _twitchChannel;
         set => SetField(ref _twitchChannel, value);
     }
 
-    [DynamicFormFieldTextBox(labelText: "Twitch id:", order: 20, editableWhenTrue: nameof(CanEditTwitchText))]
+    [DynamicFormFieldTextBox(label: "Twitch id:", order: 20, editableWhenTrue: nameof(CanEditTwitchText))]
     public string? TwitchId
     {
         get => _twitchId;
@@ -56,16 +56,16 @@ public class OptionsWindowTwitchIntegration : INotifyPropertyChanged
         set => SetField(ref _twitchStatusText, value);
     }
 
-    [DynamicFormFieldCheckBox("Enable responding to chat", labelText: "Chat functionality:", order: 50)]
+    [DynamicFormFieldCheckBox("Enable responding to chat", label: "Chat functionality:", order: 50)]
     public bool EnableChatGreeting { get; set; }
 
     [DynamicFormFieldCheckBox("Enable poll creation", order: 60)]
     public bool EnablePollCreation { get; set; }
 
-    [DynamicFormFieldNumericUpDown(minValue: 0, labelText: "Chat response time limit (in minutes):", groupName: "Bottom", order: 70)]
+    [DynamicFormFieldNumericUpDown(minValue: 0, label: "Chat response time limit (in minutes):", groupName: "Bottom", order: 70)]
     public int ChatGreetingTimeLimit { get; set; }
 
-    [DynamicFormFieldComboBox(labelText: "GT guessing game style:", order: 80)]
+    [DynamicFormFieldComboBox(label: "GT guessing game style:", order: 80)]
     public GanonsTowerGuessingGameStyle GanonsTowerGuessingGameStyle { get; set; }
 
     public bool IsLoggedIn

@@ -1,0 +1,28 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Randomizer.CrossPlatform.App"
+             xmlns:local="using:Randomizer.CrossPlatform"
+             xmlns:converters="clr-namespace:AvaloniaControls.Converters;assembly=AvaloniaControls"
+             RequestedThemeVariant="Dark">
+             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <Application.DataTemplates>
+        <local:ViewLocator/>
+    </Application.DataTemplates>
+
+    <Application.Resources>
+        <ResourceDictionary x:Key="">
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://AvaloniaControls/Themes/Resources.axaml"></ResourceInclude>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+      <local:StringToImageConverter x:Key="StringToImageConverter" />
+      <converters:TypeConverter x:Key="TypeConverter" />
+      <converters:BoolToStringConverter x:Key="BoolToStringConverter"></converters:BoolToStringConverter>
+    </Application.Resources>
+
+    <Application.Styles>
+        <SimpleTheme />
+        <StyleInclude Source="avares://AvaloniaControls/Themes/Themes.axaml"></StyleInclude>
+    </Application.Styles>
+</Application>

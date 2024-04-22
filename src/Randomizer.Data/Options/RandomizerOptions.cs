@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -60,14 +59,7 @@ namespace Randomizer.Data.Options
         [JsonIgnore, YamlIgnore]
         public string? FilePath { get; set; }
 
-        public bool EarlyItemsExpanded { get; set; } = false;
-
-        public bool CustomizationExpanded { get; set; } = false;
-        public bool LocationExpanded { get; set; } = false;
-        public bool LogicExpanded { get; set; } = false;
-
-        public bool CommonExpanded { get; set; } = false;
-        public bool MetroidControlsExpanded { get; set; } = false;
+        public bool IsAdvancedMode { get; set; }
 
         public double WindowWidth { get; set; } = 500d;
 
@@ -154,105 +146,52 @@ namespace Randomizer.Data.Options
                 return;
             }
 
-            var serializer = new YamlDotNet.Serialization.Serializer();
+            var serializer = new Serializer();
             var yamlText = serializer.Serialize(this);
             File.WriteAllText(path, yamlText);
         }
 
         public Config ToConfig()
         {
-            if (string.IsNullOrWhiteSpace(SeedOptions.ConfigString)) {
-                var config = new Config()
-                {
-                    GameMode = GameMode.Normal,
-                    KeysanityMode = SeedOptions.KeysanityMode,
-                    Race = SeedOptions.Race,
-                    ItemPlacementRule = SeedOptions.ItemPlacementRule,
-                    DisableSpoilerLog = SeedOptions.DisableSpoilerLog,
-                    DisableTrackerHints = SeedOptions.DisableTrackerHints,
-                    DisableTrackerSpoilers = SeedOptions.DisableTrackerSpoilers,
-                    DisableCheats = SeedOptions.DisableCheats,
-                    ExtendedMsuSupport = PatchOptions.CanEnableExtendedSoundtrack && PatchOptions.EnableExtendedSoundtrack,
-                    ShuffleDungeonMusic = PatchOptions.ShuffleDungeonMusic,
-                    HeartColor = PatchOptions.HeartColor,
-                    LowHealthBeepSpeed = PatchOptions.LowHealthBeepSpeed,
-                    DisableLowEnergyBeep = PatchOptions.DisableLowEnergyBeep,
-                    CasualSMPatches = PatchOptions.CasualSuperMetroidPatches,
-                    MenuSpeed = PatchOptions.MenuSpeed,
-                    LocationItems = SeedOptions.LocationItems,
-                    LogicConfig = LogicConfig.Clone(),
-                    CasPatches = PatchOptions.CasPatches.Clone(),
-                    CopySeedAndRaceSettings = true,
-                    Seed = SeedOptions.Seed,
-                    UniqueHintCount = SeedOptions.UniqueHintCount,
-                    GanonsTowerCrystalCount = SeedOptions.GanonsTowerCrystalCount,
-                    GanonCrystalCount = SeedOptions.GanonCrystalCount,
-                    OpenPyramid = SeedOptions.OpenPyramid,
-                    TourianBossCount = SeedOptions.TourianBossCount,
-                    MetroidControls = PatchOptions.MetroidControls.Clone(),
-                    ItemOptions = SeedOptions.ItemOptions,
-                    ZeldaDrops = PatchOptions.ZeldaDrops
-                };
-                return config;
-            }
-            else
+            if (SeedOptions.UniqueHintCount != null)
             {
-                var oldConfig = Config.FromConfigString(SeedOptions.ConfigString).First();
-
-                var race = SeedOptions.Race;
-                var disableSpoilerLog = SeedOptions.DisableSpoilerLog;
-                var disableTrackerHints = SeedOptions.DisableTrackerHints;
-                var disableTrackerSpoilers = SeedOptions.DisableTrackerSpoilers;
-                var disableCheats = SeedOptions.DisableCheats;
-                var casPatches = PatchOptions.CasPatches.Clone();
-                var seed = SeedOptions.Seed;
-                var zeldaDrops = PatchOptions.ZeldaDrops;
-
-                if (SeedOptions.CopySeedAndRaceSettings)
-                {
-                    race = oldConfig.Race;
-                    disableSpoilerLog = oldConfig.DisableSpoilerLog;
-                    disableTrackerHints = oldConfig.DisableTrackerHints;
-                    disableTrackerSpoilers = oldConfig.DisableTrackerSpoilers;
-                    disableCheats = oldConfig.DisableCheats;
-                    casPatches = oldConfig.CasPatches;
-                    seed = oldConfig.Seed;
-                    zeldaDrops = oldConfig.ZeldaDrops;
-                }
-
-                return new Config()
-                {
-                    GameMode = GameMode.Normal,
-                    KeysanityMode = oldConfig.KeysanityMode,
-                    ItemPlacementRule = oldConfig.ItemPlacementRule,
-                    Race = race,
-                    DisableSpoilerLog = disableSpoilerLog,
-                    DisableTrackerHints = disableTrackerHints,
-                    DisableTrackerSpoilers = disableTrackerSpoilers,
-                    DisableCheats = disableCheats,
-                    Seed = seed,
-                    ExtendedMsuSupport = PatchOptions.CanEnableExtendedSoundtrack && PatchOptions.EnableExtendedSoundtrack,
-                    ShuffleDungeonMusic = PatchOptions.ShuffleDungeonMusic,
-                    HeartColor = PatchOptions.HeartColor,
-                    LowHealthBeepSpeed = PatchOptions.LowHealthBeepSpeed,
-                    DisableLowEnergyBeep = PatchOptions.DisableLowEnergyBeep,
-                    CasualSMPatches = PatchOptions.CasualSuperMetroidPatches,
-                    MenuSpeed = PatchOptions.MenuSpeed,
-                    LocationItems = oldConfig.LocationItems,
-                    LogicConfig = oldConfig.LogicConfig,
-                    CasPatches = casPatches,
-                    SettingsString = SeedOptions.ConfigString,
-                    UniqueHintCount = oldConfig.UniqueHintCount,
-                    CopySeedAndRaceSettings = SeedOptions.CopySeedAndRaceSettings,
-                    GanonsTowerCrystalCount = oldConfig.GanonsTowerCrystalCount,
-                    GanonCrystalCount = oldConfig.GanonCrystalCount,
-                    OpenPyramid = oldConfig.OpenPyramid,
-                    TourianBossCount = oldConfig.TourianBossCount,
-                    MetroidControls = PatchOptions.MetroidControls.Clone(),
-                    ItemOptions = oldConfig.ItemOptions,
-                    ZeldaDrops = zeldaDrops
-                };
+                PatchOptions.CasPatches.HintTiles = SeedOptions.UniqueHintCount.Value;
             }
+
+            if (PatchOptions.ZeldaDrops != null)
+            {
+                PatchOptions.CasPatches.ZeldaDrops = PatchOptions.ZeldaDrops.Value;
+            }
+
+            return new Config()
+            {
+                GameMode = GameMode.Normal,
+                KeysanityMode = SeedOptions.KeysanityMode,
+                Race = SeedOptions.Race,
+                ItemPlacementRule = SeedOptions.ItemPlacementRule,
+                DisableSpoilerLog = SeedOptions.DisableSpoilerLog,
+                DisableTrackerHints = SeedOptions.DisableTrackerHints,
+                DisableTrackerSpoilers = SeedOptions.DisableTrackerSpoilers,
+                DisableCheats = SeedOptions.DisableCheats,
+                ExtendedMsuSupport = PatchOptions.CanEnableExtendedSoundtrack && PatchOptions.EnableExtendedSoundtrack,
+                ShuffleDungeonMusic = PatchOptions.ShuffleDungeonMusic,
+                HeartColor = PatchOptions.HeartColor,
+                LowHealthBeepSpeed = PatchOptions.LowHealthBeepSpeed,
+                DisableLowEnergyBeep = PatchOptions.DisableLowEnergyBeep,
+                CasualSMPatches = PatchOptions.CasualSuperMetroidPatches,
+                MenuSpeed = PatchOptions.MenuSpeed,
+                LocationItems = SeedOptions.LocationItems,
+                LogicConfig = LogicConfig.Clone(),
+                CasPatches = PatchOptions.CasPatches.Clone(),
+                CopySeedAndRaceSettings = true,
+                Seed = SeedOptions.Seed,
+                GanonsTowerCrystalCount = SeedOptions.GanonsTowerCrystalCount,
+                GanonCrystalCount = SeedOptions.GanonCrystalCount,
+                OpenPyramid = SeedOptions.OpenPyramid,
+                TourianBossCount = SeedOptions.TourianBossCount,
+                MetroidControls = PatchOptions.MetroidControls.Clone(),
+                ItemOptions = SeedOptions.ItemOptions,
+            };
         }
 
         public RandomizerOptions Clone()

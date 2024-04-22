@@ -19,21 +19,21 @@ public class OptionsWindowRandomizerOptions : INotifyPropertyChanged
     private string? _msuPath;
     private bool _displayMsuWarning;
 
-    [DynamicFormFieldFilePicker(FilePickerType.OpenFile, labelText: "ALttP Japanese v1.0 ROM (required):",
+    [DynamicFormFieldFilePicker(FilePickerType.OpenFile, label: "ALttP Japanese v1.0 ROM (required):",
         groupName: "Top", filter: "SNES ROMs (*.sfc, *.smc)|*.sfc;*.smc|All files (*.*)|*.*",
         dialogText: "Select 'A Link to the Past' ROM",
         checkSum: "03a63945398191337e896e5771f77173",
         checkSumError: "The rom selected does not appear to be a valid ALttP Japanese v1.0 ROM. Generated SMZ3 ROMs may not work as expected. Do you still wish to use it?")]
     public string? Z3RomPath { get; set; } = "";
 
-    [DynamicFormFieldFilePicker(FilePickerType.OpenFile, labelText: "Super Metroid Japanese/US ROM (required):",
+    [DynamicFormFieldFilePicker(FilePickerType.OpenFile, label: "Super Metroid Japanese/US ROM (required):",
         groupName: "Top", filter: "SNES ROMs (*.sfc, *.smc)|*.sfc;*.smc|All files (*.*)|*.*",
         dialogText: "Select 'Super Metroid' ROM",
         checkSum: "21f3e98df4780ee1c667b84e57d88675",
         checkSumError: "The rom selected does not appear to be a valid Super Metroid Japanese/US ROM. Generated SMZ3 ROMs may not work as expected. Do you still wish to use it?")]
     public string? SMRomPath { get; set; } = "";
 
-    [DynamicFormFieldFilePicker(FilePickerType.Folder, labelText: "ROM output folder:", groupName: "Top",
+    [DynamicFormFieldFilePicker(FilePickerType.Folder, label: "ROM output folder:", groupName: "Top",
         dialogText: "Select ROM output folder")]
     public string RomOutputPath
     {
@@ -45,7 +45,7 @@ public class OptionsWindowRandomizerOptions : INotifyPropertyChanged
         }
     }
 
-    [DynamicFormFieldFilePicker(FilePickerType.Folder, labelText: "MSU parent folder:", groupName: "Top",
+    [DynamicFormFieldFilePicker(FilePickerType.Folder, label: "MSU parent folder:", groupName: "Top",
         dialogText: "Select MSU parent folder")]
     public string? MsuPath
     {
@@ -67,14 +67,17 @@ public class OptionsWindowRandomizerOptions : INotifyPropertyChanged
         set => SetField(ref _displayMsuWarning, value);
     }
 
-    [DynamicFormFieldComboBox(labelText: "Launch button behavior:", groupName: "Top")]
+    [DynamicFormFieldComboBox(label: "Launch button behavior:", groupName: "Top")]
     public LaunchButtonOptions LaunchButtonOption { get; set; }
 
-    [DynamicFormFieldTextBox(labelText: "Launch application:")]
+    [DynamicFormFieldTextBox(label: "Launch application:")]
     public string? LaunchApplication { get; set; } = "";
 
-    [DynamicFormFieldTextBox(labelText: "Launch arguments:")]
+    [DynamicFormFieldTextBox(label: "Launch arguments:")]
     public string? LaunchArguments { get; set; } = "";
+
+    [DynamicFormFieldSlider(1, 3, decimalPlaces: 1, incrementAmount: 0.1, label: "UI scaling:", platforms: DynamicFormPlatform.Linux)]
+    public double UIScaleFactor { get; set; } = 1;
 
     [DynamicFormFieldCheckBox(checkBoxText: "Check for updates on startup", groupName: "Bottom left")]
     public bool CheckForUpdatesOnStartup { get; set; }

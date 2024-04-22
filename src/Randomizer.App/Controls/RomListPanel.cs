@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Randomizer.App.Windows;
+using Randomizer.Data.Interfaces;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Shared.Models;
@@ -26,7 +27,7 @@ namespace Randomizer.App.Controls
         public RomListPanel(IServiceProvider serviceProvider,
             OptionsFactory optionsFactory,
             ILogger<RomListPanel> logger,
-            RomGenerationService romGenerationService,
+            IRomGenerationService romGenerationService,
             IGameDbService gameDbService,
             RomLauncherService romLauncherService)
         {
@@ -62,7 +63,7 @@ namespace Randomizer.App.Controls
 
         protected virtual bool CanStartTracker { get; private set; }
 
-        protected virtual RomGenerationService RomGenerationService { get; private set; }
+        protected virtual IRomGenerationService RomGenerationService { get; private set; }
 
         public RandomizerOptions Options { get; private set; }
 
@@ -276,11 +277,20 @@ namespace Randomizer.App.Controls
         public bool ShowGenerateRomWindow(PlandoConfig? plandoConfig, bool isMulti)
         {
             using var scope = ServiceProvider.CreateScope();
-            var generateWindow = scope.ServiceProvider.GetRequiredService<GenerateRomWindow>();
+
+            var generateWindow = scope.ServiceProvider.GetRequiredService<GenerationSettingsWindow>();
             generateWindow.Owner = Window.GetWindow(this);
-            generateWindow.Options = Options;
-            generateWindow.PlandoConfig = plandoConfig;
-            generateWindow.MultiplayerMode = isMulti;
+
+            if (plandoConfig != null)
+            {
+                generateWindow.SetPlandoConfig(plandoConfig);
+            }
+
+            if (isMulti)
+            {
+                generateWindow.SetMultiplayerEnabled();
+            }
+
             var successful = generateWindow.ShowDialog();
             return successful.HasValue && successful.Value;
         }
@@ -294,5 +304,6 @@ namespace Randomizer.App.Controls
         {
             return MessageBox.Show(Window.GetWindow(this)!, message, "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+
     }
 }

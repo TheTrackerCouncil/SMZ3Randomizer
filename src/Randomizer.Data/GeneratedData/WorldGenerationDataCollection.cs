@@ -2,7 +2,7 @@
 using System.Linq;
 using Randomizer.Data.WorldData;
 
-namespace Randomizer.SMZ3.Generation;
+namespace Randomizer.Data.GeneratedData;
 
 /// <summary>
 /// Class for generating a series of worlds

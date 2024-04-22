@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Randomizer.Data.Configuration;
 using Randomizer.Data.Configuration.ConfigFiles;
+using Randomizer.Data.GeneratedData;
 using Randomizer.Data.Services;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
@@ -93,7 +94,7 @@ namespace Randomizer.SMZ3.Generation
         /// <returns>A collection of strings to use for the in game hints</returns>
         public void GetInGameHints(World hintPlayerWorld, List<World> allWorlds, Playthrough playthrough, int seed)
         {
-            if (hintPlayerWorld.Config.UniqueHintCount <= 0 || _hintTileConfig.HintTiles == null)
+            if (hintPlayerWorld.Config.CasPatches.HintTiles <= 0 || _hintTileConfig.HintTiles == null)
             {
                 return;
             }
@@ -113,7 +114,7 @@ namespace Randomizer.SMZ3.Generation
             var selectedHints = new List<PlayerHintTile>();
 
             // Get the number of requested hints
-            while (selectedHints.Count < hintPlayerWorld.Config.UniqueHintCount && allHints.Any())
+            while (selectedHints.Count < hintPlayerWorld.Config.CasPatches.HintTiles && allHints.Any())
             {
                 var hint = allHints.First();
                 allHints.Remove(hint);

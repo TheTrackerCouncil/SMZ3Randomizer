@@ -1,223 +1,124 @@
-﻿using System.Diagnostics;
+﻿using Avalonia;
+using Avalonia.ReactiveUI;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
+using Avalonia.Threading;
+using AvaloniaControls.Controls;
+using AvaloniaControls.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using MSURandomizer.Services;
 using MSURandomizerLibrary.Models;
 using MSURandomizerLibrary.Services;
-using Randomizer.Data.Options;
-using Randomizer.Data.Services;
-using Randomizer.SMZ3.Generation;
-using Randomizer.SMZ3.Infrastructure;
 using Serilog;
 
 namespace Randomizer.CrossPlatform;
 
-public static class Program
+sealed class Program
 {
-    private static ServiceProvider s_services = null!;
+    internal static IHost? MainHost { get; private set; }
 
+    // Initialization code. Don't use any Avalonia, third-party APIs or any
+    // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
+    // yet and stuff might break.
+    [STAThread]
     public static void Main(string[] args)
     {
-        Log.Logger = new LoggerConfiguration()
+        var loggerConfiguration = new LoggerConfiguration();
+
+#if DEBUG
+        loggerConfiguration = loggerConfiguration.MinimumLevel.Debug();
+#else
+        loggerConfiguration = args.Contains("-d")
+            ? loggerConfiguration.MinimumLevel.Debug()
+            : loggerConfiguration.MinimumLevel.Information();
+#endif
+
+        Log.Logger = loggerConfiguration
             .Enrich.FromLogContext()
+            .WriteTo.File(Directories.LogPath, rollingInterval: RollingInterval.Day, retainedFileCountLimit: 30)
+#if DEBUG
             .WriteTo.Debug()
-            .WriteTo.File(LogPath, rollingInterval: RollingInterval.Day, retainedFileCountLimit: 30)
+            .WriteTo.Console()
+#endif
             .CreateLogger();
 
-        s_services = new ServiceCollection()
-            .AddLogging(logging =>
+        MainHost = Host.CreateDefaultBuilder(args)
+            .UseSerilog()
+            .ConfigureLogging(logging =>
             {
                 logging.AddSerilog(dispose: true);
             })
-            .ConfigureServices()
-            .BuildServiceProvider();
-
-        InitializeMsuRandomizer(s_services.GetRequiredService<IMsuRandomizerInitializationService>());
-
-        var optionsFile = new FileInfo("randomizer-options.yml");
-        var randomizerOptions = s_services.GetRequiredService<OptionsFactory>().LoadFromFile(optionsFile.FullName, optionsFile.FullName, true);
-
-        var configSource = randomizerOptions.GeneralOptions.ConfigSources.FirstOrDefault();
-        if (configSource == null)
-        {
-            configSource = new ConfigSource() { Owner = "TheTrackerCouncil", Repo = "SMZ3CasConfigs" };
-            randomizerOptions.GeneralOptions.ConfigSources.Add(configSource);
-        }
-        s_services.GetRequiredService<IGitHubConfigDownloaderService>()
-            .DownloadFromSourceAsync(configSource).Wait();
-
-        s_services.GetRequiredService<IGitHubSpriteDownloaderService>()
-            .DownloadSpritesAsync("TheTrackerCouncil", "SMZ3CasSprites").Wait();
-
-        randomizerOptions.Save();
-        var launcher = s_services.GetRequiredService<RomLauncherService>();
-
-        if (!ValidateRandomizerOptions(randomizerOptions))
-        {
-            return;
-        }
-
-        Console.WriteLine($"Using Randomizer Options file at {optionsFile.FullName}");
-
-        var result = DisplayMenu("What do you want to do?", new List<string>()
-        {
-            "Generate & Play a Rom",
-            "Play a Rom",
-            "Delete Rom(s)"
-        });
-
-        if (result == null)
-        {
-            return;
-        }
-
-        // Generates a new rom
-        if (result.Value.Item1 == 0)
-        {
-            // Allow the user to select an MSU
-            if (!string.IsNullOrEmpty(randomizerOptions.GeneralOptions.MsuPath))
+            .ConfigureServices(services =>
             {
-                var msus = s_services.GetRequiredService<IMsuLookupService>().LookupMsus(randomizerOptions.GeneralOptions.MsuPath)
-                    .Where(x => x.ValidTracks.Count > 10).ToList();
+                services.ConfigureServices();
+            })
+            .Build();
 
-                result = DisplayMenu("Which msu do you want to use?",
-                    msus.Select(x => $"{x.Name} ({x.MsuTypeName})").ToList());
-                if (result != null)
-                {
-                    randomizerOptions.PatchOptions.MsuPaths = new List<string>() { msus[result.Value.Item1].Path };
-                }
-            }
+        MainHost.Services.GetRequiredService<ITaskService>();
+        MainHost.Services.GetRequiredService<IControlServiceFactory>();
+        MainHost.Services.GetRequiredService<AppInitializationService>().IsEnabled = false;
 
-            // Generate the rom
-            var results = s_services.GetRequiredService<RomGenerationService>().GenerateRandomRomAsync(randomizerOptions).Result;
-            if (string.IsNullOrEmpty(results.GenerationError))
-            {
-                var romPath = Path.Combine(randomizerOptions.RomOutputPath, results.Rom!.RomPath);
-                Console.WriteLine($"Rom generated successfully: {romPath}");
-                launcher.LaunchRom(romPath, randomizerOptions.GeneralOptions.LaunchApplication,
-                    randomizerOptions.GeneralOptions.LaunchArguments);
-                _ = s_services.GetRequiredService<ConsoleTrackerDisplayService>().StartTracking(results.Rom, romPath);
-            }
-            else
-            {
-                Console.WriteLine($"Error generating rom: {results.GenerationError}");
-            }
-        }
-        // Plays a previously generated rom
-        else if (result.Value.Item1 == 1)
+        InitializeMsuRandomizer();
+
+        ExceptionWindow.GitHubUrl = "https://github.com/TheTrackerCouncil/SMZ3Randomizer/issues";
+        ExceptionWindow.LogPath = Directories.LogFolder;
+
+        using var source = new CancellationTokenSource();
+
+        try
         {
-            var roms = s_services.GetRequiredService<IGameDbService>().GetGeneratedRomsList()
-                .OrderByDescending(x => x.Id)
-                .ToList();
-
-            result = DisplayMenu("Which rom do you want to play?",
-                roms.Select(x => $"{x.Seed} - {x.Date:G}").ToList());
-
-            if (result != null)
-            {
-                var selectedRom = roms[result.Value.Item1];
-                var romPath = Path.Combine(randomizerOptions.RomOutputPath, selectedRom.RomPath);
-                launcher.LaunchRom(romPath, randomizerOptions.GeneralOptions.LaunchApplication,
-                    randomizerOptions.GeneralOptions.LaunchArguments);
-                _ = s_services.GetRequiredService<ConsoleTrackerDisplayService>().StartTracking(selectedRom, romPath);
-            }
-
+            BuildAvaloniaApp()
+                .StartWithClassicDesktopLifetime(args);
         }
-        // Deletes rom(s)
-        else if (result.Value.Item1 == 2)
+        catch (Exception e)
         {
-            var dbService = s_services.GetRequiredService<IGameDbService>();
-            var roms = dbService.GetGeneratedRomsList()
-                .OrderByDescending(x => x.Id)
-                .ToList();
-
-            while (roms.Count > 0)
-            {
-                result = DisplayMenu("Which rom do you want to delete?",
-                    roms.Select(x => $"{x.Seed} - {x.Date:G}").ToList());
-
-                if (result == null)
-                {
-                    break;
-                }
-                else
-                {
-                    var selectedRom = roms[result.Value.Item1];
-                    if (!dbService.DeleteGeneratedRom(selectedRom, out var error))
-                    {
-                        Log.Error("Could not delete rom: {Message}", error);
-                    }
-                    else
-                    {
-                        roms.Remove(selectedRom);
-                    }
-                }
-            }
+            Log.Error(e, "[CRASH] Uncaught {Name}: ", e.GetType().Name);
+            ShowExceptionPopup(e).ContinueWith(t => source.Cancel(), TaskScheduler.FromCurrentSynchronizationContext());
+            Dispatcher.UIThread.MainLoop(source.Token);
         }
     }
 
-    private static bool ValidateRandomizerOptions(RandomizerOptions options)
-    {
-        var sourceRomValidationService = s_services.GetRequiredService<SourceRomValidationService>();
+    // Avalonia configuration, don't remove; also used by visual designer.
+    public static AppBuilder BuildAvaloniaApp()
+        => AppBuilder.Configure<App>()
+            .UsePlatformDetect()
+            .With(new Win32PlatformOptions() { RenderingMode = new List<Win32RenderingMode>() { Win32RenderingMode.Software }  })
+            .With(new X11PlatformOptions() { UseDBusFilePicker = false })
+            .WithInterFont()
+            .LogToTrace()
+            .UseReactiveUI();
 
-        if (!sourceRomValidationService.ValidateZeldaRom(options.GeneralOptions.Z3RomPath))
-        {
-            Console.WriteLine("Missing Z3RomPath. Please enter a valid A Link to the Past Japanese v1.0 ROM");
-            return false;
-        }
-
-        if (!sourceRomValidationService.ValidateMetroidRom(options.GeneralOptions.SMRomPath))
-        {
-            Console.WriteLine("Missing SMRomPath. Please enter a valid Super Metroid Japanese/US ROM");
-            return false;
-        }
-
-        return true;
-    }
-
-    private static (int, string)? DisplayMenu(string prompt, List<string> options)
-    {
-        Console.WriteLine(prompt);
-
-        for (var i = 0; i < options.Count; i++)
-        {
-            Console.WriteLine($"  {i+1}) {options[i]}");
-        }
-
-        while (true)
-        {
-            Console.Write($"Enter a value (1-{options.Count}): ");
-            var selectedOption = Console.ReadLine();
-            if (string.IsNullOrEmpty(selectedOption))
-            {
-                return null;
-            }
-
-            if (int.TryParse(selectedOption, out var value) && value >= 1 && value <= options.Count)
-            {
-                return (value - 1, options[value - 1]);
-            }
-        }
-
-    }
-
-    private static void InitializeMsuRandomizer(IMsuRandomizerInitializationService msuRandomizerInitializationService)
+    private static void InitializeMsuRandomizer()
     {
         var settingsStream =  Assembly.GetExecutingAssembly()
             .GetManifestResourceStream("Randomizer.CrossPlatform.msu-randomizer-settings.yml");
-        var typesStream = Assembly.GetExecutingAssembly()
-            .GetManifestResourceStream("Randomizer.CrossPlatform.msu-randomizer-types.json");
         var msuInitializationRequest = new MsuRandomizerInitializationRequest()
         {
             MsuAppSettingsStream = settingsStream,
-            MsuTypeConfigStream = typesStream,
-            LookupMsus = true
+            LookupMsus = false
         };
-        msuRandomizerInitializationService.Initialize(msuInitializationRequest);
+#if DEBUG
+        msuInitializationRequest.UserOptionsPath = "%LocalAppData%\\SMZ3CasRandomizer\\msu-user-settings-debug.yml";
+#endif
+        MainHost!.Services.GetRequiredService<IMsuRandomizerInitializationService>().Initialize(msuInitializationRequest);
     }
 
-#if DEBUG
-    private static string LogPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "smz3-cas-debug_.log");
-#else
-    private static string LogPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "smz3-cas.log");
-#endif
+    private static async Task ShowExceptionPopup(Exception e)
+    {
+        Log.Error(e, "[CRASH] Uncaught {Name}: ", e.GetType().Name);
+        var window = new ExceptionWindow();
+        window.Show();
+        await Dispatcher.UIThread.Invoke(async () =>
+        {
+            while (window.IsVisible)
+            {
+                await Task.Delay(500);
+            }
+        });
+    }
 }

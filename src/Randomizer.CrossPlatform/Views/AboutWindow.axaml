@@ -1,0 +1,89 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:AvaloniaControls.Controls;assembly=AvaloniaControls"
+        mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="275"
+        Width="480" Height="275"
+        MaxWidth="480" MaxHeight="275"
+        CanResize="False"
+        Icon="/Assets/chozo20.ico"
+        x:Class="Randomizer.CrossPlatform.Views.AboutWindow"
+        WindowStartupLocation="CenterOwner"
+        Title="SMZ3 Cas' Randomizer">
+  <LayoutTransformControl x:Name="MainLayout">
+    <StackPanel
+              HorizontalAlignment="Left"
+              Margin="11">
+      <Grid Margin="0,0,0,11">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Image Source="/Assets/chozo20.ico"
+               Grid.Column="0"
+               Grid.RowSpan="2"
+               Width="32"
+               Height="32"
+               Margin="0,0,7,0" />
+
+        <TextBlock
+                   Margin="0"
+                   Grid.Column="1"
+                   Grid.Row="0"
+                   FontSize="20"
+                   Text="SMZ3 Cas' Randomizer" />
+
+        <TextBlock Grid.Column="1"
+                   Grid.Row="1"
+                   Margin="0"
+                   x:Name="TextBlockVersion"
+                   Text="" />
+      </Grid>
+      <TextBlock FontWeight="SemiBold" Margin="0 0 0 15">Created by Vivelin and MattEqualsCoder</TextBlock>
+      <TextBlock TextWrapping="Wrap">
+        Based on the original
+        <InlineUIContainer>
+          <controls:LinkControl Click="SMZ3Button_OnClick" ToolTip.Tip="https://samus.link/">
+            Super Metroid &amp; A Link to the Past Crossover Randomizer
+          </controls:LinkControl>
+        </InlineUIContainer>
+        by RebelusQuo, tewtal and others.
+      </TextBlock>
+
+      <TextBlock FontWeight="Bold" Margin="0 15 0 0">Special thanks:</TextBlock>
+      <TextBlock Margin="0,3,0,0" TextWrapping="Wrap">
+        •
+        <InlineUIContainer>
+          <controls:LinkControl Click="BetusButton_OnClick" ToolTip.Tip="https://twitch.tv/the_betus">
+            Diabetus
+          </controls:LinkControl>
+        </InlineUIContainer>
+        and
+        <InlineUIContainer>
+          <controls:LinkControl Click="PinkButton_OnClick" ToolTip.Tip="https://twitch.tv/pinkkittyrose">
+            PinkKittyRose
+          </controls:LinkControl>
+        </InlineUIContainer>
+        for streaming so much with the Cas’ Randomizer
+      </TextBlock>
+      <TextBlock Margin="0,8,0,0" TextWrapping="Wrap">
+        • Fragger for the original sprite work and the original SMZ3 EmoTracker
+        customizations
+      </TextBlock>
+      <TextBlock Margin="0,8,0,0" TextWrapping="Wrap">
+        • PaddyCo and others for their original sprite work
+      </TextBlock>
+      <TextBlock Margin="0,8,0,0" TextWrapping="Wrap">
+        • Everyone from the BCU who helped test the Cas’ Randomizer and Tracker
+      </TextBlock>
+    </StackPanel>
+
+  </LayoutTransformControl>
+</Window>
+

@@ -1,4 +1,5 @@
 ﻿UserOptionsFilePath: "%LocalAppData%\\SMZ3CasRandomizer\\msu-user-settings.yml"
+SaveDataDirectory: "%LocalAppData%"
 MsuCachePath: "%LocalAppData%\\SMZ3CasRandomizer"
 ContinuousReshuffleSeconds: 60
 MsuWindowDisplayRandomButton: false

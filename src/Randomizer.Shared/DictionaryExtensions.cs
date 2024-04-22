@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace Randomizer.App
+namespace Randomizer.Shared
 {
     public static class DictionaryExtensions
     {

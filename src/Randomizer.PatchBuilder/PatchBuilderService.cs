@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using MSURandomizerLibrary.Models;
 using MSURandomizerLibrary.Services;
+using Randomizer.Data.Interfaces;
 using Randomizer.Data.Options;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Infrastructure;
@@ -11,7 +12,7 @@ namespace Randomizer.PatchBuilder;
 public class PatchBuilderService
 {
     private readonly ILogger<PatchBuilderService> _logger;
-    private readonly RomGenerationService _romGenerationService;
+    private readonly IRomGenerationService _romGenerationService;
     private readonly OptionsFactory _optionsFactory;
     private readonly IMsuTypeService _msuTypeService;
     private readonly IMsuLookupService _msuLookupService;
@@ -20,7 +21,7 @@ public class PatchBuilderService
     private readonly string _solutionPath;
     private readonly string _randomizerRomPath;
 
-    public PatchBuilderService(ILogger<PatchBuilderService> logger, RomGenerationService romGenerationService, OptionsFactory optionsFactory, IMsuLookupService msuLookupService, IMsuSelectorService msuSelectorService, IMsuTypeService msuTypeService, RomLauncherService romLauncherService)
+    public PatchBuilderService(ILogger<PatchBuilderService> logger, IRomGenerationService romGenerationService, OptionsFactory optionsFactory, IMsuLookupService msuLookupService, IMsuSelectorService msuSelectorService, IMsuTypeService msuTypeService, RomLauncherService romLauncherService)
     {
         _logger = logger;
         _romGenerationService = romGenerationService;
