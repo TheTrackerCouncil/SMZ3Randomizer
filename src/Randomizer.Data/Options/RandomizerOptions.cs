@@ -153,6 +153,16 @@ namespace Randomizer.Data.Options
 
         public Config ToConfig()
         {
+            if (SeedOptions.UniqueHintCount != null)
+            {
+                PatchOptions.CasPatches.HintTiles = SeedOptions.UniqueHintCount.Value;
+            }
+
+            if (PatchOptions.ZeldaDrops != null)
+            {
+                PatchOptions.CasPatches.ZeldaDrops = PatchOptions.ZeldaDrops.Value;
+            }
+
             return new Config()
             {
                 GameMode = GameMode.Normal,
