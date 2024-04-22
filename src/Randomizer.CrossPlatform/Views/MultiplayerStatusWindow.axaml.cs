@@ -40,14 +40,22 @@ public partial class MultiplayerStatusWindow : RestorableWindow
     protected override int DefaultWidth => 500;
     protected override int DefualtHeight => 250;
 
-    private void CopyUrlButton_OnClick(object? sender, RoutedEventArgs e)
+    private async void CopyUrlButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        _ = Clipboard?.SetTextAsync(_model.GameUrl);
+        if (Clipboard == null)
+        {
+            return;
+        }
+        await Clipboard.SetTextAsync(_model.GameUrl);
     }
 
-    private void UpdateConfigButton_OnClick(object? sender, RoutedEventArgs e)
+    private async void UpdateConfigButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        _ = _service?.SubmitConfig();
+        if (_service == null)
+        {
+            return;
+        }
+        await _service.SubmitConfig();
     }
 
     private void ForfeitButton_OnClick(object? sender, RoutedEventArgs e)

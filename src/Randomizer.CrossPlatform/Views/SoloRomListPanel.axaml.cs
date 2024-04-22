@@ -31,19 +31,31 @@ public partial class SoloRomListPanel : UserControl
     }
 
 
-    private void QuickPlayButton_OnClick(object? sender, RoutedEventArgs e)
+    private async void QuickPlayButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        _ = _service?.QuickPlay();
+        if (_service == null)
+        {
+            return;
+        }
+        await _service.QuickPlay();
     }
 
-    private void StartPlandoButton_OnClick(object? sender, RoutedEventArgs e)
+    private async void StartPlandoButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        _ = _service?.GeneratePlando();
+        if (_service == null)
+        {
+            return;
+        }
+        await _service.GeneratePlando();
     }
 
-    private void GenerateRomButton_OnClick(object? sender, RoutedEventArgs e)
+    private async void GenerateRomButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        _ = _service?.GenerateRom();
+        if (_service == null)
+        {
+            return;
+        }
+        await _service.GenerateRom();
     }
 
     private void LaunchButton_OnClick(object? sender, RoutedEventArgs e)

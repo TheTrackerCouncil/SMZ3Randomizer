@@ -59,12 +59,7 @@ public partial class GenerationSettingsBasicPanel : UserControl
 
     public event EventHandler? Displayed;
 
-    private void LinkSpriteButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        _ = ShowLinkSpriteWindow();
-    }
-
-    private async Task ShowLinkSpriteWindow()
+    private async void LinkSpriteButton_OnClick(object? sender, RoutedEventArgs e)
     {
         if (_serviceProvider == null || _generationSettingsWindowService == null)
         {
@@ -78,12 +73,7 @@ public partial class GenerationSettingsBasicPanel : UserControl
             spriteWindow.SelectedSpriteOptions, spriteWindow.Model.SearchText, spriteWindow.Model.SpriteFilter);
     }
 
-    private void SamusSpriteButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        _ = ShowSamusSpriteWindow();
-    }
-
-    private async Task ShowSamusSpriteWindow()
+    private async void SamusSpriteButton_OnClick(object? sender, RoutedEventArgs e)
     {
         if (_serviceProvider == null || _generationSettingsWindowService == null)
         {
@@ -97,12 +87,7 @@ public partial class GenerationSettingsBasicPanel : UserControl
             spriteWindow.SelectedSpriteOptions, spriteWindow.Model.SearchText, spriteWindow.Model.SpriteFilter);
     }
 
-    private void ShipSpriteButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        _ = ShowShipSpriteWindow();
-    }
-
-    private async Task ShowShipSpriteWindow()
+    private async void ShipSpriteButton_OnClick(object? sender, RoutedEventArgs e)
     {
         if (_serviceProvider == null || _generationSettingsWindowService == null)
         {
@@ -115,7 +100,6 @@ public partial class GenerationSettingsBasicPanel : UserControl
         _generationSettingsWindowService.SaveSpriteSettings(result == true, spriteWindow.SelectedSprite ?? Sprite.DefaultShip,
             spriteWindow.SelectedSpriteOptions, spriteWindow.Model.SearchText, spriteWindow.Model.SpriteFilter);
     }
-
 
     private void SelectMsuButton_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -142,12 +126,7 @@ public partial class GenerationSettingsBasicPanel : UserControl
         OpenMsuSelectionWindow(MsuRandomizationStyle.Continuous);
     }
 
-    private void SelectMsuFileMenuItem_OnClick(object? sender, RoutedEventArgs e)
-    {
-        _ = SelectMsu();
-    }
-
-    private async Task SelectMsu()
+    private async void SelectMsuFileMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
         var options = _serviceProvider?.GetRequiredService<OptionsFactory>().Create();
         var path = options?.PatchOptions.MsuPaths.FirstOrDefault() ?? options?.GeneralOptions.MsuPath;

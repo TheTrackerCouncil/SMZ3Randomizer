@@ -69,9 +69,9 @@ public partial class GenerationSettingsWindow : ScalableWindow
         GenerateMenuButton.ContextMenu?.Open();
     }
 
-    private void GenerateGameButton_OnClick(object sender, RoutedEventArgs e)
+    private async void GenerateGameButton_OnClick(object sender, RoutedEventArgs e)
     {
-        _ = GenerateRom();
+        await GenerateRom();
     }
 
     private async Task GenerateRom()
