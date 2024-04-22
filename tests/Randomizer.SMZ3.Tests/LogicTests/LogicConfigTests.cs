@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-
+using DynamicForms.Library.Core.Attributes;
 using FluentAssertions;
 using Randomizer.Data.Logic;
 using Randomizer.Data.Options;
@@ -21,16 +21,28 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         [Fact]
         public void ValidateConfigDetails()
         {
-            Config config = new Config();
+            var config = new Config();
             var type = config.LogicConfig.GetType();
 
-            foreach (var property in type.GetProperties())
+            foreach (var property in type.GetProperties().Where(x => x.SetMethod != null))
             {
-                var displayName = property.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
-                displayName.Should().NotBeNullOrEmpty();
+                var attribute = property.GetCustomAttribute<DynamicFormObjectAttribute>();
+                attribute.Should().NotBeNull($"Property {property.Name} of the LogicConfig should have a DynamicFormObjectAttribute associated with it");
 
-                var category = property.GetCustomAttribute<CategoryAttribute>()?.Category;
-                category.Should().BeOneOf("Logic", "Tricks", "Patches");
+                attribute?.GroupName.Should()
+                    .NotBeNullOrEmpty(
+                        $"Property {property.Name}'s DynamicFormObjectATtribute should have a group associated with it");
+
+                if (attribute is DynamicFormFieldCheckBoxAttribute checkBoxAttribute)
+                {
+                    checkBoxAttribute.CheckBoxText.Should()
+                        .NotBeNullOrEmpty($"Property {property.Name} should have CheckBoxText associated with it");
+                }
+                else if (attribute is DynamicFormFieldComboBoxAttribute comboBoxAttribute)
+                {
+                    comboBoxAttribute.Label.Should()
+                        .NotBeNullOrEmpty($"Property {property.Name} should have Label associated with it");
+                }
             }
         }
 
