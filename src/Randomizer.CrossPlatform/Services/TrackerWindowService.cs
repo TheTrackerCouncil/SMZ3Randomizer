@@ -334,11 +334,6 @@ public class TrackerWindowService(
             items[item] = fileName;
         }
 
-        if (gridLocation.Identifiers.First() == "Power Bomb")
-        {
-            var a = "1";
-        }
-
         var model = new TrackerWindowItemPanelViewModel()
         {
             Items = items,
