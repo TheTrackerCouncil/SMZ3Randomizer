@@ -1,8 +1,11 @@
 using System.IO;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using AvaloniaControls.Controls;
+using AvaloniaControls.Services;
 using Randomizer.CrossPlatform.Services;
 using Randomizer.CrossPlatform.ViewModels;
 using Randomizer.Data.Configuration.ConfigTypes;
@@ -59,7 +62,6 @@ public partial class TrackerWindow : RestorableWindow
     private void CreateLayout()
     {
         MainGrid.Children.Clear();
-
         foreach (var image in _model.Panels)
         {
             var panel = new TrackerWindowPanel(image);
@@ -75,8 +77,14 @@ public partial class TrackerWindow : RestorableWindow
         {
             return;
         }
-        _service?.SetLayout(layout);
-        CreateLayout();
+
+        // This can take a few seconds when rebuilding the full UI, so rather than have the UI freeze,
+        // fire it off in a new task
+        ITaskService.Run(() =>
+        {
+            _service?.SetLayout(layout);
+            Dispatcher.UIThread.Invoke(CreateLayout);
+        });
     }
 
     public GeneratedRom? Rom

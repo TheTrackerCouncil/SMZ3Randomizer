@@ -6,7 +6,7 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Randomizer.CrossPlatform.Views.CurrentTrackWindow"
         Closing="Window_OnClosing"
-        Title="CurrentTrackWindow">
+        Title="Current Song — SMZ3 Cas' Randomizer">
   <LayoutTransformControl x:Name="MainLayout">
     <DockPanel>
       <views:CurrentPlayingTrackControl />

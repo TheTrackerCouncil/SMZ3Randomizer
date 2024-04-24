@@ -58,7 +58,8 @@ public class TrackerWindowItemPanelViewModel : TrackerWindowPanelViewModel
     {
         if (Items != null && item != null && !string.IsNullOrEmpty(path))
         {
-            Items[item] = path;
+            var key = Items.Keys.First(x => x.Type == item.Type);
+            Items[key] = path;
         }
 
         if (ConnectedItems != null)

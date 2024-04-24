@@ -9,6 +9,7 @@ using AvaloniaControls;
 using AvaloniaControls.Controls;
 using AvaloniaControls.ControlServices;
 using AvaloniaControls.Models;
+using AvaloniaControls.Services;
 using Microsoft.Extensions.Logging;
 using Randomizer.Abstractions;
 using Randomizer.CrossPlatform.ViewModels;
@@ -147,7 +148,7 @@ public class TrackerWindowService(
         }
 
         _model.Rom = rom;
-        sharedCrossplatformService.LookupMsus();
+        ITaskService.Run(sharedCrossplatformService.LookupMsus);
         var romPath = Path.Combine(Options.RomOutputPath, rom.RomPath);
         tracker.Load(rom, romPath);
     }
@@ -244,28 +245,24 @@ public class TrackerWindowService(
         _itemModels.Clear();
         _medallions.Clear();
 
-        var maxRow = layout.GridLocations.Max(x => x.Row);
-        var maxCol = layout.GridLocations.Max(x => x.Column);
-
         var models = new List<TrackerWindowPanelViewModel>();
 
-        for (var col = 1; col <= maxCol; col++)
+        foreach (var spot in layout.GridLocations)
         {
-            for (var row = 1; row <= maxRow; row++)
+            var panel = GetPanelViewModel(spot);
+            if (panel != null)
             {
-                var spot = layout.GridLocations.FirstOrDefault(x => x.Column == col && x.Row == row);
-                var panel = GetPanelViewModel(spot);
-                if (panel != null)
-                {
-                    models.Add(panel);
-                }
+                models.Add(panel);
             }
         }
 
         _model.Panels = models;
 
-        Options.GeneralOptions.SelectedLayout = layout.Name;
-        Options.Save();
+        ITaskService.Run(() =>
+        {
+            Options.GeneralOptions.SelectedLayout = layout.Name;
+            Options.Save();
+        });
     }
 
     public void ToggleTimer()
@@ -335,6 +332,11 @@ public class TrackerWindowService(
             }
 
             items[item] = fileName;
+        }
+
+        if (gridLocation.Identifiers.First() == "Power Bomb")
+        {
+            var a = "1";
         }
 
         var model = new TrackerWindowItemPanelViewModel()

@@ -5,6 +5,7 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using Randomizer.CrossPlatform.ViewModels;
 using Randomizer.Shared;
 
@@ -32,6 +33,12 @@ public partial class TrackerWindowPanel : UserControl
 
     private void Update()
     {
+        if (!CheckAccess())
+        {
+            Dispatcher.UIThread.Invoke(Update);
+            return;
+        }
+
         MainDock.Children.Clear();
 
         if (_model == null)

@@ -10,7 +10,7 @@
         Icon="/Assets/chozo20.ico"
         x:Class="Randomizer.CrossPlatform.Views.AboutWindow"
         WindowStartupLocation="CenterOwner"
-        Title="SMZ3 Cas' Randomizer">
+        Title="About — SMZ3 Cas' Randomizer">
   <LayoutTransformControl x:Name="MainLayout">
     <StackPanel
               HorizontalAlignment="Left"
