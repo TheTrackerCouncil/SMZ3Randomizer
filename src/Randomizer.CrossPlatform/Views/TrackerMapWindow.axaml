@@ -1,0 +1,81 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:AvaloniaControls.Controls;assembly=AvaloniaControls"
+        xmlns:viewModels="clr-namespace:Randomizer.CrossPlatform.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Randomizer.CrossPlatform.Views.TrackerMapWindow"
+        x:DataType="viewModels:TrackerMapWindowViewModel"
+        Loaded="Control_OnLoaded"
+        Title="TrackerMapWindow">
+  <Grid RowDefinitions="Auto, *">
+    <controls:HeaderFooter Grid.Row="0" BorderSize="0 0 0 2">
+      <Grid ColumnDefinitions="Auto, *" Margin="5">
+        <TextBlock Grid.Column="0" VerticalAlignment="Center" Margin="0 0 5 0">Map: </TextBlock>
+        <ComboBox Grid.Column="1"
+                  ItemsSource="{Binding Maps}"
+                  SelectedItem="{Binding SelectedMap}"
+                  SelectionChanged="SelectingItemsControl_OnSelectionChanged"
+                  DisplayMemberBinding="{Binding Name}"
+        ></ComboBox>
+      </Grid>
+    </controls:HeaderFooter>
+    <Grid Grid.Row="1" SizeChanged="MapCanvas_OnSizeChanged" Name="MainGrid">
+      <ItemsControl ItemsSource="{Binding Locations}" Name="LocationsItemsControl">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <Canvas x:Name="MapCanvas">
+              <Canvas.Background>
+                <ImageBrush Source="{Binding MainImage, Converter={StaticResource StringToImageConverter}}"/>
+              </Canvas.Background>
+            </Canvas>
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <Grid Width="{Binding Size}" Height="{Binding Size}" IsVisible="{Binding IconVisibility}" PointerPressed="InputElement_OnPointerPressed" Tag="{Binding}">
+              <Grid.ContextMenu>
+                <ContextMenu ItemsSource="{Binding Locations}" PointerPressed="ContextMenuInputElement_OnPointerPressed">
+                  <ContextMenu.Styles>
+                    <Style x:DataType="viewModels:TrackerMapSubLocationViewModel" Selector="ContextMenu > MenuItem">
+                      <Setter Property="Tag" Value="{Binding Location}"/>
+                    </Style>
+                  </ContextMenu.Styles>
+                  <ContextMenu.ItemTemplate>
+                    <DataTemplate>
+                      <TextBlock Text="{Binding Name}" />
+                    </DataTemplate>
+                  </ContextMenu.ItemTemplate>
+                </ContextMenu>
+              </Grid.ContextMenu>
+              <Rectangle Width="20" Height="20" Margin="0 0 0 0">
+                <Rectangle.Fill>
+                  <ImageBrush Source="{Binding ImagePath, Converter={StaticResource StringToImageConverter}}" TileMode="None" Stretch="None" AlignmentX="Center" AlignmentY="Center"/>
+                </Rectangle.Fill>
+              </Rectangle>
+              <Rectangle Width="20" Height="20" Margin="0 0 0 0" IsHitTestVisible="False" >
+                <Rectangle.Fill>
+                  <ImageBrush Source="{Binding NumberImagePath, Converter={StaticResource StringToImageConverter}}" TileMode="None" Stretch="None" AlignmentX="Center" AlignmentY="Center"/>
+                </Rectangle.Fill>
+              </Rectangle>
+              <Rectangle Width="16" Height="16" IsVisible="{Binding MarkedVisibility}" IsHitTestVisible="False" Margin="14 -14 0 0">
+                <Rectangle.Fill>
+                  <ImageBrush Source="{Binding MarkedImagePath, Converter={StaticResource StringToImageConverter}}" TileMode="None" Stretch="None" AlignmentX="Center" AlignmentY="Center"/>
+                </Rectangle.Fill>
+              </Rectangle>
+
+            </Grid>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+        <ItemsControl.Styles>
+          <Style x:DataType="viewModels:TrackerMapLocationViewModel" Selector="ItemsControl > ContentPresenter">
+            <Setter Property="Canvas.Left" Value="{Binding X}" />
+            <Setter Property="Canvas.Top" Value="{Binding Y}" />
+          </Style>
+        </ItemsControl.Styles>
+      </ItemsControl>
+    </Grid>
+  </Grid>
+</Window>
+

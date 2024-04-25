@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Randomizer.Data.WorldData;
+using Randomizer.Data.WorldData.Regions;
+using YamlDotNet.Serialization;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {
@@ -24,7 +26,8 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <param name="x">The x location to place this location on the map</param>
         /// <param name="y">The y location to place this location on the map</param>
         /// <param name="scale">The ratio at which this location has been scaled down (for combined maps)</param>
-        public TrackerMapLocation(MapLocationType type, string region, string regionTypeName, string name, int x, int y, double scale = 1)
+        /// <param name="regionObject"></param>
+        public TrackerMapLocation(MapLocationType type, string region, string regionTypeName, string name, int x, int y, double scale = 1, Region? regionObject = null)
         {
             Type = type;
             Region = region;
@@ -33,6 +36,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
             X = x;
             Y = y;
             Scale = scale;
+            RegionObject = regionObject;
         }
 
         /// <summary>
@@ -64,6 +68,12 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// The ratio at which this location has been scaled down (for combined maps)
         /// </summary>
         public double Scale { get; set; }
+
+        [YamlIgnore]
+        public List<Location>? Locations { get; set; }
+
+        [YamlIgnore]
+        public Region? RegionObject { get; set; }
 
         public MapLocationType Type { get; set; }
 

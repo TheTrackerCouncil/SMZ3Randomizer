@@ -11,7 +11,7 @@ namespace Randomizer.CrossPlatform.ViewModels;
 
 public class TrackerWindowViewModel : ViewModelBase
 {
-    public List<TrackerWindowPanelViewModel> Panels { get; set; } = [];
+    [Reactive] public List<TrackerWindowPanelViewModel> Panels { get; set; } = [];
 
     public IBrush Background { get; set; } = new SolidColorBrush(new Color(255, 0, 0, 0));
 
