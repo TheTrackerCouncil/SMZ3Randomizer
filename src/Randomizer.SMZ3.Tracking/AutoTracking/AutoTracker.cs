@@ -87,6 +87,22 @@ public class AutoTracker : AutoTrackerBase
             snesConnectorSettings.ConnectorType = connectorTypeOverride.Value;
         }
 
+        var prevEnabled = IsEnabled;
+        ConnectorType = snesConnectorSettings.ConnectorType;
+        _isEnabled = snesConnectorSettings.ConnectorType != SnesConnectorType.None;
+
+        if (prevEnabled != _isEnabled)
+        {
+            if (_isEnabled)
+            {
+                OnAutoTrackerEnabled();
+            }
+            else
+            {
+                OnAutoTrackerDisabled();
+            }
+        }
+
         if (snesConnectorSettings.ConnectorType == SnesConnectorType.None)
         {
             _snesConnectorService.Disconnect();
@@ -95,9 +111,6 @@ public class AutoTracker : AutoTrackerBase
         {
             _snesConnectorService.Connect(snesConnectorSettings);
         }
-
-        ConnectorType = snesConnectorSettings.ConnectorType;
-        _isEnabled = snesConnectorSettings.ConnectorType != SnesConnectorType.None;
     }
 
     /// <summary>

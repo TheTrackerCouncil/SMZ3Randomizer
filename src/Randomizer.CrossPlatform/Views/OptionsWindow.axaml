@@ -7,7 +7,7 @@
         xmlns:controls="clr-namespace:AvaloniaControls.Controls;assembly=AvaloniaControls"
         mc:Ignorable="d"
         x:Class="Randomizer.CrossPlatform.Views.OptionsWindow"
-        Title="SMZ3 Cas' Randomizer"
+        Title="Options — SMZ3 Cas' Randomizer"
         Height="500"
         Width="600"
         CanResize="False"

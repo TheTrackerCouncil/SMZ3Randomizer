@@ -280,7 +280,7 @@ public class SharedCrossplatformService(
 
         await window.ShowDialog(ParentWindow);
 
-        if (!window.DialogResult)
+        if (window.DialogResult)
         {
             return Options;
         }
