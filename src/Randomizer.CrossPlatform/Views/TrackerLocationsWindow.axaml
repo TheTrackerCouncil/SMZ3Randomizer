@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:Randomizer.CrossPlatform.ViewModels"
         xmlns:controls="clr-namespace:AvaloniaControls.Controls;assembly=AvaloniaControls"
+        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="600"
         MinWidth="450"
         x:Class="Randomizer.CrossPlatform.Views.TrackerLocationsWindow"
@@ -77,14 +78,13 @@
                 <ItemsControl ItemsSource="{Binding Locations}" Margin="14 10" HorizontalAlignment="Stretch">
                   <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                      <!--<StackPanel Orientation="Horizontal" Opacity="{Binding Opacity}">
+                      <StackPanel Orientation="Horizontal" Opacity="{Binding Opacity}">
                         <TextBlock Text="{Binding Name}"></TextBlock>
                         <Image Source="{Binding KeyImage, Converter={StaticResource StringToImageConverter}}" Height="16" Margin="2 0" IsVisible="{Binding ShowKeyIcon}" />
                         <controls:ImageButton Margin="0 -4 0 0" Click="ClearLocationButton_OnClick" Tag="{Binding}" Background="Transparent">
                           <avalonia:MaterialIcon Kind="Close" Width="10" Background="Transparent"/>
                         </controls:ImageButton>
-                      </StackPanel>-->
-                      <TextBlock Text="{Binding Name}"></TextBlock>
+                      </StackPanel>
                     </DataTemplate>
                   </ItemsControl.ItemTemplate>
                 </ItemsControl>
