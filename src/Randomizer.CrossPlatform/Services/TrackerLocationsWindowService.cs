@@ -41,7 +41,8 @@ public class TrackerLocationsWindowService(TrackerBase trackerBase, IWorldServic
             if (markedItemType == ItemType.Nothing) continue;
             var item = itemService.FirstOrDefault(markedItemType);
             if (item == null) continue;
-            markedLocations.Add(new MarkedLocationViewModel(markedLocation, item, uiService.GetSpritePath(item)));
+            markedLocations.Add(new MarkedLocationViewModel(markedLocation, item, uiService.GetSpritePath(item),
+                markedLocation.IsAvailable(progressionWithoutKeys)));
         }
 
         _model.MarkedLocations = markedLocations;

@@ -25,4 +25,6 @@ public class TrackerMapWindowViewModel : ViewModelBase
     public Size GridSize { get; set; }
 
     public Size MapSize { get; set; }
+
+    public bool ShowOutOfLogicLocations { get; set; }
 }

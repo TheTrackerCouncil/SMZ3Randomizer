@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -8,6 +9,11 @@ using Randomizer.CrossPlatform.ViewModels;
 using Randomizer.Shared.Enums;
 
 namespace Randomizer.CrossPlatform.Views;
+
+public class OutOfLogicChangedEventArgs : EventArgs
+{
+    public required bool ShowOutOfLogic { get; init; }
+}
 
 public partial class TrackerLocationsWindow : RestorableWindow
 {
@@ -31,6 +37,8 @@ public partial class TrackerLocationsWindow : RestorableWindow
     protected override int DefaultWidth => 450;
     protected override int DefualtHeight => 600;
 
+    public event EventHandler<OutOfLogicChangedEventArgs>? OutOfLogicChanged;
+
     private void ClearLocationButton_OnClick(object? sender, RoutedEventArgs e)
     {
         if (sender is not Control { Tag: LocationViewModel model })
@@ -45,6 +53,7 @@ public partial class TrackerLocationsWindow : RestorableWindow
     {
         _model.ShowOutOfLogic = (sender as CheckBox)?.IsChecked == true;
         _service?.UpdateModel();
+        OutOfLogicChanged?.Invoke(this, new OutOfLogicChangedEventArgs() { ShowOutOfLogic = _model.ShowOutOfLogic });
     }
 
     private void EnumComboBox_OnValueChanged(object sender, EnumValueChangedEventArgs args)

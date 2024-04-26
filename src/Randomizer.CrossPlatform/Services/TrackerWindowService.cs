@@ -169,7 +169,17 @@ public class TrackerWindowService(
 
         _trackerLocationsWindow = serviceProvider.GetRequiredService<TrackerLocationsWindow>();
         _trackerLocationsWindow.Show(_window.Owner as Window ?? _window);
-        _trackerLocationsWindow.Closed += (_, _) => _trackerLocationsWindow = null;
+        _trackerLocationsWindow.OutOfLogicChanged += TrackerLocationsWindowOnOutOfLogicChanged;
+        _trackerLocationsWindow.Closed += (_, _) =>
+        {
+            _trackerLocationsWindow.OutOfLogicChanged -= TrackerLocationsWindowOnOutOfLogicChanged;
+            _trackerLocationsWindow = null;
+        };
+    }
+
+    private void TrackerLocationsWindowOnOutOfLogicChanged(object? sender, OutOfLogicChangedEventArgs e)
+    {
+        _trackerMapWindow?.UpdateShowOutOfLogic(e.ShowOutOfLogic);
     }
 
     public void SetRom(GeneratedRom rom)
