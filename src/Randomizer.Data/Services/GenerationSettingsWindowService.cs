@@ -23,13 +23,6 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
     private RandomizerOptions _options = null!;
     private GenerationWindowViewModel _model = null!;
     private static readonly char[] s_invalidFileNameChars = Path.GetInvalidFileNameChars();
-    private static readonly IDeserializer s_deserializer = new DeserializerBuilder()
-        .WithNamingConvention(PascalCaseNamingConvention.Instance)
-        .IgnoreUnmatchedProperties()
-        .Build();
-    private static readonly ISerializer s_serializer = new SerializerBuilder()
-        .WithNamingConvention(PascalCaseNamingConvention.Instance)
-        .Build();
 
     public GenerationWindowViewModel GetViewModel()
     {
@@ -189,8 +182,12 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         error = null;
         try
         {
+            var deserializer = new DeserializerBuilder()
+                .WithNamingConvention(PascalCaseNamingConvention.Instance)
+                .IgnoreUnmatchedProperties()
+                .Build();
             var configString = File.ReadAllText(file);
-            LoadPlando(s_deserializer.Deserialize<PlandoConfig>(configString));
+            LoadPlando(deserializer.Deserialize<PlandoConfig>(configString));
             return true;
         }
         catch (Exception e)
@@ -326,13 +323,19 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "SMZ3CasRandomizer", "Presets");
 
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(PascalCaseNamingConvention.Instance)
+            .IgnoreUnmatchedProperties()
+            .Build();
+
         if (Directory.Exists(folder))
         {
             foreach (var file in Directory.EnumerateFiles(folder))
             {
                 try
                 {
-                    presets.Add(s_deserializer.Deserialize<RandomizerPreset>(File.ReadAllText(file)));
+
+                    presets.Add(deserializer.Deserialize<RandomizerPreset>(File.ReadAllText(file)));
                 }
                 catch (Exception e)
                 {
@@ -388,7 +391,10 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
                    ?? Path.Combine(folder, $"{fileSafeName}-{Guid.NewGuid()}.yml");
 
         var newPreset = new RandomizerPreset() { PresetName = name, Config = GetConfig(), FilePath = path };
-        var yamlText = s_serializer.Serialize(newPreset);
+        var serializer = new SerializerBuilder()
+            .WithNamingConvention(PascalCaseNamingConvention.Instance)
+            .Build();
+        var yamlText = serializer.Serialize(newPreset);
         File.WriteAllText(path, yamlText);
         _model.Basic.Presets = GetPresets();
 
