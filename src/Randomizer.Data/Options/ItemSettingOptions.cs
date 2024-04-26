@@ -16,10 +16,6 @@ public class ItemSettingOptions
 {
     private static List<ItemSettingOptions>? s_itemSettingsOptions;
 
-    private static readonly IDeserializer s_deserializer = new DeserializerBuilder()
-        .WithNamingConvention(PascalCaseNamingConvention.Instance)
-        .Build();
-
     /// <summary>
     /// The UI name of the item/category
     /// </summary>
@@ -82,11 +78,15 @@ public class ItemSettingOptions
             return s_itemSettingsOptions;
         }
 
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(PascalCaseNamingConvention.Instance)
+            .Build();
+
         using var stream = Assembly.GetExecutingAssembly()
             .GetManifestResourceStream("Randomizer.Data.Options.ItemSettingOptions.yml") ?? throw new FileNotFoundException("Unable to find ItemSettingOptions.yml file");
         using var reader = new StreamReader(stream);
         var ymlText = reader.ReadToEnd();
-        s_itemSettingsOptions = s_deserializer.Deserialize<List<ItemSettingOptions>>(ymlText);
+        s_itemSettingsOptions = deserializer.Deserialize<List<ItemSettingOptions>>(ymlText);
         return s_itemSettingsOptions;
     }
 }

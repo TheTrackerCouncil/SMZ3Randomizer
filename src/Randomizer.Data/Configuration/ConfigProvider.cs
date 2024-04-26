@@ -29,11 +29,6 @@ namespace Randomizer.Data.Configuration
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
         };
 
-        private static readonly IDeserializer s_deserializer = new DeserializerBuilder()
-            .WithNamingConvention(PascalCaseNamingConvention.Instance)
-            .IgnoreUnmatchedProperties()
-            .Build();
-
         private readonly string _basePath;
         private readonly ILogger<ConfigProvider>? _logger;
 
@@ -374,7 +369,11 @@ namespace Randomizer.Data.Configuration
             T? obj;
             try
             {
-                obj = s_deserializer.Deserialize<T>(yml);
+                var deserializer = new DeserializerBuilder()
+                    .WithNamingConvention(PascalCaseNamingConvention.Instance)
+                    .IgnoreUnmatchedProperties()
+                    .Build();
+                obj = deserializer.Deserialize<T>(yml);
             }
             catch (Exception ex) when (ex is YamlDotNet.Core.SemanticErrorException or YamlDotNet.Core.YamlException)
             {
@@ -401,9 +400,13 @@ namespace Randomizer.Data.Configuration
 
             try
             {
+                var deserializer = new DeserializerBuilder()
+                    .WithNamingConvention(PascalCaseNamingConvention.Instance)
+                    .IgnoreUnmatchedProperties()
+                    .Build();
                 using var reader = new StreamReader(stream, detectEncodingFromByteOrderMarks: true);
                 var yml = reader.ReadToEnd();
-                return s_deserializer.Deserialize<T>(yml);
+                return deserializer.Deserialize<T>(yml);
             }
             catch (Exception ex) when (ex is YamlDotNet.Core.SemanticErrorException or YamlDotNet.Core.YamlException)
             {
