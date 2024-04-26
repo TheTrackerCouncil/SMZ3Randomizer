@@ -127,6 +127,7 @@ public partial class TrackerWindow : RestorableWindow
         }
 
         _service?.OpenTrackerMapWindow();
+        _service?.OpenTrackerLocationsWindow();
     }
 
     private async void LoadSavedStateMenuItem_OnClick(object? sender, RoutedEventArgs e)
@@ -143,7 +144,7 @@ public partial class TrackerWindow : RestorableWindow
 
     private void LocationsMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        _service?.OpenTrackerLocationsWindow();
     }
 
     private void MapMenuItem_OnClick(object? sender, RoutedEventArgs e)
