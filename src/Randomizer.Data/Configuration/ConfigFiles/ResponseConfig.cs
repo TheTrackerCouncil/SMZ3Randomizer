@@ -492,6 +492,11 @@ namespace Randomizer.Data.Configuration.ConfigFiles
         public SchrodingersString? TrackedUselessItem { get; init; }
 
         /// <summary>
+        /// Gets the phrases to respond with when counting Hyper Beam shots.
+        /// </summary> = new()
+        public SchrodingersString? CountHyperBeamShots { get; init; }
+
+        /// <summary>
         /// Gets the phrases to respond with when an internal error occurs.
         /// </summary> = new()
         public SchrodingersString? Error { get; init; }

@@ -50,6 +50,7 @@ public class FinalBossCheck(TrackerBase tracker, ISnesConnectorService snesConne
                 {
                     Logger.LogInformation("Auto tracked Mother Brain");
                     Tracker.MarkBossAsDefeated(motherBrain, admittedGuilt: true, confidence: null, autoTracked: true);
+                    CountHyperBeamShots();
                     didUpdate = true;
                 }
             }
@@ -74,6 +75,7 @@ public class FinalBossCheck(TrackerBase tracker, ISnesConnectorService snesConne
                 {
                     Logger.LogInformation("Auto tracked Mother Brain");
                     Tracker.MarkBossAsDefeated(motherBrain, admittedGuilt: true, confidence: null, autoTracked: true);
+                    CountHyperBeamShots();
                     didUpdate = true;
                 }
             }
@@ -84,5 +86,36 @@ public class FinalBossCheck(TrackerBase tracker, ISnesConnectorService snesConne
             AutoTracker.HasDefeatedBothBosses = true;
         }
 
+    }
+
+    private void CountHyperBeamShots()
+    {
+        SnesConnector.MakeMemoryRequest(new SnesSingleMemoryRequest()
+        {
+            MemoryRequestType = SnesMemoryRequestType.RetrieveMemory,
+            SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+            AddressFormat = AddressFormat.Snes9x,
+            SniMemoryMapping = MemoryMapping.ExHiRom,
+            Address = 0x7e033e,
+            Length = 0x02,
+            OnResponse = (data, _) =>
+            {
+                var health = data.ReadUInt16(0);
+
+                if (health != null)
+                {
+                    // Each Hyper Beam shot does 1000 damage
+                    var count = (int)health / 1000;
+
+                    if (health % 1000 > 0)
+                    {
+                        count++;
+                    }
+
+                    Logger.LogInformation("Counted {Count} Hyper Beam shot(s) for {Health} health", count, health);
+                    Tracker.CountHyperBeamShots(count);
+                }
+            }
+        });
     }
 }

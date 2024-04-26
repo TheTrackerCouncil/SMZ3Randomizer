@@ -775,6 +775,11 @@ public abstract class TrackerBase
     public abstract void ClearLastMarkedLocations(float confidence);
 
     /// <summary>
+    /// Reports how many Hyper Beam shots were needed to defeat Mother Brain
+    /// </summary>
+    public abstract void CountHyperBeamShots(int count);
+
+    /// <summary>
     /// Resets the idle timers when tracker will comment on nothing happening
     /// </summary>
     public abstract void RestartIdleTimers();
