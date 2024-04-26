@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Randomizer.Data.WorldData;
+using Randomizer.Data.WorldData.Regions;
+using YamlDotNet.Serialization;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {

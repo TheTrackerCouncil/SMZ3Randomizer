@@ -20,6 +20,7 @@ public partial class TrackerWindow : RestorableWindow
     private GeneratedRom? _generatedRom;
     private readonly TrackerWindowViewModel _model;
     private CurrentTrackWindow? _currentTrackWindow;
+    private TrackerMapWindow? _trackerMapWindow;
 
     public TrackerWindow()
     {
@@ -57,6 +58,18 @@ public partial class TrackerWindow : RestorableWindow
         _currentTrackWindow = new CurrentTrackWindow();
         _currentTrackWindow.Show(Owner as Window ?? this);
         _currentTrackWindow.Closed += (_, _) => _currentTrackWindow = null;
+    }
+
+    private void OpenTrackerMapWindow()
+    {
+        if (_trackerMapWindow != null)
+        {
+            return;
+        }
+
+        _trackerMapWindow = new TrackerMapWindow();
+        _trackerMapWindow.Show(Owner as Window ?? this);
+        _trackerMapWindow.Closed += (_, _) => _trackerMapWindow = null;
     }
 
     private void CreateLayout()
@@ -112,6 +125,8 @@ public partial class TrackerWindow : RestorableWindow
         {
             OpenCurrentTrackWindow();
         }
+
+        _service?.OpenTrackerMapWindow();
     }
 
     private async void LoadSavedStateMenuItem_OnClick(object? sender, RoutedEventArgs e)
@@ -133,7 +148,7 @@ public partial class TrackerWindow : RestorableWindow
 
     private void MapMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        _service?.OpenTrackerMapWindow();
     }
 
     private void CurrentSongMenuItem_OnClick(object? sender, RoutedEventArgs e)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Threading;
 using AvaloniaControls;
@@ -10,6 +11,7 @@ using AvaloniaControls.Controls;
 using AvaloniaControls.ControlServices;
 using AvaloniaControls.Models;
 using AvaloniaControls.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Randomizer.Abstractions;
 using Randomizer.CrossPlatform.ViewModels;
@@ -34,6 +36,7 @@ public class TrackerWindowService(
     OptionsFactory optionsFactory,
     IWorldAccessor world,
     ITrackerTimerService trackerTimerService,
+    IServiceProvider serviceProvider,
     ILogger<TrackerWindowService> logger) : ControlService
 {
     private RandomizerOptions? _options;
@@ -44,6 +47,7 @@ public class TrackerWindowService(
     private readonly Dictionary<string, TrackerWindowDungeonPanelViewModel> _dungeonModels = new();
     private readonly Dictionary<string, TrackerWindowItemPanelViewModel> _itemModels = new();
     private readonly List<TrackerWindowItemPanelViewModel> _medallions = new();
+    private TrackerMapWindow? _trackerMapWindow;
 
     public TrackerWindowViewModel GetViewModel(TrackerWindow parent)
     {
@@ -140,6 +144,18 @@ public class TrackerWindowService(
         return _model;
     }
 
+    public void OpenTrackerMapWindow()
+    {
+        if (_trackerMapWindow != null)
+        {
+            return;
+        }
+
+        _trackerMapWindow = serviceProvider.GetRequiredService<TrackerMapWindow>();
+        _trackerMapWindow.Show(_window.Owner as Window ?? _window);
+        _trackerMapWindow.Closed += (_, _) => _trackerMapWindow = null;
+    }
+
     public void SetRom(GeneratedRom rom)
     {
         if (!GeneratedRom.IsValid(rom))
@@ -167,8 +183,8 @@ public class TrackerWindowService(
             return;
         }
 
-        _model.AutoTrackerConnected = tracker.AutoTracker.IsConnected == true;
-        _model.AutoTrackerEnabled = tracker.AutoTracker.IsEnabled == true;
+        _model.AutoTrackerConnected = tracker.AutoTracker.IsConnected;
+        _model.AutoTrackerEnabled = tracker.AutoTracker.IsEnabled;
 
         tracker.AutoTracker.AutoTrackerEnabled += AutoTrackerOnAutoTrackerEnabled;
         tracker.AutoTracker.AutoTrackerDisabled += AutoTrackerOnAutoTrackerEnabled;
@@ -233,6 +249,7 @@ public class TrackerWindowService(
             }
         }
 
+        _trackerMapWindow?.Close();
         tracker.StopTracking();
         _dispatcherTimer.Stop();
         _window.Close();
