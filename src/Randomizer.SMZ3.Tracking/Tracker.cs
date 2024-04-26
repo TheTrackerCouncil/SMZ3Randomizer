@@ -2282,6 +2282,11 @@ public sealed class Tracker : TrackerBase, IDisposable
         Clear(_lastMarkedLocations, confidence);
     }
 
+    public override void CountHyperBeamShots(int count)
+    {
+        Say(Responses.CountHyperBeamShots?.Format(count));
+    }
+
     /// <summary>
     /// Resets the timers for tracker mentioning nothing has happened
     /// </summary>
