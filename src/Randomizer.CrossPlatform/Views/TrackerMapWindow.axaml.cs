@@ -23,7 +23,7 @@ public partial class TrackerMapWindow : RestorableWindow
     {
         _service = service;
         InitializeComponent();
-        DataContext = _model = _service.GetViewModel(this);
+        DataContext = _model = _service.GetViewModel();
     }
 
     private void MapCanvas_OnSizeChanged(object? sender, SizeChangedEventArgs e)

@@ -25,16 +25,13 @@ public class TrackerMapWindowService(
     TrackerMapConfig trackerMapConfig,
     IWorldAccessor worldAccessor,
     IWorldService worldService,
-    IItemService itemService,
-    ILogger<TrackerMapWindowService> logger) : ControlService
+    IItemService itemService) : ControlService
 {
     private TrackerMapWindowViewModel _model = new();
-    private TrackerMapWindow _window = null!;
     private Dictionary<TrackerMap, List<TrackerMapLocationViewModel>> _mapLocations = new();
 
-    public TrackerMapWindowViewModel GetViewModel(TrackerMapWindow parent)
+    public TrackerMapWindowViewModel GetViewModel()
     {
-        _window = parent;
         _model.Maps = trackerMapConfig.Maps.ToList();
 
         var locations = worldAccessor.World.Locations.ToList();
@@ -84,10 +81,22 @@ public class TrackerMapWindowService(
         tracker.ActionUndone += (_, _) => UpdateLocations();
         tracker.StateLoaded += (_, _) => UpdateLocations();
         tracker.BossUpdated += (_, _) => UpdateLocations();
+        tracker.MapUpdated += TrackerOnMapUpdated;
 
-        _model.SelectedMap = _model.Maps.First();
+        _model.SelectedMap = _model.Maps.Last();
         UpdateMap();
         return _model;
+    }
+
+    private void TrackerOnMapUpdated(object? sender, EventArgs e)
+    {
+        _model.Locations = [];
+        var newMap = _model.Maps.FirstOrDefault(x => x.ToString() == tracker.CurrentMap);
+        if (newMap != null)
+        {
+            _model.SelectedMap = newMap;
+            UpdateMap();
+        }
     }
 
     public void UpdateLocations(List<TrackerMapLocationViewModel>? locations = null)

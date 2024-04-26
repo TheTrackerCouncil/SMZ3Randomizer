@@ -25,7 +25,7 @@ public class TrackerMapLocationViewModel : ViewModelBase
         Name = innerMapLocation.Name;
         RegionName = mapRegion.Name;
         Region = region;
-        Locations = locations.Select(x => new TrackerMapSubLocationViewModel { Name = x.ToString(), Location = x}).ToList();
+        Locations = locations.Select(x => new TrackerMapSubLocationViewModel { Name = $"Clear {x}", Location = x}).ToList();
     }
 
     public TrackerMapLocationViewModel(TrackerMapRegion mapRegion, TrackerMapLocation mapLocation, Region region)
@@ -80,10 +80,4 @@ public class TrackerMapLocationViewModel : ViewModelBase
     [Reactive]
     [ReactiveLinkedProperties(nameof(X), nameof(Y))]
     public Size Offset { get; set; }
-}
-
-public class TrackerMapSubLocationViewModel
-{
-    public required string Name { get; set; }
-    public required Location Location { get; set; }
 }

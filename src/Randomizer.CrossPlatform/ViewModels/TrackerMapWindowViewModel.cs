@@ -17,7 +17,7 @@ public class TrackerMapWindowViewModel : ViewModelBase
     public TrackerMap? SelectedMap { get; set; }
 
     public string MainImage => SelectedMap == null
-        ? "//home/matt/Source/Randomizers/SMZ3CasSprites/Sprites/Maps/lttp_both.png"
+        ? ""
         : Path.Combine(Sprite.SpritePath, "Maps", SelectedMap.Image);
 
     [Reactive] public List<TrackerMapLocationViewModel> Locations { get; set; } = [];

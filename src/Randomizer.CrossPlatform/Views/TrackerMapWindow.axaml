@@ -8,7 +8,7 @@
         x:Class="Randomizer.CrossPlatform.Views.TrackerMapWindow"
         x:DataType="viewModels:TrackerMapWindowViewModel"
         Loaded="Control_OnLoaded"
-        Title="TrackerMapWindow">
+        Title="Tracker Map — SMZ3 Cas' Randomizer">
   <Grid RowDefinitions="Auto, *">
     <controls:HeaderFooter Grid.Row="0" BorderSize="0 0 0 2">
       <Grid ColumnDefinitions="Auto, *" Margin="5">
@@ -34,7 +34,13 @@
         </ItemsControl.ItemsPanel>
         <ItemsControl.ItemTemplate>
           <DataTemplate>
-            <Grid Width="{Binding Size}" Height="{Binding Size}" IsVisible="{Binding IconVisibility}" PointerPressed="InputElement_OnPointerPressed" Tag="{Binding}">
+            <Grid Width="{Binding Size}"
+                  Height="{Binding Size}"
+                  IsVisible="{Binding IconVisibility}"
+                  ToolTip.Tip="{Binding Name}"
+                  PointerPressed="InputElement_OnPointerPressed"
+                  Tag="{Binding}"
+            >
               <Grid.ContextMenu>
                 <ContextMenu ItemsSource="{Binding Locations}" PointerPressed="ContextMenuInputElement_OnPointerPressed">
                   <ContextMenu.Styles>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Threading;
 using AvaloniaControls;
@@ -151,7 +152,7 @@ public class TrackerWindowService(
         }
 
         _trackerMapWindow = serviceProvider.GetRequiredService<TrackerMapWindow>();
-        _trackerMapWindow.Show(_window);
+        _trackerMapWindow.Show(_window.Owner as Window ?? _window);
         _trackerMapWindow.Closed += (_, _) => _trackerMapWindow = null;
     }
 
@@ -248,6 +249,7 @@ public class TrackerWindowService(
             }
         }
 
+        _trackerMapWindow?.Close();
         tracker.StopTracking();
         _dispatcherTimer.Stop();
         _window.Close();
