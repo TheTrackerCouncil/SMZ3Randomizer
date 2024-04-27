@@ -48,6 +48,7 @@ public class TrackerWindowService(
     private readonly Dictionary<string, TrackerWindowItemPanelViewModel> _itemModels = new();
     private readonly List<TrackerWindowItemPanelViewModel> _medallions = new();
     private TrackerMapWindow? _trackerMapWindow;
+    private TrackerLocationsWindow? _trackerLocationsWindow;
 
     public TrackerWindowViewModel GetViewModel(TrackerWindow parent)
     {
@@ -58,6 +59,9 @@ public class TrackerWindowService(
         var bytes = Options.GeneralOptions.TrackerBGColor;
         _model.Background = new SolidColorBrush(Color.FromArgb(bytes[0], bytes[1], bytes[2], bytes[3]));
         _model.OpenTrackWindow = Options.GeneralOptions.DisplayMsuTrackWindow;
+
+        LocationViewModel.KeyImage = uiService.GetSpritePath("Items", "key.png", out _);
+        RegionViewModel.ChestImage = uiService.GetSpritePath("Items", "chest.png", out _);
 
         _dispatcherTimer.Interval = TimeSpan.FromSeconds(1);
         _dispatcherTimer.Tick += (_, _) => _model.TimeString = trackerTimerService.TimeString;
@@ -156,6 +160,28 @@ public class TrackerWindowService(
         _trackerMapWindow.Closed += (_, _) => _trackerMapWindow = null;
     }
 
+    public void OpenTrackerLocationsWindow()
+    {
+        if (_trackerLocationsWindow != null)
+        {
+            return;
+        }
+
+        _trackerLocationsWindow = serviceProvider.GetRequiredService<TrackerLocationsWindow>();
+        _trackerLocationsWindow.Show(_window.Owner as Window ?? _window);
+        _trackerLocationsWindow.OutOfLogicChanged += TrackerLocationsWindowOnOutOfLogicChanged;
+        _trackerLocationsWindow.Closed += (_, _) =>
+        {
+            _trackerLocationsWindow.OutOfLogicChanged -= TrackerLocationsWindowOnOutOfLogicChanged;
+            _trackerLocationsWindow = null;
+        };
+    }
+
+    private void TrackerLocationsWindowOnOutOfLogicChanged(object? sender, OutOfLogicChangedEventArgs e)
+    {
+        _trackerMapWindow?.UpdateShowOutOfLogic(e.ShowOutOfLogic);
+    }
+
     public void SetRom(GeneratedRom rom)
     {
         if (!GeneratedRom.IsValid(rom))
@@ -250,6 +276,7 @@ public class TrackerWindowService(
         }
 
         _trackerMapWindow?.Close();
+        _trackerLocationsWindow?.Close();
         tracker.StopTracking();
         _dispatcherTimer.Stop();
         _window.Close();

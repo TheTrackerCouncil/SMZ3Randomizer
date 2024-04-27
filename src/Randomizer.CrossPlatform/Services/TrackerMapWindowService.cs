@@ -4,10 +4,8 @@ using System.IO;
 using System.Linq;
 using Avalonia;
 using AvaloniaControls.ControlServices;
-using Microsoft.Extensions.Logging;
 using Randomizer.Abstractions;
 using Randomizer.CrossPlatform.ViewModels;
-using Randomizer.CrossPlatform.Views;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data.Options;
@@ -90,6 +88,11 @@ public class TrackerMapWindowService(
 
     private void TrackerOnMapUpdated(object? sender, EventArgs e)
     {
+        if (_model.SelectedMap?.ToString() == tracker.CurrentMap)
+        {
+            return;
+        }
+
         _model.Locations = [];
         var newMap = _model.Maps.FirstOrDefault(x => x.ToString() == tracker.CurrentMap);
         if (newMap != null)
@@ -120,8 +123,7 @@ public class TrackerMapWindowService(
 
                 var clearableLocationsCount = displayNumber = locationStatuses.Count(x => x.Status == LocationStatus.Available);
                 var relevantLocationsCount = locationStatuses.Count(x => x.Status == LocationStatus.Relevant);
-                //var outOfLogicLocationsCount = Syncer.ShowOutOfLogicLocations ? locationStatuses.Count(x => x.Status == LocationStatus.OutOfLogic) : 0;
-                var outOfLogicLocationsCount = false ? locationStatuses.Count(x => x.Status == LocationStatus.OutOfLogic) : 0;
+                var outOfLogicLocationsCount = _model.ShowOutOfLogicLocations ? locationStatuses.Count(x => x.Status == LocationStatus.OutOfLogic) : 0;
                 var unclearedLocationsCount = locationStatuses.Count(x => x.Status != LocationStatus.Cleared);
                 var clearedLocationsCount = locationStatuses.Count - unclearedLocationsCount;
 

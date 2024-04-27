@@ -26,6 +26,12 @@ public partial class TrackerMapWindow : RestorableWindow
         DataContext = _model = _service.GetViewModel();
     }
 
+    public void UpdateShowOutOfLogic(bool value)
+    {
+        _model.ShowOutOfLogicLocations = value;
+        _service?.UpdateLocations();
+    }
+
     private void MapCanvas_OnSizeChanged(object? sender, SizeChangedEventArgs e)
     {
         _service?.UpdateSize(e.NewSize);
