@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using AvaloniaControls;
@@ -97,29 +96,6 @@ public partial class MainWindow : RestorableWindow
     private void OptionsMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
         _serviceProvider?.GetRequiredService<OptionsWindow>().ShowDialog(this);
-    }
-
-    private void AboutMenuItem_OnClick(object? sender, RoutedEventArgs e)
-    {
-        throw new NotImplementedException();
-    }
-
-    private void MenuButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        if (sender is not Button button)
-        {
-            return;
-        }
-
-        var contextMenu = button.ContextMenu;
-        if (contextMenu == null)
-        {
-            return;
-        }
-
-        contextMenu.PlacementTarget = button;
-        contextMenu.Open();
-        e.Handled = true;
     }
 
     private void AboutButton_OnClick(object? sender, RoutedEventArgs e)

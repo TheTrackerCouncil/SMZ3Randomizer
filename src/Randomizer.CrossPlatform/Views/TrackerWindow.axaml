@@ -35,9 +35,6 @@
             <MenuItem Header="_Current Song"
                       x:Name="CurrentSongMenuItem"
                       Click="CurrentSongMenuItem_OnClick" />
-            <MenuItem Header="_Help"
-                      x:Name="HelpMenuItem"
-                      Click="HelpMenuItem_OnClick" />
             <MenuItem Header="_Auto Tracker Help"
                       x:Name="AutoTrackerMenuItem"
                       Click="AutoTrackerMenuItem_OnClick" />
@@ -75,6 +72,7 @@
                 <MenuItem Header="Lua Auto Tracker (Crowd Control Script)" Name="CrowdControlMenuItem" Click="CrowdControlMenuItem_OnClick"></MenuItem>
                 <MenuItem Header="Lua Auto Tracker (EmoTracker Script)" Name="EmoTrackerMenuItem" Click="EmoTrackerMenuItem_OnClick"></MenuItem>
                 <MenuItem Header="Show Auto Tracker Scripts Folder" Name="OpenFolderMenuItem" Click="OpenFolderMenuItem_OnClick"></MenuItem>
+                <MenuItem Header="Show Auto Tracker Help" Name="AutoTrackerHelp" Click="AutoTrackerMenuItem_OnClick"></MenuItem>
               </ContextMenu>
             </controls:ImageButton.ContextMenu>
             <avalonia:MaterialIcon Kind="{Binding ConnectedIcon}" Height="16" Background="Transparent" Foreground="{Binding ConnectedColor}"/>

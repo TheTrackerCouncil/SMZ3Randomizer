@@ -1,5 +1,4 @@
 using System.IO;
-using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -56,20 +55,8 @@ public partial class TrackerWindow : RestorableWindow
         }
 
         _currentTrackWindow = new CurrentTrackWindow();
-        _currentTrackWindow.Show(Owner as Window ?? this);
+        _currentTrackWindow.Show(this);
         _currentTrackWindow.Closed += (_, _) => _currentTrackWindow = null;
-    }
-
-    private void OpenTrackerMapWindow()
-    {
-        if (_trackerMapWindow != null)
-        {
-            return;
-        }
-
-        _trackerMapWindow = new TrackerMapWindow();
-        _trackerMapWindow.Show(Owner as Window ?? this);
-        _trackerMapWindow.Closed += (_, _) => _trackerMapWindow = null;
     }
 
     private void CreateLayout()
@@ -157,14 +144,10 @@ public partial class TrackerWindow : RestorableWindow
         OpenCurrentTrackWindow();
     }
 
-    private void HelpMenuItem_OnClick(object? sender, RoutedEventArgs e)
-    {
-        throw new System.NotImplementedException();
-    }
-
     private void AutoTrackerMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        var window = new AutoTrackingHelpWindow();
+        window.ShowDialog(this);
     }
 
     private bool _finishedShutdown;
