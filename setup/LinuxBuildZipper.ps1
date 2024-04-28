@@ -29,8 +29,8 @@ if (Test-Path -LiteralPath "$folder\Sprites") {
 Copy-Item "$parentFolder\sprites\Sprites\" -Destination "$folder\Sprites" -Recurse
 
 # Copy configs to be bundled together
-if (Test-Path -LiteralPath "$folder\Sprites") {
-    Remove-Item -LiteralPath "$folder\Sprites" -Recurse
+if (Test-Path -LiteralPath "$folder\Configs") {
+    Remove-Item -LiteralPath "$folder\Configs" -Recurse
 }
 Copy-Item "$parentFolder\configs\Profiles\" -Destination "$folder\Configs" -Recurse
 
