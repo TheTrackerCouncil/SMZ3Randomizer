@@ -28,6 +28,12 @@ if (Test-Path -LiteralPath "$folder\Sprites") {
 }
 Copy-Item "$parentFolder\sprites\Sprites\" -Destination "$folder\Sprites" -Recurse
 
+# Copy configs to be bundled together
+if (Test-Path -LiteralPath "$folder\Sprites") {
+    Remove-Item -LiteralPath "$folder\Sprites" -Recurse
+}
+Copy-Item "$parentFolder\configs\Profiles\" -Destination "$folder\Configs" -Recurse
+
 # Create dupes of Randomizer.CrossPlatform as SMZ3CasRandomizer
 Get-ChildItem -Filter "Randomizer.CrossPlatform*" -Path "$folder" | ForEach-Object {
     $newFileName = $_.Name -replace "Randomizer.CrossPlatform", "SMZ3CasRandomizer"
