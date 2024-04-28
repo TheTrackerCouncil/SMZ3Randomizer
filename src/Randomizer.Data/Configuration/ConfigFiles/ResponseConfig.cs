@@ -494,7 +494,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
         /// <summary>
         /// Gets the phrases to respond with when counting Hyper Beam shots.
         /// </summary> = new()
-        public SchrodingersString? CountHyperBeamShots { get; init; }
+        public Dictionary<int, SchrodingersString>? CountHyperBeamShots { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when an internal error occurs.
