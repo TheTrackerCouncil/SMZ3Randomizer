@@ -19,7 +19,6 @@ public partial class TrackerWindow : RestorableWindow
     private GeneratedRom? _generatedRom;
     private readonly TrackerWindowViewModel _model;
     private CurrentTrackWindow? _currentTrackWindow;
-    private TrackerMapWindow? _trackerMapWindow;
 
     public TrackerWindow()
     {
