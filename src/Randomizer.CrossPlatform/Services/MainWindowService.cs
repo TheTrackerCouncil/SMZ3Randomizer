@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using AvaloniaControls.Controls;
 using AvaloniaControls.ControlServices;
 using AvaloniaControls.Models;
@@ -89,6 +90,8 @@ public class MainWindowService(
 
     public async Task DownloadConfigsAsync()
     {
+        gitHubConfigDownloaderService.InstallDefaultConfigFolder();
+
         if (string.IsNullOrEmpty(_options.GeneralOptions.Z3RomPath) ||
             !_options.GeneralOptions.DownloadConfigsOnStartup)
         {
@@ -122,9 +125,12 @@ public class MainWindowService(
         }
         else
         {
-            SpriteDownloadStart?.Invoke(this, EventArgs.Empty);
-            await gitHubSpriteDownloaderService.DownloadSpritesAsync("TheTrackerCouncil", "SMZ3CasSprites", toDownload);
-            SpriteDownloadEnd?.Invoke(this, EventArgs.Empty);
+            await Dispatcher.UIThread.InvokeAsync(async () =>
+            {
+                SpriteDownloadStart?.Invoke(this, EventArgs.Empty);
+                await gitHubSpriteDownloaderService.DownloadSpritesAsync("TheTrackerCouncil", "SMZ3CasSprites", toDownload);
+                SpriteDownloadEnd?.Invoke(this, EventArgs.Empty);
+            });
         }
     }
 

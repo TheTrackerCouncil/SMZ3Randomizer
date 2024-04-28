@@ -5,6 +5,7 @@ using Avalonia.Interactivity;
 using AvaloniaControls;
 using AvaloniaControls.Controls;
 using AvaloniaControls.Models;
+using AvaloniaControls.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Randomizer.CrossPlatform.Services;
 using Randomizer.CrossPlatform.ViewModels;
@@ -88,9 +89,14 @@ public partial class MainWindow : RestorableWindow
             };
         }
 
-        _ = _service?.ValidateTwitchToken();
-        _ = _service?.DownloadConfigsAsync();
-        _ = _service?.DownloadSpritesAsync();
+        if (_service == null)
+        {
+            return;
+        }
+
+        ITaskService.Run(_service.ValidateTwitchToken);
+        ITaskService.Run(_service.DownloadConfigsAsync);
+        ITaskService.Run(_service.DownloadSpritesAsync);
     }
 
     private void OptionsMenuItem_OnClick(object? sender, RoutedEventArgs e)
