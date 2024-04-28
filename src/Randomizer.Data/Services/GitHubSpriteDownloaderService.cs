@@ -22,6 +22,7 @@ public class GitHubSpriteDownloaderService : IGitHubSpriteDownloaderService
         _logger = logger;
         _optionsFactory = optionsFactory;
         _spriteFolder = Sprite.SpritePath;
+        _logger.LogInformation("Sprite path: {Path}", Sprite.SpritePath);
     }
 
     public async Task<IDictionary<string, string>?> GetSpritesToDownloadAsync(string owner, string repo, TimeSpan? timeout = null)
