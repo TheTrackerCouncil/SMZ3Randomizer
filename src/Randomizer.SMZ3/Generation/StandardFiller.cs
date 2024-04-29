@@ -157,7 +157,10 @@ namespace Randomizer.SMZ3.Generation
                         // Some locations (AKA Shaktool) get pretty tough to tell if an item is needed there, so a workaround is to
                         // grab an item from the opposite game to minimize chances of situations where an item required to access a
                         // location is picked to go there
-                        var item = progressionItems.FirstOrDefault(x => x.Type.IsInCategory(ItemCategory.Metroid) && location.Region is Z3Region || x.Type.IsInCategory(ItemCategory.Zelda) && location.Region is SMRegion);
+                        var item = progressionItems.Where(x =>
+                            ((x.Type.IsInCategory(ItemCategory.Metroid) && location.Region is Z3Region) ||
+                            (x.Type.IsInCategory(ItemCategory.Zelda) && location.Region is SMRegion)) &&
+                            !x.Type.IsInAnyCategory(ItemCategory.Junk, ItemCategory.Scam)).Random(Random);
 
                         if (item != null)
                         {
