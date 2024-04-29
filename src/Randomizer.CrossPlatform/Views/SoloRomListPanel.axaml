@@ -8,7 +8,14 @@
              x:Class="Randomizer.CrossPlatform.Views.SoloRomListPanel"
              x:DataType="viewModels:SoloRomListViewModel">
   <Grid RowDefinitions="*, Auto">
-    <ListBox Grid.Row="0" ItemsSource="{Binding Roms }" BorderThickness="0">
+    <StackPanel IsVisible="{Binding !HasRoms}" Margin="5 2">
+      <TextBlock TextWrapping="Wrap">It looks like you don't have any generated roms yet! Press quick play below to generate and launch a rom with the either the default or last used settings, or click generate custom game to change settings before playing.</TextBlock>
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+        <Button Grid.Column="0" HorizontalAlignment="Right" Click="QuickPlayButton_OnClick" Margin="0 0 2.5 0">_Quick play</Button>
+        <Button Grid.Column="1" HorizontalAlignment="Left" Click="GenerateRomButton_OnClick" Margin="2.5 0 0 0">Generate custom game...</Button>
+      </StackPanel>
+    </StackPanel>
+    <ListBox Grid.Row="0" ItemsSource="{Binding Roms }" BorderThickness="0" IsVisible="{Binding HasRoms}">
       <ListBox.ItemTemplate>
           <DataTemplate>
             <Grid Margin="0,2" Background="Transparent">

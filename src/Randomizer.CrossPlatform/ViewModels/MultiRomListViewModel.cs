@@ -8,9 +8,10 @@ namespace Randomizer.CrossPlatform.ViewModels;
 
 public class MultiRomListViewModel : ViewModelBase
 {
-    [Reactive] public List<MultiplayerRomViewModel> Games { get; set; } = [];
+    [Reactive]
+    [ReactiveLinkedProperties(nameof(IsListVisible))]
+    public List<MultiplayerRomViewModel> Games { get; set; } = [];
 
-    [ReactiveLinkedProperties(nameof(Games))]
     public bool IsListVisible => Games.Count > 0;
 
     public void UpdateList(ICollection<MultiplayerGameDetails> details)
