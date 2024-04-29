@@ -10,6 +10,7 @@ using Avalonia.Threading;
 using AvaloniaControls.Controls;
 using AvaloniaControls.ControlServices;
 using AvaloniaControls.Models;
+using AvaloniaControls.Services;
 using GitHubReleaseChecker;
 using Microsoft.Extensions.Logging;
 using NAudio.MediaFoundation;
@@ -40,7 +41,7 @@ public class MainWindowService(
         _window = window;
         _options = optionsFactory.Create();
         _model.HasInvalidOptions = !_options.GeneralOptions.Validate();
-        _ = CheckForUpdates();
+        ITaskService.Run(CheckForUpdates);
         return _model;
     }
 
