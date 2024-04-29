@@ -113,7 +113,7 @@ public class OptionsWindowRandomizerOptions : INotifyPropertyChanged
 
     private void ValidateMsuPath()
     {
-        if (string.IsNullOrEmpty(RomOutputPath) || string.IsNullOrEmpty(MsuPath))
+        if (string.IsNullOrEmpty(RomOutputPath) || string.IsNullOrEmpty(MsuPath) || !OperatingSystem.IsWindows())
         {
             DisplayMsuWarning = false;
             return;

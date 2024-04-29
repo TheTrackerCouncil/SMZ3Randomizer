@@ -30,6 +30,7 @@ public class SharedCrossplatformService(
     Smz3GeneratedRomLoader smz3GeneratedRomLoader,
     ILogger<SharedCrossplatformService> logger)
 {
+    private static TrackerWindow? s_trackerWindow;
     private RandomizerOptions? _options;
     private Window? _parentWindow;
 
@@ -151,6 +152,12 @@ public class SharedCrossplatformService(
             return;
         }
 
+        if (s_trackerWindow != null)
+        {
+            DisplayError("Tracker window already open");
+            return;
+        }
+
         try
         {
             smz3GeneratedRomLoader.LoadGeneratedRom(rom);
@@ -159,10 +166,14 @@ public class SharedCrossplatformService(
             var trackerOptionsAccessor = scope.ServiceProvider.GetRequiredService<TrackerOptionsAccessor>();
             trackerOptionsAccessor.Options = Options.GeneralOptions.GetTrackerOptions();
 
-            var trackerWindow = scope.ServiceProvider.GetRequiredService<TrackerWindow>();
-            trackerWindow.Closed += (_, _) => scope.Dispose();
-            trackerWindow.Rom = rom;
-            trackerWindow.Show(ParentWindow);
+            s_trackerWindow = scope.ServiceProvider.GetRequiredService<TrackerWindow>();
+            s_trackerWindow.Closed += (_, _) =>
+            {
+                s_trackerWindow = null;
+                scope.Dispose();
+            };
+            s_trackerWindow.Rom = rom;
+            s_trackerWindow.Show(ParentWindow);
         }
         catch (YamlDotNet.Core.SemanticErrorException ex)
         {
