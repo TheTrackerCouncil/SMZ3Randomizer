@@ -54,7 +54,7 @@ public partial class TrackerWindow : RestorableWindow
         }
 
         _currentTrackWindow = new CurrentTrackWindow();
-        _currentTrackWindow.Show(this);
+        _currentTrackWindow.Show(Owner as Window ?? this);
         _currentTrackWindow.Closed += (_, _) => _currentTrackWindow = null;
     }
 

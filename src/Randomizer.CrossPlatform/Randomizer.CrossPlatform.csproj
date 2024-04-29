@@ -15,9 +15,9 @@
 
     <ItemGroup>
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Include="MattEqualsCoder.AvaloniaControls" Version="0.9.13" />
-        <PackageReference Include="MattEqualsCoder.DynamicForms.Avalonia" Version="0.0.3-rc.1" />
-        <PackageReference Include="MattEqualsCoder.MSURandomizer.Avalonia" Version="2.0.0-rc.2" />
+        <PackageReference Include="MattEqualsCoder.AvaloniaControls" Version="0.9.14" />
+        <PackageReference Include="MattEqualsCoder.DynamicForms.Avalonia" Version="0.0.3-rc.2" />
+        <PackageReference Include="MattEqualsCoder.MSURandomizer.Avalonia" Version="2.0.0-rc.3" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
         <PackageReference Include="ReactiveUI.Fody" Version="19.5.41" />
         <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />

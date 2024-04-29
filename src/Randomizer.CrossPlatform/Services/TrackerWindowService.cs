@@ -156,7 +156,7 @@ public class TrackerWindowService(
         }
 
         _trackerMapWindow = serviceProvider.GetRequiredService<TrackerMapWindow>();
-        _trackerMapWindow.Show(_window);
+        _trackerMapWindow.Show(_window.Owner as Window ?? _window);
         _trackerMapWindow.Closed += (_, _) => _trackerMapWindow = null;
     }
 
@@ -168,7 +168,7 @@ public class TrackerWindowService(
         }
 
         _trackerLocationsWindow = serviceProvider.GetRequiredService<TrackerLocationsWindow>();
-        _trackerLocationsWindow.Show(_window);
+        _trackerLocationsWindow.Show(_window.Owner as Window ?? _window);
         _trackerLocationsWindow.OutOfLogicChanged += TrackerLocationsWindowOnOutOfLogicChanged;
         _trackerLocationsWindow.Closed += (_, _) =>
         {
@@ -462,7 +462,7 @@ public class TrackerWindowService(
         model.Clicked += (_, _) => tracker.MarkDungeonAsCleared(dungeon);
         model.ResetCleared += (_, _) => tracker.MarkDungeonAsIncomplete(dungeon);
         model.TreasureCleared += (_, _) => tracker.ClearDungeon(dungeon);
-        model.RewardSet += (_, args) =>tracker.SetDungeonReward(dungeon, args.RewardType);
+        model.RewardSet += (_, args) => tracker.SetDungeonReward(dungeon, args.RewardType);
 
         _dungeonModels.Add(dungeon.DungeonName, model);
 
@@ -517,7 +517,7 @@ public class TrackerWindowService(
             Buttons = buttons
         });
 
-        await window.ShowDialog(_window);
+        await window.ShowDialog(_window.Owner as Window ?? _window);
 
         return window.DialogResult;
     }
