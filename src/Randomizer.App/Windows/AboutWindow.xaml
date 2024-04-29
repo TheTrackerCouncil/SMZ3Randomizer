@@ -54,7 +54,7 @@
                  Margin="0"
                  Text="{Binding Version, StringFormat={}Version {0}}" />
     </Grid>
-    <TextBlock FontWeight="SemiBold">Created by Vivelin and MattEqualsCoder</TextBlock>
+    <TextBlock FontWeight="SemiBold">Created by Vivelin, MattEqualsCoder, and CPColin</TextBlock>
     <TextBlock>
       Based on the original
       <Hyperlink NavigateUri="https://samus.link/"
