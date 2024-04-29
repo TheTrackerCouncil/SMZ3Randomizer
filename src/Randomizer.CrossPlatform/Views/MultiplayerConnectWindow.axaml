@@ -7,8 +7,8 @@
         mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="225"
         CanResize="False"
         MinWidth="500" MaxWidth="500"
-        MinHeight="225" MaxHeight="225"
         WindowStartupLocation="CenterOwner"
+        SizeToContent="Height"
         Closing="Window_OnClosing"
         Icon="/Assets/chozo20.ico"
         x:Class="Randomizer.CrossPlatform.Views.MultiplayerConnectWindow"
@@ -74,23 +74,20 @@
                      Margin="5 0 0 0 " />
           </controls:LabeledControl>
 
-          <controls:LabeledControl Text="Game mode:" IsTabStop="False">
+          <controls:LabeledControl Text="Game mode:" IsTabStop="False" IsVisible="{Binding IsCreatingGame}">
             <StackPanel Orientation="Vertical">
               <controls:EnumComboBox Value="{Binding MultiplayerGameType}"
                         EnumType="{Binding MultiplayerGameType, Converter={StaticResource TypeConverter}}"
                         HorizontalAlignment="Left"
                         MinWidth="75"
-                        Margin="5 0 0 0 "
-                        IsEnabled="{Binding IsCreatingGame}" />
+                        Margin="5 0 0 0 "/>
               <CheckBox IsChecked="{Binding AsyncGame}"
                         Margin="5 5 0 0"
                         Content="Async/multi-session game"
-                        IsEnabled="{Binding IsCreatingGame}"
                         ToolTip.Tip="Saves the game to a database on the server so that the game can be continued even when the server does not receive updates from any players."/>
               <CheckBox IsChecked="{Binding DeathLink}"
                         Margin="5 5 0 0"
                         Content="Death link (experimental)"
-                        IsEnabled="{Binding IsCreatingGame}"
                         ToolTip.Tip="If one player dies, automatically kill all of the other players."/>
               </StackPanel>
           </controls:LabeledControl>

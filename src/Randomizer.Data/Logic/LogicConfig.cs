@@ -47,7 +47,7 @@ public class LogicConfig : ViewModelBase
     public bool ZoraNeedsRupeeItems { get; set; }
 
     [DynamicFormFieldCheckBox(checkBoxText: "Include Quarter Magic", toolTipText: "Adds an additional progressive half magic to the item pool.", groupName: "CasMiddle")]
-    public bool QuarterMagic { get; set; } = true;
+    public bool QuarterMagic { get; set; }
 
     [YamlIgnore]
     [DynamicFormFieldText(groupName: "TricksTop")]

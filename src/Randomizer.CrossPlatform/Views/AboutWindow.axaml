@@ -45,7 +45,7 @@
                    x:Name="TextBlockVersion"
                    Text="" />
       </Grid>
-      <TextBlock FontWeight="SemiBold" Margin="0 0 0 15">Created by Vivelin and MattEqualsCoder</TextBlock>
+      <TextBlock FontWeight="SemiBold" Margin="0 0 0 15">Created by Vivelin, MattEqualsCoder, and CPColin</TextBlock>
       <TextBlock TextWrapping="Wrap">
         Based on the original
         <InlineUIContainer>

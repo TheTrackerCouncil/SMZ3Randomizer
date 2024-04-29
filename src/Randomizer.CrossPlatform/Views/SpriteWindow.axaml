@@ -5,7 +5,8 @@
         xmlns:viewModels="clr-namespace:Randomizer.Data.ViewModels;assembly=Randomizer.Data"
         xmlns:controls="clr-namespace:AvaloniaControls.Controls;assembly=AvaloniaControls"
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="600"
+        Width="1100" Height="600"
         x:Class="Randomizer.CrossPlatform.Views.SpriteWindow"
         WindowStartupLocation="CenterOwner"
         Loaded="Control_OnLoaded"
@@ -66,7 +67,7 @@
                             Click="SelectButton_OnClick"
                             Tag="{Binding}"
                     >
-                      <Image Grid.Column="0" Source="{Binding PreviewPath, Converter={StaticResource StringToImageConverter}}" Width="{Binding ImageWidth}" Height="{Binding ImageHeight}" />
+                      <Image Source="{Binding PreviewPath, Converter={StaticResource StringToImageConverter}}" Width="{Binding ImageWidth}" Height="{Binding ImageHeight}" />
                     </controls:ImageButton>
 
                     <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10 0 0 0" VerticalAlignment="Center">
