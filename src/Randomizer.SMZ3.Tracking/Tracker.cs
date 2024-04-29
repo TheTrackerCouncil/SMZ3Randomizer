@@ -2284,7 +2284,18 @@ public sealed class Tracker : TrackerBase, IDisposable
 
     public override void CountHyperBeamShots(int count)
     {
-        Say(Responses.CountHyperBeamShots?.Format(count));
+        var responseIndex = 0;
+
+        // Find the response with the closest value to the target count, without being higher
+        for (var i = 0; i <= count; i++)
+        {
+            if (Responses.CountHyperBeamShots?.ContainsKey(i) == true)
+            {
+                responseIndex = i;
+            }
+        }
+
+        Say(x => x.CountHyperBeamShots?[responseIndex], count);
     }
 
     /// <summary>
