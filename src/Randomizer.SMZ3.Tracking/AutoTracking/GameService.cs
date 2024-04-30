@@ -298,7 +298,7 @@ public class GameService : TrackerModule, IGameService
             SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
             AddressFormat = AddressFormat.Snes9x,
             SniMemoryMapping = MemoryMapping.ExHiRom,
-            Address = 0x7EF373,
+            Address = 0x7EF375,
             Data = new List<byte>() { 0xFF }
         });
 
