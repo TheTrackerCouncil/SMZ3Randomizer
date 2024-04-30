@@ -146,12 +146,13 @@ public class GameService : TrackerModule, IGameService
                     Length = 0x300,
                     OnResponse = (secondDataSet, secondPrevData) =>
                     {
-                        // Determine number of gifted items by looking at both sets of data
+                        // Determine number of gifted items by looking at both sets of data.
+                        // Each item takes up two words and we're interested in the second word in each pair.
                         var data = firstDataSet.Raw.Concat(secondDataSet.Raw).ToArray();
                         var itemCounter = 0;
-                        for (var i = 0; i < 0x150; i++)
+                        for (var i = 2; i < 0x600; i += 4)
                         {
-                            var item = (ItemType)BitConverter.ToUInt16(data.AsSpan(i * 4 + 2, 2));
+                            var item = (ItemType)BitConverter.ToUInt16(data.AsSpan(i, 2));
                             if (item != ItemType.Nothing)
                             {
                                 itemCounter++;
