@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Randomizer.CrossPlatform;
 
-public class Directories
+public static class Directories
 {
     public static string AppDataFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer");
     public static string LogFolder => Path.Combine(AppDataFolder, "Logs");

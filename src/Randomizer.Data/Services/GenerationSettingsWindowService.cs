@@ -451,6 +451,11 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         _model.Basic.Summary = sb.ToString().Trim();
     }
 
+    public string? GetMsuDirectory()
+    {
+        return _options.GeneralOptions.MsuPath;
+    }
+
     private string GetObjectSummary(object obj, string prefix, string separator)
     {
         var properties = obj.GetType().GetProperties()

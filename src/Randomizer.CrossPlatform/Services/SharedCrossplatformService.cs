@@ -144,18 +144,18 @@ public class SharedCrossplatformService(
         }
     }
 
-    public void LaunchTracker(GeneratedRom? rom)
+    public TrackerWindow? LaunchTracker(GeneratedRom? rom)
     {
         if (rom == null)
         {
             DisplayError("Invalid rom");
-            return;
+            return null;
         }
 
         if (s_trackerWindow != null)
         {
             DisplayError("Tracker window already open");
-            return;
+            return null;
         }
 
         try
@@ -174,16 +174,19 @@ public class SharedCrossplatformService(
             };
             s_trackerWindow.Rom = rom;
             s_trackerWindow.Show(ParentWindow);
+            return s_trackerWindow;
         }
         catch (YamlDotNet.Core.SemanticErrorException ex)
         {
             logger.LogError(ex, "A YAML parsing error occurred");
             DisplayError(ex.Message + "\n\n" + ex.InnerException?.Message);
+            return null;
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "An unhandled exception occurred when starting the tracker.");
             DisplayError("Unknown error opening tracker");
+            return null;
         }
     }
 

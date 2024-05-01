@@ -26,6 +26,7 @@ public class MultiplayerStatusWindowService(MultiplayerClientService multiplayer
     private MultiplayerStatusWindow _window = null!;
     private MultiplayerStatusWindowViewModel _model = new();
     private RandomizerOptions _options = null!;
+    private TrackerWindow? _trackerWindow;
 
     public MultiplayerStatusWindowViewModel GetViewModel(MultiplayerStatusWindow window, MultiplayerRomViewModel romModel)
     {
@@ -129,7 +130,11 @@ public class MultiplayerStatusWindowService(MultiplayerClientService multiplayer
 
     public void LaunchTracker()
     {
-        sharedCrossplatformService.LaunchTracker(_model.GeneratedRom);
+        _trackerWindow = sharedCrossplatformService.LaunchTracker(_model.GeneratedRom);
+        if (_trackerWindow != null)
+        {
+            _trackerWindow.Closed += (_, _) => _trackerWindow = null;
+        }
     }
 
     public void LaunchRom()
@@ -237,6 +242,8 @@ public class MultiplayerStatusWindowService(MultiplayerClientService multiplayer
 
     public void Dispose()
     {
+        _trackerWindow?.Close();
+
         multiplayerGameService.Dispose();
         ITaskService.Run(async () =>
         {
@@ -252,5 +259,6 @@ public class MultiplayerStatusWindowService(MultiplayerClientService multiplayer
         multiplayerClientService.GameStateUpdated -= MultiplayerClientServiceOnGameStateUpdated;
         multiplayerClientService.GameStarted -= MultiplayerClientServiceOnGameStarted;
         GC.SuppressFinalize(this);
+
     }
 }
