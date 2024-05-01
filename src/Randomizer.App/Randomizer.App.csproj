@@ -62,7 +62,7 @@
     <PackageReference Include="Material.Icons.WPF" Version="2.1.9" />
     <PackageReference Include="MattEqualsCoder.DynamicForms.WPF" Version="0.0.3-rc.1" />
     <PackageReference Include="MattEqualsCoder.GitHubReleaseChecker" Version="1.1.2" />
-    <PackageReference Include="MattEqualsCoder.MSURandomizer.UI" Version="2.0.0-rc.13" />
+    <PackageReference Include="MattEqualsCoder.MSURandomizer.UI" Version="2.0.1-rc.1" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="NReco.Logging.File" Version="1.2.0" />
