@@ -27,10 +27,15 @@ public class TrackerMapWindowService(
 {
     private TrackerMapWindowViewModel _model = new();
     private Dictionary<TrackerMap, List<TrackerMapLocationViewModel>> _mapLocations = new();
+    private string _markedImageGoodPath = "";
+    private string _markedImageUselessPath = "";
 
     public TrackerMapWindowViewModel GetViewModel()
     {
         _model.Maps = trackerMapConfig.Maps.ToList();
+
+        _markedImageGoodPath = Path.Combine(Sprite.SpritePath, "Maps", "marked_good.png");
+        _markedImageUselessPath = Path.Combine(Sprite.SpritePath, "Maps", "marked_useless.png");
 
         var locations = worldAccessor.World.Locations.ToList();
 
@@ -80,6 +85,7 @@ public class TrackerMapWindowService(
         tracker.StateLoaded += (_, _) => UpdateLocations();
         tracker.BossUpdated += (_, _) => UpdateLocations();
         tracker.MapUpdated += TrackerOnMapUpdated;
+        tracker.MarkedLocationsUpdated += (_, _) => UpdateLocations();
 
         _model.SelectedMap = _model.Maps.Last();
         UpdateMap();
@@ -111,6 +117,9 @@ public class TrackerMapWindowService(
 
         locations ??= _model.Locations;
 
+        var world = locations.First().Region.World;
+        var hintTileLocations = world.ActiveHintTileLocations.ToList();
+
         foreach (var location in locations)
         {
             var region = location.Region;
@@ -125,7 +134,6 @@ public class TrackerMapWindowService(
                 var relevantLocationsCount = locationStatuses.Count(x => x.Status == LocationStatus.Relevant);
                 var outOfLogicLocationsCount = _model.ShowOutOfLogicLocations ? locationStatuses.Count(x => x.Status == LocationStatus.OutOfLogic) : 0;
                 var unclearedLocationsCount = locationStatuses.Count(x => x.Status != LocationStatus.Cleared);
-                var clearedLocationsCount = locationStatuses.Count - unclearedLocationsCount;
 
                 if (clearableLocationsCount > 0 && clearableLocationsCount == unclearedLocationsCount)
                 {
@@ -146,6 +154,68 @@ public class TrackerMapWindowService(
                 else if (clearableLocationsCount == 0 && outOfLogicLocationsCount > 0)
                 {
                     image = "outoflogic.png";
+                }
+
+                // If there are any valid locations, see if anything was marked
+                if (clearableLocationsCount > 0 || relevantLocationsCount > 0)
+                {
+                    var markedLocations = locationStatuses
+                        .Where(x => x.Status is LocationStatus.Available or LocationStatus.Relevant &&
+                                    hintTileLocations.Contains(x.Location.Id)).ToList();
+
+                    if (markedLocations.Any())
+                    {
+                        var activeLocationIds = markedLocations.Select(x => x.Location.Id);
+                        var hintTile = world.HintTiles.FirstOrDefault(x => x.Locations?.Intersect(activeLocationIds).Any() == true);
+                        if (hintTile?.Usefulness is LocationUsefulness.Mandatory or LocationUsefulness.Sword
+                            or LocationUsefulness.NiceToHave)
+                        {
+                            location.MarkedImagePath = _markedImageGoodPath;
+                        }
+                        else if (hintTile?.Usefulness == LocationUsefulness.Useless)
+                        {
+                            location.MarkedImagePath = _markedImageUselessPath;
+                        }
+                        else if (markedLocations.Any(x => x.Location.Item.Type.IsPossibleProgression(x.Location.World.Config.ZeldaKeysanity, x.Location.World.Config.MetroidKeysanity)))
+                        {
+                            location.MarkedImagePath = _markedImageGoodPath;
+                        }
+                        else
+                        {
+                            location.MarkedImagePath = _markedImageUselessPath;
+                        }
+
+                        location.MarkedVisibility = true;
+                    }
+                    // For marked items, we compare the marked items at the locations
+                    else
+                    {
+                        markedLocations = locationStatuses
+                            .Where(x => x.Status is LocationStatus.Available or LocationStatus.Relevant &&
+                                        x.Location.State.MarkedItem != null).ToList();
+
+                        if (markedLocations.Any())
+                        {
+                            if (markedLocations.Any(x => x.Location.State.MarkedItem!.Value.IsPossibleProgression(x.Location.World.Config.ZeldaKeysanity, x.Location.World.Config.MetroidKeysanity)))
+                            {
+                                location.MarkedImagePath = _markedImageGoodPath;
+                            }
+                            else
+                            {
+                                location.MarkedImagePath = _markedImageUselessPath;
+                            }
+
+                            location.MarkedVisibility = true;
+                        }
+                        else
+                        {
+                            location.MarkedVisibility = false;
+                        }
+                    }
+                }
+                else
+                {
+                    location.MarkedVisibility = false;
                 }
 
             }
