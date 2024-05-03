@@ -1,11 +1,8 @@
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Avalonia.Interactivity;
 using Avalonia.Threading;
 using AvaloniaControls.Controls;
 using AvaloniaControls.ControlServices;
@@ -13,14 +10,11 @@ using AvaloniaControls.Models;
 using AvaloniaControls.Services;
 using GitHubReleaseChecker;
 using Microsoft.Extensions.Logging;
-using NAudio.MediaFoundation;
 using Randomizer.CrossPlatform.ViewModels;
 using Randomizer.CrossPlatform.Views;
-using Randomizer.Data.Configuration;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.SMZ3.ChatIntegration;
-using ReactiveUI;
 
 namespace Randomizer.CrossPlatform.Services;
 
