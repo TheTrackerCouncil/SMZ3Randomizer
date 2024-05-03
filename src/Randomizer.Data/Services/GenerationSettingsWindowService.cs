@@ -31,6 +31,8 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
 
         _model.Basic.Presets = GetPresets();
         _model.Basic.SelectedPreset = _model.Basic.Presets.First();
+        _model.Basic.MsuShuffleStyle = _options.PatchOptions.MsuShuffleStyle;
+        _model.Basic.MsuRandomizationStyle = _options.PatchOptions.MsuRandomizationStyle;
 
         _model.GameSettings.KeysanityMode = _options.SeedOptions.KeysanityMode;
         _model.GameSettings.CrystalsNeededForGT = _options.SeedOptions.GanonsTowerCrystalCount;
@@ -155,6 +157,7 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
 
         _options.LogicConfig = _model.Logic.LogicConfig.Clone();
         _options.PatchOptions.CasPatches = _model.Logic.CasPatches.Clone();
+        _options.PatchOptions.MsuShuffleStyle = _model.Basic.MsuShuffleStyle;
 
         _model.Items.ApplySettings(_options);
 
@@ -292,6 +295,7 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         _options.PatchOptions.MsuRandomizationStyle = randomizationStyle;
         UpdateMsuText();
         _options.Save();
+        _model.Basic.MsuRandomizationStyle = randomizationStyle;
     }
 
     public void SetMsuPath(string path)
