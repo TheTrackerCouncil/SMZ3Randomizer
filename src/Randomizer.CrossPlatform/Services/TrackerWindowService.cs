@@ -112,14 +112,25 @@ public class TrackerWindowService(
         {
             if (args.Item == null)
             {
-                return;
+                foreach (var item in itemService.LocalPlayersItems())
+                {
+                    if (_itemModels.TryGetValue(item.Name, out var itemsPanel))
+                    {
+                        var itemPath = uiService.GetSpritePath(item);
+                        itemsPanel.UpdateItem(item, itemPath);
+                    }
+                }
+            }
+            else
+            {
+                if (_itemModels.TryGetValue(args.Item.Name, out var itemsPanel))
+                {
+                    var itemPath = uiService.GetSpritePath(args.Item);
+                    itemsPanel.UpdateItem(args.Item, itemPath);
+                }
             }
 
-            if (_itemModels.TryGetValue(args.Item.Name, out var itemsPanel))
-            {
-                var itemPath = uiService.GetSpritePath(args.Item);
-                itemsPanel.UpdateItem(args.Item, itemPath);
-            }
+
         };
 
         if (TrackerWindowPanelViewModel.NumberImagePaths.Count == 0)
