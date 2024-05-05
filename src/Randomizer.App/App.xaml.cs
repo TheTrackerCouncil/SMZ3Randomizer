@@ -226,13 +226,14 @@ namespace Randomizer.App
             if (toDownload is not { Count: > 4 })
             {
                 await spriteDownloader.DownloadSpritesAsync("TheTrackerCouncil", "SMZ3CasSprites", toDownload);
-                return;
+                await _host!.Services.GetRequiredService<SpriteService>().LoadSpritesAsync();
             }
             else
             {
                 _spriteDownloaderWindow = new SpriteDownloaderWindow();
                 _spriteDownloaderWindow.Show();
                 await spriteDownloader.DownloadSpritesAsync("TheTrackerCouncil", "SMZ3CasSprites", toDownload);
+                await _host!.Services.GetRequiredService<SpriteService>().LoadSpritesAsync();
             }
         }
 
