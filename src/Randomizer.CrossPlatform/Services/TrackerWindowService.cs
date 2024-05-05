@@ -201,7 +201,6 @@ public class TrackerWindowService(
         }
 
         _model.Rom = rom;
-        ITaskService.Run(sharedCrossplatformService.LookupMsus);
         var romPath = Path.Combine(Options.RomOutputPath, rom.RomPath);
         tracker.Load(rom, romPath);
     }
