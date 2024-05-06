@@ -28,6 +28,34 @@
   - Config files that have extra fields in them will no longer error out when loaded.
   - Various tracker line have been added and updated.
 
+### Changes in 9.7.1
+
+- Fixed an issue when saving tracker and reloading after viewing a hint tile about the medallion requirement for Misery Mire or Turtle Rock
+
+### Changes in 9.7.2
+
+- Fixed an issue where Tracker could give misleading hints when asking about cleared crystal dungeons.
+
+### Changes in 9.7.3
+
+- **Sandpit Platforms**
+  - Added a new Cas' patch for sandpit platforms to make it easier to traverse Maridia without the space jump. This setting doesn't modify any of the logic.
+  ![image](https://github.com/TheTrackerCouncil/SMZ3Randomizer/assets/63823784/810b133d-fa4a-4944-a03d-1a53dc4fb097)
+
+- **Miscellaneous Updates and Fixes**
+
+  - Fixed an issue that could cause UI layouts to be duplicated in the dropdown
+  - Fixed an issue where previous settings strings could apply to multiworlds and plandos
+  - Fixed the credits music not playing on bsnes and on certain hardware
+  - Fixed stutter sounds that could happen when changing tracks in SM on the FxPakPro
+  - Fixed an issue with using QUSB2SNES and FxPakPro on certain systems
+  - Fixed an issue that could prevent certain item location settings not generating successfully
+  
+### Changes in 9.7.4
+
+- Fixed an issue that could cause tracker to conflict with the MSU Randomizer
+- Fixed detection of Metroid deaths to work when manual reserve tanks are enabled
+
 ## Changes in 9.6.1
 
 - **Advanced Tracker Mood Functionality**
