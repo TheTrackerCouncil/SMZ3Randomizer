@@ -29,7 +29,6 @@ using SnesConnectorLibrary;
 namespace Randomizer.CrossPlatform.Services;
 
 public class TrackerWindowService(
-    SharedCrossplatformService sharedCrossplatformService,
     TrackerBase tracker,
     IUIService uiService,
     IItemService itemService,
