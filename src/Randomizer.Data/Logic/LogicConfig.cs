@@ -1,3 +1,4 @@
+using System.Linq;
 using DynamicForms.Library.Core;
 using DynamicForms.Library.Core.Attributes;
 using Randomizer.Data.ViewModels;
@@ -15,6 +16,31 @@ namespace Randomizer.Data.Logic;
 [DynamicFormGroupBasic(DynamicFormLayout.SideBySide, name: "TricksBottom", parentGroup: "Tricks and Advanced Logic")]
 public class LogicConfig : ViewModelBase
 {
+    public LogicConfig()
+    {
+
+    }
+
+    public LogicConfig(bool enableAllCasOptions, bool enableAllTricks, WallJumpDifficulty wallJumpDifficulty)
+    {
+        foreach (var property in GetType().GetProperties().Where(x => x.PropertyType == typeof(bool)))
+        {
+            var attribute = property.GetCustomAttributes(true).Cast<DynamicFormObjectAttribute>()
+                .FirstOrDefault(x => x != null);
+
+            if (attribute?.GroupName.StartsWith("Cas") == true)
+            {
+                property.SetValue(this, enableAllCasOptions);
+            }
+            else if (attribute?.GroupName.StartsWith("Tricks") == true)
+            {
+                property.SetValue(this, enableAllTricks);
+            }
+        }
+
+        WallJumpDifficulty = wallJumpDifficulty;
+    }
+
     [YamlIgnore]
     [DynamicFormFieldText(groupName: "CasTop")]
     public string CasLogicDescription => "Logic settings that will make the experience more relaxed and easier to play.";
