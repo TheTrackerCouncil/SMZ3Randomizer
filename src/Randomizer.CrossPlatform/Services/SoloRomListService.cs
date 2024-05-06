@@ -7,6 +7,7 @@ using AvaloniaControls;
 using AvaloniaControls.Controls;
 using AvaloniaControls.ControlServices;
 using AvaloniaControls.Models;
+using AvaloniaControls.Services;
 using Randomizer.CrossPlatform.ViewModels;
 using Randomizer.CrossPlatform.Views;
 using Randomizer.Data.Interfaces;
@@ -31,6 +32,7 @@ public class SoloRomListService(IRomGenerationService romGenerationService,
         sharedCrossplatformService.ParentControl = _panel;
         _options = optionsFactory.Create();
         UpdateList();
+        sharedCrossplatformService.LookupMsus();
         return _model;
     }
 

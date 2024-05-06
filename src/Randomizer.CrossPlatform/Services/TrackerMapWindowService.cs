@@ -117,6 +117,11 @@ public class TrackerMapWindowService(
 
         locations ??= _model.Locations;
 
+        if (locations.Count == 0)
+        {
+            return;
+        }
+
         var world = locations.First().Region.World;
         var hintTileLocations = world.ActiveHintTileLocations.ToList();
 

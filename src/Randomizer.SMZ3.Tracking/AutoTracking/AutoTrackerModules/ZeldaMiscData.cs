@@ -58,7 +58,7 @@ public class ZeldaMiscData(TrackerBase tracker, ISnesConnectorService snesConnec
         AutoTracker.PlayerHasFairy = hasFairy;
 
         // Activated flute
-        if (data.CheckUInt8Flag(0x10C, 0x01) && !data.CheckUInt8Flag(0x10C, 0x01))
+        if (data.CheckUInt8Flag(0x10C, 0x01) && !prevData.CheckUInt8Flag(0x10C, 0x01))
         {
             var duckItem = itemService.FirstOrDefault("Duck");
             if (duckItem?.State.TrackingState == 0)
