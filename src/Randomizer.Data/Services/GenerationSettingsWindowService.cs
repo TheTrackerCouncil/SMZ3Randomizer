@@ -348,7 +348,10 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
             }
         }
 
-        return presets.OrderBy(x => x.Config != null).ThenBy(x => x.PresetName).ToList();
+        return presets.OrderBy(x => x.Config != null)
+            .ThenBy(x => x.Order)
+            .ThenBy(x => x.PresetName)
+            .ToList();
     }
 
     public bool ApplySelectedPreset()
