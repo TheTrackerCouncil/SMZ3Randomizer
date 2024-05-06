@@ -111,6 +111,7 @@ sealed class Program
     private static async Task ShowExceptionPopup(Exception e)
     {
         Log.Error(e, "[CRASH] Uncaught {Name}: ", e.GetType().Name);
+        Log.Error(e.StackTrace ?? "");
         var window = new ExceptionWindow();
         window.Show();
         await Dispatcher.UIThread.Invoke(async () =>

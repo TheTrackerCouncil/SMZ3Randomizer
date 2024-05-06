@@ -5,7 +5,7 @@
     <TargetFramework>net8.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>chozo20.ico</ApplicationIcon>
-    <Version>9.7.5</Version>
+    <Version>9.8.0-rc.1</Version>
     <Title>SMZ3 Cas' Randomizer</Title>
     <AssemblyTitle>SMZ3 Cas' Randomizer</AssemblyTitle>
     <Authors>Vivelin</Authors>
@@ -58,11 +58,11 @@
 
   <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.4.4" />
-    <PackageReference Include="FluentIcons.WPF" Version="1.1.233" />
-    <PackageReference Include="Material.Icons.WPF" Version="2.1.0" />
+    <PackageReference Include="FluentIcons.WPF" Version="1.1.237" />
+    <PackageReference Include="Material.Icons.WPF" Version="2.1.9" />
     <PackageReference Include="MattEqualsCoder.DynamicForms.WPF" Version="0.0.3-rc.1" />
     <PackageReference Include="MattEqualsCoder.GitHubReleaseChecker" Version="1.1.2" />
-    <PackageReference Include="MattEqualsCoder.MSURandomizer.UI" Version="2.0.0-rc.11" />
+    <PackageReference Include="MattEqualsCoder.MSURandomizer.UI" Version="2.1.0-rc.2" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="NReco.Logging.File" Version="1.2.0" />

@@ -60,7 +60,7 @@
                   <ImageBrush Source="{Binding ImagePath, Converter={StaticResource StringToImageConverter}}" TileMode="None" Stretch="None" AlignmentX="Center" AlignmentY="Center"/>
                 </Rectangle.Fill>
               </Rectangle>
-              <Rectangle Width="20" Height="20" Margin="0 0 0 0" IsHitTestVisible="False" >
+              <Rectangle Width="20" Height="20" Margin="0 0 0 0" IsHitTestVisible="False" IsVisible="{Binding NumberVisibility}">
                 <Rectangle.Fill>
                   <ImageBrush Source="{Binding NumberImagePath, Converter={StaticResource StringToImageConverter}}" TileMode="None" Stretch="None" AlignmentX="Center" AlignmentY="Center"/>
                 </Rectangle.Fill>

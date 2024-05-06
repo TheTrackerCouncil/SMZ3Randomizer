@@ -5,6 +5,7 @@ using System.Linq;
 using Avalonia.Controls;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
+using Randomizer.Shared.Enums;
 using ReactiveUI.Fody.Helpers;
 
 namespace Randomizer.CrossPlatform.ViewModels;
@@ -65,16 +66,17 @@ public class TrackerWindowItemPanelViewModel : TrackerWindowPanelViewModel
         if (ConnectedItems != null)
         {
             ItemCount = ConnectedItems.Select(x => x.State).Distinct().Sum(x => x.TrackingState);
+            IsLabelActive = ConnectedItems.Any(x => x.State.TrackingState > 0);
+            RetrievedItemCount = ConnectedItems.Count(x => x.State.TrackingState > 0);
+            Stage = ConnectedItems.Sum(x => x.State.TrackingState);
         }
         else if (Items != null)
         {
             ItemCount = Items.Keys.Sum(x => x.Counter);
+            IsLabelActive = Items?.Keys.Any(x => x.State.TrackingState > 0) == true;
+            RetrievedItemCount = Items?.Keys.Count(x => x.State.TrackingState > 0) ?? 0;
+            Stage = Items?.Keys.Sum(x => x.State.TrackingState) ?? 0;
         }
-
-        IsLabelActive = Items?.Keys.Any(x => x.State.TrackingState > 0) == true;
-
-        RetrievedItemCount = Items?.Keys.Count(x => x.State.TrackingState > 0) ?? 0;
-        Stage = Items?.Keys.Sum(x => x.State.TrackingState) ?? 0;
     }
 
     public override List<TrackerWindowPanelImage?> GetImages()
@@ -88,10 +90,14 @@ public class TrackerWindowItemPanelViewModel : TrackerWindowPanelViewModel
         {
             foreach (var item in Items)
             {
+                var isActive = ConnectedItems?.Count > 1
+                    ? ConnectedItems.Any(x => x.State.TrackingState > 0)
+                    : item.Key.State.TrackingState > 0;
+
                 images.Add(new TrackerWindowPanelImage
                 {
                     ImagePath = item.Value,
-                    IsActive = item.Key.State.TrackingState > 0
+                    IsActive = isActive
                 });
 
                 images.AddRange(GetNumberImages(ItemCount, 2, 0, 16, RetrievedItemCount > 0));

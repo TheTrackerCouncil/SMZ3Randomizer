@@ -79,7 +79,7 @@
       </ListView>
 
       <StackPanel Visibility="{Binding IntroVisibility}" Margin="5 2">
-        <TextBlock TextWrapping="Wrap">It looks like you haven't joined or created any multiplayer games! Click Create game to host a name game for others to join, or click Join game to join a multiplayer game created by someone else. Multiplayer games require auto tracking, so verify that is fully setup.</TextBlock>
+        <TextBlock TextWrapping="Wrap">It looks like you haven't joined or created any multiplayer games! Click Create game to host a new game for others to join, or click Join game to join a multiplayer game created by someone else. Multiplayer games require auto tracking, so verify that is fully setup.</TextBlock>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
           <Button HorizontalAlignment="Right" Click="CreateMultiGameButton_Click">_Create game...</Button>
           <Button HorizontalAlignment="Left" Click="JoinMultiGameButton_Click">_Join game...</Button>

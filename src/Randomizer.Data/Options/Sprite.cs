@@ -129,17 +129,13 @@ namespace Randomizer.Data.Options
 
                 if (!Directory.Exists(path) || path == "Sprites")
                 {
-                    return Path.Combine(
-                        Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName ?? "")!,
-                        "Sprites");
+                    return Path.Combine(AppContext.BaseDirectory, "Sprites");
                 }
 
                 return path;
 #else
 
-            return Path.Combine(
-                Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName ?? "")!,
-                "Sprites");
+            return Path.Combine(AppContext.BaseDirectory, "Sprites");
 #endif
             }
 

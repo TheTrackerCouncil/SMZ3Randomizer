@@ -1,14 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using GitHubReleaseChecker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using MSURandomizerLibrary;
 using Randomizer.Data.Configuration;
-using Randomizer.Data.Services;
 
 namespace Randomizer.SMZ3.Tests;
 
@@ -17,7 +15,7 @@ using Xunit;
 public class MetaTests
 {
     [Fact]
-    public async void ValidateVersionNumber()
+    public async Task ValidateVersionNumber()
     {
         // Get csproj file for Randomizer.App
         var directory = new DirectoryInfo(Directory.GetCurrentDirectory());

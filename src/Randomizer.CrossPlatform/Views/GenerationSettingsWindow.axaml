@@ -9,7 +9,7 @@
         mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="700"
         x:Class="Randomizer.CrossPlatform.Views.GenerationSettingsWindow"
         Title="SMZ3 Cas' Randomizer"
-        Height="700" Width="700"
+        Height="750" Width="700"
         CanResize="False"
         WindowStartupLocation="CenterOwner"
         Icon="/Assets/chozo20.ico"
@@ -55,7 +55,7 @@
                   Margin="0 0 8 0">_Submit Settings
           </Button>
 
-          <StackPanel Grid.Column="1" Orientation="Horizontal"
+          <StackPanel Orientation="Horizontal"
                       HorizontalAlignment="Right">
             <Button x:Name="GenerateGameButton"
                     IsVisible="{Binding IsSingleplayer}"

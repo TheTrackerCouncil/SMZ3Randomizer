@@ -30,6 +30,7 @@ public class SharedCrossplatformService(
     Smz3GeneratedRomLoader smz3GeneratedRomLoader,
     ILogger<SharedCrossplatformService> logger)
 {
+    private static TrackerWindow? s_trackerWindow;
     private RandomizerOptions? _options;
     private Window? _parentWindow;
 
@@ -143,12 +144,18 @@ public class SharedCrossplatformService(
         }
     }
 
-    public void LaunchTracker(GeneratedRom? rom)
+    public TrackerWindow? LaunchTracker(GeneratedRom? rom)
     {
         if (rom == null)
         {
             DisplayError("Invalid rom");
-            return;
+            return null;
+        }
+
+        if (s_trackerWindow != null)
+        {
+            DisplayError("Tracker window already open");
+            return null;
         }
 
         try
@@ -159,20 +166,27 @@ public class SharedCrossplatformService(
             var trackerOptionsAccessor = scope.ServiceProvider.GetRequiredService<TrackerOptionsAccessor>();
             trackerOptionsAccessor.Options = Options.GeneralOptions.GetTrackerOptions();
 
-            var trackerWindow = scope.ServiceProvider.GetRequiredService<TrackerWindow>();
-            trackerWindow.Closed += (_, _) => scope.Dispose();
-            trackerWindow.Rom = rom;
-            trackerWindow.Show(ParentWindow);
+            s_trackerWindow = scope.ServiceProvider.GetRequiredService<TrackerWindow>();
+            s_trackerWindow.Closed += (_, _) =>
+            {
+                s_trackerWindow = null;
+                scope.Dispose();
+            };
+            s_trackerWindow.Rom = rom;
+            s_trackerWindow.Show(ParentWindow);
+            return s_trackerWindow;
         }
         catch (YamlDotNet.Core.SemanticErrorException ex)
         {
             logger.LogError(ex, "A YAML parsing error occurred");
             DisplayError(ex.Message + "\n\n" + ex.InnerException?.Message);
+            return null;
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "An unhandled exception occurred when starting the tracker.");
             DisplayError("Unknown error opening tracker");
+            return null;
         }
     }
 

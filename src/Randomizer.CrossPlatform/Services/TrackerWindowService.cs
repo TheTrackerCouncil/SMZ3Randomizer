@@ -29,7 +29,6 @@ using SnesConnectorLibrary;
 namespace Randomizer.CrossPlatform.Services;
 
 public class TrackerWindowService(
-    SharedCrossplatformService sharedCrossplatformService,
     TrackerBase tracker,
     IUIService uiService,
     IItemService itemService,
@@ -112,14 +111,25 @@ public class TrackerWindowService(
         {
             if (args.Item == null)
             {
-                return;
+                foreach (var item in itemService.LocalPlayersItems())
+                {
+                    if (_itemModels.TryGetValue(item.Name, out var itemsPanel))
+                    {
+                        var itemPath = uiService.GetSpritePath(item);
+                        itemsPanel.UpdateItem(item, itemPath);
+                    }
+                }
+            }
+            else
+            {
+                if (_itemModels.TryGetValue(args.Item.Name, out var itemsPanel))
+                {
+                    var itemPath = uiService.GetSpritePath(args.Item);
+                    itemsPanel.UpdateItem(args.Item, itemPath);
+                }
             }
 
-            if (_itemModels.TryGetValue(args.Item.Name, out var itemsPanel))
-            {
-                var itemPath = uiService.GetSpritePath(args.Item);
-                itemsPanel.UpdateItem(args.Item, itemPath);
-            }
+
         };
 
         if (TrackerWindowPanelViewModel.NumberImagePaths.Count == 0)
@@ -190,7 +200,6 @@ public class TrackerWindowService(
         }
 
         _model.Rom = rom;
-        ITaskService.Run(sharedCrossplatformService.LookupMsus);
         var romPath = Path.Combine(Options.RomOutputPath, rom.RomPath);
         tracker.Load(rom, romPath);
     }
@@ -462,7 +471,7 @@ public class TrackerWindowService(
         model.Clicked += (_, _) => tracker.MarkDungeonAsCleared(dungeon);
         model.ResetCleared += (_, _) => tracker.MarkDungeonAsIncomplete(dungeon);
         model.TreasureCleared += (_, _) => tracker.ClearDungeon(dungeon);
-        model.RewardSet += (_, args) =>tracker.SetDungeonReward(dungeon, args.RewardType);
+        model.RewardSet += (_, args) => tracker.SetDungeonReward(dungeon, args.RewardType);
 
         _dungeonModels.Add(dungeon.DungeonName, model);
 
@@ -517,7 +526,7 @@ public class TrackerWindowService(
             Buttons = buttons
         });
 
-        await window.ShowDialog(_window);
+        await window.ShowDialog(_window.Owner as Window ?? _window);
 
         return window.DialogResult;
     }

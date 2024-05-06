@@ -105,7 +105,11 @@ public class GenerationWindowBasicViewModel : ViewModelBase
     public MsuRandomizationStyle? MsuRandomizationStyle
     {
         get => _msuRandomizationStyle;
-        set => SetField(ref _msuRandomizationStyle, value);
+        set
+        {
+            SetField(ref _msuRandomizationStyle, value);
+            OnPropertyChanged(nameof(IsShuffleStyleVisible));
+        }
     }
 
     public MsuShuffleStyle MsuShuffleStyle
@@ -113,6 +117,9 @@ public class GenerationWindowBasicViewModel : ViewModelBase
         get => _msuShuffleStyle;
         set => SetField(ref _msuShuffleStyle, value);
     }
+
+    public bool IsShuffleStyleVisible =>
+        MsuRandomizationStyle is MSURandomizerLibrary.MsuRandomizationStyle.Continuous or MSURandomizerLibrary.MsuRandomizationStyle.Shuffled;
 
     public List<string> MsuPaths
     {

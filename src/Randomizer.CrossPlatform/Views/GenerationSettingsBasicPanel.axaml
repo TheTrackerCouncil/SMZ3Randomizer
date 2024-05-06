@@ -113,11 +113,7 @@
         </Grid>
 
         <TextBlock Margin="0 5 0 0">Custom Music Pack</TextBlock>
-        <Grid>
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
-          </Grid.ColumnDefinitions>
+        <Grid ColumnDefinitions="*,Auto">
           <TextBox Grid.Column="0" Name="SelectedMsuTextBox" IsReadOnly="True" Text="{Binding Basic.MsuText}"></TextBox>
           <StackPanel Grid.Column="1" Orientation="Horizontal"
                       HorizontalAlignment="Right"
@@ -143,6 +139,11 @@
             </Button>
           </StackPanel>
         </Grid>
+        <TextBlock Margin="0 3 0 3" IsVisible="{Binding Basic.IsShuffleStyleVisible}">Shuffle style:</TextBlock>
+        <controls:EnumComboBox
+          Value="{Binding Basic.MsuShuffleStyle, Mode=TwoWay}"
+          EnumType="{Binding Basic.MsuShuffleStyle, Converter={StaticResource TypeConverter}}"
+          IsVisible="{Binding Basic.IsShuffleStyleVisible}" />
       </StackPanel>
 
     </controls:CardControl>

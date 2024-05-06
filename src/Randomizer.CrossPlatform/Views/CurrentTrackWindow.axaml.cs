@@ -30,7 +30,7 @@ public partial class CurrentTrackWindow : RestorableWindow
 
     private void Window_OnClosing(object? sender, WindowClosingEventArgs e)
     {
-        if (_isShuttingDown) return;
+        if (_isShuttingDown || e.CloseReason == WindowCloseReason.OwnerWindowClosing) return;
         _service?.Save(false);
     }
 

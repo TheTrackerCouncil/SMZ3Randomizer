@@ -26,13 +26,14 @@ public class MsuUiService
         _msuUiFactory = msuUiFactory;
     }
 
-    public void OpenMsuWindow(Window parentWindow, SelectionMode selectionMode, MsuRandomizationStyle? randomizationStyle)
+    public bool OpenMsuWindow(Window parentWindow, SelectionMode selectionMode, MsuRandomizationStyle? randomizationStyle)
     {
-        if (!VerifyMsuDirectory(parentWindow)) return;
-        if (!_msuUiFactory.OpenMsuWindow(selectionMode, true, out var options)) return;
-        if (options.SelectedMsus?.Any() != true) return;
+        if (!VerifyMsuDirectory(parentWindow)) return false;
+        if (!_msuUiFactory.OpenMsuWindow(selectionMode, true, out var options)) return false;
+        if (options.SelectedMsus?.Any() != true) return false;
         _options.PatchOptions.MsuPaths = options.SelectedMsus.ToList();
         _options.PatchOptions.MsuRandomizationStyle = randomizationStyle;
+        return true;
     }
 
     public bool LookupMsus()

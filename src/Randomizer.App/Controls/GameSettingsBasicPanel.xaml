@@ -5,6 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Randomizer.App.Controls"
              xmlns:viewModels="clr-namespace:Randomizer.Data.ViewModels;assembly=Randomizer.Data"
+             xmlns:app="clr-namespace:Randomizer.App"
+             xmlns:options="clr-namespace:Randomizer.Data.Options;assembly=Randomizer.Data"
+             xmlns:msuRandomizerLibrary="clr-namespace:MSURandomizerLibrary;assembly=MSURandomizerLibrary"
              mc:Ignorable="d"
              Loaded="GameSettingsBasicPanel_OnLoaded"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -160,6 +163,10 @@
             </Button>
           </StackPanel>
         </Grid>
+        <TextBlock Margin="0 3 0 3" Visibility="{Binding Basic.IsShuffleStyleVisible, Converter={StaticResource BoolToVisibilityConverter}}">Shuffle style:</TextBlock>
+        <ComboBox SelectedItem="{Binding Basic.MsuShuffleStyle, Converter={StaticResource EnumDescriptionConverter}}"
+                  Visibility="{Binding Basic.IsShuffleStyleVisible, Converter={StaticResource BoolToVisibilityConverter}}"
+                  ItemsSource="{Binding Source={app:EnumDescriptionBindingSource {x:Type msuRandomizerLibrary:MsuShuffleStyle}}}" />
       </StackPanel>
 
     </GroupBox>

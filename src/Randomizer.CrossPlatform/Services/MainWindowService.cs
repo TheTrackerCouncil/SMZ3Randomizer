@@ -1,24 +1,20 @@
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Avalonia.Interactivity;
+using Avalonia.Threading;
 using AvaloniaControls.Controls;
 using AvaloniaControls.ControlServices;
 using AvaloniaControls.Models;
+using AvaloniaControls.Services;
 using GitHubReleaseChecker;
 using Microsoft.Extensions.Logging;
-using NAudio.MediaFoundation;
 using Randomizer.CrossPlatform.ViewModels;
 using Randomizer.CrossPlatform.Views;
-using Randomizer.Data.Configuration;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.SMZ3.ChatIntegration;
-using ReactiveUI;
 
 namespace Randomizer.CrossPlatform.Services;
 
@@ -39,7 +35,7 @@ public class MainWindowService(
         _window = window;
         _options = optionsFactory.Create();
         _model.HasInvalidOptions = !_options.GeneralOptions.Validate();
-        _ = CheckForUpdates();
+        ITaskService.Run(CheckForUpdates);
         return _model;
     }
 
@@ -89,6 +85,8 @@ public class MainWindowService(
 
     public async Task DownloadConfigsAsync()
     {
+        gitHubConfigDownloaderService.InstallDefaultConfigFolder();
+
         if (string.IsNullOrEmpty(_options.GeneralOptions.Z3RomPath) ||
             !_options.GeneralOptions.DownloadConfigsOnStartup)
         {
@@ -122,9 +120,12 @@ public class MainWindowService(
         }
         else
         {
-            SpriteDownloadStart?.Invoke(this, EventArgs.Empty);
-            await gitHubSpriteDownloaderService.DownloadSpritesAsync("TheTrackerCouncil", "SMZ3CasSprites", toDownload);
-            SpriteDownloadEnd?.Invoke(this, EventArgs.Empty);
+            await Dispatcher.UIThread.InvokeAsync(async () =>
+            {
+                SpriteDownloadStart?.Invoke(this, EventArgs.Empty);
+                await gitHubSpriteDownloaderService.DownloadSpritesAsync("TheTrackerCouncil", "SMZ3CasSprites", toDownload);
+                SpriteDownloadEnd?.Invoke(this, EventArgs.Empty);
+            });
         }
     }
 

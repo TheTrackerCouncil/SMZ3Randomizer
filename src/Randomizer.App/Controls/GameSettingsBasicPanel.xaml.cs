@@ -98,7 +98,11 @@ public partial class GameSettingsBasicPanel : UserControl
             return;
         }
 
-        _msuUiService.OpenMsuWindow(Window.GetWindow(this)!, SelectionMode.Single, null);
+        if (_msuUiService.OpenMsuWindow(Window.GetWindow(this)!, SelectionMode.Single, null))
+        {
+            Data.Basic.MsuRandomizationStyle = null;
+        }
+
         _service.UpdateMsuText();
     }
 
@@ -120,7 +124,10 @@ public partial class GameSettingsBasicPanel : UserControl
             return;
         }
 
-        _msuUiService.OpenMsuWindow(Window.GetWindow(this)!, SelectionMode.Multiple, MsuRandomizationStyle.Single);
+        if (_msuUiService.OpenMsuWindow(Window.GetWindow(this)!, SelectionMode.Multiple, MsuRandomizationStyle.Single))
+        {
+            Data.Basic.MsuRandomizationStyle = MsuRandomizationStyle.Single;
+        }
         _service.UpdateMsuText();
     }
 
@@ -131,7 +138,11 @@ public partial class GameSettingsBasicPanel : UserControl
             return;
         }
 
-        _msuUiService.OpenMsuWindow(Window.GetWindow(this)!, SelectionMode.Multiple, MsuRandomizationStyle.Shuffled);
+        if (_msuUiService.OpenMsuWindow(Window.GetWindow(this)!, SelectionMode.Multiple,
+                MsuRandomizationStyle.Shuffled))
+        {
+            Data.Basic.MsuRandomizationStyle = MsuRandomizationStyle.Shuffled;
+        }
         _service.UpdateMsuText();
     }
 
@@ -142,7 +153,11 @@ public partial class GameSettingsBasicPanel : UserControl
             return;
         }
 
-        _msuUiService.OpenMsuWindow(Window.GetWindow(this)!, SelectionMode.Multiple, MsuRandomizationStyle.Continuous);
+        if (_msuUiService.OpenMsuWindow(Window.GetWindow(this)!, SelectionMode.Multiple,
+                MsuRandomizationStyle.Continuous))
+        {
+            Data.Basic.MsuRandomizationStyle = MsuRandomizationStyle.Continuous;
+        }
         _service.UpdateMsuText();
     }
 
@@ -166,6 +181,7 @@ public partial class GameSettingsBasicPanel : UserControl
         if (dialog.ShowDialog(Window.GetWindow(this)!) == true && File.Exists(dialog.FileName))
         {
             _service.SetMsuPath(dialog.FileName);
+            Data.Basic.MsuRandomizationStyle = null;
         }
     }
 

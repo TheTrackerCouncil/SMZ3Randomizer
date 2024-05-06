@@ -1,11 +1,11 @@
 using System;
 using System.IO;
-using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using AvaloniaControls;
 using AvaloniaControls.Controls;
 using AvaloniaControls.Models;
+using AvaloniaControls.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Randomizer.CrossPlatform.Services;
 using Randomizer.CrossPlatform.ViewModels;
@@ -89,37 +89,19 @@ public partial class MainWindow : RestorableWindow
             };
         }
 
-        _ = _service?.ValidateTwitchToken();
-        _ = _service?.DownloadConfigsAsync();
-        _ = _service?.DownloadSpritesAsync();
+        if (_service == null)
+        {
+            return;
+        }
+
+        ITaskService.Run(_service.ValidateTwitchToken);
+        ITaskService.Run(_service.DownloadConfigsAsync);
+        ITaskService.Run(_service.DownloadSpritesAsync);
     }
 
     private void OptionsMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
         _serviceProvider?.GetRequiredService<OptionsWindow>().ShowDialog(this);
-    }
-
-    private void AboutMenuItem_OnClick(object? sender, RoutedEventArgs e)
-    {
-        throw new NotImplementedException();
-    }
-
-    private void MenuButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        if (sender is not Button button)
-        {
-            return;
-        }
-
-        var contextMenu = button.ContextMenu;
-        if (contextMenu == null)
-        {
-            return;
-        }
-
-        contextMenu.PlacementTarget = button;
-        contextMenu.Open();
-        e.Handled = true;
     }
 
     private void AboutButton_OnClick(object? sender, RoutedEventArgs e)
