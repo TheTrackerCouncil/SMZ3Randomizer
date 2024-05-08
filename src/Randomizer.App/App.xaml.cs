@@ -190,6 +190,7 @@ namespace Randomizer.App
             await DownloadConfigsAsync(options);
             await DownloadSpritesAsync(options);
             var mainWindow = _host!.Services.GetRequiredService<RomListWindow>();
+            _host!.Services.GetRequiredService<MsuUiService>().LookupMsus();
             mainWindow.Show();
             _spriteDownloaderWindow?.Close();
         }
@@ -281,12 +282,9 @@ namespace Randomizer.App
         {
             var settingsStream =  Assembly.GetExecutingAssembly()
                 .GetManifestResourceStream("Randomizer.App.msu-randomizer-settings.yml");
-            var typesStream = Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("Randomizer.App.msu-randomizer-types.json");
             var msuInitializationRequest = new MsuRandomizerInitializationRequest()
             {
                 MsuAppSettingsStream = settingsStream,
-                MsuTypeConfigStream = typesStream,
                 LookupMsus = false
             };
 #if DEBUG

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using MSURandomizerLibrary.Services;
 using MSURandomizerUI.Controls;
 using Randomizer.Data.Options;
 
@@ -20,6 +21,7 @@ public partial class MsuTrackWindow : Window, IDisposable
     {
         _panel = panel;
         panel.IsEmbedded = true;
+        panel.TrackDisplayFormat = options.GeneralOptions.TrackDisplayFormat;
         MainDockPanel.Children.Add(panel);
         _options = options;
         _options.GeneralOptions.DisplayMsuTrackWindow = true;
