@@ -10,6 +10,7 @@ using AvaloniaControls.Models;
 using AvaloniaControls.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MSURandomizerLibrary;
 using MSURandomizerLibrary.Services;
 using Randomizer.CrossPlatform.Views;
 using Randomizer.Data.Options;
@@ -305,7 +306,7 @@ public class SharedCrossplatformService(
     public void LookupMsus()
     {
         var msuDirectory = Options.GeneralOptions.MsuPath;
-        if (string.IsNullOrEmpty(msuDirectory) || !Directory.Exists(msuDirectory))
+        if (string.IsNullOrEmpty(msuDirectory) || !Directory.Exists(msuDirectory) || msuLookupService.Status == MsuLoadStatus.Loading)
         {
             return;
         }

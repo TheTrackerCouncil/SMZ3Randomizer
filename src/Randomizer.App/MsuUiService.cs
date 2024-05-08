@@ -38,7 +38,7 @@ public class MsuUiService
 
     public bool LookupMsus()
     {
-        if (!string.IsNullOrEmpty(_options.GeneralOptions.MsuPath) && Directory.Exists(_options.GeneralOptions.MsuPath))
+        if (!string.IsNullOrEmpty(_options.GeneralOptions.MsuPath) && Directory.Exists(_options.GeneralOptions.MsuPath) || _msuLookupService.Status != MsuLoadStatus.Loading)
         {
             Task.Run(() =>
             {

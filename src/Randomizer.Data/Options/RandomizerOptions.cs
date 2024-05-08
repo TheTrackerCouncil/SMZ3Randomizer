@@ -118,6 +118,7 @@ namespace Randomizer.Data.Options
                             MsuTrackDisplayStyle.SentenceStyle => TrackDisplayFormat.SentenceStyle,
                             _ => TrackDisplayFormat.Vertical
                         };
+                    options.GeneralOptions.MsuTrackDisplayStyle = null;
                 }
 
                 return options;

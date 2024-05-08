@@ -89,12 +89,9 @@ static void InitializeMsuRandomizer(IMsuRandomizerInitializationService msuRando
 {
     var settingsStream =  Assembly.GetExecutingAssembly()
         .GetManifestResourceStream("Randomizer.PatchBuilder.msu-randomizer-settings.yml");
-    var typesStream = Assembly.GetExecutingAssembly()
-        .GetManifestResourceStream("Randomizer.PatchBuilder.msu-randomizer-types.json");
     var msuInitializationRequest = new MsuRandomizerInitializationRequest()
     {
         MsuAppSettingsStream = settingsStream,
-        MsuTypeConfigStream = typesStream,
         LookupMsus = false
     };
     msuRandomizerInitializationService.Initialize(msuInitializationRequest);
