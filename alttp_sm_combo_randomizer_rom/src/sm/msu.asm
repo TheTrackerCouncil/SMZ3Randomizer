@@ -83,7 +83,8 @@
 !MAX_RESUME_FRAMES = $708
 
 !TRACK_OFFSET = 100
-!TRACK_ITEM_ROOM = 103  ; 3 + TRACK_OFFSET
+!TRACK_SAMUS_FANFARE = 101  ; 1 + TRACK_OFFSET
+!TRACK_ITEM_ROOM = 103      ; 3 + TRACK_OFFSET
 
 !VAL_COMMAND_MUTE_SPC = $FA
 !VAL_COMMAND_UNMUTE_SPC = $FB
@@ -526,6 +527,9 @@ ComputeResumeAndVolume:
     ;; But only if the incoming track is the one we set to resume above and we haven't timed out
     lda.w !CURRENT_MSU_TRACK
     CMP #!TRACK_ITEM_ROOM : BNE .NoFade
+    ;; If the outgoing track is Samus Fanfare, never resume
+    lda.w !CURRENT_MSU_TRACK
+    CMP #!TRACK_SAMUS_FANFARE : BEQ .NoFade
     pla     ; Load the incoming track back into the accumulator...
     pha     ; ...but keep it on the stack because we need it again at the end of the block.
     CMP !RESUME_MSU_TRACK : BNE .NoFade
