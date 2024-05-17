@@ -257,14 +257,21 @@ public class TrackerWindowService(
         tracker.AutoTracker.AutoTrackerDisabled += AutoTrackerOnAutoTrackerEnabled;
         tracker.AutoTracker.AutoTrackerConnected += AutoTrackerOnAutoTrackerEnabled;
         tracker.AutoTracker.AutoTrackerDisconnected += AutoTrackerOnAutoTrackerEnabled;
+        tracker.AutoTracker.AutoTrackerConnectorChanged += AutoTrackerOnAutoTrackerConnectorChanged;
 
         tracker.AutoTracker.SetConnector(Options.GeneralOptions.SnesConnectorSettings);
+    }
+
+    private void AutoTrackerOnAutoTrackerConnectorChanged(object? sender, EventArgs e)
+    {
+        _model.SnesConnectorType = tracker.AutoTracker!.ConnectorType;
     }
 
     private void AutoTrackerOnAutoTrackerEnabled(object? sender, EventArgs e)
     {
         _model.AutoTrackerConnected = tracker.AutoTracker!.IsConnected;
-        _model.AutoTrackerEnabled = tracker.AutoTracker!.IsEnabled;
+        _model.AutoTrackerEnabled = tracker.AutoTracker.IsEnabled;
+        _model.SnesConnectorType = tracker.AutoTracker.ConnectorType;
     }
 
     public async Task LoadRomAsync()
@@ -329,6 +336,8 @@ public class TrackerWindowService(
         _dungeonModels.Clear();
         _itemModels.Clear();
         _medallions.Clear();
+
+        _model.LayoutName = layout.Name;
 
         var models = new List<TrackerWindowPanelViewModel>();
 

@@ -103,6 +103,8 @@ public class AutoTracker : AutoTrackerBase
             }
         }
 
+        OnAutoTrackerConnectorChanged();
+
         if (snesConnectorSettings.ConnectorType == SnesConnectorType.None)
         {
             _snesConnectorService.Disconnect();
