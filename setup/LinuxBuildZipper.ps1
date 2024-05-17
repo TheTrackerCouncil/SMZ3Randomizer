@@ -6,7 +6,7 @@ $winFolder = "$parentFolder\src\Randomizer.App\bin\Release\net8.0-windows\win-x8
 if (-not (Test-Path $folder))
 {
     $folder = "$parentFolder\src\Randomizer.CrossPlatform\bin\Release\net8.0\publish\linux-x64"
-    $winFolder = "$parentFolder\src\Randomizer.App\bin\Release\net8.0-windows\publish\win-x86"
+    $winFolder = "$parentFolder\src\Randomizer.CrossPlatform\bin\Release\net8.0-windows\publish\win-x86"
 }
 
 # Get version number from Randomizer.App
@@ -15,7 +15,7 @@ if (Test-Path "$winFolder\Randomizer.App.exe") {
     $version = (Get-Item "$winFolder\Randomizer.App.exe").VersionInfo.ProductVersion
 }
 else {
-    $version = (Get-Item "$folder\Randomizer.CrossPlatform.dll").VersionInfo.ProductVersion
+    $version = (Get-Item "$folder\Randomizer.App.dll").VersionInfo.ProductVersion
 }
 $version = $version -replace "\+.*", ""
 
@@ -35,8 +35,8 @@ if (Test-Path -LiteralPath "$folder\Configs") {
 Copy-Item "$parentFolder\configs\Profiles\" -Destination "$folder\Configs" -Recurse
 
 # Create dupes of Randomizer.CrossPlatform as SMZ3CasRandomizer
-Get-ChildItem -Filter "Randomizer.CrossPlatform*" -Path "$folder" | ForEach-Object {
-    $newFileName = $_.Name -replace "Randomizer.CrossPlatform", "SMZ3CasRandomizer"
+Get-ChildItem -Filter "Randomizer.App*" -Path "$folder" | ForEach-Object {
+    $newFileName = $_.Name -replace "Randomizer.App", "SMZ3CasRandomizer"
     Copy-Item -Path $_.FullName -Destination "$folder\$newFileName"
 }
 
