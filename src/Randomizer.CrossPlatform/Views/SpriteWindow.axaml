@@ -12,7 +12,7 @@
         Loaded="Control_OnLoaded"
         Closing="Window_OnClosing"
         Title="Sprites — SMZ3 Cas' Randomizer"
-        Icon="/Assets/chozo20.ico"
+        Icon="/Assets/smz3.ico"
         x:DataType="viewModels:SpriteWindowViewModel">
   <LayoutTransformControl x:Name="MainLayout">
     <Grid>

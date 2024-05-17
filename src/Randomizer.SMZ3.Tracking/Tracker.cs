@@ -286,6 +286,7 @@ public sealed class Tracker : TrackerBase, IDisposable
             GoMode = false;
             if (Responses.GoModeToggledOff != null)
                 Say(Responses.GoModeToggledOff);
+            OnGoModeToggledOff(new TrackerEventArgs(confidence));
         });
     }
 
@@ -639,6 +640,7 @@ public sealed class Tracker : TrackerBase, IDisposable
             _recognizer.StopRecognition();
             _recognizer.StartRecognition();
             VoiceRecognitionEnabled = true;
+            OnVoiceRecognitionEnabledChanged();
         }
     }
 
@@ -652,6 +654,7 @@ public sealed class Tracker : TrackerBase, IDisposable
             VoiceRecognitionEnabled = false;
             _recognizer.StopRecognition();
             _logger.LogInformation("Stopped speech recognition");
+            OnVoiceRecognitionEnabledChanged();
         }
     }
 

@@ -6,6 +6,7 @@
         xmlns:controls="clr-namespace:AvaloniaControls.Controls;assembly=AvaloniaControls"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         Height="500" Width="400"
+        Icon="/Assets/smz3.ico"
         x:Class="Randomizer.CrossPlatform.Views.AutoTrackingHelpWindow"
         Title="Auto Tracker Help — SMZ3 Cas' Randomizer">
   <LayoutTransformControl x:Name="MainLayout">

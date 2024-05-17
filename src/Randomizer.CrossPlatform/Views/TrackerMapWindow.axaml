@@ -8,6 +8,7 @@
         x:Class="Randomizer.CrossPlatform.Views.TrackerMapWindow"
         x:DataType="viewModels:TrackerMapWindowViewModel"
         Loaded="Control_OnLoaded"
+        Icon="/Assets/smz3.ico"
         Title="Tracker Map — SMZ3 Cas' Randomizer">
   <Grid RowDefinitions="Auto, *">
     <controls:HeaderFooter Grid.Row="0" BorderSize="0 0 0 2">
@@ -22,7 +23,7 @@
       </Grid>
     </controls:HeaderFooter>
     <Grid Grid.Row="1" SizeChanged="MapCanvas_OnSizeChanged" Name="MainGrid">
-      <ItemsControl ItemsSource="{Binding Locations}" Name="LocationsItemsControl">
+      <ItemsControl ItemsSource="{Binding Locations}" Name="LocationsItemsControl" >
         <ItemsControl.ItemsPanel>
           <ItemsPanelTemplate>
             <Canvas x:Name="MapCanvas">

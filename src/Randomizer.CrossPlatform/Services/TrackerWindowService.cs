@@ -48,6 +48,7 @@ public class TrackerWindowService(
     private readonly List<TrackerWindowItemPanelViewModel> _medallions = new();
     private TrackerMapWindow? _trackerMapWindow;
     private TrackerLocationsWindow? _trackerLocationsWindow;
+    private TrackerHelpWindow? _trackerHelpWindow;
 
     public TrackerWindowViewModel GetViewModel(TrackerWindow parent)
     {
@@ -128,9 +129,40 @@ public class TrackerWindowService(
                     itemsPanel.UpdateItem(args.Item, itemPath);
                 }
             }
-
-
         };
+
+        tracker.GoModeToggledOn += (sender, args) =>
+        {
+            _model.IsInGoMode = true;
+        };
+
+        tracker.GoModeToggledOff += (sender, args) =>
+        {
+            _model.IsInGoMode = false;
+        };
+
+        tracker.SpeechRecognized += (sender, args) =>
+        {
+            _model.SpeechConfidence = $"{args.Confidence:P2}";
+            _model.SpeechPhrase = $"“{args.Phrase}”";
+        };
+
+        tracker.VoiceRecognitionEnabledChanged += (sender, args) =>
+        {
+            _model.VoiceEnabled = tracker.VoiceRecognitionEnabled;
+            if (!_model.VoiceEnabled)
+            {
+                _model.SpeechConfidence = "Voice Disabled";
+                _model.SpeechPhrase = "";
+            }
+            else
+            {
+                _model.SpeechConfidence = "";
+                _model.SpeechPhrase = "";
+            }
+        };
+
+        tracker.DisableVoiceRecognition();
 
         if (TrackerWindowPanelViewModel.NumberImagePaths.Count == 0)
         {
@@ -344,6 +376,18 @@ public class TrackerWindowService(
         CrossPlatformTools.OpenDirectory(path);
     }
 
+    public void OpenTrackerHelpWindow()
+    {
+        if (_trackerHelpWindow != null)
+        {
+            return;
+        }
+
+        _trackerHelpWindow = serviceProvider.GetRequiredService<TrackerHelpWindow>();
+        _trackerHelpWindow.Show(_window.Owner as Window ?? _window);
+        _trackerHelpWindow.Closed += (_, _) => _trackerHelpWindow = null;
+    }
+
     private TrackerWindowPanelViewModel? GetPanelViewModel(UIGridLocation? gridLocation)
     {
         return gridLocation?.Type switch
@@ -542,6 +586,18 @@ public class TrackerWindowService(
 
             _options = optionsFactory.Create();
             return _options;
+        }
+    }
+
+    public void ToggleSpeechRecognition()
+    {
+        if (tracker.VoiceRecognitionEnabled)
+        {
+            tracker.DisableVoiceRecognition();
+        }
+        else
+        {
+            tracker.EnableVoiceRecognition();
         }
     }
 }

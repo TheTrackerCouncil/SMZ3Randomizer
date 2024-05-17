@@ -10,7 +10,7 @@
         x:Class="Randomizer.CrossPlatform.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Loaded="Control_OnLoaded"
-        Icon="/Assets/chozo20.ico"
+        Icon="/Assets/smz3.ico"
         MinWidth="500"
         MinHeight="250"
         Title="SMZ3 Cas' Randomizer">

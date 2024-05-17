@@ -10,7 +10,7 @@
         WindowStartupLocation="CenterOwner"
         SizeToContent="Height"
         Closing="Window_OnClosing"
-        Icon="/Assets/chozo20.ico"
+        Icon="/Assets/smz3.ico"
         x:Class="Randomizer.CrossPlatform.Views.MultiplayerConnectWindow"
         x:DataType="viewModels:MultiplayerConnectWindowViewModel"
         Title="SMZ3 Cas' Randomizer">
