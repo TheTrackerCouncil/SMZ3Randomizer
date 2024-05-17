@@ -7,7 +7,7 @@
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
         <Version>9.8.0-rc.3</Version>
-        <AssemblyName>Randomizer.App</AssemblyName>
+        <AssemblyName></AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
