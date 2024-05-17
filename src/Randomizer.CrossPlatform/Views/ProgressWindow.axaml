@@ -11,7 +11,7 @@
         x:Class="Randomizer.CrossPlatform.Views.ProgressWindow"
         x:DataType="views:ProgressWindowViewModel"
         Closing="Window_OnClosing"
-        Icon="/Assets/chozo20.ico"
+        Icon="/Assets/smz3.ico"
         Title="SMZ3 Cas' Randomizer">
   <LayoutTransformControl Name="MainLayout">
     <Grid RowDefinitions="Auto,*,Auto,Auto,*,Auto">

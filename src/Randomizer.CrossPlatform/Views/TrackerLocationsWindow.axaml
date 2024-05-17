@@ -9,6 +9,7 @@
         MinWidth="450"
         x:Class="Randomizer.CrossPlatform.Views.TrackerLocationsWindow"
         x:DataType="viewModels:TrackerLocationsViewModel"
+        Icon="/Assets/smz3.ico"
         Title="Tracker Locations — SMZ3 Cas' Randomizer">
   <LayoutTransformControl x:Name="MainLayout">
     <DockPanel>

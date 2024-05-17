@@ -7,7 +7,7 @@
         Width="480" Height="275"
         MaxWidth="480" MaxHeight="275"
         CanResize="False"
-        Icon="/Assets/chozo20.ico"
+        Icon="/Assets/smz3.ico"
         x:Class="Randomizer.CrossPlatform.Views.AboutWindow"
         WindowStartupLocation="CenterOwner"
         Title="About — SMZ3 Cas' Randomizer">

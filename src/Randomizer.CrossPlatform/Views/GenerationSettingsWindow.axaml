@@ -12,7 +12,7 @@
         Height="750" Width="700"
         CanResize="False"
         WindowStartupLocation="CenterOwner"
-        Icon="/Assets/chozo20.ico"
+        Icon="/Assets/smz3.ico"
         x:DataType="viewModels:GenerationWindowViewModel">
   <LayoutTransformControl x:Name="MainLayout">
     <Grid RowDefinitions="*, Auto">

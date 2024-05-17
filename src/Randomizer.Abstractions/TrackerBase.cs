@@ -66,6 +66,11 @@ public abstract class TrackerBase
     public event EventHandler<TrackerEventArgs>? GoModeToggledOn;
 
     /// <summary>
+    /// Occurs when Go mode has been turned off.
+    /// </summary>
+    public event EventHandler<TrackerEventArgs>? GoModeToggledOff;
+
+    /// <summary>
     /// Occurs when the last action was undone.
     /// </summary>
     public event EventHandler<TrackerEventArgs>? ActionUndone;
@@ -104,6 +109,11 @@ public abstract class TrackerBase
     /// Occurs when a hint tile is viewed that is for a region, dungeon, or group of locations
     /// </summary>
     public event EventHandler<HintTileUpdatedEventArgs>? HintTileUpdated;
+
+    /// <summary>
+    /// Occurs when the voice recognition has been enabled or disabled
+    /// </summary>
+    public event EventHandler? VoiceRecognitionEnabledChanged;
 
     /// <summary>
     /// Gets a reference to the <see cref="ItemService"/>.
@@ -913,6 +923,15 @@ public abstract class TrackerBase
     }
 
     /// <summary>
+    /// Invokes the GoModeToggledOff event
+    /// </summary>
+    /// <param name="args"></param>
+    protected virtual void OnGoModeToggledOff(TrackerEventArgs args)
+    {
+        GoModeToggledOff?.Invoke(this, args);
+    }
+
+    /// <summary>
     /// Invokes the ActionUndone event
     /// </summary>
     /// <param name="args"></param>
@@ -980,5 +999,13 @@ public abstract class TrackerBase
     protected virtual void OnHintTileUpdated(HintTileUpdatedEventArgs args)
     {
         HintTileUpdated?.Invoke(this, args);
+    }
+
+    /// <summary>
+    /// Invokes the VoiceRecognitionEnabledChanged event
+    /// </summary>
+    protected virtual void OnVoiceRecognitionEnabledChanged()
+    {
+        VoiceRecognitionEnabledChanged?.Invoke(this, EventArgs.Empty);
     }
 }

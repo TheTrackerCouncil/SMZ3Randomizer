@@ -1,7 +1,9 @@
 using System.IO;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.Threading;
 using AvaloniaControls.Controls;
 using AvaloniaControls.Services;
@@ -60,13 +62,14 @@ public partial class TrackerWindow : RestorableWindow
 
     private void CreateLayout()
     {
-        MainGrid.Children.Clear();
+        MainPanel.Children.Clear();
         foreach (var image in _model.Panels)
         {
             var panel = new TrackerWindowPanel(image);
-            Grid.SetColumn(panel, image.Column);
-            Grid.SetRow(panel, image.Row);
-            MainGrid.Children.Add(panel);
+            panel.VerticalAlignment = VerticalAlignment.Top;
+            panel.HorizontalAlignment = HorizontalAlignment.Left;
+            panel.Margin = new Thickness((image.Column-1) * 34, (image.Row-1) * 34, 0, 0);
+            MainPanel.Children.Add(panel);
         }
     }
 
@@ -105,15 +108,25 @@ public partial class TrackerWindow : RestorableWindow
 
     private void Control_OnLoaded(object? sender, RoutedEventArgs e)
     {
-        _service?.StartTracker();
-
-        if (_model.OpenTrackWindow)
+        if (Design.IsDesignMode)
         {
-            OpenCurrentTrackWindow();
+            return;
         }
 
-        _service?.OpenTrackerMapWindow();
-        _service?.OpenTrackerLocationsWindow();
+        ITaskService.Run(() =>
+        {
+            _service?.StartTracker();
+
+            Dispatcher.UIThread.Invoke(() =>
+            {
+                if (_model.OpenTrackWindow)
+                {
+                    OpenCurrentTrackWindow();
+                }
+                _service?.OpenTrackerLocationsWindow();
+                _service?.OpenTrackerMapWindow();
+            }, DispatcherPriority.Background);
+        });
     }
 
     private async void LoadSavedStateMenuItem_OnClick(object? sender, RoutedEventArgs e)
@@ -212,6 +225,21 @@ public partial class TrackerWindow : RestorableWindow
     private void OpenFolderMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
         _service?.OpenAutoTrackerFolder();
+    }
+
+    private void TrackerHelpMenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        _service?.OpenTrackerHelpWindow();
+    }
+
+    private void SpeechRecognition_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        var point = e.GetCurrentPoint(sender as Control);
+
+        if (point.Properties.IsLeftButtonPressed && e.ClickCount == 2)
+        {
+            _service?.ToggleSpeechRecognition();
+        }
     }
 }
 

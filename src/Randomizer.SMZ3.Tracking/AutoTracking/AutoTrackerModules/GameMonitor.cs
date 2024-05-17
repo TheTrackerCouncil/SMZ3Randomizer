@@ -25,6 +25,7 @@ public class GameMonitor(TrackerBase tracker, ISnesConnectorService snesConnecto
             SniMemoryMapping = MemoryMapping.ExHiRom,
             Address = 0x7e0020,
             Length = 1,
+            FrequencySeconds = 0.5,
             OnResponse = GameStart,
             Filter = () => !HasStartedGame
         });
@@ -46,7 +47,7 @@ public class GameMonitor(TrackerBase tracker, ISnesConnectorService snesConnecto
     private void GameStart(SnesData data, SnesData? prevData)
     {
         var value = data.ReadUInt8(0);
-        if (value != 0 && !HasStartedGame)
+        if (value != 0 && prevData?.ReadUInt8(0) != 0 && !HasStartedGame)
         {
             Logger.LogInformation("Game started");
             AutoTracker.HasStarted = true;

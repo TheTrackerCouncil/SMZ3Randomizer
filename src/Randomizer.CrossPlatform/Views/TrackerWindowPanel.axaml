@@ -7,7 +7,9 @@
              x:Class="Randomizer.CrossPlatform.Views.TrackerWindowPanel"
              PointerPressed="InputElement_OnPointerPressed"
              Background="Transparent"
+             Width="34"
+             Height="34"
              x:DataType="viewModels:TrackerWindowPanelViewModel">
-  <Grid Name="MainDock" Margin="2"></Grid>
+  <Grid Name="MainDock" Margin="1"></Grid>
 </UserControl>
 

@@ -7,7 +7,7 @@
         mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="250"
         MinWidth="500"
         MinHeight="250"
-        Icon="/Assets/chozo20.ico"
+        Icon="/Assets/smz3.ico"
         x:Class="Randomizer.CrossPlatform.Views.MultiplayerStatusWindow"
         Loaded="Control_OnLoaded"
         Closed="TopLevel_OnClosed"

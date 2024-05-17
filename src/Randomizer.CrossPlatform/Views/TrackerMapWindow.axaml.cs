@@ -39,7 +39,6 @@ public partial class TrackerMapWindow : RestorableWindow
 
     private void SelectingItemsControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        LocationsItemsControl.ItemsSource = null;
         _service?.UpdateMap();
     }
 

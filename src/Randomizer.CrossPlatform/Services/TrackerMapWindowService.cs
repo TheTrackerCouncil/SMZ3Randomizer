@@ -9,6 +9,7 @@ using Randomizer.CrossPlatform.ViewModels;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data.Options;
+using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData.Regions.Zelda;
 using Randomizer.Shared;
@@ -127,61 +128,87 @@ public class TrackerMapWindowService(
 
         foreach (var location in locations)
         {
-            var region = location.Region;
-            var image = "";
-            var displayNumber = 0;
-            if (location.Type == TrackerMapLocation.MapLocationType.Item)
+            UpdateLocationModel(location, world, hintTileLocations);
+        }
+    }
+
+    private void UpdateLocationModel(TrackerMapLocationViewModel location, World world, List<LocationId> hintTileLocations)
+    {
+        var region = location.Region;
+        var image = "";
+        var displayNumber = 0;
+        if (location.Type == TrackerMapLocation.MapLocationType.Item)
+        {
+            var progression = itemService.GetProgression(!(region is HyruleCastle || region.World.Config.KeysanityForRegion(region)));
+            var locationStatuses = location.Locations!.Select(x => (Location: x.Location, Status: x.Location.GetStatus(progression))).ToList();
+
+            var clearableLocationsCount = displayNumber = locationStatuses.Count(x => x.Status == LocationStatus.Available);
+            var relevantLocationsCount = locationStatuses.Count(x => x.Status == LocationStatus.Relevant);
+            var outOfLogicLocationsCount = _model.ShowOutOfLogicLocations ? locationStatuses.Count(x => x.Status == LocationStatus.OutOfLogic) : 0;
+            var unclearedLocationsCount = locationStatuses.Count(x => x.Status != LocationStatus.Cleared);
+
+            if (clearableLocationsCount > 0 && clearableLocationsCount == unclearedLocationsCount)
             {
-                var progression = itemService.GetProgression(!(region is HyruleCastle || region.World.Config.KeysanityForRegion(region)));
-                var locationStatuses = location.Locations!.Select(x => (Location: x.Location, Status: x.Location.GetStatus(progression))).ToList();
+                image = "accessible.png";
+            }
+            else if (relevantLocationsCount > 0 && relevantLocationsCount + clearableLocationsCount == unclearedLocationsCount)
+            {
+                image = "relevant.png";
+            }
+            else if (relevantLocationsCount > 0 && clearableLocationsCount == 0)
+            {
+                image = "partial_relevance.png";
+            }
+            else if (clearableLocationsCount > 0 && clearableLocationsCount < unclearedLocationsCount)
+            {
+                image = "partial.png";
+            }
+            else if (clearableLocationsCount == 0 && outOfLogicLocationsCount > 0)
+            {
+                image = "outoflogic.png";
+            }
 
-                var clearableLocationsCount = displayNumber = locationStatuses.Count(x => x.Status == LocationStatus.Available);
-                var relevantLocationsCount = locationStatuses.Count(x => x.Status == LocationStatus.Relevant);
-                var outOfLogicLocationsCount = _model.ShowOutOfLogicLocations ? locationStatuses.Count(x => x.Status == LocationStatus.OutOfLogic) : 0;
-                var unclearedLocationsCount = locationStatuses.Count(x => x.Status != LocationStatus.Cleared);
+            // If there are any valid locations, see if anything was marked
+            if (clearableLocationsCount > 0 || relevantLocationsCount > 0)
+            {
+                var markedLocations = locationStatuses
+                    .Where(x => x.Status is LocationStatus.Available or LocationStatus.Relevant &&
+                                hintTileLocations.Contains(x.Location.Id)).ToList();
 
-                if (clearableLocationsCount > 0 && clearableLocationsCount == unclearedLocationsCount)
+                if (markedLocations.Any())
                 {
-                    image = "accessible.png";
-                }
-                else if (relevantLocationsCount > 0 && relevantLocationsCount + clearableLocationsCount == unclearedLocationsCount)
-                {
-                    image = "relevant.png";
-                }
-                else if (relevantLocationsCount > 0 && clearableLocationsCount == 0)
-                {
-                    image = "partial_relevance.png";
-                }
-                else if (clearableLocationsCount > 0 && clearableLocationsCount < unclearedLocationsCount)
-                {
-                    image = "partial.png";
-                }
-                else if (clearableLocationsCount == 0 && outOfLogicLocationsCount > 0)
-                {
-                    image = "outoflogic.png";
-                }
+                    var activeLocationIds = markedLocations.Select(x => x.Location.Id);
+                    var hintTile = world.HintTiles.FirstOrDefault(x => x.Locations?.Intersect(activeLocationIds).Any() == true);
+                    if (hintTile?.Usefulness is LocationUsefulness.Mandatory or LocationUsefulness.Sword
+                        or LocationUsefulness.NiceToHave)
+                    {
+                        location.MarkedImagePath = _markedImageGoodPath;
+                    }
+                    else if (hintTile?.Usefulness == LocationUsefulness.Useless)
+                    {
+                        location.MarkedImagePath = _markedImageUselessPath;
+                    }
+                    else if (markedLocations.Any(x => x.Location.Item.Type.IsPossibleProgression(x.Location.World.Config.ZeldaKeysanity, x.Location.World.Config.MetroidKeysanity)))
+                    {
+                        location.MarkedImagePath = _markedImageGoodPath;
+                    }
+                    else
+                    {
+                        location.MarkedImagePath = _markedImageUselessPath;
+                    }
 
-                // If there are any valid locations, see if anything was marked
-                if (clearableLocationsCount > 0 || relevantLocationsCount > 0)
+                    location.MarkedVisibility = true;
+                }
+                // For marked items, we compare the marked items at the locations
+                else
                 {
-                    var markedLocations = locationStatuses
+                    markedLocations = locationStatuses
                         .Where(x => x.Status is LocationStatus.Available or LocationStatus.Relevant &&
-                                    hintTileLocations.Contains(x.Location.Id)).ToList();
+                                    x.Location.State.MarkedItem != null).ToList();
 
                     if (markedLocations.Any())
                     {
-                        var activeLocationIds = markedLocations.Select(x => x.Location.Id);
-                        var hintTile = world.HintTiles.FirstOrDefault(x => x.Locations?.Intersect(activeLocationIds).Any() == true);
-                        if (hintTile?.Usefulness is LocationUsefulness.Mandatory or LocationUsefulness.Sword
-                            or LocationUsefulness.NiceToHave)
-                        {
-                            location.MarkedImagePath = _markedImageGoodPath;
-                        }
-                        else if (hintTile?.Usefulness == LocationUsefulness.Useless)
-                        {
-                            location.MarkedImagePath = _markedImageUselessPath;
-                        }
-                        else if (markedLocations.Any(x => x.Location.Item.Type.IsPossibleProgression(x.Location.World.Config.ZeldaKeysanity, x.Location.World.Config.MetroidKeysanity)))
+                        if (markedLocations.Any(x => x.Location.State.MarkedItem!.Value.IsPossibleProgression(x.Location.World.Config.ZeldaKeysanity, x.Location.World.Config.MetroidKeysanity)))
                         {
                             location.MarkedImagePath = _markedImageGoodPath;
                         }
@@ -192,83 +219,62 @@ public class TrackerMapWindowService(
 
                         location.MarkedVisibility = true;
                     }
-                    // For marked items, we compare the marked items at the locations
                     else
                     {
-                        markedLocations = locationStatuses
-                            .Where(x => x.Status is LocationStatus.Available or LocationStatus.Relevant &&
-                                        x.Location.State.MarkedItem != null).ToList();
-
-                        if (markedLocations.Any())
-                        {
-                            if (markedLocations.Any(x => x.Location.State.MarkedItem!.Value.IsPossibleProgression(x.Location.World.Config.ZeldaKeysanity, x.Location.World.Config.MetroidKeysanity)))
-                            {
-                                location.MarkedImagePath = _markedImageGoodPath;
-                            }
-                            else
-                            {
-                                location.MarkedImagePath = _markedImageUselessPath;
-                            }
-
-                            location.MarkedVisibility = true;
-                        }
-                        else
-                        {
-                            location.MarkedVisibility = false;
-                        }
-                    }
-                }
-                else
-                {
-                    location.MarkedVisibility = false;
-                }
-
-            }
-            else if (location.Type == TrackerMapLocation.MapLocationType.Boss)
-            {
-                var progression = itemService.GetProgression(region);
-                var actualProgression = itemService.GetProgression(false);
-                if (location.BossRegion != null && location.BossRegion.Boss.State.Defeated != true && location.BossRegion.CanBeatBoss(progression))
-                {
-                    image = "boss.png";
-                }
-                else if (location.RewardRegion != null && location.RewardRegion.Reward.State.Cleared != true)
-                {
-                    var regionLocations = (IHasLocations)location.Region;
-
-                    // If the player can complete the region with the current actual progression
-                    // or if they can access all locations in the dungeon (unless this is Castle Tower
-                    // in Keysanity because it doesn't have a location for Aga himself)
-                    if (location.RewardRegion.CanComplete(actualProgression)
-                        || (regionLocations.Locations.All(x => x.IsAvailable(progression, true))
-                            && !(location.Region.Config.ZeldaKeysanity && location.RewardRegion is CastleTower)))
-                    {
-                        var dungeon = (IDungeon)location.Region;
-                        image = dungeon.MarkedReward.GetDescription().ToLowerInvariant() + ".png";
+                        location.MarkedVisibility = false;
                     }
                 }
             }
-
-            if (!string.IsNullOrEmpty(image))
-            {
-                location.ImagePath = Path.Combine(Sprite.SpritePath, "Maps", image);
-                location.IconVisibility = true;
-            }
             else
             {
-                location.IconVisibility = false;
+                location.MarkedVisibility = false;
             }
 
-            if (displayNumber > 1)
+        }
+        else if (location.Type == TrackerMapLocation.MapLocationType.Boss)
+        {
+            var progression = itemService.GetProgression(region);
+            var actualProgression = itemService.GetProgression(false);
+            if (location.BossRegion != null && location.BossRegion.Boss.State.Defeated != true && location.BossRegion.CanBeatBoss(progression))
             {
-                location.NumberImagePath = Path.Combine(
-                    Sprite.SpritePath, "Marks", $"{Math.Min(9, displayNumber)}.png");
-                location.NumberVisibility = true;
+                image = "boss.png";
             }
-            else
+            else if (location.RewardRegion != null && location.RewardRegion.Reward.State.Cleared != true)
             {
-                location.NumberVisibility = false;
+                var regionLocations = (IHasLocations)location.Region;
+
+                // If the player can complete the region with the current actual progression
+                // or if they can access all locations in the dungeon (unless this is Castle Tower
+                // in Keysanity because it doesn't have a location for Aga himself)
+                if (location.RewardRegion.CanComplete(actualProgression)
+                    || (regionLocations.Locations.All(x => x.IsAvailable(progression, true))
+                        && !(location.Region.Config.ZeldaKeysanity && location.RewardRegion is CastleTower)))
+                {
+                    var dungeon = (IDungeon)location.Region;
+                    image = dungeon.MarkedReward.GetDescription().ToLowerInvariant() + ".png";
+                }
             }
+        }
+
+        if (!string.IsNullOrEmpty(image))
+        {
+            location.ImagePath = Path.Combine(Sprite.SpritePath, "Maps", image);
+            location.IconVisibility = true;
+        }
+        else
+        {
+            location.IconVisibility = false;
+        }
+
+        if (displayNumber > 1)
+        {
+            location.NumberImagePath = Path.Combine(
+                Sprite.SpritePath, "Marks", $"{Math.Min(9, displayNumber)}.png");
+            location.NumberVisibility = true;
+        }
+        else
+        {
+            location.NumberVisibility = false;
         }
     }
 
