@@ -8,6 +8,7 @@
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
         <Version>9.8.0-rc.3</Version>
         <AssemblyName></AssemblyName>
+        <ApplicationIcon>Assets\smz3.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
@@ -33,10 +34,7 @@
 
     <ItemGroup>
       <None Remove="msu-randomizer-settings.yml" />
+      <Content Include="Assets\smz3.ico" />
       <EmbeddedResource Include="msu-randomizer-settings.yml" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Assets\" />
     </ItemGroup>
 </Project>

@@ -29,6 +29,7 @@ PrivilegesRequiredOverridesAllowed=dialog
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
+ArchitecturesInstallIn64BitMode=x64
 OutputBaseFilename=SMZ3CasRandomizerSetupWin_{#MyAppVersion}     
 
 [Code]
