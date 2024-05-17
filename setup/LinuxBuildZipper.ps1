@@ -2,11 +2,11 @@ $parentFolder = Split-Path -parent $PSScriptRoot
 
 # Get publish folder
 $folder = "$parentFolder\src\Randomizer.CrossPlatform\bin\Release\net8.0\linux-x64\publish"
-$winFolder = "$parentFolder\src\Randomizer.App\bin\Release\net8.0-windows\win-x86\publish"
+$winFolder = "$parentFolder\src\Randomizer.App\bin\Release\net8.0\win-x86\publish"
 if (-not (Test-Path $folder))
 {
     $folder = "$parentFolder\src\Randomizer.CrossPlatform\bin\Release\net8.0\publish\linux-x64"
-    $winFolder = "$parentFolder\src\Randomizer.CrossPlatform\bin\Release\net8.0-windows\publish\win-x86"
+    $winFolder = "$parentFolder\src\Randomizer.CrossPlatform\bin\Release\net8.0\publish\win-x86"
 }
 
 # Get version number from Randomizer.App

@@ -50,7 +50,7 @@ jobs:
       if: ${{ github.event_name != 'pull_request' }}
       id: version
       run: |
-        $version = (Get-Item "src\Randomizer.CrossPlatform\bin\Release\net8.0-windows\win-x86\publish\Randomizer.App.exe").VersionInfo.ProductVersion
+        $version = (Get-Item "src\Randomizer.CrossPlatform\bin\Release\net8.0\win-x86\publish\Randomizer.App.exe").VersionInfo.ProductVersion
         $version = $version -replace "\+.*", ""
         $projText = Get-Content src/Randomizer.CrossPlatform/Randomizer.CrossPlatform.csproj
         $projText = $projText -replace "<version>.*</version>", "<version>$version</version>"
