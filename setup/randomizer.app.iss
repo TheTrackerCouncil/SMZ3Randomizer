@@ -6,7 +6,7 @@
 #define MyAppName "SMZ3 Cas' Randomizer"
 #define MyAppPublisher "Vivelin"
 #define MyAppURL "https://github.com/Vivelin/SMZ3Randomizer"
-#define MyAppExeName "Randomizer.CrossPlatform.exe"
+#define MyAppExeName "Randomizer.App.exe"
 #define MyAppVersion GetStringFileInfo("..\src\Randomizer.CrossPlatform\bin\Release\net8.0\win-x64\publish\" + MyAppExeName, "ProductVersion")
 #define MyAppVersion Copy(MyAppVersion, 0, Pos('+', MyAppVersion)-1)
 
