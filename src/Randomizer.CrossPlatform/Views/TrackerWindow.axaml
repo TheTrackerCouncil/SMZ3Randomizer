@@ -74,32 +74,32 @@
                 <ContextMenu>
                   <MenuItem Header="Disable Auto Tracker" Name="DisableAutoTrackerMenuItem" Click="DisableAutoTrackerMenuItem_OnClick">
                     <MenuItem.Icon>
-                      <Image Width="16" Height="16" Source="avares://Randomizer.CrossPlatform/Assets/check.png" IsVisible="{Binding IsDisabledConnector}" />
+                      <Image Width="16" Height="16" Source="avares://Randomizer.App/Assets/check.png" IsVisible="{Binding IsDisabledConnector}" />
                     </MenuItem.Icon>
                   </MenuItem>
                   <MenuItem Header="SNI Auto Tracker" Name="SniMenuItem" Click="SniMenuItem_OnClick">
                     <MenuItem.Icon>
-                      <Image Width="16" Height="16" Source="avares://Randomizer.CrossPlatform/Assets/check.png" IsVisible="{Binding IsSniConnector}" />
+                      <Image Width="16" Height="16" Source="avares://Randomizer.App/Assets/check.png" IsVisible="{Binding IsSniConnector}" />
                     </MenuItem.Icon>
                   </MenuItem>
                   <MenuItem Header="USB2SNES Auto Tracker" Name="Usb2SnesMenuItem" Click="Usb2SnesMenuItem_OnClick">
                     <MenuItem.Icon>
-                      <Image Width="16" Height="16" Source="avares://Randomizer.CrossPlatform/Assets/check.png" IsVisible="{Binding IsUsb2SnesConnector}" />
+                      <Image Width="16" Height="16" Source="avares://Randomizer.App/Assets/check.png" IsVisible="{Binding IsUsb2SnesConnector}" />
                     </MenuItem.Icon>
                   </MenuItem>
                   <MenuItem Header="Lua Auto Tracker" Name="LuaMenuItem" Click="LuaMenuItem_OnClick">
                     <MenuItem.Icon>
-                      <Image Width="16" Height="16" Source="avares://Randomizer.CrossPlatform/Assets/check.png" IsVisible="{Binding IsLuaConnector}" />
+                      <Image Width="16" Height="16" Source="avares://Randomizer.App/Assets/check.png" IsVisible="{Binding IsLuaConnector}" />
                     </MenuItem.Icon>
                   </MenuItem>
                   <MenuItem Header="Lua Auto Tracker (Crowd Control Script)" Name="CrowdControlMenuItem" Click="CrowdControlMenuItem_OnClick">
                     <MenuItem.Icon>
-                      <Image Width="16" Height="16" Source="avares://Randomizer.CrossPlatform/Assets/check.png" IsVisible="{Binding IsLuaCrowdControlConnector}" />
+                      <Image Width="16" Height="16" Source="avares://Randomizer.App/Assets/check.png" IsVisible="{Binding IsLuaCrowdControlConnector}" />
                     </MenuItem.Icon>
                   </MenuItem>
                   <MenuItem Header="Lua Auto Tracker (EmoTracker Script)" Name="EmoTrackerMenuItem" Click="EmoTrackerMenuItem_OnClick">
                     <MenuItem.Icon>
-                      <Image Width="16" Height="16" Source="avares://Randomizer.CrossPlatform/Assets/check.png" IsVisible="{Binding IsLuaEmoTrackerConnector}" />
+                      <Image Width="16" Height="16" Source="avares://Randomizer.App/Assets/check.png" IsVisible="{Binding IsLuaEmoTrackerConnector}" />
                     </MenuItem.Icon>
                   </MenuItem>
                   <MenuItem Header="Show Auto Tracker Scripts Folder" Name="OpenFolderMenuItem" Click="OpenFolderMenuItem_OnClick"></MenuItem>

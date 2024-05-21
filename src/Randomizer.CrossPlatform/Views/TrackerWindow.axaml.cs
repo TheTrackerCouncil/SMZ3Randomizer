@@ -36,6 +36,7 @@ public partial class TrackerWindow : RestorableWindow
     public TrackerWindow(TrackerWindowService service)
     {
         _service = service;
+
         DataContext = _model = _service.GetViewModel(this);
         InitializeComponent();
 
@@ -43,7 +44,7 @@ public partial class TrackerWindow : RestorableWindow
         {
             var image = new Image()
             {
-                Source = new Bitmap(AssetLoader.Open(new Uri("avares://Randomizer.CrossPlatform/Assets/check.png"))),
+                Source = new Bitmap(AssetLoader.Open(new Uri("avares://Randomizer.App/Assets/check.png"))),
                 IsVisible = false
             };
             _layoutImages[layout.Name] = image;
@@ -58,6 +59,10 @@ public partial class TrackerWindow : RestorableWindow
             LayoutMenu.Items.Add(layoutMenuItem);
         }
 
+        service.LayoutSet += (sender, args) =>
+        {
+            Dispatcher.UIThread.Invoke(CreateLayout);
+        };
         CreateLayout();
     }
 
@@ -102,7 +107,6 @@ public partial class TrackerWindow : RestorableWindow
         ITaskService.Run(() =>
         {
             _service?.SetLayout(layout);
-            Dispatcher.UIThread.Invoke(CreateLayout);
         });
     }
 

@@ -26,6 +26,9 @@ public class TrackerWindowViewModel : ViewModelBase
 
     public IBrush StatusBarBorder => IsInGoMode ? Brushes.Transparent : new SolidColorBrush(new Color(255, 53, 53, 53));
 
+    public bool PegWorldMode { get; set; }
+    public bool ShaktoolMode { get; set; }
+
     [Reactive] public string TimeString { get; set; } = "00:00";
 
     [Reactive]
@@ -72,4 +75,8 @@ public class TrackerWindowViewModel : ViewModelBase
     public List<UILayout> Layouts { get; set; } = [];
 
     public bool OpenTrackWindow { get; set; }
+
+    public UILayout? PrevLayout { get; set; }
+
+    public UILayout? CurrentLayout { get; set; }
 }

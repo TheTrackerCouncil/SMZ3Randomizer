@@ -15,7 +15,7 @@ public class TrackerWindowPanelViewModel : ViewModelBase
     public int Column { get; set; }
     public int Row { get; set; }
 
-    public List<TrackerWindowPanelImage?> Images = [];
+    [Reactive] public List<TrackerWindowPanelImage?> Images { get; set; } = [];
 
     public virtual List<TrackerWindowPanelImage?> GetImages()
     {
@@ -86,9 +86,9 @@ public class TrackerWindowPanelViewModel : ViewModelBase
     }
 }
 
-public class TrackerWindowPanelImage
+public class TrackerWindowPanelImage : ViewModelBase
 {
-    public string ImagePath { get; set; } = "";
+    [Reactive] public string ImagePath { get; set; } = "";
     public bool IsActive { get; set; }
     public int Width { get; set; } = 32;
     public int Height { get; set; } = 32;
