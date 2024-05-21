@@ -51,6 +51,11 @@ public abstract class AutoTrackerBase : IDisposable
     public event EventHandler? AutoTrackerDisabled;
 
     /// <summary>
+    /// Occurs when the tracker's auto tracker connector is changed
+    /// </summary>
+    public event EventHandler? AutoTrackerConnectorChanged;
+
+    /// <summary>
     /// Occurs when the tracker's auto tracker is connected
     /// </summary>
     public event EventHandler? AutoTrackerConnected;
@@ -121,7 +126,7 @@ public abstract class AutoTrackerBase : IDisposable
     }
 
     /// <summary>
-    /// Invokes the OnAutoTrackerDisabled event
+    /// Invokes the AutoTrackerDisabled event
     /// </summary>
     protected virtual void OnAutoTrackerDisabled()
     {
@@ -129,7 +134,7 @@ public abstract class AutoTrackerBase : IDisposable
     }
 
     /// <summary>
-    /// Invokes the OnAutoTrackerConnected event
+    /// Invokes the AutoTrackerConnected event
     /// </summary>
     protected virtual void OnAutoTrackerConnected()
     {
@@ -137,11 +142,19 @@ public abstract class AutoTrackerBase : IDisposable
     }
 
     /// <summary>
-    /// Invokes the OnAutoTrackerDisconnected event
+    /// Invokes the AutoTrackerDisconnected event
     /// </summary>
     protected virtual void OnAutoTrackerDisconnected()
     {
         AutoTrackerDisconnected?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>
+    /// Invokes the AutoTrackerConnectorChanged event
+    /// </summary>
+    protected virtual void OnAutoTrackerConnectorChanged()
+    {
+        AutoTrackerConnectorChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public abstract void Dispose();

@@ -1,9 +1,13 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using Avalonia.Threading;
 using AvaloniaControls.Controls;
 using AvaloniaControls.Services;
@@ -21,6 +25,7 @@ public partial class TrackerWindow : RestorableWindow
     private GeneratedRom? _generatedRom;
     private readonly TrackerWindowViewModel _model;
     private CurrentTrackWindow? _currentTrackWindow;
+    private Dictionary<string, Image> _layoutImages = new();
 
     public TrackerWindow()
     {
@@ -31,20 +36,33 @@ public partial class TrackerWindow : RestorableWindow
     public TrackerWindow(TrackerWindowService service)
     {
         _service = service;
+
         DataContext = _model = _service.GetViewModel(this);
         InitializeComponent();
 
         foreach (var layout in _model.Layouts)
         {
+            var image = new Image()
+            {
+                Source = new Bitmap(AssetLoader.Open(new Uri("avares://Randomizer.App/Assets/check.png"))),
+                IsVisible = false
+            };
+            _layoutImages[layout.Name] = image;
+
             var layoutMenuItem = new MenuItem
             {
                 Header = layout.Name,
-                Tag = layout
+                Tag = layout,
+                Icon = image
             };
             layoutMenuItem.Click += LayoutMenuItemOnClick;
             LayoutMenu.Items.Add(layoutMenuItem);
         }
 
+        service.LayoutSet += (sender, args) =>
+        {
+            Dispatcher.UIThread.Invoke(CreateLayout);
+        };
         CreateLayout();
     }
 
@@ -63,6 +81,10 @@ public partial class TrackerWindow : RestorableWindow
     private void CreateLayout()
     {
         MainPanel.Children.Clear();
+        foreach (var layout in _model.Layouts)
+        {
+            _layoutImages[layout.Name].IsVisible = layout.Name == _model.LayoutName;
+        }
         foreach (var image in _model.Panels)
         {
             var panel = new TrackerWindowPanel(image);
@@ -85,7 +107,6 @@ public partial class TrackerWindow : RestorableWindow
         ITaskService.Run(() =>
         {
             _service?.SetLayout(layout);
-            Dispatcher.UIThread.Invoke(CreateLayout);
         });
     }
 
@@ -103,8 +124,8 @@ public partial class TrackerWindow : RestorableWindow
     }
 
     protected override string RestoreFilePath => Path.Combine(Directories.AppDataFolder, "Windows", "tracker-window.json");
-    protected override int DefaultWidth => 800;
-    protected override int DefualtHeight => 600;
+    protected override int DefaultWidth => 350;
+    protected override int DefualtHeight => 300;
 
     private void Control_OnLoaded(object? sender, RoutedEventArgs e)
     {

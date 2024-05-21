@@ -24,6 +24,7 @@ using Randomizer.Shared.Enums;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Tracking.Services;
+using Randomizer.SMZ3.Tracking.VoiceCommands;
 using SnesConnectorLibrary;
 
 namespace Randomizer.CrossPlatform.Services;
@@ -49,6 +50,8 @@ public class TrackerWindowService(
     private TrackerMapWindow? _trackerMapWindow;
     private TrackerLocationsWindow? _trackerLocationsWindow;
     private TrackerHelpWindow? _trackerHelpWindow;
+    private UILayout? _defaultLayout;
+    private Dictionary<int, TrackerWindowPanelViewModel> _pegWorldImages = new();
 
     public TrackerWindowViewModel GetViewModel(TrackerWindow parent)
     {
@@ -129,6 +132,11 @@ public class TrackerWindowService(
                     itemsPanel.UpdateItem(args.Item, itemPath);
                 }
             }
+
+            if (_model.PegWorldMode)
+            {
+                TogglePegWorld(false);
+            }
         };
 
         tracker.GoModeToggledOn += (sender, args) =>
@@ -162,6 +170,21 @@ public class TrackerWindowService(
             }
         };
 
+        tracker.ToggledPegWorldModeOn += (sender, args) =>
+        {
+            TogglePegWorld(tracker.PegWorldMode);
+        };
+
+        tracker.PegPegged += (sender, args) =>
+        {
+            UpdatePegs();
+        };
+
+        tracker.ToggledShaktoolMode += (sender, args) =>
+        {
+            ToggleShaktoolMode(tracker.ShaktoolMode);
+        };
+
         tracker.DisableVoiceRecognition();
 
         if (TrackerWindowPanelViewModel.NumberImagePaths.Count == 0)
@@ -189,6 +212,8 @@ public class TrackerWindowService(
 
         return _model;
     }
+
+    public event EventHandler? LayoutSet;
 
     public void OpenTrackerMapWindow()
     {
@@ -257,14 +282,70 @@ public class TrackerWindowService(
         tracker.AutoTracker.AutoTrackerDisabled += AutoTrackerOnAutoTrackerEnabled;
         tracker.AutoTracker.AutoTrackerConnected += AutoTrackerOnAutoTrackerEnabled;
         tracker.AutoTracker.AutoTrackerDisconnected += AutoTrackerOnAutoTrackerEnabled;
+        tracker.AutoTracker.AutoTrackerConnectorChanged += AutoTrackerOnAutoTrackerConnectorChanged;
 
         tracker.AutoTracker.SetConnector(Options.GeneralOptions.SnesConnectorSettings);
+    }
+
+    private void AutoTrackerOnAutoTrackerConnectorChanged(object? sender, EventArgs e)
+    {
+        _model.SnesConnectorType = tracker.AutoTracker!.ConnectorType;
     }
 
     private void AutoTrackerOnAutoTrackerEnabled(object? sender, EventArgs e)
     {
         _model.AutoTrackerConnected = tracker.AutoTracker!.IsConnected;
-        _model.AutoTrackerEnabled = tracker.AutoTracker!.IsEnabled;
+        _model.AutoTrackerEnabled = tracker.AutoTracker.IsEnabled;
+        _model.SnesConnectorType = tracker.AutoTracker.ConnectorType;
+    }
+
+    private void TogglePegWorld(bool enable)
+    {
+        if (_model.PegWorldMode == enable) return;
+        _model.PegWorldMode = enable;
+        if (enable)
+        {
+            _model.PrevLayout = _model.CurrentLayout;
+            SetLayout(uiService.GetLayout("Peg World"));
+        }
+        else
+        {
+            SetLayout(_model.PrevLayout ?? _defaultLayout!);
+            _model.PrevLayout = null;
+        }
+    }
+
+    private void UpdatePegs()
+    {
+        var peggedFileName = uiService.GetSpritePath("Items", "pegged.png", out _);
+        var unpeggedFileName = uiService.GetSpritePath("Items", "peg.png", out _);
+        for (var i = 1; i <= PegWorldModeModule.TotalPegs; i++)
+        {
+            _pegWorldImages[i].Images =
+            [
+                new TrackerWindowPanelImage()
+                {
+                    ImagePath = i <= tracker.PegsPegged ? peggedFileName! : unpeggedFileName!,
+                    IsActive = true
+                }
+            ];
+        }
+    }
+
+    private void ToggleShaktoolMode(bool enable)
+    {
+        if (_model.ShaktoolMode == enable) return;
+        _model.ShaktoolMode = enable;
+        if (enable)
+        {
+            _model.PrevLayout = _model.CurrentLayout;
+            SetLayout(uiService.GetLayout("Shak"));
+        }
+        else
+        {
+            SetLayout(_model.PrevLayout ?? _defaultLayout!);
+            _model.PrevLayout = null;
+        }
     }
 
     public async Task LoadRomAsync()
@@ -323,12 +404,15 @@ public class TrackerWindowService(
         _window.Close();
     }
 
-    public void SetLayout(UILayout layout)
+    public void SetLayout(UILayout layout, bool automatic = false)
     {
         _bossModels.Clear();
         _dungeonModels.Clear();
         _itemModels.Clear();
         _medallions.Clear();
+
+        _model.LayoutName = layout.Name;
+        _model.CurrentLayout = layout;
 
         var models = new List<TrackerWindowPanelViewModel>();
 
@@ -343,12 +427,18 @@ public class TrackerWindowService(
 
         _model.Panels = models;
 
-        ITaskService.Run(() =>
+        if (!automatic)
         {
-            Options.GeneralOptions.SelectedLayout = layout.Name;
-            Options.Save();
-        });
+            ITaskService.Run(() =>
+            {
+                Options.GeneralOptions.SelectedLayout = layout.Name;
+                Options.Save();
+            });
+        }
+
+        LayoutSet?.Invoke(this, EventArgs.Empty);
     }
+
 
     public void ToggleTimer()
     {
@@ -395,6 +485,8 @@ public class TrackerWindowService(
             UIGridLocationType.Items => GetItemPanelViewModel(gridLocation),
             UIGridLocationType.Dungeon => GetDungeonPanelViewModel(gridLocation),
             UIGridLocationType.SMBoss => GetBossPanelViewModel(gridLocation),
+            UIGridLocationType.Peg => GetPegPanelViewModel(gridLocation),
+            UIGridLocationType.Shak => GetShakPanelViewModel(gridLocation),
             _ => null
         };
     }
@@ -551,6 +643,69 @@ public class TrackerWindowService(
 
         model.Clicked += (_, _) => tracker.MarkBossAsDefeated(boss);
         model.BossRevived += (_, _) => tracker.MarkBossAsNotDefeated(boss);
+
+        return model;
+    }
+
+    private TrackerWindowPanelViewModel? GetPegPanelViewModel(UIGridLocation gridLocation)
+    {
+        if (!int.TryParse(gridLocation.Identifiers.First(), out var pegNumber))
+        {
+            logger.LogError("Could not determine peg number");
+            return null;
+        }
+
+        var fileName = uiService.GetSpritePath("Items",
+            tracker.PegsPegged >= pegNumber ? "pegged.png" : "peg.png", out _);
+
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return null;
+        }
+
+        var model = new TrackerWindowPanelViewModel
+        {
+            Row = gridLocation.Row,
+            Column = gridLocation.Column,
+            Images =
+            [
+                new TrackerWindowPanelImage { ImagePath = fileName, IsActive = true }
+            ]
+        };
+
+        _pegWorldImages[pegNumber] = model;
+
+        model.Clicked += (_, _) => tracker.Peg();
+
+        return model;
+    }
+
+    private TrackerWindowPanelViewModel? GetShakPanelViewModel(UIGridLocation gridLocation)
+    {
+        if (!int.TryParse(gridLocation.Identifiers.First(), out var pegNumber))
+        {
+            logger.LogError("Could not determine peg number");
+            return null;
+        }
+
+        var fileName = uiService.GetSpritePath("Items", "shakspin.gif", out _);
+
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return null;
+        }
+
+        var model = new TrackerWindowPanelViewModel
+        {
+            Row = gridLocation.Row,
+            Column = gridLocation.Column,
+            Images =
+            [
+                new TrackerWindowPanelImage { ImagePath = fileName, IsActive = true }
+            ]
+        };
+
+        model.Clicked += (_, _) => tracker.StopShaktoolMode();
 
         return model;
     }

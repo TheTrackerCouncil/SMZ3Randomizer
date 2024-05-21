@@ -7,7 +7,7 @@
 #define MyAppPublisher "Vivelin"
 #define MyAppURL "https://github.com/Vivelin/SMZ3Randomizer"
 #define MyAppExeName "Randomizer.App.exe"
-#define MyAppVersion GetStringFileInfo("..\src\Randomizer.App\bin\Release\net8.0-windows\win-x64\publish\" + MyAppExeName, "ProductVersion")
+#define MyAppVersion GetStringFileInfo("..\src\Randomizer.CrossPlatform\bin\Release\net8.0\win-x64\publish\" + MyAppExeName, "ProductVersion")
 #define MyAppVersion Copy(MyAppVersion, 0, Pos('+', MyAppVersion)-1)
 
 [Setup]
@@ -29,6 +29,7 @@ PrivilegesRequiredOverridesAllowed=dialog
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
+ArchitecturesInstallIn64BitMode=x64
 OutputBaseFilename=SMZ3CasRandomizerSetupWin_{#MyAppVersion}     
 
 [Code]
@@ -52,10 +53,10 @@ Type: filesandordirs; Name: "{app}\Sprites"
 Source: "netcorecheck.exe"; Flags: dontcopy noencryption
 Source: "netcorecheck_x64.exe"; Flags: dontcopy noencryption
 Source: "..\sprites\Sprites\*"; DestDir: "{app}\Sprites"; Excludes: "\bin\*,obj\*,*.cs,*.csproj"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\src\Randomizer.App\bin\Release\net8.0-windows\win-x64\publish\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; Check: Is64BitInstallMode;
-Source: "..\src\Randomizer.App\bin\Release\net8.0-windows\win-x64\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: Is64BitInstallMode;
-Source: "..\src\Randomizer.App\bin\Release\net8.0-windows\win-x86\publish\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; Check: "not Is64BitInstallMode";
-Source: "..\src\Randomizer.App\bin\Release\net8.0-windows\win-x86\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: "not Is64BitInstallMode";
+Source: "..\src\Randomizer.CrossPlatform\bin\Release\net8.0\win-x64\publish\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; Check: Is64BitInstallMode;
+Source: "..\src\Randomizer.CrossPlatform\bin\Release\net8.0\win-x64\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: Is64BitInstallMode;
+Source: "..\src\Randomizer.CrossPlatform\bin\Release\net8.0\win-x86\publish\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; Check: "not Is64BitInstallMode";
+Source: "..\src\Randomizer.CrossPlatform\bin\Release\net8.0\win-x86\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: "not Is64BitInstallMode";
 Source: "..\src\Randomizer.Data\maps.json"; DestDir: "{localappdata}\SMZ3CasRandomizer"; Flags: comparetimestamp
 Source: "..\configs\Profiles\*"; DestDir: "{localappdata}\SMZ3CasRandomizer\Configs"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\configs\Schemas\*"; DestDir: "{localappdata}\SMZ3CasRandomizer\Schemas"; Flags: ignoreversion recursesubdirs createallsubdirs

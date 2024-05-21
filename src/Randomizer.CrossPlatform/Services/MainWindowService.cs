@@ -24,7 +24,8 @@ public class MainWindowService(
     ILogger<MainWindowService> logger,
     IChatAuthenticationService chatAuthenticationService,
     IGitHubConfigDownloaderService gitHubConfigDownloaderService,
-    IGitHubSpriteDownloaderService gitHubSpriteDownloaderService) : ControlService
+    IGitHubSpriteDownloaderService gitHubSpriteDownloaderService,
+    SpriteService spriteService) : ControlService
 {
     private MainWindowViewModel _model = new();
     private MainWindow _window = null!;
@@ -150,6 +151,8 @@ public class MainWindowService(
         {
             logger.LogError(ex, "Error getting GitHub release");
         }
+
+        await spriteService.LoadSpritesAsync();
     }
 }
 

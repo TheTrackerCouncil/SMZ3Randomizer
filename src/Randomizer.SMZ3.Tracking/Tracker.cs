@@ -2051,7 +2051,12 @@ public sealed class Tracker : TrackerBase, IDisposable
         if (PegsPegged < PegWorldModeModule.TotalPegs)
             Say(Responses.PegWorldModePegged);
         else
+        {
+            PegWorldMode = false;
             Say(Responses.PegWorldModeDone);
+            OnToggledPegWorldModeOn(new TrackerEventArgs(confidence));
+        }
+
         OnPegPegged(new TrackerEventArgs(confidence));
         AddUndo(() => PegsPegged--);
 

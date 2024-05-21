@@ -13,6 +13,8 @@ public class TrackerWindowViewModel : ViewModelBase
 {
     [Reactive] public List<TrackerWindowPanelViewModel> Panels { get; set; } = [];
 
+    public string LayoutName { get; set; } = "";
+
     public IBrush Background { get; set; } = new SolidColorBrush(new Color(255, 0, 0, 0));
 
     public MaterialIconKind ConnectedIcon => AutoTrackerEnabled ? MaterialIconKind.Link : MaterialIconKind.LinkOff;
@@ -23,6 +25,9 @@ public class TrackerWindowViewModel : ViewModelBase
     public IBrush StatusBarBackground => IsInGoMode ? Brushes.Green : new SolidColorBrush(new Color(255, 45, 45, 45));
 
     public IBrush StatusBarBorder => IsInGoMode ? Brushes.Transparent : new SolidColorBrush(new Color(255, 53, 53, 53));
+
+    public bool PegWorldMode { get; set; }
+    public bool ShaktoolMode { get; set; }
 
     [Reactive] public string TimeString { get; set; } = "00:00";
 
@@ -54,9 +59,24 @@ public class TrackerWindowViewModel : ViewModelBase
 
     public MaterialIconKind SpeechIcon => VoiceEnabled ? MaterialIconKind.Microphone : MaterialIconKind.MicOff;
 
+    [Reactive]
+    [ReactiveLinkedProperties(nameof(IsDisabledConnector), nameof(IsSniConnector), nameof(IsUsb2SnesConnector), nameof(IsLuaConnector), nameof(IsLuaCrowdControlConnector), nameof(IsLuaEmoTrackerConnector))]
+    public SnesConnectorType SnesConnectorType { get; set; } = SnesConnectorType.None;
+
+    public bool IsDisabledConnector => SnesConnectorType == SnesConnectorType.None;
+    public bool IsSniConnector => SnesConnectorType == SnesConnectorType.Sni;
+    public bool IsUsb2SnesConnector => SnesConnectorType == SnesConnectorType.Usb2Snes;
+    public bool IsLuaConnector => SnesConnectorType == SnesConnectorType.Lua;
+    public bool IsLuaCrowdControlConnector => SnesConnectorType == SnesConnectorType.LuaCrowdControl;
+    public bool IsLuaEmoTrackerConnector => SnesConnectorType == SnesConnectorType.LuaEmoTracker;
+
     public GeneratedRom? Rom { get; set; }
 
     public List<UILayout> Layouts { get; set; } = [];
 
     public bool OpenTrackWindow { get; set; }
+
+    public UILayout? PrevLayout { get; set; }
+
+    public UILayout? CurrentLayout { get; set; }
 }

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
@@ -6,18 +6,20 @@
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-        <Version>1.0.0</Version>
+        <Version>9.8.0-beta.1</Version>
+        <AssemblyName>Randomizer.App</AssemblyName>
+        <ApplicationIcon>Assets\smz3.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
-        <AvaloniaResource Include="Assets\**"/>
+        <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
 
     <ItemGroup>
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Include="MattEqualsCoder.AvaloniaControls" Version="0.9.15" />
         <PackageReference Include="MattEqualsCoder.DynamicForms.Avalonia" Version="0.0.3-rc.3" />
-        <PackageReference Include="MattEqualsCoder.MSURandomizer.Avalonia" Version="2.1.0-rc.3" />
+        <PackageReference Include="MattEqualsCoder.MSURandomizer.Avalonia" Version="2.1.0-rc.4" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
         <PackageReference Include="ReactiveUI.Fody" Version="19.5.41" />
         <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
@@ -32,10 +34,7 @@
 
     <ItemGroup>
       <None Remove="msu-randomizer-settings.yml" />
+      <Content Include="Assets\smz3.ico" />
       <EmbeddedResource Include="msu-randomizer-settings.yml" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Assets\" />
     </ItemGroup>
 </Project>
