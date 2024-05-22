@@ -74,7 +74,7 @@ public partial class TrackerWindow : RestorableWindow
         }
 
         _currentTrackWindow = new CurrentTrackWindow();
-        _currentTrackWindow.Show(Owner as Window ?? this);
+        _currentTrackWindow.Show(this);
         _currentTrackWindow.Closed += (_, _) => _currentTrackWindow = null;
     }
 
@@ -125,7 +125,7 @@ public partial class TrackerWindow : RestorableWindow
 
     protected override string RestoreFilePath => Path.Combine(Directories.AppDataFolder, "Windows", "tracker-window.json");
     protected override int DefaultWidth => 350;
-    protected override int DefualtHeight => 300;
+    protected override int DefaultHeight => 300;
 
     private void Control_OnLoaded(object? sender, RoutedEventArgs e)
     {
@@ -148,6 +148,8 @@ public partial class TrackerWindow : RestorableWindow
                 _service?.OpenTrackerMapWindow();
             }, DispatcherPriority.Background);
         });
+
+        MessageWindow.GlobalParentWindow?.Hide();
     }
 
     private async void LoadSavedStateMenuItem_OnClick(object? sender, RoutedEventArgs e)
@@ -197,6 +199,8 @@ public partial class TrackerWindow : RestorableWindow
         }
 
         _currentTrackWindow?.Close(true);
+
+        MessageWindow.GlobalParentWindow?.Show();
     }
 
     private void TimeTextBlock_OnPointerPressed(object? sender, PointerPressedEventArgs e)

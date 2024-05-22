@@ -223,7 +223,7 @@ public class TrackerWindowService(
         }
 
         _trackerMapWindow = serviceProvider.GetRequiredService<TrackerMapWindow>();
-        _trackerMapWindow.Show(_window.Owner as Window ?? _window);
+        _trackerMapWindow.Show(_window);
         _trackerMapWindow.Closed += (_, _) => _trackerMapWindow = null;
     }
 
@@ -235,7 +235,7 @@ public class TrackerWindowService(
         }
 
         _trackerLocationsWindow = serviceProvider.GetRequiredService<TrackerLocationsWindow>();
-        _trackerLocationsWindow.Show(_window.Owner as Window ?? _window);
+        _trackerLocationsWindow.Show(_window);
         _trackerLocationsWindow.OutOfLogicChanged += TrackerLocationsWindowOnOutOfLogicChanged;
         _trackerLocationsWindow.Closed += (_, _) =>
         {
@@ -474,7 +474,7 @@ public class TrackerWindowService(
         }
 
         _trackerHelpWindow = serviceProvider.GetRequiredService<TrackerHelpWindow>();
-        _trackerHelpWindow.Show(_window.Owner as Window ?? _window);
+        _trackerHelpWindow.Show(_window);
         _trackerHelpWindow.Closed += (_, _) => _trackerHelpWindow = null;
     }
 
@@ -725,7 +725,7 @@ public class TrackerWindowService(
             Buttons = buttons
         });
 
-        await window.ShowDialog(_window.Owner as Window ?? _window);
+        await window.ShowDialog(_window);
 
         return window.DialogResult;
     }

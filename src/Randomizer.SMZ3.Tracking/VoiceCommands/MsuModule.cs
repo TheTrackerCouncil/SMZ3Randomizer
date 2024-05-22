@@ -22,6 +22,7 @@ public class MsuModule : TrackerModule, IDisposable
     private Msu? _currentMsu;
     private readonly MsuConfig _msuConfig;
     private readonly IMsuMonitorService _msuMonitorService;
+    private readonly IGameService _gameService;
     private readonly string _msuKey = "MsuKey";
     private int _currentTrackNumber;
     private readonly HashSet<int> _validTrackNumbers;
@@ -40,6 +41,7 @@ public class MsuModule : TrackerModule, IDisposable
     /// <param name="msuTypeService"></param>
     /// <param name="msuUserOptionsService"></param>
     /// <param name="msuConfig"></param>
+    /// <param name="gameService"></param>
     public MsuModule(
         TrackerBase tracker,
         IItemService itemService,
@@ -49,9 +51,11 @@ public class MsuModule : TrackerModule, IDisposable
         IMsuMonitorService msuMonitorService,
         IMsuTypeService msuTypeService,
         IMsuUserOptionsService msuUserOptionsService,
-        MsuConfig msuConfig)
+        MsuConfig msuConfig,
+        IGameService gameService)
         : base(tracker, itemService, worldService, logger)
     {
+        _gameService = gameService;
         _msuMonitorService = msuMonitorService;
         var msuType = msuTypeService.GetSMZ3MsuType();
         _msuConfig = msuConfig;
@@ -114,9 +118,15 @@ public class MsuModule : TrackerModule, IDisposable
         }
 
         msuMonitorService.MsuTrackChanged += MsuMonitorServiceOnMsuTrackChanged;
+        msuMonitorService.MsuShuffled += MsuMonitorServiceOnMsuShuffled;
 
         _isSetup = true;
 
+    }
+
+    private void MsuMonitorServiceOnMsuShuffled(object? sender, EventArgs e)
+    {
+        _gameService.TryCancelMsuResume();
     }
 
     private void MsuMonitorServiceOnMsuTrackChanged(object sender, MsuTrackChangedEventArgs e)

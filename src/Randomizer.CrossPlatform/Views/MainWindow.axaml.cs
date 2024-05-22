@@ -49,7 +49,7 @@ public partial class MainWindow : RestorableWindow
 
     protected override string RestoreFilePath => Path.Combine(Directories.AppDataFolder, "Windows", "main-window.json");
     protected override int DefaultWidth => 800;
-    protected override int DefualtHeight => 600;
+    protected override int DefaultHeight => 600;
 
     private void CloseUpdateButton_OnClick(object? sender, RoutedEventArgs e)
     {

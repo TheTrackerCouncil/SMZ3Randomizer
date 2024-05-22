@@ -50,7 +50,7 @@ public partial class TrackerMapWindow : RestorableWindow
 
     protected override string RestoreFilePath => Path.Combine(Directories.AppDataFolder, "Windows", "tracker-map-window.json");
     protected override int DefaultWidth => 1024;
-    protected override int DefualtHeight => 768;
+    protected override int DefaultHeight => 768;
 
     private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
