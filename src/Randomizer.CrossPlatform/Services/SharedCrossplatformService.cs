@@ -174,7 +174,7 @@ public class SharedCrossplatformService(
                 scope.Dispose();
             };
             s_trackerWindow.Rom = rom;
-            s_trackerWindow.Show(ParentWindow);
+            s_trackerWindow.Show();
             return s_trackerWindow;
         }
         catch (YamlDotNet.Core.SemanticErrorException ex)

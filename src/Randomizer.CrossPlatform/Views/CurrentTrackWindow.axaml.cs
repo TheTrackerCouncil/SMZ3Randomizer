@@ -36,6 +36,6 @@ public partial class CurrentTrackWindow : RestorableWindow
 
     protected override string RestoreFilePath => Path.Combine(Directories.AppDataFolder, "Windows", "msu-monitor.json");
     protected override int DefaultWidth => 600;
-    protected override int DefualtHeight => 400;
+    protected override int DefaultHeight => 400;
 }
 

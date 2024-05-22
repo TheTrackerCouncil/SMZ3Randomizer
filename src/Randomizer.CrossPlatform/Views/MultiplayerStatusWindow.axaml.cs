@@ -38,7 +38,7 @@ public partial class MultiplayerStatusWindow : RestorableWindow
 
     protected override string RestoreFilePath => Path.Combine(Directories.AppDataFolder, "Windows", "multiplayer-status-window.json");
     protected override int DefaultWidth => 500;
-    protected override int DefualtHeight => 250;
+    protected override int DefaultHeight => 250;
 
     private async void CopyUrlButton_OnClick(object? sender, RoutedEventArgs e)
     {

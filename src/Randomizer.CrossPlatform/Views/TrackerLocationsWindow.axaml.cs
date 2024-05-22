@@ -35,7 +35,7 @@ public partial class TrackerLocationsWindow : RestorableWindow
 
     protected override string RestoreFilePath => Path.Combine(Directories.AppDataFolder, "Windows", "tracker-locations-window.json");
     protected override int DefaultWidth => 450;
-    protected override int DefualtHeight => 600;
+    protected override int DefaultHeight => 600;
 
     public event EventHandler<OutOfLogicChangedEventArgs>? OutOfLogicChanged;
 
