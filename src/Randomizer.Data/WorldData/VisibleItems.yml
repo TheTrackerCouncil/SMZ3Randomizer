@@ -71,6 +71,15 @@
         BottomRightY: 8674
         Locations:
           - Library
+  - Room: 0
+    OverworldScreen: 74
+    Areas:
+      - TopLeftX: 1270
+        TopLeftY: 512
+        BottomRightX: 1472
+        BottomRightY: 752
+        Locations:
+          - BumperCave
 MetroidItems:
   - Room: 14
     Areas:
