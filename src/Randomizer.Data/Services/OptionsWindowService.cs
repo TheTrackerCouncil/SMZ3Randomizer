@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -77,6 +78,12 @@ public class OptionsWindowService(ConfigProvider configProvider, IMicrophoneServ
     {
         var options = optionsFactory.Create();
         _model.UpdateOptions(options.GeneralOptions);
+
+        if (!Directory.Exists(options.GeneralOptions.RomOutputPath))
+        {
+            Directory.CreateDirectory(options.GeneralOptions.RomOutputPath);
+        }
+
         options.Save();
     }
 

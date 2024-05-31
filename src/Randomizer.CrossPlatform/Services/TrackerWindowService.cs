@@ -275,6 +275,9 @@ public class TrackerWindowService(
             return;
         }
 
+        tracker.ConnectToChat(Options.GeneralOptions.TwitchUserName, Options.GeneralOptions.TwitchOAuthToken,
+            Options.GeneralOptions.TwitchChannel, Options.GeneralOptions.TwitchId);
+
         _model.AutoTrackerConnected = tracker.AutoTracker.IsConnected;
         _model.AutoTrackerEnabled = tracker.AutoTracker.IsEnabled;
 

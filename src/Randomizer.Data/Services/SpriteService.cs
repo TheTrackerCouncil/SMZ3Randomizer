@@ -33,7 +33,7 @@ public class SpriteService
     /// </summary>
     public Task LoadSpritesAsync()
     {
-        if (Sprites.Any()) return Task.CompletedTask;
+        if (Sprites.Any() || !Directory.Exists(Sprite.SpritePath)) return Task.CompletedTask;
 
         return Task.Run(() =>
         {

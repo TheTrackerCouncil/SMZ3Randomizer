@@ -364,6 +364,7 @@ public sealed class Tracker : TrackerBase, IDisposable
                 {
                     location.State.Cleared = false;
                 }
+                OnDungeonUpdated(new DungeonTrackedEventArgs(dungeon, confidence, autoTracked));
             });
 
             return true;
@@ -407,7 +408,11 @@ public sealed class Tracker : TrackerBase, IDisposable
 
         OnDungeonUpdated(new DungeonTrackedEventArgs(dungeon, confidence, autoTracked));
 
-        if (!autoTracked) AddUndo(() => dungeon.DungeonState.MarkedReward = originalReward);
+        if (!autoTracked) AddUndo(() =>
+        {
+            dungeon.DungeonState.MarkedReward = originalReward;
+            OnDungeonUpdated(new DungeonTrackedEventArgs(dungeon, confidence, autoTracked));
+        });
     }
 
     /// <summary>
@@ -425,7 +430,11 @@ public sealed class Tracker : TrackerBase, IDisposable
         {
             Say(Responses.RemainingDungeonsMarked?.Format(ItemService.GetName(reward)));
             unmarkedDungeons.ForEach(dungeon => dungeon.DungeonState.MarkedReward = reward);
-            AddUndo(() => unmarkedDungeons.ForEach(dungeon => dungeon.DungeonState.MarkedReward = RewardType.None));
+            AddUndo(() =>
+            {
+                unmarkedDungeons.ForEach(dungeon => dungeon.DungeonState.MarkedReward = RewardType.None);
+                OnDungeonUpdated(new DungeonTrackedEventArgs(null, confidence, false));
+            });
             OnDungeonUpdated(new DungeonTrackedEventArgs(null, confidence, false));
         }
         else
@@ -481,7 +490,11 @@ public sealed class Tracker : TrackerBase, IDisposable
             OnDungeonUpdated(new DungeonTrackedEventArgs(dungeon, confidence, false));
         }
 
-        AddUndo(() => dungeon.DungeonState.MarkedMedallion = originalRequirement);
+        AddUndo(() =>
+        {
+            dungeon.DungeonState.MarkedMedallion = originalRequirement;
+            OnDungeonUpdated(new DungeonTrackedEventArgs(dungeon, confidence, false));
+        });
     }
 
     /// <summary>
@@ -1031,7 +1044,11 @@ public sealed class Tracker : TrackerBase, IDisposable
             }
         }
 
-        var undoTrack = () => { item.State.TrackingState = originalTrackingState; ItemService.ResetProgression(); };
+        var undoTrack = () =>
+        {
+            item.State.TrackingState = originalTrackingState; ItemService.ResetProgression();
+            OnItemTracked(new ItemTrackedEventArgs(item, trackedAs, confidence, autoTracked));
+        };
         OnItemTracked(new ItemTrackedEventArgs(item, trackedAs, confidence, autoTracked));
 
         // Check if we can clear a location
@@ -1255,7 +1272,11 @@ public sealed class Tracker : TrackerBase, IDisposable
 
         IsDirty = true;
         OnItemTracked(new(item, null, confidence, false));
-        AddUndo(() => { item.State.TrackingState = originalTrackingState; ItemService.ResetProgression(); });
+        AddUndo(() =>
+        {
+            item.State.TrackingState = originalTrackingState; ItemService.ResetProgression();
+            OnItemTracked(new(item, null, confidence, false));
+        });
     }
 
     /// <summary>
@@ -1305,6 +1326,7 @@ public sealed class Tracker : TrackerBase, IDisposable
                 undoTrackTreasure?.Invoke();
                 location.State.Cleared = false;
                 ItemService.ResetProgression();
+                OnLocationCleared(new(location, confidence, false));
             });
         }
         else
@@ -1403,7 +1425,11 @@ public sealed class Tracker : TrackerBase, IDisposable
 
         IsDirty = true;
 
-        AddUndo(() => { item.State.TrackingState = oldItemCount; ItemService.ResetProgression(); });
+        AddUndo(() =>
+        {
+            item.State.TrackingState = oldItemCount; ItemService.ResetProgression();
+            OnItemTracked(new(item, null, confidence, false));
+        });
         OnItemTracked(new(item, null, confidence, false));
     }
 
@@ -1636,6 +1662,7 @@ public sealed class Tracker : TrackerBase, IDisposable
                 state.Cleared = false;
             }
             ItemService.ResetProgression();
+            OnDungeonUpdated(new(dungeon, confidence, false));
         });
     }
 
@@ -1693,6 +1720,7 @@ public sealed class Tracker : TrackerBase, IDisposable
                 undoTrackTreasure?.Invoke();
                 undoStopPegWorldMode?.Invoke();
                 ItemService.ResetProgression();
+                OnLocationCleared(new(location, confidence, autoTracked));
             });
         }
 
@@ -1758,6 +1786,7 @@ public sealed class Tracker : TrackerBase, IDisposable
             }
             undoDungeonTreasure?.Invoke();
             ItemService.ResetProgression();
+            OnLocationCleared(new(locations.First(), confidence, false));
         });
 
         World.LastClearedLocation = locations.First();
@@ -1834,6 +1863,7 @@ public sealed class Tracker : TrackerBase, IDisposable
                 {
                     location.State.Cleared = false;
                 }
+                OnDungeonUpdated(new DungeonTrackedEventArgs(dungeon, confidence, autoTracked));
             });
         }
     }
@@ -1884,6 +1914,7 @@ public sealed class Tracker : TrackerBase, IDisposable
             {
                 boss.State.Defeated = false;
                 addedEvent.IsUndone = true;
+                OnBossUpdated(new(boss, confidence, autoTracked));
             });
         }
     }
@@ -1908,7 +1939,11 @@ public sealed class Tracker : TrackerBase, IDisposable
         ItemService.ResetProgression();
 
         OnBossUpdated(new(boss, confidence, false));
-        AddUndo(() => boss.State.Defeated = true);
+        AddUndo(() =>
+        {
+            boss.State.Defeated = true;
+            OnBossUpdated(new(boss, confidence, false));
+        });
     }
 
     /// <summary>
@@ -1970,6 +2005,7 @@ public sealed class Tracker : TrackerBase, IDisposable
             undoUntrackTreasure?.Invoke();
             undoUnclear?.Invoke();
             ItemService.ResetProgression();
+            OnDungeonUpdated(new(dungeon, confidence, false));
         });
     }
 
@@ -2017,7 +2053,11 @@ public sealed class Tracker : TrackerBase, IDisposable
             Say(x => x.LocationMarkedAgain, locationName, metadata?.Name ?? item.GetDescription(), oldType.GetDescription());
             if (!autoTracked)
             {
-                AddUndo(() => location.State.MarkedItem = oldType);
+                AddUndo(() =>
+                {
+                    location.State.MarkedItem = oldType;
+                    OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
+                });
             }
         }
         else
@@ -2026,7 +2066,11 @@ public sealed class Tracker : TrackerBase, IDisposable
             Say(x => x.LocationMarked, locationName, metadata?.Name ?? item.GetDescription());
             if (!autoTracked)
             {
-                AddUndo(() => location.State.MarkedItem = null);
+                AddUndo(() =>
+                {
+                    location.State.MarkedItem = null;
+                    OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
+                });
             }
         }
 
@@ -2058,7 +2102,11 @@ public sealed class Tracker : TrackerBase, IDisposable
         }
 
         OnPegPegged(new TrackerEventArgs(confidence));
-        AddUndo(() => PegsPegged--);
+        AddUndo(() =>
+        {
+            PegsPegged--;
+            OnPegPegged(new TrackerEventArgs(confidence));
+        });
 
         RestartIdleTimers();
     }
@@ -2073,7 +2121,11 @@ public sealed class Tracker : TrackerBase, IDisposable
         PegWorldMode = true;
         Say(Responses.PegWorldModeOn, wait: true);
         OnToggledPegWorldModeOn(new TrackerEventArgs(confidence));
-        AddUndo(() => PegWorldMode = false);
+        AddUndo(() =>
+        {
+            PegWorldMode = false;
+            OnToggledPegWorldModeOn(new TrackerEventArgs(confidence));
+        });
     }
 
     /// <summary>
@@ -2085,7 +2137,11 @@ public sealed class Tracker : TrackerBase, IDisposable
         PegWorldMode = false;
         Say(Responses.PegWorldModeDone);
         OnToggledPegWorldModeOn(new TrackerEventArgs(confidence));
-        AddUndo(() => PegWorldMode = true);
+        AddUndo(() =>
+        {
+            PegWorldMode = true;
+            OnToggledPegWorldModeOn(new TrackerEventArgs(confidence));
+        });
     }
 
     /// <summary>
@@ -2096,7 +2152,11 @@ public sealed class Tracker : TrackerBase, IDisposable
     {
         ShaktoolMode = true;
         OnToggledShaktoolMode(new TrackerEventArgs(confidence));
-        AddUndo(() => ShaktoolMode = false);
+        AddUndo(() =>
+        {
+            ShaktoolMode = false;
+            OnToggledShaktoolMode(new TrackerEventArgs(confidence));
+        });
     }
 
     /// <summary>
@@ -2107,7 +2167,11 @@ public sealed class Tracker : TrackerBase, IDisposable
     {
         ShaktoolMode = false;
         OnToggledShaktoolMode(new TrackerEventArgs(confidence));
-        AddUndo(() => ShaktoolMode = true);
+        AddUndo(() =>
+        {
+            ShaktoolMode = true;
+            OnToggledShaktoolMode(new TrackerEventArgs(confidence));
+        });
     }
 
     /// <summary>
@@ -2171,6 +2235,7 @@ public sealed class Tracker : TrackerBase, IDisposable
                     {
                         pauseUndo();
                     }
+                    OnBeatGame(new TrackerEventArgs(autoTracked));
                 });
             }
         }
