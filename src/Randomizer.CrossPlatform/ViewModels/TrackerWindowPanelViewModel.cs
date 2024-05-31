@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Avalonia.Controls;
+using Randomizer.Shared;
 using ReactiveUI.Fody.Helpers;
 
 namespace Randomizer.CrossPlatform.ViewModels;
@@ -14,12 +16,19 @@ public class TrackerWindowPanelViewModel : ViewModelBase
     public string? LabelImage { get; set; }
     public int Column { get; set; }
     public int Row { get; set; }
+    public bool AddShadows { get; set; }
 
     [Reactive] public List<TrackerWindowPanelImage?> Images { get; set; } = [];
+    [Reactive] public List<TrackerWindowPanelImage?> OverlayImages { get; set; } = [];
 
-    public virtual List<TrackerWindowPanelImage?> GetImages()
+    public virtual List<TrackerWindowPanelImage> GetMainImages()
     {
-        return Images;
+        return Images.NonNull().ToList();
+    }
+
+    public virtual List<TrackerWindowPanelImage> GetOverlayImages()
+    {
+        return OverlayImages.NonNull().ToList();
     }
 
     public event EventHandler? Clicked;

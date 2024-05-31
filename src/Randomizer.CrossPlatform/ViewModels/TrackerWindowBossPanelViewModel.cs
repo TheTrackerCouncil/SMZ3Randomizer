@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Avalonia.Controls;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
@@ -14,10 +15,10 @@ public class TrackerWindowBossPanelViewModel : TrackerWindowPanelViewModel
     [Reactive] public bool BossDefeated { get; set; }
     public event EventHandler? BossRevived;
 
-    public override List<TrackerWindowPanelImage?> GetImages()
+    public override List<TrackerWindowPanelImage> GetMainImages()
     {
-        return
-        [
+        var images = new List<TrackerWindowPanelImage?>()
+        {
             GetLabelImage(),
             new TrackerWindowPanelImage
             {
@@ -28,7 +29,9 @@ public class TrackerWindowBossPanelViewModel : TrackerWindowPanelViewModel
                 OffsetX = 0,
                 OffsetY = 0
             }
-        ];
+        };
+
+        return images.NonNull().ToList();
     }
 
     public override List<MenuItem> GetMenuItems()

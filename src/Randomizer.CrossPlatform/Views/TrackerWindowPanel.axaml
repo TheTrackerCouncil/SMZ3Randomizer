@@ -10,6 +10,6 @@
              Width="34"
              Height="34"
              x:DataType="viewModels:TrackerWindowPanelViewModel">
-  <Grid Name="MainDock" Margin="1"></Grid>
+  <Grid Name="MainDock" Margin="1" RenderOptions.RequiresFullOpacityHandling="True"></Grid>
 </UserControl>
 

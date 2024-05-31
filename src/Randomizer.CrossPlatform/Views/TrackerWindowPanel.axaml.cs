@@ -46,10 +46,7 @@ public partial class TrackerWindowPanel : UserControl
             return;
         }
 
-        foreach (var image in _model.GetImages().NonNull())
-        {
-            MainDock.Children.Add(GetGridItemControl(image, true));
-        }
+        AddImages();
 
         var menu = new ContextMenu();
 
@@ -68,30 +65,85 @@ public partial class TrackerWindowPanel : UserControl
         }
     }
 
-    protected Image GetGridItemControl(TrackerWindowPanelImage model, bool displayDropShadows)
+    protected void AddImages()
     {
-        var image = new Image
+        if (_model == null)
         {
-            Source = new Bitmap(model.ImagePath),
-            MaxWidth = model.Width,
-            MaxHeight = model.Height,
-            Margin = new Thickness(model.OffsetX, model.OffsetY, 0, 0),
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Top,
-            Opacity = model.IsActive ? 1 : 0.2
-        };
-
-        if (displayDropShadows)
-        {
-            image.Effect = new DropShadowEffect
-            {
-                Color = Colors.Black,
-                BlurRadius = 3,
-                Opacity = 0.7
-            };
+            return;
         }
 
-        return image;
+        var images = _model.GetMainImages();
+        var overlayImages = _model.GetOverlayImages();
+
+        if (overlayImages.Count == 0)
+        {
+            foreach (var modelModel in images)
+            {
+                var image = new Image
+                {
+                    Source = new Bitmap(modelModel.ImagePath),
+                    MaxWidth = modelModel.Width,
+                    MaxHeight = modelModel.Height,
+                    Margin = new Thickness(modelModel.OffsetX, modelModel.OffsetY, 0, 0),
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    Opacity = modelModel.IsActive? 1 : 0.2
+                };
+
+                if (_model.AddShadows)
+                {
+                    image.Effect = new DropShadowEffect
+                    {
+                        Color = Colors.Black,
+                        BlurRadius = 3,
+                        Opacity = 0.7
+                    };
+                }
+
+                MainDock.Children.Add(image);
+            }
+        }
+        else
+        {
+            var drawingGroup = new DrawingGroup();
+
+            var anyActive = false;
+
+            foreach (var overlay in images.Concat(overlayImages))
+            {
+                var overlayImage = new Bitmap(overlay.ImagePath);
+                drawingGroup.Children.Add(new ImageDrawing()
+                {
+                    ImageSource = overlayImage,
+                    Rect = new Rect(overlay.OffsetX, overlay.OffsetY, overlay.Width, overlay.Height)
+                });
+                anyActive |= overlay.IsActive;
+            }
+
+            var image = new Image
+            {
+                Source = new DrawingImage(drawingGroup),
+                MaxWidth = 32,
+                MaxHeight = 32,
+                Margin = new Thickness(0, 0, 0, 0),
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                Opacity = anyActive ? 1 : 0.2
+            };
+
+            if (_model.AddShadows)
+            {
+                image.Effect = new DropShadowEffect
+                {
+                    Color = Colors.Black,
+                    BlurRadius = 3,
+                    Opacity = 0.7
+                };
+            }
+
+            MainDock.Children.Add(image);
+        }
+
     }
 
     private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)

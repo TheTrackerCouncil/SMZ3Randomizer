@@ -26,6 +26,7 @@ public class TrackerWindowViewModel : ViewModelBase
 
     public IBrush StatusBarBorder => IsInGoMode ? Brushes.Transparent : new SolidColorBrush(new Color(255, 53, 53, 53));
 
+    public bool AddShadows { get; set; }
     public bool PegWorldMode { get; set; }
     public bool ShaktoolMode { get; set; }
 
