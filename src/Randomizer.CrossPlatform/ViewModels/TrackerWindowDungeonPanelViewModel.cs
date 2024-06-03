@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Avalonia.Controls;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
@@ -23,12 +24,21 @@ public class TrackerWindowDungeonPanelViewModel : TrackerWindowPanelViewModel
     public event EventHandler? TreasureCleared;
     public event EventHandler<DungeonSetRewardEventArgs>? RewardSet;
 
-    public override List<TrackerWindowPanelImage?> GetImages()
+    public override List<TrackerWindowPanelImage> GetMainImages()
+    {
+        var images = new List<TrackerWindowPanelImage?>
+        {
+            GetRewardImage(),
+        };
+
+        return images.NonNull().ToList();
+    }
+
+    public override List<TrackerWindowPanelImage> GetOverlayImages()
     {
         var images = new List<TrackerWindowPanelImage?>
         {
             GetLabelImage(),
-            GetRewardImage(),
             GetDungeonImage(),
         };
 
@@ -37,7 +47,7 @@ public class TrackerWindowDungeonPanelViewModel : TrackerWindowPanelViewModel
             images.AddRange(GetNumberImages(DungeonTreasure, 1, 0, 16, false));
         }
 
-        return images;
+        return images.NonNull().ToList();
     }
 
     public override List<MenuItem> GetMenuItems()
@@ -93,7 +103,7 @@ public class TrackerWindowDungeonPanelViewModel : TrackerWindowPanelViewModel
             ImagePath = DungeonImage,
             IsActive = DungeonCleared,
             Width = 20,
-            Height = 16
+            Height = 16,
         };
     }
 

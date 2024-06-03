@@ -62,6 +62,7 @@ public class TrackerWindowService(
         var bytes = Options.GeneralOptions.TrackerBGColor;
         _model.Background = new SolidColorBrush(Color.FromArgb(bytes[0], bytes[1], bytes[2], bytes[3]));
         _model.OpenTrackWindow = Options.GeneralOptions.DisplayMsuTrackWindow;
+        _model.AddShadows = Options.GeneralOptions.TrackerShadows;
 
         LocationViewModel.KeyImage = uiService.GetSpritePath("Items", "key.png", out _);
         RegionViewModel.ChestImage = uiService.GetSpritePath("Items", "chest.png", out _);
@@ -274,6 +275,9 @@ public class TrackerWindowService(
             logger.LogError("Auto tracker not initialized");
             return;
         }
+
+        tracker.ConnectToChat(Options.GeneralOptions.TwitchUserName, Options.GeneralOptions.TwitchOAuthToken,
+            Options.GeneralOptions.TwitchChannel, Options.GeneralOptions.TwitchId);
 
         _model.AutoTrackerConnected = tracker.AutoTracker.IsConnected;
         _model.AutoTrackerEnabled = tracker.AutoTracker.IsEnabled;
@@ -531,6 +535,7 @@ public class TrackerWindowService(
             IsLabelActive = items.Keys.Any(x => x.State.TrackingState > 0),
             Row = gridLocation.Row,
             Column = gridLocation.Column,
+            AddShadows = _model.AddShadows,
             IsMedallion = items.Keys.First().Type is ItemType.Bombos or ItemType.Ether or ItemType.Quake
         };
 
@@ -600,8 +605,9 @@ public class TrackerWindowService(
             RewardImage = rewardImage,
             Row = gridLocation.Row,
             Column = gridLocation.Column,
+            AddShadows = _model.AddShadows,
             DungeonCleared = dungeon.DungeonState.Cleared,
-            DungeonTreasure = dungeon.DungeonState.RemainingTreasure
+            DungeonTreasure = dungeon.DungeonState.RemainingTreasure,
         };
 
         model.Clicked += (_, _) => tracker.MarkDungeonAsCleared(dungeon);
@@ -636,7 +642,8 @@ public class TrackerWindowService(
             BossImage = fileName,
             BossDefeated = boss.State.Defeated,
             Row = gridLocation.Row,
-            Column = gridLocation.Column
+            Column = gridLocation.Column,
+            AddShadows = _model.AddShadows
         };
 
         _bossModels.Add(boss.Name, model);
@@ -667,6 +674,7 @@ public class TrackerWindowService(
         {
             Row = gridLocation.Row,
             Column = gridLocation.Column,
+            AddShadows = _model.AddShadows,
             Images =
             [
                 new TrackerWindowPanelImage { ImagePath = fileName, IsActive = true }
@@ -699,6 +707,7 @@ public class TrackerWindowService(
         {
             Row = gridLocation.Row,
             Column = gridLocation.Column,
+            AddShadows = _model.AddShadows,
             Images =
             [
                 new TrackerWindowPanelImage { ImagePath = fileName, IsActive = true }

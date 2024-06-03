@@ -79,7 +79,7 @@ public class TrackerWindowItemPanelViewModel : TrackerWindowPanelViewModel
         }
     }
 
-    public override List<TrackerWindowPanelImage?> GetImages()
+    public override List<TrackerWindowPanelImage> GetMainImages()
     {
         var images = new List<TrackerWindowPanelImage?>
         {
@@ -138,7 +138,7 @@ public class TrackerWindowItemPanelViewModel : TrackerWindowPanelViewModel
             }
         }
 
-        return images;
+        return images.NonNull().ToList();
     }
 
     public override List<MenuItem> GetMenuItems()
