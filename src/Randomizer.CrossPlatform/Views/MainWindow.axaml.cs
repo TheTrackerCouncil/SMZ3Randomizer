@@ -47,6 +47,12 @@ public partial class MainWindow : RestorableWindow
         _service.SpriteDownloadEnd += (sender, args) => _spriteDownloadWindow?.Close();
     }
 
+    public void Reload()
+    {
+        SoloRomListPanel.Reload();
+        MultiRomListPanel.Reload();
+    }
+
     protected override string RestoreFilePath => Path.Combine(Directories.AppDataFolder, "Windows", "main-window.json");
     protected override int DefaultWidth => 800;
     protected override int DefaultHeight => 600;

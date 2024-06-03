@@ -30,6 +30,10 @@ public partial class SoloRomListPanel : UserControl
         DataContext = _model;
     }
 
+    public void Reload()
+    {
+        _service?.UpdateList();
+    }
 
     private async void QuickPlayButton_OnClick(object? sender, RoutedEventArgs e)
     {

@@ -27,6 +27,11 @@ public partial class MultiRomListPanel : UserControl
         DataContext = _model;
     }
 
+    public void Reload()
+    {
+        _service?.UpdateList();
+    }
+
     private void OpenFolderMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
         if (sender is not MenuItem { Tag: MultiplayerRomViewModel model } )
