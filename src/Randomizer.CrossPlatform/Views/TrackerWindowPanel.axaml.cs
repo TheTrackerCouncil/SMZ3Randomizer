@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
@@ -6,6 +7,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
+using AvaloniaGif;
 using Randomizer.CrossPlatform.ViewModels;
 using Randomizer.Shared;
 
@@ -79,28 +81,68 @@ public partial class TrackerWindowPanel : UserControl
         {
             foreach (var modelModel in images)
             {
-                var image = new Image
+                if (modelModel.ImagePath.EndsWith(".gif", StringComparison.OrdinalIgnoreCase))
                 {
-                    Source = new Bitmap(modelModel.ImagePath),
-                    MaxWidth = modelModel.Width,
-                    MaxHeight = modelModel.Height,
-                    Margin = new Thickness(modelModel.OffsetX, modelModel.OffsetY, 0, 0),
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    VerticalAlignment = VerticalAlignment.Top,
-                    Opacity = modelModel.IsActive? 1 : 0.2
-                };
-
-                if (_model.AddShadows)
-                {
-                    image.Effect = new DropShadowEffect
+                    var image = new GifImage()
                     {
-                        Color = Colors.Black,
-                        BlurRadius = 3,
-                        Opacity = 0.7
+                        AutoStart = true,
+                        Stretch = Stretch.UniformToFill,
+                        SourceUri = new Uri(modelModel.ImagePath),
+                        Width = modelModel.Width,
+                        Height = modelModel.Height,
+                        MinWidth = modelModel.Width,
+                        MinHeight = modelModel.Height,
+                        MaxWidth = modelModel.Width,
+                        MaxHeight = modelModel.Height,
+                        Margin = new Thickness(modelModel.OffsetX, modelModel.OffsetY, 0, 0),
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        VerticalAlignment = VerticalAlignment.Top,
+                        Opacity = modelModel.IsActive ? 1 : 0.2
                     };
-                }
 
-                MainDock.Children.Add(image);
+                    RenderOptions.SetBitmapInterpolationMode(image, BitmapInterpolationMode.None);
+
+                    Height = modelModel.Height + 2;
+                    Width = modelModel.Height + 2;
+
+                    if (_model.AddShadows)
+                    {
+                        image.Effect = new DropShadowEffect
+                        {
+                            Color = Colors.Black,
+                            BlurRadius = 3,
+                            Opacity = 0.7
+                        };
+                    }
+
+                    MainDock.Children.Add(image);
+                }
+                else
+                {
+
+                    var image = new Image
+                    {
+                        Source = new Bitmap(modelModel.ImagePath),
+                        MaxWidth = modelModel.Width,
+                        MaxHeight = modelModel.Height,
+                        Margin = new Thickness(modelModel.OffsetX, modelModel.OffsetY, 0, 0),
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        VerticalAlignment = VerticalAlignment.Top,
+                        Opacity = modelModel.IsActive? 1 : 0.2
+                    };
+
+                    if (_model.AddShadows)
+                    {
+                        image.Effect = new DropShadowEffect
+                        {
+                            Color = Colors.Black,
+                            BlurRadius = 3,
+                            Opacity = 0.7
+                        };
+                    }
+
+                    MainDock.Children.Add(image);
+                }
             }
         }
         else
