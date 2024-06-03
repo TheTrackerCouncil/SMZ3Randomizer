@@ -79,31 +79,31 @@ public partial class TrackerWindowPanel : UserControl
 
         if (overlayImages.Count == 0)
         {
-            foreach (var modelModel in images)
+            foreach (var imageModel in images)
             {
-                if (modelModel.ImagePath.EndsWith(".gif", StringComparison.OrdinalIgnoreCase))
+                if (imageModel.ImagePath.EndsWith(".gif", StringComparison.OrdinalIgnoreCase))
                 {
                     var image = new GifImage()
                     {
                         AutoStart = true,
                         Stretch = Stretch.UniformToFill,
-                        SourceUri = new Uri(modelModel.ImagePath),
-                        Width = modelModel.Width,
-                        Height = modelModel.Height,
-                        MinWidth = modelModel.Width,
-                        MinHeight = modelModel.Height,
-                        MaxWidth = modelModel.Width,
-                        MaxHeight = modelModel.Height,
-                        Margin = new Thickness(modelModel.OffsetX, modelModel.OffsetY, 0, 0),
+                        SourceUri = new Uri(imageModel.ImagePath),
+                        Width = imageModel.Width,
+                        Height = imageModel.Height,
+                        MinWidth = imageModel.Width,
+                        MinHeight = imageModel.Height,
+                        MaxWidth = imageModel.Width,
+                        MaxHeight = imageModel.Height,
+                        Margin = new Thickness(imageModel.OffsetX, imageModel.OffsetY, 0, 0),
                         HorizontalAlignment = HorizontalAlignment.Left,
                         VerticalAlignment = VerticalAlignment.Top,
-                        Opacity = modelModel.IsActive ? 1 : 0.2
+                        Opacity = imageModel.IsActive ? 1 : 0.2
                     };
 
                     RenderOptions.SetBitmapInterpolationMode(image, BitmapInterpolationMode.None);
 
-                    Height = modelModel.Height + 2;
-                    Width = modelModel.Height + 2;
+                    Height = imageModel.Height + 2;
+                    Width = imageModel.Height + 2;
 
                     if (_model.AddShadows)
                     {
@@ -122,13 +122,13 @@ public partial class TrackerWindowPanel : UserControl
 
                     var image = new Image
                     {
-                        Source = new Bitmap(modelModel.ImagePath),
-                        MaxWidth = modelModel.Width,
-                        MaxHeight = modelModel.Height,
-                        Margin = new Thickness(modelModel.OffsetX, modelModel.OffsetY, 0, 0),
+                        Source = new Bitmap(imageModel.ImagePath),
+                        MaxWidth = imageModel.Width,
+                        MaxHeight = imageModel.Height,
+                        Margin = new Thickness(imageModel.OffsetX, imageModel.OffsetY, 0, 0),
                         HorizontalAlignment = HorizontalAlignment.Left,
                         VerticalAlignment = VerticalAlignment.Top,
-                        Opacity = modelModel.IsActive? 1 : 0.2
+                        Opacity = imageModel.IsActive? 1 : 0.2
                     };
 
                     if (_model.AddShadows)
@@ -151,23 +151,48 @@ public partial class TrackerWindowPanel : UserControl
 
             var anyActive = false;
 
+            var topLeftX = int.MaxValue;
+            var topLeftY = int.MaxValue;
+            var bottomRightX = 0;
+            var bottomRightY = 0;
+
             foreach (var overlay in images.Concat(overlayImages))
             {
                 var overlayImage = new Bitmap(overlay.ImagePath);
-                drawingGroup.Children.Add(new ImageDrawing()
+                drawingGroup.Children.Add(new ImageDrawing
                 {
                     ImageSource = overlayImage,
                     Rect = new Rect(overlay.OffsetX, overlay.OffsetY, overlay.Width, overlay.Height)
                 });
                 anyActive |= overlay.IsActive;
+
+                if (overlay.OffsetX < topLeftX)
+                {
+                    topLeftX = overlay.OffsetX;
+                }
+
+                if (overlay.OffsetY < topLeftY)
+                {
+                    topLeftY = overlay.OffsetY;
+                }
+
+                if (overlay.OffsetX + overlay.Width > bottomRightX)
+                {
+                    bottomRightX = overlay.OffsetX + overlay.Width;
+                }
+
+                if (overlay.OffsetY + overlay.Height > bottomRightY)
+                {
+                    bottomRightY = overlay.OffsetY + overlay.Height;
+                }
             }
 
             var image = new Image
             {
                 Source = new DrawingImage(drawingGroup),
-                MaxWidth = 32,
-                MaxHeight = 32,
-                Margin = new Thickness(0, 0, 0, 0),
+                MaxWidth = bottomRightX - topLeftX,
+                MaxHeight = bottomRightY - topLeftY,
+                Margin = new Thickness(topLeftX, topLeftY, 0, 0),
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
                 Opacity = anyActive ? 1 : 0.2
