@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DynamicForms.Library.Core.Attributes;
-using Google.Protobuf.Compiler;
 using Microsoft.Extensions.Logging;
 using MSURandomizerLibrary;
+using MSURandomizerLibrary.Services;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.GeneratedData;
 using Randomizer.Data.Interfaces;
@@ -18,7 +18,7 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace Randomizer.Data.Services;
 
-public class GenerationSettingsWindowService(SpriteService spriteService, OptionsFactory optionsFactory, IRomGenerationService _romGenerator, LocationConfig locations, ILogger<GenerationSettingsWindowService> logger)
+public class GenerationSettingsWindowService(SpriteService spriteService, OptionsFactory optionsFactory, IRomGenerationService romGenerator, LocationConfig locations, ILogger<GenerationSettingsWindowService> logger, IMsuLookupService msuLookupService)
 {
     private RandomizerOptions _options = null!;
     private GenerationWindowViewModel _model = null!;
@@ -289,6 +289,26 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         }
     }
 
+    public bool IsUserMsuPathValid => !string.IsNullOrEmpty(_options.GeneralOptions.MsuPath) &&
+                                       Directory.Exists(_options.GeneralOptions.MsuPath);
+
+    public void UpdateUserMsuPath(string path)
+    {
+        if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
+        {
+            return;
+        }
+
+        _options.GeneralOptions.MsuPath = path;
+        _options.Save();
+
+        Task.Run(() =>
+        {
+            msuLookupService.LookupMsus(path);
+        });
+    }
+
+
     public void SetMsuPaths(List<string> paths, MsuRandomizationStyle? randomizationStyle)
     {
         _options.PatchOptions.MsuPaths = paths;
@@ -311,8 +331,8 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
     public async Task<GeneratedRomResult> GenerateRom()
     {
         return _model.IsPlando
-            ? await _romGenerator.GeneratePlandoRomAsync(_options, _model.PlandoConfig!)
-            : await _romGenerator.GenerateRandomRomAsync(_options);
+            ? await romGenerator.GeneratePlandoRomAsync(_options, _model.PlandoConfig!)
+            : await romGenerator.GenerateRandomRomAsync(_options);
     }
 
     public List<RandomizerPreset> GetPresets()

@@ -10,12 +10,14 @@ using Avalonia.Markup.Xaml;
 using AvaloniaControls;
 using AvaloniaControls.Controls;
 using AvaloniaControls.Models;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using MSURandomizer.Views;
 using MSURandomizerLibrary;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Data.ViewModels;
+using Dispatcher = Avalonia.Threading.Dispatcher;
 
 namespace Randomizer.CrossPlatform.Views;
 
@@ -23,6 +25,7 @@ public partial class GenerationSettingsBasicPanel : UserControl
 {
     private IServiceProvider? _serviceProvider;
     private GenerationSettingsWindowService? _generationSettingsWindowService;
+    private RandomizerOptions? _options;
 
     public GenerationSettingsBasicPanel()
     {
@@ -35,6 +38,7 @@ public partial class GenerationSettingsBasicPanel : UserControl
         _serviceProvider = serviceProvider;
         _generationSettingsWindowService = generationSettingsWindowService;
         _generationSettingsWindowService.ConfigError += GenerationSettingsWindowServiceOnConfigError;
+        _options = _serviceProvider.GetRequiredService<OptionsFactory>().Create();
     }
 
     private void GenerationSettingsWindowServiceOnConfigError(object? sender, EventArgs e)
@@ -154,8 +158,45 @@ public partial class GenerationSettingsBasicPanel : UserControl
 
     private void OpenMsuSelectionWindow(MsuRandomizationStyle? randomizationStyle)
     {
-        if (_serviceProvider == null)
+        if (_serviceProvider == null || _generationSettingsWindowService == null)
         {
+            return;
+        }
+
+        if (!_generationSettingsWindowService.IsUserMsuPathValid)
+        {
+            var messageWindow = new MessageWindow(new MessageWindowRequest()
+            {
+                Message = "No parent MSU folder is currently specified. Would you like to specify a folder where all of your MSUs are located now?",
+                Title = "SMZ3 Cas' Randomizer",
+                Buttons = MessageWindowButtons.YesNo,
+                Icon = MessageWindowIcon.Info
+            });
+
+            messageWindow.Closed += (sender, args) =>
+            {
+                if (messageWindow.DialogResult?.PressedAcceptButton != true)
+                {
+                    return;
+                }
+
+                Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    var storagePath = await CrossPlatformTools.OpenFileDialogAsync(ParentWindow, FileInputControlType.Folder, "", _options?.GeneralOptions.RomOutputPath,
+                        title: "Select parent MSU folder");
+
+                    var path =  Uri.UnescapeDataString(storagePath?.Path.AbsolutePath ?? "");
+
+                    if (!string.IsNullOrEmpty(path) && Directory.Exists(path))
+                    {
+                        _generationSettingsWindowService.UpdateUserMsuPath(path);
+                        OpenMsuSelectionWindow(randomizationStyle);
+                    }
+                });
+            };
+
+            _ = messageWindow.ShowDialog(ParentWindow);
+
             return;
         }
 
@@ -168,10 +209,10 @@ public partial class GenerationSettingsBasicPanel : UserControl
                 return;
             }
 
-            _generationSettingsWindowService?.SetMsuPaths(window.GetSelectedMsus().ToList(), randomizationStyle);
+            _generationSettingsWindowService.SetMsuPaths(window.GetSelectedMsus().ToList(), randomizationStyle);
         };
 
-        window.ShowDialog((Window)TopLevel.GetTopLevel(this)!, randomizationStyle == null, _generationSettingsWindowService?.GetMsuDirectory());
+        window.ShowDialog((Window)TopLevel.GetTopLevel(this)!, randomizationStyle == null, _generationSettingsWindowService.GetMsuDirectory());
     }
 
     private Window ParentWindow => (Window)TopLevel.GetTopLevel(this)!;
