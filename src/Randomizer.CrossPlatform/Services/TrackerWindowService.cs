@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Threading;
 using AvaloniaControls;
@@ -218,8 +217,11 @@ public class TrackerWindowService(
                 uiService.GetSpritePath("Dungeons", $"both wide.png", out _) ?? "";
         }
 
-        SetLayout(uiService.SelectableLayouts.FirstOrDefault(x => x.Name == Options.GeneralOptions.SelectedLayout) ??
-                  uiService.SelectableLayouts.First());
+        _defaultLayout =
+            uiService.SelectableLayouts.FirstOrDefault(x => x.Name == Options.GeneralOptions.SelectedLayout) ??
+            uiService.SelectableLayouts.First();
+
+        SetLayout(_defaultLayout);
 
         return _model;
     }
@@ -705,7 +707,7 @@ public class TrackerWindowService(
 
     private TrackerWindowPanelViewModel? GetShakPanelViewModel(UIGridLocation gridLocation)
     {
-        if (!int.TryParse(gridLocation.Identifiers.First(), out var pegNumber))
+        if (!int.TryParse(gridLocation.Identifiers.First(), out _))
         {
             logger.LogError("Could not determine peg number");
             return null;

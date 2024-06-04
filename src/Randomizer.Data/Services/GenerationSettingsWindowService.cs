@@ -4,9 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AvaloniaControls.Services;
 using DynamicForms.Library.Core.Attributes;
-using Google.Protobuf.Compiler;
 using Microsoft.Extensions.Logging;
 using MSURandomizerLibrary;
 using MSURandomizerLibrary.Services;
@@ -20,7 +18,7 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace Randomizer.Data.Services;
 
-public class GenerationSettingsWindowService(SpriteService spriteService, OptionsFactory optionsFactory, IRomGenerationService _romGenerator, LocationConfig locations, ILogger<GenerationSettingsWindowService> logger, IMsuLookupService msuLookupService)
+public class GenerationSettingsWindowService(SpriteService spriteService, OptionsFactory optionsFactory, IRomGenerationService romGenerator, LocationConfig locations, ILogger<GenerationSettingsWindowService> logger, IMsuLookupService msuLookupService)
 {
     private RandomizerOptions _options = null!;
     private GenerationWindowViewModel _model = null!;
@@ -304,7 +302,7 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         _options.GeneralOptions.MsuPath = path;
         _options.Save();
 
-        ITaskService.Run(() =>
+        Task.Run(() =>
         {
             msuLookupService.LookupMsus(path);
         });
@@ -333,8 +331,8 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
     public async Task<GeneratedRomResult> GenerateRom()
     {
         return _model.IsPlando
-            ? await _romGenerator.GeneratePlandoRomAsync(_options, _model.PlandoConfig!)
-            : await _romGenerator.GenerateRandomRomAsync(_options);
+            ? await romGenerator.GeneratePlandoRomAsync(_options, _model.PlandoConfig!)
+            : await romGenerator.GenerateRandomRomAsync(_options);
     }
 
     public List<RandomizerPreset> GetPresets()
