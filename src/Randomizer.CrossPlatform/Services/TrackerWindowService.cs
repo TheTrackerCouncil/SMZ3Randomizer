@@ -82,6 +82,11 @@ public class TrackerWindowService(
             {
                 bossPanel.BossDefeated = args.Boss.State.Defeated;
             }
+
+            if (_model.ShaktoolMode)
+            {
+                ToggleShaktoolMode(false);
+            }
         };
 
         tracker.DungeonUpdated += (_, args) =>
@@ -137,6 +142,11 @@ public class TrackerWindowService(
             if (_model.PegWorldMode)
             {
                 TogglePegWorld(false);
+            }
+
+            if (_model.ShaktoolMode)
+            {
+                ToggleShaktoolMode(false);
             }
         };
 
@@ -427,6 +437,11 @@ public class TrackerWindowService(
             {
                 models.Add(panel);
             }
+
+            if (layout.Name == "Shak")
+            {
+                break;
+            }
         }
 
         _model.Panels = models;
@@ -710,7 +725,7 @@ public class TrackerWindowService(
             AddShadows = _model.AddShadows,
             Images =
             [
-                new TrackerWindowPanelImage { ImagePath = fileName, IsActive = true }
+                new TrackerWindowPanelImage { ImagePath = fileName, IsActive = true, Width = 128, Height = 128 }
             ]
         };
 

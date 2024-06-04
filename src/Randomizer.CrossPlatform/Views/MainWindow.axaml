@@ -74,10 +74,10 @@
       </StackPanel>
       <TabControl Grid.Row="1">
         <TabItem Header="Singleplayer">
-          <views:SoloRomListPanel></views:SoloRomListPanel>
+          <views:SoloRomListPanel Name="SoloRomListPanel"></views:SoloRomListPanel>
         </TabItem>
         <TabItem Header="Multiplayer">
-          <views:MultiRomListPanel></views:MultiRomListPanel>
+          <views:MultiRomListPanel Name="MultiRomListPanel"></views:MultiRomListPanel>
         </TabItem>
       </TabControl>
     </Grid>

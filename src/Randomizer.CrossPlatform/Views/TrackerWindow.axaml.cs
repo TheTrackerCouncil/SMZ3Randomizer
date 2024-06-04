@@ -26,11 +26,13 @@ public partial class TrackerWindow : RestorableWindow
     private readonly TrackerWindowViewModel _model;
     private CurrentTrackWindow? _currentTrackWindow;
     private Dictionary<string, Image> _layoutImages = new();
+    private MainWindow? _parentWindow;
 
     public TrackerWindow()
     {
         InitializeComponent();
         DataContext = _model = new TrackerWindowViewModel();
+        _parentWindow = MessageWindow.GlobalParentWindow as MainWindow;
     }
 
     public TrackerWindow(TrackerWindowService service)
@@ -64,6 +66,7 @@ public partial class TrackerWindow : RestorableWindow
             Dispatcher.UIThread.Invoke(CreateLayout);
         };
         CreateLayout();
+        _parentWindow = MessageWindow.GlobalParentWindow as MainWindow;
     }
 
     private void OpenCurrentTrackWindow()
@@ -149,7 +152,7 @@ public partial class TrackerWindow : RestorableWindow
             }, DispatcherPriority.Background);
         });
 
-        MessageWindow.GlobalParentWindow?.Hide();
+        _parentWindow?.Hide();
     }
 
     private async void LoadSavedStateMenuItem_OnClick(object? sender, RoutedEventArgs e)
@@ -200,7 +203,8 @@ public partial class TrackerWindow : RestorableWindow
 
         _currentTrackWindow?.Close(true);
 
-        MessageWindow.GlobalParentWindow?.Show();
+        _parentWindow?.Reload();
+        _parentWindow?.Show();
     }
 
     private void TimeTextBlock_OnPointerPressed(object? sender, PointerPressedEventArgs e)

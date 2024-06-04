@@ -22,8 +22,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
         public bool ExecuteCheck(TrackerBase tracker, AutoTrackerMetroidState currentState, AutoTrackerMetroidState prevState)
         {
             if (currentState is { CurrentRegion: 4, CurrentRoomInRegion: 36 } && prevState.CurrentRoomInRegion == 28 &&
-                tracker.World.FindLocation(LocationId.InnerMaridiaSpringBall)?.State.Cleared != true &&
-                tracker.World.AllBosses.FirstOrDefault(x => x.Name == "Shaktool")?.State?.Defeated != true)
+                tracker.World.FindLocation(LocationId.InnerMaridiaSpringBall).State.Cleared != true &&
+                tracker.World.AllBosses.FirstOrDefault(x => x.Name == "Shaktool")?.State.Defeated != true)
             {
                 tracker.ShutUp();
                 tracker.SayOnce(x => x.AutoTracker.NearShaktool);
@@ -32,9 +32,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
             }
 
             if (tracker.ShaktoolMode &&
-                currentState is { CurrentRegion: 4, CurrentRoomInRegion: 28 } && prevState.CurrentRoomInRegion == 36 &&
-                tracker.World.FindLocation(LocationId.InnerMaridiaSpringBall)?.State.Cleared != true &&
-                tracker.World.AllBosses.FirstOrDefault(x => x.Name == "Shaktool")?.State?.Defeated != true)
+                ((currentState is { CurrentRegion: 4, CurrentRoomInRegion: 28 } && prevState.CurrentRoomInRegion == 36) ||
+                currentState.CurrentRegion != 4))
             {
                 tracker.StopShaktoolMode();
                 return true;
