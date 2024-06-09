@@ -9,6 +9,7 @@ using Randomizer.Data.Logic;
 using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
+using Randomizer.Shared.Enums;
 
 using Xunit;
 
@@ -83,6 +84,14 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             var emptyProgression = new Progression(World.ItemPools.Keycards, new List<Reward>(), new List<Boss>());
             var missingItems = Logic.GetMissingRequiredItems(World.FindLocation(LocationId.CrateriaBombTorizo), emptyProgression, out _);
             missingItems.Should().ContainEquivalentOf(new[] { ItemType.Morph, ItemType.Super, ItemType.PowerBomb });
+        }
+
+        [Fact]
+        public void HiJumpLobbyMissilePreventsDeadEnd()
+        {
+            var progression = new Progression(new[] { ItemType.Flute, ItemType.Morph, ItemType.Missile }, new List<RewardType>(), new List<BossType>());
+            var missingItems = Logic.GetMissingRequiredItems(World.FindLocation(LocationId.UpperNorfairHiJumpEnergyTankLeft), progression, out _);
+            missingItems.Should().ContainEquivalentOf(new[] { ItemType.Bombs });
         }
     }
 }
