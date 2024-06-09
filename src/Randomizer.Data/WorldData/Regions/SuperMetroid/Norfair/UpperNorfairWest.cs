@@ -132,7 +132,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
                     new Location(this, LocationId.UpperNorfairHiJumpEnergyTankLeft, 0x8F8BE6, LocationType.Visible,
                         name: "Missile (Hi-Jump Boots)",
                         vanillaItem: ItemType.Missile,
-                        access: items => Logic.CanOpenRedDoors(items) && items.Morph,
+                        access: items => Logic.CanOpenRedDoors(items) && Logic.CanPassBombPassages(items),
                         memoryAddress: 0x6,
                         memoryFlag: 0x80,
                         metadata: metadata,
