@@ -233,9 +233,14 @@ namespace Randomizer.Data.Configuration.ConfigFiles
         public SchrodingersString? PegWorldModeOn { get; init; }
 
         /// <summary>
-        /// Gets the phrases to respond with when pegging a Peg World peg.
+        /// Gets the phrases to respond with when pegging a single Peg World peg.
         /// </summary> = new()
         public SchrodingersString? PegWorldModePegged { get; init; }
+
+        /// <summary>
+        /// Gets the phrases to respond with when pegging multiple Peg World pegs.
+        /// </summary> = new()
+        public Dictionary<int, SchrodingersString>? PegWorldModePeggedMultiple { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when all Peg World pegs have been

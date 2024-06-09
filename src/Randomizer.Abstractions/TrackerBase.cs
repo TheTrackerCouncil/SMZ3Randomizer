@@ -697,10 +697,16 @@ public abstract class TrackerBase
         bool autoTracked = false, ItemData? metadata = null);
 
     /// <summary>
-    /// Pegs a Peg World peg.
+    /// Pegs a Peg World peg, incrementing the count by one.
     /// </summary>
     /// <param name="confidence">The speech recognition confidence.</param>
     public abstract void Peg(float? confidence = null);
+
+    /// <summary>
+    /// Sets the Peg World peg count to the given value.
+    /// </summary>
+    /// <param name="count">The new count of hammered pegs.</param>
+    public abstract void Pegs(int count);
 
     /// <summary>
     /// Starts Peg World mode.
