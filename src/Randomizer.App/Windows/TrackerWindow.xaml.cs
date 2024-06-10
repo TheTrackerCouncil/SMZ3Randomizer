@@ -1203,7 +1203,7 @@ namespace Randomizer.App.Windows
             var logFileLocation = Environment.ExpandEnvironmentVariables("%LocalAppData%\\SMZ3CasRandomizer");
             MessageBox.Show($"{baseErrorMessage}\n\n" +
                 $"Please try again. If the problem persists, please see the log files in '{logFileLocation}' and " +
-                "post them in Discord or on GitHub at https://github.com/Vivelin/SMZ3Randomizer/issues.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
+                "post them in Discord or on GitHub at https://github.com/TheTrackerCouncil/SMZ3Randomizer/issues.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         private void MapMenuItem_Click(object sender, RoutedEventArgs e)

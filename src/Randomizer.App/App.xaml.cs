@@ -272,7 +272,7 @@ namespace Randomizer.App
             var logFileLocation = Environment.ExpandEnvironmentVariables("%LocalAppData%\\SMZ3CasRandomizer");
             MessageBox.Show("An unexpected problem occurred and the SMZ3 Cas’ Randomizer needs to shut down.\n\n" +
                 $"For technical details, please see the log files in '{logFileLocation}' and " +
-                "post them in Discord or on GitHub at https://github.com/Vivelin/SMZ3Randomizer/issues.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Stop);
+                "post them in Discord or on GitHub at https://github.com/TheTrackerCouncil/SMZ3Randomizer/issues.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Stop);
 
             e.Handled = true;
             Environment.FailFast("Uncaught exception in Dispatcher", e.Exception);

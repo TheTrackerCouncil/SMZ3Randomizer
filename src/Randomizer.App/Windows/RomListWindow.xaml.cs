@@ -103,7 +103,7 @@ namespace Randomizer.App.Windows
                 else
                 {
                     gitHubRelease = await _gitHubReleaseCheckerService
-                        .GetGitHubReleaseToUpdateToAsync("Vivelin", "SMZ3Randomizer", version ?? "", false);
+                        .GetGitHubReleaseToUpdateToAsync("TheTrackerCouncil", "SMZ3Randomizer", version ?? "", false);
 
                     if (gitHubRelease != null && gitHubRelease.Url != Options.GeneralOptions.IgnoredUpdateUrl)
                     {

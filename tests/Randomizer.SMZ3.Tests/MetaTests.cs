@@ -42,7 +42,7 @@ public class MetaTests
 
         // Get latest version from GitHub and make sure the current version is newer
         var releases = await serviceProvider.GetRequiredService<IGitHubReleaseService>()
-            .GetReleasesAsync("Vivelin", "SMZ3Randomizer");
+            .GetReleasesAsync("TheTrackerCouncil", "SMZ3Randomizer");
         var latestRelease = releases?.FirstOrDefault();
         latestRelease.Should().NotBeNull();
         latestRelease!.Tag.Should().NotBeEquivalentTo($"v{version}");
