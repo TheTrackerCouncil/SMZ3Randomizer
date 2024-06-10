@@ -70,7 +70,7 @@
           A new version of SMZ3 is now available!
           <Hyperlink
             Name="UpdateNotificationHyperlink"
-            NavigateUri="https://github.com/Vivelin/SMZ3Randomizer"
+            NavigateUri="https://github.com/TheTrackerCouncil/SMZ3Randomizer"
             RequestNavigate="UpdateNotificationHyperlink_OnRequestNavigate">
             Click here to go to the download page.
           </Hyperlink>
@@ -81,7 +81,7 @@
           <TextBlock FontSize="10" Margin="0 0 10 0">
             <Hyperlink
               Name="IgnoreVersionHyperlink"
-              NavigateUri="https://github.com/Vivelin/SMZ3Randomizer"
+              NavigateUri="https://github.com/TheTrackerCouncil/SMZ3Randomizer"
               RequestNavigate="IgnoreVersionHyperlink_OnRequestNavigate">
               Ignore this Version
             </Hyperlink>
@@ -89,7 +89,7 @@
           <TextBlock FontSize="10">
             <Hyperlink
               Name="StopUpdateCheckHyperlink"
-              NavigateUri="https://github.com/Vivelin/SMZ3Randomizer"
+              NavigateUri="https://github.com/TheTrackerCouncil/SMZ3Randomizer"
               RequestNavigate="StopUpdateCheckHyperlink_OnRequestNavigate">
               Don't Check for Updates
             </Hyperlink>
