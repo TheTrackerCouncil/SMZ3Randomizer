@@ -2111,7 +2111,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         RestartIdleTimers();
     }
 
-    public override void Pegs(int count)
+    public override void SetPegs(int count)
     {
         if (count <= PegsPegged)
             return;

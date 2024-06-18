@@ -706,7 +706,7 @@ public abstract class TrackerBase
     /// Sets the Peg World peg count to the given value.
     /// </summary>
     /// <param name="count">The new count of hammered pegs.</param>
-    public abstract void Pegs(int count);
+    public abstract void SetPegs(int count);
 
     /// <summary>
     /// Starts Peg World mode.
