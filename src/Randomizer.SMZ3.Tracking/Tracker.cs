@@ -2111,6 +2111,38 @@ public sealed class Tracker : TrackerBase, IDisposable
         RestartIdleTimers();
     }
 
+    public override void SetPegs(int count)
+    {
+        if (count <= PegsPegged)
+            return;
+
+        if (!PegWorldMode)
+        {
+            PegWorldMode = true;
+            OnToggledPegWorldModeOn(new TrackerEventArgs(null, true));
+        }
+
+        if (count <= PegWorldModeModule.TotalPegs)
+        {
+            var delta = count - PegsPegged;
+            var responseIndex = 0;
+
+            PegsPegged = count;
+
+            // Find the response with the closest value to the target delta, without being higher
+            for (var i = 0; i <= delta; i++)
+            {
+                if (Responses.PegWorldModePeggedMultiple?.ContainsKey(i) == true)
+                {
+                    responseIndex = i;
+                }
+            }
+
+            Say(x => x.PegWorldModePeggedMultiple?[responseIndex], delta);
+            OnPegPegged(new TrackerEventArgs(null, true));
+        }
+    }
+
     /// <summary>
     /// Starts Peg World mode.
     /// </summary>

@@ -767,7 +767,7 @@ namespace Randomizer.App.Windows
             });
             TrackerBase.PegPegged += (sender, e) => Dispatcher.Invoke(() =>
             {
-                TogglePegWorld(TrackerBase.PegsPegged < PegWorldModeModule.TotalPegs);
+                TogglePegWorld(e.AutoTracked || TrackerBase.PegsPegged < PegWorldModeModule.TotalPegs);
                 RefreshGridItems();
             });
             TrackerBase.DungeonUpdated += (sender, e) => Dispatcher.Invoke(() =>
