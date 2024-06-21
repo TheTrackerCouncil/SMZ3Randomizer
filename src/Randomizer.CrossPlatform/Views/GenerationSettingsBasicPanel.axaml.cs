@@ -219,7 +219,36 @@ public partial class GenerationSettingsBasicPanel : UserControl
 
     private void ImportSeedButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        _generationSettingsWindowService?.ApplyConfig(Data.Basic.ImportString, true);
+        if (_generationSettingsWindowService == null)
+        {
+            return;
+        }
+
+        if (_generationSettingsWindowService.VerifyConfigVersion(Data.Basic.ImportString, out var versionMismatch))
+        {
+            _generationSettingsWindowService?.ApplyConfig(Data.Basic.ImportString, true);
+        }
+        else if (versionMismatch)
+        {
+            var messageWindow = new MessageWindow(new MessageWindowRequest()
+            {
+                Message = "The randomizer version of the import settings string does not match the current application's version. Using the seed number in this version may produce different results from the original seed. Do you want to continue?",
+                Title = "SMZ3 Cas' Randomizer",
+                Buttons = MessageWindowButtons.YesNo,
+                Icon = MessageWindowIcon.Warning
+            });
+
+            messageWindow.Closed += (o, args) =>
+            {
+                if (messageWindow.DialogResult?.PressedAcceptButton == true)
+                {
+                    _generationSettingsWindowService?.ApplyConfig(Data.Basic.ImportString, true);
+                }
+            };
+
+            messageWindow.ShowDialog(ParentWindow);
+        }
+
     }
 
     private void ImportSettingsButton_OnClick(object? sender, RoutedEventArgs e)

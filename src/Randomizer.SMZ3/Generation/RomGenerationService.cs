@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using MSURandomizerLibrary;
 using MSURandomizerLibrary.Models;
 using MSURandomizerLibrary.Services;
+using Randomizer.Data;
 using Randomizer.Data.GeneratedData;
 using Randomizer.Data.Interfaces;
 using Randomizer.Data.Options;
@@ -351,7 +352,7 @@ public class RomGenerationService : IRomGenerationService
             SpoilerPath = Path.GetRelativePath(options.RomOutputPath, spoilerPath),
             Date = DateTimeOffset.Now,
             Settings = settingsString,
-            GeneratorVersion = Smz3Randomizer.Version.Major,
+            GeneratorVersion = RandomizerVersion.MajorVersion,
             MultiplayerGameDetails = multiplayerGameDetails,
             MsuRandomizationStyle = options.PatchOptions.MsuRandomizationStyle,
             MsuShuffleStyle = options.PatchOptions.MsuShuffleStyle,

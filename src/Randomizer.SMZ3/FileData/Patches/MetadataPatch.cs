@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Randomizer.Data;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Generation;
 
@@ -58,8 +59,8 @@ public class MetadataPatch : RomPatch
             ((_data.World.Config.Race ? 1 : 0) << 15) |
             ((_data.World.Config.Keysanity ? 1 : 0) << 13) |
             ((GetPatchesRequest.EnableMultiworld ? 1 : 0) << 12) |
-            (Smz3Randomizer.Version.Major << 4) |
-            (Smz3Randomizer.Version.Minor << 0);
+            (RandomizerVersion.Version.Major << 4) |
+            (RandomizerVersion.Version.Minor << 0);
 
         yield return new GeneratedPatch(Snes(0x80FF50), UshortBytes(_data.World.Id));
         yield return new GeneratedPatch(Snes(0x80FF52), UshortBytes(configField));

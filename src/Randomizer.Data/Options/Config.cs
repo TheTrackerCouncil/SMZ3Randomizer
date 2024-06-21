@@ -218,7 +218,7 @@ namespace Randomizer.Data.Options
         public bool OpenPyramid { get; set; }
         public int TourianBossCount { get; set; }  = 4;
         public IDictionary<string, int> ItemOptions { get; set; } = new Dictionary<string, int>();
-
+        public string? RandomizerVersion { get; set; }
         [System.Text.Json.Serialization.JsonIgnore, JsonIgnore]
         public bool IsLocalConfig { get; set; } = true;
 
@@ -237,6 +237,7 @@ namespace Randomizer.Data.Options
         /// <returns>The string representation</returns>
         public static string ToConfigString(Config config, bool compress)
         {
+            config.RandomizerVersion = Data.RandomizerVersion.VersionString;
             var json = JsonSerializer.Serialize(config, s_options);
             if (!compress) return json;
             var buffer = Encoding.UTF8.GetBytes(json);
