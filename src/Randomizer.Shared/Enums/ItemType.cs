@@ -590,14 +590,14 @@ namespace Randomizer.Shared
 
         [Description("Level 1 Keycard")]
         [ItemCategory(ItemCategory.Metroid, ItemCategory.NonRandomized, ItemCategory.Keycard, ItemCategory.KeycardL1)]
-        KeycardL1 = 0xF0,
+        CardL1 = 0xF0,
 
         [Description("Level 2 Keycard")]
         [ItemCategory(ItemCategory.Metroid, ItemCategory.NonRandomized, ItemCategory.Keycard, ItemCategory.KeycardL2)]
-        KeycardL2 = 0xF1,
+        CardL2 = 0xF1,
 
         [Description("Boss Keycard")]
         [ItemCategory(ItemCategory.Metroid, ItemCategory.NonRandomized, ItemCategory.Keycard, ItemCategory.KeycardBoss)]
-        KeycardBoss = 0xF2,
+        CardBoss = 0xF2,
     }
 }

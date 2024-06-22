@@ -161,15 +161,15 @@ namespace Randomizer.Shared.Enums
             }
             else if (itemType.IsInCategory(ItemCategory.KeycardL1))
             {
-                return ItemType.KeycardL1;
+                return ItemType.CardL1;
             }
             else if (itemType.IsInCategory(ItemCategory.KeycardL2))
             {
-                return ItemType.KeycardL2;
+                return ItemType.CardL2;
             }
             else if (itemType.IsInCategory(ItemCategory.KeycardBoss))
             {
-                return ItemType.KeycardBoss;
+                return ItemType.CardBoss;
             }
             else
             {

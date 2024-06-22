@@ -85,8 +85,7 @@ namespace Randomizer.SMZ3.Generation
                 {
                     _logger.LogDebug("Distributing dungeon items according to logic");
                     var worldLocations = world.Locations.Empty().Shuffle(Random);
-
-                    AssumedFill(dungeon, progression.Concat(keycards).Concat(assumedInventory).Concat(preferenceItems).ToList(), worldLocations, new[] { world }, cancellationToken);
+                    AssumedFill(dungeon, progression.Concat(world.ItemPools.Keycards).Concat(assumedInventory).Concat(preferenceItems).ToList(), worldLocations, new[] { world }, cancellationToken);
                 }
 
                 if (worldConfig.MetroidKeysanity)
