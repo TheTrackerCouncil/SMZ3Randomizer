@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Randomizer.Abstractions;
@@ -91,32 +92,39 @@ public class FinalBossCheck(TrackerBase tracker, ISnesConnectorService snesConne
 
     private async Task CountHyperBeamShots()
     {
-        var response = await SnesConnector.MakeMemoryRequestAsync(new SnesSingleMemoryRequest()
+        try
         {
-            MemoryRequestType = SnesMemoryRequestType.RetrieveMemory,
-            SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
-            AddressFormat = AddressFormat.Snes9x,
-            SniMemoryMapping = MemoryMapping.ExHiRom,
-            Address = 0x7e033e,
-            Length = 0x02
-        });
-
-        if (!response.Successful || !response.HasData) return;
-
-        var health = response.Data.ReadUInt16(0);
-
-        if (health != null)
-        {
-            // Each Hyper Beam shot does 1000 damage
-            var count = (int)health / 1000;
-
-            if (health % 1000 > 0)
+            var response = await SnesConnector.MakeMemoryRequestAsync(new SnesSingleMemoryRequest()
             {
-                count++;
-            }
+                MemoryRequestType = SnesMemoryRequestType.RetrieveMemory,
+                SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+                AddressFormat = AddressFormat.Snes9x,
+                SniMemoryMapping = MemoryMapping.ExHiRom,
+                Address = 0x7e033e,
+                Length = 0x02
+            });
 
-            Logger.LogInformation("Counted {Count} Hyper Beam shot(s) for {Health} health", count, health);
-            Tracker.CountHyperBeamShots(count);
+            if (!response.Successful || !response.HasData) return;
+
+            var health = response.Data.ReadUInt16(0);
+
+            if (health != null)
+            {
+                // Each Hyper Beam shot does 1000 damage
+                var count = (int)health / 1000;
+
+                if (health % 1000 > 0)
+                {
+                    count++;
+                }
+
+                Logger.LogInformation("Counted {Count} Hyper Beam shot(s) for {Health} health", count, health);
+                Tracker.CountHyperBeamShots(count);
+            }
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Error when attempting to count the number of hyper beam shots");
         }
     }
 }
