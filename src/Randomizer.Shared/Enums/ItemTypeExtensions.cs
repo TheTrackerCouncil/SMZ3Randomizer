@@ -68,14 +68,14 @@ namespace Randomizer.Shared.Enums
         /// </returns>
         public static bool IsPossibleProgression(this ItemType itemType, bool isZeldaKeysanity, bool isMetroidKeysanity)
         {
-            if (itemType == ItemType.Nothing || itemType.IsInAnyCategory(new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.NonRandomized, ItemCategory.Map, ItemCategory.Compass, ItemCategory.Nice }))
-                return false;
-
             if (itemType.IsInAnyCategory(new[] { ItemCategory.SmallKey, ItemCategory.BigKey }))
                 return isZeldaKeysanity;
 
             if (itemType.IsInCategory(ItemCategory.Keycard))
                 return isMetroidKeysanity;
+
+            if (itemType == ItemType.Nothing || itemType.IsInAnyCategory(new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.NonRandomized, ItemCategory.Map, ItemCategory.Compass, ItemCategory.Nice }))
+                return false;
 
             return true;
         }
@@ -116,6 +116,18 @@ namespace Randomizer.Shared.Enums
             {
                 return true;
             }
+            else if (itemType.IsInCategory(ItemCategory.KeycardL1) && other.Value.IsInCategory(ItemCategory.KeycardL1))
+            {
+                return true;
+            }
+            else if (itemType.IsInCategory(ItemCategory.KeycardL2) && other.Value.IsInCategory(ItemCategory.KeycardL2))
+            {
+                return true;
+            }
+            else if (itemType.IsInCategory(ItemCategory.KeycardBoss) && other.Value.IsInCategory(ItemCategory.KeycardBoss))
+            {
+                return true;
+            }
 
             return false;
         }
@@ -127,7 +139,7 @@ namespace Randomizer.Shared.Enums
         public static ItemType GetGenericType(this ItemType itemType)
         {
             if (!itemType.IsInAnyCategory(ItemCategory.Bottle, ItemCategory.Compass, ItemCategory.Map,
-                    ItemCategory.SmallKey, ItemCategory.BigKey))
+                    ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.KeycardL1, ItemCategory.KeycardL2, ItemCategory.KeycardBoss))
             {
                 return itemType;
             }
@@ -146,6 +158,18 @@ namespace Randomizer.Shared.Enums
             else if (itemType.IsInCategory(ItemCategory.SmallKey))
             {
                 return ItemType.Key;
+            }
+            else if (itemType.IsInCategory(ItemCategory.KeycardL1))
+            {
+                return ItemType.KeycardL1;
+            }
+            else if (itemType.IsInCategory(ItemCategory.KeycardL2))
+            {
+                return ItemType.KeycardL2;
+            }
+            else if (itemType.IsInCategory(ItemCategory.KeycardBoss))
+            {
+                return ItemType.KeycardBoss;
             }
             else
             {

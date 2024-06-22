@@ -284,13 +284,13 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// </remarks>
         public bool IsJunk(Config? config)
         {
+            if (config?.ZeldaKeysanity == true && InternalItemType.IsInAnyCategory(new[] { ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Map }))
+                return false;
+
+            if (config?.MetroidKeysanity == true && InternalItemType.IsInCategory(ItemCategory.Keycard))
+                return false;
+
             if (InternalItemType == ItemType.Nothing || InternalItemType.IsInAnyCategory(new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.NonRandomized, ItemCategory.Compass }))
-                return true;
-
-            if (config?.ZeldaKeysanity == false && InternalItemType.IsInAnyCategory(new[] { ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Map }))
-                return true;
-
-            if (config?.MetroidKeysanity == false && InternalItemType.IsInCategory(ItemCategory.Keycard))
                 return true;
 
             return false;
