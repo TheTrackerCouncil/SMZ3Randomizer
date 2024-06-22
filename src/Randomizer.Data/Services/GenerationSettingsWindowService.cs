@@ -141,6 +141,35 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         UpdateSummaryText();
     }
 
+    public bool VerifyConfigVersion(string config, out bool versionMismatch)
+    {
+        try
+        {
+            var configObject = Config.FromConfigString(config.Trim()).FirstOrDefault();
+            if (configObject == null)
+            {
+                ConfigError?.Invoke(this, EventArgs.Empty);
+                versionMismatch = false;
+                return false;
+            }
+
+            versionMismatch = !VerifyConfigVersion(configObject);
+            return !versionMismatch;
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Unable to parse config string");
+            ConfigError?.Invoke(this, EventArgs.Empty);
+            versionMismatch = false;
+            return false;
+        }
+    }
+
+    public bool VerifyConfigVersion(Config config)
+    {
+        return config.RandomizerVersion == RandomizerVersion.VersionString;
+    }
+
     public void SaveSettings()
     {
         _options.SeedOptions.Seed = _model.Basic.Seed;
