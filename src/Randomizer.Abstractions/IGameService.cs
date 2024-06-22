@@ -19,7 +19,7 @@ public interface IGameService
     /// <param name="item">The item to give</param>
     /// <param name="fromPlayerId">The id of the player giving the item to the player (null for tracker)</param>
     /// <returns>False if it is currently unable to give an item to the player</returns>
-    public bool TryGiveItem(Item item, int? fromPlayerId);
+    public Task<bool> TryGiveItemAsync(Item item, int? fromPlayerId);
 
     /// <summary>
     /// Gives a series of items to the player
@@ -27,14 +27,14 @@ public interface IGameService
     /// <param name="items">The list of items to give to the player</param>
     /// <param name="fromPlayerId">The id of the player giving the item to the player</param>
     /// <returns>False if it is currently unable to give an item to the player</returns>
-    public bool TryGiveItems(List<Item> items, int fromPlayerId);
+    public Task<bool> TryGiveItemsAsync(List<Item> items, int fromPlayerId);
 
     /// <summary>
     /// Gives a series of item types from particular players
     /// </summary>
     /// <param name="items">The list of item types and the players that are giving the item to the player</param>
     /// <returns>False if it is currently unable to give the items to the player</returns>
-    public bool TryGiveItemTypes(List<(ItemType type, int fromPlayerId)> items);
+    public Task<bool> TryGiveItemTypesAsync(List<(ItemType type, int fromPlayerId)> items);
 
     /// <summary>
     /// Restores the player to max health

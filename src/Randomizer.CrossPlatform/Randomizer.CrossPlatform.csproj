@@ -20,7 +20,7 @@
         <PackageReference Include="Avalonia_Gif" Version="1.0.0" />
         <PackageReference Include="MattEqualsCoder.AvaloniaControls" Version="0.9.17" />
         <PackageReference Include="MattEqualsCoder.DynamicForms.Avalonia" Version="0.0.3-rc.5" />
-        <PackageReference Include="MattEqualsCoder.MSURandomizer.Avalonia" Version="2.1.0-rc.5" />
+        <PackageReference Include="MattEqualsCoder.MSURandomizer.Avalonia" Version="2.1.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
         <PackageReference Include="ReactiveUI.Fody" Version="19.5.41" />
         <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />

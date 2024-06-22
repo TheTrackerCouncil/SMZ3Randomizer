@@ -89,9 +89,9 @@ public class GameService : TrackerModule, IGameService
     /// <param name="item">The item to give</param>
     /// <param name="fromPlayerId">The id of the player giving the item to the player (null for tracker)</param>
     /// <returns>False if it is currently unable to give an item to the player</returns>
-    public bool TryGiveItem(Item item, int? fromPlayerId)
+    public async Task<bool> TryGiveItemAsync(Item item, int? fromPlayerId)
     {
-        return TryGiveItems(new List<Item>() { item }, fromPlayerId ?? _trackerPlayerId);
+        return await TryGiveItemsAsync(new List<Item>() { item }, fromPlayerId ?? _trackerPlayerId);
     }
 
     /// <summary>
@@ -100,7 +100,7 @@ public class GameService : TrackerModule, IGameService
     /// <param name="items">The list of items to give to the player</param>
     /// <param name="fromPlayerId">The id of the player giving the item to the player</param>
     /// <returns>False if it is currently unable to give an item to the player</returns>
-    public bool TryGiveItems(List<Item> items, int fromPlayerId)
+    public async Task<bool> TryGiveItemsAsync(List<Item> items, int fromPlayerId)
     {
         if (!IsInGame())
         {
@@ -109,7 +109,7 @@ public class GameService : TrackerModule, IGameService
 
         TrackerBase.TrackItems(items, true, true);
 
-        return TryGiveItemTypes(items.Select(x => (x.Type, fromPlayerId)).ToList());
+        return await TryGiveItemTypesAsync(items.Select(x => (x.Type, fromPlayerId)).ToList());
     }
 
     /// <summary>
@@ -117,7 +117,7 @@ public class GameService : TrackerModule, IGameService
     /// </summary>
     /// <param name="items">The list of item types and the players that are giving the item to the player</param>
     /// <returns>False if it is currently unable to give the items to the player</returns>
-    public bool TryGiveItemTypes(List<(ItemType type, int fromPlayerId)> items)
+    public async Task<bool> TryGiveItemTypesAsync(List<(ItemType type, int fromPlayerId)> items)
     {
         if (!IsInGame())
         {
@@ -125,79 +125,82 @@ public class GameService : TrackerModule, IGameService
         }
 
         // Get the first block of memory
-        _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
+        var firstBlockResponse = await _snesConnectorService.MakeMemoryRequestAsync(new SnesSingleMemoryRequest()
         {
             MemoryRequestType = SnesMemoryRequestType.RetrieveMemory,
             SnesMemoryDomain = SnesMemoryDomain.CartridgeSave,
             AddressFormat = AddressFormat.Snes9x,
             SniMemoryMapping = MemoryMapping.ExHiRom,
             Address = 0xA26000,
-            Length = 0x300,
-            OnResponse = (firstDataSet, firstPrevData) =>
-            {
-                // Get the second block of memory
-                _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
-                {
-                    MemoryRequestType = SnesMemoryRequestType.RetrieveMemory,
-                    SnesMemoryDomain = SnesMemoryDomain.CartridgeSave,
-                    AddressFormat = AddressFormat.Snes9x,
-                    SniMemoryMapping = MemoryMapping.ExHiRom,
-                    Address = 0xA26300,
-                    Length = 0x300,
-                    OnResponse = (secondDataSet, secondPrevData) =>
-                    {
-                        // Determine number of gifted items by looking at both sets of data.
-                        // Each item takes up two words and we're interested in the second word in each pair.
-                        var data = firstDataSet.Raw.Concat(secondDataSet.Raw).ToArray();
-                        var itemCounter = 0;
-                        for (var i = 2; i < 0x600; i += 4)
-                        {
-                            var item = (ItemType)BitConverter.ToUInt16(data.AsSpan(i, 2));
-                            if (item != ItemType.Nothing)
-                            {
-                                itemCounter++;
-                            }
-                        }
-
-                        // First give the player all of the requested items
-                        // Batch them into chunks of 50 due to byte limit for QUSB2SNES
-                        foreach (var batch in items.Chunk(50))
-                        {
-                            var bytes = new List<byte>();
-                            foreach (var item in batch)
-                            {
-                                bytes.AddRange(Int16ToBytes(item.fromPlayerId));
-                                bytes.AddRange(Int16ToBytes((int)item.type));
-                            }
-
-                            _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
-                            {
-                                MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
-                                SnesMemoryDomain = SnesMemoryDomain.CartridgeSave,
-                                AddressFormat = AddressFormat.Snes9x,
-                                SniMemoryMapping = MemoryMapping.ExHiRom,
-                                Address = 0xA26000 + (itemCounter * 4),
-                                Data = bytes
-                            });
-
-                            itemCounter += batch.Length;
-                        }
-
-                        // Up the item counter to have them actually pick it up
-                        _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
-                        {
-                            MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
-                            SnesMemoryDomain = SnesMemoryDomain.CartridgeSave,
-                            AddressFormat = AddressFormat.Snes9x,
-                            SniMemoryMapping = MemoryMapping.ExHiRom,
-                            Address = 0xA26602,
-                            Data = Int16ToBytes(itemCounter)
-                        });
-                    }
-                });
-            }
+            Length = 0x300
         });
 
+        var secondBlockResponse = await _snesConnectorService.MakeMemoryRequestAsync(new SnesSingleMemoryRequest()
+        {
+            MemoryRequestType = SnesMemoryRequestType.RetrieveMemory,
+            SnesMemoryDomain = SnesMemoryDomain.CartridgeSave,
+            AddressFormat = AddressFormat.Snes9x,
+            SniMemoryMapping = MemoryMapping.ExHiRom,
+            Address = 0xA26300,
+            Length = 0x300
+        });
+
+        if (!firstBlockResponse.Successful || !firstBlockResponse.HasData || !secondBlockResponse.Successful ||
+            !secondBlockResponse.HasData)
+        {
+            return false;
+        }
+
+        var firstDataSet = firstBlockResponse.Data;
+        var secondDataSet = secondBlockResponse.Data;
+
+        // Determine number of gifted items by looking at both sets of data.
+        // Each item takes up two words and we're interested in the second word in each pair.
+        var data = firstDataSet.Raw.Concat(secondDataSet.Raw).ToArray();
+        var itemCounter = 0;
+        for (var i = 2; i < 0x600; i += 4)
+        {
+            var item = (ItemType)BitConverter.ToUInt16(data.AsSpan(i, 2));
+            if (item != ItemType.Nothing)
+            {
+                itemCounter++;
+            }
+        }
+
+        // First give the player all of the requested items
+        // Batch them into chunks of 50 due to byte limit for QUSB2SNES
+        foreach (var batch in items.Chunk(50))
+        {
+            var bytes = new List<byte>();
+            foreach (var item in batch)
+            {
+                bytes.AddRange(Int16ToBytes(item.fromPlayerId));
+                bytes.AddRange(Int16ToBytes((int)item.type));
+            }
+
+            _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
+            {
+                MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+                SnesMemoryDomain = SnesMemoryDomain.CartridgeSave,
+                AddressFormat = AddressFormat.Snes9x,
+                SniMemoryMapping = MemoryMapping.ExHiRom,
+                Address = 0xA26000 + (itemCounter * 4),
+                Data = bytes
+            });
+
+            itemCounter += batch.Length;
+        }
+
+        // Up the item counter to have them actually pick it up
+        _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
+        {
+            MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+            SnesMemoryDomain = SnesMemoryDomain.CartridgeSave,
+            AddressFormat = AddressFormat.Snes9x,
+            SniMemoryMapping = MemoryMapping.ExHiRom,
+            Address = 0xA26602,
+            Data = Int16ToBytes(itemCounter)
+        });
 
         return true;
     }
@@ -639,7 +642,7 @@ public class GameService : TrackerModule, IGameService
         if (otherCollectedItems.Any())
         {
             _logger.LogInformation("Giving player {ItemCount} missing items", otherCollectedItems.Count);
-            TryGiveItemTypes(otherCollectedItems);
+            _ = TryGiveItemTypesAsync(otherCollectedItems);
         }
     }
 
