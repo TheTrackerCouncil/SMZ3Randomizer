@@ -51,7 +51,7 @@ public class FinalBossCheck(TrackerBase tracker, ISnesConnectorService snesConne
                 {
                     Logger.LogInformation("Auto tracked Mother Brain");
                     Tracker.MarkBossAsDefeated(motherBrain, admittedGuilt: true, confidence: null, autoTracked: true);
-                    CountHyperBeamShots();
+                    _ = CountHyperBeamShots();
                     didUpdate = true;
                 }
             }
@@ -76,7 +76,7 @@ public class FinalBossCheck(TrackerBase tracker, ISnesConnectorService snesConne
                 {
                     Logger.LogInformation("Auto tracked Mother Brain");
                     Tracker.MarkBossAsDefeated(motherBrain, admittedGuilt: true, confidence: null, autoTracked: true);
-                    CountHyperBeamShots();
+                    _ = CountHyperBeamShots();
                     didUpdate = true;
                 }
             }
