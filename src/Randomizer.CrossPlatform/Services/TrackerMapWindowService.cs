@@ -255,6 +255,22 @@ public class TrackerMapWindowService(
                 }
             }
         }
+        else if (location.Type == TrackerMapLocation.MapLocationType.SMDoor && world.Config.MetroidKeysanity)
+        {
+            var item = itemService.FirstOrDefault(location.Name);
+            if (item?.Type.IsInCategory(ItemCategory.KeycardL1) == true)
+            {
+                image = "door1.png";
+            }
+            else if (item?.Type.IsInCategory(ItemCategory.KeycardL2) == true)
+            {
+                image = "door2.png";
+            }
+            else if (item?.Type.IsInCategory(ItemCategory.KeycardBoss) == true)
+            {
+                image = "doorb.png";
+            }
+        }
 
         if (!string.IsNullOrEmpty(image))
         {

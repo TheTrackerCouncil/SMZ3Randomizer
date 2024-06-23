@@ -401,67 +401,67 @@ namespace Randomizer.Shared
         ArrowUpgrade10 = 0x54,
 
         [Description("Crateria Level 1 Keycard")]
-        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard)]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard, ItemCategory.KeycardL1)]
         CardCrateriaL1 = 0xD0,
 
         [Description("Crateria Level 2 Keycard")]
-        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard)]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard, ItemCategory.KeycardL2)]
         CardCrateriaL2 = 0xD1,
 
         [Description("Crateria Boss Keycard")]
-        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard)]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard, ItemCategory.KeycardBoss)]
         CardCrateriaBoss = 0xD2,
 
         [Description("Brinstar Level 1 Keycard")]
-        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard)]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard, ItemCategory.KeycardL1)]
         CardBrinstarL1 = 0xD3,
 
         [Description("Brinstar Level 2 Keycard")]
-        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard)]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard, ItemCategory.KeycardL2)]
         CardBrinstarL2 = 0xD4,
 
         [Description("Brinstar Boss Keycard")]
-        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard)]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard, ItemCategory.KeycardBoss)]
         CardBrinstarBoss = 0xD5,
 
         [Description("Norfair Level 1 Keycard")]
-        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard)]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard, ItemCategory.KeycardL1)]
         CardNorfairL1 = 0xD6,
 
         [Description("Norfair Level 2 Keycard")]
-        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard)]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard, ItemCategory.KeycardL2)]
         CardNorfairL2 = 0xD7,
 
         [Description("Norfair Boss Keycard")]
-        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard)]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard, ItemCategory.KeycardBoss)]
         CardNorfairBoss = 0xD8,
 
         [Description("Maridia Level 1 Keycard")]
-        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard)]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard, ItemCategory.KeycardL1)]
         CardMaridiaL1 = 0xD9,
 
         [Description("Maridia Level 2 Keycard")]
-        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard)]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard, ItemCategory.KeycardL2)]
         CardMaridiaL2 = 0xDA,
 
         [Description("Maridia Boss Keycard")]
-        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard)]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard, ItemCategory.KeycardBoss)]
         CardMaridiaBoss = 0xDB,
 
         [Description("Wrecked Ship Level 1 Keycard")]
-        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard)]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard, ItemCategory.KeycardL1)]
         CardWreckedShipL1 = 0xDC,
 
         [Description("Wrecked Ship Boss Keycard")]
-        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard)]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard, ItemCategory.KeycardBoss)]
         CardWreckedShipBoss = 0xDD,
 
         [Description("Lower Norfair Level 1 Keycard")]
-        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard)]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard, ItemCategory.KeycardL1)]
         CardLowerNorfairL1 = 0xDE,
 
         [Description("Lower Norfair Boss Keycard")]
-        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard)]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.Keycard, ItemCategory.KeycardBoss)]
         CardLowerNorfairBoss = 0xDF,
 
         [Description("Missile")]
@@ -587,5 +587,17 @@ namespace Randomizer.Shared
         [Description("Bee Refill")]
         [ItemCategory(ItemCategory.Zelda, ItemCategory.NonRandomized)]
         BeeContent = 0x0E,
+
+        [Description("Level 1 Keycard")]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.NonRandomized, ItemCategory.Keycard, ItemCategory.KeycardL1)]
+        CardL1 = 0xF0,
+
+        [Description("Level 2 Keycard")]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.NonRandomized, ItemCategory.Keycard, ItemCategory.KeycardL2)]
+        CardL2 = 0xF1,
+
+        [Description("Boss Keycard")]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.NonRandomized, ItemCategory.Keycard, ItemCategory.KeycardBoss)]
+        CardBoss = 0xF2,
     }
 }

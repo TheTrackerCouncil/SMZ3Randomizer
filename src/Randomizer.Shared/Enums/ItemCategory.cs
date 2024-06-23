@@ -46,6 +46,21 @@
         Keycard,
 
         /// <summary>
+        /// The item is a keycard for a level 1 door in Super Metroid.
+        /// </summary>
+        KeycardL1,
+
+        /// <summary>
+        /// The item is a keycard for a level 2 door in Super Metroid.
+        /// </summary>
+        KeycardL2,
+
+        /// <summary>
+        /// The item is a keycard for a boss door in Super Metroid.
+        /// </summary>
+        KeycardBoss,
+
+        /// <summary>
         /// The item is not worth paying 500 rupees for, but not necessarily
         /// junk.
         /// </summary>

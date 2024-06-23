@@ -841,6 +841,24 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     InternalItemType = ItemType.CardLowerNorfairBoss,
                     Image = "smkeyboss.png",
                 },
+                new()
+                {
+                    Item = "Level 1 Keycard",
+                    InternalItemType = ItemType.CardL1,
+                    Image = "smkey1.png",
+                },
+                new()
+                {
+                    Item = "Level 2 Keycard",
+                    InternalItemType = ItemType.CardL2,
+                    Image = "smkey2.png",
+                },
+                new()
+                {
+                    Item = "Boss Keycard",
+                    InternalItemType = ItemType.CardBoss,
+                    Image = "smkeyboss.png",
+                },
             };
         }
 

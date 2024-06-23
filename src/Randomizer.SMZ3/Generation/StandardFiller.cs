@@ -75,7 +75,9 @@ namespace Randomizer.SMZ3.Generation
                 var dungeon = world.ItemPools.Dungeon.ToList();
                 var progression = world.ItemPools.Progression.ToList();
 
-                var preferenceItems = ApplyItemPoolPreferences(startingInventory, progression, niceItems, junkItems, world);
+                var keycards = worldConfig.MetroidKeysanity ? world.ItemPools.Keycards.ToList() : [];
+
+                var preferenceItems = ApplyItemPoolPreferences(startingInventory, progression, niceItems, junkItems, keycards, world);
 
                 InitialFillInOwnWorld(dungeon, progression, world, config, startingInventory);
 
@@ -83,13 +85,12 @@ namespace Randomizer.SMZ3.Generation
                 {
                     _logger.LogDebug("Distributing dungeon items according to logic");
                     var worldLocations = world.Locations.Empty().Shuffle(Random);
-                    var keyCards = world.ItemPools.Keycards;
-                    AssumedFill(dungeon, progression.Concat(keyCards).Concat(assumedInventory).Concat(preferenceItems).ToList(), worldLocations, new[] { world }, cancellationToken);
+                    AssumedFill(dungeon, progression.Concat(world.ItemPools.Keycards).Concat(assumedInventory).Concat(preferenceItems).ToList(), worldLocations, new[] { world }, cancellationToken);
                 }
 
                 if (worldConfig.MetroidKeysanity)
                 {
-                    progressionItems.AddRange(world.ItemPools.Keycards);
+                    progressionItems.AddRange(keycards);
                 }
                 else
                 {
@@ -130,7 +131,7 @@ namespace Randomizer.SMZ3.Generation
             FastFill(junkItems, locations);
         }
 
-        private List<Item> ApplyItemPoolPreferences(List<Item> startingInventory, List<Item> progressionItems, List<Item> niceItems, List<Item> junkItems, World world)
+        private List<Item> ApplyItemPoolPreferences(List<Item> startingInventory, List<Item> progressionItems, List<Item> niceItems, List<Item> junkItems, List<Item> keycards, World world)
         {
             var placedItems = new List<Item>();
             var config = world.Config;
@@ -190,6 +191,10 @@ namespace Randomizer.SMZ3.Generation
                     else if (junkItems.Any(x => x.Type == itemType))
                     {
                         placedItems.Add(FillItemAtLocation(junkItems, itemType, location));
+                    }
+                    else if (keycards.Any(x => x.Type == itemType))
+                    {
+                        placedItems.Add(FillItemAtLocation(keycards, itemType, location));
                     }
                     else if (progressionItems.Any(x => x.Type == itemType))
                     {
