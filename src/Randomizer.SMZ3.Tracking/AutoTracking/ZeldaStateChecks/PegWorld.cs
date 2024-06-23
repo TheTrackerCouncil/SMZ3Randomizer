@@ -1,4 +1,5 @@
-﻿using Randomizer.Abstractions;
+﻿using System.Threading.Tasks;
+using Randomizer.Abstractions;
 using Randomizer.Data.Tracking;
 using SnesConnectorLibrary;
 using SnesConnectorLibrary.Requests;
@@ -22,16 +23,16 @@ public class PegWorld(TrackerBase tracker, ISnesConnectorService snesConnector) 
     {
         if (currentState.OverworldScreen == 0x62)
         {
-            CountPegs();
+            _ = CountPegs();
             return true;
         }
 
         return false;
     }
 
-    private void CountPegs()
+    private async Task CountPegs()
     {
-        snesConnector.MakeMemoryRequest(new SnesSingleMemoryRequest()
+        var response = await snesConnector.MakeMemoryRequestAsync(new SnesSingleMemoryRequest()
         {
             MemoryRequestType = SnesMemoryRequestType.RetrieveMemory,
             SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
@@ -39,15 +40,15 @@ public class PegWorld(TrackerBase tracker, ISnesConnectorService snesConnector) 
             SniMemoryMapping = MemoryMapping.ExHiRom,
             Address = 0x7e04c8,
             Length = 0x01, // This is actually a four-byte value, but practically, only the lowest byte is important
-            OnResponse = (data, _) =>
-            {
-                var count = data.ReadUInt8(0);
-
-                if (count != null)
-                {
-                    tracker.SetPegs((int)count);
-                }
-            }
         });
+
+        if (!response.Successful || !response.HasData) return;
+
+        var count = response.Data.ReadUInt8(0);
+
+        if (count != null)
+        {
+            tracker.SetPegs((int)count);
+        }
     }
 }

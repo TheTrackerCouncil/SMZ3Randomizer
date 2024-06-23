@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Randomizer.Abstractions;
 using SnesConnectorLibrary;
@@ -50,7 +52,7 @@ public class FinalBossCheck(TrackerBase tracker, ISnesConnectorService snesConne
                 {
                     Logger.LogInformation("Auto tracked Mother Brain");
                     Tracker.MarkBossAsDefeated(motherBrain, admittedGuilt: true, confidence: null, autoTracked: true);
-                    CountHyperBeamShots();
+                    _ = CountHyperBeamShots();
                     didUpdate = true;
                 }
             }
@@ -75,7 +77,7 @@ public class FinalBossCheck(TrackerBase tracker, ISnesConnectorService snesConne
                 {
                     Logger.LogInformation("Auto tracked Mother Brain");
                     Tracker.MarkBossAsDefeated(motherBrain, admittedGuilt: true, confidence: null, autoTracked: true);
-                    CountHyperBeamShots();
+                    _ = CountHyperBeamShots();
                     didUpdate = true;
                 }
             }
@@ -88,34 +90,41 @@ public class FinalBossCheck(TrackerBase tracker, ISnesConnectorService snesConne
 
     }
 
-    private void CountHyperBeamShots()
+    private async Task CountHyperBeamShots()
     {
-        SnesConnector.MakeMemoryRequest(new SnesSingleMemoryRequest()
+        try
         {
-            MemoryRequestType = SnesMemoryRequestType.RetrieveMemory,
-            SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
-            AddressFormat = AddressFormat.Snes9x,
-            SniMemoryMapping = MemoryMapping.ExHiRom,
-            Address = 0x7e033e,
-            Length = 0x02,
-            OnResponse = (data, _) =>
+            var response = await SnesConnector.MakeMemoryRequestAsync(new SnesSingleMemoryRequest()
             {
-                var health = data.ReadUInt16(0);
+                MemoryRequestType = SnesMemoryRequestType.RetrieveMemory,
+                SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+                AddressFormat = AddressFormat.Snes9x,
+                SniMemoryMapping = MemoryMapping.ExHiRom,
+                Address = 0x7e033e,
+                Length = 0x02
+            });
 
-                if (health != null)
+            if (!response.Successful || !response.HasData) return;
+
+            var health = response.Data.ReadUInt16(0);
+
+            if (health != null)
+            {
+                // Each Hyper Beam shot does 1000 damage
+                var count = (int)health / 1000;
+
+                if (health % 1000 > 0)
                 {
-                    // Each Hyper Beam shot does 1000 damage
-                    var count = (int)health / 1000;
-
-                    if (health % 1000 > 0)
-                    {
-                        count++;
-                    }
-
-                    Logger.LogInformation("Counted {Count} Hyper Beam shot(s) for {Health} health", count, health);
-                    Tracker.CountHyperBeamShots(count);
+                    count++;
                 }
+
+                Logger.LogInformation("Counted {Count} Hyper Beam shot(s) for {Health} health", count, health);
+                Tracker.CountHyperBeamShots(count);
             }
-        });
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Error when attempting to count the number of hyper beam shots");
+        }
     }
 }

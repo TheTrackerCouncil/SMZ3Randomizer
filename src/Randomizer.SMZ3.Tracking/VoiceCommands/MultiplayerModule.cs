@@ -90,7 +90,7 @@ public class MultiplayerModule : TrackerModule
         var items = args.ItemsToGive.Select(x => ItemService.FirstOrDefault(x)).NonNull().ToList();
 
         Logger.LogInformation("Giving player {Count} items", items.Count());
-        TrackerBase.GameService!.TryGiveItems(items, args.PlayerId.Value);
+        _ = TrackerBase.GameService!.TryGiveItemsAsync(items, args.PlayerId.Value);
 
         if ((args.DidForfeit || args.DidComplete) && WorldService.Worlds.Any(x => x.Id == args.PlayerId))
         {
@@ -160,7 +160,7 @@ public class MultiplayerModule : TrackerModule
         var item = ItemService.FirstOrDefault(args.ItemToGive);
         if (item == null)
             throw new InvalidOperationException($"Player retrieved invalid item {args.ItemToGive}");
-        TrackerBase.GameService!.TryGiveItem(item, args.PlayerId);
+        _ = TrackerBase.GameService!.TryGiveItemAsync(item, args.PlayerId);
         if (item.Type.IsPossibleProgression(item.World.Config.ZeldaKeysanity, item.World.Config.MetroidKeysanity))
         {
             TrackerBase.Say(x => x.Multiplayer.ReceivedUsefulItemFromOtherPlayer, args.PhoneticName, item.Metadata.Name,

@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Versioning;
 using System.Speech.Recognition;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Randomizer.Abstractions;
 using Randomizer.Shared;
@@ -109,7 +110,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
         }
 
-        private void GiveItem(Item? item)
+        private async Task GiveItemAsync(Item? item)
         {
             if (!PlayerCanCheat()) return;
 
@@ -117,13 +118,18 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 TrackerBase.Say(x => x.Cheats.CheatInvalidItem);
             }
-            else if (TrackerBase.GameService?.TryGiveItem(item, null) == true)
+            else if (TrackerBase.GameService != null)
             {
-                TrackerBase.Say(x => x.Cheats.CheatPerformed);
-            }
-            else
-            {
-                TrackerBase.Say(x => x.Cheats.CheatFailed);
+                var successful = await TrackerBase.GameService.TryGiveItemAsync(item, null);
+
+                if (successful)
+                {
+                    TrackerBase.Say(x => x.Cheats.CheatPerformed);
+                }
+                else
+                {
+                    TrackerBase.Say(x => x.Cheats.CheatFailed);
+                }
             }
         }
 
@@ -228,7 +234,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             AddCommand("Give item", GiveItemRule(), (result) =>
             {
                 var item = GetItemFromResult(TrackerBase, result, out var itemName);
-                GiveItem(item);
+                _ = GiveItemAsync(item);
             });
 
             AddCommand("Kill player", KillPlayerRule(), (result) =>
