@@ -6,7 +6,7 @@
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-        <Version>9.8.0-rc.3</Version>
+        <Version>9.8.0-rc.4</Version>
         <AssemblyName>Randomizer.App</AssemblyName>
         <ApplicationIcon>Assets\smz3.ico</ApplicationIcon>
     </PropertyGroup>
