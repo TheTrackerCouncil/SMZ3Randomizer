@@ -1,7 +1,21 @@
 using Microsoft.Extensions.Options;
 using Randomizer.Multiplayer.Server;
+using Serilog;
+
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json")
+    .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", true)
+    .Build();
+
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(configuration)
+    .Enrich.FromLogContext()
+    .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog(logger);
 
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<GameManager>();
@@ -14,7 +28,10 @@ var app = builder.Build();
 var settings = app.Services.GetService<IOptions<SMZ3ServerSettings>>();
 if (string.IsNullOrEmpty(settings?.Value.ServerUrl))
 {
-    throw new InvalidOperationException("The SMZ3 ServerUrl property needs to be populated in the appsettings.json file");
+    // Make sure we write to the console in case serilog is configured just for writing to logs
+    Console.WriteLine("The SMZ3 ServerUrl property needs to be populated in the appsettings.json file");
+    logger.Error("The SMZ3 ServerUrl property needs to be populated in the appsettings.json file");
+    return;
 }
 
 app.MapHub<MultiplayerHub>("");
