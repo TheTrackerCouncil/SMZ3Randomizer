@@ -92,28 +92,49 @@ public class TrackerWindowService(
         {
             if (args.Dungeon == null)
             {
-                return;
-            }
-
-            if (_dungeonModels.TryGetValue(args.Dungeon.DungeonName, out var dungeonPanel))
-            {
-                var rewardImage = args.Dungeon.MarkedReward != RewardType.None
-                    ? uiService.GetSpritePath(args.Dungeon.MarkedReward)
-                    : null;
-                dungeonPanel.RewardImage = rewardImage;
-                dungeonPanel.DungeonCleared = args.Dungeon.DungeonState.Cleared;
-                dungeonPanel.DungeonTreasure = args.Dungeon.DungeonState.RemainingTreasure;
-            }
-
-            if (args.Dungeon.NeedsMedallion)
-            {
-                foreach (var medallion in _medallions)
+                foreach (var dungeonPanel in _dungeonModels.Values.Where(x => x.Dungeon != null))
                 {
-                    var item = medallion.Items?.Keys.FirstOrDefault();
-                    medallion.IsMMRequirement = world.World.MiseryMire.DungeonState.MarkedMedallion == item?.Type;
-                    medallion.IsTRRequirement = world.World.TurtleRock.DungeonState.MarkedMedallion == item?.Type;
+                    var rewardImage = dungeonPanel.Dungeon!.MarkedReward != RewardType.None
+                        ? uiService.GetSpritePath(dungeonPanel.Dungeon.MarkedReward)
+                        : null;
+                    dungeonPanel.RewardImage = rewardImage;
+                    dungeonPanel.DungeonCleared = dungeonPanel.Dungeon.DungeonState.Cleared;
+                    dungeonPanel.DungeonTreasure = dungeonPanel.Dungeon.DungeonState.RemainingTreasure;
+
+                    if (dungeonPanel.Dungeon.NeedsMedallion)
+                    {
+                        foreach (var medallion in _medallions)
+                        {
+                            var item = medallion.Items?.Keys.FirstOrDefault();
+                            medallion.IsMMRequirement = world.World.MiseryMire.DungeonState.MarkedMedallion == item?.Type;
+                            medallion.IsTRRequirement = world.World.TurtleRock.DungeonState.MarkedMedallion == item?.Type;
+                        }
+                    }
                 }
             }
+            else
+            {
+                if (_dungeonModels.TryGetValue(args.Dungeon.DungeonName, out var dungeonPanel))
+                {
+                    var rewardImage = args.Dungeon.MarkedReward != RewardType.None
+                        ? uiService.GetSpritePath(args.Dungeon.MarkedReward)
+                        : null;
+                    dungeonPanel.RewardImage = rewardImage;
+                    dungeonPanel.DungeonCleared = args.Dungeon.DungeonState.Cleared;
+                    dungeonPanel.DungeonTreasure = args.Dungeon.DungeonState.RemainingTreasure;
+                }
+
+                if (args.Dungeon.NeedsMedallion)
+                {
+                    foreach (var medallion in _medallions)
+                    {
+                        var item = medallion.Items?.Keys.FirstOrDefault();
+                        medallion.IsMMRequirement = world.World.MiseryMire.DungeonState.MarkedMedallion == item?.Type;
+                        medallion.IsTRRequirement = world.World.TurtleRock.DungeonState.MarkedMedallion == item?.Type;
+                    }
+                }
+            }
+
         };
 
         tracker.ItemTracked += (_, args) =>

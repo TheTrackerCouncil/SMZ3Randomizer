@@ -258,7 +258,11 @@ public class TrackerMapWindowService(
         else if (location.Type == TrackerMapLocation.MapLocationType.SMDoor && world.Config.MetroidKeysanity)
         {
             var item = itemService.FirstOrDefault(location.Name);
-            if (item?.Type.IsInCategory(ItemCategory.KeycardL1) == true)
+            if (item?.State.TrackingState > 0)
+            {
+                image = "";
+            }
+            else if (item?.Type.IsInCategory(ItemCategory.KeycardL1) == true)
             {
                 image = "door1.png";
             }
