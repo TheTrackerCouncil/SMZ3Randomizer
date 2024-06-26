@@ -5,15 +5,15 @@
     <key>CFBundleIconFile</key>
     <string>AppIcon.icns</string>
     <key>CFBundleIdentifier</key>
-    <string>com.mattequalscoder.testapp</string>
+    <string>com.thetrackercouncil.smz3randomizer</string>
     <key>CFBundleName</key>
-    <string>TestApp</string>
+    <string>SMZ3Randomizer</string>
     <key>CFBundleVersion</key>
     <string>1.0.0</string>
     <key>LSMinimumSystemVersion</key>
     <string>10.12</string>
     <key>CFBundleExecutable</key>
-    <string>TestApp</string>
+    <string>Randomizer.CrossPlatform</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundlePackageType</key>

@@ -10,13 +10,15 @@ if [ -d "$APP_NAME" ]; then
     rm -rf "$APP_NAME"
 fi
 
+echo $GITHUB_OUTPUT
+
 # Create the .app bundle structure
 mkdir -p "$APP_NAME/Contents/MacOS"
 mkdir -p "$APP_NAME/Contents/Resources"
 
 # Copy the Info.plist file and the icon
-cp "$INFO_PLIST" "$APP_NAME/Contents/Info.plist"
-cp "$ICON_FILE" "$APP_NAME/Contents/Resources/AppIcon.icns"
+cp "setup/$INFO_PLIST" "$APP_NAME/Contents/Info.plist"
+cp "setup/$ICON_FILE" "$APP_NAME/Contents/Resources/AppIcon.icns"
 
 # Copy the published output to the MacOS directory
 cp -a "$PUBLISH_OUTPUT_DIRECTORY/." "$APP_NAME/Contents/MacOS"
