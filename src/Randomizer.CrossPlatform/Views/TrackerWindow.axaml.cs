@@ -46,7 +46,7 @@ public partial class TrackerWindow : RestorableWindow
         {
             var image = new Image()
             {
-                Source = new Bitmap(AssetLoader.Open(new Uri("avares://Randomizer.App/Assets/check.png"))),
+                Source = new Bitmap(AssetLoader.Open(new Uri("avares://Randomizer.CrossPlatform/Assets/check.png"))),
                 IsVisible = false
             };
             _layoutImages[layout.Name] = image;

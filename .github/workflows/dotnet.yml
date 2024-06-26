@@ -2,81 +2,113 @@ name: .NET Build + Test + Publish
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, mac-version ]
   pull_request:
     branches: [ main ]
 
 jobs:
-  build:
+  # build:
 
-    runs-on: windows-latest
+  #   runs-on: windows-latest
 
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #   - name: Download config repo
+  #     uses: actions/checkout@v4
+  #     with:
+  #       repository: TheTrackerCouncil/SMZ3CasConfigs
+  #       path: configs
+  #       ref: main
+  #   - name: Download sprite repo
+  #     uses: actions/checkout@v4
+  #     with:
+  #       repository: TheTrackerCouncil/SMZ3CasSprites
+  #       path: sprites
+  #       ref: main
+  #   - name: Download git tree
+  #     if: ${{ github.event_name != 'pull_request' }}
+  #     shell: pwsh
+  #     run: |
+  #       Invoke-RestMethod -Uri https://api.github.com/repos/TheTrackerCouncil/SMZ3CasSprites/git/trees/main?recursive=1 -OutFile sprites/Sprites/sprites.json
+  #   - name: Setup .NET
+  #     uses: actions/setup-dotnet@v4
+  #     with:
+  #       dotnet-version: 8.0.x
+  #   - name: Restore dependencies
+  #     run: dotnet restore
+  #   - name: Build
+  #     run: dotnet build --no-restore -p:PostBuildEvent=
+  #   - name: Test
+  #     run: dotnet test --no-build --verbosity normal
+  #   - name: Publish Windows 64bit
+  #     if: ${{ github.event_name != 'pull_request' }}
+  #     run: dotnet publish --os win --arch x64 -c Release --self-contained false  src/Randomizer.CrossPlatform/Randomizer.CrossPlatform.csproj
+  #   - name: Publish Windows 32bit
+  #     if: ${{ github.event_name != 'pull_request' }}
+  #     run: dotnet publish --os win --arch x86 -c Release --self-contained false  src/Randomizer.CrossPlatform/Randomizer.CrossPlatform.csproj
+  #   - name: Get version number
+  #     if: ${{ github.event_name != 'pull_request' }}
+  #     id: version
+  #     run: |
+  #       $version = (Get-Item "src\Randomizer.CrossPlatform\bin\Release\net8.0\win-x86\publish\Randomizer.App.exe").VersionInfo.ProductVersion
+  #       $version = $version -replace "\+.*", ""
+  #       Write-Output "number=$version" >> $env:GITHUB_OUTPUT
+  #     shell: pwsh
+  #   - name: Publish Linux 64bit
+  #     if: ${{ github.event_name != 'pull_request' }}
+  #     run: dotnet publish --os linux --arch x64 -c Release --self-contained false  src/Randomizer.CrossPlatform/Randomizer.CrossPlatform.csproj
+  #   - name: Publish Multiplayer Server
+  #     if: ${{ github.event_name != 'pull_request' }}
+  #     run: dotnet publish -c Release --self-contained false src/Randomizer.Multiplayer.Server/Randomizer.Multiplayer.Server.csproj
+  #   - name: Building the Windows installer
+  #     if: ${{ github.event_name != 'pull_request' }}
+  #     run: "\"%programfiles(x86)%/Inno Setup 6/iscc.exe\" \"setup/randomizer.app.iss\""
+  #     shell: cmd
+  #   - name: Building the Linux 64bit package
+  #     if: ${{ github.event_name != 'pull_request' }}
+  #     working-directory: setup
+  #     run: "./LinuxBuildZipper.ps1"
+  #     shell: pwsh
+  #   - name: Building the Multiplayer Server package
+  #     if: ${{ github.event_name != 'pull_request' }}
+  #     working-directory: setup
+  #     run: "./MultiplayerServerZipper.ps1"
+  #     shell: pwsh
+  #   - name: Upload artifact
+  #     uses: actions/upload-artifact@v4
+  #     if: ${{ github.event_name != 'pull_request' }}
+  #     with:
+  #       path: "setup/Output/*"
+  #       name: SMZ3CasRandomizer_${{ steps.version.outputs.number }}
+  build-mac:
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Download config repo
-      uses: actions/checkout@v4
-      with:
-        repository: TheTrackerCouncil/SMZ3CasConfigs
-        path: configs
-        ref: main
-    - name: Download sprite repo
-      uses: actions/checkout@v4
-      with:
-        repository: TheTrackerCouncil/SMZ3CasSprites
-        path: sprites
-        ref: main
-    - name: Download git tree
-      if: ${{ github.event_name != 'pull_request' }}
-      shell: pwsh
-      run: |
-        Invoke-RestMethod -Uri https://api.github.com/repos/TheTrackerCouncil/SMZ3CasSprites/git/trees/main?recursive=1 -OutFile sprites/Sprites/sprites.json
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore src/Randomizer.CrossPlatform/Randomizer.CrossPlatform.csproj
     - name: Build
-      run: dotnet build --no-restore -p:PostBuildEvent=
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
-    - name: Publish Windows 64bit
-      if: ${{ github.event_name != 'pull_request' }}
-      run: dotnet publish --os win --arch x64 -c Release --self-contained false  src/Randomizer.CrossPlatform/Randomizer.CrossPlatform.csproj
-    - name: Publish Windows 32bit
-      if: ${{ github.event_name != 'pull_request' }}
-      run: dotnet publish --os win --arch x86 -c Release --self-contained false  src/Randomizer.CrossPlatform/Randomizer.CrossPlatform.csproj
+      run: dotnet build --no-restore -p:PostBuildEvent= src/Randomizer.CrossPlatform/Randomizer.CrossPlatform.csproj
     - name: Get version number
       if: ${{ github.event_name != 'pull_request' }}
       id: version
       run: |
-        $version = (Get-Item "src\Randomizer.CrossPlatform\bin\Release\net8.0\win-x86\publish\Randomizer.App.exe").VersionInfo.ProductVersion
+        $version = (Get-Item "src\Randomizer.CrossPlatform\bin\Release\net8.0\win-x86\publish\Randomizer.CrossPlatform.dll").VersionInfo.ProductVersion
         $version = $version -replace "\+.*", ""
         Write-Output "number=$version" >> $env:GITHUB_OUTPUT
       shell: pwsh
-    - name: Publish Linux 64bit
-      if: ${{ github.event_name != 'pull_request' }}
-      run: dotnet publish --os linux --arch x64 -c Release --self-contained false  src/Randomizer.CrossPlatform/Randomizer.CrossPlatform.csproj
-    - name: Publish Multiplayer Server
-      if: ${{ github.event_name != 'pull_request' }}
-      run: dotnet publish -c Release --self-contained false src/Randomizer.Multiplayer.Server/Randomizer.Multiplayer.Server.csproj
-    - name: Building the Windows installer
-      if: ${{ github.event_name != 'pull_request' }}
-      run: "\"%programfiles(x86)%/Inno Setup 6/iscc.exe\" \"setup/randomizer.app.iss\""
-      shell: cmd
-    - name: Building the Linux 64bit package
-      if: ${{ github.event_name != 'pull_request' }}
-      working-directory: setup
-      run: "./LinuxBuildZipper.ps1"
-      shell: pwsh
-    - name: Building the Multiplayer Server package
-      if: ${{ github.event_name != 'pull_request' }}
-      working-directory: setup
-      run: "./MultiplayerServerZipper.ps1"
-      shell: pwsh
+    - name: Publish
+      run: dotnet publish -r osx-arm64 --configuration Release -p:UseAppHost=true src/Randomizer.CrossPlatform/Randomizer.CrossPlatform.csproj
+    - name: Prepare packaging script
+      run: |
+        chmod +x ./setup/package-macos-app.sh
+        ./setup/package-macos-app.sh
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       if: ${{ github.event_name != 'pull_request' }}
       with:
-        path: "setup/Output/*"
+        path: "setup/output/*"
         name: SMZ3CasRandomizer_${{ steps.version.outputs.number }}

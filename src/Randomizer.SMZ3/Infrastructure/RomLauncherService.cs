@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using Microsoft.Extensions.Logging;
 using Randomizer.Data.Options;
 using Randomizer.Shared.Models;
 
 namespace Randomizer.SMZ3.Infrastructure;
 
-public class RomLauncherService
+public class RomLauncherService(OptionsFactory optionsFactory, ILogger<RomLauncherService> logger)
 {
-    private readonly RandomizerOptions _options;
-
-    public RomLauncherService(OptionsFactory optionsFactory)
-    {
-        _options = optionsFactory.Create();
-    }
+    private readonly RandomizerOptions _options = optionsFactory.Create();
 
     public Process? LaunchRom(GeneratedRom rom)
     {
@@ -47,6 +43,8 @@ public class RomLauncherService
                 launchArguments = $"{_options.GeneralOptions.LaunchArguments} \"{romPath}\"";
             }
         }
+
+        logger.LogInformation("{Application} {Arguments}", launchApplication, launchArguments);
 
         return Process.Start(new ProcessStartInfo
         {
