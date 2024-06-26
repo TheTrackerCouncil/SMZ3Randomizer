@@ -92,6 +92,8 @@ jobs:
       run: dotnet restore src/Randomizer.CrossPlatform/Randomizer.CrossPlatform.csproj
     - name: Build
       run: dotnet build --no-restore -p:PostBuildEvent= src/Randomizer.CrossPlatform/Randomizer.CrossPlatform.csproj
+    - name: Publish
+      run: dotnet publish -r osx-arm64 --configuration Release -p:UseAppHost=true src/Randomizer.CrossPlatform/Randomizer.CrossPlatform.csproj
     - name: Get version number
       if: ${{ github.event_name != 'pull_request' }}
       id: version
@@ -100,8 +102,6 @@ jobs:
         $version = $version -replace "\+.*", ""
         Write-Output "number=$version" >> $env:GITHUB_OUTPUT
       shell: pwsh
-    - name: Publish
-      run: dotnet publish -r osx-arm64 --configuration Release -p:UseAppHost=true src/Randomizer.CrossPlatform/Randomizer.CrossPlatform.csproj
     - name: Prepare packaging script
       run: |
         chmod +x ./setup/package-macos-app.sh
