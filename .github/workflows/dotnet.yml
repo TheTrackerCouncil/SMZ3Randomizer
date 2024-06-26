@@ -96,7 +96,7 @@ jobs:
       if: ${{ github.event_name != 'pull_request' }}
       id: version
       run: |
-        $version = (Get-Item "src\Randomizer.CrossPlatform\bin\Release\net8.0\win-x86\publish\Randomizer.CrossPlatform.dll").VersionInfo.ProductVersion
+        $version = (Get-Item "src\Randomizer.CrossPlatform\bin\Release\net8.0\osx-arm64publish\Randomizer.CrossPlatform.dll").VersionInfo.ProductVersion
         $version = $version -replace "\+.*", ""
         Write-Output "number=$version" >> $env:GITHUB_OUTPUT
       shell: pwsh
