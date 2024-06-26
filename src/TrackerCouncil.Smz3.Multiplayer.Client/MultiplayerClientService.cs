@@ -2,9 +2,8 @@
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
-using TrackerCouncil.Shared;
-using TrackerCouncil.Smz3.Multiplayer.Client.EventHandlers;
 using TrackerCouncil.Smz3.Shared;
+using TrackerCouncil.Smz3.Multiplayer.Client.EventHandlers;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Models;
 using TrackerCouncil.Smz3.Shared.Multiplayer;

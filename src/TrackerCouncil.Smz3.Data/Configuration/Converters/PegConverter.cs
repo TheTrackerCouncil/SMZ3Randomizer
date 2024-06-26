@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using TrackerCouncil.Data.Configuration;
 
 namespace TrackerCouncil.Smz3.Data.Configuration.Converters;
 

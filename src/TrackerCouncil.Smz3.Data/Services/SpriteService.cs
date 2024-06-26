@@ -4,8 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using TrackerCouncil.Data;
-using TrackerCouncil.Shared;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Shared;
 

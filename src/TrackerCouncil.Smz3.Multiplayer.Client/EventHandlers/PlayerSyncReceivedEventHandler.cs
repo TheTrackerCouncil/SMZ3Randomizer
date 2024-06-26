@@ -1,4 +1,4 @@
-﻿using TrackerCouncil.Shared;
+﻿using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Models;
 

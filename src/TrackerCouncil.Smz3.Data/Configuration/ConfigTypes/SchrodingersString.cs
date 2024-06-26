@@ -5,8 +5,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.Json.Serialization;
-using TrackerCouncil.Data.Configuration;
-using TrackerCouncil.Data.Configuration.Converters;
 using TrackerCouncil.Smz3.Data.Configuration.Converters;
 
 namespace TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;

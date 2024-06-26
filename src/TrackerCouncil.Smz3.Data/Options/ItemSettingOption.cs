@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using TrackerCouncil.Shared;
+using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.Data.Options;

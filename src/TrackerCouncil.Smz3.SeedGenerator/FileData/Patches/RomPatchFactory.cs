@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using TrackerCouncil.Shared;
 using TrackerCouncil.Smz3.Shared;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;

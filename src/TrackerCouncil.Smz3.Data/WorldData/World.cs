@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using TrackerCouncil.Shared;
+using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Logic;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
@@ -17,7 +17,6 @@ using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda.DarkWorld;
 using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain;
 using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda.LightWorld;
 using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain;
-using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Models;
 

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using TrackerCouncil.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 
 namespace TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;

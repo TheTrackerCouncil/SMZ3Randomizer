@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
-using TrackerCouncil.Data.Configuration;
 using YamlDotNet.Serialization;
 
 namespace TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;

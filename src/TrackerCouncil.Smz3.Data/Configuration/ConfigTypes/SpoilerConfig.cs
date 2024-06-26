@@ -1,6 +1,4 @@
-﻿using TrackerCouncil.Data.Configuration;
-
-namespace TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
+﻿namespace TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 
 /// <summary>
 /// Provides the phrases for spoilers.

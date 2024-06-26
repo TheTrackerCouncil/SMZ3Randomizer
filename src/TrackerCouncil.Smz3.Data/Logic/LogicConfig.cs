@@ -1,7 +1,7 @@
 using System.Linq;
 using DynamicForms.Library.Core;
 using DynamicForms.Library.Core.Attributes;
-using TrackerCouncil.Shared;
+using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.ViewModels;
 using TrackerCouncil.Smz3.Shared.Enums;
 using YamlDotNet.Serialization;

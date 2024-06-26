@@ -2,27 +2,26 @@
 
 #nullable disable
 
-namespace TrackerCouncil.Shared.Migrations
+namespace TrackerCouncil.Smz3.Shared.Migrations;
+
+/// <inheritdoc />
+public partial class MsuShuffleStyle : Migration
 {
     /// <inheritdoc />
-    public partial class MsuShuffleStyle : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AddColumn<int>(
-                name: "MsuShuffleStyle",
-                table: "GeneratedRoms",
-                type: "INTEGER",
-                nullable: true);
-        }
+        migrationBuilder.AddColumn<int>(
+            name: "MsuShuffleStyle",
+            table: "GeneratedRoms",
+            type: "INTEGER",
+            nullable: true);
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(
-                name: "MsuShuffleStyle",
-                table: "GeneratedRoms");
-        }
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropColumn(
+            name: "MsuShuffleStyle",
+            table: "GeneratedRoms");
     }
 }

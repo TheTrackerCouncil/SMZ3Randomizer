@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using TrackerCouncil.Shared;
+using TrackerCouncil.Smz3.Shared;
 
 namespace TrackerCouncil.Smz3.Shared.Enums;
 

@@ -1,7 +1,4 @@
 using MSURandomizerLibrary.Configs;
-using TrackerCouncil.Data;
-using TrackerCouncil.Data.Configuration;
-using TrackerCouncil.Shared;
 using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;

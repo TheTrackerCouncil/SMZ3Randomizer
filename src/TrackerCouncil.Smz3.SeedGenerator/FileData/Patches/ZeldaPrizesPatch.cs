@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using TrackerCouncil.Shared;
-using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Shared;
+using TrackerCouncil.Smz3.Data.Options;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
 

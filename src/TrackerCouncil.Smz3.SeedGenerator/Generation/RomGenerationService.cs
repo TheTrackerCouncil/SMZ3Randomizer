@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using MSURandomizerLibrary;
 using MSURandomizerLibrary.Models;
 using MSURandomizerLibrary.Services;
-using TrackerCouncil.Shared;
+using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Data.GeneratedData;
 using TrackerCouncil.Smz3.Data.Interfaces;
@@ -16,7 +16,6 @@ using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.SeedGenerator.FileData;
 using TrackerCouncil.Smz3.SeedGenerator.FileData.IpsPatches;
-using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Models;
 

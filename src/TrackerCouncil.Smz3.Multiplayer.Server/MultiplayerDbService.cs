@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TrackerCouncil.Multiplayer.Server;
 using TrackerCouncil.Smz3.Shared.Multiplayer;
 
 namespace TrackerCouncil.Smz3.Multiplayer.Server;

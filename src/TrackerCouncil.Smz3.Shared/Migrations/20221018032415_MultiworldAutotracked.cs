@@ -1,23 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace TrackerCouncil.Shared.Migrations
-{
-    public partial class MultiworldAutotracked : Migration
-    {
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.RenameColumn(
-                name: "Ignored",
-                table: "TrackerLocationStates",
-                newName: "Autotracked");
-        }
+namespace TrackerCouncil.Smz3.Shared.Migrations;
 
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.RenameColumn(
-                name: "Autotracked",
-                table: "TrackerLocationStates",
-                newName: "Ignored");
-        }
+public partial class MultiworldAutotracked : Migration
+{
+    protected override void Up(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.RenameColumn(
+            name: "Ignored",
+            table: "TrackerLocationStates",
+            newName: "Autotracked");
+    }
+
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.RenameColumn(
+            name: "Autotracked",
+            table: "TrackerLocationStates",
+            newName: "Ignored");
     }
 }

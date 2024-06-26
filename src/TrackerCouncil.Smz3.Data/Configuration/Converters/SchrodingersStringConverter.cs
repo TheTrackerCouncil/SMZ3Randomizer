@@ -4,32 +4,31 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 
-namespace TrackerCouncil.Data.Configuration.Converters
+namespace TrackerCouncil.Smz3.Data.Configuration.Converters;
+
+internal class SchrodingersStringConverter : JsonConverter<SchrodingersString>
 {
-    internal class SchrodingersStringConverter : JsonConverter<SchrodingersString>
+    public override SchrodingersString? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        public override SchrodingersString? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        if (reader.TokenType == JsonTokenType.String)
         {
-            if (reader.TokenType == JsonTokenType.String)
-            {
-                var text = reader.GetString();
-                return new SchrodingersString(text!);
-            }
-
-            if (reader.TokenType == JsonTokenType.StartArray)
-            {
-                var items = JsonSerializer.Deserialize<IEnumerable<SchrodingersString.Possibility>>(ref reader, options);
-                if (items == null)
-                    throw new JsonException();
-                return new SchrodingersString(items);
-            }
-
-            throw new JsonException("Unsupported token type for SchrodingersString.");
+            var text = reader.GetString();
+            return new SchrodingersString(text!);
         }
 
-        public override void Write(Utf8JsonWriter writer, SchrodingersString value, JsonSerializerOptions options)
+        if (reader.TokenType == JsonTokenType.StartArray)
         {
-            JsonSerializer.Serialize(writer, (IEnumerable<SchrodingersString.Possibility>)value, options);
+            var items = JsonSerializer.Deserialize<IEnumerable<SchrodingersString.Possibility>>(ref reader, options);
+            if (items == null)
+                throw new JsonException();
+            return new SchrodingersString(items);
         }
+
+        throw new JsonException("Unsupported token type for SchrodingersString.");
+    }
+
+    public override void Write(Utf8JsonWriter writer, SchrodingersString value, JsonSerializerOptions options)
+    {
+        JsonSerializer.Serialize(writer, (IEnumerable<SchrodingersString.Possibility>)value, options);
     }
 }

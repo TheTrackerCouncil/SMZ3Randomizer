@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Newtonsoft.Json;
-using TrackerCouncil.Data.Configuration;
-using TrackerCouncil.Shared;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;

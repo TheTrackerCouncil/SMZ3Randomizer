@@ -6,7 +6,6 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using MSURandomizerLibrary;
 using SnesConnectorLibrary;
-using TrackerCouncil.Data;
 using TrackerCouncil.Smz3.Shared.Enums;
 using YamlDotNet.Serialization;
 

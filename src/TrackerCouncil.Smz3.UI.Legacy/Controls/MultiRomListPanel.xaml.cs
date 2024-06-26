@@ -12,135 +12,134 @@ using TrackerCouncil.Smz3.Shared.Models;
 using TrackerCouncil.Smz3.UI.Legacy.ViewModels;
 using TrackerCouncil.Smz3.UI.Legacy.Windows;
 
-namespace TrackerCouncil.Smz3.UI.Legacy.Controls
+namespace TrackerCouncil.Smz3.UI.Legacy.Controls;
+
+/// <summary>
+/// Interaction logic for MultiRomListPanel.xaml
+/// </summary>
+public partial class MultiRomListPanel : RomListPanel
 {
-    /// <summary>
-    /// Interaction logic for MultiRomListPanel.xaml
-    /// </summary>
-    public partial class MultiRomListPanel : RomListPanel
+    public MultiRomListPanel(IServiceProvider serviceProvider,
+        OptionsFactory optionsFactory,
+        ILogger<MultiRomListPanel> logger,
+        IRomGenerationService romGenerationService,
+        IGameDbService gameDbService,
+        RomLauncherService romLauncherService) : base(serviceProvider, optionsFactory, logger, romGenerationService, gameDbService, romLauncherService)
     {
-        public MultiRomListPanel(IServiceProvider serviceProvider,
-            OptionsFactory optionsFactory,
-            ILogger<MultiRomListPanel> logger,
-            IRomGenerationService romGenerationService,
-            IGameDbService gameDbService,
-            RomLauncherService romLauncherService) : base(serviceProvider, optionsFactory, logger, romGenerationService, gameDbService, romLauncherService)
+        Model = new MultiplayerGamesViewModel();
+        DataContext = Model;
+        InitializeComponent();
+        UpdateList();
+    }
+
+    public MultiplayerGamesViewModel Model { get; }
+
+    public sealed override void UpdateList()
+    {
+        var models = GameDbService.GetMultiplayerGamesList()
+            .OrderByDescending(x => x.Id)
+            .ToList();
+        Model.UpdateList(models);
+    }
+
+    private void CreateMultiGameButton_Click(object sender, RoutedEventArgs e)
+    {
+        using var scope = ServiceProvider.CreateScope();
+        var multiWindow = scope.ServiceProvider.GetRequiredService<MultiplayerConnectWindow>();
+        multiWindow.Owner = Window.GetWindow(this);
+        multiWindow.IsCreatingGame = true;
+        multiWindow.Options = Options;
+        if (multiWindow.ShowDialog() == true) OpenStatusWindow(null);
+        UpdateList();
+    }
+
+    private void JoinMultiGameButton_Click(object sender, RoutedEventArgs e)
+    {
+        using var scope = ServiceProvider.CreateScope();
+        var multiWindow = scope.ServiceProvider.GetRequiredService<MultiplayerConnectWindow>();
+        multiWindow.Owner = Window.GetWindow(this);
+        multiWindow.IsJoiningGame = true;
+        if (multiWindow.ShowDialog() == true) OpenStatusWindow(null);
+        UpdateList();
+    }
+
+    /// <summary>
+    /// Opens the multiplayer status window
+    /// </summary>
+    /// <param name="game"></param>
+    private void OpenStatusWindow(MultiplayerGameDetails? game)
+    {
+        using var scope = ServiceProvider.CreateScope();
+        var statusWindow = scope.ServiceProvider.GetRequiredService<MultiplayerStatusWindow>();
+        statusWindow.Owner = Window.GetWindow(this);
+        statusWindow.ParentPanel = this;
+        statusWindow.MultiplayerGameDetails = game;
+        statusWindow.Show();
+    }
+
+    /// <summary>
+    /// Menu item for deleting a multiplayer game and rom
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    /// <returns></returns>
+    private void DeleteRomMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not MenuItem { Tag: MultiplayerGameDetails details })
+            return;
+
+        if (!GameDbService.DeleteMultiplayerGame(details, out var error))
         {
-            Model = new MultiplayerGamesViewModel();
-            DataContext = Model;
-            InitializeComponent();
-            UpdateList();
+            ShowErrorMessageBox(error);
         }
 
-        public MultiplayerGamesViewModel Model { get; }
+        UpdateList();
+    }
 
-        public sealed override void UpdateList()
-        {
-            var models = GameDbService.GetMultiplayerGamesList()
-                .OrderByDescending(x => x.Id)
-                .ToList();
-            Model.UpdateList(models);
-        }
+    /// <summary>
+    /// The user has clicked on a quick launch button for a rom
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void LaunchButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button { Tag: MultiplayerGameDetails details })
+            return;
 
-        private void CreateMultiGameButton_Click(object sender, RoutedEventArgs e)
-        {
-            using var scope = ServiceProvider.CreateScope();
-            var multiWindow = scope.ServiceProvider.GetRequiredService<MultiplayerConnectWindow>();
-            multiWindow.Owner = Window.GetWindow(this);
-            multiWindow.IsCreatingGame = true;
-            multiWindow.Options = Options;
-            if (multiWindow.ShowDialog() == true) OpenStatusWindow(null);
-            UpdateList();
-        }
+        OpenStatusWindow(details);
+    }
 
-        private void JoinMultiGameButton_Click(object sender, RoutedEventArgs e)
-        {
-            using var scope = ServiceProvider.CreateScope();
-            var multiWindow = scope.ServiceProvider.GetRequiredService<MultiplayerConnectWindow>();
-            multiWindow.Owner = Window.GetWindow(this);
-            multiWindow.IsJoiningGame = true;
-            if (multiWindow.ShowDialog() == true) OpenStatusWindow(null);
-            UpdateList();
-        }
+    /// <summary>
+    /// Right click menu to open the folder for a rom
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OpenFolderMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not MenuItem { Tag: MultiplayerGameDetails details } || details.GeneratedRom == null)
+            return;
 
-        /// <summary>
-        /// Opens the multiplayer status window
-        /// </summary>
-        /// <param name="game"></param>
-        private void OpenStatusWindow(MultiplayerGameDetails? game)
-        {
-            using var scope = ServiceProvider.CreateScope();
-            var statusWindow = scope.ServiceProvider.GetRequiredService<MultiplayerStatusWindow>();
-            statusWindow.Owner = Window.GetWindow(this);
-            statusWindow.ParentPanel = this;
-            statusWindow.MultiplayerGameDetails = game;
-            statusWindow.Show();
-        }
+        OpenFolder(details.GeneratedRom);
+    }
 
-        /// <summary>
-        /// Menu item for deleting a multiplayer game and rom
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// <returns></returns>
-        private void DeleteRomMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is not MenuItem { Tag: MultiplayerGameDetails details })
-                return;
+    /// <summary>
+    /// Menu item for viewing the spoiler log for a rom
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void ViewSpoilerMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not MenuItem { Tag: MultiplayerGameDetails details } || details.GeneratedRom == null)
+            return;
 
-            if (!GameDbService.DeleteMultiplayerGame(details, out var error))
-            {
-                ShowErrorMessageBox(error);
-            }
+        OpenSpoilerLog(details.GeneratedRom);
+    }
 
-            UpdateList();
-        }
+    private void ProgressionLogMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not MenuItem { Tag: MultiplayerGameDetails details } || details.GeneratedRom == null)
+            return;
 
-        /// <summary>
-        /// The user has clicked on a quick launch button for a rom
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void LaunchButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is not Button { Tag: MultiplayerGameDetails details })
-                return;
-
-            OpenStatusWindow(details);
-        }
-
-        /// <summary>
-        /// Right click menu to open the folder for a rom
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OpenFolderMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is not MenuItem { Tag: MultiplayerGameDetails details } || details.GeneratedRom == null)
-                return;
-
-            OpenFolder(details.GeneratedRom);
-        }
-
-        /// <summary>
-        /// Menu item for viewing the spoiler log for a rom
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ViewSpoilerMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is not MenuItem { Tag: MultiplayerGameDetails details } || details.GeneratedRom == null)
-                return;
-
-            OpenSpoilerLog(details.GeneratedRom);
-        }
-
-        private void ProgressionLogMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is not MenuItem { Tag: MultiplayerGameDetails details } || details.GeneratedRom == null)
-                return;
-
-            OpenProgressionLog(details.GeneratedRom);
-        }
+        OpenProgressionLog(details.GeneratedRom);
     }
 }

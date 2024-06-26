@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
-using TrackerCouncil.Shared;
+using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.GeneratedData;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.SeedGenerator.Generation;
-using TrackerCouncil.Smz3.Shared;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.Contracts;
 

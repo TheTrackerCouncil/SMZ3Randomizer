@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using TrackerCouncil.Shared;
 using TrackerCouncil.Smz3.Shared;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;

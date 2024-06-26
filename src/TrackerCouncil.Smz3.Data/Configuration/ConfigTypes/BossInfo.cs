@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using TrackerCouncil.Data.Configuration;
 using TrackerCouncil.Smz3.Shared.Enums;
 using YamlDotNet.Serialization;
 

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using TrackerCouncil.Data.Configuration;
 
 namespace TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 

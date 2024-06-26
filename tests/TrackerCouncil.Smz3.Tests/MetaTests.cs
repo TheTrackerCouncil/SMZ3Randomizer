@@ -6,7 +6,6 @@ using FluentAssertions;
 using GitHubReleaseChecker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using TrackerCouncil.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Configuration;
 
 namespace TrackerCouncil.Smz3.Tests;
