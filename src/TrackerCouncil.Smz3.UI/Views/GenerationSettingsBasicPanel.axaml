@@ -1,0 +1,152 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:AvaloniaControls.Controls;assembly=AvaloniaControls"
+             xmlns:viewModels1="clr-namespace:TrackerCouncil.Smz3.Data.ViewModels;assembly=TrackerCouncil.Smz3.Data"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="TrackerCouncil.Smz3.UI.Views.GenerationSettingsBasicPanel"
+             x:DataType="viewModels1:GenerationWindowViewModel"
+             Loaded="Control_OnLoaded">
+  <StackPanel Orientation="Vertical">
+    <controls:CardControl HeaderText="Common" Padding="5">
+      <StackPanel Orientation="Vertical">
+
+        <TextBlock IsVisible="{Binding !IsPlando}">Presets</TextBlock>
+        <Grid IsVisible="{Binding !IsPlando}">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+          </Grid.ColumnDefinitions>
+          <ComboBox Grid.Column="0"
+                    ItemsSource="{Binding Basic.Presets}"
+                    SelectedItem="{Binding Basic.SelectedPreset}"
+                    DisplayMemberBinding="{Binding PresetName}"
+          ></ComboBox>
+          <Button Grid.Column="1"
+                  Margin="5 0 0 0"
+                  Name="ApplyPresetButton"
+                  Click="ApplyPresetButton_OnClick"
+                  IsEnabled="{Binding Basic.CanApplyPreset}"
+          >Apply Preset</Button>
+          <Button Grid.Column="2"
+                  Margin="5 0 0 0"
+                  Name="DeletePresetButton"
+                  Click="DeletePresetButton_OnClick"
+                  IsEnabled="{Binding Basic.CanDeletePreset}"
+          >Delete Preset</Button>
+        </Grid>
+
+        <TextBlock Margin="0 5 0 0" IsVisible="{Binding !IsPlando}">Import Settings</TextBlock>
+        <Grid IsVisible="{Binding !IsPlando}">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+          </Grid.ColumnDefinitions>
+          <TextBox Grid.Column="0" Text="{Binding Basic.ImportString}"></TextBox>
+          <Button Grid.Column="1"
+                  Margin="5 0 0 0"
+                  Name="ImportSeedButton"
+                  Click="ImportSeedButton_OnClick"
+                  IsVisible="{Binding IsSingleplayer}"
+                  IsEnabled="{Binding Basic.CanApplyConfigString}"
+          >Import Settings &amp; Seed Number</Button>
+          <Button Grid.Column="2"
+                  Margin="5 0 0 0"
+                  Name="ImportSettingsButton"
+                  Click="ImportSettingsButton_OnClick"
+                  IsEnabled="{Binding Basic.CanApplyConfigString}"
+          >Import Settings Only</Button>
+        </Grid>
+
+        <TextBlock Margin="0 5 0 0" IsVisible="{Binding CanSetSeed}">Seed</TextBlock>
+        <Grid IsVisible="{Binding CanSetSeed}">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+          </Grid.ColumnDefinitions>
+          <TextBox Grid.Column="0" Text="{Binding Basic.Seed}"></TextBox>
+          <Button Grid.Column="1"
+                  Margin="5 0 0 0"
+                  Name="ClearSeedButton"
+                  Click="ClearSeedButton_OnClick"
+                  IsEnabled="{Binding Basic.CanClearSeed}"
+          >Clear Seed</Button>
+        </Grid>
+
+        <TextBlock Margin="0 5 0 0">Summary</TextBlock>
+        <Grid>
+          <TextBox Height="150" IsReadOnly="True" Text="{Binding Basic.Summary}"></TextBox>
+        </Grid>
+
+      </StackPanel>
+
+    </controls:CardControl>
+
+    <controls:CardControl HeaderText="Basic Customization" Margin="0 5 0 0" Padding="5">
+
+      <StackPanel Orientation="Vertical">
+
+        <Grid ColumnDefinitions="*, *, *" RowDefinitions="Auto, Auto, Auto">
+
+          <TextBlock Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center">Link Sprite</TextBlock>
+          <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Basic.LinkSpriteName}" HorizontalAlignment="Center"></TextBlock>
+          <Button Grid.Column="0" Grid.Row="2" Padding="5" Height="102" Name="LinkSpriteButton" Click="LinkSpriteButton_OnClick" Margin="0, 0, 2.5, 0">
+            <Image Source="{Binding Basic.LinkSpritePath, Converter={StaticResource StringToImageConverter}}" />
+
+          </Button>
+
+          <TextBlock Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center">Samus Sprite</TextBlock>
+          <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Basic.SamusSpriteName}" HorizontalAlignment="Center"></TextBlock>
+          <Button Grid.Column="1" Grid.Row="2" Padding="5" Height="102" Name="SamusSpriteButton" Click="SamusSpriteButton_OnClick" Margin="2.5, 0">
+            <Image Source="{Binding Basic.SamusSpritePath, Converter={StaticResource StringToImageConverter}}" />
+          </Button>
+
+          <TextBlock Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center">Ship Sprite</TextBlock>
+          <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding Basic.ShipSpriteName}" HorizontalAlignment="Center"></TextBlock>
+          <Button Grid.Column="2" Grid.Row="2" Padding="5" Height="102" Name="ShipSpriteButton" Click="ShipSpriteButton_OnClick" Margin="2.5, 0, 0, 0">
+            <Image Source="{Binding Basic.ShipSpritePath, Converter={StaticResource StringToImageConverter}}" Height="92" />
+          </Button>
+
+        </Grid>
+
+        <TextBlock Margin="0 5 0 0">Custom Music Pack</TextBlock>
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBox Grid.Column="0" Name="SelectedMsuTextBox" IsReadOnly="True" Text="{Binding Basic.MsuText}"></TextBox>
+          <StackPanel Grid.Column="1" Orientation="Horizontal"
+                      HorizontalAlignment="Right"
+                      Margin="5 0 0 0">
+            <Button x:Name="SelectMsuButton" Click="SelectMsuButton_OnClick">Select _MSU</Button>
+            <Button x:Name="MsuOptionsButton"
+                    MinWidth="0"
+                    Width="23"
+                    Content="▼"
+                    FontSize="8"
+                    Click="MsuOptionsButton_OnClick"
+                    BorderThickness="0,1,1,1"
+                    Margin="0,0,0,0">
+              <Button.ContextMenu>
+                <ContextMenu>
+                  <MenuItem Header="Pick _Random MSU from List" Name="RandomMsuMenuItem" Click="RandomMsuMenuItem_OnClick"></MenuItem>
+                  <MenuItem Header="Create _Shuffled MSU" Name="ShuffledMsuMenuItem" Click="ShuffledMsuMenuItem_OnClick"></MenuItem>
+                  <MenuItem Header="_Continuously Reshuffle MSU" Name="ContinuousShuffleMsuMenuItem" Click="ContinuousShuffleMsuMenuItem_OnClick"></MenuItem>
+                  <MenuItem Header="Select MSU _File" Name="SelectMsuFileMenuItem" Click="SelectMsuFileMenuItem_OnClick"></MenuItem>
+                  <MenuItem Header="Play _Vanilla Music" Name="VanillaMusicMenuItem" Click="VanillaMusicMenuItem_OnClick"></MenuItem>
+                </ContextMenu>
+              </Button.ContextMenu>
+            </Button>
+          </StackPanel>
+        </Grid>
+        <TextBlock Margin="0 3 0 3" IsVisible="{Binding Basic.IsShuffleStyleVisible}">Shuffle style:</TextBlock>
+        <controls:EnumComboBox
+          Value="{Binding Basic.MsuShuffleStyle, Mode=TwoWay}"
+          EnumType="{Binding Basic.MsuShuffleStyle, Converter={StaticResource TypeConverter}}"
+          IsVisible="{Binding Basic.IsShuffleStyleVisible}" />
+      </StackPanel>
+
+    </controls:CardControl>
+  </StackPanel>
+</UserControl>
+

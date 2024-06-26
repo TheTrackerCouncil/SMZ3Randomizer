@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NHyphenator" Version="2.0.0" />
+    <PackageReference Include="NJsonSchema" Version="11.0.0" />
+    <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.21216.1" />
+    <PackageReference Include="YamlDotNet" Version="15.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TrackerCouncil.Smz3.Data\TrackerCouncil.Smz3.Data.csproj" />
+    <ProjectReference Include="..\TrackerCouncil.Smz3.SeedGenerator\TrackerCouncil.Smz3.SeedGenerator.csproj" />
+    <ProjectReference Include="..\TrackerCouncil.Smz3.Shared\TrackerCouncil.Smz3.Shared.csproj" />
+    <ProjectReference Include="..\TrackerCouncil.Smz3.UI\TrackerCouncil.Smz3.UI.csproj" />
+  </ItemGroup>
+
+</Project>

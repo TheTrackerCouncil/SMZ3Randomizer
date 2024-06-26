@@ -1,0 +1,33 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:avalonia="clr-namespace:DynamicForms.Library.Avalonia;assembly=DynamicForms.Library.Avalonia"
+        xmlns:controls="clr-namespace:AvaloniaControls.Controls;assembly=AvaloniaControls"
+        xmlns:viewModels="clr-namespace:TrackerCouncil.Smz3.Data.ViewModels;assembly=TrackerCouncil.Smz3.Data"
+        mc:Ignorable="d"
+        x:Class="TrackerCouncil.Smz3.UI.Views.OptionsWindow"
+        Title="Options — SMZ3 Cas' Randomizer"
+        Height="500"
+        Width="600"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Icon="/Assets/smz3.ico"
+        x:DataType="viewModels:OptionsWindowViewModel">
+  <LayoutTransformControl x:Name="MainLayout">
+    <Grid RowDefinitions="*, Auto">
+      <ScrollViewer Grid.Row="0">
+        <avalonia:DynamicFormControl Data="{Binding }" Grid.IsSharedSizeScope="True" Margin="0 0 5 0"/>
+      </ScrollViewer>
+      <controls:HeaderFooter Grid.Row="1" Padding="10">
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+          <Button IsDefault="True"
+                  x:Name="OkButton"
+                  Click="OkButton_OnClick">Save Changes</Button>
+        </StackPanel>
+      </controls:HeaderFooter>
+    </Grid>
+  </LayoutTransformControl>
+</Window>
+

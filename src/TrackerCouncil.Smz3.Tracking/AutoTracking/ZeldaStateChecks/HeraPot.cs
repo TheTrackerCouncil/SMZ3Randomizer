@@ -1,0 +1,28 @@
+﻿using TrackerCouncil.Smz3.Abstractions;
+using TrackerCouncil.Smz3.Data.Tracking;
+
+namespace TrackerCouncil.Smz3.Tracking.AutoTracking.ZeldaStateChecks;
+
+/// <summary>
+/// Zelda State check for breaking into the Tower of Hera pot
+/// player is in the pot room and did not get there from falling from the two rooms above it
+/// </summary>
+public class HeraPot : IZeldaStateCheck
+{
+    /// <summary>
+    /// Executes the check for the current state
+    /// </summary>
+    /// <param name="trackerBase">The tracker instance</param>
+    /// <param name="currentState">The current state in Zelda</param>
+    /// <param name="prevState">The previous state in Zelda</param>
+    /// <returns>True if the check was identified, false otherwise</returns>
+    public bool ExecuteCheck(TrackerBase trackerBase, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
+    {
+        if (currentState.CurrentRoom == 167 && prevState.CurrentRoom == 119 && prevState.PreviousRoom != 49)
+        {
+            trackerBase.SayOnce(x => x.AutoTracker.HeraPot);
+            return true;
+        }
+        return false;
+    }
+}

@@ -1,0 +1,151 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:controls="clr-namespace:AvaloniaControls.Controls;assembly=AvaloniaControls"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Height="500" Width="400"
+        Icon="/Assets/smz3.ico"
+        x:Class="TrackerCouncil.Smz3.UI.Views.AutoTrackingHelpWindow"
+        Title="Auto Tracker Help — SMZ3 Cas' Randomizer">
+  <LayoutTransformControl x:Name="MainLayout">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel HorizontalAlignment="Left"
+              Margin="11">
+      <TextBlock
+                Margin="0"
+                FontSize="20"
+                FontWeight="Bold"
+                Text="Auto Tracker Help" />
+
+      <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+        Auto tracker will automatically track cleared locations and picked up items so that you don't have to!
+      </TextBlock>
+
+      <TextBlock
+        FontWeight="Bold"
+        Margin="0,10,0,0"
+        FontSize="16"
+        >
+        Supported Connection Modes
+      </TextBlock>
+
+      <TextBlock FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,5,0,0">
+        • Lua Script
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="15,5,0,0">
+        Supported Emulators:
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="30,5,0,0">
+        • <controls:LinkControl Click="Snes9xButton_OnClick">Snes9x-rr</controls:LinkControl> (recommended)<LineBreak />
+        • <controls:LinkControl Click="BizHawkButton_OnClick">BizHawk</controls:LinkControl> (BSNES Core Only)
+      </TextBlock>
+
+      <TextBlock FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,5,0,0">
+        • QUSB2SNES
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+        Older versions or other emulators may work, but they are currently untested.
+      </TextBlock>
+
+      <TextBlock
+        FontWeight="Bold"
+        Margin="0,10,0,0"
+        FontSize="16"
+        >
+      Enabling Auto Tracking
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+      After you have opened the Tracker window, right click on the link icon (<avalonia:MaterialIcon Kind="Link" /> or <avalonia:MaterialIcon Kind="LinkOff" Foreground="IndianRed"/>) in the status bar to enable auto tracker in the desired connection mode. In the settings you can also set auto tracking to automatically be enabled.
+      </TextBlock>
+
+      <TextBlock
+        FontWeight="Bold"
+        Margin="0,10,0,0"
+        FontSize="14"
+        >
+      Enabling Lua Script in Emulator
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+        1. Locate the auto tracker scripts folder. You can find it by right clicking on the link icon and selecting "Open Auto Tracker Scripts Folder."
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+        2. In your emulator, open the Lua scripting window.
+      </TextBlock>
+      <TextBlock TextWrapping="Wrap" Margin="15,5,0,0">
+        Snes9x-rr: Go to File -> Lua Scripting -> New Lua Script Window.<LineBreak />
+        BizHawk: Go to Tools -> Lua Console.
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+        3. Open the connector.lua script file.
+      </TextBlock>
+
+      <TextBlock
+        FontWeight="Bold"
+        Margin="0,10,0,0"
+        FontSize="16"
+        >
+        Auto Tracker Icons
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+        The link icon color changes based on the following:
+      </TextBlock>
+
+      <StackPanel Orientation="Horizontal"
+                Margin="0,5, 5,0">
+        <avalonia:MaterialIcon Kind="Link" />
+        <TextBlock>
+        Enabled and waiting for a connection with the emulator
+        </TextBlock>
+      </StackPanel>
+
+      <StackPanel Orientation="Horizontal"
+                Margin="0,5,5,0">
+        <avalonia:MaterialIcon Kind="Link" Foreground="LimeGreen"/>
+        <TextBlock>
+        Connected successfully with the emulator
+        </TextBlock>
+      </StackPanel>
+
+      <StackPanel Orientation="Horizontal"
+                Margin="0,5,5,0">
+        <avalonia:MaterialIcon Kind="LinkOff" Foreground="IndianRed"/>
+        <TextBlock>
+        Disabled
+        </TextBlock>
+      </StackPanel>
+
+      <TextBlock
+        FontWeight="Bold"
+        Margin="0,10,0,0"
+        FontSize="16"
+      >
+        Lua Script Errors
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+        If you have an error when running the lua script, then try one of the following:
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+        • If you're using BizHawk, make sure you are set to use luainterface instead nlua.
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+        • Try copying the socket.dll file within the appropriate folder for your emulator and place it within the base directory of your emulator.
+      </TextBlock>
+
+    </StackPanel>
+  </ScrollViewer>
+  </LayoutTransformControl>
+</Window>
+

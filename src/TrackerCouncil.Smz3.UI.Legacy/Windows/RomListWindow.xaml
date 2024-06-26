@@ -1,0 +1,110 @@
+﻿<Window x:Class="TrackerCouncil.Smz3.UI.Legacy.Windows.RomListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:TrackerCouncil.Smz3.UI.Legacy.ViewModels"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance viewModels:GeneratedRomsViewModel, IsDesignTimeCreatable=True}"
+        Loaded="Window_Loaded"
+        Closing="Window_Closing"
+        Title="SMZ3 Cas' Randomizer"
+        Width="{Binding WindowWidth, Mode=TwoWay}"
+        Height="{Binding WindowHeight, Mode=TwoWay}"
+        MinWidth="400"
+        MinHeight="240"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <Border Grid.Row="0"
+            BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+            BorderThickness="0,0,0,1">
+      <Menu>
+        <MenuItem Header="_Tools">
+          <MenuItem Header="_Options..."
+                    x:Name="OptionsMenuItem"
+                    Click="OptionsMenuItem_Click" />
+        </MenuItem>
+        <MenuItem Header="_Help">
+          <MenuItem Header="_About..."
+                    x:Name="AboutMenuItem"
+                    Click="AboutMenuItem_Click" />
+        </MenuItem>
+      </Menu>
+    </Border>
+
+    <Border Grid.Row="1" Margin="0 0 0 11"
+            Name="UpdateNotificationBorder"
+            Padding="0"
+            Visibility="Collapsed"
+            Background="{DynamicResource {x:Static SystemColors.InfoBrushKey}}"
+            BorderBrush="{DynamicResource {x:Static SystemColors.InfoTextBrushKey}}"
+            BorderThickness="0 0 0 1"
+            CornerRadius="2">
+      <StackPanel Orientation="Vertical">
+
+        <Button Name="CloseUpdateNotificationButton"
+                Width="8" MinWidth="8"
+                Height="12" MinHeight="12"
+                Padding="0"
+                Margin="0 -3 0 0"
+                HorizontalAlignment="Right"
+                FontSize="10"
+                Style="{StaticResource ImageButton}"
+                Click="CloseUpdateNotificationButton_OnClick"
+        >
+          x
+        </Button>
+
+        <TextBlock TextWrapping="Wrap"
+                   Foreground="{DynamicResource {x:Static SystemColors.InfoTextBrushKey}}"
+                   Margin="8 0 8 8 ">
+          A new version of SMZ3 is now available!
+          <Hyperlink
+            Name="UpdateNotificationHyperlink"
+            NavigateUri="https://github.com/TheTrackerCouncil/SMZ3Randomizer"
+            RequestNavigate="UpdateNotificationHyperlink_OnRequestNavigate">
+            Click here to go to the download page.
+          </Hyperlink>
+        </TextBlock>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 0 3 3">
+
+          <TextBlock FontSize="10" Margin="0 0 10 0">
+            <Hyperlink
+              Name="IgnoreVersionHyperlink"
+              NavigateUri="https://github.com/TheTrackerCouncil/SMZ3Randomizer"
+              RequestNavigate="IgnoreVersionHyperlink_OnRequestNavigate">
+              Ignore this Version
+            </Hyperlink>
+          </TextBlock>
+          <TextBlock FontSize="10">
+            <Hyperlink
+              Name="StopUpdateCheckHyperlink"
+              NavigateUri="https://github.com/TheTrackerCouncil/SMZ3Randomizer"
+              RequestNavigate="StopUpdateCheckHyperlink_OnRequestNavigate">
+              Don't Check for Updates
+            </Hyperlink>
+          </TextBlock>
+        </StackPanel>
+
+      </StackPanel>
+
+    </Border>
+
+    <TabControl Grid.Row="2">
+      <TabItem Header="Singleplayer" >
+        <DockPanel Name="SoloTab"></DockPanel>
+      </TabItem>
+      <TabItem Header="Multiplayer">
+        <DockPanel Name="MultiTab"></DockPanel>
+      </TabItem>
+    </TabControl>
+  </Grid>
+</Window>

@@ -1,26 +1,26 @@
 $parentFolder = Split-Path -parent $PSScriptRoot
 
 # Get publish folder
-$folder = "$parentFolder\src\Randomizer.CrossPlatform\bin\Release\net8.0\linux-x64\publish"
-$winFolder = "$parentFolder\src\Randomizer.CrossPlatform\bin\Release\net8.0\win-x86\publish"
+$folder = "$parentFolder\src\TrackerCouncil.Smz3.UI\bin\Release\net8.0\linux-x64\publish"
+$winFolder = "$parentFolder\src\TrackerCouncil.Smz3.UI\bin\Release\net8.0\win-x86\publish"
 if (-not (Test-Path $folder))
 {
-    $folder = "$parentFolder\src\Randomizer.CrossPlatform\bin\Release\net8.0\publish\linux-x64"
-    $winFolder = "$parentFolder\src\Randomizer.CrossPlatform\bin\Release\net8.0\publish\win-x86"
+    $folder = "$parentFolder\src\TrackerCouncil.Smz3.UI\bin\Release\net8.0\publish\linux-x64"
+    $winFolder = "$parentFolder\src\TrackerCouncil.Smz3.UI\bin\Release\net8.0\publish\win-x86"
 }
 
-# Get version number from Randomizer.App
+# Get version number from TrackerCouncil.Smz3.UI
 $version = "0.0.0"
-if (Test-Path "$winFolder\Randomizer.App.exe") {
-    $version = (Get-Item "$winFolder\Randomizer.App.exe").VersionInfo.ProductVersion
+if (Test-Path "$winFolder\TrackerCouncil.Smz3.UI.exe") {
+    $version = (Get-Item "$winFolder\SMZ3CasRandomizer.exe").VersionInfo.ProductVersion
 }
 else {
-    $version = (Get-Item "$folder\Randomizer.App.dll").VersionInfo.ProductVersion
+    $version = (Get-Item "$folder\SMZ3CasRandomizer.dll").VersionInfo.ProductVersion
 }
 $version = $version -replace "\+.*", ""
 
 # Copy the README.md
-Copy-Item "$parentFolder\src\Randomizer.CrossPlatform\README.md" -Destination "$folder"
+Copy-Item "$parentFolder\src\TrackerCouncil.Smz3.UI\README.md" -Destination "$folder"
 
 # Copy sprites to be bundled together
 if (Test-Path -LiteralPath "$folder\Sprites") {
@@ -33,12 +33,6 @@ if (Test-Path -LiteralPath "$folder\Configs") {
     Remove-Item -LiteralPath "$folder\Configs" -Recurse
 }
 Copy-Item "$parentFolder\configs\Profiles\" -Destination "$folder\Configs" -Recurse
-
-# Create dupes of Randomizer.App as SMZ3CasRandomizer
-Get-ChildItem -Filter "Randomizer.App*" -Path "$folder" | ForEach-Object {
-    $newFileName = $_.Name -replace "Randomizer.App", "SMZ3CasRandomizer"
-    Copy-Item -Path $_.FullName -Destination "$folder\$newFileName"
-}
 
 # Create package
 $fullVersion = "SMZ3CasRandomizerLinux_$version"

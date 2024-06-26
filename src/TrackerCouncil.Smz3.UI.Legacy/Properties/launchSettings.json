@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "TrackerCouncil.Smz3.UI.Legacy": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
