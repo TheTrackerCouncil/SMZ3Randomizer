@@ -8,19 +8,20 @@ Link to the Past Crossover Randomizer](https://samus.link/). Originally created 
 
 A Windows installer for latest version of the **SMZ3 Cas’ Randomizer** can be 
 found on the [GitHub releases] page. Linux and Mac versions are also available
-with slightly limited functionality
+with slightly limited functionality.
 
 ## Features
 In addition to making IBJ completely optional, there is also:
 
  - Integrated voice-enabled/automated item & location tracker;
  - Built-in MSU-1 support for custom music packs;
- - Customizabale logic for either casual or advanced play;
+ - Customizable logic for either casual or advanced play;
  - Various accessibility and quality of life patches;
  - Customizable ship sprites;
  - Patches for modern Super Metroid controls;
  - In game hint tiles and voice-enabled hints via tracker;
  - Basic Twitch integration for tracker responding to chat;
+ - Multiworld support with individual player logic and game settings;
  - Sprites made by members of [Diabetus’](https://twitch.tv/the_betus) community and others;
 
  **Note**: Voice recognition and text-to-speech functionality is currently only available on Windows.
