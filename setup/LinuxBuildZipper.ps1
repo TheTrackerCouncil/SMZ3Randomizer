@@ -19,9 +19,6 @@ else {
 }
 $version = $version -replace "\+.*", ""
 
-# Copy the README.md
-Copy-Item "$parentFolder\src\TrackerCouncil.Smz3.UI\README.md" -Destination "$folder"
-
 # Copy sprites to be bundled together
 if (Test-Path -LiteralPath "$folder\Sprites") {
     Remove-Item -LiteralPath "$folder\Sprites" -Recurse

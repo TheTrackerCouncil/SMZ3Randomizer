@@ -3,9 +3,15 @@
              xmlns:converters="clr-namespace:AvaloniaControls.Converters;assembly=AvaloniaControls"
              xmlns:ui="clr-namespace:TrackerCouncil.Smz3.UI"
              x:Class="TrackerCouncil.Smz3.UI.App"
+             Name="SMZ3 Cas' Randomizer"
              RequestedThemeVariant="Dark">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
+    <NativeMenu.Menu>
+      <NativeMenu>
+        <NativeMenuItem Header="About SMZ3 Cas' Randomizer" Click="NativeMenuItem_OnClick"></NativeMenuItem>
+      </NativeMenu>
+    </NativeMenu.Menu>
     <Application.DataTemplates>
         <ui:ViewLocator/>
     </Application.DataTemplates>

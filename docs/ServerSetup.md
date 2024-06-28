@@ -4,8 +4,8 @@ The SMZ3 Cas' Multiplayer server is built as a cross platform SignalR .NET appli
 
 ## Prerequisites
 
-- ASP.NET Core 6
-- .NET Core 6
+- ASP.NET Core 8
+- .NET Core 8
 - IIS, Nginx, or similar to use as a proxy (recommended)
 
 ## appsettings.json
@@ -78,11 +78,11 @@ If you want people to be able to directly access the server without any sort of 
 To run the server you will need to run one of the following commands, depending on your environment:
 
 ```
-Randomizer.Multiplayer.Server.exe
+TrackerCouncil.Smz3.Multiplayer.Server.exe
 ```
 
 or
 
 ```
-dotnet Randomizer.Multiplayer.Server.dll
+dotnet TrackerCouncil.Smz3.Multiplayer.Server.dll
 ```
