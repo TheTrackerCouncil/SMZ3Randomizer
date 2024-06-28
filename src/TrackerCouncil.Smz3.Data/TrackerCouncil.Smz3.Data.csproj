@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DocumentationFile>bin\Debug\net7.0\TrackerCouncil.Smz3.Data.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="maps.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="maps.json" />
+    <EmbeddedResource Include="Options\ItemSettingOptions.yml" />
+    <EmbeddedResource Include="WorldData\VisibleItems.yml" />
+    <None Remove="Configuration\Yaml\ui.yml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MattEqualsCoder.DynamicForms.Core" Version="0.0.3-rc.1" />
+    <PackageReference Include="MattEqualsCoder.GitHubReleaseChecker" Version="1.1.2" />
+    <PackageReference Include="MattEqualsCoder.MSURandomizer.Library" Version="2.1.0" />
+    <PackageReference Include="NAudio.Wasapi" Version="2.2.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="YamlDotNet" Version="15.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TrackerCouncil.Smz3.Chat.Integration\TrackerCouncil.Smz3.Chat.Integration.csproj" />
+    <ProjectReference Include="..\TrackerCouncil.Smz3.Shared\TrackerCouncil.Smz3.Shared.csproj" />
+  </ItemGroup>
+
+  <!--<ItemGroup>
+    <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
+  </ItemGroup>-->
+
+</Project>

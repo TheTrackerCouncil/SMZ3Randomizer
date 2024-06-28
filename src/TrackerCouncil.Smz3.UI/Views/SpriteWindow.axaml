@@ -1,0 +1,111 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:AvaloniaControls.Controls;assembly=AvaloniaControls"
+        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:viewModels="clr-namespace:TrackerCouncil.Smz3.Data.ViewModels;assembly=TrackerCouncil.Smz3.Data"
+        mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="600"
+        Width="1100" Height="600"
+        x:Class="TrackerCouncil.Smz3.UI.Views.SpriteWindow"
+        WindowStartupLocation="CenterOwner"
+        Loaded="Control_OnLoaded"
+        Closing="Window_OnClosing"
+        Title="Sprites — SMZ3 Cas' Randomizer"
+        Icon="/Assets/smz3.ico"
+        x:DataType="viewModels:SpriteWindowViewModel">
+  <LayoutTransformControl x:Name="MainLayout">
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"></RowDefinition>
+        <RowDefinition Height="*"></RowDefinition>
+      </Grid.RowDefinitions>
+
+      <controls:HeaderFooter Grid.Row="0"
+              BorderSize="0 0 0 2"
+              Padding="5">
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+          </Grid.ColumnDefinitions>
+          <StackPanel Grid.Column="0" Orientation="Vertical">
+            <TextBlock>Search</TextBlock>
+            <TextBox Name="SearchTextBox" KeyUp="SearchTextBox_OnKeyUp" Text="{Binding SearchText}"></TextBox>
+          </StackPanel>
+
+          <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10 0 0 0">
+            <TextBlock>Filter</TextBlock>
+            <controls:EnumComboBox
+              EnumType="{Binding SpriteFilter, Converter={StaticResource TypeConverter}}"
+              Value="{Binding SpriteFilter, Mode=TwoWay}"
+              MinWidth="150"
+              ValueChanged="EnumComboBox_OnValueChanged"
+              x:Name="FilterComboBox"
+            />
+          </StackPanel>
+        </Grid>
+      </controls:HeaderFooter>
+
+      <ScrollViewer Grid.Row="1">
+        <ItemsControl x:Name="SpritesItemControl" ItemsSource="{Binding Sprites}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <WrapPanel Orientation="Horizontal"/>
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Border IsVisible="{Binding Display}">
+                  <Grid Margin="25" Width="{Binding PanelWidth}">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="{Binding ImageWidth}"></ColumnDefinition>
+                      <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <controls:ImageButton Grid.Column="0"
+                            x:Name="PreviewImageButton"
+                            Click="SelectButton_OnClick"
+                            Tag="{Binding}"
+                    >
+                      <Image Source="{Binding PreviewPath, Converter={StaticResource StringToImageConverter}}" Width="{Binding ImageWidth}" Height="{Binding ImageHeight}" />
+                    </controls:ImageButton>
+
+                    <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10 0 0 0" VerticalAlignment="Center">
+                      <Grid>
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="Auto"></ColumnDefinition>
+                          <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <controls:ImageButton Grid.Column="0"
+                                Margin="0 4 5 0"
+                                x:Name="ToggleFavoriteButton"
+                                Click="ToggleFavoriteButton_OnClick"
+                                Tag="{Binding}"
+                                IsVisible="{Binding CanFavoriteAndHide}"
+                        >
+                          <StackPanel Orientation="Horizontal">
+                            <avalonia:MaterialIcon Kind="Star" VerticalAlignment="Top" Tag="False" HorizontalAlignment="Left" Width="15" Foreground="Gray" Opacity="0.5" IsVisible="{Binding IsNotFavorite}" />
+                            <avalonia:MaterialIcon Kind="Star" VerticalAlignment="Top" Tag="True" HorizontalAlignment="Left" Width="15" Foreground="Goldenrod" IsVisible="{Binding IsFavorite}" />
+                          </StackPanel>
+                        </controls:ImageButton>
+                        <TextBlock Grid.Column="1" Text="{Binding Name}" FontWeight="Bold" FontSize="16" TextWrapping="Wrap"></TextBlock>
+                      </Grid>
+                      <TextBlock TextWrapping="Wrap" Margin="20 0 0 10" Text="{Binding AuthorText}"></TextBlock>
+                      <StackPanel Orientation="Horizontal">
+                        <Button Name="SelectButton" Margin="0 0 10 0" Tag="{Binding }" Click="SelectButton_OnClick">Select</Button>
+                        <Button Name="HideButton" Tag="{Binding}" Click="HideButton_OnClick" IsVisible="{Binding CanFavoriteAndHide}">Hide</Button>
+                      </StackPanel>
+                    </StackPanel>
+
+                  </Grid>
+                </Border>
+
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+  </LayoutTransformControl>
+</Window>
+

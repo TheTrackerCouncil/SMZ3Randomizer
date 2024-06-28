@@ -1,0 +1,136 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:AvaloniaControls.Controls;assembly=AvaloniaControls"
+        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:viewModels="clr-namespace:TrackerCouncil.Smz3.UI.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="TrackerCouncil.Smz3.UI.Views.TrackerWindow"
+        x:DataType="viewModels:TrackerWindowViewModel"
+        Title="Tracker — SMZ3 Cas' Randomizer"
+        Loaded="Control_OnLoaded"
+        Closing="Window_OnClosing"
+        Icon="/Assets/smz3.ico">
+  <LayoutTransformControl x:Name="MainLayout">
+    <Grid RowDefinitions="Auto, *, Auto">
+      <controls:HeaderFooter Grid.Row="0" BorderSize="0 0 0 2">
+        <Menu FontSize="12">
+          <MenuItem Header="_File">
+            <MenuItem Header="_Load saved state..."
+                      x:Name="LoadSavedStateMenuItem"
+                      Click="LoadSavedStateMenuItem_OnClick" />
+            <MenuItem Header="_Save state..."
+                      x:Name="SaveStateMenuItem"
+                      Click="SaveStateMenuItem_OnClick" />
+          </MenuItem>
+          <MenuItem Header="_View">
+            <MenuItem Header="_Locations"
+                      x:Name="LocationsMenuItem"
+                      Click="LocationsMenuItem_OnClick" />
+            <MenuItem Header="_Map"
+                      x:Name="MapMenuItem"
+                      Click="MapMenuItem_OnClick" />
+            <MenuItem Header="_Current Song"
+                      x:Name="CurrentSongMenuItem"
+                      Click="CurrentSongMenuItem_OnClick" />
+            <MenuItem Header="_Tracker Help"
+                      x:Name="TrackerHelpMenuItem"
+                      Click="TrackerHelpMenuItem_OnClick" />
+            <MenuItem Header="_Auto Tracker Help"
+                      x:Name="AutoTrackerMenuItem"
+                      Click="AutoTrackerMenuItem_OnClick" />
+          </MenuItem>
+          <MenuItem Header="_Layouts"
+                    Name="LayoutMenu">
+          </MenuItem>
+        </Menu>
+      </controls:HeaderFooter>
+      <DockPanel Grid.Row="1" Background="{Binding Background}">
+        <Panel Name="MainPanel" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5"></Panel>
+      </DockPanel>
+      <controls:HeaderFooter Grid.Row="2" Background="{Binding StatusBarBackground}" BorderSize="0">
+        <Border BorderThickness="0 2 0 0" BorderBrush="{Binding StatusBarBorder}">
+          <StackPanel Orientation="Horizontal" Margin="5">
+
+            <StackPanel Orientation="Horizontal"
+                        PointerPressed="TimeTextBlock_OnPointerPressed"
+                        ToolTip.Tip="Elapsed time. Right click to pause/resume. Double click to reset."
+                        Background="Transparent"
+            >
+              <avalonia:MaterialIcon Kind="Clock" Height="16"/>
+              <TextBlock Name="TimeTextBlock"
+                         Text="{Binding TimeString}"
+                         Margin="3 3 0 0"
+                         FontFamily="Consolas,Monospace,Courier"
+                         VerticalAlignment="Bottom"
+                         Background="Transparent"
+              ></TextBlock>
+            </StackPanel>
+
+            <controls:ImageButton Cursor="Hand" Margin="10 0 0 0" Background="Transparent">
+              <controls:ImageButton.ContextMenu>
+                <ContextMenu>
+                  <MenuItem Header="Disable Auto Tracker" Name="DisableAutoTrackerMenuItem" Click="DisableAutoTrackerMenuItem_OnClick">
+                    <MenuItem.Icon>
+                      <Image Width="16" Height="16" Source="avares://SMZ3CasRandomizer/Assets/check.png" IsVisible="{Binding IsDisabledConnector}" />
+                    </MenuItem.Icon>
+                  </MenuItem>
+                  <MenuItem Header="SNI Auto Tracker" Name="SniMenuItem" Click="SniMenuItem_OnClick">
+                    <MenuItem.Icon>
+                      <Image Width="16" Height="16" Source="avares://SMZ3CasRandomizer/Assets/check.png" IsVisible="{Binding IsSniConnector}" />
+                    </MenuItem.Icon>
+                  </MenuItem>
+                  <MenuItem Header="USB2SNES Auto Tracker" Name="Usb2SnesMenuItem" Click="Usb2SnesMenuItem_OnClick">
+                    <MenuItem.Icon>
+                      <Image Width="16" Height="16" Source="avares://SMZ3CasRandomizer/Assets/check.png" IsVisible="{Binding IsUsb2SnesConnector}" />
+                    </MenuItem.Icon>
+                  </MenuItem>
+                  <MenuItem Header="Lua Auto Tracker" Name="LuaMenuItem" Click="LuaMenuItem_OnClick">
+                    <MenuItem.Icon>
+                      <Image Width="16" Height="16" Source="avares://SMZ3CasRandomizer/Assets/check.png" IsVisible="{Binding IsLuaConnector}" />
+                    </MenuItem.Icon>
+                  </MenuItem>
+                  <MenuItem Header="Lua Auto Tracker (Crowd Control Script)" Name="CrowdControlMenuItem" Click="CrowdControlMenuItem_OnClick">
+                    <MenuItem.Icon>
+                      <Image Width="16" Height="16" Source="avares://SMZ3CasRandomizer/Assets/check.png" IsVisible="{Binding IsLuaCrowdControlConnector}" />
+                    </MenuItem.Icon>
+                  </MenuItem>
+                  <MenuItem Header="Lua Auto Tracker (EmoTracker Script)" Name="EmoTrackerMenuItem" Click="EmoTrackerMenuItem_OnClick">
+                    <MenuItem.Icon>
+                      <Image Width="16" Height="16" Source="avares://SMZ3CasRandomizer/Assets/check.png" IsVisible="{Binding IsLuaEmoTrackerConnector}" />
+                    </MenuItem.Icon>
+                  </MenuItem>
+                  <MenuItem Header="Show Auto Tracker Scripts Folder" Name="OpenFolderMenuItem" Click="OpenFolderMenuItem_OnClick"></MenuItem>
+                  <MenuItem Header="Show Auto Tracker Help" Name="AutoTrackerHelp" Click="AutoTrackerMenuItem_OnClick"></MenuItem>
+                </ContextMenu>
+              </controls:ImageButton.ContextMenu>
+              <avalonia:MaterialIcon Kind="{Binding ConnectedIcon}" Height="16" Background="Transparent" Foreground="{Binding ConnectedColor}"/>
+            </controls:ImageButton>
+
+            <StackPanel Orientation="Horizontal" Margin="10 0 0 0"
+                        IsVisible="{Binding IsInGoMode}"
+            >
+              <avalonia:MaterialIcon Kind="PlayCircle"></avalonia:MaterialIcon>
+              <TextBlock FontWeight="Bold" Margin="3 0 0 0">GO MODE</TextBlock>
+            </StackPanel>
+
+            <StackPanel IsVisible="{Binding ShowSpeechRecognition}"
+                        Margin="10 0 0 0"
+                        Orientation="Horizontal"
+                        Background="Transparent"
+                        ToolTip.Tip="{Binding SpeechToolTip}"
+                        PointerPressed="SpeechRecognition_OnPointerPressed"
+            >
+              <avalonia:MaterialIcon Background="Transparent" Kind="{Binding SpeechIcon}"></avalonia:MaterialIcon>
+              <TextBlock Text="{Binding SpeechConfidence}" Background="Transparent" Margin="0 0 10 0"></TextBlock>
+              <TextBlock Text="{Binding SpeechPhrase}" Background="Transparent"></TextBlock>
+            </StackPanel>
+
+          </StackPanel>
+        </Border>
+      </controls:HeaderFooter>
+    </Grid>
+  </LayoutTransformControl>
+</Window>
+

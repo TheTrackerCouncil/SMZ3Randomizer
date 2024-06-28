@@ -1,0 +1,49 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:AvaloniaControls.Controls;assembly=AvaloniaControls"
+        xmlns:views="clr-namespace:TrackerCouncil.Smz3.UI.Views"
+        mc:Ignorable="d"
+        Width="500"
+        Height="145"
+        WindowStartupLocation="CenterOwner"
+        x:Class="TrackerCouncil.Smz3.UI.Views.ProgressWindow"
+        x:DataType="views:ProgressWindowViewModel"
+        Closing="Window_OnClosing"
+        Icon="/Assets/smz3.ico"
+        Title="SMZ3 Cas' Randomizer">
+  <LayoutTransformControl Name="MainLayout">
+    <Grid RowDefinitions="Auto,*,Auto,Auto,*,Auto">
+
+      <TextBlock x:Name="MainInstructionText"
+                 FontSize="12"
+                 Margin="11"
+                 Text="{Binding MainText}"
+                 Grid.Row="0"></TextBlock>
+      <TextBlock x:Name="TimeElapsedText"
+                 Margin="11,7"
+                 Text="{Binding Elapsed}"
+                 Grid.Row="2"></TextBlock>
+      <ProgressBar x:Name="MainProgressBar"
+                   Margin="11,0"
+                   VerticalAlignment="Center"
+                   Height="23"
+                   Minimum="0"
+                   Maximum="1"
+                   Value="{Binding Percentage}"
+                   Grid.Row="3" />
+      <controls:HeaderFooter
+              Padding="5"
+              Grid.Row="5">
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+          <Button x:Name="CancelButton"
+                  Click="CancelButton_OnClick"
+                  IsCancel="True">Cancel</Button>
+        </StackPanel>
+      </controls:HeaderFooter>
+    </Grid>
+  </LayoutTransformControl>
+</Window>
+
