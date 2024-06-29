@@ -347,3 +347,4 @@ healthchecksdb
 /asar/
 setup/Output/
 patch-config*
+**/.DS_Store

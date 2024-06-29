@@ -109,6 +109,7 @@ public class GitHubConfigDownloaderService : IGitHubConfigDownloaderService
 
         CopyFolder(source, _targetDirectory);
         Directory.Delete(source, true);
+        _logger.LogInformation("Copied default config folder");
     }
 
     private async Task<string?> DownloadFileAsync(GitHubReleaseAsset asset)

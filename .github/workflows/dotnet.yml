@@ -80,3 +80,48 @@ jobs:
       with:
         path: "setup/Output/*"
         name: SMZ3CasRandomizer_${{ steps.version.outputs.number }}
+  build-mac:
+    runs-on: macos-latest
+    if: ${{ github.event_name != 'pull_request' }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Download config repo
+      uses: actions/checkout@v4
+      with:
+        repository: TheTrackerCouncil/SMZ3CasConfigs
+        path: configs
+        ref: main
+    - name: Download sprite repo
+      uses: actions/checkout@v4
+      with:
+        repository: TheTrackerCouncil/SMZ3CasSprites
+        path: sprites
+        ref: main
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies
+      run: dotnet restore src/TrackerCouncil.Smz3.UI/TrackerCouncil.Smz3.UI.csproj
+    - name: Build
+      run: dotnet build --no-restore -p:PostBuildEvent= src/TrackerCouncil.Smz3.UI/TrackerCouncil.Smz3.UI.csproj
+    - name: Publish
+      run: dotnet publish -r osx-arm64 --configuration Release -p:UseAppHost=true src/TrackerCouncil.Smz3.UI/TrackerCouncil.Smz3.UI.csproj
+    - name: Get version number
+      id: version
+      run: |
+        $version = (Get-Item "src\TrackerCouncil.Smz3.UI\bin\Release\net8.0\osx-arm64\publish\SMZ3CasRandomizer.dll").VersionInfo.ProductVersion
+        $version = $version -replace "\+.*", ""
+        $versionShort = $version -replace "\-.*", ""
+        (Get-Content setup/Info.plist).Replace('%FULL_VERSION%', $version).Replace('%SHORT_VERSION%', $versionShort) | Set-Content setup/Info.plist
+        Write-Output "number=$version" >> $env:GITHUB_OUTPUT
+      shell: pwsh
+    - name: Prepare packaging script
+      run: |
+        chmod +x ./setup/package-macos-app.sh
+        ./setup/package-macos-app.sh "${{ steps.version.outputs.number }}"
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        path: "setup/output/*"
+        name: SMZ3CasRandomizerMacOS_${{ steps.version.outputs.number }}

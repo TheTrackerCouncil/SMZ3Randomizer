@@ -133,7 +133,6 @@ public class Sprite : IEquatable<Sprite>
 
             return path;
 #else
-
             return Path.Combine(AppContext.BaseDirectory, "Sprites");
 #endif
         }
