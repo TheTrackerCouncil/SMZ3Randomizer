@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Randomizer.Data.Graph
+namespace TrackerCouncil.Smz3.Data.Graph
 {
     public class Area
     {
