@@ -9,7 +9,7 @@ public class CentralCrateria : Region
     {
         Rooms = new List<Room>
         {
-            new Room(
+            new(
                 name: "Parlor and Alcatraz",
                 exits: new Dictionary<Exit, ExitType>
                 {
@@ -22,14 +22,14 @@ public class CentralCrateria : Region
                     { Exit.CrateriaParlorAndAlcatrazBottomRight, ExitType.RedDoor }
                 }
             ),
-            new Room(
+            new(
                 name: "Crateria Save Room",
                 exits: new Dictionary<Exit, ExitType>
                 {
                     { Exit.CrateriaSaveRoomRight, ExitType.BlueDoor }
                 }
             ),
-            new Room(
+            new(
                 name: "The Final Missile",
                 exits: new Dictionary<Exit, ExitType>
                 {
@@ -37,14 +37,14 @@ public class CentralCrateria : Region
                 },
                 locations: new List<Location>
                 {
-                    new Location(
+                    new(
                         id: LocationId.CrateriaFinalMissile,
                         name: "Missile (Crateria middle)",
                         vanillaItem: ItemType.Missile
                     )
                 }
             ),
-            new Room(
+            new(
                 name: "Final Missile Bombway",
                 exits: new Dictionary<Exit, ExitType>
                 {
@@ -52,7 +52,7 @@ public class CentralCrateria : Region
                     { Exit.CrateriaFinalMissileBombwayRight, ExitType.BlueDoor }
                 }
             ),
-            new Room(
+            new(
                 name: "Flyway",
                 exits: new Dictionary<Exit, ExitType>
                 {
@@ -60,7 +60,7 @@ public class CentralCrateria : Region
                     { Exit.CrateriaFlywayRight, ExitType.RedDoor }
                 }
             ),
-            new Room(
+            new(
                 name: "Bomb Torizo Room",
                 exits: new Dictionary<Exit, ExitType>
                 {
@@ -68,14 +68,14 @@ public class CentralCrateria : Region
                 },
                 locations: new List<Location>
                 {
-                    new Location(
+                    new(
                         id: LocationId.CrateriaBombTorizo,
                         name: "Bomb Torizo",
                         vanillaItem: ItemType.Bombs
                     )
                 }
             ),
-            new Room(
+            new(
                 name: "Pre-Map Flyway",
                 exits: new Dictionary<Exit, ExitType>
                 {
@@ -83,14 +83,14 @@ public class CentralCrateria : Region
                     { Exit.CrateriaPreMapFlywayRight, ExitType.BlueDoor }
                 }
             ),
-            new Room(
+            new(
                 name: "Crateria Map Room",
                 exits: new Dictionary<Exit, ExitType>
                 {
                     { Exit.CrateriaMapRoomLeft, ExitType.BlueDoor }
                 }
             ),
-            new Room(
+            new(
                 name: "Climb",
                 exits: new Dictionary<Exit, ExitType>
                 {
@@ -101,7 +101,7 @@ public class CentralCrateria : Region
                     { Exit.CrateriaClimbBottomRight, ExitType.BlueDoor }
                 }
             ),
-            new Room(
+            new(
                 name: "Crateria Super Room",
                 exits: new Dictionary<Exit, ExitType>
                 {
@@ -109,7 +109,7 @@ public class CentralCrateria : Region
                     { Exit.CrateriaSuperRoomBottomLeft, ExitType.BlueDoor }
                 }
             ),
-            new Room(
+            new(
                 name: "Pit Room",
                 exits: new Dictionary<Exit, ExitType>
                 {
@@ -120,14 +120,14 @@ public class CentralCrateria : Region
                 },
                 locations: new List<Location>
                 {
-                    new Location(
+                    new(
                         id: LocationId.CrateriaPit,
                         name: "Missile (Crateria bottom)",
                         vanillaItem: ItemType.Missile
                     )
                 }
             ),
-            new Room(
+            new(
                 name: "Blue Brinstar Elevator Room",
                 exits: new Dictionary<Exit, ExitType>
                 {
@@ -135,7 +135,7 @@ public class CentralCrateria : Region
                     { Exit.CrateriaBlueBrinstarElevatorRoomDown, ExitType.Elevator }
                 }
             ),
-            new Room(
+            new(
                 name: "Landing Site",
                 exits: new Dictionary<Exit, ExitType>
                 {
@@ -145,7 +145,7 @@ public class CentralCrateria : Region
                     { Exit.CrateriaLandingSiteBottomRight, ExitType.GreenDoor }
                 }
             ),
-            new Room(
+            new(
                 name: "Crateria Power Bomb Room",
                 exits: new Dictionary<Exit, ExitType>
                 {
@@ -153,14 +153,14 @@ public class CentralCrateria : Region
                 },
                 locations: new List<Location>
                 {
-                    new Location(
+                    new(
                         id: LocationId.CrateriaPowerBomb,
                         name: "Power Bomb (Crateria surface)",
                         vanillaItem: ItemType.PowerBomb
                     )
                 }
             ),
-            new Room(
+            new(
                 name: "Crateria Tube",
                 exits: new Dictionary<Exit, ExitType>
                 {
@@ -168,7 +168,7 @@ public class CentralCrateria : Region
                     { Exit.CrateriaTubeRight, ExitType.Open }
                 }
             ),
-            new Room(
+            new(
                 name: "Crateria Kihunter Room",
                 exits: new Dictionary<Exit, ExitType>
                 {
@@ -177,7 +177,7 @@ public class CentralCrateria : Region
                     { Exit.CrateriaKihunterRoomDown, ExitType.YellowDoor }
                 }
             ),
-            new Room(
+            new(
                 name: "Red Brinstar Elevator Room",
                 exits: new Dictionary<Exit, ExitType>
                 {

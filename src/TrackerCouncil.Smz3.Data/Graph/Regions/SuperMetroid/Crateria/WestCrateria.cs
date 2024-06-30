@@ -9,7 +9,7 @@ public class WestCrateria : Region
     {
         Rooms = new List<Room>
         {
-            new Room(
+            new(
                 name: "Gauntlet Energy Tank Room",
                 exits: new Dictionary<Exit, ExitType>
                 {
@@ -18,14 +18,14 @@ public class WestCrateria : Region
                 },
                 locations: new List<Location>
                 {
-                    new Location(
+                    new(
                         id: LocationId.CrateriaGauntletEnergyTank,
                         name: "Energy Tank, Gauntlet",
                         vanillaItem: ItemType.ETank
                     )
                 }
             ),
-            new Room(
+            new(
                 name: "Gauntlet Entrance",
                 exits: new Dictionary<Exit, ExitType>
                 {
@@ -33,7 +33,7 @@ public class WestCrateria : Region
                     { Exit.CrateriaGauntletEntranceRight, ExitType.BlueDoor }
                 }
             ),
-            new Room(
+            new(
                 name: "Green Brinstar Elevator Room",
                 exits: new Dictionary<Exit, ExitType>
                 {
@@ -41,7 +41,7 @@ public class WestCrateria : Region
                     { Exit.CrateriaGreenBrinstarElevatorRoomRight, ExitType.BlueDoor }
                 }
             ),
-            new Room(
+            new(
                 name: "Green Pirates Shaft",
                 exits: new Dictionary<Exit, ExitType>
                 {
@@ -52,19 +52,19 @@ public class WestCrateria : Region
                 },
                 locations: new List<Location>
                 {
-                    new Location(
+                    new(
                         id: LocationId.CrateriaGauntletShaftLeft,
                         name: "Gauntlet Shaft Left",
                         vanillaItem: ItemType.Missile
                     ),
-                    new Location(
+                    new(
                         id: LocationId.CrateriaGauntletShaftRight,
                         name: "Gauntlet Shaft Right",
                         vanillaItem: ItemType.Missile
                     )
                 }
             ),
-            new Room(
+            new(
                 name: "Mushroom Kingdom",
                 exits: new Dictionary<Exit, ExitType>
                 {
@@ -72,7 +72,7 @@ public class WestCrateria : Region
                     { Exit.CrateriaMushroomKingdomRight, ExitType.BlueDoor }
                 }
             ),
-            new Room(
+            new(
                 name: "Statues Room",
                 exits: new Dictionary<Exit, ExitType>
                 {
@@ -80,7 +80,7 @@ public class WestCrateria : Region
                     { Exit.CrateriaStatuesRoomDown, ExitType.Elevator }
                 }
             ),
-            new Room(
+            new(
                 name: "Statues Hallway",
                 exits: new Dictionary<Exit, ExitType>
                 {
@@ -88,7 +88,7 @@ public class WestCrateria : Region
                     { Exit.CrateriaStatuesHallwayRight, ExitType.BlueDoor }
                 }
             ),
-            new Room(
+            new(
                 name: "Terminator Room",
                 exits: new Dictionary<Exit, ExitType>
                 {
@@ -97,7 +97,7 @@ public class WestCrateria : Region
                 },
                 locations: new List<Location>
                 {
-                    new Location(
+                    new(
                         id: LocationId.CrateriaTerminator,
                         name: "Energy Tank, Terminator",
                         vanillaItem: ItemType.ETank
