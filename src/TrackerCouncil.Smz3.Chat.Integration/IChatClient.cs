@@ -9,6 +9,8 @@ public interface IChatClient : IDisposable
 {
     event EventHandler? Connected;
 
+    event EventHandler? Reconnected;
+
     event EventHandler? Disconnected;
 
     event EventHandler? SendMessageFailure;

@@ -53,6 +53,7 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
         _itemService = itemService;
         _timerService = timerService;
         ChatClient.Connected += ChatClient_Connected;
+        ChatClient.Reconnected += ChatClient_Reconnected;
         ChatClient.MessageReceived += ChatClient_MessageReceived;
         ChatClient.Disconnected += ChatClient_Disconnected;
         ChatClient.SendMessageFailure += ChatClient_SendMessageFailure;
@@ -498,6 +499,11 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
     private void ChatClient_Disconnected(object? sender, EventArgs e)
     {
         TrackerBase.Say(x => x.Chat.WhenDisconnected);
+    }
+
+    private void ChatClient_Reconnected(object? sender, EventArgs e)
+    {
+        TrackerBase.Say(x => x.Chat.WhenReconnected);
     }
 
     private void ChatClient_SendMessageFailure(object? sender, EventArgs e)
