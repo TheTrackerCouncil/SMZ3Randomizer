@@ -31,5 +31,5 @@ echo "Packaged $APP_NAME successfully."
 
 mkdir -p "setup/output"
 
-# Move the app to the output folder
-mv "$APP_NAME" "setup/output/$APP_NAME"
+# Zip the .app bundle
+zip -r "setup/output/$ZIP_FILE" "$APP_NAME"
