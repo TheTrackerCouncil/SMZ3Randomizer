@@ -8,6 +8,7 @@ using TrackerCouncil.Smz3.Chat.Integration;
 using TrackerCouncil.Smz3.Chat.Integration.Models;
 using TrackerCouncil.Smz3.Chat.Twitch.Models;
 using TwitchLib.Client;
+using TwitchLib.Client.Events;
 using TwitchLib.Client.Exceptions;
 using TwitchLib.Client.Models;
 
@@ -17,6 +18,7 @@ public class TwitchChatClient : IChatClient
 {
     private readonly TwitchClient _twitchClient;
     private readonly IChatApi _chatApi;
+    private bool _firstConnection = true;
 
     public TwitchChatClient(ILogger<TwitchChatClient> logger, ILoggerFactory loggerFactory, IChatApi chatApi)
     {
@@ -25,12 +27,16 @@ public class TwitchChatClient : IChatClient
         _twitchClient.OnConnected += _twitchClient_OnConnected;
         _twitchClient.OnDisconnected += _twitchClient_OnDisconnected;
         _twitchClient.OnMessageReceived += _twitchClient_OnMessageReceived;
+        _twitchClient.OnReconnected += _twitchClient_OnReconnected;
+        _twitchClient.OnJoinedChannel += _twitchClient_OnJoinedChannel;
         _chatApi = chatApi;
     }
 
     public event EventHandler? Connected;
 
     public event EventHandler? Disconnected;
+
+    public event EventHandler? Reconnected;
 
     public event EventHandler? SendMessageFailure;
 
@@ -109,6 +115,11 @@ public class TwitchChatClient : IChatClient
         Connected?.Invoke(this, new());
     }
 
+    protected virtual void OnReconnected()
+    {
+        Reconnected?.Invoke(this, new());
+    }
+
     protected virtual void OnDisconnected()
     {
         Logger.LogWarning("Connection to chat lost");
@@ -131,7 +142,6 @@ public class TwitchChatClient : IChatClient
     private void _twitchClient_OnConnected(object? sender, TwitchLib.Client.Events.OnConnectedArgs e)
     {
         IsConnected = true;
-        OnConnected();
     }
 
     private void _twitchClient_OnDisconnected(object? sender, TwitchLib.Communication.Events.OnDisconnectedEventArgs e)
@@ -146,6 +156,30 @@ public class TwitchChatClient : IChatClient
     private void _twitchClient_OnMessageReceived(object? sender, TwitchLib.Client.Events.OnMessageReceivedArgs e)
     {
         OnMessageReceived(new MessageReceivedEventArgs(new TwitchChatMessage(e.ChatMessage)));
+    }
+
+    private void _twitchClient_OnReconnected(object? sender, TwitchLib.Communication.Events.OnReconnectedEventArgs e)
+    {
+        // Unfortunately this fires before reconnecting is genuinely finished, so we have to wait before
+        // rejoining the original channel
+        Task.Run(async () =>
+        {
+            await Task.Delay(TimeSpan.FromSeconds(3));
+            _twitchClient.JoinChannel(Channel);
+        });
+    }
+
+    private void _twitchClient_OnJoinedChannel(object? sender, OnJoinedChannelArgs e)
+    {
+        if (_firstConnection)
+        {
+            OnConnected();
+            _firstConnection = false;
+        }
+        else
+        {
+            OnReconnected();
+        }
     }
 
     public async Task<string?> CreatePollAsync(string title, ICollection<string> options, int duration)

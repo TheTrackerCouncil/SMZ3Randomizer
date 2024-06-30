@@ -19,6 +19,11 @@ public class ChatConfig : IMergeable<ChatConfig>
     public SchrodingersString? WhenConnected { get; init; }
 
     /// <summary>
+    /// Gets the phrases to respond with when reconnected to chat.
+    /// </summary>
+    public SchrodingersString? WhenReconnected { get; init; }
+
+    /// <summary>
     /// Gets the phrases to respond with when disconnected to chat.
     /// </summary>
     public SchrodingersString? WhenDisconnected { get; init; }
