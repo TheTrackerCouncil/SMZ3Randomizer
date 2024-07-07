@@ -101,7 +101,7 @@ public class ViewedMap : IZeldaStateCheck
         {
             if (rewards.Count(x => x == RewardType.CrystalRed || x == RewardType.CrystalBlue) == 3)
             {
-                _tracker.SayOnce(x => x.AutoTracker.LightWorldAllCrystals);
+                _tracker.Say(x => x.AutoTracker.LightWorldAllCrystals, once: true);
             }
             else if (rewards.Count == 0)
             {
@@ -157,7 +157,7 @@ public class ViewedMap : IZeldaStateCheck
         {
             if (isMiseryMirePendant && isTurtleRockPendant)
             {
-                _tracker.SayOnce(x => x.AutoTracker.DarkWorldNoMedallions);
+                _tracker.Say(x => x.AutoTracker.DarkWorldNoMedallions, once: true);
             }
             else if (rewards.Count == 0)
             {

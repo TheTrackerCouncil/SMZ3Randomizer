@@ -163,7 +163,7 @@ public class AutoTrackerConfig : IMergeable<AutoTrackerConfig>
     /// Responses based on what number the GT key was. Tracker will use the responses for the largest number less
     /// than the number of the GT key.
     /// </summary>
-    public Dictionary<int, SchrodingersString?>? GTKeyResponses { get; init; }
+    public Dictionary<int, SchrodingersString>? GTKeyResponses { get; init; }
 
     /// <summary>
     /// Auto tracker detected switching to SMZ3

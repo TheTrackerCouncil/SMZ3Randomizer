@@ -175,18 +175,10 @@ public class AutoTracker : AutoTrackerBase
 
         var chatIntegrationModule = _trackerModuleFactory.GetModule<ChatIntegrationModule>();
         _numGTItems++;
-        TrackerBase.Say(_numGTItems.ToString());
+        TrackerBase.Say(text: _numGTItems.ToString());
         if (location.Item.Type == ItemType.BigKeyGT)
         {
-            var responseIndex = 1;
-            for (var i = 1; i <= _numGTItems; i++)
-            {
-                if (TrackerBase.Responses.AutoTracker.GTKeyResponses?.ContainsKey(i) == true)
-                {
-                    responseIndex = i;
-                }
-            }
-            TrackerBase.Say(x => x.AutoTracker.GTKeyResponses?[responseIndex], _numGTItems);
+            TrackerBase.Say(selectResponses: x => x.AutoTracker.GTKeyResponses, tieredKey: _numGTItems, args: [_numGTItems]);
             chatIntegrationModule?.GTItemTracked(_numGTItems, true);
             _foundGTKey = true;
         }

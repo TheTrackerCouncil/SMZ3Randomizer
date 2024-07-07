@@ -36,7 +36,7 @@ public class Mockball : IMetroidStateCheck
             && prevState.SamusX < 560
             && currentState.SamusX < 800)
         {
-            tracker.SayOnce(x => x.AutoTracker.MockBall);
+            tracker.Say(x => x.AutoTracker.MockBall, once: true);
             return true;
         }
         // Norfair Mockball
@@ -46,7 +46,7 @@ public class Mockball : IMetroidStateCheck
                  && prevState.SamusX > 1016
                  && currentState.SamusX > 800)
         {
-            tracker.SayOnce(x => x.AutoTracker.MockBall);
+            tracker.Say(x => x.AutoTracker.MockBall, once: true);
             return true;
         }
         return false;

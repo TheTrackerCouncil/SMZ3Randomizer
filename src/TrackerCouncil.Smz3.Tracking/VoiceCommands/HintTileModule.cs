@@ -49,12 +49,12 @@ public class HintTileModule : TrackerModule
             {
                 var hintTile = GetHintTileFromResult(result);
                 var text = _gameHintService.GetHintTileText(hintTile.PlayerHintTile, WorldService.World, WorldService.Worlds);
-                TrackerBase.Say(_hintTileConfig.RequestedHintTile, text);
+                TrackerBase.Say(response: _hintTileConfig.RequestedHintTile, args: [text]);
                 TrackerBase.UpdateHintTile(hintTile.PlayerHintTile);
             }
             else
             {
-                TrackerBase.Say(_hintTileConfig.NoHintTiles);
+                TrackerBase.Say(response: _hintTileConfig.NoHintTiles);
             }
 
         });
@@ -64,7 +64,7 @@ public class HintTileModule : TrackerModule
             var hintTile = TrackerBase.LastViewedHintTile;
             if (hintTile?.State == null)
             {
-                TrackerBase.Say(_hintTileConfig.NoPreviousHintTile);
+                TrackerBase.Say(response: _hintTileConfig.NoPreviousHintTile);
             }
             else if (hintTile.State.HintState != HintState.Cleared && hintTile.Locations?.Count() > 0)
             {
@@ -78,12 +78,12 @@ public class HintTileModule : TrackerModule
                 }
                 else
                 {
-                    TrackerBase.Say(_hintTileConfig.ClearHintTileFailed);
+                    TrackerBase.Say(response: _hintTileConfig.ClearHintTileFailed);
                 }
             }
             else
             {
-                TrackerBase.Say(_hintTileConfig.ClearHintTileFailed);
+                TrackerBase.Say(response: _hintTileConfig.ClearHintTileFailed);
             }
         });
     }

@@ -25,7 +25,7 @@ public class Shaktool : IMetroidStateCheck
             tracker.World.AllBosses.FirstOrDefault(x => x.Name == "Shaktool")?.State.Defeated != true)
         {
             tracker.ShutUp();
-            tracker.SayOnce(x => x.AutoTracker.NearShaktool);
+            tracker.Say(x => x.AutoTracker.NearShaktool, once: true);
             tracker.StartShaktoolMode();
             return true;
         }

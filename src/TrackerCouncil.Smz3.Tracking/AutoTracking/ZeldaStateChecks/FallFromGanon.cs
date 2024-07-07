@@ -20,7 +20,7 @@ public class FallFromGanon : IZeldaStateCheck
     {
         if (currentState.CurrentRoom == 16 && currentState.PreviousRoom == 0 && prevState.CurrentRoom == 0)
         {
-            trackerBase.SayOnce(x => x.AutoTracker.FallFromGanon);
+            trackerBase.Say(x => x.AutoTracker.FallFromGanon, once: true);
             return true;
         }
         return false;

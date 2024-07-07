@@ -21,13 +21,13 @@ public class FallFromMoldorm : IZeldaStateCheck
         // Tower of Hera
         if (currentState.CurrentRoom == 23 && currentState.PreviousRoom == 7 && prevState.CurrentRoom == 7)
         {
-            trackerBase.SayOnce(x => x.AutoTracker.FallFromMoldorm);
+            trackerBase.Say(x => x.AutoTracker.FallFromMoldorm, once: true);
             return true;
         }
         // Ganon's Tower
         else if (currentState.CurrentRoom == 166 && currentState.PreviousRoom == 77 && prevState.CurrentRoom == 77)
         {
-            trackerBase.SayOnce(x => x.AutoTracker.FallFromGTMoldorm);
+            trackerBase.Say(x => x.AutoTracker.FallFromGTMoldorm, once: true);
             return true;
         }
         return false;

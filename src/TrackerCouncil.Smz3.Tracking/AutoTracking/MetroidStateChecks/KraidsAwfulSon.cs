@@ -20,7 +20,7 @@ public class KraidsAwfulSon : IMetroidStateCheck
     {
         if (currentState.CurrentRegion == 1 && currentState.CurrentRoomInRegion == 45 && prevState.CurrentRoomInRegion == 44)
         {
-            tracker.SayOnce(x => x.AutoTracker.NearKraidsAwfulSon);
+            tracker.Say(x => x.AutoTracker.NearKraidsAwfulSon, once: true);
             return true;
         }
         return false;

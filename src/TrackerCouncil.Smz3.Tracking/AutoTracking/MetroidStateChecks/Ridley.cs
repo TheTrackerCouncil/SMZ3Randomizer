@@ -20,7 +20,7 @@ public class Ridley : IMetroidStateCheck
     {
         if (currentState.CurrentRegion == 2 && currentState.CurrentRoomInRegion == 37 && currentState.SamusX <= 375 && currentState.SamusX >= 100 && currentState.SamusY <= 200)
         {
-            tracker.SayOnce(x => x.AutoTracker.RidleyFace);
+            tracker.Say(x => x.AutoTracker.RidleyFace, once: true);
             return true;
         }
         return false;

@@ -52,7 +52,7 @@ public class MetroidDeath : IMetroidStateCheck
 
         if (!silent && region is { Metadata.WhenDiedInRoom: not null } && currentState.CurrentRoomInRegion != null)
         {
-            tracker.SayOnce(region.Metadata.WhenDiedInRoom[currentState.CurrentRoomInRegion.Value]);
+            tracker.Say(response: region.Metadata.WhenDiedInRoom[currentState.CurrentRoomInRegion.Value], once: true);
         }
 
         tracker.TrackDeath(true);

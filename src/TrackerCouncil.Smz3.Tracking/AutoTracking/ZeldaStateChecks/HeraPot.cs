@@ -20,7 +20,7 @@ public class HeraPot : IZeldaStateCheck
     {
         if (currentState.CurrentRoom == 167 && prevState.CurrentRoom == 119 && prevState.PreviousRoom != 49)
         {
-            trackerBase.SayOnce(x => x.AutoTracker.HeraPot);
+            trackerBase.Say(x => x.AutoTracker.HeraPot, once: true);
             return true;
         }
         return false;

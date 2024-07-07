@@ -50,7 +50,7 @@ public class EnteredDungeon : IZeldaStateCheck
 
         if (!_worldAccessor.World.Config.ZeldaKeysanity && !_enteredDungeons.Contains(region) && dungeon.IsPendantDungeon)
         {
-            trackerBase.Say(trackerBase.Responses.AutoTracker.EnterPendantDungeon, dungeon.DungeonMetadata.Name, dungeon.DungeonReward?.Metadata.Name);
+            trackerBase.Say(x => x.AutoTracker.EnterPendantDungeon, args: [dungeon.DungeonMetadata.Name, dungeon.DungeonReward?.Metadata.Name]);
         }
         else if (!_worldAccessor.World.Config.ZeldaKeysanity && region is CastleTower)
         {
@@ -63,7 +63,7 @@ public class EnteredDungeon : IZeldaStateCheck
 
             if (clearedCrystalDungeonCount < trackerBase.World.Config.GanonsTowerCrystalCount)
             {
-                trackerBase.SayOnce(x => x.AutoTracker.EnteredGTEarly, clearedCrystalDungeonCount);
+                trackerBase.Say(x => x.AutoTracker.EnteredGTEarly, args: [clearedCrystalDungeonCount], once: true);
             }
         }
 

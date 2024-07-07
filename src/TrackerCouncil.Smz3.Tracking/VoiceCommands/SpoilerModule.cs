@@ -84,7 +84,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
             return;
         }
 
-        TrackerBase.Say(x => x.Hints.AreaSuggestion, result.Value.Location.Region.GetName());
+        TrackerBase.Say(x => x.Hints.AreaSuggestion, args: [result.Value.Location.Region.GetName()]);
     }
 
     /// <summary>
@@ -104,7 +104,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
             .ToImmutableList();
         if (locations.Count == 0)
         {
-            TrackerBase.Say(x => x.Hints.AreaAlreadyCleared, area.GetName());
+            TrackerBase.Say(x => x.Hints.AreaAlreadyCleared, args: [area.GetName()]);
             return;
         }
 
@@ -114,7 +114,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
                 .Select(x => x.Item)
                 .NonNull();
             var itemNames = NaturalLanguage.Join(items, TrackerBase.World.Config);
-            TrackerBase.Say(x => x.Spoilers.ItemsInArea, area.GetName(), itemNames);
+            TrackerBase.Say(x => x.Spoilers.ItemsInArea, args: [area.GetName(), itemNames]);
         }
         else if (TrackerBase.HintsEnabled)
         {
@@ -141,27 +141,27 @@ public class SpoilerModule : TrackerModule, IOptionalModule
             var usefulness = _gameHintService.GetUsefulness(locations.ToList(), WorldService.Worlds, areaReward);
             if (usefulness == LocationUsefulness.Mandatory)
             {
-                TrackerBase.Say(x => x.Hints.AreaHasSomethingMandatory, area.GetName());
+                TrackerBase.Say(x => x.Hints.AreaHasSomethingMandatory, args: [area.GetName()]);
             }
             else if (usefulness is LocationUsefulness.NiceToHave or LocationUsefulness.Sword)
             {
-                TrackerBase.Say(x => x.Hints.AreaHasSomethingGood, area.GetName());
+                TrackerBase.Say(x => x.Hints.AreaHasSomethingGood, args: [area.GetName()]);
             }
             else if (area is IHasReward region)
             {
                 if (region.RewardType == RewardType.CrystalBlue
                     || region.RewardType == RewardType.CrystalRed)
                 {
-                    TrackerBase.Say(x => x.Hints.AreaHasJunkAndCrystal, area.GetName());
+                    TrackerBase.Say(x => x.Hints.AreaHasJunkAndCrystal, args: [area.GetName()]);
                 }
                 else
                 {
-                    TrackerBase.Say(x => x.Hints.AreaHasJunk, area.GetName());
+                    TrackerBase.Say(x => x.Hints.AreaHasJunk, args: [area.GetName()]);
                 }
             }
             else
             {
-                TrackerBase.Say(x => x.Hints.AreaHasJunk, area.GetName());
+                TrackerBase.Say(x => x.Hints.AreaHasJunk, args: [area.GetName()]);
             }
         }
     }
@@ -174,12 +174,12 @@ public class SpoilerModule : TrackerModule, IOptionalModule
     {
         if (item.Metadata.HasStages && item.State.TrackingState >= item.Metadata.MaxStage)
         {
-            TrackerBase.Say(x => x.Spoilers.TrackedAllItemsAlready, item.Name);
+            TrackerBase.Say(x => x.Spoilers.TrackedAllItemsAlready, args: [item.Name]);
             return;
         }
         else if (!item.Metadata.Multiple && item.State.TrackingState > 0)
         {
-            TrackerBase.Say(x => x.Spoilers.TrackedItemAlready, item.Metadata.NameWithArticle);
+            TrackerBase.Say(x => x.Spoilers.TrackedItemAlready, args: [item.Metadata.NameWithArticle]);
             return;
         }
 
@@ -190,7 +190,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
         {
             var locationName = markedLocation.Metadata.Name;
             var regionName = markedLocation.Region.Metadata.Name;
-            TrackerBase.Say(x => x.Spoilers.MarkedItem, item.Metadata.NameWithArticle, locationName, regionName);
+            TrackerBase.Say(x => x.Spoilers.MarkedItem, args: [item.Metadata.NameWithArticle, locationName, regionName]);
             return;
         }
 
@@ -207,15 +207,15 @@ public class SpoilerModule : TrackerModule, IOptionalModule
         if (locations.Count == 0)
         {
             if (item.Metadata.Multiple || item.Metadata.HasStages)
-                TrackerBase.Say(x => x.Spoilers.ItemsNotFound, item.Metadata.Plural);
+                TrackerBase.Say(x => x.Spoilers.ItemsNotFound, args: [item.Metadata.Plural]);
             else
-                TrackerBase.Say(x => x.Spoilers.ItemNotFound, item.Metadata.NameWithArticle);
+                TrackerBase.Say(x => x.Spoilers.ItemNotFound, args: [item.Metadata.NameWithArticle]);
             return;
         }
         else if (locations.Count > 0 && locations.All(x => x.State.Cleared))
         {
             // The item exists, but all locations are cleared
-            TrackerBase.Say(x => x.Spoilers.LocationsCleared, item.Metadata.NameWithArticle);
+            TrackerBase.Say(x => x.Spoilers.LocationsCleared, args: [item.Metadata.NameWithArticle]);
             return;
         }
 
@@ -252,12 +252,12 @@ public class SpoilerModule : TrackerModule, IOptionalModule
             if (TrackerBase.HintsEnabled || TrackerBase.SpoilersEnabled)
             {
                 var itemName = ItemService.GetName(location.Item.Type);
-                TrackerBase.Say(x => x.Hints.LocationAlreadyClearedSpoiler, locationName, itemName);
+                TrackerBase.Say(x => x.Hints.LocationAlreadyClearedSpoiler, args: [locationName, itemName]);
                 return;
             }
             else
             {
-                TrackerBase.Say(x => x.Hints.LocationAlreadyCleared, locationName);
+                TrackerBase.Say(x => x.Hints.LocationAlreadyCleared, args: [locationName]);
                 return;
             }
         }
@@ -267,7 +267,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
             var markedItem = ItemService.FirstOrDefault(location.State.MarkedItem.Value);
             if (markedItem != null)
             {
-                TrackerBase.Say(x => x.Spoilers.MarkedLocation, locationName, markedItem.Metadata.NameWithArticle);
+                TrackerBase.Say(x => x.Spoilers.MarkedLocation, args: [locationName, markedItem.Metadata.NameWithArticle]);
                 return;
             }
         }
@@ -306,7 +306,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
         Item item, params object?[] additionalArgs)
     {
         var args = Args.Combine(item.Metadata.NameWithArticle, additionalArgs);
-        if (!TrackerBase.Say(responses => selectHint(responses.Hints), args))
+        if (!TrackerBase.Say(responses => selectHint(responses.Hints), args: args))
             return false;
 
         if (_itemHintsGiven.ContainsKey(item.Type))
@@ -332,7 +332,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
         Item item, params object?[] additionalArgs)
     {
         var args = Args.Combine(item.Metadata.NameWithArticle, additionalArgs);
-        if (!TrackerBase.Say(hint, args))
+        if (!TrackerBase.Say(response: hint, args: args))
             return false;
 
         if (_itemHintsGiven.ContainsKey(item.Type))
@@ -359,7 +359,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
     {
         var name = location.Metadata.Name;
         var args = Args.Combine(name, additionalArgs);
-        if (!TrackerBase.Say(responses => selectHint(responses.Hints), args))
+        if (!TrackerBase.Say(responses => selectHint(responses.Hints), args: args))
             return false;
 
         if (_locationHintsGiven.ContainsKey(location.Id))
@@ -386,7 +386,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
     {
         var name = location.Metadata.Name;
         var args = Args.Combine(name, additionalArgs);
-        if (!TrackerBase.Say(hint, args))
+        if (!TrackerBase.Say(response: hint, args: args))
             return false;
 
         if (_locationHintsGiven.ContainsKey(location.Id))
@@ -432,7 +432,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
         var locationName = location.Metadata.Name;
         if (location.Item.Type == ItemType.Nothing)
         {
-            TrackerBase.Say(x => x.Spoilers.EmptyLocation, locationName);
+            TrackerBase.Say(x => x.Spoilers.EmptyLocation, args: [locationName]);
             return true;
         }
 
@@ -442,20 +442,22 @@ public class SpoilerModule : TrackerModule, IOptionalModule
             if (_isMultiworld)
             {
                 TrackerBase.Say(x => location.Item.World == WorldService.World ? x.Spoilers.LocationHasItemOwnWorld : x.Spoilers.LocationHasItemOtherWorld,
-                    locationName,
-                    item.Metadata.NameWithArticle,
-                    location.Item.World.Player);
+                    args: [
+                        locationName,
+                        item.Metadata.NameWithArticle,
+                        location.Item.World.Player
+                    ]);
             }
             else
             {
-                TrackerBase.Say(x => x.Spoilers.LocationHasItem, locationName, item.Metadata.NameWithArticle);
+                TrackerBase.Say(x => x.Spoilers.LocationHasItem, args: [locationName, item.Metadata.NameWithArticle]);
             }
 
             return true;
         }
         else
         {
-            TrackerBase.Say(x => x.Spoilers.LocationHasUnknownItem, locationName);
+            TrackerBase.Say(x => x.Spoilers.LocationHasUnknownItem, args: [locationName]);
             return true;
         }
     }
@@ -477,26 +479,30 @@ public class SpoilerModule : TrackerModule, IOptionalModule
                 if (item.Metadata.Multiple || item.Metadata.HasStages)
                 {
                     TrackerBase.Say(x => reachableLocation.World == WorldService.World ? x.Spoilers.ItemsAreAtLocationOwnWorld : x.Spoilers.ItemsAreAtLocationOtherWorld,
-                        item.Metadata.NameWithArticle,
-                        locationName,
-                        regionName,
-                        reachableLocation.World.Player);
+                        args: [
+                            item.Metadata.NameWithArticle,
+                            locationName,
+                            regionName,
+                            reachableLocation.World.Player
+                        ]);
                 }
                 else
                 {
                     TrackerBase.Say(x => reachableLocation.World == WorldService.World ? x.Spoilers.ItemIsAtLocationOwnWorld : x.Spoilers.ItemIsAtLocationOtherWorld,
-                        item.Metadata.NameWithArticle,
-                        locationName,
-                        regionName,
-                        reachableLocation.World.Player);
+                        args: [
+                            item.Metadata.NameWithArticle,
+                            locationName,
+                            regionName,
+                            reachableLocation.World.Player
+                        ]);
                 }
             }
             else
             {
                 if (item.Metadata.Multiple || item.Metadata.HasStages)
-                    TrackerBase.Say(x => x.Spoilers.ItemsAreAtLocation, item.Metadata.NameWithArticle, locationName, regionName);
+                    TrackerBase.Say(x => x.Spoilers.ItemsAreAtLocation, args: [item.Metadata.NameWithArticle, locationName, regionName]);
                 else
-                    TrackerBase.Say(x => x.Spoilers.ItemIsAtLocation, item.Metadata.NameWithArticle, locationName, regionName);
+                    TrackerBase.Say(x => x.Spoilers.ItemIsAtLocation, args: [item.Metadata.NameWithArticle, locationName, regionName]);
             }
 
             return true;
@@ -514,26 +520,30 @@ public class SpoilerModule : TrackerModule, IOptionalModule
                 if (item.Metadata.Multiple || item.Metadata.HasStages)
                 {
                     TrackerBase.Say(x => worldLocation.World == WorldService.World ? x.Spoilers.ItemsAreAtOutOfLogicLocationOwnWorld : x.Spoilers.ItemsAreAtOutOfLogicLocationOtherWorld,
-                        item.Metadata.NameWithArticle,
-                        locationName,
-                        regionName,
-                        worldLocation.World.Player);
+                        args: [
+                            item.Metadata.NameWithArticle,
+                            locationName,
+                            regionName,
+                            worldLocation.World.Player
+                        ]);
                 }
                 else
                 {
                     TrackerBase.Say(x => worldLocation.World == WorldService.World ? x.Spoilers.ItemIsAtOutOfLogicLocationOwnWorld : x.Spoilers.ItemIsAtOutOfLogicLocationOtherWorld,
-                        item.Metadata.NameWithArticle,
-                        locationName,
-                        regionName,
-                        worldLocation.World.Player);
+                        args: [
+                            item.Metadata.NameWithArticle,
+                            locationName,
+                            regionName,
+                            worldLocation.World.Player
+                        ]);
                 }
             }
             else
             {
                 if (item.Metadata.Multiple || item.Metadata.HasStages)
-                    TrackerBase.Say(x => x.Spoilers.ItemsAreAtOutOfLogicLocation, item.Metadata.NameWithArticle, locationName, regionName);
+                    TrackerBase.Say(x => x.Spoilers.ItemsAreAtOutOfLogicLocation, args: [item.Metadata.NameWithArticle, locationName, regionName]);
                 else
-                    TrackerBase.Say(x => x.Spoilers.ItemIsAtOutOfLogicLocation, item.Metadata.NameWithArticle, locationName, regionName);
+                    TrackerBase.Say(x => x.Spoilers.ItemIsAtOutOfLogicLocation, args: [item.Metadata.NameWithArticle, locationName, regionName]);
             }
 
             return true;
@@ -704,7 +714,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
                         {
                             if (!randomLocationWithHint.World.IsLocalWorld)
                                 TrackerBase.Say(x => x.Hints.ItemInPlayerWorldRegionRoomPrefixHint,
-                                    randomLocationWithHint.World.Config.PhoneticName);
+                                    args: [randomLocationWithHint.World.Config.PhoneticName]);
                             return GiveItemHint(regionHint, item);
                         }
                     }
@@ -732,7 +742,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
                             {
                                 if (!randomLocation.World.IsLocalWorld)
                                     TrackerBase.Say(x => x.Hints.ItemInPlayerWorldRegionRoomPrefixHint,
-                                        randomLocation.World.Config.PhoneticName);
+                                        args: [randomLocation.World.Config.PhoneticName]);
                                 return GiveItemHint(roomHint, item);
                             }
                         }
@@ -742,7 +752,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
                         {
                             if (!randomLocation.World.IsLocalWorld)
                                 TrackerBase.Say(x => x.Hints.ItemInPlayerWorldRegionRoomPrefixHint,
-                                    randomLocation.World.Config.PhoneticName);
+                                    args: [randomLocation.World.Config.PhoneticName]);
                             return GiveItemHint(locationHint, item);
                         }
                     }
@@ -752,7 +762,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
                     {
                         if (!randomLocation.World.IsLocalWorld)
                             TrackerBase.Say(x => x.Hints.ItemInPlayerWorldRegionRoomPrefixHint,
-                                randomLocation.World.Config.PhoneticName);
+                                args: [randomLocation.World.Config.PhoneticName]);
 
                         if (randomLocation.Region is SMRegion
                             && randomLocation.Name.ContainsAny(StringComparison.OrdinalIgnoreCase, s_worthlessLocationNameIndicators))
