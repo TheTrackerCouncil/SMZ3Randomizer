@@ -746,7 +746,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     public override bool SayOnce(SchrodingersString? text, params object?[] args)
     {
         return SayOnce(text, false, args);
-        }
+    }
 
     /// <summary>
     /// Speak a sentence using text-to-speech only one time and wait until
@@ -2155,7 +2155,7 @@ public sealed class Tracker : TrackerBase, IDisposable
                 }
             }
 
-            Say(x => x.PegWorldModePeggedMultiple?[responseIndex], delta);
+            SayAndWait(x => x.PegWorldModePeggedMultiple?[responseIndex], delta);
             OnPegPegged(new TrackerEventArgs(null, true));
         }
     }
