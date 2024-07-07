@@ -523,13 +523,12 @@ ComputeResumeAndVolume:
     sep #$20                    ; Return to 8-bit mode
     bra .NoFade
 .CheckResume
-    ;; If the outgoing track is Item/Elevator Room, set the MSU volume low so we can fade in
-    ;; But only if the incoming track is the one we set to resume above and we haven't timed out
     lda.w !CURRENT_MSU_TRACK
-    CMP #!TRACK_ITEM_ROOM : BNE .NoFade
     ;; If the outgoing track is Samus Fanfare, never resume
-    lda.w !CURRENT_MSU_TRACK
-    CMP #!TRACK_SAMUS_FANFARE : BEQ .NoFade
+    CMP #!TRACK_SAMUS_FANFARE : BEQ .ResetResume
+    ;; If the outgoing track is Item/Elevator Room, we might fade in
+    CMP #!TRACK_ITEM_ROOM : BNE .NoFade
+    ;; Check if the incoming track is the one we set to resume above and we haven't timed out
     pla     ; Load the incoming track back into the accumulator...
     pha     ; ...but keep it on the stack because we need it again at the end of the block.
     CMP !RESUME_MSU_TRACK : BNE .NoFade
@@ -540,7 +539,7 @@ ComputeResumeAndVolume:
     cmp.w !NO_RESUME_AFTER_LO
 +
     sep #$20                    ; Return to 8-bit mode
-    bcs .ResetResume            ; Greater than or equal to
+    bcs .ResetResume            ; Greater than or equal to means we timed out
 .SetFade
     lda.b #!MIN_VOLUME
     bra .FadeDone
