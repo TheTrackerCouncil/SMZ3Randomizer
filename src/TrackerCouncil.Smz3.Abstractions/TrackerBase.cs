@@ -416,24 +416,16 @@ public abstract class TrackerBase
     /// Speak a sentence using text-to-speech.
     /// </summary>
     /// <param name="text">The possible sentences to speak.</param>
+    /// <param name="args">The arguments used to format the text.</param>
     /// <returns>
     /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
     /// name="text"/> was <c>null</c>.
     /// </returns>
-    public abstract bool Say(SchrodingersString? text);
+    public abstract bool Say(SchrodingersString? text, params object?[] args);
 
     /// <summary>
-    /// Speak a sentence using text-to-speech.
-    /// </summary>
-    /// <param name="selectResponse">Selects the response to use.</param>
-    /// <returns>
-    /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
-    /// response was <c>null</c>.
-    /// </returns>
-    public abstract bool Say(Func<ResponseConfig, SchrodingersString?> selectResponse);
-
-    /// <summary>
-    /// Speak a sentence using text-to-speech.
+    /// Speak a sentence using text-to-speech and wait until
+    /// the text has been spoken completely.
     /// </summary>
     /// <param name="text">The possible sentences to speak.</param>
     /// <param name="args">The arguments used to format the text.</param>
@@ -441,7 +433,7 @@ public abstract class TrackerBase
     /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
     /// name="text"/> was <c>null</c>.
     /// </returns>
-    public abstract bool Say(SchrodingersString? text, params object?[] args);
+    public abstract bool SayAndWait(SchrodingersString? text, params object?[] args);
 
     /// <summary>
     /// Speak a sentence using text-to-speech.
@@ -455,24 +447,16 @@ public abstract class TrackerBase
     public abstract bool Say(Func<ResponseConfig, SchrodingersString?> selectResponse, params object?[] args);
 
     /// <summary>
-    /// Speak a sentence using text-to-speech only one time.
-    /// </summary>
-    /// <param name="text">The possible sentences to speak.</param>
-    /// <returns>
-    /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
-    /// name="text"/> was <c>null</c>.
-    /// </returns>
-    public abstract bool SayOnce(SchrodingersString? text);
-
-    /// <summary>
-    /// Speak a sentence using text-to-speech only one time.
+    /// Speak a sentence using text-to-speech and wait until
+    /// the text has been spoken completely.
     /// </summary>
     /// <param name="selectResponse">Selects the response to use.</param>
+    /// <param name="args">The arguments used to format the text.</param>
     /// <returns>
     /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
     /// response was <c>null</c>.
     /// </returns>
-    public abstract bool SayOnce(Func<ResponseConfig, SchrodingersString?> selectResponse);
+    public abstract bool SayAndWait(Func<ResponseConfig, SchrodingersString?> selectResponse, params object?[] args);
 
     /// <summary>
     /// Speak a sentence using text-to-speech only one time.
@@ -486,6 +470,18 @@ public abstract class TrackerBase
     public abstract bool SayOnce(SchrodingersString? text, params object?[] args);
 
     /// <summary>
+    /// Speak a sentence using text-to-speech only one time and wait until
+    /// the text has been spoken completely.
+    /// </summary>
+    /// <param name="text">The text response to use.</param>
+    /// <param name="args">Arguments to substitute out in the text</param>
+    /// <returns>
+    /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
+    /// response was <c>null</c>.
+    /// </returns>
+    public abstract bool SayOnceAndWait(SchrodingersString? text, params object?[] args);
+
+    /// <summary>
     /// Speak a sentence using text-to-speech only one time.
     /// </summary>
     /// <param name="selectResponse">Selects the response to use.</param>
@@ -495,6 +491,18 @@ public abstract class TrackerBase
     /// response was <c>null</c>.
     /// </returns>
     public abstract bool SayOnce(Func<ResponseConfig, SchrodingersString?> selectResponse, params object?[] args);
+
+    /// <summary>
+    /// Speak a sentence using text-to-speech only one time and wait until
+    /// the text has been spoken completely.
+    /// </summary>
+    /// <param name="selectResponse">Selects the response to use.</param>
+    /// <param name="args">The arguments used to format the text.</param>
+    /// <returns>
+    /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
+    /// response was <c>null</c>.
+    /// </returns>
+    public abstract bool SayOnceAndWait(Func<ResponseConfig, SchrodingersString?> selectResponse, params object?[] args);
 
     /// <summary>
     /// Speak a sentence using text-to-speech.

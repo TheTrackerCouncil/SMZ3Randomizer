@@ -674,35 +674,6 @@ public sealed class Tracker : TrackerBase, IDisposable
     /// Speak a sentence using text-to-speech.
     /// </summary>
     /// <param name="text">The possible sentences to speak.</param>
-    /// <returns>
-    /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
-    /// name="text"/> was <c>null</c>.
-    /// </returns>
-    public override bool Say(SchrodingersString? text)
-    {
-        if (text == null)
-            return false;
-
-        return Say(text.ToString());
-    }
-
-    /// <summary>
-    /// Speak a sentence using text-to-speech.
-    /// </summary>
-    /// <param name="selectResponse">Selects the response to use.</param>
-    /// <returns>
-    /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
-    /// response was <c>null</c>.
-    /// </returns>
-    public override bool Say(Func<ResponseConfig, SchrodingersString?> selectResponse)
-    {
-        return Say(selectResponse(Responses));
-    }
-
-    /// <summary>
-    /// Speak a sentence using text-to-speech.
-    /// </summary>
-    /// <param name="text">The possible sentences to speak.</param>
     /// <param name="args">The arguments used to format the text.</param>
     /// <returns>
     /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
@@ -714,6 +685,24 @@ public sealed class Tracker : TrackerBase, IDisposable
             return false;
 
         return Say(text.Format(args), wait: false);
+    }
+
+    /// <summary>
+    /// Speak a sentence using text-to-speech and wait until
+    /// the text has been spoken completely.
+    /// </summary>
+    /// <param name="text">The possible sentences to speak.</param>
+    /// <param name="args">The arguments used to format the text.</param>
+    /// <returns>
+    /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
+    /// name="text"/> was <c>null</c>.
+    /// </returns>
+    public override bool SayAndWait(SchrodingersString? text, params object?[] args)
+    {
+        if (text == null)
+            return false;
+
+        return Say(text.Format(args), wait: true);
     }
 
     /// <summary>
@@ -731,38 +720,18 @@ public sealed class Tracker : TrackerBase, IDisposable
     }
 
     /// <summary>
-    /// Speak a sentence using text-to-speech only one time.
-    /// </summary>
-    /// <param name="text">The possible sentences to speak.</param>
-    /// <returns>
-    /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
-    /// name="text"/> was <c>null</c>.
-    /// </returns>
-    public override bool SayOnce(SchrodingersString? text)
-    {
-        if (text == null)
-            return false;
-
-        if (!_saidLines.Contains(text))
-        {
-            _saidLines.Add(text);
-            return Say(text.ToString());
-        }
-
-        return true;
-    }
-
-    /// <summary>
-    /// Speak a sentence using text-to-speech only one time.
+    /// Speak a sentence using text-to-speech and wait until
+    /// the text has been spoken completely.
     /// </summary>
     /// <param name="selectResponse">Selects the response to use.</param>
+    /// <param name="args">The arguments used to format the text.</param>
     /// <returns>
     /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
     /// response was <c>null</c>.
     /// </returns>
-    public override bool SayOnce(Func<ResponseConfig, SchrodingersString?> selectResponse)
+    public override bool SayAndWait(Func<ResponseConfig, SchrodingersString?> selectResponse, params object?[] args)
     {
-        return SayOnce(selectResponse(Responses));
+        return SayAndWait(selectResponse(Responses), args);
     }
 
     /// <summary>
@@ -776,17 +745,51 @@ public sealed class Tracker : TrackerBase, IDisposable
     /// </returns>
     public override bool SayOnce(SchrodingersString? text, params object?[] args)
     {
+        return SayOnce(text, false, args);
+        }
+
+    /// <summary>
+    /// Speak a sentence using text-to-speech only one time and wait until
+    /// the text has been spoken completely.
+    /// </summary>
+    /// <param name="text">The possible sentences to speak.</param>
+    /// <param name="args">The arguments used to format the text.</param>
+    /// <returns>
+    /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
+    /// name="text"/> was <c>null</c>.
+    /// </returns>
+    public override bool SayOnceAndWait(SchrodingersString? text, params object?[] args)
+    {
+        return SayOnce(text, true, args);
+    }
+
+    /// <summary>
+    /// Speak a sentence using text-to-speech only one time.
+    /// </summary>
+    /// <param name="text">The possible sentences to speak.</param>
+    /// <param name="wait">
+    /// <c>true</c> to wait until the text has been spoken completely or
+    /// <c>false</c> to immediately return.
+    /// </param>
+    /// <param name="args">The arguments used to format the text.</param>
+    /// <returns>
+    /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
+    /// name="text"/> was <c>null</c>.
+    /// </returns>
+    private bool SayOnce(SchrodingersString? text, bool wait, params object?[] args)
+    {
         if (text == null)
             return false;
 
         if (!_saidLines.Contains(text))
         {
             _saidLines.Add(text);
-            return Say(text.Format(args), wait: false);
+            return Say(text.Format(args), wait: wait);
         }
 
         return true;
     }
+
 
     /// <summary>
     /// Speak a sentence using text-to-speech only one time.
@@ -800,6 +803,21 @@ public sealed class Tracker : TrackerBase, IDisposable
     public override bool SayOnce(Func<ResponseConfig, SchrodingersString?> selectResponse, params object?[] args)
     {
         return SayOnce(selectResponse(Responses), args);
+    }
+
+    /// <summary>
+    /// Speak a sentence using text-to-speech only one time and wait until
+    /// the text has been spoken completely.
+    /// </summary>
+    /// <param name="selectResponse">Selects the response to use.</param>
+    /// <param name="args">The arguments used to format the text.</param>
+    /// <returns>
+    /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
+    /// response was <c>null</c>.
+    /// </returns>
+    public override bool SayOnceAndWait(Func<ResponseConfig, SchrodingersString?> selectResponse, params object?[] args)
+    {
+        return SayOnceAndWait(selectResponse(Responses), args);
     }
 
     /// <summary>
