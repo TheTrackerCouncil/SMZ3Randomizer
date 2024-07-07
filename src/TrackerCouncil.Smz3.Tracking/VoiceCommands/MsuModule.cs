@@ -118,13 +118,13 @@ public class MsuModule : TrackerModule, IDisposable
         }
 
         msuMonitorService.MsuTrackChanged += MsuMonitorServiceOnMsuTrackChanged;
-        msuMonitorService.MsuShuffled += MsuMonitorServiceOnMsuShuffled;
+        msuMonitorService.PreMsuShuffle += MsuMonitorServiceOnPreMsuShuffle;
 
         _isSetup = true;
 
     }
 
-    private void MsuMonitorServiceOnMsuShuffled(object? sender, EventArgs e)
+    private void MsuMonitorServiceOnPreMsuShuffle(object? sender, EventArgs e)
     {
         _gameService.TryCancelMsuResume();
     }
