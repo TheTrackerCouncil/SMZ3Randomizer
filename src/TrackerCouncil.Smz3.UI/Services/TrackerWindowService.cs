@@ -61,6 +61,7 @@ public class TrackerWindowService(
         _model.Background = new SolidColorBrush(Color.FromArgb(bytes[0], bytes[1], bytes[2], bytes[3]));
         _model.OpenTrackWindow = Options.GeneralOptions.DisplayMsuTrackWindow;
         _model.AddShadows = Options.GeneralOptions.TrackerShadows;
+        _model.DisplayTimer = Options.GeneralOptions.TrackerTimerEnabled;
 
         LocationViewModel.KeyImage = uiService.GetSpritePath("Items", "key.png", out _);
         RegionViewModel.ChestImage = uiService.GetSpritePath("Items", "chest.png", out _);
