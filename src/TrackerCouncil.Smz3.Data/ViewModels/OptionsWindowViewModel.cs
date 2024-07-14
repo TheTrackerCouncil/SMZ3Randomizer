@@ -53,6 +53,7 @@ public class OptionsWindowViewModel
         TrackerOptions.TrackerHintsEnabled = options.TrackerHintsEnabled;
         TrackerOptions.TrackerSpoilersEnabled = options.TrackerSpoilersEnabled;
         TrackerOptions.AudioDevices = audioInputDevices;
+        TrackerOptions.TrackerTimerEnabled = options.TrackerTimerEnabled;
 
         TwitchIntegration.TwitchUserName = options.TwitchUserName;
         TwitchIntegration.TwitchChannel = options.TwitchChannel;
@@ -101,6 +102,7 @@ public class OptionsWindowViewModel
         options.AutoSaveLookAtEvents = TrackerOptions.AutoSaveLookAtEvents;
         options.TrackerHintsEnabled = TrackerOptions.TrackerHintsEnabled;
         options.TrackerSpoilersEnabled = TrackerOptions.TrackerSpoilersEnabled;
+        options.TrackerTimerEnabled = TrackerOptions.TrackerTimerEnabled;
 
         options.TwitchUserName = TwitchIntegration.TwitchUserName;
         options.TwitchChannel = TwitchIntegration.TwitchChannel;

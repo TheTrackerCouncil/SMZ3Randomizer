@@ -139,4 +139,9 @@ public record TrackerOptions
     /// Device to be used for push to talk mode
     /// </summary>
     public string PushToTalkDevice { get; set; } = "Default";
+
+    /// <summary>
+    /// Whether the timer should be displayed and timer voice lines should be enabled
+    /// </summary>
+    public bool TrackerTimerEnabled { get; set; } = true;
 }

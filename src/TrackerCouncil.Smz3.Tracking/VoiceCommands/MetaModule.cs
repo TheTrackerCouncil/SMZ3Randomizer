@@ -201,20 +201,23 @@ public class MetaModule : TrackerModule
             }
         });
 
-        AddCommand("Pause timer", GetPauseTimerRule(), (_) =>
+        if (TrackerBase.Options.TrackerTimerEnabled)
         {
-            TrackerBase.PauseTimer();
-        });
+            AddCommand("Pause timer", GetPauseTimerRule(), (_) =>
+            {
+                TrackerBase.PauseTimer();
+            });
 
-        AddCommand("Start timer", GetResumeTimerRule(), (_) =>
-        {
-            TrackerBase.StartTimer();
-        });
+            AddCommand("Start timer", GetResumeTimerRule(), (_) =>
+            {
+                TrackerBase.StartTimer();
+            });
 
-        AddCommand("Reset timer", GetResetTimerRule(), (_) =>
-        {
-            TrackerBase.ResetTimer();
-        });
+            AddCommand("Reset timer", GetResetTimerRule(), (_) =>
+            {
+                TrackerBase.ResetTimer();
+            });
+        }
 
         AddCommand("Mute", GetMuteRule(), (_) =>
         {

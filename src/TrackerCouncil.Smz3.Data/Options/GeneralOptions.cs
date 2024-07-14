@@ -64,6 +64,7 @@ public class GeneralOptions : INotifyPropertyChanged
     public bool TrackerHintsEnabled { get; set; }
 
     public bool TrackerSpoilersEnabled { get; set; }
+    public bool TrackerTimerEnabled { get; set; } = true;
 
     public EmulatorConnectorType AutoTrackerDefaultConnectionType { get; set; }
 
@@ -256,7 +257,8 @@ public class GeneralOptions : INotifyPropertyChanged
         GanonsTowerGuessingGameStyle = GanonsTowerGuessingGameStyle,
         SpeechRecognitionMode = SpeechRecognitionMode,
         PushToTalkKey = PushToTalkKey,
-        PushToTalkDevice = PushToTalkDevice
+        PushToTalkDevice = PushToTalkDevice,
+        TrackerTimerEnabled = TrackerTimerEnabled
     };
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)

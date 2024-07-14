@@ -72,5 +72,8 @@ public class OptionsWindowTrackerOptions
     [DynamicFormFieldCheckBox(checkBoxText: "Enable spoilers", groupName: "Bottom", platforms: DynamicFormPlatform.Windows)]
     public bool TrackerSpoilersEnabled { get; set; } = true;
 
+    [DynamicFormFieldCheckBox(checkBoxText: "Enable timer", groupName: "Bottom")]
+    public bool TrackerTimerEnabled { get; set; } = true;
+
     public Dictionary<string, string> AudioDevices { get; set; } = new();
 }

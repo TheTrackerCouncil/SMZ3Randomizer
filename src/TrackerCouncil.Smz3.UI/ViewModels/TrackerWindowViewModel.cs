@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Avalonia.Media;
 using AvaloniaControls.Models;
@@ -46,7 +47,7 @@ public class TrackerWindowViewModel : ViewModelBase
     [ReactiveLinkedProperties(nameof(StatusBarBackground), nameof(StatusBarBorder))]
     public bool IsInGoMode { get; set; }
 
-    [Reactive] public bool ShowSpeechRecognition { get; set; } = true;
+    public bool ShowSpeechRecognition => OperatingSystem.IsWindows();
 
     [Reactive] public string SpeechConfidence { get; set; } = "Voice Disabled";
 
@@ -55,6 +56,7 @@ public class TrackerWindowViewModel : ViewModelBase
     [Reactive]
     [ReactiveLinkedProperties(nameof(SpeechToolTip), nameof(SpeechIcon))]
     public bool VoiceEnabled { get; set; }
+    public bool DisplayTimer { get; set; }
 
     public string SpeechToolTip => VoiceEnabled ? "Confidence of last recognized voice command. Double click to disable voice recognition." : "Voice recognition disabled. Double click to attempt to enable voice recognition.";
 
