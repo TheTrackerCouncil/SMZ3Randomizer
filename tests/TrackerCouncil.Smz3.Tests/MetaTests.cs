@@ -41,9 +41,20 @@ public class MetaTests
             .BuildServiceProvider();
 
         // Get latest version from GitHub and make sure the current version is newer
-        var releases = await serviceProvider.GetRequiredService<IGitHubReleaseService>()
-            .GetReleasesAsync("TheTrackerCouncil", "SMZ3Randomizer");
-        var latestRelease = releases?.FirstOrDefault();
+        GitHubRelease? latestRelease = null;
+
+        for (var i = 0; i < 5 && latestRelease == null; i++)
+        {
+            var releases = await serviceProvider.GetRequiredService<IGitHubReleaseService>()
+                .GetReleasesAsync("TheTrackerCouncil", "SMZ3Randomizer");
+            latestRelease = releases?.FirstOrDefault();
+
+            if (latestRelease == null)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(5));
+            }
+        }
+
         latestRelease.Should().NotBeNull();
         latestRelease!.Tag.Should().NotBeEquivalentTo($"v{version}");
         serviceProvider.GetRequiredService<IGitHubReleaseCheckerService>()
