@@ -11,6 +11,7 @@ using TwitchLib.Client;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Exceptions;
 using TwitchLib.Client.Models;
+using TwitchLib.Communication.Clients;
 
 namespace TrackerCouncil.Smz3.Chat.Twitch;
 
@@ -19,11 +20,14 @@ public class TwitchChatClient : IChatClient
     private readonly TwitchClient _twitchClient;
     private readonly IChatApi _chatApi;
     private bool _firstConnection = true;
+    private readonly WebSocketClient TwitchWebSocketClient = new();
 
     public TwitchChatClient(ILogger<TwitchChatClient> logger, ILoggerFactory loggerFactory, IChatApi chatApi)
     {
         Logger = logger;
-        _twitchClient = new(logger: loggerFactory.CreateLogger<TwitchClient>());
+
+        _twitchClient = new TwitchClient(TwitchWebSocketClient, logger: loggerFactory.CreateLogger<TwitchClient>());
+
         _twitchClient.OnConnected += _twitchClient_OnConnected;
         _twitchClient.OnDisconnected += _twitchClient_OnDisconnected;
         _twitchClient.OnMessageReceived += _twitchClient_OnMessageReceived;
@@ -56,7 +60,7 @@ public class TwitchChatClient : IChatClient
 
     public void Connect(string userName, string oauthToken, string channel, string id)
     {
-        if (!_twitchClient.IsInitialized)
+        if (string.IsNullOrEmpty(_twitchClient.ConnectionCredentials?.TwitchUsername))
         {
             var credentials = new ConnectionCredentials(userName, oauthToken);
             _twitchClient.Initialize(credentials, channel);
@@ -136,6 +140,7 @@ public class TwitchChatClient : IChatClient
         if (disposing)
         {
             Disconnect();
+            TwitchWebSocketClient.Dispose();
         }
     }
 
