@@ -1,4 +1,6 @@
-﻿namespace TrackerCouncil.Smz3.Tracking.Services;
+﻿using System;
+
+namespace TrackerCouncil.Smz3.Tracking.Services;
 
 /// <summary>
 /// Defines a mechanism to communicate with the player.
@@ -61,4 +63,16 @@ public interface ICommunicator
     /// communication rate.
     /// </summary>
     public void SlowDown() { }
+
+    /// <summary>
+    /// If the TTS is currently speaking
+    /// </summary>
+    public bool IsSpeaking { get;  }
+
+    /// <summary>
+    /// Event for when the communicator has finished speaking
+    /// </summary>
+    public event EventHandler<SpeakCompletedEventArgs> SpeakCompleted;
+
+
 }
