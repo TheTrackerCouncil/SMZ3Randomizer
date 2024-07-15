@@ -586,6 +586,11 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     public SchrodingersString? BeatGame { get; init; }
 
     /// <summary>
+    /// Gets the phrases for sass for when tracker has been talking for over a minute
+    /// </summary>
+    public SchrodingersString? LongSpeechResponse { get; init; }
+
+    /// <summary>
     /// Gets a dictionary that contains the phrases to respond with when no
     /// voice commands have been issued after a certain period of time, as
     /// expressed in the dictionary keys.

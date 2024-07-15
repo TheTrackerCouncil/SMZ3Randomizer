@@ -61,6 +61,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     private readonly HashSet<SchrodingersString> _saidLines = new();
     private IEnumerable<ItemType>? _previousMissingItems;
     private List<Location> _lastMarkedLocations = new();
+    private List<Item> _pendingSpeechItems = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Tracker"/> class.
@@ -159,6 +160,8 @@ public sealed class Tracker : TrackerBase, IDisposable
         InitializeMicrophone();
         World = _worldAccessor.World;
         Options = _trackerOptions.Options;
+
+        _communicator.SpeakCompleted += CommunicatorOnSpeakCompleted;
 
         Mood = configs.CurrentMood ?? "";
     }
@@ -852,6 +855,12 @@ public sealed class Tracker : TrackerBase, IDisposable
                                                           || !item.Metadata.IsDungeonItem()
                                                           || World.Config.ZeldaKeysanity);
 
+        if (stateResponse && _communicator.IsSpeaking)
+        {
+            _pendingSpeechItems.Add(item);
+            stateResponse = false;
+        }
+
         // Actually track the item if it's for the local player's world
         if (item.World == World)
         {
@@ -1123,25 +1132,7 @@ public sealed class Tracker : TrackerBase, IDisposable
             item.Track();
         }
 
-        if (items.Count == 2)
-        {
-            Say(x => x.TrackedTwoItems, args: [items[0].Metadata.Name, items[1].Metadata.Name]);
-        }
-        else if (items.Count == 3)
-        {
-            Say(x => x.TrackedThreeItems, args: [items[0].Metadata.Name, items[1].Metadata.Name, items[2].Metadata.Name]);
-        }
-        else
-        {
-            var itemsToSay = items.Where(x => x.Type.IsPossibleProgression(World.Config.ZeldaKeysanity, World.Config.MetroidKeysanity)).Take(2).ToList();
-            if (itemsToSay.Count() < 2)
-            {
-                var numToTake = 2 - itemsToSay.Count();
-                itemsToSay.AddRange(items.Where(x => !x.Type.IsPossibleProgression(World.Config.ZeldaKeysanity, World.Config.MetroidKeysanity)).Take(numToTake));
-            }
-
-            Say(x => x.TrackedManyItems, args: [itemsToSay[0].Metadata.Name, itemsToSay[1].Metadata.Name, items.Count - 2]);
-        }
+        AnnounceTrackedItems(items);
 
         OnItemTracked(new ItemTrackedEventArgs(null, null, null, true));
         IsDirty = true;
@@ -2590,4 +2581,52 @@ public sealed class Tracker : TrackerBase, IDisposable
         }
     }
 
+    private void AnnounceTrackedItems(List<Item> items)
+    {
+        if (items.Count == 1)
+        {
+            var item = items[0];
+            if (item.TryGetTrackingResponse(out var response))
+            {
+                Say(text: response.Format(item.Counter));
+            }
+            else
+            {
+                Say(text: Responses.TrackedItem?.Format(item.Name, item.Metadata.NameWithArticle));
+            }
+        }
+        else if (items.Count == 2)
+        {
+            Say(x => x.TrackedTwoItems, args: [items[0].Metadata.NameWithArticle, items[1].Metadata.NameWithArticle]);
+        }
+        else if (items.Count == 3)
+        {
+            Say(x => x.TrackedThreeItems, args: [items[0].Metadata.NameWithArticle, items[1].Metadata.NameWithArticle, items[2].Metadata.NameWithArticle]);
+        }
+        else
+        {
+            var itemsToSay = items.Where(x => x.Type.IsPossibleProgression(World.Config.ZeldaKeysanity, World.Config.MetroidKeysanity)).Take(2).ToList();
+            if (itemsToSay.Count() < 2)
+            {
+                var numToTake = 2 - itemsToSay.Count();
+                itemsToSay.AddRange(items.Where(x => !x.Type.IsPossibleProgression(World.Config.ZeldaKeysanity, World.Config.MetroidKeysanity)).Take(numToTake));
+            }
+
+            Say(x => x.TrackedManyItems, args: [itemsToSay[0].Metadata.NameWithArticle, itemsToSay[1].Metadata.NameWithArticle, items.Count - 2]);
+        }
+    }
+
+    private void CommunicatorOnSpeakCompleted(object? sender, SpeakCompletedEventArgs e)
+    {
+        if (_pendingSpeechItems.Count > 0)
+        {
+            AnnounceTrackedItems(_pendingSpeechItems);
+            _pendingSpeechItems.Clear();
+        }
+
+        if (e.SpeechDuration.TotalSeconds > 60)
+        {
+            Say(x => x.LongSpeechResponse);
+        }
+    }
 }

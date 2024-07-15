@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Speech.Synthesis;
+using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Data.Options;
 
 namespace TrackerCouncil.Smz3.Tracking.Services;
@@ -12,12 +13,13 @@ public class TextToSpeechCommunicator : ICommunicator, IDisposable
 {
     private readonly SpeechSynthesizer _tts = null!;
     private bool _canSpeak;
+    private DateTime _startSpeakingTime;
 
     /// <summary>
     /// Initializes a new instance of the <see
     /// cref="TextToSpeechCommunicator"/> class.
     /// </summary>
-    public TextToSpeechCommunicator(TrackerOptionsAccessor trackerOptionsAccessor)
+    public TextToSpeechCommunicator(TrackerOptionsAccessor trackerOptionsAccessor, ILogger<ICommunicator> logger)
     {
         if (!OperatingSystem.IsWindows())
         {
@@ -26,6 +28,22 @@ public class TextToSpeechCommunicator : ICommunicator, IDisposable
 
         _tts = new SpeechSynthesizer();
         _tts.SelectVoiceByHints(VoiceGender.Female);
+
+        _tts.SpeakStarted += (sender, args) =>
+        {
+            if (IsSpeaking) return;
+            _startSpeakingTime = DateTime.Now;
+            IsSpeaking = true;
+        };
+
+        _tts.SpeakCompleted += (sender, args) =>
+        {
+            if (!OperatingSystem.IsWindows() || !_canSpeak || _tts.State != SynthesizerState.Ready) return;
+            IsSpeaking = false;
+            var duration = DateTime.Now - _startSpeakingTime;
+            SpeakCompleted?.Invoke(this, new SpeakCompletedEventArgs(duration));
+        };
+
         _canSpeak = trackerOptionsAccessor.Options?.VoiceFrequency != Shared.Enums.TrackerVoiceFrequency.Disabled;
     }
 
@@ -122,6 +140,10 @@ public class TextToSpeechCommunicator : ICommunicator, IDisposable
 
         _tts.Rate -= 2;
     }
+
+    public bool IsSpeaking { get; private set; }
+
+    public event EventHandler<SpeakCompletedEventArgs>? SpeakCompleted;
 
     /// <inheritdoc/>
     public void Dispose()
