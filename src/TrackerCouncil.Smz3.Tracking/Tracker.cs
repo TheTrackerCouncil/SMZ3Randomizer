@@ -2040,7 +2040,7 @@ public sealed class Tracker : TrackerBase, IDisposable
             var delta = count - PegsPegged;
 
             PegsPegged = count;
-            Say(responses: Responses.PegWorldModePeggedMultiple, tieredKey: delta);
+            Say(responses: Responses.PegWorldModePeggedMultiple, tieredKey: delta, wait: true);
             OnPegPegged(new TrackerEventArgs(null, true));
         }
     }
