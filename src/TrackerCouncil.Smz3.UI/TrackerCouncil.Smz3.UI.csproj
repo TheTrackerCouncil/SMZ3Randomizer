@@ -6,7 +6,7 @@
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-        <Version>9.8.1</Version>
+        <Version>9.8.2</Version>
         <AssemblyName>SMZ3CasRandomizer</AssemblyName>
         <ApplicationIcon>Assets\smz3.ico</ApplicationIcon>
         <RootNamespace>$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
@@ -20,14 +20,14 @@
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Include="Avalonia_Gif" Version="1.0.0" />
         <PackageReference Include="MattEqualsCoder.AvaloniaControls" Version="1.3.1" />
-        <PackageReference Include="MattEqualsCoder.DynamicForms.Avalonia" Version="0.0.3-rc.5" />
-        <PackageReference Include="MattEqualsCoder.MSURandomizer.Avalonia" Version="2.1.0" />
+        <PackageReference Include="MattEqualsCoder.DynamicForms.Avalonia" Version="1.0.1" />
+        <PackageReference Include="MattEqualsCoder.MSURandomizer.Avalonia" Version="2.1.1" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
         <PackageReference Include="ReactiveUI.Fody" Version="19.5.41" />
         <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
         <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
-        <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+        <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
     </ItemGroup>
 
     <ItemGroup>

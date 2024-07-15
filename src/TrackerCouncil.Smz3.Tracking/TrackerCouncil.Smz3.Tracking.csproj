@@ -10,10 +10,10 @@
     <PackageReference Include="BunLabs.Common" Version="1.0.4" />
     <PackageReference Include="MattEqualsCoder.MSURandomizer.Library" Version="2.2.0-beta.1" />
     <PackageReference Include="NAudio.Wasapi" Version="2.2.1" />
-    <PackageReference Include="SharpHook" Version="5.3.3" />
+    <PackageReference Include="SharpHook" Version="5.3.7" />
     <PackageReference Include="System.Speech" Version="8.0.0" />
-    <PackageReference Include="Websocket.Client" Version="5.1.1" />
-    <PackageReference Include="YamlDotNet" Version="15.1.2" />
+    <PackageReference Include="Websocket.Client" Version="5.1.2" />
+    <PackageReference Include="YamlDotNet" Version="16.0.0" />
   </ItemGroup>
 
   <ItemGroup>
