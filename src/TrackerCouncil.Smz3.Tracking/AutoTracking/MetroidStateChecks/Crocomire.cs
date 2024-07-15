@@ -22,7 +22,7 @@ public class Crocomire(IItemService itemService) : IMetroidStateCheck
     {
         if (currentState is { CurrentRegion: 2, CurrentRoomInRegion: 9, SamusX: >= 3000, SamusY: > 500 } && (!tracker.World.Config.MetroidKeysanity || itemService.IsTracked(ItemType.CardNorfairBoss)))
         {
-            tracker.SayOnce(x => x.AutoTracker.NearCrocomire, currentState.SuperMissiles, currentState.MaxSuperMissiles);
+            tracker.Say(x => x.AutoTracker.NearCrocomire, args: [currentState.SuperMissiles, currentState.MaxSuperMissiles], once: true);
             return true;
         }
         return false;

@@ -20,7 +20,7 @@ public class SporeSpawn : IMetroidStateCheck
     {
         if (currentState.CurrentRegion == 1 && currentState.CurrentRoomInRegion == 22 && prevState.CurrentRoomInRegion == 9)
         {
-            tracker.SayOnce(x => x.AutoTracker.SkipSporeSpawn);
+            tracker.Say(selectResponse: x => x.AutoTracker.SkipSporeSpawn, once: true);
             return true;
         }
         return false;

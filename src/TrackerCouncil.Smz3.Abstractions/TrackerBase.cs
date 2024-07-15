@@ -415,91 +415,31 @@ public abstract class TrackerBase
     /// <summary>
     /// Speak a sentence using text-to-speech.
     /// </summary>
-    /// <param name="text">The possible sentences to speak.</param>
-    /// <returns>
-    /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
-    /// name="text"/> was <c>null</c>.
-    /// </returns>
-    public abstract bool Say(SchrodingersString? text);
-
-    /// <summary>
-    /// Speak a sentence using text-to-speech.
-    /// </summary>
     /// <param name="selectResponse">Selects the response to use.</param>
-    /// <returns>
-    /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
-    /// response was <c>null</c>.
-    /// </returns>
-    public abstract bool Say(Func<ResponseConfig, SchrodingersString?> selectResponse);
-
-    /// <summary>
-    /// Speak a sentence using text-to-speech.
-    /// </summary>
-    /// <param name="text">The possible sentences to speak.</param>
-    /// <param name="args">The arguments used to format the text.</param>
-    /// <returns>
-    /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
-    /// name="text"/> was <c>null</c>.
-    /// </returns>
-    public abstract bool Say(SchrodingersString? text, params object?[] args);
-
-    /// <summary>
-    /// Speak a sentence using text-to-speech.
-    /// </summary>
-    /// <param name="selectResponse">Selects the response to use.</param>
-    /// <param name="args">The arguments used to format the text.</param>
-    /// <returns>
-    /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
-    /// response was <c>null</c>.
-    /// </returns>
-    public abstract bool Say(Func<ResponseConfig, SchrodingersString?> selectResponse, params object?[] args);
-
-    /// <summary>
-    /// Speak a sentence using text-to-speech only one time.
-    /// </summary>
-    /// <param name="text">The possible sentences to speak.</param>
-    /// <returns>
-    /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
-    /// name="text"/> was <c>null</c>.
-    /// </returns>
-    public abstract bool SayOnce(SchrodingersString? text);
-
-    /// <summary>
-    /// Speak a sentence using text-to-speech only one time.
-    /// </summary>
-    /// <param name="selectResponse">Selects the response to use.</param>
-    /// <returns>
-    /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
-    /// response was <c>null</c>.
-    /// </returns>
-    public abstract bool SayOnce(Func<ResponseConfig, SchrodingersString?> selectResponse);
-
-    /// <summary>
-    /// Speak a sentence using text-to-speech only one time.
-    /// </summary>
-    /// <param name="text">The text response to use.</param>
-    /// <param name="args">Arguments to substitute out in the text</param>
-    /// <returns>
-    /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
-    /// response was <c>null</c>.
-    /// </returns>
-    public abstract bool SayOnce(SchrodingersString? text, params object?[] args);
-
-    /// <summary>
-    /// Speak a sentence using text-to-speech only one time.
-    /// </summary>
-    /// <param name="selectResponse">Selects the response to use.</param>
-    /// <param name="args">The arguments used to format the text.</param>
-    /// <returns>
-    /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
-    /// response was <c>null</c>.
-    /// </returns>
-    public abstract bool SayOnce(Func<ResponseConfig, SchrodingersString?> selectResponse, params object?[] args);
-
-    /// <summary>
-    /// Speak a sentence using text-to-speech.
-    /// </summary>
-    /// <param name="text">The phrase to speak.</param>
+    /// <param name="selectResponses">
+    /// Selects the dictionary of responses that <c>key</c> or <c>tieredKey</c> will pull a response from.
+    /// </param>
+    /// <param name="response">The response to use.</param>
+    /// <param name="responses">
+    /// The dictionary of responses that <c>key</c> or <c>tieredKey</c> will pull a response from.
+    /// </param>
+    /// <param name="key">
+    /// The exact key of the response that should be pulled from the dictionary of <c>responses</c>.
+    /// </param>
+    /// <param name="tieredKey">
+    /// The "tiered" key of the response that should be pulled from the dictionary of <c>responses</c>.
+    /// The closest key in the dictionary that is less than or equal to this value will be used.
+    /// </param>
+    /// <param name="args">
+    /// The arguments used to format the selected response.
+    /// This paremeter is ignored when the <c>text</c> parameter is specified.
+    /// </param>
+    /// <param name="text">The specific sentence that should be spoken, which may include placeholders.</param>
+    /// <param name="once">
+    /// <c>true</c> to speak the selected response only once or
+    /// <c>false</c> to speak it as many times as requested. The default is <c>false</c>.
+    /// This parameter is ignored when the <c>text</c> parameter is specified.
+    /// </param>
     /// <param name="wait">
     /// <c>true</c> to wait until the text has been spoken completely or
     /// <c>false</c> to immediately return. The default is <c>false</c>.
@@ -508,7 +448,17 @@ public abstract class TrackerBase
     /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
     /// response was <c>null</c>.
     /// </returns>
-    public abstract bool Say(string? text, bool wait = false);
+    public abstract bool Say(
+        Func<ResponseConfig, SchrodingersString?>? selectResponse = null,
+        Func<ResponseConfig, Dictionary<int, SchrodingersString>?>? selectResponses = null,
+        SchrodingersString? response = null,
+        Dictionary<int, SchrodingersString>? responses = null,
+        int? key = null,
+        int? tieredKey = null,
+        object?[]? args = null,
+        string? text = null,
+        bool once = false,
+        bool wait = false);
 
     /// <summary>
     /// Repeats the most recently spoken sentence using text-to-speech at a

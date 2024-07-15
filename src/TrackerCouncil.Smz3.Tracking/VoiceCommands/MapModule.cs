@@ -92,7 +92,7 @@ public class MapModule : TrackerModule
         {
             var mapName = (string)result.Semantics[MapKey].Value;
             TrackerBase.UpdateMap(mapName);
-            TrackerBase.Say(x => x.Map.UpdateMap, mapName);
+            TrackerBase.Say(x => x.Map.UpdateMap, args: [mapName]);
         });
 
         AddCommand("Show dark room map", DarkRoomRule(), (result) =>
@@ -122,7 +122,7 @@ public class MapModule : TrackerModule
                     _prevMap = _config.Maps.Last().ToString();
                 }
                 TrackerBase.UpdateMap(map.ToString());
-                TrackerBase.Say(x => x.Map.ShowDarkRoomMap, map.Name);
+                TrackerBase.Say(x => x.Map.ShowDarkRoomMap, args: [map.Name]);
             }
             else
             {
@@ -139,7 +139,7 @@ public class MapModule : TrackerModule
             else
             {
                 TrackerBase.UpdateMap(_prevMap);
-                TrackerBase.Say(x => x.Map.HideDarkRoomMap, _prevMap);
+                TrackerBase.Say(x => x.Map.HideDarkRoomMap, args: [_prevMap]);
                 _prevMap = "";
             }
         });

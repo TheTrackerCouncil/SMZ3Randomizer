@@ -252,19 +252,19 @@ public sealed class Tracker : TrackerBase, IDisposable
         {
             if ((DateTime.Now - undoLast.UndoTime).TotalMinutes <= (_trackerOptions.Options?.UndoExpirationTime ?? 3))
             {
-                Say(Responses.ActionUndone);
+                Say(response: Responses.ActionUndone);
                 undoLast.Action();
                 OnActionUndone(new TrackerEventArgs(confidence));
             }
             else
             {
-                Say(Responses.UndoExpired);
+                Say(response: Responses.UndoExpired);
                 _undoHistory.Push(undoLast);
             }
         }
         else
         {
-            Say(Responses.NothingToUndo);
+            Say(response: Responses.NothingToUndo);
         }
     }
 
@@ -275,16 +275,16 @@ public sealed class Tracker : TrackerBase, IDisposable
     public override void ToggleGoMode(float? confidence = null)
     {
         ShutUp();
-        Say("Toggled Go Mode <break time='1s'/>", wait: true);
+        Say(text: "Toggled Go Mode <break time='1s'/>", wait: true);
         GoMode = true;
         OnGoModeToggledOn(new TrackerEventArgs(confidence));
-        Say("on.");
+        Say(text: "on.");
 
         AddUndo(() =>
         {
             GoMode = false;
             if (Responses.GoModeToggledOff != null)
-                Say(Responses.GoModeToggledOff);
+                Say(response: Responses.GoModeToggledOff);
             OnGoModeToggledOff(new TrackerEventArgs(confidence));
         });
     }
@@ -317,7 +317,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         if (amount > dungeon.DungeonState.RemainingTreasure && !dungeon.DungeonState.HasManuallyClearedTreasure)
         {
             _logger.LogWarning("Trying to track {Amount} treasures in a dungeon with only {Left} treasures left.", amount, dungeon.DungeonState.RemainingTreasure);
-            Say(Responses.DungeonTooManyTreasuresTracked?.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonState.RemainingTreasure, amount));
+            Say(response: Responses.DungeonTooManyTreasuresTracked, args: [dungeon.DungeonMetadata.Name, dungeon.DungeonState.RemainingTreasure, amount]);
             return false;
         }
 
@@ -347,12 +347,12 @@ public sealed class Tracker : TrackerBase, IDisposable
             {
                 // Try to get the response based on the amount of items left
                 if (Responses.DungeonTreasureTracked?.TryGetValue(dungeon.DungeonState.RemainingTreasure, out var response) == true)
-                    Say(response.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonState.RemainingTreasure));
+                    Say(response: response, args: [dungeon.DungeonMetadata.Name, dungeon.DungeonState.RemainingTreasure]);
                 // If we don't have a response for the exact amount and we
                 // have multiple left, get the one for 2 (considered
                 // generic)
                 else if (dungeon.DungeonState.RemainingTreasure >= 2 && Responses.DungeonTreasureTracked?.TryGetValue(2, out response) == true)
-                    Say(response.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonState.RemainingTreasure));
+                    Say(response: response, args: [dungeon.DungeonMetadata.Name, dungeon.DungeonState.RemainingTreasure]);
             }
 
             OnDungeonUpdated(new DungeonTrackedEventArgs(dungeon, confidence, autoTracked));
@@ -372,7 +372,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         {
             // Attempted to track treasure when all treasure items were
             // already cleared out
-            Say(response.Format(dungeon.DungeonMetadata.Name));
+            Say(response: response, args: [dungeon.DungeonMetadata.Name]);
         }
 
         return false;
@@ -402,7 +402,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         {
             dungeon.DungeonState.MarkedReward = reward.Value;
             var rewardObj = ItemService.FirstOrDefault(reward.Value);
-            Say(Responses.DungeonRewardMarked?.Format(dungeon.DungeonMetadata.Name, rewardObj?.Metadata.Name ?? reward.GetDescription()));
+            Say(response: Responses.DungeonRewardMarked, args: [dungeon.DungeonMetadata.Name, rewardObj?.Metadata.Name ?? reward.GetDescription()]);
         }
 
         OnDungeonUpdated(new DungeonTrackedEventArgs(dungeon, confidence, autoTracked));
@@ -427,7 +427,7 @@ public sealed class Tracker : TrackerBase, IDisposable
 
         if (unmarkedDungeons.Count > 0)
         {
-            Say(Responses.RemainingDungeonsMarked?.Format(ItemService.GetName(reward)));
+            Say(response: Responses.RemainingDungeonsMarked, args: [ItemService.GetName(reward)]);
             unmarkedDungeons.ForEach(dungeon => dungeon.DungeonState.MarkedReward = reward);
             AddUndo(() =>
             {
@@ -438,7 +438,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         }
         else
         {
-            Say(Responses.NoRemainingDungeons);
+            Say(response: Responses.NoRemainingDungeons);
         }
     }
 
@@ -454,11 +454,11 @@ public sealed class Tracker : TrackerBase, IDisposable
         var region = World.Regions.SingleOrDefault(x => dungeon.DungeonMetadata.Name?.Contains(x.Name, StringComparison.OrdinalIgnoreCase) == true);
         if (region == null)
         {
-            Say("Strange, I can't find that dungeon in this seed.");
+            Say(text: "Strange, I can't find that dungeon in this seed.");
         }
         else if (region is not INeedsMedallion)
         {
-            Say(Responses.DungeonRequirementInvalid?.Format(dungeon.DungeonMetadata.Name));
+            Say(response: Responses.DungeonRequirementInvalid, args: [dungeon.DungeonMetadata.Name]);
             return;
         }
 
@@ -478,14 +478,16 @@ public sealed class Tracker : TrackerBase, IDisposable
                 && medallionRegion.Medallion != medallion.Value
                 && confidence >= Options.MinimumSassConfidence)
             {
-                Say(Responses.DungeonRequirementMismatch?.Format(
-                    HintsEnabled ? "a different medallion" : medallionRegion.Medallion.ToString(),
-                    dungeon.DungeonMetadata.Name,
-                    medallion.Value.ToString()));
+                Say(response: Responses.DungeonRequirementMismatch,
+                    args: [
+                        HintsEnabled ? "a different medallion" : medallionRegion.Medallion.ToString(),
+                        dungeon.DungeonMetadata.Name,
+                        medallion.Value.ToString()
+                    ]);
             }
 
             dungeon.DungeonState.MarkedMedallion = medallion.Value;
-            Say(Responses.DungeonRequirementMarked?.Format(medallion.ToString(), dungeon.DungeonMetadata.Name));
+            Say(response: Responses.DungeonRequirementMarked, args: [medallion.ToString(), dungeon.DungeonMetadata.Name]);
             OnDungeonUpdated(new DungeonTrackedEventArgs(dungeon, confidence, false));
         }
 
@@ -528,7 +530,7 @@ public sealed class Tracker : TrackerBase, IDisposable
             loadError = true;
         }
 
-        Say(_alternateTracker ? Responses.StartingTrackingAlternate : Responses.StartedTracking);
+        Say(response: _alternateTracker ? Responses.StartingTrackingAlternate : Responses.StartedTracking);
         RestartIdleTimers();
         return !loadError;
     }
@@ -571,7 +573,7 @@ public sealed class Tracker : TrackerBase, IDisposable
 
         if (!isInitial)
         {
-            Say(Responses.TimerResumed);
+            Say(response: Responses.TimerResumed);
             AddUndo(() => _timerService.Undo());
         }
     }
@@ -585,7 +587,7 @@ public sealed class Tracker : TrackerBase, IDisposable
 
         if (!isInitial)
         {
-            Say(Responses.TimerReset);
+            Say(response: Responses.TimerReset);
             AddUndo(() => _timerService.Undo());
         }
     }
@@ -597,7 +599,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     {
         _timerService.StopTimer();
 
-        Say(Responses.TimerPaused);
+        Say(response: Responses.TimerPaused);
 
         if (addUndo)
         {
@@ -634,7 +636,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         DisableVoiceRecognition();
         _communicator.Abort();
         _chatClient.Disconnect();
-        Say(GoMode ? Responses.StoppedTrackingPostGoMode : Responses.StoppedTracking, wait: true);
+        Say(response: GoMode ? Responses.StoppedTrackingPostGoMode : Responses.StoppedTracking, wait: true);
 
         foreach (var timer in _idleTimers.Values)
             timer.Change(Timeout.Infinite, Timeout.Infinite);
@@ -670,161 +672,75 @@ public sealed class Tracker : TrackerBase, IDisposable
         }
     }
 
-    /// <summary>
-    /// Speak a sentence using text-to-speech.
-    /// </summary>
-    /// <param name="text">The possible sentences to speak.</param>
-    /// <returns>
-    /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
-    /// name="text"/> was <c>null</c>.
-    /// </returns>
-    public override bool Say(SchrodingersString? text)
+    /// <inheritdoc/>
+    public override bool Say(
+        Func<ResponseConfig, SchrodingersString?>? selectResponse = null,
+        Func<ResponseConfig, Dictionary<int, SchrodingersString>?>? selectResponses = null,
+        SchrodingersString? response = null,
+        Dictionary<int, SchrodingersString>? responses = null,
+        int? key = null,
+        int? tieredKey = null,
+        object?[]? args = null,
+        string? text = null,
+        bool once = false,
+        bool wait = false)
     {
-        if (text == null)
-            return false;
+        SchrodingersString? selectedResponse = null;
 
-        return Say(text.ToString());
-    }
-
-    /// <summary>
-    /// Speak a sentence using text-to-speech.
-    /// </summary>
-    /// <param name="selectResponse">Selects the response to use.</param>
-    /// <returns>
-    /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
-    /// response was <c>null</c>.
-    /// </returns>
-    public override bool Say(Func<ResponseConfig, SchrodingersString?> selectResponse)
-    {
-        return Say(selectResponse(Responses));
-    }
-
-    /// <summary>
-    /// Speak a sentence using text-to-speech.
-    /// </summary>
-    /// <param name="text">The possible sentences to speak.</param>
-    /// <param name="args">The arguments used to format the text.</param>
-    /// <returns>
-    /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
-    /// name="text"/> was <c>null</c>.
-    /// </returns>
-    public override bool Say(SchrodingersString? text, params object?[] args)
-    {
-        if (text == null)
-            return false;
-
-        return Say(text.Format(args), wait: false);
-    }
-
-    /// <summary>
-    /// Speak a sentence using text-to-speech.
-    /// </summary>
-    /// <param name="selectResponse">Selects the response to use.</param>
-    /// <param name="args">The arguments used to format the text.</param>
-    /// <returns>
-    /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
-    /// response was <c>null</c>.
-    /// </returns>
-    public override bool Say(Func<ResponseConfig, SchrodingersString?> selectResponse, params object?[] args)
-    {
-        return Say(selectResponse(Responses), args);
-    }
-
-    /// <summary>
-    /// Speak a sentence using text-to-speech only one time.
-    /// </summary>
-    /// <param name="text">The possible sentences to speak.</param>
-    /// <returns>
-    /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
-    /// name="text"/> was <c>null</c>.
-    /// </returns>
-    public override bool SayOnce(SchrodingersString? text)
-    {
-        if (text == null)
-            return false;
-
-        if (!_saidLines.Contains(text))
+        if (key != null)
         {
-            _saidLines.Add(text);
-            return Say(text.ToString());
+            // Grab the exact response out of the dictionary, if it exists.
+            responses ??= selectResponses?.Invoke(Responses);
+            responses?.TryGetValue((int)key, out selectedResponse);
         }
-
-        return true;
-    }
-
-    /// <summary>
-    /// Speak a sentence using text-to-speech only one time.
-    /// </summary>
-    /// <param name="selectResponse">Selects the response to use.</param>
-    /// <returns>
-    /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
-    /// response was <c>null</c>.
-    /// </returns>
-    public override bool SayOnce(Func<ResponseConfig, SchrodingersString?> selectResponse)
-    {
-        return SayOnce(selectResponse(Responses));
-    }
-
-    /// <summary>
-    /// Speak a sentence using text-to-speech only one time.
-    /// </summary>
-    /// <param name="text">The possible sentences to speak.</param>
-    /// <param name="args">The arguments used to format the text.</param>
-    /// <returns>
-    /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
-    /// name="text"/> was <c>null</c>.
-    /// </returns>
-    public override bool SayOnce(SchrodingersString? text, params object?[] args)
-    {
-        if (text == null)
-            return false;
-
-        if (!_saidLines.Contains(text))
+        else if (tieredKey != null)
         {
-            _saidLines.Add(text);
-            return Say(text.Format(args), wait: false);
+            var responseIndex = 0;
+
+            responses ??= selectResponses?.Invoke(Responses);
+
+            // Find the response with the closest value to the target delta, without being higher.
+            for (var i = 0; i <= tieredKey; i++)
+            {
+                if (responses?.ContainsKey(i) == true)
+                {
+                    responseIndex = i;
+                }
+            }
+
+            responses?.TryGetValue(responseIndex, out selectedResponse);
         }
-
-        return true;
-    }
-
-    /// <summary>
-    /// Speak a sentence using text-to-speech only one time.
-    /// </summary>
-    /// <param name="selectResponse">Selects the response to use.</param>
-    /// <param name="args">The arguments used to format the text.</param>
-    /// <returns>
-    /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
-    /// response was <c>null</c>.
-    /// </returns>
-    public override bool SayOnce(Func<ResponseConfig, SchrodingersString?> selectResponse, params object?[] args)
-    {
-        return SayOnce(selectResponse(Responses), args);
-    }
-
-    /// <summary>
-    /// Speak a sentence using text-to-speech.
-    /// </summary>
-    /// <param name="text">The phrase to speak.</param>
-    /// <param name="wait">
-    /// <c>true</c> to wait until the text has been spoken completely or
-    /// <c>false</c> to immediately return. The default is <c>false</c>.
-    /// </param>
-    /// <returns>
-    /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
-    /// response was <c>null</c>.
-    /// </returns>
-    public override bool Say(string? text, bool wait = false)
-    {
-        if (text == null)
-            return false;
-
-        var formattedText = FormatPlaceholders(text);
-        if (wait)
-            _communicator.SayWait(formattedText);
         else
+        {
+            selectedResponse = response ?? selectResponse?.Invoke(Responses);
+        }
+
+        if (once == true && selectedResponse != null && !_saidLines.Add(selectedResponse))
+        {
+            // True because we did successfully select a response, even though it was already said before
+            return true;
+        }
+
+        var placeholderText = text ?? selectedResponse?.Format(args ?? []);
+
+        if (placeholderText == null)
+        {
+            return false;
+        }
+
+        var formattedText = FormatPlaceholders(placeholderText);
+
+        if (wait)
+        {
+            _communicator.SayWait(formattedText);
+        }
+        else
+        {
             _communicator.Say(formattedText);
-        _lastSpokenText = text;
+        }
+
+        _lastSpokenText = formattedText;
+
         return true;
     }
 
@@ -864,13 +780,13 @@ public sealed class Tracker : TrackerBase, IDisposable
 
         if (_lastSpokenText == null)
         {
-            Say("I haven't said anything yet.");
+            Say(text: "I haven't said anything yet.");
             return;
         }
 
         _communicator.SayWait("I said");
         _communicator.SlowDown();
-        Say(_lastSpokenText, wait: true);
+        Say(text: _lastSpokenText, wait: true);
         _communicator.SpeedUp();
     }
 
@@ -887,7 +803,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     /// </summary>
     public override void Error()
     {
-        Say(Responses.Error);
+        Say(response: Responses.Error);
     }
 
     /// <summary>
@@ -956,16 +872,16 @@ public sealed class Tracker : TrackerBase, IDisposable
                         {
                             if (item.TryGetTrackingResponse(out var response))
                             {
-                                Say(response.Format(item.Counter));
+                                Say(response: response, args: [item.Counter]);
                             }
                             else
                             {
-                                Say(Responses.TrackedItemByStage?.Format(itemName, stageName));
+                                Say(response: Responses.TrackedItemByStage, args: [itemName, stageName]);
                             }
                         }
                         else
                         {
-                            Say(Responses.TrackedOlderProgressiveItem?.Format(itemName, item.Metadata.Stages[item.State.TrackingState].ToString()));
+                            Say(response: Responses.TrackedOlderProgressiveItem, args: [itemName, item.Metadata.Stages[item.State.TrackingState].ToString()]);
                         }
                     }
                 }
@@ -979,17 +895,17 @@ public sealed class Tracker : TrackerBase, IDisposable
                         {
                             if (item.TryGetTrackingResponse(out var response))
                             {
-                                Say(response.Format(item.Counter));
+                                Say(response: response, args: [item.Counter]);
                             }
                             else
                             {
                                 var stageName = item.Metadata.Stages[item.State.TrackingState].ToString();
-                                Say(Responses.TrackedProgressiveItem?.Format(itemName, stageName));
+                                Say(response: Responses.TrackedProgressiveItem, args: [itemName, stageName]);
                             }
                         }
                         else
                         {
-                            Say(Responses.TrackedTooManyOfAnItem?.Format(itemName));
+                            Say(response: Responses.TrackedTooManyOfAnItem, args: [itemName]);
                         }
                     }
                 }
@@ -1000,23 +916,23 @@ public sealed class Tracker : TrackerBase, IDisposable
                 if (item.TryGetTrackingResponse(out var response))
                 {
                     if (stateResponse)
-                        Say(response.Format(item.Counter));
+                        Say(response: response, args: [item.Counter]);
                 }
                 else if (item.Counter == 1)
                 {
                     if (stateResponse)
-                        Say(Responses.TrackedItem?.Format(itemName, item.Metadata.NameWithArticle));
+                        Say(response: Responses.TrackedItem, args: [itemName, item.Metadata.NameWithArticle]);
                 }
                 else if (item.Counter > 1)
                 {
                     if (stateResponse)
-                        Say(Responses.TrackedItemMultiple?.Format(item.Metadata.Plural ?? $"{itemName}s", item.Counter, item.Name));
+                        Say(response: Responses.TrackedItemMultiple, args: [item.Metadata.Plural ?? $"{itemName}s", item.Counter, item.Name]);
                 }
                 else
                 {
                     _logger.LogWarning("Encountered multiple item with counter 0: {Item} has counter {Counter}", item, item.Counter);
                     if (stateResponse)
-                        Say(Responses.TrackedItem?.Format(itemName, item.Metadata.NameWithArticle));
+                        Say(response: Responses.TrackedItem, args: [itemName, item.Metadata.NameWithArticle]);
                 }
             }
             else
@@ -1028,16 +944,16 @@ public sealed class Tracker : TrackerBase, IDisposable
                     {
                         if (item.TryGetTrackingResponse(out var response))
                         {
-                            Say(response.Format(item.Counter));
+                            Say(response: response, args: [item.Counter]);
                         }
                         else
                         {
-                            Say(Responses.TrackedItem?.Format(itemName, item.Metadata.NameWithArticle));
+                            Say(response: Responses.TrackedItem, args: [itemName, item.Metadata.NameWithArticle]);
                         }
                     }
                     else
                     {
-                        Say(Responses.TrackedAlreadyTrackedItem?.Format(itemName));
+                        Say(response: Responses.TrackedAlreadyTrackedItem, args: [itemName]);
                     }
                 }
             }
@@ -1102,15 +1018,15 @@ public sealed class Tracker : TrackerBase, IDisposable
 
                     if (locationInfo.OutOfLogic != null)
                     {
-                        Say(locationInfo.OutOfLogic);
+                        Say(response: locationInfo.OutOfLogic);
                     }
                     else if (roomInfo?.OutOfLogic != null)
                     {
-                        Say(roomInfo.OutOfLogic);
+                        Say(response: roomInfo.OutOfLogic);
                     }
                     else if (regionInfo.OutOfLogic != null)
                     {
-                        Say(regionInfo.OutOfLogic);
+                        Say(response: regionInfo.OutOfLogic);
                     }
                     else
                     {
@@ -1121,7 +1037,7 @@ public sealed class Tracker : TrackerBase, IDisposable
                         var allPossibleMissingItems = allMissingItems.ToList();
                         if (missingItems == null)
                         {
-                            Say(x => x.TrackedOutOfLogicItemTooManyMissing, item.Metadata.Name, locationInfo.Name);
+                            Say(x => x.TrackedOutOfLogicItemTooManyMissing, args: [item.Metadata.Name, locationInfo.Name]);
                         }
                         // Do not say anything if the only thing missing are keys
                         else
@@ -1133,7 +1049,7 @@ public sealed class Tracker : TrackerBase, IDisposable
                             if (itemsChanged && !onlyKeys)
                             {
                                 var missingItemNames = NaturalLanguage.Join(missingItems.Select(ItemService.GetName));
-                                Say(x => x.TrackedOutOfLogicItem, item.Metadata.Name, locationInfo.Name, missingItemNames);
+                                Say(x => x.TrackedOutOfLogicItem, args: [item.Metadata.Name, locationInfo.Name, missingItemNames]);
                             }
                         }
 
@@ -1182,7 +1098,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         if (LocalConfig != null && LocalConfig.LocationItems.ContainsKey(location.Id))
         {
             // I guess we're not storing the other options? We could respond to those, too, if we had those here.
-            Say(x => marking ? x.LocationMarkedPreConfigured : x.TrackedPreConfigured, location.Metadata.Name);
+            Say(x => marking ? x.LocationMarkedPreConfigured : x.TrackedPreConfigured, args: [location.Metadata.Name]);
         }
     }
 
@@ -1209,11 +1125,11 @@ public sealed class Tracker : TrackerBase, IDisposable
 
         if (items.Count == 2)
         {
-            Say(x => x.TrackedTwoItems, items[0].Metadata.Name, items[1].Metadata.Name);
+            Say(x => x.TrackedTwoItems, args: [items[0].Metadata.Name, items[1].Metadata.Name]);
         }
         else if (items.Count == 3)
         {
-            Say(x => x.TrackedThreeItems, items[0].Metadata.Name, items[1].Metadata.Name, items[2].Metadata.Name);
+            Say(x => x.TrackedThreeItems, args: [items[0].Metadata.Name, items[1].Metadata.Name, items[2].Metadata.Name]);
         }
         else
         {
@@ -1224,7 +1140,7 @@ public sealed class Tracker : TrackerBase, IDisposable
                 itemsToSay.AddRange(items.Where(x => !x.Type.IsPossibleProgression(World.Config.ZeldaKeysanity, World.Config.MetroidKeysanity)).Take(numToTake));
             }
 
-            Say(x => x.TrackedManyItems, itemsToSay[0].Metadata.Name, itemsToSay[1].Metadata.Name, items.Count - 2);
+            Say(x => x.TrackedManyItems, args: [itemsToSay[0].Metadata.Name, itemsToSay[1].Metadata.Name, items.Count - 2]);
         }
 
         OnItemTracked(new ItemTrackedEventArgs(null, null, null, true));
@@ -1244,29 +1160,29 @@ public sealed class Tracker : TrackerBase, IDisposable
 
         if (!item.Untrack())
         {
-            Say(Responses.UntrackedNothing?.Format(item.Name, item.Metadata.NameWithArticle));
+            Say(response: Responses.UntrackedNothing, args: [item.Name, item.Metadata.NameWithArticle]);
             return;
         }
 
         if (item.Metadata.HasStages)
         {
-            Say(Responses.UntrackedProgressiveItem?.Format(item.Name, item.Metadata.NameWithArticle));
+            Say(response: Responses.UntrackedProgressiveItem, args: [item.Name, item.Metadata.NameWithArticle]);
         }
         else if (item.Metadata.Multiple)
         {
             if (item.State.TrackingState > 0)
             {
                 if (item.Metadata.CounterMultiplier > 1)
-                    Say(Responses.UntrackedItemMultiple?.Format($"{item.Metadata.CounterMultiplier} {item.Metadata.Plural}", $"{item.Metadata.CounterMultiplier} {item.Metadata.Plural}"));
+                    Say(text: Responses.UntrackedItemMultiple?.Format($"{item.Metadata.CounterMultiplier} {item.Metadata.Plural}", $"{item.Metadata.CounterMultiplier} {item.Metadata.Plural}"));
                 else
-                    Say(Responses.UntrackedItemMultiple?.Format(item.Name, item.Metadata.NameWithArticle));
+                    Say(response: Responses.UntrackedItemMultiple, args: [item.Name, item.Metadata.NameWithArticle]);
             }
             else
-                Say(Responses.UntrackedItemMultipleLast?.Format(item.Name, item.Metadata.NameWithArticle));
+                Say(response: Responses.UntrackedItemMultipleLast, args: [item.Name, item.Metadata.NameWithArticle]);
         }
         else
         {
-            Say(Responses.UntrackedItem?.Format(item.Name, item.Metadata.NameWithArticle));
+            Say(response: Responses.UntrackedItem, args: [item.Name, item.Metadata.NameWithArticle]);
         }
 
         IsDirty = true;
@@ -1357,12 +1273,12 @@ public sealed class Tracker : TrackerBase, IDisposable
 
         if (locations.Count == 0)
         {
-            Say(Responses.AreaDoesNotHaveItem?.Format(item.Name, area.Name, item.Metadata.NameWithArticle));
+            Say(response: Responses.AreaDoesNotHaveItem, args: [item.Name, area.Name, item.Metadata.NameWithArticle]);
         }
         else if (locations.Count > 1)
         {
             // Consider tracking/clearing everything?
-            Say(Responses.AreaHasMoreThanOneItem?.Format(item.Name, area.Name, item.Metadata.NameWithArticle));
+            Say(response: Responses.AreaHasMoreThanOneItem, args: [item.Name, area.Name, item.Metadata.NameWithArticle]);
         }
 
         IsDirty = true;
@@ -1404,22 +1320,22 @@ public sealed class Tracker : TrackerBase, IDisposable
         var oldItemCount = item.State.TrackingState;
         if (newItemCount == oldItemCount)
         {
-            Say(Responses.TrackedExactAmountDuplicate?.Format(item.Metadata.Plural, count));
+            Say(response: Responses.TrackedExactAmountDuplicate, args: [item.Metadata.Plural, count]);
             return;
         }
 
         item.State.TrackingState = newItemCount;
         if (item.TryGetTrackingResponse(out var response))
         {
-            Say(response.Format(item.Counter));
+            Say(response: response, args: [item.Counter]);
         }
         else if (newItemCount > oldItemCount)
         {
-            Say(Responses.TrackedItemMultiple?.Format(item.Metadata.Plural ?? $"{item.Name}s", item.Counter, item.Name));
+            Say(text: Responses.TrackedItemMultiple?.Format(item.Metadata.Plural ?? $"{item.Name}s", item.Counter, item.Name));
         }
         else
         {
-            Say(Responses.UntrackedItemMultiple?.Format(item.Metadata.Plural ?? $"{item.Name}s", item.Metadata.Plural ?? $"{item.Name}s"));
+            Say(text: Responses.UntrackedItemMultiple?.Format(item.Metadata.Plural ?? $"{item.Name}s", item.Metadata.Plural ?? $"{item.Name}s"));
         }
 
         IsDirty = true;
@@ -1464,12 +1380,10 @@ public sealed class Tracker : TrackerBase, IDisposable
             var outOfLogicLocations = area.Locations
                 .Count(x => x.State.Cleared == false);
 
-            if (outOfLogicLocations > 1)
-                Say(Responses.TrackedNothingOutOfLogic?[2].Format(area.Name, outOfLogicLocations));
-            else if (outOfLogicLocations > 0)
-                Say(Responses.TrackedNothingOutOfLogic?[1].Format(area.Name, outOfLogicLocations));
+            if (outOfLogicLocations > 0)
+                Say(responses: Responses.TrackedNothingOutOfLogic, tieredKey: outOfLogicLocations, args: [area.Name, outOfLogicLocations]);
             else
-                Say(Responses.TrackedNothing?.Format(area.Name));
+                Say(response: Responses.TrackedNothing, args: [area.Name]);
         }
         else
         {
@@ -1523,18 +1437,18 @@ public sealed class Tracker : TrackerBase, IDisposable
                     var itemNames = confidence >= Options.MinimumSassConfidence
                         ? NaturalLanguage.Join(itemsTracked, World.Config)
                         : $"{itemsCleared} items";
-                    Say(x => x.TrackedMultipleItems, itemsCleared, area.Name, itemNames);
+                    Say(x => x.TrackedMultipleItems, args: [itemsCleared, area.Name, itemNames]);
 
                     var roomInfo = area is Room room ? room.Metadata : null;
                     var regionInfo = area is Region region ? region.Metadata : null;
 
                     if (roomInfo?.OutOfLogic != null)
                     {
-                        Say(roomInfo.OutOfLogic);
+                        Say(response: roomInfo.OutOfLogic);
                     }
                     else if (regionInfo?.OutOfLogic != null)
                     {
-                        Say(regionInfo.OutOfLogic);
+                        Say(response: regionInfo.OutOfLogic);
                     }
                     else
                     {
@@ -1547,18 +1461,18 @@ public sealed class Tracker : TrackerBase, IDisposable
                             if (missingItems != null)
                             {
                                 var missingItemNames = NaturalLanguage.Join(missingItems.Select(ItemService.GetName));
-                                Say(x => x.TrackedOutOfLogicItem, someOutOfLogicItem.Metadata.Name, someOutOfLogicLocation.Metadata.Name, missingItemNames);
+                                Say(x => x.TrackedOutOfLogicItem, args: [someOutOfLogicItem.Metadata.Name, someOutOfLogicLocation.Metadata.Name, missingItemNames]);
                             }
                             else
                             {
-                                Say(x => x.TrackedOutOfLogicItemTooManyMissing, someOutOfLogicItem.Metadata.Name, someOutOfLogicLocation.Metadata.Name);
+                                Say(x => x.TrackedOutOfLogicItemTooManyMissing, args: [someOutOfLogicItem.Metadata.Name, someOutOfLogicLocation.Metadata.Name]);
                             }
                         }
                     }
                 }
                 else
                 {
-                    Say(x => x.ClearedMultipleItems, itemsCleared, area.Name);
+                    Say(x => x.ClearedMultipleItems, args: [itemsCleared, area.Name]);
                 }
 
                 if (treasureTracked > 0)
@@ -1625,11 +1539,11 @@ public sealed class Tracker : TrackerBase, IDisposable
         if (remaining <= 0 && locations.Count <= 0)
         {
             // We didn't do anything
-            Say(x => x.DungeonAlreadyCleared, dungeon.DungeonMetadata.Name);
+            Say(x => x.DungeonAlreadyCleared, args: [dungeon.DungeonMetadata.Name]);
             return;
         }
 
-        Say(x => x.DungeonCleared, dungeon.DungeonMetadata.Name);
+        Say(x => x.DungeonCleared, args: [dungeon.DungeonMetadata.Name]);
         if (inaccessibleLocations.Count > 0 && confidence >= Options.MinimumSassConfidence)
         {
             var anyMissedLocation = inaccessibleLocations.Random(s_random) ?? inaccessibleLocations.First();
@@ -1641,11 +1555,11 @@ public sealed class Tracker : TrackerBase, IDisposable
                     .Select(ItemService.FirstOrDefault)
                     .NonNull();
                 var missingItemsText = NaturalLanguage.Join(missingItems, World.Config);
-                Say(x => x.DungeonClearedWithInaccessibleItems, dungeon.DungeonMetadata.Name, locationInfo.Name, missingItemsText);
+                Say(x => x.DungeonClearedWithInaccessibleItems, args: [dungeon.DungeonMetadata.Name, locationInfo.Name, missingItemsText]);
             }
             else
             {
-                Say(x => x.DungeonClearedWithTooManyInaccessibleItems, dungeon.DungeonMetadata.Name, locationInfo.Name);
+                Say(x => x.DungeonClearedWithTooManyInaccessibleItems, args: [dungeon.DungeonMetadata.Name, locationInfo.Name]);
             }
         }
         ItemService.ResetProgression();
@@ -1680,7 +1594,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         {
             // Only use TTS if called from a voice command
             var locationName = location.Metadata.Name;
-            Say(Responses.LocationCleared?.Format(locationName));
+            Say(response: Responses.LocationCleared, args: [locationName]);
         }
 
         ItemType? prevMarkedItem = null;
@@ -1760,7 +1674,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         Action? undoDungeonTreasure = null;
         if (locations.Select(x => x.Region).Distinct().Count() == 1)
         {
-            Say(x => x.LocationsClearedSameRegion, locations.Count, locations.First().Region.GetName());
+            Say(x => x.LocationsClearedSameRegion, args: [locations.Count, locations.First().Region.GetName()]);
             if (locations.First().Region is IDungeon dungeon)
             {
                 var treasureCount = locations.Count(x => IsTreasure(x.Item) || World.Config.ZeldaKeysanity);
@@ -1770,7 +1684,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         }
         else
         {
-            Say(x => x.LocationsCleared, locations.Count);
+            Say(x => x.LocationsCleared, args: [locations.Count]);
         }
 
         AddUndo(() =>
@@ -1808,7 +1722,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         if (dungeon.DungeonState.Cleared)
         {
             if (!autoTracked)
-                Say(Responses.DungeonBossAlreadyCleared?.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss));
+                Say(response: Responses.DungeonBossAlreadyCleared, args: [dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss]);
             else
                 OnDungeonUpdated(new DungeonTrackedEventArgs(dungeon, confidence, autoTracked));
 
@@ -1846,7 +1760,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         }
 
         dungeon.DungeonState.Cleared = true;
-        Say(Responses.DungeonBossCleared?.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss));
+        Say(response: Responses.DungeonBossCleared, args: [dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss]);
         IsDirty = true;
         RestartIdleTimers();
         OnDungeonUpdated(new DungeonTrackedEventArgs(dungeon, confidence, autoTracked));
@@ -1882,7 +1796,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         if (boss.State.Defeated)
         {
             if (!autoTracked)
-                Say(x => x.BossAlreadyDefeated, boss.Name);
+                Say(x => x.BossAlreadyDefeated, args: [boss.Name]);
             else
                 OnBossUpdated(new(boss, confidence, autoTracked));
             return;
@@ -1891,9 +1805,9 @@ public sealed class Tracker : TrackerBase, IDisposable
         boss.State.Defeated = true;
 
         if (!admittedGuilt && boss.Metadata.WhenTracked != null)
-            Say(boss.Metadata.WhenTracked, boss.Name);
+            Say(response: boss.Metadata.WhenTracked, args: [boss.Name]);
         else
-            Say(boss.Metadata.WhenDefeated ?? Responses.BossDefeated, boss.Name);
+            Say(response: boss.Metadata.WhenDefeated ?? Responses.BossDefeated, args: [boss.Name]);
 
         var addedEvent = History.AddEvent(
             HistoryEventType.BeatBoss,
@@ -1927,12 +1841,12 @@ public sealed class Tracker : TrackerBase, IDisposable
     {
         if (boss.State.Defeated != true)
         {
-            Say(x => x.BossNotYetDefeated, boss.Name);
+            Say(x => x.BossNotYetDefeated, args: [boss.Name]);
             return;
         }
 
         boss.State.Defeated = false;
-        Say(Responses.BossUndefeated, boss.Name);
+        Say(response: Responses.BossUndefeated, args: [boss.Name]);
 
         IsDirty = true;
         ItemService.ResetProgression();
@@ -1955,13 +1869,13 @@ public sealed class Tracker : TrackerBase, IDisposable
     {
         if (!dungeon.DungeonState.Cleared)
         {
-            Say(Responses.DungeonBossNotYetCleared?.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss));
+            Say(response: Responses.DungeonBossNotYetCleared, args: [dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss]);
             return;
         }
 
         ItemService.ResetProgression();
         dungeon.DungeonState.Cleared = false;
-        Say(Responses.DungeonBossUncleared?.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss));
+        Say(response: Responses.DungeonBossUncleared, args: [dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss]);
 
         // Try to untrack the associated boss reward item
         Action? undoUnclear = null;
@@ -2043,13 +1957,13 @@ public sealed class Tracker : TrackerBase, IDisposable
         if (item == ItemType.Nothing)
         {
             Clear(location);
-            Say(Responses.LocationMarkedAsBullshit?.Format(locationName));
+            Say(response: Responses.LocationMarkedAsBullshit, args: [locationName]);
         }
         else if (location.State.MarkedItem != null)
         {
             var oldType = location.State.MarkedItem;
             location.State.MarkedItem = item;
-            Say(x => x.LocationMarkedAgain, locationName, metadata?.Name ?? item.GetDescription(), oldType.GetDescription());
+            Say(x => x.LocationMarkedAgain, args: [locationName, metadata?.Name ?? item.GetDescription(), oldType.GetDescription()]);
             if (!autoTracked)
             {
                 AddUndo(() =>
@@ -2062,7 +1976,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         else
         {
             location.State.MarkedItem = item;
-            Say(x => x.LocationMarked, locationName, metadata?.Name ?? item.GetDescription());
+            Say(x => x.LocationMarked, args: [locationName, metadata?.Name ?? item.GetDescription()]);
             if (!autoTracked)
             {
                 AddUndo(() =>
@@ -2092,11 +2006,11 @@ public sealed class Tracker : TrackerBase, IDisposable
         PegsPegged++;
 
         if (PegsPegged < PegWorldModeModule.TotalPegs)
-            Say(Responses.PegWorldModePegged);
+            Say(response: Responses.PegWorldModePegged);
         else
         {
             PegWorldMode = false;
-            Say(Responses.PegWorldModeDone);
+            Say(response: Responses.PegWorldModeDone);
             OnToggledPegWorldModeOn(new TrackerEventArgs(confidence));
         }
 
@@ -2124,20 +2038,9 @@ public sealed class Tracker : TrackerBase, IDisposable
         if (count <= PegWorldModeModule.TotalPegs)
         {
             var delta = count - PegsPegged;
-            var responseIndex = 0;
 
             PegsPegged = count;
-
-            // Find the response with the closest value to the target delta, without being higher
-            for (var i = 0; i <= delta; i++)
-            {
-                if (Responses.PegWorldModePeggedMultiple?.ContainsKey(i) == true)
-                {
-                    responseIndex = i;
-                }
-            }
-
-            Say(x => x.PegWorldModePeggedMultiple?[responseIndex], delta);
+            Say(responses: Responses.PegWorldModePeggedMultiple, tieredKey: delta);
             OnPegPegged(new TrackerEventArgs(null, true));
         }
     }
@@ -2150,7 +2053,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     {
         ShutUp();
         PegWorldMode = true;
-        Say(Responses.PegWorldModeOn, wait: true);
+        Say(response: Responses.PegWorldModeOn, wait: true);
         OnToggledPegWorldModeOn(new TrackerEventArgs(confidence));
         AddUndo(() =>
         {
@@ -2166,7 +2069,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     public override void StopPegWorldMode(float? confidence = null)
     {
         PegWorldMode = false;
-        Say(Responses.PegWorldModeDone);
+        Say(response: Responses.PegWorldModeDone);
         OnToggledPegWorldModeOn(new TrackerEventArgs(confidence));
         AddUndo(() =>
         {
@@ -2349,22 +2252,22 @@ public sealed class Tracker : TrackerBase, IDisposable
             if (locations.All(x => x.State.Autotracked || x.State.Cleared))
             {
                 hintTile.State.HintState = HintState.Cleared;
-                Say(Configs.HintTileConfig.ViewedHintTileAlreadyVisited, hintTile.LocationKey);
+                Say(response: Configs.HintTileConfig.ViewedHintTileAlreadyVisited, args: [hintTile.LocationKey]);
             }
             else if (hintTile.Usefulness == LocationUsefulness.Mandatory)
             {
                 hintTile.State.HintState = HintState.Viewed;
-                Say(Configs.HintTileConfig.ViewedHintTileMandatory, hintTile.LocationKey);
+                Say(response: Configs.HintTileConfig.ViewedHintTileMandatory, args: [hintTile.LocationKey]);
             }
             else if (hintTile.Usefulness == LocationUsefulness.Useless)
             {
                 hintTile.State.HintState = HintState.Viewed;
-                Say(Configs.HintTileConfig.ViewedHintTileUseless, hintTile.LocationKey);
+                Say(response: Configs.HintTileConfig.ViewedHintTileUseless, args: [hintTile.LocationKey]);
             }
             else
             {
                 hintTile.State.HintState = HintState.Viewed;
-                Say(Configs.HintTileConfig.ViewedHintTile);
+                Say(response: Configs.HintTileConfig.ViewedHintTile);
             }
         }
 
@@ -2388,18 +2291,7 @@ public sealed class Tracker : TrackerBase, IDisposable
 
     public override void CountHyperBeamShots(int count)
     {
-        var responseIndex = 0;
-
-        // Find the response with the closest value to the target count, without being higher
-        for (var i = 0; i <= count; i++)
-        {
-            if (Responses.CountHyperBeamShots?.ContainsKey(i) == true)
-            {
-                responseIndex = i;
-            }
-        }
-
-        Say(x => x.CountHyperBeamShots?[responseIndex], count);
+        Say(responses: Responses.CountHyperBeamShots, tieredKey: count, args: [count]);
     }
 
     /// <summary>
@@ -2583,7 +2475,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         // If the plando config specifies a specific line for this location, say it
         if (World.Config.PlandoConfig?.TrackerLocationLines.ContainsKey(location.ToString()) == true)
         {
-            Say(World.Config.PlandoConfig?.TrackerLocationLines[location.ToString()]);
+            Say(text: World.Config.PlandoConfig?.TrackerLocationLines[location.ToString()]);
         }
         // Give some sass if the user tracks or marks the wrong item at a
         // location unless the user is clearing a useless item like missiles
@@ -2595,7 +2487,7 @@ public sealed class Tracker : TrackerBase, IDisposable
             var actualItemName = ItemService.GetName(location.Item.Type);
             if (HintsEnabled) actualItemName = "another item";
 
-            Say(Responses.LocationHasDifferentItem?.Format(metadata?.NameWithArticle ?? item.GetDescription(), actualItemName));
+            Say(response: Responses.LocationHasDifferentItem, args: [metadata?.NameWithArticle ?? item.GetDescription(), actualItemName]);
         }
         else
         {
@@ -2611,22 +2503,22 @@ public sealed class Tracker : TrackerBase, IDisposable
             {
                 if (!isTracking && locationInfo.WhenMarkingJunk?.Count > 0)
                 {
-                    Say(locationInfo.WhenMarkingJunk.Random(s_random)!);
+                    Say(text: locationInfo.WhenMarkingJunk.Random(s_random)!);
                 }
                 else if (locationInfo.WhenTrackingJunk?.Count > 0)
                 {
-                    Say(locationInfo.WhenTrackingJunk.Random(s_random)!);
+                    Say(text: locationInfo.WhenTrackingJunk.Random(s_random)!);
                 }
             }
             else if (!isJunk)
             {
                 if (!isTracking && locationInfo.WhenMarkingProgression?.Count > 0)
                 {
-                    Say(locationInfo.WhenMarkingProgression.Random(s_random)!);
+                    Say(text: locationInfo.WhenMarkingProgression.Random(s_random)!);
                 }
                 else if (locationInfo.WhenTrackingProgression?.Count > 0)
                 {
-                    Say(locationInfo.WhenTrackingProgression.Random(s_random)!);
+                    Say(text: locationInfo.WhenTrackingProgression.Random(s_random)!);
                 }
             }
         }
@@ -2651,7 +2543,7 @@ public sealed class Tracker : TrackerBase, IDisposable
             if (locations.All(x => dungeon != x.Region))
             {
                 // Be a smart-ass about it
-                Say(Responses.ItemTrackedInIncorrectDungeon?.Format(dungeon.DungeonMetadata.Name, item.Metadata.NameWithArticle));
+                Say(response: Responses.ItemTrackedInIncorrectDungeon, args: [dungeon.DungeonMetadata.Name, item.Metadata.NameWithArticle]);
             }
         }
 
@@ -2668,7 +2560,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     private void IdleTimerElapsed(object? state)
     {
         var key = (string)state!;
-        Say(Responses.Idle?[key]);
+        Say(response: Responses.Idle?[key]);
     }
 
     private void Recognizer_SpeechRecognized(object? sender, SpeechRecognizedEventArgs e)
@@ -2687,14 +2579,14 @@ public sealed class Tracker : TrackerBase, IDisposable
         if (newlyAccessible.Any())
         {
             if (newlyAccessible.Contains(World.FindLocation(LocationId.InnerMaridiaSpringBall)))
-                Say(Responses.ShaktoolAvailable);
+                Say(response: Responses.ShaktoolAvailable);
 
             if (newlyAccessible.Contains(World.DarkWorldNorthWest.PegWorld))
-                Say(Responses.PegWorldAvailable);
+                Say(response: Responses.PegWorldAvailable);
         }
         else if (Responses.TrackedUselessItem != null)
         {
-            Say(Responses.TrackedUselessItem);
+            Say(response: Responses.TrackedUselessItem);
         }
     }
 

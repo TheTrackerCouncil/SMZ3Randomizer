@@ -357,7 +357,7 @@ public abstract class TrackerModule
                             // If the confidence level is too low to be
                             // executed, but high enough to be recognized,
                             // let Tracker say something
-                            TrackerBase.Say(TrackerBase.Responses.Misheard);
+                            TrackerBase.Say(x => x.Misheard);
                             TrackerBase.RestartIdleTimers();
                         }
                     }

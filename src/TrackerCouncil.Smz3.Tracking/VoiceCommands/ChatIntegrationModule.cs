@@ -110,7 +110,7 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
         TrackerBase.Say(x => x.Chat.StartedGuessingGame);
 
         await Task.Delay(s_random.Next(100, 900));
-        TrackerBase.Say(x => x.Chat.TrackerGuess, _trackerGuess);
+        TrackerBase.Say(x => x.Chat.TrackerGuess, args: [_trackerGuess]);
 
         TrackerBase.AddUndo(() =>
         {
@@ -142,7 +142,7 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
         {
             TrackerBase.Say(x => isModerator
                 ? x.Chat.ModeratorClosedGuessingGameBeforeStarting
-                : x.Chat.ClosedGuessingGameBeforeStarting, moderator);
+                : x.Chat.ClosedGuessingGameBeforeStarting, args: [moderator]);
             return;
         }
 
@@ -153,7 +153,7 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
             {
                 TrackerBase.Say(x => isModerator
                     ? x.Chat.ModeratorClosedGuessingGameWhileClosed
-                    : x.Chat.ClosedGuessingGameWhileClosed, moderator);
+                    : x.Chat.ClosedGuessingGameWhileClosed, args: [moderator]);
             }
             return;
         }
@@ -173,7 +173,7 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
         }
         else
         {
-            TrackerBase.Say(x => x.Chat.ModeratorClosedGuessingGame, moderator);
+            TrackerBase.Say(x => x.Chat.ModeratorClosedGuessingGame, args: [moderator]);
         }
 
         TrackerBase.AddUndo(() =>
@@ -226,11 +226,11 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
         {
             if (winningNumber == _trackerGuess)
             {
-                TrackerBase.Say(x => x.Chat.TrackerGuessOnlyWinner, winningNumber);
+                TrackerBase.Say(x => x.Chat.TrackerGuessOnlyWinner, args: [winningNumber]);
             }
             else
             {
-                TrackerBase.Say(x => x.Chat.NobodyWonGuessingGame, winningNumber);
+                TrackerBase.Say(x => x.Chat.NobodyWonGuessingGame, args: [winningNumber]);
             }
 
             var chatMessage = TrackerBase.Responses.Chat.NobodyWonGuessingGame?.Format(winningNumber);
@@ -247,7 +247,7 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
             var pronouncedNames = winners.Select(TrackerBase.CorrectUserNamePronunciation);
             if (currentValue == winningNumber)
             {
-                TrackerBase.Say(x => x.Chat.DeclareGuessingGameWinners, winningNumber, NaturalLanguage.Join(pronouncedNames));
+                TrackerBase.Say(x => x.Chat.DeclareGuessingGameWinners, args: [winningNumber, NaturalLanguage.Join(pronouncedNames)]);
                 var chatMessage = TrackerBase.Responses.Chat.DeclareGuessingGameWinners?.Format(winningNumber, NaturalLanguage.Join(winners));
                 if (chatMessage != null)
                 {
@@ -256,7 +256,7 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
             }
             else
             {
-                TrackerBase.Say(x => x.Chat.DeclareGuessingGameClosestButNotOverWinner, winningNumber, currentValue, NaturalLanguage.Join(pronouncedNames));
+                TrackerBase.Say(x => x.Chat.DeclareGuessingGameClosestButNotOverWinner, args: [winningNumber, currentValue, NaturalLanguage.Join(pronouncedNames)]);
                 var chatMessage = TrackerBase.Responses.Chat.DeclareGuessingGameClosestButNotOverWinner?.Format(winningNumber, currentValue, NaturalLanguage.Join(winners));
                 if (chatMessage != null)
                 {
@@ -267,12 +267,12 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
             if (winningNumber == _trackerGuess)
             {
                 await Task.Delay(s_random.Next(100, 900));
-                TrackerBase.Say(x => x.Chat.TrackerGuessWon, winningNumber);
+                TrackerBase.Say(x => x.Chat.TrackerGuessWon, args: [winningNumber]);
             }
         }
 
         if (winningNumber < _trackerGuess || (winningNumber != _trackerGuess && !isAutoTracked))
-            TrackerBase.Say(x => x.Chat.TrackerGuessFailed, winningNumber);
+            TrackerBase.Say(x => x.Chat.TrackerGuessFailed, args: [winningNumber]);
     }
 
     /// <summary>
@@ -288,7 +288,7 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
 
         if (!wasBigKey && number == _trackerGuess)
         {
-            TrackerBase.Say(x => x.Chat.TrackerGuessFailed, number);
+            TrackerBase.Say(x => x.Chat.TrackerGuessFailed, args: [number]);
         }
         else if (wasBigKey)
         {
@@ -327,7 +327,7 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
         }
 
         TrackerBase.Say(x => x.Chat.AskChatAboutContent);
-        TrackerBase.Say(x => x.Chat.PollOpened, _askChatAboutContentPollTime);
+        TrackerBase.Say(x => x.Chat.PollOpened, args: [_askChatAboutContentPollTime]);
         _askChatAboutContentCheckPollResults = true;
         _hasAskedChatAboutContent = true;
 
@@ -455,7 +455,7 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
                 if (message.SenderUserName.Equals(TrackerBase.Options.UserName)
                     && TrackerBase.Responses.Chat.GreetedChannel != null)
                 {
-                    TrackerBase.Say(x => x.Chat.GreetedChannel, senderNamePronunciation);
+                    TrackerBase.Say(x => x.Chat.GreetedChannel, args: [senderNamePronunciation]);
                     break;
                 }
 
@@ -465,12 +465,12 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
                     if (greeted >= 2)
                         break;
 
-                    TrackerBase.Say(x => x.Chat.GreetedTwice, senderNamePronunciation);
+                    TrackerBase.Say(x => x.Chat.GreetedTwice, args: [senderNamePronunciation]);
                     _usersGreetedTimes[message.Sender]++;
                 }
                 else
                 {
-                    TrackerBase.Say(x => x.Chat.GreetingResponses, senderNamePronunciation);
+                    TrackerBase.Say(x => x.Chat.GreetingResponses, args: [senderNamePronunciation]);
                     _usersGreetedTimes.Add(message.Sender, 1);
                 }
                 break;

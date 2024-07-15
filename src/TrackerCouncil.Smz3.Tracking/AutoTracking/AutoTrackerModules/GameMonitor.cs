@@ -56,11 +56,11 @@ public class GameMonitor(TrackerBase tracker, ISnesConnectorService snesConnecto
             {
                 var worldCount = worldService.Worlds.Count;
                 var otherPlayerName = worldService.Worlds.Where(x => x != worldService.World).Random(new Random())!.Config.PhoneticName;
-                Tracker.Say(x => x.AutoTracker.GameStartedMultiplayer, worldCount, otherPlayerName);
+                Tracker.Say(x => x.AutoTracker.GameStartedMultiplayer, args: [worldCount, otherPlayerName]);
             }
             else
             {
-                Tracker.Say(x => x.AutoTracker.GameStarted, Tracker.Rom?.Seed);
+                Tracker.Say(x => x.AutoTracker.GameStarted, args: [Tracker.Rom?.Seed]);
             }
         }
     }

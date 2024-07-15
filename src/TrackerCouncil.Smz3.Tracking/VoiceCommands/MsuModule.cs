@@ -138,15 +138,15 @@ public class MsuModule : TrackerModule, IDisposable
         // Respond if we have lines to the song number, song name, or msu name
         if (_msuConfig.SongResponses?.TryGetValue(_currentTrack.MsuName ?? "", out var response) == true)
         {
-            TrackerBase.Say(response);
+            TrackerBase.Say(response: response);
         }
         else if (_msuConfig.SongResponses?.TryGetValue(_currentTrack.SongName, out response) == true)
         {
-            TrackerBase.Say(response);
+            TrackerBase.Say(response: response);
         }
         else if (_msuConfig.SongResponses?.TryGetValue(_currentTrackNumber.ToString(), out response) == true)
         {
-            TrackerBase.Say(response);
+            TrackerBase.Say(response: response);
         }
     }
 
@@ -286,7 +286,7 @@ public class MsuModule : TrackerModule, IDisposable
         {
             if (_currentMsu == null)
             {
-                TrackerBase.Say(_msuConfig.UnknownSong);
+                TrackerBase.Say(response: _msuConfig.UnknownSong);
                 return;
             }
 
@@ -294,11 +294,11 @@ public class MsuModule : TrackerModule, IDisposable
             var track = _currentMsu.GetTrackFor(trackNumber);
             if (track != null)
             {
-                TrackerBase.Say(_msuConfig.CurrentSong, track.GetDisplayText(TrackDisplayFormat.SpeechStyle));
+                TrackerBase.Say(response: _msuConfig.CurrentSong, args: [track.GetDisplayText(TrackDisplayFormat.SpeechStyle)]);
             }
             else
             {
-                TrackerBase.Say(_msuConfig.UnknownSong);
+                TrackerBase.Say(response: _msuConfig.UnknownSong);
             }
         });
 
@@ -306,7 +306,7 @@ public class MsuModule : TrackerModule, IDisposable
         {
             if (_currentMsu == null)
             {
-                TrackerBase.Say(_msuConfig.UnknownSong);
+                TrackerBase.Say(response: _msuConfig.UnknownSong);
                 return;
             }
 
@@ -314,11 +314,11 @@ public class MsuModule : TrackerModule, IDisposable
             var track = _currentMsu.GetTrackFor(trackNumber);
             if (track?.GetMsuName() != null)
             {
-                TrackerBase.Say(_msuConfig.CurrentMsu, track.GetMsuName());
+                TrackerBase.Say(response: _msuConfig.CurrentMsu, args: [track.GetMsuName()]);
             }
             else
             {
-                TrackerBase.Say(_msuConfig.UnknownSong);
+                TrackerBase.Say(response: _msuConfig.UnknownSong);
             }
         });
 
@@ -326,20 +326,20 @@ public class MsuModule : TrackerModule, IDisposable
         {
             if (_currentTrack == null)
             {
-                TrackerBase.Say(_msuConfig.UnknownSong);
+                TrackerBase.Say(response: _msuConfig.UnknownSong);
                 return;
             }
-            TrackerBase.Say(_msuConfig.CurrentSong, _currentTrack.GetDisplayText(TrackDisplayFormat.SpeechStyle));
+            TrackerBase.Say(response: _msuConfig.CurrentSong, args: [_currentTrack.GetDisplayText(TrackDisplayFormat.SpeechStyle)]);
         });
 
         AddCommand("current msu", GetCurrentMsuRules(), (_) =>
         {
             if (_currentTrack == null)
             {
-                TrackerBase.Say(_msuConfig.UnknownSong);
+                TrackerBase.Say(response: _msuConfig.UnknownSong);
                 return;
             }
-            TrackerBase.Say(_msuConfig.CurrentMsu, _currentTrack.GetMsuName());
+            TrackerBase.Say(response: _msuConfig.CurrentMsu, args: [_currentTrack.GetMsuName()]);
         });
     }
 }

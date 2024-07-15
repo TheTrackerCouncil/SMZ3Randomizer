@@ -21,13 +21,13 @@ public class DiverDown : IZeldaStateCheck
         // Back diver down
         if (currentState.CurrentRoom == 118 && currentState.LinkX < 3474 && (currentState.LinkX < 3424 || currentState.LinkX > 3440) && currentState.LinkY <= 4000 && prevState.LinkY > 4000 && (currentState.LinkState is 0 or 6 or 3) && currentState.IsOnBottomHalfOfRoom && currentState.IsOnRightHalfOfRoom)
         {
-            trackerBase.SayOnce(x => x.AutoTracker.DiverDown);
+            trackerBase.Say(x => x.AutoTracker.DiverDown, once: true);
             return true;
         }
         // Left side diver down
         else if (currentState.CurrentRoom == 53 && currentState.PreviousRoom == 54 && currentState.LinkX > 2808 && currentState.LinkX < 2850 && currentState.LinkY <= 1940 && prevState.LinkY > 1940 && currentState.LinkX <= prevState.LinkX && (currentState.LinkState is 0 or 6 or 3))
         {
-            trackerBase.SayOnce(x => x.AutoTracker.DiverDown);
+            trackerBase.Say(x => x.AutoTracker.DiverDown, once: true);
             return true;
         }
         return false;

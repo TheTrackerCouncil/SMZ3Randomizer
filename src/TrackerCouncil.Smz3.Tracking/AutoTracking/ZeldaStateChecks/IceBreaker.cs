@@ -20,7 +20,7 @@ public class IceBreaker : IZeldaStateCheck
     {
         if (currentState.CurrentRoom == 31 && currentState.PreviousRoom == 30 && currentState.LinkX >= 8000 && prevState.LinkX < 8000 && currentState.IsOnRightHalfOfRoom && prevState.IsOnRightHalfOfRoom)
         {
-            trackerBase.SayOnce(x => x.AutoTracker.IceBreaker);
+            trackerBase.Say(x => x.AutoTracker.IceBreaker, once: true);
             return true;
         }
         return false;

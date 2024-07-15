@@ -32,7 +32,7 @@ public class PersonalityModule : TrackerModule
     {
         AddCommand("Hey, ya missed pal", GetYaMissedRule(), (_) =>
         {
-            TrackerBase.Say("Here Mike. This will explain everything.", wait: true);
+            TrackerBase.Say(text: "Here Mike. This will explain everything.", wait: true);
             OpenInBrowser(new Uri("https://www.youtube.com/watch?v=5P6UirFDdxM"));
         });
 
@@ -43,7 +43,7 @@ public class PersonalityModule : TrackerModule
 
             AddCommand(request.Phrases.First(), GetRequestRule(request.Phrases), (_) =>
             {
-                TrackerBase.Say(request.Response);
+                TrackerBase.Say(response: request.Response);
             });
         }
     }

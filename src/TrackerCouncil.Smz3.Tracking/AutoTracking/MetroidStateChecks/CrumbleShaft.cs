@@ -20,7 +20,7 @@ public class CrumbleShaft : IMetroidStateCheck
     {
         if (currentState.CurrentRegion == 2 && currentState.CurrentRoomInRegion == 8 && prevState.CurrentRoomInRegion == 4)
         {
-            tracker.SayOnce(x => x.AutoTracker.AtCrumbleShaft);
+            tracker.Say(x => x.AutoTracker.AtCrumbleShaft, once: true);
             return true;
         }
         return false;

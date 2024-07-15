@@ -25,7 +25,7 @@ public class SpeckyClip : IZeldaStateCheck
             { LinkX: >= 3650, LinkX: <= 3696, LinkY: >= 1864, LinkY: <= 1872, CurrentRoom: 55 };
         if (inCorrectLocation && prevInWall && nowBelowWall)
         {
-            tracker.SayOnce(x => x.AutoTracker.SpeckyClip);
+            tracker.Say(x => x.AutoTracker.SpeckyClip, once: true);
             return true;
         }
         return false;
