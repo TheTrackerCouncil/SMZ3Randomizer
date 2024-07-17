@@ -27,4 +27,14 @@ public interface IGitHubSpriteDownloaderService
     /// <param name="timeout">How long to timeout from the api call</param>
     /// <returns></returns>
     public Task DownloadSpritesAsync(string owner, string repo, IDictionary<string, string>? spritesToDownload = null, TimeSpan? timeout = null);
+
+    /// <summary>
+    /// Cancels the current sprite download
+    /// </summary>
+    public void CancelDownload();
+
+    /// <summary>
+    /// Event that fires off after each completed sprite download
+    /// </summary>
+    public event EventHandler<SpriteDownloadUpdateEventArgs> SpriteDownloadUpdate;
 }
