@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Data.Options;
@@ -19,6 +20,7 @@ public class GitHubSpriteDownloaderService : IGitHubSpriteDownloaderService
     private ILogger<GitHubSpriteDownloaderService> _logger;
     private string _spriteFolder;
     private OptionsFactory _optionsFactory;
+    private CancellationTokenSource _cts = new();
 
     public GitHubSpriteDownloaderService(ILogger<GitHubSpriteDownloaderService> logger, OptionsFactory optionsFactory)
     {
@@ -27,6 +29,10 @@ public class GitHubSpriteDownloaderService : IGitHubSpriteDownloaderService
         _spriteFolder = Sprite.SpritePath;
         _logger.LogInformation("Sprite path: {Path} | {OtherPath}", Sprite.SpritePath, AppContext.BaseDirectory);
     }
+
+    public void CancelDownload() => _cts.Cancel();
+
+    public event EventHandler<SpriteDownloadUpdateEventArgs>? SpriteDownloadUpdate;
 
     public async Task<IDictionary<string, string>?> GetSpritesToDownloadAsync(string owner, string repo, TimeSpan? timeout = null)
     {
@@ -59,10 +65,13 @@ public class GitHubSpriteDownloaderService : IGitHubSpriteDownloaderService
 
     public async Task DownloadSpritesAsync(string owner, string repo, IDictionary<string, string>? spritesToDownload = null, TimeSpan? timeout = null)
     {
+        spritesToDownload ??= await GetSpritesToDownloadAsync(owner, repo, timeout);
         if (spritesToDownload == null)
         {
-            spritesToDownload = await GetSpritesToDownloadAsync(owner, repo, timeout);
+            return;
         }
+
+        _cts.TryReset();
 
         if (!Directory.Exists(_spriteFolder))
         {
@@ -72,9 +81,12 @@ public class GitHubSpriteDownloaderService : IGitHubSpriteDownloaderService
         var previousHashes = GetPreviousSpriteHashes();
         var added = new ConcurrentDictionary<string, string>();
 
+        var total = spritesToDownload.Count;
+        var completed = 0;
+
         if (spritesToDownload?.Any() == true)
         {
-            await Parallel.ForEachAsync(spritesToDownload, parallelOptions: new ParallelOptions() { MaxDegreeOfParallelism = 4 },
+            await Parallel.ForEachAsync(spritesToDownload, parallelOptions: new ParallelOptions() { MaxDegreeOfParallelism = 4, CancellationToken = _cts.Token},
                 async (spriteData, _) =>
                 {
                     var localPath = ConvertGitHubPath(spriteData.Key);
@@ -86,6 +98,9 @@ public class GitHubSpriteDownloaderService : IGitHubSpriteDownloaderService
                     {
                         added[localPath] = currentHash;
                     }
+
+                    completed++;
+                    SpriteDownloadUpdate.Invoke(this, new SpriteDownloadUpdateEventArgs(completed, total));
                 });
         }
 

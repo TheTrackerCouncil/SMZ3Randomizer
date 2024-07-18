@@ -53,7 +53,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IGameDbService, GameDbService>();
         services.AddTransient<SourceRomValidationService>();
         services.AddTransient<IGitHubConfigDownloaderService, GitHubConfigDownloaderService>();
-        services.AddTransient<IGitHubSpriteDownloaderService, GitHubSpriteDownloaderService>();
+        services.AddSingleton<IGitHubSpriteDownloaderService, GitHubSpriteDownloaderService>();
         services.AddSingleton<OptionsFactory>();
         services.AddSingleton<IMicrophoneService, NullMicrophoneService>();
 
