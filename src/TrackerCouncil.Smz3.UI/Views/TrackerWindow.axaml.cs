@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -110,6 +111,14 @@ public partial class TrackerWindow : RestorableWindow
         ITaskService.Run(() =>
         {
             _service?.SetLayout(layout);
+
+            Dispatcher.UIThread.Invoke(() =>
+            {
+                if (Math.Abs(Width - _model.IdealWindowWidth) > 1 || Math.Abs(Height - _model.IdealWindowHeight) > 1)
+                {
+                    _model.ShowResizeButton = true;
+                }
+            });
         });
     }
 
@@ -151,6 +160,11 @@ public partial class TrackerWindow : RestorableWindow
                 _service?.OpenTrackerMapWindow();
             }, DispatcherPriority.Background);
         });
+
+        if (Math.Abs(Width - _model.IdealWindowWidth) > 1 || Math.Abs(Height - _model.IdealWindowHeight) > 1)
+        {
+            _model.ShowResizeButton = true;
+        }
 
         _parentWindow?.Hide();
     }
@@ -268,6 +282,25 @@ public partial class TrackerWindow : RestorableWindow
         if (point.Properties.IsLeftButtonPressed && e.ClickCount == 2)
         {
             _service?.ToggleSpeechRecognition();
+        }
+    }
+
+    private void ResizeWindowButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        Width = _model.IdealWindowWidth;
+        Height = _model.IdealWindowHeight;
+        _model.ShowResizeButton = false;
+    }
+
+    private void WindowBase_OnResized(object? sender, WindowResizedEventArgs e)
+    {
+        if (Math.Abs(Width - _model.IdealWindowWidth) > 1 || Math.Abs(Height - _model.IdealWindowHeight) > 1)
+        {
+            _model.ShowResizeButton = true;
+        }
+        else
+        {
+            _model.ShowResizeButton = false;
         }
     }
 }
