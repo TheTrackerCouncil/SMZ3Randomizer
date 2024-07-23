@@ -11,40 +11,51 @@
         Title="Tracker — SMZ3 Cas' Randomizer"
         Loaded="Control_OnLoaded"
         Closing="Window_OnClosing"
+        Resized="WindowBase_OnResized"
         Icon="/Assets/smz3.ico">
   <LayoutTransformControl x:Name="MainLayout">
     <Grid RowDefinitions="Auto, *, Auto">
       <controls:HeaderFooter Grid.Row="0" BorderSize="0 0 0 2">
-        <Menu FontSize="12">
-          <MenuItem Header="_File">
-            <MenuItem Header="_Load saved state..."
-                      x:Name="LoadSavedStateMenuItem"
-                      Click="LoadSavedStateMenuItem_OnClick" />
-            <MenuItem Header="_Save state..."
-                      x:Name="SaveStateMenuItem"
-                      Click="SaveStateMenuItem_OnClick" />
-          </MenuItem>
-          <MenuItem Header="_View">
-            <MenuItem Header="_Locations"
-                      x:Name="LocationsMenuItem"
-                      Click="LocationsMenuItem_OnClick" />
-            <MenuItem Header="_Map"
-                      x:Name="MapMenuItem"
-                      Click="MapMenuItem_OnClick" />
-            <MenuItem Header="_Current Song"
-                      x:Name="CurrentSongMenuItem"
-                      Click="CurrentSongMenuItem_OnClick" />
-            <MenuItem Header="_Tracker Help"
-                      x:Name="TrackerHelpMenuItem"
-                      Click="TrackerHelpMenuItem_OnClick" />
-            <MenuItem Header="_Auto Tracker Help"
-                      x:Name="AutoTrackerMenuItem"
-                      Click="AutoTrackerMenuItem_OnClick" />
-          </MenuItem>
-          <MenuItem Header="_Layouts"
-                    Name="LayoutMenu">
-          </MenuItem>
-        </Menu>
+        <Grid ColumnDefinitions="*,Auto">
+          <Menu Grid.Column="0" FontSize="12">
+            <MenuItem Header="_File">
+              <MenuItem Header="_Load saved state..."
+                        x:Name="LoadSavedStateMenuItem"
+                        Click="LoadSavedStateMenuItem_OnClick" />
+              <MenuItem Header="_Save state..."
+                        x:Name="SaveStateMenuItem"
+                        Click="SaveStateMenuItem_OnClick" />
+            </MenuItem>
+            <MenuItem Header="_View">
+              <MenuItem Header="_Locations"
+                        x:Name="LocationsMenuItem"
+                        Click="LocationsMenuItem_OnClick" />
+              <MenuItem Header="_Map"
+                        x:Name="MapMenuItem"
+                        Click="MapMenuItem_OnClick" />
+              <MenuItem Header="_Current Song"
+                        x:Name="CurrentSongMenuItem"
+                        Click="CurrentSongMenuItem_OnClick" />
+              <MenuItem Header="_Tracker Help"
+                        x:Name="TrackerHelpMenuItem"
+                        Click="TrackerHelpMenuItem_OnClick" />
+              <MenuItem Header="_Auto Tracker Help"
+                        x:Name="AutoTrackerMenuItem"
+                        Click="AutoTrackerMenuItem_OnClick" />
+            </MenuItem>
+            <MenuItem Header="_Layouts"
+                      Name="LayoutMenu">
+            </MenuItem>
+          </Menu>
+          <StackPanel Grid.Column="1" Orientation="Horizontal">
+            <controls:ImageButton Cursor="Hand" Background="Transparent" Click="ResizeWindowButton_OnClick" IsVisible="{Binding ShowResizeButton}">
+              <StackPanel Orientation="Horizontal" Background="Transparent">
+                <TextBlock Margin="0 0 5 0">Resize to Fit</TextBlock>
+                <avalonia:MaterialIcon Kind="Resize" Margin="0 0 5 0"></avalonia:MaterialIcon>
+              </StackPanel>
+            </controls:ImageButton>
+          </StackPanel>
+        </Grid>
       </controls:HeaderFooter>
       <DockPanel Grid.Row="1" Background="{Binding Background}">
         <Panel Name="MainPanel" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5"></Panel>

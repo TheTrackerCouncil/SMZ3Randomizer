@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Avalonia.Media;
 using AvaloniaControls.Models;
 using Material.Icons;
@@ -57,6 +58,10 @@ public class TrackerWindowViewModel : ViewModelBase
     [ReactiveLinkedProperties(nameof(SpeechToolTip), nameof(SpeechIcon))]
     public bool VoiceEnabled { get; set; }
     public bool DisplayTimer { get; set; }
+
+    public int IdealWindowWidth => Panels.Max(x => x.Column) * 34 + 10;
+    public int IdealWindowHeight => Panels.Max(x => x.Row) * 34 + 10 + 50;
+    [Reactive] public bool ShowResizeButton { get; set; }
 
     public string SpeechToolTip => VoiceEnabled ? "Confidence of last recognized voice command. Double click to disable voice recognition." : "Voice recognition disabled. Double click to attempt to enable voice recognition.";
 
