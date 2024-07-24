@@ -76,22 +76,14 @@ public partial class MainWindow : RestorableWindow
         _service?.DisableUpdates();
     }
 
-    private void Control_OnLoaded(object? sender, RoutedEventArgs e)
+    private async void Control_OnLoaded(object? sender, RoutedEventArgs e)
     {
-        if (_model.HasInvalidOptions)
+        if (_model.HasInvalidOptions && _serviceProvider != null)
         {
-            var messageWindow = new MessageWindow(new MessageWindowRequest()
-            {
-                Message = "If this is your first time using the randomizer, there are some required options you need to configure before you can start playing randomized SMZ3 games. Please do so now.",
-                Title = "SMZ3 Cas’ Randomizer",
-                Icon = MessageWindowIcon.Info,
-                Buttons = MessageWindowButtons.OK
-            });
-            messageWindow.ShowDialog(this);
-            messageWindow.Closed += (o, args) =>
-            {
-                _serviceProvider?.GetRequiredService<OptionsWindow>().ShowDialog(this);
-            };
+            await MessageWindow.ShowInfoDialog(
+                "If this is your first time using the randomizer, there are some required options you need to configure before you can start playing randomized SMZ3 games. Please do so now.",
+                "SMZ3 Cas’ Randomizer", this);
+            await _serviceProvider.GetRequiredService<OptionsWindow>().ShowDialog(this);
         }
 
         if (_service == null)
@@ -99,9 +91,9 @@ public partial class MainWindow : RestorableWindow
             return;
         }
 
-        ITaskService.Run(_service.ValidateTwitchToken);
-        ITaskService.Run(_service.DownloadConfigsAsync);
-        ITaskService.Run(_service.DownloadSpritesAsync);
+        _ = ITaskService.Run(_service.ValidateTwitchToken);
+        _ = ITaskService.Run(_service.DownloadConfigsAsync);
+        _ = ITaskService.Run(_service.DownloadSpritesAsync);
     }
 
     private void OptionsMenuItem_OnClick(object? sender, RoutedEventArgs e)

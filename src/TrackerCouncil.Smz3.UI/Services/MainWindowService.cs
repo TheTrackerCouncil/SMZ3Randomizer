@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -111,6 +112,14 @@ public class MainWindowService(
         {
             return;
         }
+
+        #if DEBUG
+        // Skip sprite download when debugging if the folder already exists
+        if (Directory.Exists(Sprite.SpritePath))
+        {
+            return;
+        }
+        #endif
 
         var toDownload = await gitHubSpriteDownloaderService.GetSpritesToDownloadAsync("TheTrackerCouncil", "SMZ3CasSprites");
 
