@@ -181,6 +181,11 @@ public class ChatConfig : IMergeable<ChatConfig>
     public SchrodingersString? PollComplete { get; init; }
 
     /// <summary>
+    /// Gets the phrases for when the poll has votes, but it was terminated before being finished
+    /// </summary>
+    public SchrodingersString? PollCompleteTerminated { get; init; }
+
+    /// <summary>
     /// Gets the phrases for when the poll is opened
     /// </summary>
     public SchrodingersString? PollOpened { get; init; }
@@ -189,4 +194,9 @@ public class ChatConfig : IMergeable<ChatConfig>
     /// Gets the phrases for when the poll outcome could not be determined
     /// </summary>
     public SchrodingersString? PollError { get; init; }
+
+    /// <summary>
+    /// Gets the phrases for when the poll was terminated before any results came in
+    /// </summary>
+    public SchrodingersString? PollErrorTerminated { get; init; }
 }

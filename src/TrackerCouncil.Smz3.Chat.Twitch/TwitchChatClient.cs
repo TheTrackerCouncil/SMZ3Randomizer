@@ -225,6 +225,7 @@ public class TwitchChatClient : IChatClient
         {
             IsPollComplete = pollApiResponse.IsPollComplete,
             IsPollSuccessful = pollApiResponse.IsPollSuccessful,
+            WasPollTerminated = pollApiResponse.WasPollTerminated,
             WinningChoice = pollApiResponse.WinningChoice?.Title
         };
     }

@@ -36,6 +36,8 @@ public class TwitchPoll : TwitchAPIResponse
     /// </summary>
     public bool IsPollSuccessful => WinningChoice?.Votes > 0;
 
+    public bool WasPollTerminated => "TERMINATED".Equals(Status, StringComparison.OrdinalIgnoreCase);
+
     /// <summary>
     /// Returns choice that was voted on the most
     /// </summary>

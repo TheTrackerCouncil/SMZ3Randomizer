@@ -10,5 +10,6 @@ public class ChatPoll
 {
     public bool IsPollComplete { get; set; }
     public bool IsPollSuccessful { get; set; }
+    public bool WasPollTerminated { get; set; }
     public string? WinningChoice { get; set; }
 }
