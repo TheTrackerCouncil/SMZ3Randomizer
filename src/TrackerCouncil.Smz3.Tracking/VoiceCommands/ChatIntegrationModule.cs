@@ -347,7 +347,7 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
 
                 if (result.IsPollSuccessful)
                 {
-                    TrackerBase.Say(x => x.Chat.PollComplete);
+                    TrackerBase.Say(x => result.WasPollTerminated ? x.Chat.PollCompleteTerminated : x.Chat.PollComplete);
 
                     if ("Yes".Equals(result.WinningChoice, StringComparison.OrdinalIgnoreCase))
                     {
@@ -361,7 +361,7 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
                 }
                 else
                 {
-                    TrackerBase.Say(x => x.Chat.PollError);
+                    TrackerBase.Say(x => result.WasPollTerminated ? x.Chat.PollErrorTerminated : x.Chat.PollError);
                 }
             }
             else if (_askChatAboutContentCheckPollResults)
