@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Speech.Synthesis;
 
 namespace TrackerCouncil.Smz3.Tracking.Services;
 
@@ -70,9 +71,19 @@ public interface ICommunicator
     public bool IsSpeaking { get;  }
 
     /// <summary>
+    /// Event for when the communicator has started speaking
+    /// </summary>
+    public event EventHandler SpeakStarted;
+
+    /// <summary>
     /// Event for when the communicator has finished speaking
     /// </summary>
     public event EventHandler<SpeakCompletedEventArgs> SpeakCompleted;
+
+    /// <summary>
+    /// Event for when the communicator has reached a new viseme
+    /// </summary>
+    public event EventHandler<VisemeReachedEventArgs> VisemeReached;
 
 
 }

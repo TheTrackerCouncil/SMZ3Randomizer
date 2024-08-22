@@ -26,13 +26,18 @@ public partial class TrackerWindow : RestorableWindow
     private GeneratedRom? _generatedRom;
     private readonly TrackerWindowViewModel _model;
     private CurrentTrackWindow? _currentTrackWindow;
+    private TrackerSpeechWindow? _currentTrackerSpeechWindow;
     private Dictionary<string, Image> _layoutImages = new();
     private MainWindow? _parentWindow;
 
     public TrackerWindow()
     {
         InitializeComponent();
-        DataContext = _model = new TrackerWindowViewModel();
+        DataContext = _model = new TrackerWindowViewModel()
+        {
+            Panels = [ new TrackerWindowPanelViewModel() ],
+            Layouts = [ new UILayout() ]
+        };
         _parentWindow = MessageWindow.GlobalParentWindow as MainWindow;
     }
 
@@ -80,6 +85,17 @@ public partial class TrackerWindow : RestorableWindow
         _currentTrackWindow = new CurrentTrackWindow();
         _currentTrackWindow.Show(this);
         _currentTrackWindow.Closed += (_, _) => _currentTrackWindow = null;
+    }
+
+    private void OpenTrackerSpeechWindow()
+    {
+        if (_currentTrackerSpeechWindow != null || _service == null)
+        {
+            return;
+        }
+
+        _currentTrackerSpeechWindow = _service.OpenTrackerSpeechWindow();
+        _currentTrackerSpeechWindow.Closed += (_, _) => _currentTrackerSpeechWindow = null;
     }
 
     private void CreateLayout()
@@ -156,6 +172,10 @@ public partial class TrackerWindow : RestorableWindow
                 {
                     OpenCurrentTrackWindow();
                 }
+                if (_model.OpenSpeechWindow)
+                {
+                    _service?.OpenTrackerSpeechWindow();
+                }
                 _service?.OpenTrackerLocationsWindow();
                 _service?.OpenTrackerMapWindow();
             }, DispatcherPriority.Background);
@@ -208,14 +228,15 @@ public partial class TrackerWindow : RestorableWindow
     {
         if (_service == null) return;
 
+        _currentTrackWindow?.Close(true);
+        _currentTrackerSpeechWindow?.Close(true);
+
         if (!_finishedShutdown)
         {
             e.Cancel = true;
             _finishedShutdown = true;
             await _service.Shutdown();
         }
-
-        _currentTrackWindow?.Close(true);
 
         _parentWindow?.Reload();
         _parentWindow?.Show();
@@ -273,6 +294,11 @@ public partial class TrackerWindow : RestorableWindow
     private void TrackerHelpMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
         _service?.OpenTrackerHelpWindow();
+    }
+
+    private void TrackerSpeechWindowMenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        _service?.OpenTrackerSpeechWindow();
     }
 
     private void SpeechRecognition_OnPointerPressed(object? sender, PointerPressedEventArgs e)

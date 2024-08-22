@@ -34,6 +34,8 @@ public class OptionsWindowViewModel
 
         TrackerOptions.TrackerBGColor = options.TrackerBGColor;
         TrackerOptions.TrackerShadows = options.TrackerShadows;
+        TrackerOptions.TrackerSpeechBGColor = options.TrackerSpeechBGColor;
+        TrackerOptions.TrackerSpeechEnableBounce = options.TrackerSpeechEnableBounce;
         TrackerOptions.TrackerRecognitionThreshold = options.TrackerRecognitionThreshold * 100;
         TrackerOptions.TrackerConfidenceThreshold = options.TrackerConfidenceThreshold * 100;
         TrackerOptions.TrackerConfidenceSassThreshold = options.TrackerConfidenceSassThreshold * 100;
@@ -84,6 +86,8 @@ public class OptionsWindowViewModel
 
         options.TrackerBGColor = TrackerOptions.TrackerBGColor;
         options.TrackerShadows = TrackerOptions.TrackerShadows;
+        options.TrackerSpeechBGColor = TrackerOptions.TrackerSpeechBGColor;
+        options.TrackerSpeechEnableBounce = TrackerOptions.TrackerSpeechEnableBounce;
         options.TrackerRecognitionThreshold = TrackerOptions.TrackerRecognitionThreshold / 100;
         options.TrackerConfidenceThreshold = TrackerOptions.TrackerConfidenceThreshold / 100;
         options.TrackerConfidenceSassThreshold = TrackerOptions.TrackerConfidenceSassThreshold / 100;

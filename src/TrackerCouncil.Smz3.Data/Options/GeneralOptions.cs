@@ -47,9 +47,13 @@ public class GeneralOptions : INotifyPropertyChanged
     [Range(0.0, 1.0)]
     public float TrackerConfidenceSassThreshold { get; set; } = 0.92f;
 
-    public byte[] TrackerBGColor { get; set; } = { 0xFF, 0x21, 0x21, 0x21 };
+    public byte[] TrackerBGColor { get; set; } = [0xFF, 0x21, 0x21, 0x21];
 
     public bool TrackerShadows { get; set; } = true;
+
+    public byte[] TrackerSpeechBGColor { get; set; } = [0xFF, 0x48, 0x3D, 0x8B];
+
+    public bool TrackerSpeechEnableBounce { get; set; } = true;
 
     [YamlIgnore]
     public int LaunchButton { get; set; } = (int)LaunchButtonOptions.PlayAndTrack;
@@ -171,6 +175,11 @@ public class GeneralOptions : INotifyPropertyChanged
     /// If the MSU track window should open by default
     /// </summary>
     public bool DisplayMsuTrackWindow { get; set; }
+
+    /// <summary>
+    /// If the tracker speech window should open by default
+    /// </summary>
+    public bool DisplayTrackerSpeechWindow { get; set; }
 
     /// <summary>
     /// Check for new releases on GitHub on startup

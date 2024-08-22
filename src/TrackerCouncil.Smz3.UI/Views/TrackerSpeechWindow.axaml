@@ -1,0 +1,23 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        xmlns:viewModels="clr-namespace:TrackerCouncil.Smz3.UI.ViewModels"
+        x:Class="TrackerCouncil.Smz3.UI.TrackerSpeechWindow"
+        x:DataType="viewModels:TrackerSpeechWindowViewModel"
+        Icon="/Assets/smz3.ico"
+        Title="Tracker Speech — SMZ3 Cas' Randomizer">
+  <DockPanel>
+    <DockPanel.ContextMenu>
+      <ContextMenu>
+        <MenuItem Header="Copy Background Color" Click="MenuItem_OnClick"></MenuItem>
+      </ContextMenu>
+    </DockPanel.ContextMenu>
+    <Panel>
+      <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{Binding Background}"></Rectangle>
+      <Image Margin="{Binding AnimationMargin}" VerticalAlignment="Bottom"
+             Source="{Binding TrackerImage, Converter={StaticResource StringToImageConverter}}"/>
+    </Panel>
+  </DockPanel>
+</Window>

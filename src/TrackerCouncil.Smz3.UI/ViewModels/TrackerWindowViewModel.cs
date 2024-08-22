@@ -84,6 +84,8 @@ public class TrackerWindowViewModel : ViewModelBase
 
     public bool OpenTrackWindow { get; set; }
 
+    public bool OpenSpeechWindow { get; set; }
+
     public UILayout? PrevLayout { get; set; }
 
     public UILayout? CurrentLayout { get; set; }

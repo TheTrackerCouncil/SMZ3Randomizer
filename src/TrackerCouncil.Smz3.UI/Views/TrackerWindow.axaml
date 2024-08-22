@@ -39,6 +39,9 @@
               <MenuItem Header="_Tracker Help"
                         x:Name="TrackerHelpMenuItem"
                         Click="TrackerHelpMenuItem_OnClick" />
+              <MenuItem Header="_Tracker Speech Window"
+                        x:Name="TrackerSpeechWindowMenuItem"
+                        Click="TrackerSpeechWindowMenuItem_OnClick" />
               <MenuItem Header="_Auto Tracker Help"
                         x:Name="AutoTrackerMenuItem"
                         Click="AutoTrackerMenuItem_OnClick" />
