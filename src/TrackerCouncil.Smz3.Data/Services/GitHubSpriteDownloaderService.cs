@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Data.Options;
+using YamlDotNet.Serialization;
 
 namespace TrackerCouncil.Smz3.Data.Services;
 
@@ -19,13 +20,11 @@ public class GitHubSpriteDownloaderService : IGitHubSpriteDownloaderService
 {
     private ILogger<GitHubSpriteDownloaderService> _logger;
     private string _spriteFolder;
-    private OptionsFactory _optionsFactory;
     private CancellationTokenSource _cts = new();
 
-    public GitHubSpriteDownloaderService(ILogger<GitHubSpriteDownloaderService> logger, OptionsFactory optionsFactory)
+    public GitHubSpriteDownloaderService(ILogger<GitHubSpriteDownloaderService> logger)
     {
         _logger = logger;
-        _optionsFactory = optionsFactory;
         _spriteFolder = Sprite.SpritePath;
         _logger.LogInformation("Sprite path: {Path} | {OtherPath}", Sprite.SpritePath, AppContext.BaseDirectory);
     }
@@ -34,7 +33,7 @@ public class GitHubSpriteDownloaderService : IGitHubSpriteDownloaderService
 
     public event EventHandler<SpriteDownloadUpdateEventArgs>? SpriteDownloadUpdate;
 
-    public async Task<IDictionary<string, string>?> GetSpritesToDownloadAsync(string owner, string repo, TimeSpan? timeout = null)
+    public async Task<IDictionary<string, string>?> GetSpritesToDownloadAsync(string owner, string repo, TimeSpan? timeout = null, bool ignoreNoPreviousHashes = false)
     {
         var sprites = await GetGitHubSpritesAsync(owner, repo, timeout);
         if (sprites == null)
@@ -43,6 +42,13 @@ public class GitHubSpriteDownloaderService : IGitHubSpriteDownloaderService
         }
 
         var previousHashes = GetPreviousSpriteHashes();
+
+        // If there are no previous hashes, don't download any sprites
+        if (!ignoreNoPreviousHashes && previousHashes.Count == 0)
+        {
+            return new Dictionary<string, string>();
+        }
+
         var toDownload = new ConcurrentDictionary<string, string>();
 
         Parallel.ForEach(sprites, parallelOptions: new ParallelOptions() { MaxDegreeOfParallelism = 4 },
@@ -66,7 +72,7 @@ public class GitHubSpriteDownloaderService : IGitHubSpriteDownloaderService
     public async Task DownloadSpritesAsync(string owner, string repo, IDictionary<string, string>? spritesToDownload = null, TimeSpan? timeout = null)
     {
         spritesToDownload ??= await GetSpritesToDownloadAsync(owner, repo, timeout);
-        if (spritesToDownload == null)
+        if (spritesToDownload == null || spritesToDownload.Count == 0)
         {
             return;
         }
@@ -78,13 +84,13 @@ public class GitHubSpriteDownloaderService : IGitHubSpriteDownloaderService
             Directory.CreateDirectory(_spriteFolder);
         }
 
-        var previousHashes = GetPreviousSpriteHashes();
-        var added = new ConcurrentDictionary<string, string>();
+        var spriteHashes = GetPreviousSpriteHashes();
+        var addedHashes = new ConcurrentDictionary<string, string>();
 
         var total = spritesToDownload.Count;
         var completed = 0;
 
-        if (spritesToDownload?.Any() == true)
+        if (spritesToDownload.Any())
         {
             await Parallel.ForEachAsync(spritesToDownload, parallelOptions: new ParallelOptions() { MaxDegreeOfParallelism = 4, CancellationToken = _cts.Token},
                 async (spriteData, _) =>
@@ -96,45 +102,70 @@ public class GitHubSpriteDownloaderService : IGitHubSpriteDownloaderService
 
                     if (successful)
                     {
-                        added[localPath] = currentHash;
+                        addedHashes[localPath] = currentHash;
                     }
 
                     completed++;
-                    SpriteDownloadUpdate.Invoke(this, new SpriteDownloadUpdateEventArgs(completed, total));
+                    SpriteDownloadUpdate?.Invoke(this, new SpriteDownloadUpdateEventArgs(completed, total));
                 });
         }
 
-        if (File.Exists(Path.Combine(_spriteFolder, "sprites.json")))
+        foreach (var addedSprite in addedHashes)
         {
-            File.Delete(Path.Combine(_spriteFolder, "sprites.json"));
+            spriteHashes[addedSprite.Key] = addedSprite.Value;
         }
 
-        foreach (var addedSprite in added)
-        {
-            previousHashes[addedSprite.Key] = addedSprite.Value;
-        }
-
-        _optionsFactory.Create().GeneralOptions.SpriteHashes = previousHashes;
-        _optionsFactory.Create().Save();
+        SaveSpriteHashYaml(spriteHashes);
     }
 
     private Dictionary<string, string> GetPreviousSpriteHashes()
     {
-        if (File.Exists(Path.Combine(_spriteFolder, "sprites.json")))
+        if (File.Exists(GitHubSpriteJsonFilePath))
         {
-            var spriteJson = File.ReadAllText(Path.Combine(_spriteFolder, "sprites.json"));
+            var spriteJson = File.ReadAllText(GitHubSpriteJsonFilePath);
             var tree = JsonSerializer.Deserialize<GitHubTree>(spriteJson);
 
-            if (tree?.tree?.Any() == true)
+            if (tree?.tree == null || tree.tree.Count == 0)
             {
-                _logger.LogInformation("Loading previous sprite hashes from {Path}", Path.Combine(_spriteFolder, "sprites.json"));
-                return tree.tree
-                    .Where(IsValidSpriteFile)
-                    .ToDictionary(x => ConvertGitHubPath(x.path), x => x.sha);
+                File.Delete(GitHubSpriteJsonFilePath);
+                return [];
+            }
+
+            _logger.LogInformation("Loading previous sprite hashes from {Path}", GitHubSpriteJsonFilePath);
+
+            var toReturn = tree.tree
+                .Where(IsValidSpriteFile)
+                .ToDictionary(x => ConvertGitHubPath(x.path), x => x.sha);
+
+            SaveSpriteHashYaml(toReturn);
+            File.Delete(GitHubSpriteJsonFilePath);
+
+            return toReturn;
+        }
+        else if (File.Exists(SpriteHashYamlFilePath))
+        {
+            var yamlText = File.ReadAllText(SpriteHashYamlFilePath);
+            var serializer = new DeserializerBuilder()
+                .IgnoreUnmatchedProperties()
+                .Build();
+            try
+            {
+                return serializer.Deserialize<Dictionary<string, string>>(yamlText);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error deserializing sprite hash yaml file {Path}", SpriteHashYamlFilePath);
             }
         }
 
-        return _optionsFactory.Create().GeneralOptions.SpriteHashes;
+        return [];
+    }
+
+    private void SaveSpriteHashYaml(Dictionary<string, string> hashes)
+    {
+        var serializer = new Serializer();
+        var yamlText = serializer.Serialize(hashes);
+        File.WriteAllText(SpriteHashYamlFilePath, yamlText);
     }
 
     private async Task<bool> DownloadFileAsync(string destination, string url, int attempts = 2)
@@ -197,7 +228,6 @@ public class GitHubSpriteDownloaderService : IGitHubSpriteDownloaderService
 
         _logger.LogInformation("Retrieved {Count} file data from GitHub", tree.tree.Count);
 
-
         return tree.tree
             .Where(IsValidSpriteFile)
             .ToDictionary(x => x.path, x => x.sha);
@@ -227,7 +257,7 @@ public class GitHubSpriteDownloaderService : IGitHubSpriteDownloaderService
         public List<GitHubFile>? tree { get; set; }
     }
 
-    public class GitHubFile
+    private class GitHubFile
     {
         public required string path { get; set; }
         public required string mode { get; set; }
@@ -235,4 +265,12 @@ public class GitHubSpriteDownloaderService : IGitHubSpriteDownloaderService
         public required string sha { get; set; }
         public required string url { get; set; }
     }
+
+#if DEBUG
+    private string SpriteHashYamlFilePath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "sprite-hashes-debug.yml");
+#else
+    private string SpriteHashYamlFilePath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "sprite-hashes.yml");
+#endif
+
+    private string GitHubSpriteJsonFilePath => Path.Combine(_spriteFolder, "sprites.json");
 }
