@@ -165,4 +165,80 @@ public class UIService: IUIService
         profilePath = null;
         return null;
     }
+
+    /// <summary>
+    /// Gets the images for tracker talking
+    /// </summary>
+    /// <param name="profilePath">The selected profile</param>
+    /// <param name="basePath">The base path of the folder used</param>
+    /// <returns>A dictionary of all of the available tracker speech images</returns>
+    public Dictionary<string, TrackerSpeechImages> GetTrackerSpeechSprites(out string? profilePath, string? basePath = null)
+    {
+        var toReturn = new Dictionary<string, TrackerSpeechImages>();
+
+        foreach (var idleSprite in GetCategorySprites("Tracker", out profilePath, basePath).Where(x => x.EndsWith("_idle.png")))
+        {
+            var file = new FileInfo(idleSprite);
+
+            var reaction = file.Name.Replace("_idle.png", "").ToLower();
+            var talkSprite = idleSprite.Replace("_idle.png", "_talk.png");
+
+            if (File.Exists(talkSprite))
+            {
+                toReturn.Add(reaction, new TrackerSpeechImages()
+                {
+                    ReactionName = reaction,
+                    IdleImage = idleSprite,
+                    TalkingImage = talkSprite,
+                });
+            }
+        }
+
+        return toReturn;
+    }
+
+    /// <summary>
+    /// Returns all of the sprites for a category
+    /// </summary>
+    /// <param name="category">The category of sprite</param>
+    /// <param name="profilePath">The path of the selected profile</param>
+    /// <param name="basePath">The base path of the desired sprite</param>
+    /// <returns>The full path of the sprite or null if it's not found</returns>
+    public List<string> GetCategorySprites(string category, out string? profilePath, string? basePath = null)
+    {
+        var toReturn = new List<string>();
+
+        if (!string.IsNullOrEmpty(basePath))
+        {
+            var path = Path.Combine(basePath, category);
+            if (Directory.Exists(path))
+            {
+                foreach (var spritePath in Directory.EnumerateFiles(path, "*.png"))
+                {
+                    toReturn.Add(spritePath);
+                }
+                profilePath = basePath;
+                return toReturn;
+            }
+        }
+        else
+        {
+            foreach (var profile in _iconPaths)
+            {
+                var path = Path.Combine(profile, category);
+                if (Directory.Exists(path))
+                {
+                    foreach (var spritePath in Directory.EnumerateFiles(path, "*.png", new EnumerationOptions() { MatchCasing = MatchCasing.CaseInsensitive }))
+                    {
+                        toReturn.Add(spritePath);
+                    }
+                    profilePath = profile;
+                    return toReturn;
+                }
+            }
+        }
+
+        profilePath = null;
+        return toReturn;
+    }
 }

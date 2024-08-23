@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Speech.Synthesis;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Data.Options;
@@ -34,6 +35,7 @@ public class TextToSpeechCommunicator : ICommunicator, IDisposable
             if (IsSpeaking) return;
             _startSpeakingTime = DateTime.Now;
             IsSpeaking = true;
+            SpeakStarted?.Invoke(this, EventArgs.Empty);
         };
 
         _tts.SpeakCompleted += (sender, args) =>
@@ -42,6 +44,12 @@ public class TextToSpeechCommunicator : ICommunicator, IDisposable
             IsSpeaking = false;
             var duration = DateTime.Now - _startSpeakingTime;
             SpeakCompleted?.Invoke(this, new SpeakCompletedEventArgs(duration));
+        };
+
+        _tts.VisemeReached += (sender, args) =>
+        {
+            if (!OperatingSystem.IsWindows()) return;
+            VisemeReached?.Invoke(this, args);
         };
 
         _canSpeak = trackerOptionsAccessor.Options?.VoiceFrequency != Shared.Enums.TrackerVoiceFrequency.Disabled;
@@ -143,7 +151,11 @@ public class TextToSpeechCommunicator : ICommunicator, IDisposable
 
     public bool IsSpeaking { get; private set; }
 
+    public event EventHandler? SpeakStarted;
+
     public event EventHandler<SpeakCompletedEventArgs>? SpeakCompleted;
+
+    public event EventHandler<VisemeReachedEventArgs>? VisemeReached;
 
     /// <inheritdoc/>
     public void Dispose()

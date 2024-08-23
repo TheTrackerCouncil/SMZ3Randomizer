@@ -18,6 +18,12 @@ public class OptionsWindowTrackerOptions
     [DynamicFormFieldCheckBox(checkBoxText: "Render shadows", alignment: DynamicFormAlignment.Right)]
     public bool TrackerShadows { get; set; } = true;
 
+    [DynamicFormFieldColorPicker(label: "Tracker speech window color:")]
+    public byte[] TrackerSpeechBGColor { get; set; } = [0xFF, 0x48, 0x3D, 0x8B];
+
+    [DynamicFormFieldCheckBox(checkBoxText: "Enable speech bounce animation", alignment: DynamicFormAlignment.Right)]
+    public bool TrackerSpeechEnableBounce { get; set; } = true;
+
     [DynamicFormFieldSlider(minimumValue: 0, maximumValue:100, decimalPlaces:1, incrementAmount:.1, suffix:"%", label: "Tracker recognition threshold:", platforms: DynamicFormPlatform.Windows)]
     public float TrackerRecognitionThreshold { get; set; }
 

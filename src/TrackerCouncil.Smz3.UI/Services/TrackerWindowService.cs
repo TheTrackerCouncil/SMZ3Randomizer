@@ -60,6 +60,7 @@ public class TrackerWindowService(
         var bytes = Options.GeneralOptions.TrackerBGColor;
         _model.Background = new SolidColorBrush(Color.FromArgb(bytes[0], bytes[1], bytes[2], bytes[3]));
         _model.OpenTrackWindow = Options.GeneralOptions.DisplayMsuTrackWindow;
+        _model.OpenSpeechWindow = Options.GeneralOptions.DisplayTrackerSpeechWindow;
         _model.AddShadows = Options.GeneralOptions.TrackerShadows;
         _model.DisplayTimer = Options.GeneralOptions.TrackerTimerEnabled;
 
@@ -518,6 +519,13 @@ public class TrackerWindowService(
         _trackerHelpWindow = serviceProvider.GetRequiredService<TrackerHelpWindow>();
         _trackerHelpWindow.Show(_window);
         _trackerHelpWindow.Closed += (_, _) => _trackerHelpWindow = null;
+    }
+
+    public TrackerSpeechWindow OpenTrackerSpeechWindow()
+    {
+        var window = serviceProvider.GetRequiredService<TrackerSpeechWindow>();
+        window.Show(_window);
+        return window;
     }
 
     private TrackerWindowPanelViewModel? GetPanelViewModel(UIGridLocation? gridLocation)
