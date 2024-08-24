@@ -227,11 +227,6 @@ public class GeneralOptions : INotifyPropertyChanged
     public List<ConfigSource> ConfigSources { get; set; } = new();
 
     /// <summary>
-    /// Dictionary of previously downloaded hashes
-    /// </summary>
-    public Dictionary<string, string> SpriteHashes { get; set; } = new();
-
-    /// <summary>
     /// Device to be used for push to talk mode
     /// </summary>
     public string PushToTalkDevice { get; set; } = "Default";

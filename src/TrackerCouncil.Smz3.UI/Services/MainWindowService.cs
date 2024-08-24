@@ -113,14 +113,6 @@ public class MainWindowService(
             return;
         }
 
-        #if DEBUG
-        // Skip sprite download when debugging if the folder already exists
-        if (Directory.Exists(Sprite.SpritePath))
-        {
-            return;
-        }
-        #endif
-
         var toDownload = await gitHubSpriteDownloaderService.GetSpritesToDownloadAsync("TheTrackerCouncil", "SMZ3CasSprites");
 
         if (toDownload is not { Count: > 4 })

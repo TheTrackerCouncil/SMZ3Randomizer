@@ -15,8 +15,9 @@ public interface IGitHubSpriteDownloaderService
     /// <param name="owner">The GitHub repository owner</param>
     /// <param name="repo">The GitHub repository to download</param>
     /// <param name="timeout">How long to timeout from the api call</param>
+    /// <param name="ignoreNoPreviousHashes">If downloads should be triggered, even if no previous hashes exist</param>
     /// <returns>A dictionary of paths on GitHub and their git hashes</returns>
-    public Task<IDictionary<string, string>?> GetSpritesToDownloadAsync(string owner, string repo, TimeSpan? timeout = null);
+    public Task<IDictionary<string, string>?> GetSpritesToDownloadAsync(string owner, string repo, TimeSpan? timeout = null, bool ignoreNoPreviousHashes = false);
 
     /// <summary>
     /// Downloads sprites from GitHub to the folder

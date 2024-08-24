@@ -192,12 +192,12 @@ public class OptionsWindowService(ConfigProvider configProvider, IMicrophoneServ
 
     private async Task UpdateSpritesAsync()
     {
-        var sprites = await gitHubSpriteDownloaderService.GetSpritesToDownloadAsync("TheTrackerCouncil", "SMZ3CasSprites");
+        var sprites = await gitHubSpriteDownloaderService.GetSpritesToDownloadAsync("TheTrackerCouncil", "SMZ3CasSprites", null, true);
 
         if (sprites?.Any() == true)
         {
             SpriteDownloadStarted?.Invoke(this, EventArgs.Empty);
-            await gitHubSpriteDownloaderService.DownloadSpritesAsync("TheTrackerCouncil", "SMZ3CasSprites");
+            await gitHubSpriteDownloaderService.DownloadSpritesAsync("TheTrackerCouncil", "SMZ3CasSprites", sprites);
             SpriteDownloadEnded?.Invoke(this, EventArgs.Empty);
         }
     }
