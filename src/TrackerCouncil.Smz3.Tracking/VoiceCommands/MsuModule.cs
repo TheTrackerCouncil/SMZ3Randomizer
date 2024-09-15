@@ -9,6 +9,7 @@ using MSURandomizerLibrary.Configs;
 using MSURandomizerLibrary.Models;
 using MSURandomizerLibrary.Services;
 using TrackerCouncil.Smz3.Abstractions;
+using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Tracking.Services;
 
@@ -40,7 +41,7 @@ public class MsuModule : TrackerModule, IDisposable
     /// <param name="msuMonitorService"></param>
     /// <param name="msuTypeService"></param>
     /// <param name="msuUserOptionsService"></param>
-    /// <param name="msuConfig"></param>
+    /// <param name="config"></param>
     /// <param name="gameService"></param>
     public MsuModule(
         TrackerBase tracker,
@@ -51,14 +52,14 @@ public class MsuModule : TrackerModule, IDisposable
         IMsuMonitorService msuMonitorService,
         IMsuTypeService msuTypeService,
         IMsuUserOptionsService msuUserOptionsService,
-        MsuConfig msuConfig,
+        Configs config,
         IGameService gameService)
         : base(tracker, itemService, worldService, logger)
     {
         _gameService = gameService;
         _msuMonitorService = msuMonitorService;
         var msuType = msuTypeService.GetSMZ3MsuType();
-        _msuConfig = msuConfig;
+        _msuConfig = config.MsuConfig;
         _validTrackNumbers = msuType!.ValidTrackNumbers;
 
         if (!File.Exists(tracker.RomPath))
