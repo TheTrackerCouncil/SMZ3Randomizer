@@ -173,21 +173,21 @@ public class HintsConfig : IMergeable<HintsConfig>
     /// <summary>
     /// Gets the hints for locations that don't have anything useful.
     /// <c>{0}</c> is placeholder for the name of the location.
-    /// <c>{1}</c> is placeholder for the character name.
+    /// <c>{1}</c> is placeholder for the name of the character who the item is for.
     /// </summary>
     public SchrodingersString? LocationHasJunkItem { get; init; }
 
     /// <summary>
     /// Gets the hints for locations that have something required
     /// <c>{0}</c> is placeholder for the name of the location.
-    /// <c>{1}</c> is placeholder for the character name.
+    /// <c>{1}</c> is placeholder for the name of the character who the item is for.
     /// </summary>
     public SchrodingersString? LocationHasMandatoryItem { get; init; }
 
     /// <summary>
     /// Gets the hints for locations that might have something useful.
     /// <c>{0}</c> is placeholder for the name of the location.
-    /// <c>{1}</c> is placeholder for the character name.
+    /// <c>{1}</c> is placeholder for the name of the character who the item is for.
     /// </summary>
     public SchrodingersString? LocationHasUsefulItem { get; init; }
 
