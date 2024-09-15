@@ -8,7 +8,6 @@ using AvaloniaControls.Models;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.UI.Services;
 using TrackerCouncil.Smz3.UI.ViewModels;
-using Location = TrackerCouncil.Smz3.Data.WorldData.Location;
 
 namespace TrackerCouncil.Smz3.UI.Views;
 
