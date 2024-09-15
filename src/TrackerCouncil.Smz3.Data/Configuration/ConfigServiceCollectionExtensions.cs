@@ -7,10 +7,10 @@ public static class ConfigServiceCollectionExtensions
 {
     public static IServiceCollection AddConfigs(this IServiceCollection services)
     {
-        services.AddSingleton<Smz3.Data.Configuration.ConfigProvider>();
+        services.AddSingleton<ConfigProvider>();
         services.AddTransient(serviceProvider =>
         {
-            var configProvider = serviceProvider.GetRequiredService<Smz3.Data.Configuration.ConfigProvider>();
+            var configProvider = serviceProvider.GetRequiredService<ConfigProvider>();
             return configProvider.GetMapConfig();
         });
 
