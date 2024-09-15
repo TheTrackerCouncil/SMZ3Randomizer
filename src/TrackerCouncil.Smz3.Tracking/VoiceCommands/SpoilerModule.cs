@@ -118,27 +118,9 @@ public class SpoilerModule : TrackerModule, IOptionalModule
         }
         else if (TrackerBase.HintsEnabled)
         {
-            Reward? areaReward = null;
-            if (area is IHasReward rewardArea && rewardArea.RewardType != RewardType.Agahnim && rewardArea.RewardType != RewardType.None && area is IDungeon dungeon)
-            {
-                var bossLocation = area.Locations.First(x => x.Id == dungeon.BossLocationId);
-
-                // For pendant dungeons, only factor it in if the player has not gotten it so that they get hints
-                // that factor in Saha/Ped
-                if (rewardArea.RewardType is RewardType.PendantBlue or RewardType.PendantGreen
-                        or RewardType.PendantRed && (bossLocation.State.Cleared || bossLocation.State.Autotracked))
-                {
-                    areaReward = rewardArea.Reward;
-                }
-                // For crystal dungeons, always act like the player has them so that it only gives a hint based on
-                // the actual items in the dungeon
-                else if (rewardArea.RewardType is RewardType.CrystalBlue or RewardType.CrystalRed)
-                {
-                    areaReward = rewardArea.Reward;
-                }
-            }
-
+            var areaReward = GetRewardForHint(area);
             var usefulness = _gameHintService.GetUsefulness(locations.ToList(), WorldService.Worlds, areaReward);
+
             if (usefulness == LocationUsefulness.Mandatory)
             {
                 TrackerBase.Say(x => x.Hints.AreaHasSomethingMandatory, args: [area.GetName()]);
@@ -149,8 +131,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
             }
             else if (area is IHasReward region)
             {
-                if (region.RewardType == RewardType.CrystalBlue
-                    || region.RewardType == RewardType.CrystalRed)
+                if (region.RewardType is RewardType.CrystalBlue or RewardType.CrystalRed)
                 {
                     TrackerBase.Say(x => x.Hints.AreaHasJunkAndCrystal, args: [area.GetName()]);
                 }
@@ -396,21 +377,53 @@ public class SpoilerModule : TrackerModule, IOptionalModule
         return true;
     }
 
+    private Reward? GetRewardForHint(IHasLocations area)
+    {
+        if (area is not IHasReward rewardArea || rewardArea.RewardType == RewardType.Agahnim ||
+            rewardArea.RewardType == RewardType.None || area is not IDungeon dungeon) return null;
+
+        var bossLocation = area.Locations.First(x => x.Id == dungeon.BossLocationId);
+
+        // For pendant dungeons, only factor it in if the player has not gotten it so that they get hints
+        // that factor in Saha/Ped
+        if (rewardArea.RewardType is RewardType.PendantBlue or RewardType.PendantGreen
+                or RewardType.PendantRed && (bossLocation.State.Cleared || bossLocation.State.Autotracked))
+        {
+            return rewardArea.Reward;
+        }
+        // For crystal dungeons, always act like the player has them so that it only gives a hint based on
+        // the actual items in the dungeon
+        else if (rewardArea.RewardType is RewardType.CrystalBlue or RewardType.CrystalRed)
+        {
+            return rewardArea.Reward;
+        }
+
+        return null;
+    }
+
     private bool GiveLocationHints(Location location)
     {
         switch (HintsGiven(location))
         {
             // Who's it for and is it any good?
             case 0:
+
+                var areaReward = GetRewardForHint(location.Region);
+                var usefulness = _gameHintService.GetUsefulness([ location ], WorldService.Worlds, areaReward);
+
                 var characterName = location.Item.Type.IsInCategory(ItemCategory.Metroid)
                     ? TrackerBase.CorrectPronunciation(location.World.Config.SamusName)
                     : TrackerBase.CorrectPronunciation(location.World.Config.LinkName);
 
-                if (TrackerBase.IsWorth(location.Item))
+                switch (usefulness)
                 {
-                    return GiveLocationHint(x => x.LocationHasUsefulItem, location, characterName);
+                    case LocationUsefulness.Mandatory:
+                        return GiveLocationHint(x => x.LocationHasMandatoryItem, location, characterName);
+                    case LocationUsefulness.NiceToHave or LocationUsefulness.Sword:
+                        return GiveLocationHint(x => x.LocationHasUsefulItem, location, characterName);
+                    default:
+                        return GiveLocationHint(x => x.LocationHasJunkItem, location, characterName);
                 }
-                return GiveLocationHint(x => x.LocationHasJunkItem, location, characterName);
 
             // Try to give a hint from the config
             case 1:
