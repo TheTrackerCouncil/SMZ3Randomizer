@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -23,7 +24,30 @@ public partial class TrackerLocationsWindow : RestorableWindow
     public TrackerLocationsWindow()
     {
         InitializeComponent();
-        DataContext = _model = new TrackerLocationsViewModel();
+        DataContext = _model = new TrackerLocationsViewModel()
+        {
+            Regions =
+            [
+                new RegionViewModel()
+                {
+                    RegionName = "Test Region",
+                    Locations = CreateMockLocations()
+                }
+            ]
+        };
+        return;
+
+        List<LocationViewModel> CreateMockLocations()
+        {
+            var toReturn = new List<LocationViewModel>();
+
+            for (var i = 0; i < 20; i++)
+            {
+                toReturn.Add(new LocationViewModel(null, true, true) { Name = $"Location {i}"});
+            }
+
+            return toReturn;
+        }
     }
 
     public TrackerLocationsWindow(TrackerLocationsWindowService service)
