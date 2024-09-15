@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -7,6 +8,7 @@ using AvaloniaControls.Models;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.UI.Services;
 using TrackerCouncil.Smz3.UI.ViewModels;
+using Location = TrackerCouncil.Smz3.Data.WorldData.Location;
 
 namespace TrackerCouncil.Smz3.UI.Views;
 
@@ -23,7 +25,30 @@ public partial class TrackerLocationsWindow : RestorableWindow
     public TrackerLocationsWindow()
     {
         InitializeComponent();
-        DataContext = _model = new TrackerLocationsViewModel();
+        DataContext = _model = new TrackerLocationsViewModel()
+        {
+            Regions =
+            [
+                new RegionViewModel()
+                {
+                    RegionName = "Test Region",
+                    Locations = CreateMockLocations()
+                }
+            ]
+        };
+        return;
+
+        List<LocationViewModel> CreateMockLocations()
+        {
+            var toReturn = new List<LocationViewModel>();
+
+            for (var i = 0; i < 20; i++)
+            {
+                toReturn.Add(new LocationViewModel(null, true, true) { Name = $"Location {i}"});
+            }
+
+            return toReturn;
+        }
     }
 
     public TrackerLocationsWindow(TrackerLocationsWindowService service)
