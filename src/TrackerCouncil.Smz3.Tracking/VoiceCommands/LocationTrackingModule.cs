@@ -69,15 +69,14 @@ public class LocationTrackingModule : TrackerModule
     }
 
     [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetClearMarkedLocationsRule()
+    private GrammarBuilder GetClearViewedObjectRule()
     {
         return new GrammarBuilder()
             .Append("Hey tracker,")
-            .Append("clear")
+            .OneOf("clear", "I don't care about", "I don't give a shit about", "I don't give a fuck about")
             .OneOf("that", "those")
             .Optional("last", "recent")
-            .Append("marked")
-            .OneOf("location", "locations");
+            .OneOf("marked location", "marked locations", "hint tile", "telepathic tile");
     }
 
     [SupportedOSPlatform("windows")]
@@ -210,9 +209,9 @@ public class LocationTrackingModule : TrackerModule
             }
         });
 
-        AddCommand("Clear recent marked locations", GetClearMarkedLocationsRule(), (result) =>
+        AddCommand("Clear recent marked locations", GetClearViewedObjectRule(), (result) =>
         {
-            TrackerBase.ClearLastMarkedLocations(result.Confidence);
+            TrackerBase.ClearLastViewedObject(result.Confidence);
         });
     }
 }

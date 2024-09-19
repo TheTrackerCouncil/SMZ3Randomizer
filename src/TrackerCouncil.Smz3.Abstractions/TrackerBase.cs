@@ -258,9 +258,9 @@ public abstract class TrackerBase
     public bool HasBeatenGame { get; protected set; }
 
     /// <summary>
-    /// The last viewed hint tile by the player
+    /// The last viewed hint tile or set of locations
     /// </summary>
-    public PlayerHintTile? LastViewedHintTile { get; set; }
+    public ViewedObject? LastViewedObject { get; set; }
 
     /// <summary>
     /// Attempts to replace a user name with a pronunciation-corrected
@@ -737,7 +737,7 @@ public abstract class TrackerBase
     /// Clears the most recently marked locations
     /// </summary>
     /// <param name="confidence">Voice recognition confidence</param>
-    public abstract void ClearLastMarkedLocations(float confidence);
+    public abstract void ClearLastViewedObject(float confidence);
 
     /// <summary>
     /// Reports how many Hyper Beam shots were needed to defeat Mother Brain

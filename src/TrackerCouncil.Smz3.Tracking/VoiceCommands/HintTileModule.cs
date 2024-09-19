@@ -58,34 +58,6 @@ public class HintTileModule : TrackerModule
             }
 
         });
-
-        AddCommand("Clear Hint Tile", GetClearHintTileRules(), (result) =>
-        {
-            var hintTile = TrackerBase.LastViewedHintTile;
-            if (hintTile?.State == null)
-            {
-                TrackerBase.Say(response: _hintTileConfig.NoPreviousHintTile);
-            }
-            else if (hintTile.State.HintState != HintState.Cleared && hintTile.Locations?.Count() > 0)
-            {
-                var locations = hintTile.Locations.Select(x => WorldService.World.FindLocation(x))
-                    .Where(x => x.State is { Cleared: false, Autotracked: false }).ToList();
-                if (locations.Any())
-                {
-                    TrackerBase.Clear(locations, result.Confidence);
-                    hintTile.State.HintState = HintState.Cleared;
-                    TrackerBase.UpdateHintTile(hintTile);
-                }
-                else
-                {
-                    TrackerBase.Say(response: _hintTileConfig.ClearHintTileFailed);
-                }
-            }
-            else
-            {
-                TrackerBase.Say(response: _hintTileConfig.ClearHintTileFailed);
-            }
-        });
     }
 
     [SupportedOSPlatform("windows")]
@@ -120,16 +92,6 @@ public class HintTileModule : TrackerModule
             .Append(_hintTileKey, GetHintTileNames())
             .OneOf("hint tile", "telepathic tile")
             .OneOf("say", "state");
-    }
-
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetClearHintTileRules()
-    {
-        return new GrammarBuilder()
-            .Append("Hey tracker,")
-            .OneOf("clear that", "ignore that", "I don't care about", "I don't give a shit about",
-                "I don't give a fuck about")
-            .OneOf("hint tile", "telepathic tile");
     }
 
     [SupportedOSPlatform("windows")]
