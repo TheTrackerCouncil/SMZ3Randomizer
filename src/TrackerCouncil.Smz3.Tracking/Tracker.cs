@@ -60,7 +60,6 @@ public sealed class Tracker : TrackerBase, IDisposable
     private readonly bool _alternateTracker;
     private readonly HashSet<SchrodingersString> _saidLines = new();
     private IEnumerable<ItemType>? _previousMissingItems;
-    private List<Location> _lastMarkedLocations = new();
     private List<Item> _pendingSpeechItems = [];
 
     /// <summary>
@@ -2198,7 +2197,7 @@ public sealed class Tracker : TrackerBase, IDisposable
 
     public override void UpdateHintTile(PlayerHintTile hintTile)
     {
-        if (hintTile.State == null)
+        if (hintTile.State == null || LastViewedObject?.HintTile == hintTile)
         {
             return;
         }
@@ -2208,7 +2207,7 @@ public sealed class Tracker : TrackerBase, IDisposable
             return;
         }
 
-        LastViewedHintTile = hintTile;
+        LastViewedObject = new ViewedObject { HintTile = hintTile };
 
         if (hintTile.Type == HintTileType.Location)
         {
@@ -2267,17 +2266,47 @@ public sealed class Tracker : TrackerBase, IDisposable
 
     public override void UpdateLastMarkedLocations(List<Location> locations)
     {
-        _lastMarkedLocations = locations;
+        LastViewedObject = new ViewedObject { ViewedLocations = locations };
     }
 
-    public override void ClearLastMarkedLocations(float confidence)
+    public override void ClearLastViewedObject(float confidence)
     {
-        if (_lastMarkedLocations.Count == 0)
+        if (LastViewedObject?.ViewedLocations?.Count > 0)
+        {
+            Clear(LastViewedObject.ViewedLocations, confidence);
+        }
+        else if (LastViewedObject?.HintTile != null)
+        {
+            var hintTile = LastViewedObject.HintTile;
+
+            if (hintTile?.State == null)
+            {
+                Say(response: Configs.HintTileConfig.NoPreviousHintTile);
+            }
+            else if (hintTile.State.HintState != HintState.Cleared && hintTile.Locations?.Count() > 0)
+            {
+                var locations = hintTile.Locations.Select(x => World.FindLocation(x))
+                    .Where(x => x.State is { Cleared: false, Autotracked: false }).ToList();
+                if (locations.Count != 0)
+                {
+                    Clear(locations, confidence);
+                    hintTile.State.HintState = HintState.Cleared;
+                    UpdateHintTile(hintTile);
+                }
+                else
+                {
+                    Say(response: Configs.HintTileConfig.ClearHintTileFailed);
+                }
+            }
+            else
+            {
+                Say(response: Configs.HintTileConfig.ClearHintTileFailed);
+            }
+        }
+        else
         {
             Say(x => x.NoMarkedLocations);
-            return;
         }
-        Clear(_lastMarkedLocations, confidence);
     }
 
     public override void CountHyperBeamShots(int count)
