@@ -63,7 +63,6 @@ public class ViewedText : IZeldaStateCheck
                      hintTile.TopLeftY, hintTile.TopLeftX+15, hintTile.TopLeftY+1))
         {
             _lastHintTile = hintTile;
-            tracker.UpdateHintTile(World.HintTiles.First(x => x.HintTileCode == _lastHintTile.HintTileKey));
             tracker.AutoTracker.SetLatestViewAction("MarkHintTileAsViewed", MarkHintTileAsViewed);
         }
 

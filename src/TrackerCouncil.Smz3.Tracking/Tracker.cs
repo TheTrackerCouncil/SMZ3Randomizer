@@ -2197,7 +2197,7 @@ public sealed class Tracker : TrackerBase, IDisposable
 
     public override void UpdateHintTile(PlayerHintTile hintTile)
     {
-        if (hintTile.State == null)
+        if (hintTile.State == null || LastViewedObject?.HintTile == hintTile)
         {
             return;
         }
@@ -2271,7 +2271,7 @@ public sealed class Tracker : TrackerBase, IDisposable
 
     public override void ClearLastViewedObject(float confidence)
     {
-        if (LastViewedObject?.ViewedLocations?.Count == 0)
+        if (LastViewedObject?.ViewedLocations?.Count > 0)
         {
             Clear(LastViewedObject.ViewedLocations, confidence);
         }
