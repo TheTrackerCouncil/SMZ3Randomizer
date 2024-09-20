@@ -593,9 +593,51 @@ public class GameService : TrackerModule, IGameService
     }
 
     /// <summary>
-    /// Gives the player any items that tracker thinks they should have but are not in memory as having been gifted
+    /// Sets the player to have a charged shinespark
     /// </summary>
-    /// <param name="action"></param>
+    /// <returns>True if successful</returns>
+    public bool TryChargeShinespark()
+    {
+        if (!IsInGame(Game.SM))
+        {
+            return false;
+        }
+
+        _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
+        {
+            MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+            SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+            AddressFormat = AddressFormat.Snes9x,
+            SniMemoryMapping = MemoryMapping.ExHiRom,
+            Address = 0x7E0A68, // Special Samus palette timer
+            Data = Int16ToBytes(600) // Ten seconds
+        });
+        _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
+        {
+            MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+            SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+            AddressFormat = AddressFormat.Snes9x,
+            SniMemoryMapping = MemoryMapping.ExHiRom,
+            Address = 0x7E0ACC, // Samus palette type
+            Data = Int16ToBytes(1) // Speed booster shine
+        });
+        _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
+        {
+            MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+            SnesMemoryDomain = SnesMemoryDomain.ConsoleRAM,
+            AddressFormat = AddressFormat.Snes9x,
+            SniMemoryMapping = MemoryMapping.ExHiRom,
+            Address = 0x7E0ACE, // Special Samus palette frame
+            Data = Int16ToBytes(0)
+        });
+
+        return true;
+    }
+
+    /// <summary>
+     /// Gives the player any items that tracker thinks they should have but are not in memory as having been gifted
+     /// </summary>
+     /// <param name="action"></param>
     public void SyncItems(EmulatorAction action)
     {
         if (AutoTracker?.HasValidState != true)

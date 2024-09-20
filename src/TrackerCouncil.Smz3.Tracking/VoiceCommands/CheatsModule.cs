@@ -208,6 +208,15 @@ public class CheatsModule : TrackerModule
     }
 
     [SupportedOSPlatform("windows")]
+    private GrammarBuilder ChargeShinesparkRule()
+    {
+        return new GrammarBuilder()
+            .Append("Hey tracker,")
+            .Optional("please", "would you kindly")
+            .OneOf("charge a shine spark", "ready a spine shark");
+    }
+
+    [SupportedOSPlatform("windows")]
     public override void AddCommands()
     {
         if (TrackerBase.World.Config.Race || TrackerBase.World.Config.DisableCheats) return;
@@ -255,6 +264,20 @@ public class CheatsModule : TrackerModule
             if (!PlayerCanCheat()) return;
 
             if (TrackerBase.GameService?.TrySetupCrystalFlash() == true)
+            {
+                TrackerBase.Say(x => x.Cheats.CheatPerformed);
+            }
+            else
+            {
+                TrackerBase.Say(x => x.Cheats.CheatFailed);
+            }
+        });
+
+        AddCommand("Charge Shinespark", ChargeShinesparkRule(), (result) =>
+        {
+            if (!PlayerCanCheat()) return;
+
+            if (TrackerBase.GameService?.TryChargeShinespark() == true)
             {
                 TrackerBase.Say(x => x.Cheats.CheatPerformed);
             }
