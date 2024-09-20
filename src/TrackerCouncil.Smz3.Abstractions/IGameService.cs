@@ -98,6 +98,12 @@ public interface IGameService
     public bool TrySetupCrystalFlash();
 
     /// <summary>
+    /// Sets the player to have a charged shinespark
+    /// </summary>
+    /// <returns>True if successful</returns>
+    public bool TryChargeShinespark();
+
+    /// <summary>
     /// Gives the player any items that tracker thinks they should have but are not in memory as having been gifted
     /// </summary>
     /// <param name="action"></param>
