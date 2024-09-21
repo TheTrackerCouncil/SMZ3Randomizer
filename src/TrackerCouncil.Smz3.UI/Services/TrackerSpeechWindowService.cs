@@ -99,7 +99,7 @@ public class TrackerSpeechWindowService(ICommunicator communicator, IUIService u
     {
         if (!OperatingSystem.IsWindows()) return;
 
-        SetReactionType(e.Request.TrackerImage);
+        SetReactionType(e.Request?.TrackerImage ?? "default");
 
         if (e.VisemeDetails.Viseme == 0)
         {
