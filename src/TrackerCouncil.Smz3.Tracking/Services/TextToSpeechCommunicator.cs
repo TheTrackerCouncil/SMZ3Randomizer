@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Speech.Synthesis;
 using Microsoft.Extensions.Logging;
@@ -15,6 +16,8 @@ public class TextToSpeechCommunicator : ICommunicator, IDisposable
     private readonly SpeechSynthesizer _tts = null!;
     private bool _canSpeak;
     private DateTime _startSpeakingTime;
+    private ConcurrentQueue<SpeechRequest> _pendingRequests = [];
+    private SpeechRequest? _currentSpeechRequest;
 
     /// <summary>
     /// Initializes a new instance of the <see
@@ -41,15 +44,24 @@ public class TextToSpeechCommunicator : ICommunicator, IDisposable
         _tts.SpeakCompleted += (sender, args) =>
         {
             if (!OperatingSystem.IsWindows() || !_canSpeak || _tts.State != SynthesizerState.Ready) return;
-            IsSpeaking = false;
-            var duration = DateTime.Now - _startSpeakingTime;
-            SpeakCompleted?.Invoke(this, new SpeakCompletedEventArgs(duration));
+
+            if (_pendingRequests.IsEmpty)
+            {
+                IsSpeaking = false;
+                var duration = DateTime.Now - _startSpeakingTime;
+                _currentSpeechRequest = null;
+                SpeakCompleted?.Invoke(this, new SpeakCompletedEventArgs(duration));
+            }
+            else
+            {
+                SayNext();
+            }
         };
 
         _tts.VisemeReached += (sender, args) =>
         {
             if (!OperatingSystem.IsWindows()) return;
-            VisemeReached?.Invoke(this, args);
+            VisemeReached?.Invoke(this, new SpeakVisemeReachedEventArgs(args, _currentSpeechRequest));
         };
 
         _canSpeak = trackerOptionsAccessor.Options?.VoiceFrequency != Shared.Enums.TrackerVoiceFrequency.Disabled;
@@ -77,49 +89,31 @@ public class TextToSpeechCommunicator : ICommunicator, IDisposable
         {
             return;
         }
+        IsSpeaking = false;
+        _pendingRequests.Clear();
         _tts.SpeakAsyncCancelAll();
     }
 
     /// <summary>
     /// Speaks the specified text or SSML.
     /// </summary>
-    /// <param name="text">
-    /// The plain text or SSML representation of the text to communicate.
+    /// <param name="request">
+    /// The request object containing details about what to communicate
     /// </param>
-    public void Say(string text)
+    public void Say(SpeechRequest request)
     {
-        if (!OperatingSystem.IsWindows())
+        if (!OperatingSystem.IsWindows() || !_canSpeak)
         {
             return;
         }
 
-        if (!_canSpeak) return;
-        var prompt = GetPromptFromText(text);
-        if (prompt != null)
+        if (_pendingRequests.IsEmpty && !IsSpeaking)
         {
-            _tts.SpeakAsync(prompt);
+            SayNext(request);
         }
-    }
-
-    /// <summary>
-    /// Speaks the specified text or SSML and blocks the calling thread
-    /// until the text-to-speech engine has finished speaking the text.
-    /// </summary>
-    /// <param name="text">
-    /// The plain text or SSML representation of the text to communicate.
-    /// </param>
-    public void SayWait(string text)
-    {
-        if (!OperatingSystem.IsWindows())
+        else
         {
-            return;
-        }
-
-        if (!_canSpeak) return;
-        var prompt = GetPromptFromText(text);
-        if (prompt != null)
-        {
-            _tts.Speak(prompt);
+            _pendingRequests.Enqueue(request);
         }
     }
 
@@ -155,7 +149,7 @@ public class TextToSpeechCommunicator : ICommunicator, IDisposable
 
     public event EventHandler<SpeakCompletedEventArgs>? SpeakCompleted;
 
-    public event EventHandler<VisemeReachedEventArgs>? VisemeReached;
+    public event EventHandler<SpeakVisemeReachedEventArgs>? VisemeReached;
 
     /// <inheritdoc/>
     public void Dispose()
@@ -220,4 +214,38 @@ public class TextToSpeechCommunicator : ICommunicator, IDisposable
     /// </summary>
     /// <returns>True if enabled, false otherwise</returns>
     public bool IsEnabled => _canSpeak;
+
+    private void SayNext(SpeechRequest? request = null)
+    {
+        if (!_canSpeak || !OperatingSystem.IsWindows())
+        {
+            return;
+        }
+
+        if (request == null)
+        {
+            if (!_pendingRequests.TryDequeue(out var nextRequest))
+            {
+                return;
+            }
+            request = nextRequest;
+        }
+
+        var prompt = GetPromptFromText(request.Text);
+        if (prompt == null)
+        {
+            return;
+        }
+
+        _currentSpeechRequest = request;
+
+        if (request.Wait)
+        {
+            _tts.Speak(prompt);
+        }
+        else
+        {
+            _tts.SpeakAsync(prompt);
+        }
+    }
 }

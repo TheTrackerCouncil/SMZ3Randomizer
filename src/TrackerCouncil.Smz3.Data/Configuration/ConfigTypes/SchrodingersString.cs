@@ -101,6 +101,22 @@ public class SchrodingersString : Collection<SchrodingersString.Possibility>, IM
     }
 
     /// <summary>
+    /// Gets the details needed for tracker speaking
+    /// </summary>
+    /// <param name="args"></param>
+    /// <returns>The text for tracker to speak and the image to display, if applicable</returns>
+    public (string SpeechText, string? TrackerImage)? GetSpeechDetails(params object?[] args)
+    {
+        var selectedPossibility = Random(s_random);
+        if (selectedPossibility == null)
+        {
+            return null;
+        }
+        var formattedText = string.Format(selectedPossibility.Text, args);
+        return (formattedText, selectedPossibility.TrackerImage);
+    }
+
+    /// <summary>
     /// Replaces placeholders in the string with the specified values.
     /// </summary>
     /// <param name="args">
@@ -208,6 +224,11 @@ public class SchrodingersString : Collection<SchrodingersString.Possibility>, IM
         /// </summary>
         [DefaultValue(DefaultWeight)]
         public double Weight { get; init; } = DefaultWeight;
+
+        /// <summary>
+        /// The tracker image to display
+        /// </summary>
+        public string? TrackerImage { get; init; } = null;
 
         /// <summary>
         /// Converts the possibility to a string.
