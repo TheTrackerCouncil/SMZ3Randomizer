@@ -255,7 +255,8 @@ public sealed partial class MultiplayerConnectWindow : Window, INotifyPropertyCh
 
     private void PhoneticNameTestButton_OnClick(object sender, RoutedEventArgs e)
     {
-        _communicator.Say(string.IsNullOrEmpty(PhoneticName) ? DisplayName : PhoneticName);
+        var nameToSay = string.IsNullOrEmpty(PhoneticName) ? DisplayName : PhoneticName;
+        _communicator.Say(new SpeechRequest(nameToSay));
     }
 
     private void ServerListButton_OnClick(object sender, RoutedEventArgs e)

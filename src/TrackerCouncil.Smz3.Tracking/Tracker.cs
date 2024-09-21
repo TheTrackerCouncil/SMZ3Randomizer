@@ -688,6 +688,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         bool wait = false)
     {
         SchrodingersString? selectedResponse = null;
+        string? trackerImage = null;
 
         if (key != null)
         {
@@ -723,24 +724,20 @@ public sealed class Tracker : TrackerBase, IDisposable
             return true;
         }
 
-        var placeholderText = text ?? selectedResponse?.Format(args ?? []);
-
-        if (placeholderText == null)
+        if (text == null)
         {
-            return false;
+            var trackerSpeechDetails = selectedResponse?.GetSpeechDetails(args ?? []);
+            if (trackerSpeechDetails?.SpeechText == null)
+            {
+                return false;
+            }
+            text = trackerSpeechDetails.Value.SpeechText;
+            trackerImage = trackerSpeechDetails.Value.TrackerImage;
         }
 
-        var formattedText = FormatPlaceholders(placeholderText);
+        var formattedText = FormatPlaceholders(text);
 
-        if (wait)
-        {
-            _communicator.SayWait(formattedText);
-        }
-        else
-        {
-            _communicator.Say(formattedText);
-        }
-
+        _communicator.Say(new SpeechRequest(formattedText, trackerImage, wait));
         _lastSpokenText = formattedText;
 
         return true;
@@ -786,7 +783,7 @@ public sealed class Tracker : TrackerBase, IDisposable
             return;
         }
 
-        _communicator.SayWait("I said");
+        _communicator.Say(new SpeechRequest("I said"));
         _communicator.SlowDown();
         Say(text: _lastSpokenText, wait: true);
         _communicator.SpeedUp();

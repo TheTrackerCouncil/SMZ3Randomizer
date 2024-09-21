@@ -9,21 +9,12 @@ namespace TrackerCouncil.Smz3.Tracking.Services;
 public interface ICommunicator
 {
     /// <summary>
-    /// Communicates the specified text to the player.
+    /// Communicates the specified text to the player
     /// </summary>
-    /// <param name="text">
-    /// The plain text or SSML representation of the text to communicate.
+    /// <param name="request">
+    /// The request object containing details about what to communicate
     /// </param>
-    void Say(string text);
-
-    /// <summary>
-    /// Communicates the specified text to the player and blocks the calling
-    /// thread until the text has been fully communicated to the player.
-    /// </summary>
-    /// <param name="text">
-    /// The plain text or SSML representation of the text to communicate.
-    /// </param>
-    void SayWait(string text);
+    void Say(SpeechRequest request);
 
     /// <summary>
     /// If the communicator is currently enabled
@@ -83,7 +74,7 @@ public interface ICommunicator
     /// <summary>
     /// Event for when the communicator has reached a new viseme
     /// </summary>
-    public event EventHandler<VisemeReachedEventArgs> VisemeReached;
+    public event EventHandler<SpeakVisemeReachedEventArgs> VisemeReached;
 
 
 }

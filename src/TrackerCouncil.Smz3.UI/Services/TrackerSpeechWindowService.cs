@@ -28,11 +28,12 @@ public class TrackerSpeechWindowService(ICommunicator communicator, IUIService u
     private readonly double _bounceHeight = 6;
     private int _prevViseme;
     private bool _enableBounce;
+    private string? _currentReactionType;
 
     public TrackerSpeechWindowViewModel GetViewModel()
     {
         _availableSpeechImages = uiService.GetTrackerSpeechSprites(out _);
-        SetSpeechImages("default");
+        SetReactionType();
 
         var options = optionsFactory.Create();
         var bytes = options.GeneralOptions.TrackerSpeechBGColor;
@@ -94,11 +95,13 @@ public class TrackerSpeechWindowService(ICommunicator communicator, IUIService u
         options.Save();
     }
 
-    private void Communicator_VisemeReached(object? sender, System.Speech.Synthesis.VisemeReachedEventArgs e)
+    private void Communicator_VisemeReached(object? sender, SpeakVisemeReachedEventArgs e)
     {
         if (!OperatingSystem.IsWindows()) return;
 
-        if (e.Viseme == 0)
+        SetReactionType(e.Request.TrackerImage);
+
+        if (e.VisemeDetails.Viseme == 0)
         {
             _model.TrackerImage = _currentSpeechImages?.IdleImage;
         }
@@ -112,28 +115,40 @@ public class TrackerSpeechWindowService(ICommunicator communicator, IUIService u
             _model.TrackerImage = _currentSpeechImages?.TalkingImage;
         }
 
-        _prevViseme = e.Viseme;
+        _prevViseme = e.VisemeDetails.Viseme;
     }
 
     private void Communicator_SpeakCompleted(object? sender, SpeakCompletedEventArgs e)
     {
+        SetReactionType();
         _model.TrackerImage = _currentSpeechImages?.IdleImage;
         _prevViseme = 0;
     }
 
-    private void SetSpeechImages(string reaction)
+    private void SetReactionType(string reaction = "default")
     {
-        if (_availableSpeechImages.TryGetValue(reaction.ToLower(), out var requestedSpeechImage))
+        var newReactionType = reaction.ToLower();
+
+        if (_currentReactionType == newReactionType)
         {
+            return;
+        }
+
+        if (_availableSpeechImages.TryGetValue(newReactionType, out var requestedSpeechImage))
+        {
+            _currentReactionType = newReactionType;
             _currentSpeechImages = requestedSpeechImage;
         }
         else if (_availableSpeechImages.TryGetValue("default", out var defaultSpeechImage))
         {
+            _currentReactionType = "default";
             _currentSpeechImages = defaultSpeechImage;
         }
         else
         {
-            _currentSpeechImages = _availableSpeechImages.Values.FirstOrDefault();
+            var newPair = _availableSpeechImages.FirstOrDefault();
+            _currentReactionType = newPair.Key.ToLower();
+            _currentSpeechImages = newPair.Value;
         }
     }
 
