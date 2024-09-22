@@ -277,7 +277,16 @@ public sealed class Tracker : TrackerBase, IDisposable
     public override void ToggleGoMode(float? confidence = null)
     {
         ShutUp();
-        Say(text: "Toggled Go Mode <break time='1s'/>", wait: true);
+
+        if (s_random.NextDouble(0, 1) < 0.95)
+        {
+            Say(text: "Toggled Go Mode <break time='1s'/>", wait: true);
+        }
+        else
+        {
+            Say(text: "Toggled Go Mode <break time='8s'/>", wait: true);
+        }
+
         GoMode = true;
         OnGoModeToggledOn(new TrackerEventArgs(confidence));
         Say(text: "on.");
