@@ -221,9 +221,8 @@ public class GameHintService : IGameHintService
     /// </summary>
     private IEnumerable<Hint> GetDungeonHints(World hintPlayerWorld, List<World> allWorlds, List<Location> importantLocations)
     {
-        // For keysanity/multiworld check all dungeons, otherwise check non-crystal dungeons
         var dungeons = hintPlayerWorld.Dungeons
-            .Where(x => hintPlayerWorld.Config.MultiWorld || hintPlayerWorld.Config.ZeldaKeysanity || x.IsPendantDungeon || x is HyruleCastle or GanonsTower);
+            .Where(x => x.IsPendantDungeon || x is HyruleCastle or GanonsTower);
         var hints = new List<Hint>();
 
         foreach (var dungeon in dungeons)

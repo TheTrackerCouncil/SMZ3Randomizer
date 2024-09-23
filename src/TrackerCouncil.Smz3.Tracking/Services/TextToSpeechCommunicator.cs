@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Speech.Synthesis;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Data.Options;
@@ -41,9 +40,9 @@ public class TextToSpeechCommunicator : ICommunicator, IDisposable
             SpeakStarted?.Invoke(this, EventArgs.Empty);
         };
 
-        _tts.SpeakCompleted += (sender, args) =>
+        _tts.StateChanged += (sender, args) =>
         {
-            if (!OperatingSystem.IsWindows() || !_canSpeak || _tts.State != SynthesizerState.Ready) return;
+            if (!OperatingSystem.IsWindows() || !_canSpeak || args.State != SynthesizerState.Ready) return;
 
             if (_pendingRequests.IsEmpty)
             {
