@@ -39,4 +39,9 @@ public class UIGridLocation
     /// Collection of object identifiers to look up for this location
     /// </summary>
     public ICollection<string> Identifiers { get; set; } = new List<string>();
+
+    /// <summary>
+    /// Map of identifier to images to use
+    /// </summary>
+    public Dictionary<string, string> ReplacementImages { get; set; } = new();
 }

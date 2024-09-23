@@ -573,9 +573,14 @@ public class TrackerWindowService(
             items[item] = fileName;
         }
 
+        var replacementImages =
+            gridLocation.ReplacementImages.ToDictionary(x => x.Key,
+                x => uiService.GetSpritePath("Items", x.Value, out _));
+
         var model = new TrackerWindowItemPanelViewModel()
         {
             Items = items,
+            ItemReplacementImages = replacementImages,
             ConnectedItems = connectedItems,
             LabelImage = labelImage,
             IsLabelActive = items.Keys.Any(x => x.State.TrackingState > 0),

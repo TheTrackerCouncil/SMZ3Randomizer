@@ -34,6 +34,8 @@ public class TrackerWindowItemPanelViewModel : TrackerWindowPanelViewModel
 
     public Dictionary<Item, string>? Items { get; set; }
 
+    public Dictionary<string, string?> ItemReplacementImages { get; set; } = [];
+
     public List<Item>? ConnectedItems { get; set; }
 
     [Reactive] public int ItemCount { get; set; }
@@ -59,7 +61,7 @@ public class TrackerWindowItemPanelViewModel : TrackerWindowPanelViewModel
         if (Items != null && item != null && !string.IsNullOrEmpty(path))
         {
             var key = Items.Keys.First(x => x.Type == item.Type);
-            Items[key] = path;
+            Items[key] = GetItemPath(item, path);
         }
 
         if (ConnectedItems != null)
@@ -95,7 +97,7 @@ public class TrackerWindowItemPanelViewModel : TrackerWindowPanelViewModel
 
                 images.Add(new TrackerWindowPanelImage
                 {
-                    ImagePath = item.Value,
+                    ImagePath = GetItemPath(item.Key ,item.Value),
                     IsActive = isActive
                 });
 
@@ -199,5 +201,14 @@ public class TrackerWindowItemPanelViewModel : TrackerWindowPanelViewModel
         }
 
         return menuItems;
+    }
+
+    private string GetItemPath(Item item, string desiredPath)
+    {
+        if (ItemReplacementImages.TryGetValue(item.Name, out var replacementImage))
+        {
+            return replacementImage ?? desiredPath;
+        }
+        return desiredPath;
     }
 }
