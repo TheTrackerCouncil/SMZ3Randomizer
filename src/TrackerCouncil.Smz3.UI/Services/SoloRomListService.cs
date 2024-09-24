@@ -143,6 +143,44 @@ public class SoloRomListService(IRomGenerationService romGenerationService,
         sharedCrossplatformService.LaunchTracker(rom.Rom);
     }
 
+    public async Task OpenArchipelagoModeAsync()
+    {
+        var storageItem = await CrossPlatformTools.OpenFileDialogAsync(ParentWindow, FileInputControlType.OpenFile,
+                    "Rom file (*.sfc)|*.sfc|All files (*.*)|*.*", _options.RomOutputPath);
+
+        var pathString = HttpUtility.UrlDecode(storageItem?.Path.AbsolutePath);
+
+        if (!File.Exists(pathString))
+        {
+            return;
+        }
+
+        var rom = await File.ReadAllBytesAsync(pathString);
+        romGenerationService.ApplyCasPatches(rom, new PatchOptions()
+        {
+            CasPatches = new CasPatches()
+            {
+                AimAnyButton = true,
+                DisableFlashing = true,
+                DisableScreenShake = true,
+                EasierWallJumps = true,
+                FastDoors = true,
+                FastElevators = true,
+                InfiniteSpaceJump = true,
+                MetroidAutoSave = true,
+                NerfedCharge = true,
+                SnapMorph = true,
+                Respin = true,
+                RefillAtSaveStation = true,
+            }
+        });
+
+        var folder = Path.GetDirectoryName(pathString)!;
+        var fileName = Path.GetFileNameWithoutExtension(pathString)+"_updated";
+        var extension = Path.GetExtension(pathString);
+        await File.WriteAllBytesAsync(Path.Combine(folder, fileName + extension), rom);
+    }
+
     private void OpenMessageWindow(string message, MessageWindowIcon icon = MessageWindowIcon.Error, MessageWindowButtons buttons = MessageWindowButtons.OK)
     {
         var window = new MessageWindow(new MessageWindowRequest()
