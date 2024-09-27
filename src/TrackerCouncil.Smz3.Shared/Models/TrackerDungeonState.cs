@@ -9,8 +9,8 @@ public class TrackerDungeonState
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Key]
     public long Id { get; set; }
-
     public TrackerState? TrackerState { get; set; }
+    [MaxLength(50)]
     public string Name { get; set; } = string.Empty;
     public bool Cleared { get; set; }
     public bool AutoTracked { get; set; }

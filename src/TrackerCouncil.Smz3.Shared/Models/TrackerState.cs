@@ -17,10 +17,13 @@ public class TrackerState
     public int LocalWorldId { get; set; }
     public ICollection<TrackerItemState> ItemStates { get; set; } = new List<TrackerItemState>();
     public ICollection<TrackerLocationState> LocationStates { get; set; } = new List<TrackerLocationState>();
-    public ICollection<TrackerRegionState> RegionStates { get; set; } = new List<TrackerRegionState>();
     public ICollection<TrackerDungeonState> DungeonStates { get; set; } = new List<TrackerDungeonState>();
-    public ICollection<TrackerMarkedLocation> MarkedLocations { get; set; } = new List<TrackerMarkedLocation>();
+
+    public ICollection<TrackerRewardState> RewardStates { get; set; } = new List<TrackerRewardState>();
     public ICollection<TrackerBossState> BossStates { get; set; } = new List<TrackerBossState>();
     public ICollection<TrackerHistoryEvent> History { get; set; } = new List<TrackerHistoryEvent>();
     public ICollection<TrackerHintState> Hints { get; set; } = new List<TrackerHintState>();
+
+    public ICollection<TrackerRegionState> RegionStates { get; set; } = new List<TrackerRegionState>();
+    public ICollection<TrackerMarkedLocation> MarkedLocations { get; set; } = new List<TrackerMarkedLocation>();
 }

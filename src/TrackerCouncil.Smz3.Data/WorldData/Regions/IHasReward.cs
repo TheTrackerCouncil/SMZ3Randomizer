@@ -1,5 +1,5 @@
-﻿using TrackerCouncil.Smz3.Shared;
-using TrackerCouncil.Smz3.Shared.Enums;
+﻿using TrackerCouncil.Smz3.Shared.Enums;
+using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Data.WorldData.Regions;
 
@@ -17,7 +17,24 @@ public interface IHasReward
 
     Reward Reward { get; set; }
 
-    RewardType DefaultRewardType { get;  }
+    RewardType DefaultRewardType { get; }
+
+    TrackerRewardState? RewardState { get; set; }
+
+    public RewardType MarkedReward
+    {
+        get
+        {
+            return RewardState?.MarkedReward ?? RewardType.None;
+        }
+        set
+        {
+            if (RewardState != null)
+            {
+                RewardState.MarkedReward = value;
+            }
+        }
+    }
 
     /// <summary>
     /// Determines whether the reward for the region can be obtained.
