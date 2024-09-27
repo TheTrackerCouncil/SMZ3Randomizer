@@ -598,4 +598,7 @@ public enum ItemType : byte
     [Description("Boss Keycard")]
     [ItemCategory(ItemCategory.Metroid, ItemCategory.NonRandomized, ItemCategory.Keycard, ItemCategory.KeycardBoss)]
     CardBoss = 0xF2,
+
+    [ItemCategory(ItemCategory.NonRandomized)]
+    OtherGameItem = 0xFF
 }

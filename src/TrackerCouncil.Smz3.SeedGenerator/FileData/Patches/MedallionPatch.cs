@@ -8,11 +8,11 @@ namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
 
 public class MedallionPatch : RomPatch
 {
+    private static readonly int[] s_turtleRockAddresses = { Snes(0x308023), Snes(0xD020), Snes(0xD0FF), Snes(0xD1DE) };
+    private static readonly int[] s_miseryMireAddresses = { Snes(0x308022), Snes(0xCFF2), Snes(0xD0D1), Snes(0xD1B0) };
+
     public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
     {
-        var turtleRockAddresses = new[] { 0x308023, 0xD020, 0xD0FF, 0xD1DE };
-        var miseryMireAddresses = new[] { 0x308022, 0xCFF2, 0xD0D1, 0xD1B0 };
-
         var turtleRockValues = data.World.TurtleRock.Medallion switch
         {
             ItemType.Bombos => new byte[] { 0x00, 0x51, 0x10, 0x00 },
@@ -30,8 +30,16 @@ public class MedallionPatch : RomPatch
         };
 
         var patches = new List<GeneratedPatch>();
-        patches.AddRange(turtleRockAddresses.Zip(turtleRockValues, (i, b) => new GeneratedPatch(Snes(i), new[] { b })));
-        patches.AddRange(miseryMireAddresses.Zip(miseryMireValues, (i, b) => new GeneratedPatch(Snes(i), new[] { b })));
+        patches.AddRange(s_turtleRockAddresses.Zip(turtleRockValues, (i, b) => new GeneratedPatch(i, [b])));
+        patches.AddRange(s_miseryMireAddresses.Zip(miseryMireValues, (i, b) => new GeneratedPatch(i, [b])));
         return patches;
+    }
+
+    public static (ItemType miseryMire, ItemType turtleRock) GetRequiredMedallions(byte[] rom)
+    {
+        var types = new[] { ItemType.Bombos, ItemType.Ether, ItemType.Quake };
+        var mmMedallion = types[rom.Skip(s_miseryMireAddresses[0]).First()];
+        var trMedallion = types[rom.Skip(s_turtleRockAddresses[0]).First()];
+        return (mmMedallion, trMedallion);
     }
 }

@@ -21,4 +21,6 @@ public enum RewardType
     CrystalRed,
     [Description("Blue Pendant")]
     PendantBlue,
+    [Description("Metroid Boss")]
+    MetroidBoss,
 }
