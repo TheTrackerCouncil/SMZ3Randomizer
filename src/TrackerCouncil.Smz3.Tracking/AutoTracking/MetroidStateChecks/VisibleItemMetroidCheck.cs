@@ -69,7 +69,7 @@ public class VisibleItemMetroidCheck : IMetroidStateCheck
 
             foreach (var location in toClearLocations)
             {
-                tracker.MarkLocation(location, location.Item.Type.GetGenericType());
+                tracker.LocationTracker.MarkLocation(location, location.Item.Type.GetGenericType());
             }
 
             if (toClearLocations.Any())

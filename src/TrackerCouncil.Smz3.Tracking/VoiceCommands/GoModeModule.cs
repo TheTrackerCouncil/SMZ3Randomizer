@@ -45,7 +45,7 @@ public class GoModeModule : TrackerModule
 
         AddCommand("Toggle Go Mode", GetGoModeRule(_responseConfig.GoModePrompts), (result) =>
         {
-            TrackerBase.ToggleGoMode(result.Confidence);
+            TrackerBase.ModeTracker.ToggleGoMode(result.Confidence);
         });
     }
 }

@@ -58,7 +58,7 @@ public class MultiplayerFiller : IFiller
 
     private static void EnsureDungeonsHaveMedallions(World world)
     {
-        var emptyMedallions = world.Regions.Where(x => x is INeedsMedallion { Medallion: ItemType.Nothing }).ToList();
+        var emptyMedallions = world.Regions.Where(x => x is IHasPrerequisite { RequiredItem: ItemType.Nothing }).ToList();
         if (emptyMedallions.Any())
         {
             throw new PlandoConfigurationException($"Not all dungeons have had their medallions set. Missing:\n"
@@ -88,21 +88,37 @@ public class MultiplayerFiller : IFiller
 
     private void FillDungeonData(World world)
     {
-        var generatedDungeonData = world.Config.MultiplayerPlayerGenerationData!.Dungeons;
-        foreach (var dungeon in world.Dungeons)
+        foreach (var reward in world.Rewards)
         {
-            var generatedData = generatedDungeonData.Single(x => x.Name == dungeon.DungeonName);
-            if (generatedData.Medallion != ItemType.Nothing && dungeon is INeedsMedallion medallionRegion)
+            reward.Region = null;
+        }
+
+        var generatedDungeonData = world.Config.MultiplayerPlayerGenerationData!.Dungeons;
+        foreach (var dungeon in world.TreasureRegions)
+        {
+            var generatedData = generatedDungeonData.Single(x => x.Name == dungeon.Name);
+            if (generatedData.Medallion != ItemType.Nothing && dungeon is IHasPrerequisite medallionRegion)
             {
-                medallionRegion.Medallion = generatedData.Medallion;
+                medallionRegion.RequiredItem = generatedData.Medallion;
                 _logger.LogDebug("Marked {Dungeon} as requiring {Medallion}", generatedData.Name, generatedData.Medallion);
             }
-            if (generatedData.Reward != null && dungeon is IHasReward rewardRegion)
+        }
+
+        foreach (var rewardRegion in world.RewardRegions)
+        {
+            var generatedData = generatedDungeonData.FirstOrDefault(x => x.Name == rewardRegion.Name);
+
+            if (generatedData?.Reward != null)
             {
-                rewardRegion.Reward = new Reward(generatedData.Reward.Value, world, rewardRegion);
-                _logger.LogDebug("Marked {Dungeon} as having {Medallion}", generatedData.Name, generatedData.Reward);
+                rewardRegion.SetRewardType(generatedData.Reward.Value);
+                _logger.LogDebug("Marked {Dungeon} as having {Reward}", generatedData.Name, generatedData.Reward);
+            }
+            else
+            {
+                rewardRegion.SetRewardType(rewardRegion.DefaultRewardType);
             }
         }
+
         EnsureDungeonsHaveMedallions(world);
         EnsureDungeonsHaveRewards(world);
     }

@@ -9,7 +9,7 @@ public interface ITrackerStateService
 {
     public Task CreateStateAsync(IEnumerable<World> world, GeneratedRom generatedRom);
 
-    public TrackerState CreateTrackerState(IEnumerable<World> worlds);
+    public TrackerState CreateTrackerState(List<World> worlds);
 
     public Task SaveStateAsync(IEnumerable<World> worlds, GeneratedRom generatedRom, double secondsElapsed);
 

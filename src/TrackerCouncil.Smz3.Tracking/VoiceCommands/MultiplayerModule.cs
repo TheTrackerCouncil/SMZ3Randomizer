@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Tracking;
+using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Multiplayer.Client;
 using TrackerCouncil.Smz3.Multiplayer.Client.EventHandlers;
 using TrackerCouncil.Smz3.Shared;
@@ -37,7 +38,6 @@ public class MultiplayerModule : TrackerModule
         TrackerBase.LocationCleared += TrackerOnLocationCleared;
         TrackerBase.BossUpdated += TrackerOnBossUpdated;
         TrackerBase.ItemTracked += TrackerOnItemTracked;
-        TrackerBase.DungeonUpdated += TrackerOnDungeonUpdated;
         TrackerBase.BeatGame += TrackerOnBeatGame;
         TrackerBase.PlayerDied += TrackerOnPlayerDied;
         autoTrackerBase.AutoTrackerConnected += AutoTrackerOnAutoTrackerConnected;
@@ -45,7 +45,6 @@ public class MultiplayerModule : TrackerModule
         _multiplayerGameService.PlayerTrackedLocation += PlayerTrackedLocation;
         _multiplayerGameService.PlayerTrackedItem += PlayerTrackedItem;
         _multiplayerGameService.PlayerTrackedBoss += PlayerTrackedBoss;
-        _multiplayerGameService.PlayerTrackedDungeon += PlayerTrackedDungeon;
         _multiplayerGameService.PlayerTrackedDeath += PlayerTrackedDeath;
         _multiplayerGameService.PlayerSyncReceived += PlayerSyncReceived;
         _multiplayerGameService.PlayerEndedGame += PlayerEndedGame;
@@ -112,13 +111,6 @@ public class MultiplayerModule : TrackerModule
             bossState.Defeated = true;
             bossState.AutoTracked = true;
         }
-
-        foreach (var dungeonState in args.UpdatedDungeonStates)
-        {
-            dungeonState.Cleared = true;
-            dungeonState.AutoTracked = true;
-        }
-
     }
 
     private void PlayerEndedGame(PlayerEndedGameEventHandlerArgs args)
@@ -174,36 +166,46 @@ public class MultiplayerModule : TrackerModule
         args.LocationState.Autotracked = true;
     }
 
-    private void PlayerTrackedDungeon(PlayerTrackedDungeonEventHandlerArgs args)
-    {
-        args.DungeonState.Cleared = true;
-        args.DungeonState.AutoTracked = true;
-        var dungeon = WorldService.GetWorld(args.PlayerId).Dungeons
-            .FirstOrDefault(x => x.GetType().Name == args.DungeonState.Name);
-        if (dungeon == null) return;
-        if (dungeon is { HasReward: true, DungeonReward: { } })
-        {
-            TrackerBase.Say(x => x.Multiplayer.OtherPlayerClearedDungeonWithReward,
-                args: [
-                    args.PhoneticName,
-                    dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss, dungeon.DungeonReward.Metadata.Name,
-                    dungeon.DungeonReward.Metadata.NameWithArticle
-                ]);
-        }
-        else
-        {
-            TrackerBase.Say(x => x.Multiplayer.OtherPlayerClearedDungeonWithoutReward,
-                args: [args.PhoneticName, dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss]);
-        }
-    }
-
     private void PlayerTrackedBoss(PlayerTrackedBossEventHandlerArgs args)
     {
         args.BossState.Defeated = true;
         args.BossState.AutoTracked = true;
-        var boss = WorldService.World.GoldenBosses.FirstOrDefault(x => x.Type == args.BossState.Type);
-        if (boss == null) return;
-        TrackerBase.Say(x => x.Multiplayer.OtherPlayerDefeatedBoss, args: [args.PhoneticName, boss.Metadata.Name]);
+
+        if (args.BossState.Type == BossType.None)
+        {
+            return;
+        }
+
+        var boss = WorldService.Worlds.FirstOrDefault(x => x.Id == args.PlayerId)?.Bosses
+            .FirstOrDefault(x => x.Type == args.BossState.Type);
+        if (boss?.Region == null)
+        {
+            return;
+        }
+
+        // Check if the region also has treasure, thus it's a Zelda dungeon
+        if (boss.Region is IHasTreasure treasureRegion)
+        {
+            if (boss.Region is IHasReward rewardRegion && rewardRegion.RewardType.IsInAnyCategory(RewardCategory.Pendant, RewardCategory.Crystal))
+            {
+                TrackerBase.Say(x => x.Multiplayer.OtherPlayerClearedDungeonWithReward,
+                    args: [
+                        args.PhoneticName,
+                        rewardRegion.Metadata.Name, boss.Region.BossMetadata.Name, rewardRegion.RewardMetadata.Name,
+                        rewardRegion.RewardMetadata.NameWithArticle
+                    ]);
+            }
+            else
+            {
+                TrackerBase.Say(x => x.Multiplayer.OtherPlayerClearedDungeonWithoutReward,
+                    args: [args.PhoneticName, treasureRegion.Metadata.Name, boss.Region.BossMetadata.Name]);
+            }
+        }
+        else
+        {
+            TrackerBase.Say(x => x.Multiplayer.OtherPlayerDefeatedBoss, args: [args.PhoneticName, boss.Metadata.Name]);
+        }
+
     }
 
     private void PlayerTrackedDeath(PlayerTrackedDeathEventHandlerArgs args)
@@ -219,12 +221,6 @@ public class MultiplayerModule : TrackerModule
             TrackerBase.Say(x => x.Multiplayer.OtherPlayedDied, args: [args.PhoneticName]);
         }
 
-    }
-
-    private async void TrackerOnDungeonUpdated(object? sender, DungeonTrackedEventArgs e)
-    {
-        if (e.Dungeon == null || !e.AutoTracked || !e.Dungeon.DungeonState.Cleared) return;
-        await _multiplayerGameService.TrackDungeon(e.Dungeon);
     }
 
     private async void TrackerOnItemTracked(object? sender, ItemTrackedEventArgs e)

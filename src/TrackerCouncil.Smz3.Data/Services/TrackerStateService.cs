@@ -8,7 +8,6 @@ using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
-using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Models;
 
@@ -29,23 +28,22 @@ public class TrackerStateService : ITrackerStateService
 
     public async Task CreateStateAsync(IEnumerable<World> worlds, GeneratedRom generatedRom)
     {
-        var state = CreateTrackerState(worlds);
+        var worldList = worlds.ToList();
 
-        foreach (var world in worlds)
+        var state = CreateTrackerState(worldList);
+
+        foreach (var world in worldList)
         {
             world.State = state;
         }
 
         generatedRom.TrackerState = state;
         await _randomizerContext.SaveChangesAsync();
-
     }
 
-    public TrackerState CreateTrackerState(IEnumerable<World> worlds)
+    public TrackerState CreateTrackerState(List<World> worlds)
     {
-        var worldList = worlds.ToList();
-
-        var locationStates = worldList
+        var locationStates = worlds
             .SelectMany(x => x.Locations)
             .Select(x => new TrackerLocationState
             {
@@ -60,7 +58,7 @@ public class TrackerStateService : ITrackerStateService
 
         var addedItems = new List<(World, ItemType)>();
         var itemStates = new List<TrackerItemState>();
-        foreach (var item in worldList.SelectMany(x => x.AllItems))
+        foreach (var item in worlds.SelectMany(x => x.AllItems))
         {
             if (addedItems.Contains((item.World, item.Type))) continue;
             itemStates.Add(new TrackerItemState
@@ -72,31 +70,46 @@ public class TrackerStateService : ITrackerStateService
             addedItems.Add((item.World, item.Type));
         }
 
-        var dungeonStates = worldList
-            .SelectMany(x => x.Dungeons)
-            .Select(x => new TrackerDungeonState
+        var rewardStates = worlds
+            .SelectMany(x => x.RewardRegions)
+            .Select(x => new TrackerRewardState { RegionName = x.GetType().Name, RewardType = x.RewardType })
+            .ToList();
+
+        var treasureStates = worlds
+            .SelectMany(x => x.TreasureRegions)
+            .Select(region => new TrackerTreasureState
             {
-                Name = x.GetType().Name,
-                RemainingTreasure = x.GetTreasureCount(),
-                Reward = x is IHasReward rewardRegion ? rewardRegion.RewardType : null,
-                RequiredMedallion = x is INeedsMedallion medallionRegion ? medallionRegion.Medallion : null,
-                MarkedReward = x is CastleTower ? RewardType.Agahnim : null,
-                WorldId = ((Region)x).World.Id
+                RegionName = region.GetType().Name,
+                RemainingTreasure = region.GetTreasureCount(),
+                TotalTreasure = region.GetTreasureCount(),
+                WorldId = ((Region)region).World.Id
             })
             .ToList();
 
-        var bossStates = worldList
+        var bossStates = worlds
             .SelectMany(x => x.AllBosses)
-            .Select(boss => new TrackerBossState()
+            .Select(boss => new TrackerBossState
             {
                 BossName = boss.Name,
+                RegionName = boss.Region?.GetType().Name ?? string.Empty,
                 Type = boss.Type,
                 WorldId = boss.World.Id,
             })
             .ToList();
 
+        var prereqStates = worlds
+            .SelectMany(x => x.PrerequisiteRegions)
+            .Select(region => new TrackerPrerequisiteState
+            {
+                RequiredItem = region.RequiredItem,
+                RegionName = region.GetType().Name,
+                WorldId = region.World.Id
+            })
+            .ToList();
+
+
         var hintStates = new List<TrackerHintState>();
-        foreach (var hint in worldList.SelectMany(x => x.HintTiles))
+        foreach (var hint in worlds.SelectMany(x => x.HintTiles))
         {
             var hintState = new TrackerHintState()
             {
@@ -115,7 +128,7 @@ public class TrackerStateService : ITrackerStateService
         }
 
         // Add starting equipment, including items that may not be in the world anymore
-        foreach (var world in worldList)
+        foreach (var world in worlds)
         {
             var startingInventory = ItemSettingOptions.GetStartingItemTypes(world.Config).ToList();
             foreach (var itemType in startingInventory.Distinct())
@@ -140,7 +153,7 @@ public class TrackerStateService : ITrackerStateService
         }
 
         // Add items from metadata that may be missing
-        foreach (var world in worldList)
+        foreach (var world in worlds)
         {
             foreach (var itemMetadata in _configs.Items.Where(m => !itemStates.Any(s => m.Is(s) && s.WorldId == world.Id)))
             {
@@ -159,9 +172,11 @@ public class TrackerStateService : ITrackerStateService
         {
             LocationStates = locationStates,
             ItemStates = itemStates,
-            DungeonStates = dungeonStates,
+            TreasureStates = treasureStates,
             BossStates = bossStates,
-            LocalWorldId = worldList.First(x => x.IsLocalWorld).Id,
+            RewardStates = rewardStates,
+            PrerequisiteStates = prereqStates,
+            LocalWorldId = worlds.First(x => x.IsLocalWorld).Id,
             Hints = hintStates,
             StartDateTime = DateTimeOffset.Now,
             UpdatedDateTime = DateTimeOffset.Now
@@ -201,6 +216,7 @@ public class TrackerStateService : ITrackerStateService
 
     public async Task SaveStateAsync(IEnumerable<World> worlds, GeneratedRom generatedRom, double secondsElapsed)
     {
+        var worldList = worlds.ToList();
         var trackerState = generatedRom.TrackerState;
 
         if (trackerState == null)
@@ -208,43 +224,42 @@ public class TrackerStateService : ITrackerStateService
             return;
         }
 
-        foreach (var world in worlds)
+        foreach (var world in worldList)
         {
             world.State = trackerState;
         }
 
-        SaveLocationStates(worlds, trackerState);
-        SaveItemStates(worlds, trackerState);
-        SaveBossStates(worlds, trackerState);
+        SaveLocationStates(worldList, trackerState);
+        SaveItemStates(worldList, trackerState);
+        SaveBossStates(worldList, trackerState);
 
         trackerState.UpdatedDateTime = DateTimeOffset.Now;
         trackerState.SecondsElapsed = secondsElapsed;
 
-
         await _randomizerContext.SaveChangesAsync();
     }
 
-    private void SaveLocationStates(IEnumerable<World> worlds, TrackerState trackerState)
+    private void SaveLocationStates(List<World> worlds, TrackerState trackerState)
     {
         var totalLocations = worlds.SelectMany(x => x.Locations).Count();
-        var clearedLocations = worlds.SelectMany(x => x.Locations).Count(x => x.State.Cleared == true);
+        var clearedLocations = worlds.SelectMany(x => x.Locations).Count(x => x.State.Cleared);
         var percCleared = (int)Math.Floor((double)clearedLocations / totalLocations * 100);
         trackerState.PercentageCleared = percCleared;
     }
 
-    private void SaveItemStates(IEnumerable<World> worlds, TrackerState trackerState)
+    private void SaveItemStates(List<World> worlds, TrackerState trackerState)
     {
         // Add any new item states
         var itemStates = worlds
             .SelectMany(x => x.AllItems)
             .Select(x => x.State).Distinct()
-            .Where(x => x != null && !trackerState.ItemStates.Contains(x))
+            .Where(x => !trackerState.ItemStates.Contains(x))
             .NonNull()
             .ToList();
         itemStates.ForEach(x => trackerState.ItemStates.Add(x) );
     }
 
-    private void SaveBossStates(IEnumerable<World> worlds, TrackerState trackerState)
+    private void SaveBossStates(List<World> worlds, TrackerState trackerState)
     {
         // Add any new item states
         var bossStates = worlds

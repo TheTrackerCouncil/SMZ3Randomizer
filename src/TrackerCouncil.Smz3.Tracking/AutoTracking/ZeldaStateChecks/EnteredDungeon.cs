@@ -5,6 +5,7 @@ using TrackerCouncil.Smz3.Data.Tracking;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
+using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.Tracking.AutoTracking.ZeldaStateChecks;
 
@@ -46,11 +47,14 @@ public class EnteredDungeon : IZeldaStateCheck
             .FirstOrDefault(x => x.StartingRooms.Count > 0 && x.StartingRooms.Contains(currentState.CurrentRoom.Value) && !x.IsOverworld);
 
         // Get the dungeon info for the room
-        if (region is not IDungeon dungeon) return false;
+        if (region is not IHasTreasure dungeon) return false;
 
-        if (!_worldAccessor.World.Config.ZeldaKeysanity && !_enteredDungeons.Contains(region) && dungeon.IsPendantDungeon)
+        var rewardRegion = region as IHasReward;
+        var bossRegion = region as IHasBoss;
+
+        if (!_worldAccessor.World.Config.ZeldaKeysanity && !_enteredDungeons.Contains(region) && rewardRegion?.HasReward(RewardType.PendantBlue, RewardType.PendantGreen, RewardType.PendantRed) == true)
         {
-            trackerBase.Say(x => x.AutoTracker.EnterPendantDungeon, args: [dungeon.DungeonMetadata.Name, dungeon.DungeonReward?.Metadata.Name]);
+            trackerBase.Say(x => x.AutoTracker.EnterPendantDungeon, args: [region.Metadata.Name, rewardRegion.Reward.Metadata.Name]);
         }
         else if (!_worldAccessor.World.Config.ZeldaKeysanity && region is CastleTower)
         {
@@ -58,8 +62,8 @@ public class EnteredDungeon : IZeldaStateCheck
         }
         else if (region is GanonsTower)
         {
-            var clearedCrystalDungeonCount = trackerBase.World.Dungeons
-                .Count(x => x.DungeonState.Cleared && x.IsCrystalDungeon);
+            var clearedCrystalDungeonCount = trackerBase.World.RewardRegions
+                .Count(x => x.RewardState.HasReceivedReward && x.RewardType is RewardType.CrystalBlue or RewardType.CrystalRed);
 
             if (clearedCrystalDungeonCount < trackerBase.World.Config.GanonsTowerCrystalCount)
             {

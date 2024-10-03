@@ -111,10 +111,10 @@ public class UIService: IUIService
     /// <summary>
     /// Returns the path of the sprite for the dungeon
     /// </summary>
-    /// <param name="dungeon">The dungeon requested</param>
+    /// <param name="hasTreasure">The dungeon requested</param>
     /// <returns>The full path of the sprite or null if it's not found</returns>
-    public string? GetSpritePath(IDungeon dungeon) => GetSpritePath("Dungeons",
-        $"{dungeon.DungeonName.ToLowerInvariant()}.png", out _);
+    public string? GetSpritePath(IHasTreasure hasTreasure) => GetSpritePath("Dungeons",
+        $"{hasTreasure.Name.ToLowerInvariant()}.png", out _);
 
     /// <summary>
     /// Returns the path of the sprite for the reward

@@ -221,8 +221,11 @@ public class GameHintService : IGameHintService
     /// </summary>
     private IEnumerable<Hint> GetDungeonHints(World hintPlayerWorld, List<World> allWorlds, List<Location> importantLocations)
     {
-        var dungeons = hintPlayerWorld.Dungeons
-            .Where(x => x.IsPendantDungeon || x is HyruleCastle or GanonsTower);
+        var dungeons = hintPlayerWorld.RewardRegions.Where(x =>
+                x.RewardType is RewardType.PendantBlue or RewardType.PendantGreen or RewardType.PendantRed)
+            .Cast<Region>()
+            .Concat([hintPlayerWorld.HyruleCastle, hintPlayerWorld.GanonsTower])
+            .OfType<IHasTreasure>();
         var hints = new List<Hint>();
 
         foreach (var dungeon in dungeons)
@@ -232,7 +235,7 @@ public class GameHintService : IGameHintService
 
         return hints;
 
-        PlayerHintTile GetDungeonHint(IDungeon dungeon)
+        PlayerHintTile GetDungeonHint(IHasTreasure dungeon)
         {
             var dungeonRegion = (Region)dungeon;
             var locations = dungeonRegion.Locations.Where(x => x.Type != LocationType.NotInDungeon).ToList();
@@ -241,7 +244,7 @@ public class GameHintService : IGameHintService
             {
                 Type = HintTileType.Dungeon,
                 WorldId = hintPlayerWorld.Id,
-                LocationKey = dungeon.DungeonName,
+                LocationKey = dungeon.Name,
                 LocationWorldId = locations.First().World.Id,
                 Locations = locations.Select(x => x.Id),
                 Usefulness = usefulness
@@ -420,8 +423,8 @@ public class GameHintService : IGameHintService
                 {
                     numCrystalsNeeded = world.Config.GanonsTowerCrystalCount;
                 }
-                var currentCrystalCount = world.Dungeons.Count(d =>
-                    d.IsCrystalDungeon && sphereLocations.Any(l =>
+                var currentCrystalCount = world.RewardRegions.Count(d =>
+                    d.RewardType is RewardType.CrystalBlue or RewardType.CrystalRed && sphereLocations.Any(l =>
                         l.World.Id == world.Id && l.Id == s_dungeonBossLocations[d.GetType()])) + (ignoredReward == null ? 0 : 1);
                 if (currentCrystalCount < numCrystalsNeeded)
                 {
@@ -475,7 +478,7 @@ public class GameHintService : IGameHintService
 
         hints.Add(() =>
         {
-            var mmMedallion = hintPlayerWorld.MiseryMire.Medallion;
+            var mmMedallion = hintPlayerWorld.MiseryMire.PrerequisiteState.RequiredItem;
             return new PlayerHintTile()
             {
                 Type = HintTileType.Requirement,
@@ -487,7 +490,7 @@ public class GameHintService : IGameHintService
 
         hints.Add(() =>
         {
-            var trMedallion = hintPlayerWorld.TurtleRock.Medallion;
+            var trMedallion = hintPlayerWorld.TurtleRock.PrerequisiteState.RequiredItem;
             return new PlayerHintTile()
             {
                 Type = HintTileType.Requirement,
@@ -525,9 +528,9 @@ public class GameHintService : IGameHintService
         }
     }
 
-    private string GetDungeonName(World hintPlayerWorld, IDungeon dungeon, Region region)
+    private string GetDungeonName(World hintPlayerWorld, IHasTreasure hasTreasure, Region region)
     {
-        var dungeonName = _metadataService.Dungeon(dungeon).Name?.ToString() ?? dungeon.DungeonName;
+        var dungeonName = _metadataService.Dungeon(hasTreasure).Name?.ToString() ?? hasTreasure.Name;
         return $"{dungeonName}{GetMultiworldSuffix(hintPlayerWorld, region.World)}";
     }
 
@@ -657,7 +660,7 @@ public class GameHintService : IGameHintService
             else if (tile.Type == HintTileType.Dungeon)
             {
                 var region = world.Regions.First(x => x.Name == areaName);
-                var dungeon = world.Dungeons.First(x => x.DungeonName == areaName);
+                var dungeon = world.TreasureRegions.First(x => x.Name == areaName);
                 areaName = GetDungeonName(hintPlayerWorld, dungeon, region);
             }
             else if (tile.Type == HintTileType.Room)

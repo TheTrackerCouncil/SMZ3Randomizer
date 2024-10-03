@@ -522,39 +522,6 @@ public class MultiplayerHub : Hub
     }
 
     /// <summary>
-    /// Request to mark a specific dungeon as tracked
-    /// </summary>
-    /// <param name="request"></param>
-    public async Task TrackDungeon(TrackDungeonRequest request)
-    {
-        var player = MultiplayerGame.LoadPlayer(Context.ConnectionId);
-        if (player == null)
-        {
-            await SendErrorResponse("Unable to find player");
-            return;
-        }
-
-        var playerToUpdate = request.PlayerGuid != player.Guid
-            ? player.Game.GetPlayer(request.PlayerGuid, null, false)
-            : player;
-
-        if (playerToUpdate == null)
-        {
-            await SendErrorResponse("Unable to find player");
-            return;
-        }
-
-        LogInfo(player, $"Tracked dungeon {request.DungeonName} for {playerToUpdate.Guid}");
-
-        var dungeon = player.Game.TrackDungeon(playerToUpdate, request.DungeonName);
-
-        await SendPlayerTrackedResponse(playerToUpdate, "TrackDungeon",
-            new TrackDungeonResponse(playerToUpdate.Guid, request.DungeonName));
-
-        if (dungeon != null) await _dbService.SaveDungeonState(playerToUpdate.Game.State, dungeon);
-    }
-
-    /// <summary>
     /// Request to notify all players of a death
     /// </summary>
     /// <param name="request"></param>

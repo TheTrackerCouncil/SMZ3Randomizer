@@ -9,17 +9,11 @@ using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda;
 
-public class TowerOfHera : Z3Region, IHasReward, IDungeon
+public class TowerOfHera : Z3Region, IHasReward, IHasTreasure, IHasBoss
 {
-    public static readonly int[] MusicAddresses = new[] {
-        0x02D5C5,
-        0x02907A,
-        0x028B8C
-    };
-
     public TowerOfHera(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
-        RegionItems = new[] { ItemType.KeyTH, ItemType.BigKeyTH, ItemType.MapTH, ItemType.CompassTH };
+        RegionItems = [ItemType.KeyTH, ItemType.BigKeyTH, ItemType.MapTH, ItemType.CompassTH];
 
         BasementCage = new Location(this, LocationId.TowerOfHeraBasementCage, 0x308162, LocationType.HeraStandingKey,
             name: "Basement Cage",
@@ -68,7 +62,7 @@ public class TowerOfHera : Z3Region, IHasReward, IDungeon
         MoldormReward = new Location(this, LocationId.TowerOfHeraMoldorm, 0x308152, LocationType.Regular,
             name: "Moldorm",
             vanillaItem: ItemType.HeartContainer,
-            access: items => items.BigKeyTH && CanBeatBoss(items),
+            access: items => items.BigKeyTH && CanBeatMoldorm(items),
             memoryAddress: 0x7,
             memoryFlag: 0xB,
             metadata: metadata,
@@ -78,27 +72,32 @@ public class TowerOfHera : Z3Region, IHasReward, IDungeon
         MemoryFlag = 0xB;
         StartingRooms = new List<int> { 119 };
         Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Tower of Hera");
-        DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Tower of Hera", "Moldorm");
-        DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
-        Reward = new Reward(DungeonState.Reward ?? RewardType.None, world, this, metadata, DungeonState);
         MapName = "Light World";
+
+        ((IHasReward)this).ApplyState(trackerState);
+        ((IHasTreasure)this).ApplyState(trackerState);
+        ((IHasBoss)this).ApplyState(trackerState);
     }
 
     public override string Name => "Tower of Hera";
 
     public RewardType DefaultRewardType => RewardType.PendantRed;
 
-    public int SongIndex { get; init; } = 8;
-    public string Abbreviation => "TH";
+    public BossType DefaultBossType => BossType.Moldorm;
+
+    public bool IsShuffledReward => true;
+
     public LocationId? BossLocationId => LocationId.TowerOfHeraMoldorm;
 
-    public Reward Reward { get; set; }
+    public Reward Reward { get; set; } = null!;
 
-    public DungeonInfo DungeonMetadata { get; set; }
+    public TrackerTreasureState TreasureState { get; set; } = null!;
 
-    public TrackerDungeonState DungeonState { get; set; }
+    public TrackerRewardState RewardState { get; set; } = null!;
 
-    public Region ParentRegion => World.LightWorldNorthWest;
+    public TrackerBossState BossState { get; set; } = null!;
+
+    public Boss Boss { get; set; } = null!;
 
     public Location BasementCage { get; }
 
@@ -118,12 +117,13 @@ public class TowerOfHera : Z3Region, IHasReward, IDungeon
                && World.LightWorldDeathMountainWest.CanEnter(items, requireRewards);
     }
 
-    public bool CanComplete(Progression items)
-    {
-        return MoldormReward.IsAvailable(items);
-    }
+    public bool CanBeatBoss(Progression items) => MoldormReward.IsAvailable(items);
 
-    private bool CanBeatBoss(Progression items)
+    public bool CanRetrieveReward(Progression items) => MoldormReward.IsAvailable(items);
+
+    public bool CanSeeReward(Progression items) => !World.Config.ZeldaKeysanity || items.Contains(ItemType.MapTH);
+
+    private bool CanBeatMoldorm(Progression items)
     {
         return items.Sword || items.Hammer;
     }

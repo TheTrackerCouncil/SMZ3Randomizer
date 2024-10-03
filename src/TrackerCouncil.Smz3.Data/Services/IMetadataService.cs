@@ -141,13 +141,13 @@ public interface IMetadataService
     /// <summary>
     /// Returns extra information for the specified dungeon.
     /// </summary>
-    /// <param name="dungeon">
+    /// <param name="hasTreasure">
     /// The dungeon to get extra information for.
     /// </param>
     /// <returns>
     /// A new <see cref="DungeonInfo"/> for the specified dungeon region.
     /// </returns>
-    public DungeonInfo Dungeon(IDungeon dungeon);
+    public DungeonInfo Dungeon(IHasTreasure hasTreasure);
 
     /// <summary>
     /// Returns extra information for the specified room.

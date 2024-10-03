@@ -59,7 +59,7 @@ public class ViewedMedallion : IZeldaStateCheck
     {
         if (_tracker == null || _mireUpdated) return;
         var dungeon = _tracker.World.MiseryMire;
-        _tracker.SetDungeonRequirement(dungeon, dungeon.DungeonState.RequiredMedallion, null, true);
+        _tracker.PrerequisiteTracker.SetDungeonRequirement(dungeon, dungeon.PrerequisiteState.RequiredItem, null, true);
         _mireUpdated = true;
     }
 
@@ -67,7 +67,7 @@ public class ViewedMedallion : IZeldaStateCheck
     {
         if (_tracker == null || _turtleRockUpdated) return;
         var dungeon = _tracker.World.TurtleRock;
-        _tracker.SetDungeonRequirement(dungeon, dungeon.DungeonState.RequiredMedallion, null, true);
+        _tracker.PrerequisiteTracker.SetDungeonRequirement(dungeon, dungeon.PrerequisiteState.RequiredItem, null, true);
         _turtleRockUpdated = true;
     }
 

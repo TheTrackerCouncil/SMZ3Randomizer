@@ -21,4 +21,14 @@ public interface IHasLocations
     /// Gets all locations in the area.
     /// </summary>
     IEnumerable<Location> Locations { get; }
+
+    public IHasTreasure? GetTreasureRegion()
+    {
+        return this switch
+        {
+            Room room => room.Region as IHasTreasure,
+            Region region => region as IHasTreasure,
+            _ => null
+        };
+    }
 }

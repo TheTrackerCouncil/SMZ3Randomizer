@@ -314,7 +314,7 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
         var shouldAskChat = ChatClient.IsConnected && (!_hasAskedChatAboutContent || s_random.Next(0, 3) == 0);
         if (!ShouldCreatePolls || !shouldAskChat)
         {
-            TrackerBase.TrackItem(contentItemData);
+            TrackerBase.ItemTracker.TrackItem(contentItemData);
             return;
         }
 
@@ -322,7 +322,7 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
 
         if (string.IsNullOrEmpty(_askChatAboutContentPollId))
         {
-            TrackerBase.TrackItem(contentItemData);
+            TrackerBase.ItemTracker.TrackItem(contentItemData);
             return;
         }
 
@@ -352,7 +352,7 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
                     if ("Yes".Equals(result.WinningChoice, StringComparison.OrdinalIgnoreCase))
                     {
                         TrackerBase.Say(x => x.Chat.AskChatAboutContentYes);
-                        TrackerBase.TrackItem(contentItemData);
+                        TrackerBase.ItemTracker.TrackItem(contentItemData);
                     }
                     else
                     {

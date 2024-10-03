@@ -18,16 +18,15 @@ public class Boss
     /// </summary>
     /// <param name="type">The type of boss</param>
     /// <param name="world">The world this boss belongs to</param>
-    /// <param name="name">The name of the boss</param>
     /// <param name="metadata">The metadata object with additional boss info</param>
-    /// <param name="state">The tracking state of the boss</param>
-    public Boss(BossType type, World world, string name, BossInfo metadata, TrackerBossState state)
+    /// <param name="bossState"></param>
+    public Boss(BossType type, World world, BossInfo metadata, TrackerBossState? bossState = null)
     {
         Type = type;
         World = world;
-        Name = name;
+        Name = metadata.Boss;
         Metadata = metadata;
-        State = state;
+        State = bossState ?? new TrackerBossState();
     }
 
     /// <summary>
@@ -35,30 +34,40 @@ public class Boss
     /// </summary>
     /// <param name="type">The type of boss</param>
     /// <param name="world">The world this boss belongs to</param>
-    /// <param name="region">The region where this boss is locatedd</param>
     /// <param name="metadata">The metadata service for looking up additional boss info</param>
-    /// <param name="trackerState">The tracking state for this run</param>
-    public Boss(BossType type, World world, IHasBoss region, IMetadataService? metadata, TrackerState? trackerState)
+    /// <param name="bossState"></param>
+    public Boss(BossType type, World world, IMetadataService? metadata, TrackerBossState? bossState = null)
     {
         Type = type;
         World = world;
-        Region = region;
         Name = type.GetDescription();
         Metadata = metadata?.Boss(type) ?? new BossInfo(Name);
-        State = trackerState?.BossStates.First(x => x.WorldId == world.Id && x.BossName == Name) ?? new TrackerBossState();
+        State = bossState ?? new TrackerBossState();
     }
 
     public string Name { get; set; }
 
     public BossType Type { get; set; }
 
-    public TrackerBossState State { get; set; }
+    public TrackerBossState State { get; set;  }
 
     public BossInfo Metadata { get; set; }
 
     public World World { get; set; }
 
     public IHasBoss? Region { get; set; }
+
+    public bool Defeated
+    {
+        get => State.Defeated;
+        set => State.Defeated = value;
+    }
+
+    public bool AutoTracked
+    {
+        get => State.AutoTracked;
+        set => State.AutoTracked = value;
+    }
 
     /// <summary>
     /// Determines if an item matches the type or name

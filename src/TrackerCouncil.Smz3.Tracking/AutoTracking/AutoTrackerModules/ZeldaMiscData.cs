@@ -63,7 +63,7 @@ public class ZeldaMiscData(TrackerBase tracker, ISnesConnectorService snesConnec
             var duckItem = itemService.FirstOrDefault("Duck");
             if (duckItem?.State.TrackingState == 0)
             {
-                Tracker.TrackItem(duckItem, null, null, false, true);
+                Tracker.ItemTracker.TrackItem(duckItem, null, null, false, true);
             }
         }
 
@@ -71,9 +71,9 @@ public class ZeldaMiscData(TrackerBase tracker, ISnesConnectorService snesConnec
         if (data.ReadUInt8(0x145) >= 3)
         {
             var castleTower = Tracker.World.CastleTower;
-            if (castleTower.DungeonState.Cleared == false)
+            if (castleTower.BossState.Defeated == false)
             {
-                Tracker.MarkDungeonAsCleared(castleTower, null, autoTracked: true);
+                Tracker.BossTracker.MarkRegionBossAsDefeated(castleTower, null, autoTracked: true);
                 Logger.LogInformation("Auto tracked {Name} as cleared", castleTower.Name);
             }
         }

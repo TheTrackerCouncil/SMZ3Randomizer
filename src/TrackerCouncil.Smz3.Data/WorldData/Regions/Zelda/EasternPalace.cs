@@ -9,15 +9,11 @@ using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda;
 
-public class EasternPalace : Z3Region, IHasReward, IDungeon
+public class EasternPalace : Z3Region, IHasReward, IHasTreasure, IHasBoss
 {
-    public static readonly int[] MusicAddresses = new[] {
-        0x02D59A
-    };
-
     public EasternPalace(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
-        RegionItems = new[] { ItemType.BigKeyEP, ItemType.MapEP, ItemType.CompassEP };
+        RegionItems = [ItemType.BigKeyEP, ItemType.MapEP, ItemType.CompassEP];
 
         CannonballChest = new Location(this, LocationId.EasternPalaceCannonballChest, 0x1E9B3, LocationType.Regular,
             name: "Cannonball Chest",
@@ -74,29 +70,32 @@ public class EasternPalace : Z3Region, IHasReward, IDungeon
         MemoryFlag = 0xB;
         StartingRooms = new List<int> { 201 };
         Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Eastern Palace");
-        DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Eastern Palace", "Armos Knights");
-        DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
-        Reward = new Reward(DungeonState.Reward ?? RewardType.None, world, this, metadata, DungeonState);
         MapName = "Light World";
+
+        ((IHasReward)this).ApplyState(trackerState);
+        ((IHasTreasure)this).ApplyState(trackerState);
+        ((IHasBoss)this).ApplyState(trackerState);
     }
 
     public override string Name => "Eastern Palace";
 
     public RewardType DefaultRewardType => RewardType.PendantGreen;
 
-    public Reward Reward { get; set; }
+    public BossType DefaultBossType => BossType.ArmosKnights;
 
-    public DungeonInfo DungeonMetadata { get; set; }
+    public bool IsShuffledReward => true;
 
-    public TrackerDungeonState DungeonState { get; set; }
+    public Reward Reward { get; set; } = null!;
 
-    public int SongIndex { get; init; } = 0;
+    public TrackerBossState BossState { get; set; } = null!;
 
-    public string Abbreviation => "EP";
+    public TrackerTreasureState TreasureState { get; set; } = null!;
+
+    public TrackerRewardState RewardState { get; set; } = null!;
+
+    public Boss Boss { get; set; } = null!;
 
     public LocationId? BossLocationId => LocationId.EasternPalaceArmosKnights;
-
-    public Region ParentRegion => World.LightWorldNorthEast;
 
     public Location CannonballChest { get; }
 
@@ -110,6 +109,11 @@ public class EasternPalace : Z3Region, IHasReward, IDungeon
 
     public Location ArmosKnightsRewards { get; }
 
-    public bool CanComplete(Progression items)
+    public bool CanRetrieveReward(Progression items)
+        => ArmosKnightsRewards.IsAvailable(items);
+
+    public bool CanSeeReward(Progression items) => !World.Config.ZeldaKeysanity || items.Contains(ItemType.MapEP);
+
+    public bool CanBeatBoss(Progression items)
         => ArmosKnightsRewards.IsAvailable(items);
 }

@@ -182,7 +182,8 @@ public class ItemService : IItemService
     /// A collection of reward that have been tracked.
     /// </returns>
     public virtual IEnumerable<Reward> TrackedRewards()
-        => _world.World.Dungeons.Where(x => x.HasReward && x.DungeonState.Cleared).Select(x => new Reward(x.MarkedReward, _world.World, (IHasReward)x));
+        => _world.World.RewardRegions.Where(x => x.HasReceivedReward)
+                .Select(x => x.Reward);
 
     /// <summary>
     /// Enumerates all bosses that can be tracked for all players.

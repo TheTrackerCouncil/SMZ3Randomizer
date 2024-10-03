@@ -118,6 +118,8 @@ public class Item
     /// </summary>
     public bool IsKeycard => Type.IsInCategory(ItemCategory.Keycard);
 
+    public bool IsTreasure => !IsDungeonItem;
+
     /// <summary>
     /// Gets the number of actual items as displayed or mentioned by
     /// tracker, or <c>0</c> if the item does not have copies.

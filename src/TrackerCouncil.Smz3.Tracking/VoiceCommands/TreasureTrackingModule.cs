@@ -5,6 +5,7 @@ using System.Speech.Recognition;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
+using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Tracking.Services;
 
@@ -14,25 +15,26 @@ namespace TrackerCouncil.Smz3.Tracking.VoiceCommands;
 /// Provides voice commands for marking dungeons and tracking dungeon
 /// progress.
 /// </summary>
-public class ZeldaDungeonTrackingModule : TrackerModule
+public class TreasureTrackingModule : TrackerModule
 {
     private const string RewardKey = "RewardName";
     private const string TreasureCountKey = "NumberOfTreasures";
 
     /// <summary>
     /// Initializes a new instance of the <see
-    /// cref="ZeldaDungeonTrackingModule"/> class.
+    /// cref="TreasureTrackingModule"/> class.
     /// </summary>
     /// <param name="tracker">The tracker instance.</param>
     /// <param name="itemService">Service to get item information</param>
     /// <param name="worldService">Service to get world information</param>
     /// <param name="logger">Used to log information.</param>
-    public ZeldaDungeonTrackingModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<ZeldaDungeonTrackingModule> logger)
+    public TreasureTrackingModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<TreasureTrackingModule> logger)
         : base(tracker, itemService, worldService, logger)
     {
 
     }
 
+    #region Voice Commands
     [SupportedOSPlatform("windows")]
     private GrammarBuilder GetMarkDungeonRewardRule()
     {
@@ -147,27 +149,31 @@ public class ZeldaDungeonTrackingModule : TrackerModule
     {
         AddCommand("Mark dungeon pendant/crystal", GetMarkDungeonRewardRule(), (result) =>
         {
-            var dungeon = GetDungeonFromResult(TrackerBase, result);
+            var dungeon = (IHasReward)GetDungeonFromResult(TrackerBase, result);
             var reward = (RewardType)result.Semantics[RewardKey].Value;
-            TrackerBase.SetDungeonReward(dungeon, reward, result.Confidence);
+            TrackerBase.RewardTracker.SetDungeonReward(dungeon, reward, result.Confidence);
         });
 
         AddCommand("Mark remaining dungeons", GetMarkRemainingDungeonRewardsRule(), (result) =>
         {
-            TrackerBase.SetUnmarkedDungeonReward(RewardType.CrystalBlue, result.Confidence);
+            TrackerBase.RewardTracker.SetUnmarkedDungeonReward(RewardType.CrystalBlue, result.Confidence);
         });
 
         AddCommand("Mark dungeon as cleared", GetClearDungeonRule(), (result) =>
         {
-            var dungeon = GetDungeonFromResult(TrackerBase, result);
-            TrackerBase.MarkDungeonAsCleared(dungeon, result.Confidence);
+            if (GetDungeonFromResult(TrackerBase, result) is IHasBoss dungeon)
+            {
+                TrackerBase.BossTracker.MarkRegionBossAsDefeated(dungeon, result.Confidence);
+            }
         });
 
         AddCommand("Mark dungeon medallion", GetMarkDungeonRequirementRule(), (result) =>
         {
-            var dungeon = GetDungeonFromResult(TrackerBase, result);
-            var medallion = GetItemFromResult(TrackerBase, result, out _);
-            TrackerBase.SetDungeonRequirement(dungeon, medallion.Type, result.Confidence);
+            if (GetDungeonFromResult(TrackerBase, result) is IHasPrerequisite dungeon)
+            {
+                var medallion = GetItemFromResult(TrackerBase, result, out _);
+                TrackerBase.PrerequisiteTracker.SetDungeonRequirement(dungeon, medallion.Type, result.Confidence);
+            }
         });
 
         AddCommand("Clear dungeon treasure", GetTreasureTrackingRule(), (result) =>
@@ -176,9 +182,8 @@ public class ZeldaDungeonTrackingModule : TrackerModule
                 ? (int)result.Semantics[TreasureCountKey].Value
                 : 1;
             var dungeon = GetDungeonFromResult(TrackerBase, result);
-            TrackerBase.TrackDungeonTreasure(dungeon, result.Confidence, amount: count);
-
-            dungeon.DungeonState.HasManuallyClearedTreasure = true;
+            TrackerBase.TreasureTracker.TrackDungeonTreasure(dungeon, result.Confidence, amount: count);
         });
     }
+    #endregion
 }

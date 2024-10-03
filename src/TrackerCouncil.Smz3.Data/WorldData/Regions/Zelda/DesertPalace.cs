@@ -9,18 +9,11 @@ using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda;
 
-public class DesertPalace : Z3Region, IHasReward, IDungeon
+public class DesertPalace : Z3Region, IHasReward, IHasTreasure, IHasBoss
 {
-    public static readonly int[] MusicAddresses = new[] {
-        0x02D59B,
-        0x02D59C,
-        0x02D59D,
-        0x02D59E
-    };
-
     public DesertPalace(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
-        RegionItems = new[] { ItemType.KeyDP, ItemType.BigKeyDP, ItemType.MapDP, ItemType.CompassDP };
+        RegionItems = [ItemType.KeyDP, ItemType.BigKeyDP, ItemType.MapDP, ItemType.CompassDP];
 
         BigChest = new Location(this, LocationId.DesertPalaceBigChest, 0x1E98F, LocationType.Regular,
             name: "Big Chest",
@@ -72,7 +65,7 @@ public class DesertPalace : Z3Region, IHasReward, IDungeon
             access: items => (
                 Logic.CanLiftLight(items) ||
                 (Logic.CanAccessMiseryMirePortal(items) && items.Mirror)
-            ) && items.BigKeyDP && items.KeyDP && Logic.CanLightTorches(items) && CanBeatBoss(items),
+            ) && items.BigKeyDP && items.KeyDP && Logic.CanLightTorches(items) && CanDefeatLanmolas(items),
             memoryAddress: 0x33,
             memoryFlag: 0xB,
             metadata: metadata,
@@ -81,32 +74,35 @@ public class DesertPalace : Z3Region, IHasReward, IDungeon
         MemoryAddress = 0x33;
         MemoryFlag = 0xB;
         StartingRooms = new List<int>() { 99, 131, 132, 133 };
-        Reward = new Reward(RewardType.None, world, this);
         Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Desert Palace");
-        DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Desert Palace", "Lanmolas");
-        DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
-        Reward = new Reward(DungeonState.Reward ?? RewardType.None, world, this, metadata, DungeonState);
         MapName = "Light World";
+
+        ((IHasReward)this).ApplyState(trackerState);
+        ((IHasTreasure)this).ApplyState(trackerState);
+        ((IHasBoss)this).ApplyState(trackerState);
     }
 
     public override string Name => "Desert Palace";
 
     public RewardType DefaultRewardType => RewardType.PendantBlue;
 
-    public override List<string> AlsoKnownAs { get; }
-        = new List<string>() { "Dessert Palace" };
+    public BossType DefaultBossType => BossType.Lanmolas;
 
-    public int SongIndex { get; init; } = 1;
-    public string Abbreviation => "DP";
+    public bool IsShuffledReward => true;
+
+    public override List<string> AlsoKnownAs { get; } = ["Dessert Palace"];
+
     public LocationId? BossLocationId => LocationId.DesertPalaceLanmolas;
 
-    public Reward Reward { get; set; }
+    public Reward Reward { get; set; } = null!;
 
-    public DungeonInfo DungeonMetadata { get; set; }
+    public TrackerRewardState RewardState { get; set; } = null!;
 
-    public TrackerDungeonState DungeonState { get; set; }
+    public TrackerBossState BossState { get; set; } = null!;
 
-    public Region ParentRegion => World.LightWorldSouth;
+    public TrackerTreasureState TreasureState { get; set; } = null!;
+
+    public Boss Boss { get; set; } = null!;
 
     public Location BigChest { get; }
 
@@ -127,12 +123,13 @@ public class DesertPalace : Z3Region, IHasReward, IDungeon
                Logic.CanAccessMiseryMirePortal(items) && items.Mirror;
     }
 
-    public bool CanComplete(Progression items)
-    {
-        return LanmolasReward.IsAvailable(items);
-    }
+    public bool CanBeatBoss(Progression items) => LanmolasReward.IsAvailable(items);
 
-    private bool CanBeatBoss(Progression items)
+    public bool CanRetrieveReward(Progression items) => LanmolasReward.IsAvailable(items);
+
+    public bool CanSeeReward(Progression items) => !World.Config.ZeldaKeysanity || items.Contains(ItemType.MapDP);
+
+    private bool CanDefeatLanmolas(Progression items)
     {
         return items.Sword || items.Hammer || items.Bow ||
                items.FireRod || items.IceRod ||

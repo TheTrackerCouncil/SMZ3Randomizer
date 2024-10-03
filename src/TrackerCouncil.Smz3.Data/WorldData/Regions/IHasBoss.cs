@@ -1,4 +1,7 @@
-﻿using TrackerCouncil.Smz3.Shared.Enums;
+﻿using System.Linq;
+using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
+using TrackerCouncil.Smz3.Shared.Enums;
+using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Data.WorldData.Regions;
 
@@ -7,15 +10,58 @@ namespace TrackerCouncil.Smz3.Data.WorldData.Regions;
 /// </summary>
 public interface IHasBoss
 {
-    /// <summary>
-    /// Gets or sets the SM golden boss for the region
-    /// </summary>
-    Boss Boss { get; set; }
+    string Name { get; }
 
-    /// <summary>
-    /// The boss type
-    /// </summary>
-    BossType BossType => Boss?.Type ?? BossType.None;
+    RegionInfo Metadata { get; set; }
+
+    World World { get; }
+
+    Boss Boss { get; protected set; }
+
+    BossInfo BossMetadata => Boss.Metadata;
+
+    BossType BossType => Boss.Type;
+
+    BossType DefaultBossType { get; }
+
+    TrackerBossState BossState => Boss.State;
+
+    LocationId? BossLocationId { get; }
+
+    public bool BossDefeated
+    {
+        get => BossState.Defeated;
+        set => BossState.Defeated = value;
+    }
+
+    public void SetBossType(BossType bossType)
+    {
+        var region = (Region)this;
+        Boss = region.World.Bosses.First(x => x.Type == bossType && x.Region == null);
+        Boss.Region = this;
+        BossState.Type = bossType;
+    }
+
+    public void ApplyState(TrackerState? state)
+    {
+        var region = (Region)this;
+
+        if (state == null)
+        {
+            Boss.State = new TrackerBossState
+            {
+                WorldId = region.World.Id,
+                RegionName = GetType().Name
+            };
+            SetBossType(DefaultBossType);
+        }
+        else
+        {
+            Boss.State = state.BossStates.First(x =>
+                x.WorldId == region.World.Id && x.RegionName == GetType().Name);
+            SetBossType(BossState.Type);
+        }
+    }
 
     /// <summary>
     /// Determines whether the boss for the region can be defeated.

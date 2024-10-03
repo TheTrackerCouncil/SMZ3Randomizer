@@ -44,13 +44,15 @@ public class Smz3GeneratedRomLoader
 
         _randomizerContext.Entry(trackerState).Collection(x => x.LocationStates).Load();
         _randomizerContext.Entry(trackerState).Collection(x => x.ItemStates).Load();
-        _randomizerContext.Entry(trackerState).Collection(x => x.DungeonStates).Load();
         _randomizerContext.Entry(trackerState).Collection(x => x.BossStates).Load();
+        _randomizerContext.Entry(trackerState).Collection(x => x.RewardStates).Load();
+        _randomizerContext.Entry(trackerState).Collection(x => x.PrerequisiteStates).Load();
         _randomizerContext.Entry(trackerState).Collection(x => x.History).Load();
         _randomizerContext.Entry(trackerState).Collection(x => x.Hints).Load();
 
         var configs = Config.FromConfigString(rom.Settings);
-        var worlds = configs.Select(config => new World(config, config.PlayerName, config.Id, config.PlayerGuid, config.Id == trackerState.LocalWorldId, _metadata, trackerState)).ToList();
+        var worlds = configs.Select(config => new World(config, config.PlayerName, config.Id, config.PlayerGuid,
+            config.Id == trackerState.LocalWorldId, _metadata, trackerState)).ToList();
 
         // Load world items from state
         foreach (var location in worlds.SelectMany(x => x.Locations))
@@ -74,7 +76,7 @@ public class Smz3GeneratedRomLoader
                                new ItemData(new SchrodingersString(itemState.ItemName),
                                    itemState.Type ?? ItemType.Nothing, new SchrodingersString());
             var world = worlds.First(w => w.Id == itemState.WorldId);
-            world.TrackerItems.Add(new Item(itemState.Type ?? ItemType.Nothing, world, itemState.ItemName, itemMetadata, itemState));
+            world.CustomItems.Add(new Item(itemState.Type ?? ItemType.Nothing, world, itemState.ItemName, itemMetadata, itemState));
         }
 
         // Create items for metadata items not in the world
@@ -91,23 +93,23 @@ public class Smz3GeneratedRomLoader
                     WorldId = world.Id
                 };
 
-                world.TrackerItems.Add(new Item(itemMetadata.InternalItemType, world, itemState.ItemName, itemMetadata, itemState));
+                world.CustomItems.Add(new Item(itemMetadata.InternalItemType, world, itemState.ItemName, itemMetadata, itemState));
                 trackerState.ItemStates.Add(itemState);
             }
         }
 
-        // Create bosses for saved state bosses not in the world
-        foreach (var bossState in trackerState.BossStates.Where(s => worlds.First(w => w.Id == s.WorldId).GoldenBosses.All(b => b.Type != s.Type)))
+        // Create custom bosses from the tracker states
+        foreach (var bossState in trackerState.BossStates.Where(x => x.Type == BossType.None))
         {
             var bossMetadata = _metadata.Boss(bossState.BossName) ?? new BossInfo(bossState.BossName);
             var world = worlds.First(w => w.Id == bossState.WorldId);
-            world.TrackerBosses.Add(new Boss(bossMetadata.Type, world, bossMetadata.Boss, bossMetadata, bossState));
+            world.CustomBosses.Add(new Boss(BossType.None, world, bossMetadata, bossState));
         }
 
-        // Create bosses for metadata items not in the world
+        // Create custom bosses for metadata items not in the world
         foreach (var world in worlds)
         {
-            foreach (var bossMetadata in _metadata.Bosses.Where(m => !world.AllBosses.Any(b => b.Is(m.Type, m.Boss))))
+            foreach (var bossMetadata in _metadata.Bosses.Where(m => !world.AllBosses.Any(b => b.Is(BossType.None, m.Boss))))
             {
                 var bossState = new TrackerBossState()
                 {
@@ -117,7 +119,7 @@ public class Smz3GeneratedRomLoader
                     WorldId = world.Id
                 };
 
-                world.TrackerBosses.Add(new Boss(bossMetadata.Type, world, bossMetadata.Boss, bossMetadata, bossState));
+                world.CustomBosses.Add(new Boss(BossType.None, world, bossMetadata, bossState));
                 trackerState.BossStates.Add(bossState);
             }
         }

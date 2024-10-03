@@ -16,6 +16,6 @@ public class TrackerBossState
     public string BossName { get; init; } = string.Empty;
     public bool Defeated { get; set; }
     public bool AutoTracked { get; set; }
-    public BossType Type { get; init; }
+    public BossType Type { get; set; }
     public int WorldId { get; set; }
 }

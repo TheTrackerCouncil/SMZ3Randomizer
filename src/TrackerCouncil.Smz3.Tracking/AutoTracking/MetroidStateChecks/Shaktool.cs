@@ -26,15 +26,15 @@ public class Shaktool : IMetroidStateCheck
         {
             tracker.ShutUp();
             tracker.Say(x => x.AutoTracker.NearShaktool, once: true);
-            tracker.StartShaktoolMode();
+            tracker.ModeTracker.StartShaktoolMode();
             return true;
         }
 
-        if (tracker.ShaktoolMode &&
+        if (tracker.ModeTracker.ShaktoolMode &&
             ((currentState is { CurrentRegion: 4, CurrentRoomInRegion: 28 } && prevState.CurrentRoomInRegion == 36) ||
              currentState.CurrentRegion != 4))
         {
-            tracker.StopShaktoolMode();
+            tracker.ModeTracker.StopShaktoolMode();
             return true;
         }
 

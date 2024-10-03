@@ -71,9 +71,9 @@ public class ZeldaLocations(TrackerBase tracker, ISnesConnectorService snesConne
                     TrackLocation(location);
 
                     // Mark HC as cleared if this was Zelda's Cell
-                    if (location.Id == LocationId.HyruleCastleZeldasCell && Tracker.World.HyruleCastle.DungeonState.Cleared == false)
+                    if (location.Id == LocationId.HyruleCastleZeldasCell && !Tracker.World.HyruleCastle.BossState.Defeated)
                     {
-                        Tracker.MarkDungeonAsCleared(Tracker.World.HyruleCastle, autoTracked: true);
+                        Tracker.BossTracker.MarkRegionBossAsDefeated(Tracker.World.HyruleCastle, autoTracked: true);
                     }
                 }
 
@@ -88,7 +88,7 @@ public class ZeldaLocations(TrackerBase tracker, ISnesConnectorService snesConne
 
     private void CheckDungeons(SnesData data, SnesData prevData)
     {
-        foreach (var dungeon in Tracker.World.Dungeons)
+        foreach (var dungeon in Tracker.World.BossRegions.Where(x => x is Z3Region))
         {
             var region = (Z3Region)dungeon;
 
@@ -102,17 +102,17 @@ public class ZeldaLocations(TrackerBase tracker, ISnesConnectorService snesConne
             {
                 var prevValue = prevData.CheckInt16Flag((int)(region.MemoryAddress * 2), region.MemoryFlag ?? 0);
                 var currentValue = data.CheckInt16Flag((int)(region.MemoryAddress * 2), region.MemoryFlag ?? 0);
-                if (dungeon.DungeonState.AutoTracked == false && prevValue && currentValue)
+                if (dungeon.BossState.AutoTracked == false && prevValue && currentValue)
                 {
-                    dungeon.DungeonState.AutoTracked = true;
-                    Tracker.MarkDungeonAsCleared(dungeon, autoTracked: true);
-                    Logger.LogInformation("Auto tracked {DungeonName} as cleared", dungeon.DungeonName);
+                    dungeon.BossState.AutoTracked = true;
+                    Tracker.BossTracker.MarkRegionBossAsDefeated(dungeon, autoTracked: true);
+                    Logger.LogInformation("Auto tracked {DungeonName} as cleared", dungeon.Name);
                 }
 
             }
             catch (Exception e)
             {
-                Logger.LogError(e, "Unable to auto track Dungeon: {DungeonName}", dungeon.DungeonName);
+                Logger.LogError(e, "Unable to auto track Dungeon: {DungeonName}", dungeon.Name);
                 Tracker.Error();
             }
         }

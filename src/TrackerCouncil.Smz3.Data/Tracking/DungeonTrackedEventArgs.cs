@@ -14,7 +14,7 @@ public class DungeonTrackedEventArgs : TrackerEventArgs
     /// <param name="dungeon">The dungeon that was tracked.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
     /// <param name="autoTracked">If the location was automatically tracked</param>
-    public DungeonTrackedEventArgs(IDungeon? dungeon, float? confidence, bool autoTracked)
+    public DungeonTrackedEventArgs(IHasTreasure? dungeon, float? confidence, bool autoTracked)
         : base(confidence, autoTracked)
     {
         Dungeon = dungeon;
@@ -23,5 +23,5 @@ public class DungeonTrackedEventArgs : TrackerEventArgs
     /// <summary>
     /// Gets the boss that was tracked.
     /// </summary>
-    public IDungeon? Dungeon { get; }
+    public IHasTreasure? Dungeon { get; }
 }

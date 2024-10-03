@@ -16,7 +16,11 @@ public class DungeonSetRewardEventArgs : EventArgs
 
 public class TrackerWindowDungeonPanelViewModel : TrackerWindowPanelViewModel
 {
-    public IDungeon? Dungeon { get; set; }
+    public Region? Region { get; set; }
+    public IHasTreasure? TreasureRegion => Region as IHasTreasure;
+    public IHasReward? RewardRegion => Region as IHasReward;
+    public IHasPrerequisite? PrereqRegion => Region as IHasPrerequisite;
+    public IHasBoss? BossRegion => Region as IHasBoss;
     public string? DungeonImage { get; set; } = "";
     [Reactive] public string? RewardImage { get; set; }
     [Reactive] public bool DungeonCleared { get; set; }
@@ -69,7 +73,7 @@ public class TrackerWindowDungeonPanelViewModel : TrackerWindowPanelViewModel
             menuItems.Add(menuItem);
         }
 
-        if (Dungeon?.HasReward == true)
+        if (RewardRegion != null)
         {
             AddRewardMenuItem(menuItems, RewardType.PendantGreen);
             AddRewardMenuItem(menuItems, RewardType.PendantRed);
@@ -83,7 +87,7 @@ public class TrackerWindowDungeonPanelViewModel : TrackerWindowPanelViewModel
 
     private void AddRewardMenuItem(List<MenuItem> menuItems, RewardType rewardType)
     {
-        if (rewardType == Dungeon?.MarkedReward)
+        if (RewardRegion == null || RewardRegion.MarkedReward == rewardType)
         {
             return;
         }

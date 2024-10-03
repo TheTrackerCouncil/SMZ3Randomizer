@@ -74,8 +74,8 @@ public class ViewedText : IZeldaStateCheck
     /// </summary>
     private void MarkGreenPendantDungeons()
     {
-        var dungeon = World.Dungeons.FirstOrDefault(x =>
-            x.DungeonRewardType == RewardType.PendantGreen && x.MarkedReward != RewardType.PendantGreen);
+        var dungeon = World.RewardRegions.FirstOrDefault(x =>
+            x is { RewardType: RewardType.PendantGreen, HasCorrectlyMarkedReward: false });
 
         if (dungeon == null)
         {
@@ -83,7 +83,7 @@ public class ViewedText : IZeldaStateCheck
             return;
         }
 
-        _tracker.SetDungeonReward(dungeon, dungeon.DungeonRewardType);
+        _tracker.RewardTracker.SetDungeonReward(dungeon, dungeon.RewardType);
         _greenPendantUpdated = true;
     }
 
@@ -92,10 +92,10 @@ public class ViewedText : IZeldaStateCheck
     /// </summary>
     private void MarkRedCrystalDungeons()
     {
-        var dungeons = World.Dungeons.Where(x =>
-            x.DungeonRewardType == RewardType.CrystalRed && x.MarkedReward != RewardType.CrystalRed).ToList();
+        var dungeons = World.RewardRegions.Where(x =>
+            x is { RewardType: RewardType.PendantGreen, HasCorrectlyMarkedReward: false }).ToList();
 
-        if (!dungeons.Any())
+        if (dungeons.Count == 0)
         {
             _redCrystalsUpdated = true;
             return;
@@ -103,7 +103,7 @@ public class ViewedText : IZeldaStateCheck
 
         foreach (var dungeon in dungeons)
         {
-            _tracker.SetDungeonReward(dungeon, dungeon.DungeonRewardType);
+            _tracker.RewardTracker.SetDungeonReward(dungeon, dungeon.RewardType);
         }
 
         _redCrystalsUpdated = true;

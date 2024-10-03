@@ -13,7 +13,7 @@ public class MedallionPatch : RomPatch
 
     public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
     {
-        var turtleRockValues = data.World.TurtleRock.Medallion switch
+        var turtleRockValues = data.World.TurtleRock.PrerequisiteState.RequiredItem switch
         {
             ItemType.Bombos => new byte[] { 0x00, 0x51, 0x10, 0x00 },
             ItemType.Ether => new byte[] { 0x01, 0x51, 0x18, 0x00 },
@@ -21,7 +21,7 @@ public class MedallionPatch : RomPatch
             var x => throw new InvalidOperationException($"Tried using {x} in place of Turtle Rock medallion")
         };
 
-        var miseryMireValues = data.World.MiseryMire.Medallion switch
+        var miseryMireValues = data.World.MiseryMire.PrerequisiteState.RequiredItem switch
         {
             ItemType.Bombos => new byte[] { 0x00, 0x51, 0x00, 0x00 },
             ItemType.Ether => new byte[] { 0x01, 0x13, 0x9F, 0xF1 },

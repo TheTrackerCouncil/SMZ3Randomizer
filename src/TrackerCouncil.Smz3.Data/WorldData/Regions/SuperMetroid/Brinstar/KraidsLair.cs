@@ -8,7 +8,7 @@ using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Data.WorldData.Regions.SuperMetroid.Brinstar;
 
-public class KraidsLair : SMRegion, IHasBoss
+public class KraidsLair : SMRegion, IHasBoss, IHasReward
 {
     public KraidsLair(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
@@ -16,21 +16,34 @@ public class KraidsLair : SMRegion, IHasBoss
         WarehouseKihunter = new WarehouseKihunterRoom(this, metadata, trackerState);
         VariaSuit = new VariaSuitRoom(this, metadata, trackerState);
         MemoryRegionId = 1;
-        Boss = new Boss(Shared.Enums.BossType.Kraid, World, this, metadata, trackerState);
         Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Kraid's Lair");
         MapName = "Brinstar";
+
+        ((IHasReward)this).ApplyState(trackerState);
+        ((IHasBoss)this).ApplyState(trackerState);
     }
 
     public override string Name => "Kraid's Lair";
 
     public override string Area => "Brinstar";
 
-    public override List<string> AlsoKnownAs { get; } = new List<string>()
-    {
-        "Warehouse"
-    };
+    public override List<string> AlsoKnownAs { get; } = ["Warehouse"];
 
-    public Boss Boss{ get; set; }
+    public Boss Boss { get; set; } = null!;
+
+    public BossType DefaultBossType => BossType.Kraid;
+
+    public LocationId? BossLocationId => LocationId.KraidsLairVariaSuit;
+
+    public TrackerBossState BossState { get; set; } = null!;
+
+    public Reward Reward { get; set; } = null!;
+
+    public RewardType DefaultRewardType => RewardType.MetroidBoss;
+
+    public TrackerRewardState RewardState { get; set; } = null!;
+
+    public bool IsShuffledReward => false;
 
     public WarehouseEnergyTankRoom WarehouseEnergyTank { get; }
 
@@ -49,6 +62,10 @@ public class KraidsLair : SMRegion, IHasBoss
     {
         return CanEnter(items, true) && items.CardBrinstarBoss;
     }
+
+    public bool CanRetrieveReward(Progression items) => CanBeatBoss(items);
+
+    public bool CanSeeReward(Progression items) => true;
 
     public class WarehouseEnergyTankRoom : Room
     {

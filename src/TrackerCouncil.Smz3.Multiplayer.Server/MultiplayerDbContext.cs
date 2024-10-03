@@ -37,8 +37,6 @@ public sealed class MultiplayerDbContext : DbContext
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<MultiplayerPlayerState>().HasMany(x => x.Items).WithOne(x => x.Player)
             .OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<MultiplayerPlayerState>().HasMany(x => x.Dungeons).WithOne(x => x.Player)
-            .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<MultiplayerPlayerState>().HasMany(x => x.Bosses).WithOne(x => x.Player)
             .OnDelete(DeleteBehavior.Cascade);
 
@@ -50,6 +48,5 @@ public sealed class MultiplayerDbContext : DbContext
     public DbSet<MultiplayerLocationState> MultiplayerLocationStates { get; set; }
     public DbSet<MultiplayerItemState> MultiplayerItemStates { get; set; }
     public DbSet<MultiplayerBossState> MultiplayerBossStates { get; set; }
-    public DbSet<MultiplayerDungeonState> MultiplayerDungeonStates { get; set; }
 
 }

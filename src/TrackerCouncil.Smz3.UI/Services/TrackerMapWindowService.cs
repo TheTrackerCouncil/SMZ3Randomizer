@@ -235,22 +235,22 @@ public class TrackerMapWindowService(
         {
             var progression = itemService.GetProgression(region);
             var actualProgression = itemService.GetProgression(false);
-            if (location.BossRegion != null && location.BossRegion.Boss.State.Defeated != true && location.BossRegion.CanBeatBoss(progression))
+            if (location.BossRegion is { BossDefeated: false } && location.BossRegion.CanBeatBoss(progression))
             {
                 image = "boss.png";
             }
-            else if (location.RewardRegion != null && location.RewardRegion.Reward.State.Cleared != true)
+            else if (location.RewardRegion is { HasReceivedReward: false })
             {
                 var regionLocations = (IHasLocations)location.Region;
 
                 // If the player can complete the region with the current actual progression
                 // or if they can access all locations in the dungeon (unless this is Castle Tower
                 // in Keysanity because it doesn't have a location for Aga himself)
-                if (location.RewardRegion.CanComplete(actualProgression)
+                if (location.RewardRegion.CanRetrieveReward(actualProgression)
                     || (regionLocations.Locations.All(x => x.IsAvailable(progression, true))
                         && !(location.Region.Config.ZeldaKeysanity && location.RewardRegion is CastleTower)))
                 {
-                    var dungeon = (IDungeon)location.Region;
+                    var dungeon = (IHasReward)location.Region;
                     image = dungeon.MarkedReward.GetDescription().ToLowerInvariant() + ".png";
                 }
             }
@@ -352,23 +352,23 @@ public class TrackerMapWindowService(
         {
             model.Locations?.Where(x => x.Location.State.Cleared == false)
                 .ToList()
-                .ForEach(x => tracker.Clear(x.Location));
+                .ForEach(x => tracker.LocationTracker.Clear(x.Location));
         }
         else if (model.Type == TrackerMapLocation.MapLocationType.Boss)
         {
             if (model.BossRegion != null)
             {
-                tracker.MarkBossAsDefeated(model.BossRegion.Boss);
+                tracker.BossTracker.MarkBossAsDefeated(model.BossRegion.Boss);
             }
-            else if(model.RewardRegion is IDungeon dungeon)
+            else if(model.RewardRegion is IHasBoss dungeon)
             {
-                tracker.MarkDungeonAsCleared(dungeon);
+                tracker.BossTracker.MarkRegionBossAsDefeated(dungeon);
             }
         }
     }
 
     public void Clear(TrackerMapSubLocationViewModel model)
     {
-        tracker.Clear(model.Location);
+        tracker.LocationTracker.Clear(model.Location);
     }
 }

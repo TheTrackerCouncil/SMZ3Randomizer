@@ -104,6 +104,12 @@ public class Location
     /// </summary>
     public TrackerLocationState State { get; set; }
 
+    public bool Cleared
+    {
+        get => State.Cleared;
+        set => State.Cleared = value;
+    }
+
     /// <summary>
     /// Gets the type of location.
     /// </summary>
@@ -301,4 +307,6 @@ public class Location
             ? $"{Room} - {Name}"
             : $"{Region} - {Name}";
     }
+
+    public IHasTreasure? GetTreasureRegion() => Region as IHasTreasure;
 }

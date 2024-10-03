@@ -285,7 +285,7 @@ public class StandardFiller : IFiller
     {
         var worldsList = worlds.ToList();
         var locationsList = locations.ToList();
-        var allRewards = worldsList.SelectMany(Reward.CreatePool).ToList();
+        var allRewards = worldsList.SelectMany(x => x.Rewards).ToList();
         var allBosses = worldsList.SelectMany(w => w.GoldenBosses).ToList();
         var itemsToAdd = new List<Item>(itemPool);
         var failedAttempts = new Dictionary<Item, int>();
@@ -354,7 +354,7 @@ public class StandardFiller : IFiller
 
         return worldsList
             .SelectMany(w => w.Regions)
-            .Where(r => r is IHasReward reward && reward.CanComplete(progressions[r.World]))
+            .Where(r => r is IHasReward reward && reward.CanRetrieveReward(progressions[r.World]))
             .SelectMany(r => rewardPool.Where(p => p.Type == ((IHasReward)r).RewardType && p.Region == r));
     }
 

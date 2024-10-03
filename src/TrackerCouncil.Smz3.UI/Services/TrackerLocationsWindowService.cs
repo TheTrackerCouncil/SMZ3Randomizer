@@ -71,6 +71,6 @@ public class TrackerLocationsWindowService(TrackerBase trackerBase, IWorldServic
         {
             return;
         }
-        trackerBase.Clear(model.Location);
+        trackerBase.LocationTracker.Clear(model.Location);
     }
 }

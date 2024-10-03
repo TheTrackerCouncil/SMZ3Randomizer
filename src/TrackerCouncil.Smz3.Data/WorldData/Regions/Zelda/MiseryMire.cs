@@ -9,14 +9,11 @@ using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda;
 
-public class MiseryMire : Z3Region, IHasReward, INeedsMedallion, IDungeon
+public class MiseryMire : Z3Region, IHasReward, IHasPrerequisite, IHasTreasure, IHasBoss
 {
-    public static readonly int[] MusicAddresses = new[] {
-        0x02D5B9
-    };
     public MiseryMire(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
-        RegionItems = new[] { ItemType.KeyMM, ItemType.BigKeyMM, ItemType.MapMM, ItemType.CompassMM };
+        RegionItems = [ItemType.KeyMM, ItemType.BigKeyMM, ItemType.MapMM, ItemType.CompassMM];
 
         MainLobby = new Location(this, LocationId.MiseryMireMainLobby, 0x1EA5E, LocationType.Regular,
             name: "Main Lobby",
@@ -24,7 +21,7 @@ public class MiseryMire : Z3Region, IHasReward, INeedsMedallion, IDungeon
             access: items => items.BigKeyMM || items.KeyMM >= 1,
             memoryAddress: 0xC2,
             memoryFlag: 0x4,
-            trackerLogic: items => items.HasMarkedMedallion(DungeonState!.MarkedMedallion),
+            trackerLogic: items => items.HasMarkedMedallion(PrerequisiteState.MarkedItem),
             metadata: metadata,
             trackerState: trackerState);
 
@@ -34,7 +31,7 @@ public class MiseryMire : Z3Region, IHasReward, INeedsMedallion, IDungeon
             access: items => items.BigKeyMM || items.KeyMM >= 1,
             memoryAddress: 0xC3,
             memoryFlag: 0x5,
-            trackerLogic: items => items.HasMarkedMedallion(DungeonState!.MarkedMedallion),
+            trackerLogic: items => items.HasMarkedMedallion(PrerequisiteState.MarkedItem),
             metadata: metadata,
             trackerState: trackerState);
 
@@ -43,7 +40,7 @@ public class MiseryMire : Z3Region, IHasReward, INeedsMedallion, IDungeon
             vanillaItem: ItemType.KeyMM,
             memoryAddress: 0xA2,
             memoryFlag: 0x4,
-            trackerLogic: items => items.HasMarkedMedallion(DungeonState!.MarkedMedallion),
+            trackerLogic: items => items.HasMarkedMedallion(PrerequisiteState.MarkedItem),
             metadata: metadata,
             trackerState: trackerState);
 
@@ -52,7 +49,7 @@ public class MiseryMire : Z3Region, IHasReward, INeedsMedallion, IDungeon
             vanillaItem: ItemType.KeyMM,
             memoryAddress: 0xB3,
             memoryFlag: 0x4,
-            trackerLogic: items => items.HasMarkedMedallion(DungeonState!.MarkedMedallion),
+            trackerLogic: items => items.HasMarkedMedallion(PrerequisiteState.MarkedItem),
             metadata: metadata,
             trackerState: trackerState);
 
@@ -64,7 +61,7 @@ public class MiseryMire : Z3Region, IHasReward, INeedsMedallion, IDungeon
                              && items.KeyMM >= (BigKeyChest.ItemIs(ItemType.BigKeyMM, World) ? 2 : 3),
             memoryAddress: 0xC1,
             memoryFlag: 0x4,
-            trackerLogic: items => items.HasMarkedMedallion(DungeonState!.MarkedMedallion),
+            trackerLogic: items => items.HasMarkedMedallion(PrerequisiteState.MarkedItem),
             metadata: metadata,
             trackerState: trackerState);
 
@@ -75,7 +72,7 @@ public class MiseryMire : Z3Region, IHasReward, INeedsMedallion, IDungeon
                              && items.KeyMM >= (CompassChest.ItemIs(ItemType.BigKeyMM, World) ? 2 : 3),
             memoryAddress: 0xD1,
             memoryFlag: 0x4,
-            trackerLogic: items => items.HasMarkedMedallion(DungeonState!.MarkedMedallion),
+            trackerLogic: items => items.HasMarkedMedallion(PrerequisiteState.MarkedItem),
             metadata: metadata,
             trackerState: trackerState);
 
@@ -85,7 +82,7 @@ public class MiseryMire : Z3Region, IHasReward, INeedsMedallion, IDungeon
             access: items => items.BigKeyMM,
             memoryAddress: 0xC3,
             memoryFlag: 0x4,
-            trackerLogic: items => items.HasMarkedMedallion(DungeonState!.MarkedMedallion),
+            trackerLogic: items => items.HasMarkedMedallion(PrerequisiteState.MarkedItem),
             metadata: metadata,
             trackerState: trackerState);
 
@@ -95,41 +92,45 @@ public class MiseryMire : Z3Region, IHasReward, INeedsMedallion, IDungeon
             access: items => items.BigKeyMM && Logic.CanPassSwordOnlyDarkRooms(items) && items.Somaria,
             memoryAddress: 0x90,
             memoryFlag: 0xB,
-            trackerLogic: items => items.HasMarkedMedallion(DungeonState!.MarkedMedallion),
+            trackerLogic: items => items.HasMarkedMedallion(PrerequisiteState.MarkedItem),
             metadata: metadata,
             trackerState: trackerState);
 
         MemoryAddress = 0x90;
         MemoryFlag = 0xB;
         StartingRooms = new List<int> { 152 };
-
         Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Misery Mire");
-        DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Misery Mire", "Vitreous");
-        DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
-        Reward = new Reward(DungeonState.Reward ?? RewardType.None, world, this, metadata, DungeonState);
-        Medallion = DungeonState.RequiredMedallion ?? ItemType.Nothing;
         MapName = "Dark World";
+
+        ((IHasReward)this).ApplyState(trackerState);
+        ((IHasPrerequisite)this).ApplyState(trackerState);
+        ((IHasTreasure)this).ApplyState(trackerState);
+        ((IHasBoss)this).ApplyState(trackerState);
     }
 
     public override string Name => "Misery Mire";
 
     public RewardType DefaultRewardType => RewardType.CrystalRed;
 
-    public ItemType DefaultMedallion => ItemType.Ether;
+    public BossType DefaultBossType => BossType.Vitreous;
 
-    public int SongIndex { get; init; } = 5;
-    public string Abbreviation => "MM";
+    public bool IsShuffledReward => true;
+
+    public ItemType DefaultRequiredItem => ItemType.Ether;
+
     public LocationId? BossLocationId => LocationId.MiseryMireVitreous;
 
-    public Reward Reward { get; set; }
+    public Reward Reward { get; set; } = null!;
 
-    public DungeonInfo DungeonMetadata { get; set; }
+    public TrackerRewardState RewardState { get; set; } = null!;
 
-    public TrackerDungeonState DungeonState { get; set; }
+    public TrackerBossState BossState { get; set; } = null!;
 
-    public Region ParentRegion => World.DarkWorldMire;
+    public TrackerTreasureState TreasureState { get; set; } = null!;
 
-    public ItemType Medallion { get; set; }
+    public TrackerPrerequisiteState PrerequisiteState { get; set; } = null!;
+
+    public Boss Boss { get; set; } = null!;
 
     public Location MainLobby { get; }
 
@@ -150,12 +151,13 @@ public class MiseryMire : Z3Region, IHasReward, INeedsMedallion, IDungeon
     // Need "CanKillManyEnemies" if implementing swordless
     public override bool CanEnter(Progression items, bool requireRewards)
     {
-        return items.Contains(Medallion) && items.Sword && items.MoonPearl &&
+        return items.Contains(PrerequisiteState.RequiredItem) && items is { Sword: true, MoonPearl: true } &&
                (items.Boots || items.Hookshot) && World.DarkWorldMire.CanEnter(items, requireRewards);
     }
 
-    public bool CanComplete(Progression items)
-    {
-        return VitreousReward.IsAvailable(items);
-    }
+    public bool CanBeatBoss(Progression items) => VitreousReward.IsAvailable(items);
+
+    public bool CanRetrieveReward(Progression items) => VitreousReward.IsAvailable(items);
+
+    public bool CanSeeReward(Progression items) => !World.Config.ZeldaKeysanity || items.Contains(ItemType.MapMM);
 }

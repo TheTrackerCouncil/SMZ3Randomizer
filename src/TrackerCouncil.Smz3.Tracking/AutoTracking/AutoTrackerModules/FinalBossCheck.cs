@@ -7,6 +7,7 @@ using SnesConnectorLibrary.Requests;
 using SnesConnectorLibrary.Responses;
 using SNI;
 using TrackerCouncil.Smz3.Abstractions;
+using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.Tracking.AutoTracking.AutoTrackerModules;
 
@@ -33,53 +34,34 @@ public class FinalBossCheck(TrackerBase tracker, ISnesConnectorService snesConne
         if (prevData == null) return;
         var didUpdate = false;
 
-        if (prevData.ReadUInt8(0x2) == 0 && data.ReadUInt8(0x2) > 0)
+        var hasNewlyDefeatedFinalBoss = (prevData.ReadUInt8(0x2) == 0 && data.ReadUInt8(0x2) > 0) ||
+                                   (prevData.ReadUInt8(0x106) == 0 && data.ReadUInt8(0x106) > 0);
+
+        if (!hasNewlyDefeatedFinalBoss)
         {
-            if (IsInZelda)
-            {
-                var gt = Tracker.World.GanonsTower;
-                if (gt.DungeonState.Cleared == false)
-                {
-                    Logger.LogInformation("Auto tracked Ganon's Tower");
-                    Tracker.MarkDungeonAsCleared(gt, confidence: null, autoTracked: true);
-                    didUpdate = true;
-                }
-            }
-            else if (IsInMetroid)
-            {
-                var motherBrain = Tracker.World.AllBosses.First(x => x.Name == "Mother Brain");
-                if (motherBrain.State.Defeated != true)
-                {
-                    Logger.LogInformation("Auto tracked Mother Brain");
-                    Tracker.MarkBossAsDefeated(motherBrain, admittedGuilt: true, confidence: null, autoTracked: true);
-                    _ = CountHyperBeamShots();
-                    didUpdate = true;
-                }
-            }
+            return;
         }
 
-        if (prevData.ReadUInt8(0x106) == 0 && data.ReadUInt8(0x106) > 0)
+        if (IsInZelda)
         {
-            if (IsInZelda)
+            var ganon = Tracker.World.GetBossOfType(BossType.Ganon);
+            if (!ganon.Defeated)
             {
-                var gt = Tracker.World.GanonsTower;
-                if (gt.DungeonState.Cleared == false)
-                {
-                    Logger.LogInformation("Auto tracked Ganon's Tower");
-                    Tracker.MarkDungeonAsCleared(gt, confidence: null, autoTracked: true);
-                    didUpdate = true;
-                }
+                Logger.LogInformation("Auto tracked Ganon's Tower");
+                Tracker.BossTracker.MarkRegionBossAsDefeated(Tracker.World.GanonsTower, confidence: null, autoTracked: true);
+                didUpdate = true;
             }
-            else if (IsInMetroid)
+        }
+        else if (IsInMetroid)
+        {
+            var motherBrain = Tracker.World.GetBossOfType(BossType.MotherBrain);
+            if (!motherBrain.Defeated)
             {
-                var motherBrain = Tracker.World.AllBosses.First(x => x.Name == "Mother Brain");
-                if (motherBrain.State.Defeated != true)
-                {
-                    Logger.LogInformation("Auto tracked Mother Brain");
-                    Tracker.MarkBossAsDefeated(motherBrain, admittedGuilt: true, confidence: null, autoTracked: true);
-                    _ = CountHyperBeamShots();
-                    didUpdate = true;
-                }
+                Logger.LogInformation("Auto tracked Mother Brain");
+                var boss = Tracker.World.Bosses.First(x => x.Type == BossType.MotherBrain);
+                Tracker.BossTracker.MarkBossAsDefeated(boss, admittedGuilt: true, confidence: null, autoTracked: true);
+                _ = CountHyperBeamShots();
+                didUpdate = true;
             }
         }
 
@@ -87,7 +69,6 @@ public class FinalBossCheck(TrackerBase tracker, ISnesConnectorService snesConne
         {
             AutoTracker.HasDefeatedBothBosses = true;
         }
-
     }
 
     private async Task CountHyperBeamShots()

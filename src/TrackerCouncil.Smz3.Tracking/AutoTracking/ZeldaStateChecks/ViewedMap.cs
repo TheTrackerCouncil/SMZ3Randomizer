@@ -3,13 +3,13 @@ using System.Linq;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Tracking;
 using TrackerCouncil.Smz3.Data.WorldData;
+using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda.DarkWorld;
 using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain;
 using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda.LightWorld;
 using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
 using TrackerCouncil.Smz3.Shared.Enums;
-using IDungeon = TrackerCouncil.Smz3.Data.WorldData.Regions.IDungeon;
 using IHasReward = TrackerCouncil.Smz3.Data.WorldData.Regions.IHasReward;
 using Z3Region = TrackerCouncil.Smz3.Data.WorldData.Regions.Z3Region;
 
@@ -32,9 +32,9 @@ public class ViewedMap : IZeldaStateCheck
         Items = itemService;
     }
 
-    protected World World => _worldAccessor.World;
+    private World World => _worldAccessor.World;
 
-    protected IItemService Items { get; }
+    private IItemService Items { get; }
 
     /// <summary>
     /// Executes the check for the current state
@@ -76,30 +76,17 @@ public class ViewedMap : IZeldaStateCheck
     {
         if (_tracker == null || _lightWorldUpdated) return;
 
-        var rewards = new List<RewardType>();
-        var dungeons = new (Data.WorldData.Regions.Region Region, ItemType Map)[] {
+        var dungeons = new (IHasReward Region, ItemType Map)[] {
             (World.EasternPalace, ItemType.MapEP),
             (World.DesertPalace, ItemType.MapDP),
             (World.TowerOfHera, ItemType.MapTH)
         };
 
-        foreach (var (region, map) in dungeons)
-        {
-            if (World.Config.ZeldaKeysanity && !Items.IsTracked(map))
-                continue;
-
-            var dungeon = (IDungeon)region;
-            var rewardRegion = (IHasReward)region;
-            if (dungeon.DungeonState.MarkedReward != dungeon.DungeonState.Reward)
-            {
-                rewards.Add(rewardRegion.RewardType);
-                _tracker.SetDungeonReward(dungeon, rewardRegion.RewardType);
-            }
-        }
+        var rewards = CheckDungeonRewards(dungeons);
 
         if (!World.Config.ZeldaKeysanity)
         {
-            if (rewards.Count(x => x == RewardType.CrystalRed || x == RewardType.CrystalBlue) == 3)
+            if (rewards.Count(x => x is RewardType.CrystalRed or RewardType.CrystalBlue) == 3)
             {
                 _tracker.Say(x => x.AutoTracker.LightWorldAllCrystals, once: true);
             }
@@ -110,8 +97,7 @@ public class ViewedMap : IZeldaStateCheck
         }
 
         // If all dungeons are marked, save the light world as updated
-        if (dungeons.Select(x => x.Region as IDungeon).Count(x => x?.DungeonState.MarkedReward != null) >=
-            dungeons.Length)
+        if (dungeons.Count(x => x.Region.HasCorrectlyMarkedReward) >= dungeons.Length)
         {
             _lightWorldUpdated = true;
         }
@@ -121,12 +107,11 @@ public class ViewedMap : IZeldaStateCheck
     /// <summary>
     /// Marks all of the rewards for the dark world dungeons
     /// </summary>
-    protected void UpdateDarkWorldRewards()
+    private void UpdateDarkWorldRewards()
     {
         if (_tracker == null || _darkWorldUpdated) return;
 
-        var rewards = new List<RewardType>();
-        var dungeons = new (Data.WorldData.Regions.Region Region, ItemType Map)[] {
+        var dungeons = new (IHasReward Region, ItemType Map)[] {
             (World.PalaceOfDarkness, ItemType.MapPD),
             (World.SwampPalace, ItemType.MapSP),
             (World.SkullWoods, ItemType.MapSW),
@@ -136,25 +121,14 @@ public class ViewedMap : IZeldaStateCheck
             (World.TurtleRock, ItemType.MapTR)
         };
 
-        foreach (var (region, map) in dungeons)
-        {
-            if (World.Config.ZeldaKeysanity && !Items.IsTracked(map))
-                continue;
-
-            var dungeon = (IDungeon)region;
-            var rewardRegion = (IHasReward)region;
-            if (dungeon.DungeonState.MarkedReward != dungeon.DungeonState.Reward)
-            {
-                rewards.Add(rewardRegion.Reward.Type);
-                _tracker.SetDungeonReward(dungeon, rewardRegion.Reward.Type);
-            }
-        }
-
-        var isMiseryMirePendant = (World.MiseryMire as IDungeon).IsPendantDungeon;
-        var isTurtleRockPendant = (World.TurtleRock as IDungeon).IsPendantDungeon;
+        var rewards = CheckDungeonRewards(dungeons);
 
         if (!World.Config.ZeldaKeysanity)
         {
+            RewardType[] pendants = [RewardType.PendantBlue, RewardType.PendantGreen, RewardType.PendantRed];
+            var isMiseryMirePendant = pendants.Contains(World.MiseryMire.Reward.Type);
+            var isTurtleRockPendant = pendants.Contains(World.TurtleRock.Reward.Type);
+
             if (isMiseryMirePendant && isTurtleRockPendant)
             {
                 _tracker.Say(x => x.AutoTracker.DarkWorldNoMedallions, once: true);
@@ -166,11 +140,27 @@ public class ViewedMap : IZeldaStateCheck
         }
 
         // If all dungeons are marked, save the light world as updated
-        if (dungeons.Select(x => x.Region as IDungeon).Count(x => x?.DungeonState.MarkedReward != null) >=
-            dungeons.Length)
+        if (dungeons.Count(x => x.Region.HasCorrectlyMarkedReward) >= dungeons.Length)
         {
             _darkWorldUpdated = true;
         }
 
+    }
+
+    private List<RewardType> CheckDungeonRewards((IHasReward Region, ItemType Map)[] dungeons)
+    {
+        var rewards = new List<RewardType>();
+
+        foreach (var (region, map) in dungeons)
+        {
+            if (World.Config.ZeldaKeysanity && !Items.IsTracked(map))
+                continue;
+
+            if (region.HasCorrectlyMarkedReward) continue;
+            rewards.Add(region.RewardType);
+            _tracker!.RewardTracker.SetDungeonReward(region, region.RewardType);
+        }
+
+        return rewards;
     }
 }

@@ -17,6 +17,7 @@ using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData;
+using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Models;
@@ -93,45 +94,54 @@ public class TrackerWindowService(
         {
             if (args.Dungeon == null)
             {
-                foreach (var dungeonPanel in _dungeonModels.Values.Where(x => x.Dungeon != null))
+                foreach (var dungeonPanel in _dungeonModels.Values.Where(x => x is { RewardRegion: not null, TreasureRegion: not null }))
                 {
-                    var rewardImage = dungeonPanel.Dungeon!.MarkedReward != RewardType.None
-                        ? uiService.GetSpritePath(dungeonPanel.Dungeon.MarkedReward)
+                    var rewardRegion = dungeonPanel.RewardRegion;
+                    var bossRegion = dungeonPanel.BossRegion;
+                    var treasureRegion = dungeonPanel.TreasureRegion;
+                    var prereqRegion = dungeonPanel.PrereqRegion;
+
+                    var rewardImage = rewardRegion?.MarkedReward.GetCategories().Length > 0
+                        ? uiService.GetSpritePath(rewardRegion.MarkedReward)
                         : null;
                     dungeonPanel.RewardImage = rewardImage;
-                    dungeonPanel.DungeonCleared = dungeonPanel.Dungeon.DungeonState.Cleared;
-                    dungeonPanel.DungeonTreasure = dungeonPanel.Dungeon.DungeonState.RemainingTreasure;
+                    dungeonPanel.DungeonCleared = bossRegion?.BossDefeated == true;
+                    dungeonPanel.DungeonTreasure = treasureRegion?.RemainingTreasure ?? 0;
 
-                    if (dungeonPanel.Dungeon.NeedsMedallion)
+                    if (prereqRegion != null)
                     {
                         foreach (var medallion in _medallions)
                         {
                             var item = medallion.Items?.Keys.FirstOrDefault();
-                            medallion.IsMMRequirement = world.World.MiseryMire.DungeonState.MarkedMedallion == item?.Type;
-                            medallion.IsTRRequirement = world.World.TurtleRock.DungeonState.MarkedMedallion == item?.Type;
+                            medallion.IsMMRequirement = world.World.MiseryMire.PrerequisiteState.MarkedItem == item?.Type;
+                            medallion.IsTRRequirement = world.World.TurtleRock.PrerequisiteState.MarkedItem == item?.Type;
                         }
                     }
                 }
             }
             else
             {
-                if (_dungeonModels.TryGetValue(args.Dungeon.DungeonName, out var dungeonPanel))
+                if (_dungeonModels.TryGetValue(args.Dungeon.Name, out var dungeonPanel))
                 {
-                    var rewardImage = args.Dungeon.MarkedReward != RewardType.None
-                        ? uiService.GetSpritePath(args.Dungeon.MarkedReward)
+                    var rewardRegion = dungeonPanel.RewardRegion;
+                    var bossRegion = dungeonPanel.BossRegion;
+                    var treasureRegion = dungeonPanel.TreasureRegion;
+
+                    var rewardImage = rewardRegion?.MarkedReward.GetCategories().Length > 0
+                        ? uiService.GetSpritePath(rewardRegion.MarkedReward)
                         : null;
                     dungeonPanel.RewardImage = rewardImage;
-                    dungeonPanel.DungeonCleared = args.Dungeon.DungeonState.Cleared;
-                    dungeonPanel.DungeonTreasure = args.Dungeon.DungeonState.RemainingTreasure;
+                    dungeonPanel.DungeonCleared = bossRegion?.BossDefeated == true;
+                    dungeonPanel.DungeonTreasure = treasureRegion?.RemainingTreasure ?? 0;
                 }
 
-                if (args.Dungeon.NeedsMedallion)
+                if (args.Dungeon is IHasPrerequisite)
                 {
                     foreach (var medallion in _medallions)
                     {
                         var item = medallion.Items?.Keys.FirstOrDefault();
-                        medallion.IsMMRequirement = world.World.MiseryMire.DungeonState.MarkedMedallion == item?.Type;
-                        medallion.IsTRRequirement = world.World.TurtleRock.DungeonState.MarkedMedallion == item?.Type;
+                        medallion.IsMMRequirement = world.World.MiseryMire.PrerequisiteState.MarkedItem == item?.Type;
+                        medallion.IsTRRequirement = world.World.TurtleRock.PrerequisiteState.MarkedItem == item?.Type;
                     }
                 }
             }
@@ -171,12 +181,12 @@ public class TrackerWindowService(
             }
         };
 
-        tracker.GoModeToggledOn += (sender, args) =>
+        tracker.ModeTracker.GoModeToggledOn += (sender, args) =>
         {
             _model.IsInGoMode = true;
         };
 
-        tracker.GoModeToggledOff += (sender, args) =>
+        tracker.ModeTracker.GoModeToggledOff += (sender, args) =>
         {
             _model.IsInGoMode = false;
         };
@@ -202,19 +212,19 @@ public class TrackerWindowService(
             }
         };
 
-        tracker.ToggledPegWorldModeOn += (sender, args) =>
+        tracker.ModeTracker.ToggledPegWorldModeOn += (sender, args) =>
         {
-            TogglePegWorld(tracker.PegWorldMode);
+            TogglePegWorld(tracker.ModeTracker.PegWorldMode);
         };
 
-        tracker.PegPegged += (sender, args) =>
+        tracker.ModeTracker.PegPegged += (sender, args) =>
         {
             UpdatePegs();
         };
 
-        tracker.ToggledShaktoolMode += (sender, args) =>
+        tracker.ModeTracker.ToggledShaktoolMode += (sender, args) =>
         {
-            ToggleShaktoolMode(tracker.ShaktoolMode);
+            ToggleShaktoolMode(tracker.ModeTracker.ShaktoolMode);
         };
 
         tracker.DisableVoiceRecognition();
@@ -363,7 +373,7 @@ public class TrackerWindowService(
             [
                 new TrackerWindowPanelImage()
                 {
-                    ImagePath = i <= tracker.PegsPegged ? peggedFileName! : unpeggedFileName!,
+                    ImagePath = i <= tracker.ModeTracker.PegsPegged ? peggedFileName! : unpeggedFileName!,
                     IsActive = true
                 }
             ];
@@ -597,8 +607,8 @@ public class TrackerWindowService(
 
         if (model.IsMedallion)
         {
-            model.IsMMRequirement = world.World.MiseryMire.DungeonState.MarkedMedallion == items.Keys.First().Type;
-            model.IsTRRequirement = world.World.TurtleRock.DungeonState.MarkedMedallion == items.Keys.First().Type;
+            model.IsMMRequirement = world.World.MiseryMire.PrerequisiteState.MarkedItem == items.Keys.First().Type;
+            model.IsTRRequirement = world.World.TurtleRock.PrerequisiteState.MarkedItem == items.Keys.First().Type;
             _medallions.Add(model);
         }
 
@@ -606,31 +616,31 @@ public class TrackerWindowService(
 
         if (items.Count == 1)
         {
-            model.Clicked += (_, _) => tracker.TrackItem(items.Keys.First());
+            model.Clicked += (_, _) => tracker.ItemTracker.TrackItem(items.Keys.First());
         }
 
-        model.ItemGiven += (_, args) => tracker.TrackItem(args.Item);
-        model.ItemRemoved += (_, args) => tracker.UntrackItem(args.Item);
+        model.ItemGiven += (_, args) => tracker.ItemTracker.TrackItem(args.Item);
+        model.ItemRemoved += (_, args) => tracker.ItemTracker.UntrackItem(args.Item);
         model.ItemSetAsDungeonRequirement += (_, args) =>
         {
             var item = items.Keys.First();
 
-            if (args.IsMMRequirement && world.World.MiseryMire.DungeonState.MarkedMedallion != item.Type)
+            if (args.IsMMRequirement && world.World.MiseryMire.PrerequisiteState.MarkedItem != item.Type)
             {
-                tracker.SetDungeonRequirement(world.World.MiseryMire, item.Type);
+                tracker.PrerequisiteTracker.SetDungeonRequirement(world.World.MiseryMire, item.Type);
             }
-            else if (!args.IsMMRequirement && world.World.MiseryMire.DungeonState.MarkedMedallion == item.Type)
+            else if (!args.IsMMRequirement && world.World.MiseryMire.PrerequisiteState.MarkedItem == item.Type)
             {
-                tracker.SetDungeonRequirement(world.World.MiseryMire);
+                tracker.PrerequisiteTracker.SetDungeonRequirement(world.World.MiseryMire);
             }
 
-            if (args.IsTRRequirement && world.World.TurtleRock.DungeonState.MarkedMedallion != item.Type)
+            if (args.IsTRRequirement && world.World.TurtleRock.PrerequisiteState.MarkedItem != item.Type)
             {
-                tracker.SetDungeonRequirement(world.World.TurtleRock, item.Type);
+                tracker.PrerequisiteTracker.SetDungeonRequirement(world.World.TurtleRock, item.Type);
             }
-            else if (!args.IsTRRequirement && world.World.TurtleRock.DungeonState.MarkedMedallion == item.Type)
+            else if (!args.IsTRRequirement && world.World.TurtleRock.PrerequisiteState.MarkedItem == item.Type)
             {
-                tracker.SetDungeonRequirement(world.World.TurtleRock);
+                tracker.PrerequisiteTracker.SetDungeonRequirement(world.World.TurtleRock);
             }
         };
 
@@ -639,34 +649,45 @@ public class TrackerWindowService(
 
     private TrackerWindowPanelViewModel? GetDungeonPanelViewModel(UIGridLocation gridLocation)
     {
-        var dungeon = world.World.Dungeons.FirstOrDefault(x => x.DungeonName == gridLocation.Identifiers.First());
+        var dungeon = world.World.TreasureRegions.FirstOrDefault(x => x.Name == gridLocation.Identifiers.First());
         if (dungeon == null)
         {
             logger.LogError("Dungeon {DungeonName} could not be found", gridLocation.Identifiers.First());
             return null;
         }
 
+        var rewardRegion = dungeon as IHasReward;
+        var bossRegion = dungeon as IHasBoss;
+
         var dungeonImage = uiService.GetSpritePath(dungeon);
-        var rewardImage = dungeon.MarkedReward != RewardType.None ? uiService.GetSpritePath(dungeon.MarkedReward) : null;
+        var rewardImage = rewardRegion?.RewardType.GetCategories().Length > 0 ? uiService.GetSpritePath(rewardRegion.MarkedReward) : null;
 
         var model = new TrackerWindowDungeonPanelViewModel()
         {
-            Dungeon = dungeon,
+            Region = dungeon as Region,
             DungeonImage = dungeonImage,
             RewardImage = rewardImage,
             Row = gridLocation.Row,
             Column = gridLocation.Column,
             AddShadows = _model.AddShadows,
-            DungeonCleared = dungeon.DungeonState.Cleared,
-            DungeonTreasure = dungeon.DungeonState.RemainingTreasure,
+            DungeonCleared = bossRegion?.BossDefeated == true,
+            DungeonTreasure = dungeon.RemainingTreasure,
         };
 
-        model.Clicked += (_, _) => tracker.MarkDungeonAsCleared(dungeon);
-        model.ResetCleared += (_, _) => tracker.MarkDungeonAsIncomplete(dungeon);
-        model.TreasureCleared += (_, _) => tracker.ClearDungeon(dungeon);
-        model.RewardSet += (_, args) => tracker.SetDungeonReward(dungeon, args.RewardType);
+        if (bossRegion != null)
+        {
+            model.Clicked += (_, _) => tracker.BossTracker.MarkRegionBossAsDefeated(bossRegion);
+            model.ResetCleared += (_, _) => tracker.BossTracker.MarkRegionBossAsNotDefeated(bossRegion);
+        }
 
-        _dungeonModels.Add(dungeon.DungeonName, model);
+        model.TreasureCleared += (_, _) => tracker.TreasureTracker.ClearDungeon(dungeon);
+
+        if (rewardRegion != null)
+        {
+            model.RewardSet += (_, args) => tracker.RewardTracker.SetDungeonReward(rewardRegion, args.RewardType);
+        }
+
+        _dungeonModels.Add(dungeon.Name, model);
 
         return model;
     }
@@ -699,8 +720,8 @@ public class TrackerWindowService(
 
         _bossModels.Add(boss.Name, model);
 
-        model.Clicked += (_, _) => tracker.MarkBossAsDefeated(boss);
-        model.BossRevived += (_, _) => tracker.MarkBossAsNotDefeated(boss);
+        model.Clicked += (_, _) => tracker.BossTracker.MarkBossAsDefeated(boss);
+        model.BossRevived += (_, _) => tracker.BossTracker.MarkBossAsNotDefeated(boss);
 
         return model;
     }
@@ -714,7 +735,7 @@ public class TrackerWindowService(
         }
 
         var fileName = uiService.GetSpritePath("Items",
-            tracker.PegsPegged >= pegNumber ? "pegged.png" : "peg.png", out _);
+            tracker.ModeTracker.PegsPegged >= pegNumber ? "pegged.png" : "peg.png", out _);
 
         if (string.IsNullOrEmpty(fileName))
         {
@@ -734,7 +755,7 @@ public class TrackerWindowService(
 
         _pegWorldImages[pegNumber] = model;
 
-        model.Clicked += (_, _) => tracker.Peg();
+        model.Clicked += (_, _) => tracker.ModeTracker.Peg();
 
         return model;
     }
@@ -765,7 +786,7 @@ public class TrackerWindowService(
             ]
         };
 
-        model.Clicked += (_, _) => tracker.StopShaktoolMode();
+        model.Clicked += (_, _) => tracker.ModeTracker.StopShaktoolMode();
 
         return model;
     }

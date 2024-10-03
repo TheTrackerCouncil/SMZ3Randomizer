@@ -379,21 +379,25 @@ public class SpoilerModule : TrackerModule, IOptionalModule
 
     private Reward? GetRewardForHint(IHasLocations area)
     {
-        if (area is not IHasReward rewardArea || rewardArea.RewardType == RewardType.Agahnim ||
-            rewardArea.RewardType == RewardType.None || area is not IDungeon dungeon) return null;
+        if (area is not IHasReward rewardArea || !rewardArea.RewardType.IsInAnyCategory(RewardCategory.Crystal, RewardCategory.Pendant) ||
+            rewardArea.RewardType == RewardType.None || area is not IHasBoss bossRegion) return null;
 
-        var bossLocation = area.Locations.First(x => x.Id == dungeon.BossLocationId);
+        var bossLocation = area.Locations.FirstOrDefault(x => x.Id == bossRegion.BossLocationId);
+
+        if (bossLocation == null)
+        {
+            return null;
+        }
 
         // For pendant dungeons, only factor it in if the player has not gotten it so that they get hints
         // that factor in Saha/Ped
-        if (rewardArea.RewardType is RewardType.PendantBlue or RewardType.PendantGreen
-                or RewardType.PendantRed && (bossLocation.State.Cleared || bossLocation.State.Autotracked))
+        if (rewardArea.RewardType.IsInCategory(RewardCategory.Pendant) && (bossLocation.State.Cleared || bossLocation.State.Autotracked))
         {
             return rewardArea.Reward;
         }
         // For crystal dungeons, always act like the player has them so that it only gives a hint based on
         // the actual items in the dungeon
-        else if (rewardArea.RewardType is RewardType.CrystalBlue or RewardType.CrystalRed)
+        else if (rewardArea.RewardType.IsInCategory(RewardCategory.Crystal))
         {
             return rewardArea.Reward;
         }
