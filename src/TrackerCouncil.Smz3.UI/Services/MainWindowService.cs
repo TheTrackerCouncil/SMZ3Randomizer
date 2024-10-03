@@ -43,7 +43,7 @@ public class MainWindowService(
 
     public void DisableUpdates()
     {
-        _options.GeneralOptions.CheckForUpdatesOnStartup = true;
+        _options.GeneralOptions.CheckForUpdatesOnStartup = false;
         _options.Save();
         _model.DisplayNewVersionBanner = false;
     }
