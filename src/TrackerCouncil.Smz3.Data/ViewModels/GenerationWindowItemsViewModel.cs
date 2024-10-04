@@ -100,7 +100,7 @@ public class GenerationWindowItemsViewModel : ViewModelBase
             LocationOptions.Add(new GenerationWindowLocationViewModel()
             {
                 LocationId = location.Id,
-                LocationName = locationDetails.Name?.FirstOrDefault() ?? location.Id.ToString(),
+                LocationName = location.Name,
                 Options = LocationItemOptions,
                 Region = location.Region,
                 SelectedOption = options.SeedOptions.LocationItems.TryGetValue(location.Id, out var locationSetting)

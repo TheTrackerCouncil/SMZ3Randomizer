@@ -11,7 +11,7 @@ public enum RewardType
     None,
 
     [Description("Agahnim")]
-    [RewardCategory(RewardCategory.Zelda, RewardCategory.Known)]
+    [RewardCategory(RewardCategory.Zelda, RewardCategory.NonRandomized)]
     Agahnim,
 
     [Description("Green Pendant")]

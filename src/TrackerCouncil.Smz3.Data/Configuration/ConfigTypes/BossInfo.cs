@@ -13,6 +13,11 @@ namespace TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 /// </remarks>
 public class BossInfo : IMergeable<BossInfo>
 {
+    public BossInfo()
+    {
+        Name = [];
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="BossInfo"/> class.
     /// </summary>

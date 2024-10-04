@@ -49,7 +49,7 @@ public class Boss
 
     public BossType Type { get; set; }
 
-    public TrackerBossState State { get; set;  }
+    public TrackerBossState State { get; set; }
 
     public BossInfo Metadata { get; set; }
 

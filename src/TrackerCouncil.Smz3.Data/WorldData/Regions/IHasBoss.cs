@@ -36,30 +36,29 @@ public interface IHasBoss
 
     public void SetBossType(BossType bossType)
     {
-        var region = (Region)this;
-        Boss = region.World.Bosses.First(x => x.Type == bossType && x.Region == null);
+        Boss = World.Bosses.First(x => x.Type == bossType && x.Region == null);
         Boss.Region = this;
-        BossState.Type = bossType;
     }
 
     public void ApplyState(TrackerState? state)
     {
-        var region = (Region)this;
-
         if (state == null)
         {
+            SetBossType(DefaultBossType);
             Boss.State = new TrackerBossState
             {
-                WorldId = region.World.Id,
-                RegionName = GetType().Name
+                WorldId = World.Id,
+                RegionName = GetType().Name,
+                Type = DefaultBossType,
+                BossName = Boss.Name
             };
-            SetBossType(DefaultBossType);
         }
         else
         {
-            Boss.State = state.BossStates.First(x =>
-                x.WorldId == region.World.Id && x.RegionName == GetType().Name);
-            SetBossType(BossState.Type);
+            var bossState = state.BossStates.First(x =>
+                x.WorldId == World.Id && x.RegionName == GetType().Name);
+            SetBossType(bossState.Type);
+            Boss.State = bossState;
         }
     }
 

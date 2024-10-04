@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrackerCouncil.Smz3.Multiplayer.Server;
 
@@ -10,9 +11,11 @@ using TrackerCouncil.Smz3.Multiplayer.Server;
 namespace TrackerCouncil.Smz3.Multiplayer.Server.Migrations
 {
     [DbContext(typeof(MultiplayerDbContext))]
-    partial class MultiplayerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241003001723_ReplaceDungeonState")]
+    partial class ReplaceDungeonState
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.7");

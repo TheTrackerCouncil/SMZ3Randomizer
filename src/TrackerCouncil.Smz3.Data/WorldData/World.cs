@@ -117,8 +117,8 @@ public class World
     public IEnumerable<Room> Rooms { get; }
     public IEnumerable<Location> Locations { get; }
     public IDictionary<LocationId, Location> LocationMap { get; }
-    public List<Reward> Rewards => null!;
-    public List<Boss> Bosses => null!;
+    public List<Reward> Rewards = [];
+    public List<Boss> Bosses = [];
     public IEnumerable<Item> LocationItems => Locations.Select(l => l.Item);
     public List<Item> CustomItems { get; } = [];
     public IEnumerable<Item> AllItems => CustomItems.Concat(LocationItems);
@@ -276,7 +276,7 @@ public class World
 
     private void SetRewards(Random rnd)
     {
-        var rewards = Rewards.Where(x => x.Type != RewardType.None && x.Type != RewardType.Agahnim).Shuffle(rnd);
+        var rewards = Rewards.Where(x => x.Type.IsInCategory(RewardCategory.Zelda) && !x.Type.IsInCategory(RewardCategory.NonRandomized)).Shuffle(rnd);
         foreach (var region in RewardRegions.Where(x => x.IsShuffledReward))
         {
             region.SetReward(rewards.First());

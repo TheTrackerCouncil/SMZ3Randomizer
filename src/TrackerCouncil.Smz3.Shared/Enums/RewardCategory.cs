@@ -6,5 +6,5 @@ public enum RewardCategory
     Crystal,
     Pendant,
     Metroid,
-    Known
+    NonRandomized
 }

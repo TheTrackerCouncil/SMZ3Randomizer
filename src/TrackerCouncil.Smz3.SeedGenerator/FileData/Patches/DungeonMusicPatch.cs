@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda;
 using TrackerCouncil.Smz3.Shared.Enums;
@@ -15,9 +14,12 @@ public class DungeonMusicPatch : RomPatch
         if (data.World.Config.ZeldaKeysanity)
         {
             return new List<GeneratedPatch>();
-        };
+        }
 
-        var regions = data.World.Regions.OfType<IHasReward>().Where(x => x.RewardType != RewardType.Agahnim);
+        var regions = data.World.TreasureRegions.OfType<IHasReward>().Where(x =>
+                x.RewardType.IsInAnyCategory(RewardCategory.Crystal, RewardCategory.Pendant))
+            .ToList();
+
         var music = regions.Select(x => (byte)(x.RewardType switch {
             RewardType.PendantBlue => 0x11,
             RewardType.PendantGreen => 0x11,

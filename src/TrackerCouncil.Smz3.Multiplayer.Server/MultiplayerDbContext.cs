@@ -43,10 +43,10 @@ public sealed class MultiplayerDbContext : DbContext
         base.OnModelCreating(modelBuilder);
     }
 
-    public DbSet<MultiplayerGameState> MultiplayerGameStates { get; set; }
-    public DbSet<MultiplayerPlayerState> MultiplayerPlayerStates { get; set; }
-    public DbSet<MultiplayerLocationState> MultiplayerLocationStates { get; set; }
-    public DbSet<MultiplayerItemState> MultiplayerItemStates { get; set; }
-    public DbSet<MultiplayerBossState> MultiplayerBossStates { get; set; }
+    public DbSet<MultiplayerGameState> MultiplayerGameStates { get; init; }
+    public DbSet<MultiplayerPlayerState> MultiplayerPlayerStates { get; init; }
+    public DbSet<MultiplayerLocationState> MultiplayerLocationStates { get; init; }
+    public DbSet<MultiplayerItemState> MultiplayerItemStates { get; init; }
+    public DbSet<MultiplayerBossState> MultiplayerBossStates { get; init; }
 
 }
