@@ -3,25 +3,16 @@ using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Abstractions;
+using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.Tracking.TrackingServices;
 
-public class TrackerRewardService(ILogger<TrackerRewardService> logger, IItemService itemService) : TrackerService
+internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IItemService itemService) : TrackerService, ITrackerRewardService
 {
-    /// <summary>
-    /// Sets the dungeon's reward to the specific pendant or crystal.
-    /// </summary>
-    /// <param name="rewardRegion">The dungeon to mark.</param>
-    /// <param name="reward">
-    /// The type of pendant or crystal, or <c>null</c> to cycle through the
-    /// possible rewards.
-    /// </param>
-    /// <param name="confidence">The speech recognition confidence.</param>
-    /// <param name="autoTracked">If this was called by the auto tracker</param>
-    public void SetDungeonReward(IHasReward rewardRegion, RewardType? reward = null, float? confidence = null, bool autoTracked = false)
+    public void SetAreaReward(IHasReward rewardRegion, RewardType? reward = null, float? confidence = null, bool autoTracked = false)
     {
         var originalReward = rewardRegion.MarkedReward;
         if (reward == null)
@@ -46,7 +37,7 @@ public class TrackerRewardService(ILogger<TrackerRewardService> logger, IItemSer
             Tracker.Say(response: Responses.DungeonRewardMarked, args: [rewardRegion.Metadata.Name, rewardObj.Metadata.Name ?? reward.GetDescription()]);
         }
 
-        if (!autoTracked) AddUndo(() =>
+        AddUndo(autoTracked, () =>
         {
             rewardRegion.MarkedReward = originalReward;
         });
@@ -61,43 +52,72 @@ public class TrackerRewardService(ILogger<TrackerRewardService> logger, IItemSer
 
         var previousMarkedReward = rewardRegion.MarkedReward;
         rewardRegion.HasReceivedReward = true;
-        rewardRegion.MarkedReward = rewardRegion.RewardType;
+
+        if (isAutoTracked)
+        {
+            rewardRegion.MarkedReward = rewardRegion.RewardType;
+        }
+
+        UpdateAllAccessibility(false);
 
         // TODO: Add a response
 
-        if (!isAutoTracked)
+        AddUndo(isAutoTracked, () =>
         {
-            AddUndo(() =>
-            {
-                rewardRegion.HasReceivedReward = false;
-                rewardRegion.MarkedReward = previousMarkedReward;
-            });
-        }
+            rewardRegion.HasReceivedReward = false;
+            rewardRegion.MarkedReward = previousMarkedReward;
+            UpdateAllAccessibility(true);
+        });
     }
 
-    /// <summary>
-    /// Sets the reward of all unmarked dungeons.
-    /// </summary>
-    /// <param name="reward">The reward to set.</param>
-    /// <param name="confidence">The speech recognition confidence.</param>
-    public void SetUnmarkedDungeonReward(RewardType reward, float? confidence = null)
+    public void SetUnmarkedRewards(RewardType reward, float? confidence = null)
     {
-        var unmarkedDungeons = World.RewardRegions
+        var unmarkedRegions = World.RewardRegions
             .Where(x => x.MarkedReward == RewardType.None)
             .ToImmutableList();
 
-        if (unmarkedDungeons.Count > 0)
+        if (unmarkedRegions.Count > 0)
         {
             Tracker.Say(response: Responses.RemainingDungeonsMarked, args: [itemService.GetName(reward)]);
-            unmarkedDungeons.ForEach(dungeon => dungeon.MarkedReward = reward);
+            unmarkedRegions.ForEach(dungeon => dungeon.MarkedReward = reward);
             AddUndo(() =>
             {
-                unmarkedDungeons.ForEach(dungeon => dungeon.MarkedReward = RewardType.None);
+                unmarkedRegions.ForEach(dungeon => dungeon.MarkedReward = RewardType.None);
             });
         }
         else
         {
             Tracker.Say(response: Responses.NoRemainingDungeons);
         }
+    }
+
+    public void UpdateAccessibility(Progression? actualProgression = null, Progression? withKeysProgression = null)
+    {
+        actualProgression ??= itemService.GetProgression(false);
+        withKeysProgression ??= itemService.GetProgression(true);
+
+        foreach (var region in Tracker.World.RewardRegions)
+        {
+            UpdateAccessibility(region, actualProgression, withKeysProgression);
+        }
+    }
+
+    public void UpdateAccessibility(Reward reward, Progression? actualProgression = null, Progression? withKeysProgression = null)
+    {
+        if (reward.Region == null) return;
+        UpdateAccessibility(reward.Region, actualProgression, withKeysProgression);
+    }
+
+    public void UpdateAccessibility(IHasReward region, Progression? actualProgression = null, Progression? withKeysProgression = null)
+    {
+        if (region.HasReceivedReward)
+        {
+            region.RewardAccessibility = Accessibility.Cleared;
+            return;
+        }
+
+        actualProgression ??= itemService.GetProgression(false);
+        withKeysProgression ??= itemService.GetProgression(true);
+        region.Reward.UpdateAccessibility(actualProgression, withKeysProgression);
     }
 }

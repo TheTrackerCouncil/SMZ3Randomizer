@@ -60,7 +60,7 @@ public class ZeldaLocations(TrackerBase tracker, ISnesConnectorService snesConne
                 var flag = location.MemoryFlag ?? 0;
                 var currentCleared = data.CheckInt16Flag(loc * 2, flag);
                 var prevCleared = prevData.CheckInt16Flag(loc * 2, flag);
-                if (location.State.Autotracked == false && currentCleared && prevCleared)
+                if (location.Autotracked == false && currentCleared && prevCleared)
                 {
                     // Increment GT guessing game number
                     if (location.Region is GanonsTower gt && location != gt.BobsTorch)
@@ -71,7 +71,7 @@ public class ZeldaLocations(TrackerBase tracker, ISnesConnectorService snesConne
                     TrackLocation(location);
 
                     // Mark HC as cleared if this was Zelda's Cell
-                    if (location.Id == LocationId.HyruleCastleZeldasCell && !Tracker.World.HyruleCastle.BossState.Defeated)
+                    if (location.Id == LocationId.HyruleCastleZeldasCell && !Tracker.World.HyruleCastle.Boss.Defeated)
                     {
                         Tracker.BossTracker.MarkRegionBossAsDefeated(Tracker.World.HyruleCastle, autoTracked: true);
                     }
@@ -105,7 +105,7 @@ public class ZeldaLocations(TrackerBase tracker, ISnesConnectorService snesConne
                 if (dungeon.BossState.AutoTracked == false && prevValue && currentValue)
                 {
                     dungeon.BossState.AutoTracked = true;
-                    Tracker.BossTracker.MarkRegionBossAsDefeated(dungeon, autoTracked: true);
+                    Tracker.BossTracker.MarkRegionBossAsDefeated(dungeon, autoTracked: true, admittedGuilt: true);
                     Logger.LogInformation("Auto tracked {DungeonName} as cleared", dungeon.Name);
                 }
 

@@ -8,95 +8,95 @@ public enum ItemType : byte
     Nothing,
 
     [Description("Hyrule Castle Map")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Map)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Map, ItemCategory.NeverProgression)]
     MapHC = 0x7F,
 
     [Description("Eastern Palace Map")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Map)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Map, ItemCategory.NeverProgression)]
     MapEP = 0x7D,
 
     [Description("Desert Palace Map")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Map)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Map, ItemCategory.NeverProgression)]
     MapDP = 0x7C,
 
     [Description("Tower of Hera Map")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Map)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Map, ItemCategory.NeverProgression)]
     MapTH = 0x75,
 
     [Description("Palace of Darkness Map")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Map)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Map, ItemCategory.NeverProgression)]
     MapPD = 0x79,
 
     [Description("Swamp Palace Map")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Map)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Map, ItemCategory.NeverProgression)]
     MapSP = 0x7A,
 
     [Description("Skull Woods Map")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Map)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Map, ItemCategory.NeverProgression)]
     MapSW = 0x77,
 
     [Description("Thieves Town Map")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Map)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Map, ItemCategory.NeverProgression)]
     MapTT = 0x74,
 
     [Description("Ice Palace Map")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Map)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Map, ItemCategory.NeverProgression)]
     MapIP = 0x76,
 
     [Description("Misery Mire Map")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Map)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Map, ItemCategory.NeverProgression)]
     MapMM = 0x78,
 
     [Description("Turtle Rock Map")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Map)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Map, ItemCategory.NeverProgression)]
     MapTR = 0x73,
 
     [Description("Ganons Tower Map")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Map)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Map, ItemCategory.NeverProgression)]
     MapGT = 0x72,
 
     [Description("Eastern Palace Compass")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Compass)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Compass, ItemCategory.NeverProgression)]
     CompassEP = 0x8D,
 
     [Description("Desert Palace Compass")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Compass)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Compass, ItemCategory.NeverProgression)]
     CompassDP = 0x8C,
 
     [Description("Tower of Hera Compass")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Compass)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Compass, ItemCategory.NeverProgression)]
     CompassTH = 0x85,
 
     [Description("Palace of Darkness Compass")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Compass)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Compass, ItemCategory.NeverProgression)]
     CompassPD = 0x89,
 
     [Description("Swamp Palace Compass")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Compass)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Compass, ItemCategory.NeverProgression)]
     CompassSP = 0x8A,
 
     [Description("Skull Woods Compass")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Compass)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Compass, ItemCategory.NeverProgression)]
     CompassSW = 0x87,
 
     [Description("Thieves Town Compass")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Compass)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Compass, ItemCategory.NeverProgression)]
     CompassTT = 0x84,
 
     [Description("Ice Palace Compass")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Compass)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Compass, ItemCategory.NeverProgression)]
     CompassIP = 0x86,
 
     [Description("Misery Mire Compass")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Compass)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Compass, ItemCategory.NeverProgression)]
     CompassMM = 0x88,
 
     [Description("Turtle Rock Compass")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Compass)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Compass, ItemCategory.NeverProgression)]
     CompassTR = 0x83,
 
     [Description("Ganons Tower Compass")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Compass)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Compass, ItemCategory.NeverProgression)]
     CompassGT = 0x82,
 
     [Description("Eastern Palace Big Key")]
@@ -208,7 +208,7 @@ public enum ItemType : byte
     Map = 0x33,
 
     [Description("Progressive Mail")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Nice)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Nice, ItemCategory.NeverProgression)]
     ProgressiveTunic = 0x60,
 
     [Description("Progressive Shield")]
@@ -228,11 +228,11 @@ public enum ItemType : byte
     SilverArrows = 0x58,
 
     [Description("Blue Boomerang")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.NeverProgression)]
     BlueBoomerang = 0x0C,
 
     [Description("Red Boomerang")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.NeverProgression)]
     RedBoomerang = 0x2A,
 
     [Description("Hookshot")]
@@ -284,7 +284,7 @@ public enum ItemType : byte
     Flute = 0x14,
 
     [Description("Bug Catching Net")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.NeverProgression)]
     Bugnet = 0x21,
 
     [Description("Book of Mudora")]
@@ -344,31 +344,31 @@ public enum ItemType : byte
     HeartContainerRefill = 0x3F,
 
     [Description("Three Bombs")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.Plentiful, ItemCategory.IgnoreOnMultiplayerCompletion)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.Plentiful, ItemCategory.IgnoreOnMultiplayerCompletion, ItemCategory.NeverProgression)]
     ThreeBombs = 0x28,
 
     [Description("Single Arrow")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.IgnoreOnMultiplayerCompletion)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.IgnoreOnMultiplayerCompletion, ItemCategory.NeverProgression)]
     Arrow = 0x43,
 
     [Description("Ten Arrows")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.IgnoreOnMultiplayerCompletion)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.IgnoreOnMultiplayerCompletion, ItemCategory.NeverProgression)]
     TenArrows = 0x44,
 
     [Description("One Rupee")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.IgnoreOnMultiplayerCompletion)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.IgnoreOnMultiplayerCompletion, ItemCategory.NeverProgression)]
     OneRupee = 0x34,
 
     [Description("Five Rupees")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.IgnoreOnMultiplayerCompletion)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.IgnoreOnMultiplayerCompletion, ItemCategory.NeverProgression)]
     FiveRupees = 0x35,
 
     [Description("Twenty Rupees")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.Plentiful, ItemCategory.IgnoreOnMultiplayerCompletion)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.Plentiful, ItemCategory.IgnoreOnMultiplayerCompletion, ItemCategory.NeverProgression)]
     TwentyRupees = 0x36,
 
     [Description("Twenty Rupees")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.IgnoreOnMultiplayerCompletion)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.IgnoreOnMultiplayerCompletion, ItemCategory.NeverProgression)]
     TwentyRupees2 = 0x47,
 
     [Description("Fifty Rupees")]
@@ -384,19 +384,19 @@ public enum ItemType : byte
     ThreeHundredRupees = 0x46,
 
     [Description("+5 Bomb Capacity")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.NeverProgression)]
     BombUpgrade5 = 0x51,
 
     [Description("+10 Bomb Capacity")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.NeverProgression)]
     BombUpgrade10 = 0x52,
 
     [Description("+5 Arrow Capacity")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.NeverProgression)]
     ArrowUpgrade5 = 0x53,
 
     [Description("+10 Arrow Capacity")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.NeverProgression)]
     ArrowUpgrade10 = 0x54,
 
     [Description("Crateria Level 1 Keycard")]
@@ -464,11 +464,11 @@ public enum ItemType : byte
     CardLowerNorfairBoss = 0xDF,
 
     [Description("Missile")]
-    [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.Plentiful)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.Plentiful, ItemCategory.ProgressionOnlyOnFirst)]
     Missile = 0xC2,
 
     [Description("Super Missile")]
-    [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.Plentiful)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.Plentiful, ItemCategory.ProgressionOnlyOnFirst)]
     Super = 0xC3,
 
     [Description("Power Bomb")]
@@ -480,7 +480,7 @@ public enum ItemType : byte
     Grapple = 0xB0,
 
     [Description("X-Ray Scope")]
-    [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam, ItemCategory.NeverProgression)]
     XRay = 0xB1,
 
     [Description("Energy Tank")]
@@ -504,7 +504,7 @@ public enum ItemType : byte
     Wave = 0xBD,
 
     [Description("Spazer")]
-    [ItemCategory(ItemCategory.Metroid, ItemCategory.Nice)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.Nice, ItemCategory.NeverProgression)]
     Spazer = 0xBE,
 
     [Description("Plasma Beam")]

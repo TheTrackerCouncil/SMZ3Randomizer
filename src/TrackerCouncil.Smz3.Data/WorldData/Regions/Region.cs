@@ -181,6 +181,24 @@ public abstract class Region : IHasLocations
     protected IEnumerable<Room> GetRooms()
         => GetType().GetPropertyValues<Room>(this);
 
+    public Accessibility GetKeysanityAdjustedAccessibility(Accessibility accessibility)
+    {
+        if (Config.KeysanityForRegion(this))
+        {
+            return accessibility;
+        }
+        else if (accessibility == Accessibility.AvailableWithKeys)
+        {
+            return Accessibility.Available;
+        }
+        else if (accessibility == Accessibility.RelevantWithKeys)
+        {
+            return Accessibility.Relevant;
+        }
+
+        return accessibility;
+    }
+
     /*public bool CheckDungeonMedallion(Progression items, IDungeon dungeon)
     {
         if (!dungeon.NeedsMedallion) return true;

@@ -16,14 +16,14 @@ public class TrackerLocationsWindowService(TrackerBase trackerBase, IWorldServic
     {
         UpdateModel();
 
-        trackerBase.MarkedLocationsUpdated += (_, _) => UpdateModel();
+        /*trackerBase.MarkedLocationsUpdated += (_, _) => UpdateModel();
         trackerBase.LocationCleared += (_, _) => UpdateModel();
         trackerBase.DungeonUpdated += (_, _) => UpdateModel();
         trackerBase.ItemTracked += (_, _) => UpdateModel();
         trackerBase.ActionUndone += (_, _) => UpdateModel();
         trackerBase.StateLoaded += (_, _) => UpdateModel();
         trackerBase.BossUpdated += (_, _) => UpdateModel();
-        trackerBase.HintTileUpdated += (_, _) => UpdateModel();
+        trackerBase.HintTileUpdated += (_, _) => UpdateModel();*/
 
         return _model;
     }
@@ -37,7 +37,7 @@ public class TrackerLocationsWindowService(TrackerBase trackerBase, IWorldServic
 
         foreach (var markedLocation in worldService.MarkedLocations())
         {
-            var markedItemType = markedLocation.State.MarkedItem ?? ItemType.Nothing;
+            var markedItemType = markedLocation.MarkedItem ?? ItemType.Nothing;
             if (markedItemType == ItemType.Nothing) continue;
             var item = itemService.FirstOrDefault(markedItemType);
             if (item == null) continue;

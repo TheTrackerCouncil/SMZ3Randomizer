@@ -11,7 +11,7 @@ using TrackerCouncil.Smz3.Tracking.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.TrackingServices;
 
-public class TrackerTreasureService(ILogger<TrackerTreasureService> logger, IItemService itemService) : TrackerService, ITrackerTreasureService
+internal class TrackerTreasureService(ILogger<TrackerTreasureService> logger, IItemService itemService) : TrackerService, ITrackerTreasureService
 {
     public bool TrackDungeonTreasure(IHasTreasure region, float? confidence = null, int amount = 1,
         bool autoTracked = false, bool stateResponse = true)
@@ -26,6 +26,8 @@ public class TrackerTreasureService(ILogger<TrackerTreasureService> logger, IIte
             return false;
         }
 
+        List<Action> undoActions = [];
+
         if (!autoTracked)
         {
             region.HasManuallyClearedTreasure = true;
@@ -36,17 +38,12 @@ public class TrackerTreasureService(ILogger<TrackerTreasureService> logger, IIte
             region.RemainingTreasure -= amount;
 
             // If there are no more treasures and the boss is defeated, clear all locations in the dungeon
-            var clearedLocations = new List<Location>();
             if (region.RemainingTreasure == 0 && region is IHasBoss { BossDefeated: true })
             {
-                foreach (var location in ((Region)region).Locations.Where(x => !x.State.Cleared))
+                foreach (var location in ((Region)region).Locations.Where(x => !x.Cleared))
                 {
-                    location.State.Cleared = true;
-                    if (autoTracked)
-                    {
-                        location.State.Autotracked = true;
-                    }
-                    clearedLocations.Add(location);
+                    Tracker.LocationTracker.Clear(location, confidence, autoTracked, false, false, false);
+                    undoActions.Add(PopUndo().Action);
                 }
             }
 
@@ -65,12 +62,12 @@ public class TrackerTreasureService(ILogger<TrackerTreasureService> logger, IIte
                     Tracker.Say(response: response, args: [region.Metadata.Name, region.RemainingTreasure]);
             }
 
-            AddUndo(() =>
+            AddUndo(autoTracked, () =>
             {
                 region.RemainingTreasure += amount;
-                foreach (var location in clearedLocations)
+                foreach (var action in undoActions)
                 {
-                    location.State.Cleared = false;
+                    action.Invoke();
                 }
             });
 
@@ -86,9 +83,35 @@ public class TrackerTreasureService(ILogger<TrackerTreasureService> logger, IIte
         return false;
     }
 
+    public bool UntrackDungeonTreasure(IHasTreasure region, int amount = 1)
+    {
+        if (amount < 1)
+            throw new ArgumentOutOfRangeException(nameof(amount), "The amount of items must be greater than zero.");
+
+        if (region.RemainingTreasure == region.TotalTreasure)
+        {
+            logger.LogWarning("Trying to untrack {Amount} treasures in a dungeon where no treasures have been removed.", amount);
+            return false;
+        }
+        else if (region.RemainingTreasure + amount > region.TotalTreasure)
+        {
+            amount = region.TotalTreasure - region.RemainingTreasure;
+        }
+
+        IsDirty = true;
+
+        region.RemainingTreasure += amount;
+        AddUndo(() =>
+        {
+            region.RemainingTreasure -= amount;
+        });
+
+        return true;
+    }
+
     public Action? TryTrackDungeonTreasure(Location location, float? confidence, bool autoTracked = false, bool stateResponse = true)
     {
-        if (confidence < Options.MinimumSassConfidence)
+        if (!autoTracked && confidence < Options.MinimumSassConfidence)
         {
             // Tracker response could give away the location of an item if
             // it is in a dungeon but tracker misheard.
@@ -99,7 +122,9 @@ public class TrackerTreasureService(ILogger<TrackerTreasureService> logger, IIte
         if (dungeon != null && (location.Item.IsTreasure || World.Config.ZeldaKeysanity))
         {
             if (TrackDungeonTreasure(dungeon, confidence, 1, autoTracked, stateResponse))
-                return PopUndo().Action;
+            {
+                return !autoTracked ? PopUndo().Action : null;
+            }
         }
 
         IsDirty = true;
@@ -107,11 +132,18 @@ public class TrackerTreasureService(ILogger<TrackerTreasureService> logger, IIte
         return null;
     }
 
-    /// <summary>
-    /// Marks all locations and treasure within a dungeon as cleared.
-    /// </summary>
-    /// <param name="treasureRegion">The dungeon to clear.</param>
-    /// <param name="confidence">The speech recognition confidence.</param>
+    public Action? TryUntrackDungeonTreasure(Location location)
+    {
+        var dungeon = location.GetTreasureRegion();
+
+        if (dungeon == null || (!location.Item.IsTreasure && !World.Config.ZeldaKeysanity))
+        {
+            return null;
+        }
+
+        return UntrackDungeonTreasure(dungeon) ? PopUndo().Action : null;
+    }
+
     public void ClearDungeon(IHasTreasure treasureRegion, float? confidence = null)
     {
         var remaining = treasureRegion.RemainingTreasure;
@@ -124,7 +156,7 @@ public class TrackerTreasureService(ILogger<TrackerTreasureService> logger, IIte
 
         var region = (Region)treasureRegion;
         var progress = itemService.GetProgression(assumeKeys: !World.Config.ZeldaKeysanity);
-        var locations = region.Locations.Where(x => x.State.Cleared == false).ToList();
+        var locations = region.Locations.Where(x => !x.Cleared).ToList();
 
         if (remaining <= 0 && locations.Count <= 0)
         {
@@ -135,7 +167,7 @@ public class TrackerTreasureService(ILogger<TrackerTreasureService> logger, IIte
 
         foreach (var location in locations)
         {
-            Tracker.LocationTracker.Clear(location, confidence, false, false);
+            Tracker.LocationTracker.Clear(location, confidence, false, false, false);
             undoActions.Add(PopUndo().Action);
         }
 

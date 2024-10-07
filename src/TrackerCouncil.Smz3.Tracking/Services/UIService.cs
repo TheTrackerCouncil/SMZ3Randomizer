@@ -79,7 +79,7 @@ public class UIService: IUIService
         if (item.Metadata.HasStages || item.Metadata.Multiple)
         {
             var baseFileName = GetSpritePath("Items", $"{item.Metadata.Item.ToLowerInvariant()}.png", out var profilePath);
-            fileName = GetSpritePath("Items", $"{item.Metadata.Item.ToLowerInvariant()} ({item.State.TrackingState}).png", out _, profilePath);
+            fileName = GetSpritePath("Items", $"{item.Metadata.Item.ToLowerInvariant()} ({item.TrackingState}).png", out _, profilePath);
             if (File.Exists(fileName))
                 return fileName;
             else

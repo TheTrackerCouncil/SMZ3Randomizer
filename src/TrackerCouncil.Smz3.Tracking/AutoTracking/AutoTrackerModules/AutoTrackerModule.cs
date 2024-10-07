@@ -29,7 +29,7 @@ public abstract class AutoTrackerModule(TrackerBase tracker, ISnesConnectorServi
     protected void TrackLocation(Location location)
     {
         var item = location.Item;
-        location.State.Autotracked = true;
+        location.Autotracked = true;
         Tracker.ItemTracker.TrackItem(item: item, trackedAs: null, confidence: null, tryClear: true, autoTracked: true, location: location);
         Logger.LogInformation("Auto tracked {ItemName} from {LocationName}", location.Item.Name, location.Name);
     }

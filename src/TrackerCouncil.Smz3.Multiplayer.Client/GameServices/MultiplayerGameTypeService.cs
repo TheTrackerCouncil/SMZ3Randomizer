@@ -206,7 +206,7 @@ public abstract class MultiplayerGameTypeService : IDisposable
     /// <param name="item">The item that has been tracked</param>
     public async Task TrackItem(Item item)
     {
-        await Client.TrackItem(item.Type, item.State.TrackingState, item.World.Guid);
+        await Client.TrackItem(item.Type, item.TrackingState, item.World.Guid);
     }
 
     /// <summary>

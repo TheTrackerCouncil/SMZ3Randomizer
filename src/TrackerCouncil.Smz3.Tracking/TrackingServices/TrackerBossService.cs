@@ -1,23 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Abstractions;
+using TrackerCouncil.Smz3.Data.Tracking;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.Tracking.TrackingServices;
 
-public class TrackerBossService(IItemService itemService) : TrackerService, ITrackerBossService
+internal class TrackerBossService(IItemService itemService) : TrackerService, ITrackerBossService
 {
-    /// <summary>
-    /// Marks a dungeon as cleared and, if possible, tracks the boss reward.
-    /// </summary>
-    /// <param name="region">The dungeon that was cleared.</param>
-    /// <param name="confidence">The speech recognition confidence.</param>
-    /// <param name="autoTracked">If this was cleared by the auto tracker</param>
-    public void MarkRegionBossAsDefeated(IHasBoss region, float? confidence = null, bool autoTracked = false)
+    public event EventHandler<BossTrackedEventArgs>? BossUpdated;
+
+    public void MarkRegionBossAsDefeated(IHasBoss region, float? confidence = null, bool autoTracked = false, bool admittedGuilt = false)
     {
         if (region.BossDefeated)
         {
@@ -27,7 +23,6 @@ public class TrackerBossService(IItemService itemService) : TrackerService, ITra
             return;
         }
 
-        itemService.ResetProgression();
         List<Action> undoActions = [];
 
         var addedEvent = History.AddEvent(
@@ -36,52 +31,56 @@ public class TrackerBossService(IItemService itemService) : TrackerService, ITra
             region.BossMetadata.Name.ToString() ?? $"boss of {region.Metadata.Name}"
         );
 
+        region.Boss.Defeated = true;
+        region.Boss.AutoTracked = autoTracked;
+        BossUpdated?.Invoke(this, new BossTrackedEventArgs(region.Boss, confidence, autoTracked));
+
         // If all treasures have been retrieved and the boss is defeated, clear all locations in the dungeon
-        if (region is IHasTreasure { RemainingTreasure: 0 })
+        if (region is IHasTreasure treasureRegion)
         {
-            foreach (var location in ((Region)region).Locations.Where(x => !x.State.Cleared))
+            if (treasureRegion.RemainingTreasure > 0)
             {
-                Tracker.LocationTracker.Clear(location, confidence, autoTracked, false);
-                undoActions.Add(PopUndo().Action);
+                foreach (var location in ((Region)region).Locations.Where(x => !x.Cleared))
+                {
+                    Tracker.LocationTracker.Clear(location, confidence, autoTracked, false);
+                    undoActions.Add(PopUndo().Action);
+                }
             }
-        }
 
-        // Auto track the dungeon reward if not already marked
-        if (region is IHasReward rewardRegion && autoTracked && rewardRegion.MarkedReward != rewardRegion.RewardType)
+            Tracker.Say(response: Responses.DungeonBossCleared, args: [region.Metadata.Name, region.BossMetadata.Name]);
+        }
+        else
         {
-            rewardRegion.MarkedReward = rewardRegion.RewardType;
+            if (!admittedGuilt && region.BossMetadata.WhenTracked != null)
+                Tracker.Say(response: region.BossMetadata.WhenTracked, args: [region.BossMetadata.Name]);
+            else
+                Tracker.Say(response: region.BossMetadata.WhenDefeated ?? Responses.BossDefeated, args: [region.BossMetadata.Name]);
         }
 
-        region.BossDefeated = true;
-        Tracker.Say(response: Responses.DungeonBossCleared, args: [region.Metadata.Name, region.BossMetadata.Name]);
+        // Auto track the region's reward
+        if (region is IHasReward rewardRegion && autoTracked)
+        {
+            Tracker.RewardTracker.GiveAreaReward(rewardRegion, autoTracked, true);
+        }
+
         IsDirty = true;
         RestartIdleTimers();
+        UpdateAllAccessibility(false);
 
-        if (!autoTracked)
+        AddUndo(autoTracked, () =>
         {
-            AddUndo(() =>
+            itemService.ResetProgression();
+            region.BossDefeated = false;
+            BossUpdated?.Invoke(this, new BossTrackedEventArgs(region.Boss, null, false));
+            foreach (var undo in undoActions)
             {
-                itemService.ResetProgression();
-                region.BossDefeated = false;
-                foreach (var action in undoActions)
-                {
-                    action();
-                }
-                addedEvent.IsUndone = true;
-            });
-        }
+                undo();
+            }
+            addedEvent.IsUndone = true;
+            UpdateAllAccessibility(true);
+        });
     }
 
-    /// <summary>
-    /// Marks a boss as defeated.
-    /// </summary>
-    /// <param name="boss">The boss that was defeated.</param>
-    /// <param name="admittedGuilt">
-    /// <see langword="true"/> if the command implies the boss was killed;
-    /// <see langword="false"/> if the boss was simply "tracked".
-    /// </param>
-    /// <param name="confidence">The speech recognition confidence.</param>
-    /// <param name="autoTracked">If this was tracked by the auto tracker</param>
     public void MarkBossAsDefeated(Boss boss, bool admittedGuilt = true, float? confidence = null, bool autoTracked = false)
     {
         if (boss.Defeated)
@@ -91,8 +90,15 @@ public class TrackerBossService(IItemService itemService) : TrackerService, ITra
             return;
         }
 
+        if (boss.Region != null)
+        {
+            MarkRegionBossAsNotDefeated(boss.Region, confidence);
+            return;
+        }
+
         boss.Defeated = true;
-        boss.AutoTracked = true;
+        boss.AutoTracked = autoTracked;
+        BossUpdated?.Invoke(this, new BossTrackedEventArgs(boss, confidence, autoTracked));
 
         if (!admittedGuilt && boss.Metadata.WhenTracked != null)
             Tracker.Say(response: boss.Metadata.WhenTracked, args: [boss.Name]);
@@ -106,25 +112,19 @@ public class TrackerBossService(IItemService itemService) : TrackerService, ITra
         );
 
         IsDirty = true;
-        itemService.ResetProgression();
+        UpdateAllAccessibility(false);
 
         RestartIdleTimers();
 
-        if (!autoTracked)
+        AddUndo(autoTracked, () =>
         {
-            AddUndo(() =>
-            {
-                boss.Defeated = false;
-                addedEvent.IsUndone = true;
-            });
-        }
+            boss.Defeated = false;
+            BossUpdated?.Invoke(this, new BossTrackedEventArgs(boss, null, false));
+            addedEvent.IsUndone = true;
+            UpdateAllAccessibility(true);
+        });
     }
 
-    /// <summary>
-    /// Un-marks a boss as defeated.
-    /// </summary>
-    /// <param name="boss">The boss that should be 'revived'.</param>
-    /// <param name="confidence">The speech recognition confidence.</param>
     public void MarkBossAsNotDefeated(Boss boss, float? confidence = null)
     {
         if (boss.Defeated != true)
@@ -133,15 +133,23 @@ public class TrackerBossService(IItemService itemService) : TrackerService, ITra
             return;
         }
 
+        if (boss.Region != null)
+        {
+            MarkRegionBossAsNotDefeated(boss.Region, confidence);
+        }
+
         boss.Defeated = false;
+        BossUpdated?.Invoke(this, new BossTrackedEventArgs(boss, confidence, false));
         Tracker.Say(response: Responses.BossUndefeated, args: [boss.Name]);
 
         IsDirty = true;
-        itemService.ResetProgression();
+        UpdateAllAccessibility(true);
 
         AddUndo(() =>
         {
             boss.Defeated = true;
+            UpdateAllAccessibility(false);
+            BossUpdated?.Invoke(this, new BossTrackedEventArgs(boss, null, false));
         });
     }
 
@@ -159,49 +167,75 @@ public class TrackerBossService(IItemService itemService) : TrackerService, ITra
             return;
         }
 
-        itemService.ResetProgression();
         region.BossDefeated = false;
+        BossUpdated?.Invoke(this, new BossTrackedEventArgs(region.Boss, confidence, false));
         Tracker.Say(response: Responses.DungeonBossUncleared, args: [region.Metadata.Name, region.BossMetadata.Name]);
 
         // Try to untrack the associated boss reward item
-        Action? undoUnclear = null;
-        Action? undoUntrackTreasure = null;
-        Action? undoUntrack = null;
+        List<Action> undoActions = [];
+
         if (region.BossLocationId != null)
         {
-            var rewardLocation = World.LocationMap[region.BossLocationId.Value];
-            if (rewardLocation.Item.Type != ItemType.Nothing)
+            var bossLocation = World.LocationMap[region.BossLocationId.Value];
+            if (bossLocation.Cleared)
             {
-                var item = rewardLocation.Item;
-                if (item.Type != ItemType.Nothing && item.State.TrackingState > 0)
-                {
-                    Tracker.ItemTracker.UntrackItem(item);
-                    undoUntrack = PopUndo().Action;
-                }
-
-                if (!rewardLocation.Item.IsDungeonItem && region is IHasTreasure treasureRegion)
-                {
-                    treasureRegion.RemainingTreasure++;
-                    undoUntrackTreasure = () => treasureRegion.RemainingTreasure--;
-                }
+                Tracker.LocationTracker.Unclear(bossLocation);
+                undoActions.Add(PopUndo().Action);
             }
 
-            if (rewardLocation.State.Cleared)
+            if (bossLocation.Item.Type != ItemType.Nothing && bossLocation.Item.TrackingState > 0)
             {
-                rewardLocation.State.Cleared = false;
-                undoUnclear = () => rewardLocation.State.Cleared = true;
+                Tracker.ItemTracker.UntrackItem(bossLocation.Item);
+                undoActions.Add(PopUndo().Action);
             }
         }
 
         IsDirty = true;
+        UpdateAllAccessibility(false);
 
         AddUndo(() =>
         {
-            region.BossDefeated = false;
-            undoUntrack?.Invoke();
-            undoUntrackTreasure?.Invoke();
-            undoUnclear?.Invoke();
-            itemService.ResetProgression();
+            region.BossDefeated = true;
+            region.BossAccessibility = Accessibility.Cleared;
+            BossUpdated?.Invoke(this, new BossTrackedEventArgs(region.Boss, null, false));
+
+            foreach (var undo in undoActions)
+            {
+                undo.Invoke();
+            }
+            UpdateAllAccessibility(true);
         });
+    }
+
+    public void UpdateAccessibility(Progression? actualProgression = null, Progression? withKeysProgression = null)
+    {
+        actualProgression ??= itemService.GetProgression(false);
+        withKeysProgression ??= itemService.GetProgression(true);
+        foreach (var region in Tracker.World.BossRegions)
+        {
+            UpdateAccessibility(region, actualProgression, withKeysProgression);
+        }
+    }
+
+    public void UpdateAccessibility(Boss boss, Progression? actualProgression = null, Progression? withKeysProgression = null)
+    {
+        if (boss.Region == null) return;
+        actualProgression ??= itemService.GetProgression(false);
+        withKeysProgression ??= itemService.GetProgression(true);
+        UpdateAccessibility(boss.Region, actualProgression, withKeysProgression);
+    }
+
+    public void UpdateAccessibility(IHasBoss region, Progression? actualProgression = null, Progression? withKeysProgression = null)
+    {
+        if (region.BossDefeated)
+        {
+            region.BossAccessibility = Accessibility.Cleared;
+            return;
+        }
+
+        actualProgression ??= itemService.GetProgression(false);
+        withKeysProgression ??= itemService.GetProgression(true);
+
+        region.Boss.UpdateAccessibility(actualProgression, withKeysProgression);
     }
 }

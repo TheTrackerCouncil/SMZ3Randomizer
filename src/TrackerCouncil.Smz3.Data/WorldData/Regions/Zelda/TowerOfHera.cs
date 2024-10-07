@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
@@ -93,9 +94,11 @@ public class TowerOfHera : Z3Region, IHasReward, IHasTreasure, IHasBoss
 
     public TrackerTreasureState TreasureState { get; set; } = null!;
 
-    public TrackerRewardState RewardState { get; set; } = null!;
+    public event EventHandler? UpdatedTreasure;
 
-    public TrackerBossState BossState { get; set; } = null!;
+    public void OnUpdatedTreasure() => UpdatedTreasure?.Invoke(this, EventArgs.Empty);
+
+    public TrackerRewardState RewardState { get; set; } = null!;
 
     public Boss Boss { get; set; } = null!;
 

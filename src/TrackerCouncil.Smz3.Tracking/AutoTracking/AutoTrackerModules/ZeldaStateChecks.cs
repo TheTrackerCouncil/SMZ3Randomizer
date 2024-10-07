@@ -48,7 +48,7 @@ public class ZeldaStateChecks(TrackerBase tracker, ISnesConnectorService snesCon
         {
             if (AutoTracker.HasDefeatedBothBosses)
             {
-                Tracker.GameBeaten(true);
+                Tracker.GameStateTracker.GameBeaten(true);
             }
         }
 

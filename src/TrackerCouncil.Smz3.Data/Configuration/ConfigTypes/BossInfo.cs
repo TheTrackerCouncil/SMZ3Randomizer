@@ -33,6 +33,7 @@ public class BossInfo : IMergeable<BossInfo>
     /// <param name="name">The name of the boss.</param>
     public BossInfo(string name)
     {
+        Boss = name;
         Name = new SchrodingersString(name);
     }
 

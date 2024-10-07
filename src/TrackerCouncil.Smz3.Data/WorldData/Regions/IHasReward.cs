@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Models;
@@ -33,6 +34,8 @@ public interface IHasReward
 
     public bool IsShuffledReward { get; }
 
+    Region Region => (Region)this;
+
     public void SetReward(Reward reward)
     {
         Reward = reward;
@@ -50,16 +53,22 @@ public interface IHasReward
 
     public RewardType MarkedReward
     {
-        get => RewardState.MarkedReward ?? RewardType.None;
-        set => RewardState.MarkedReward = value;
+        get => Reward.MarkedReward ?? RewardType.None;
+        set => Reward.MarkedReward = value;
     }
 
-    public bool HasCorrectlyMarkedReward => RewardType == RewardState?.MarkedReward;
+    public Accessibility RewardAccessibility
+    {
+        get => Reward.Accessibility;
+        set => Reward.Accessibility = value;
+    }
+
+    public bool HasCorrectlyMarkedReward => Reward.HasCorrectlyMarkedReward;
 
     public bool HasReceivedReward
     {
-        get => RewardState.HasReceivedReward;
-        set => RewardState.HasReceivedReward = value;
+        get => Reward.HasReceivedReward;
+        set => Reward.HasReceivedReward = value;
     }
 
     /// <summary>
@@ -81,6 +90,11 @@ public interface IHasReward
     /// <see langword="false"/>.
     /// </returns>
     bool CanSeeReward(Progression items);
+
+    public Accessibility GetKeysanityAdjustedBossAccessibility()
+    {
+        return Region.GetKeysanityAdjustedAccessibility(RewardAccessibility);
+    }
 
     public bool HasReward(params RewardType[] types) => types.Contains(RewardType);
 

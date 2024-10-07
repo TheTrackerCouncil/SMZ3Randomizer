@@ -1,3 +1,4 @@
+using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Shared.Enums;
 
@@ -15,7 +16,7 @@ public interface ITrackerRewardService
     /// </param>
     /// <param name="confidence">The speech recognition confidence.</param>
     /// <param name="autoTracked">If this was called by the auto tracker</param>
-    public void SetDungeonReward(IHasReward rewardRegion, RewardType? reward = null, float? confidence = null,
+    public void SetAreaReward(IHasReward rewardRegion, RewardType? reward = null, float? confidence = null,
         bool autoTracked = false);
 
     /// <summary>
@@ -31,5 +32,11 @@ public interface ITrackerRewardService
     /// </summary>
     /// <param name="reward">The reward to set.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void SetUnmarkedDungeonReward(RewardType reward, float? confidence = null);
+    public void SetUnmarkedRewards(RewardType reward, float? confidence = null);
+
+    public void UpdateAccessibility(Progression? actualProgression = null, Progression? withKeysProgression = null);
+
+    public void UpdateAccessibility(Reward reward, Progression? actualProgression = null, Progression? withKeysProgression = null);
+
+    public void UpdateAccessibility(IHasReward region, Progression? actualProgression = null, Progression? withKeysProgression = null);
 }

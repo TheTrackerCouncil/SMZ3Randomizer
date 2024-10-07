@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using BunLabs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using MSURandomizerLibrary.Configs;
 using TrackerCouncil.Smz3.Chat.Integration;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Configuration;
@@ -19,12 +18,12 @@ using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.Tracking;
 using TrackerCouncil.Smz3.Data.WorldData;
-using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Models;
 using TrackerCouncil.Smz3.Tracking.Services;
 using TrackerCouncil.Smz3.Tracking.Services.Speech;
+using TrackerCouncil.Smz3.Tracking.TrackingServices;
 using TrackerCouncil.Smz3.Tracking.VoiceCommands;
 
 namespace TrackerCouncil.Smz3.Tracking;
@@ -88,6 +87,8 @@ public sealed class Tracker : TrackerBase, IDisposable
         if (trackerOptions.Options == null)
             throw new InvalidOperationException("Tracker options have not yet been activated.");
 
+        LoadServices(serviceProvider);
+
         _worldAccessor = worldAccessor;
         _moduleFactory = moduleFactory;
         _chatClient = chatClient;
@@ -140,6 +141,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         {
             _recognizer = serviceProvider.GetRequiredService<AlwaysOnSpeechRecognitionService>();
         }
+
         _recognizer.SpeechRecognized += Recognizer_SpeechRecognized;
         InitializeMicrophone();
         World = _worldAccessor.World;
@@ -206,11 +208,42 @@ public sealed class Tracker : TrackerBase, IDisposable
 
         if (trackerState != null)
         {
+            UpdateAllAccessibility(true);
             _timerService.SetSavedTime(TimeSpan.FromSeconds(trackerState.SecondsElapsed));
             OnStateLoaded();
             return true;
         }
+
         return false;
+    }
+
+    private void LoadServices(IServiceProvider serviceProvider)
+    {
+        var interfaceNamespace = typeof(TrackerBase).Namespace;
+        if (string.IsNullOrEmpty(interfaceNamespace))
+        {
+            throw new InvalidOperationException("Could not determine TrackerBase namespace");
+        }
+
+        var properties = GetType().GetProperties()
+            .Where(pi => pi.PropertyType.IsInterface && pi.PropertyType.Namespace == interfaceNamespace)
+            .ToDictionary(
+                pi => pi.PropertyType,
+                pi => pi);
+
+        var trackerService = serviceProvider.GetServices<TrackerService>().ToList();
+        foreach (var service in trackerService)
+        {
+            service.Tracker = this;
+            service.Initialize();
+            var serviceInterface = service.GetType().GetInterfaces()
+                .FirstOrDefault(x => x.Namespace == interfaceNamespace);
+            if (serviceInterface != null && properties.TryGetValue(serviceInterface, out var property))
+            {
+                property.SetValue(this, service);
+            }
+        }
+
     }
 
     /// <summary>
@@ -223,6 +256,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         {
             throw new NullReferenceException("No rom loaded into tracker");
         }
+
         IsDirty = false;
         await _stateService.SaveStateAsync(_worldAccessor.Worlds, Rom, _timerService.SecondsElapsed);
     }
@@ -484,6 +518,7 @@ public sealed class Tracker : TrackerBase, IDisposable
             {
                 return false;
             }
+
             text = trackerSpeechDetails.Value.SpeechText;
             trackerImage = trackerSpeechDetails.Value.TrackerImage;
         }
@@ -568,222 +603,6 @@ public sealed class Tracker : TrackerBase, IDisposable
     }
 
     /// <summary>
-    /// Updates the region that the player is in
-    /// </summary>
-    /// <param name="region">The region the player is in</param>
-    /// <param name="updateMap">Set to true to update the map for the player to match the region</param>
-    /// <param name="resetTime">If the time should be reset if this is the first region update</param>
-    public override void UpdateRegion(Region region, bool updateMap = false, bool resetTime = false)
-    {
-        if (region != CurrentRegion)
-        {
-            if (resetTime && !History.GetHistory().Any(x => x is { LocationId: not null, IsUndone: false }))
-            {
-                ResetTimer(true);
-            }
-
-            History.AddEvent(
-                HistoryEventType.EnteredRegion,
-                true,
-                region.Name
-            );
-        }
-
-        CurrentRegion = region;
-        if (updateMap && !string.IsNullOrEmpty(region?.MapName))
-        {
-            UpdateMap(region.MapName);
-        }
-    }
-
-    /// <summary>
-    /// Updates the map to display for the user
-    /// </summary>
-    /// <param name="map">The name of the map</param>
-    public override void UpdateMap(string map)
-    {
-        CurrentMap = map;
-        OnMapUpdated();
-    }
-
-    /// <summary>
-    /// Called when the game is beaten by entering triforce room
-    /// or entering the ship after beating both bosses
-    /// </summary>
-    /// <param name="autoTracked">If this was triggered by the auto tracker</param>
-    public override void GameBeaten(bool autoTracked)
-    {
-        if (!HasBeatenGame)
-        {
-            HasBeatenGame = true;
-            var pauseUndo = PauseTimer(false);
-            Say(x => x.BeatGame);
-            OnBeatGame(new TrackerEventArgs(autoTracked));
-            if (!autoTracked)
-            {
-                AddUndo(() =>
-                {
-                    HasBeatenGame = false;
-                    if (pauseUndo != null)
-                    {
-                        pauseUndo();
-                    }
-                    OnBeatGame(new TrackerEventArgs(autoTracked));
-                });
-            }
-        }
-    }
-
-    /// <summary>
-    /// Called when the player has died
-    /// </summary>
-    public override void TrackDeath(bool autoTracked)
-    {
-        OnPlayerDied(new TrackerEventArgs(autoTracked));
-    }
-
-    /// <summary>
-    /// Updates the current track number being played
-    /// </summary>
-    /// <param name="number">The number of the track</param>
-    public override void UpdateTrackNumber(int number)
-    {
-        if (number <= 0 || number > 200 || number == CurrentTrackNumber) return;
-        CurrentTrackNumber = number;
-        OnTrackNumberUpdated(new TrackNumberEventArgs(number));
-    }
-
-    /// <summary>
-    /// Updates the current track being played
-    /// </summary>
-    /// <param name="msu">The current MSU pack</param>
-    /// <param name="track">The current track</param>
-    /// <param name="outputText">Formatted output text matching the requested style</param>
-    public override void UpdateTrack(Msu msu, Track track, string outputText)
-    {
-        OnTrackChanged(new TrackChangedEventArgs(msu, track, outputText));
-    }
-
-    public override void UpdateHintTile(PlayerHintTile hintTile)
-    {
-        if (hintTile.State == null || LastViewedObject?.HintTile == hintTile)
-        {
-            return;
-        }
-        else if (hintTile.State.HintState == HintState.Cleared)
-        {
-            OnHintTileUpdated(new HintTileUpdatedEventArgs(hintTile));
-            return;
-        }
-
-        LastViewedObject = new ViewedObject { HintTile = hintTile };
-
-        if (hintTile.Type == HintTileType.Location)
-        {
-            var locationId = hintTile.Locations!.First();
-            var location = World.FindLocation(locationId);
-            if (location.State is { Cleared: false, Autotracked: false } && location.State.MarkedItem != location.State.Item)
-            {
-                LocationTracker.MarkLocation(location, location.Item, null, true);
-                hintTile.State.HintState = HintState.Viewed;
-            }
-            else
-            {
-                hintTile.State.HintState = HintState.Cleared;
-            }
-        }
-        else if (hintTile.Type == HintTileType.Requirement)
-        {
-            var dungeon = World.PrerequisiteRegions.First(x => x.Name == hintTile.LocationKey);
-            if (!dungeon.HasMarkedCorrectly)
-            {
-                PrerequisiteTracker.SetDungeonRequirement(dungeon, hintTile.MedallionType, null, true);
-                hintTile.State.HintState = HintState.Viewed;
-            }
-            else
-            {
-                hintTile.State.HintState = HintState.Cleared;
-            }
-        }
-        else
-        {
-            var locations = hintTile.Locations!.Select(x => World.FindLocation(x)).ToList();
-            if (locations.All(x => x.State.Autotracked || x.State.Cleared))
-            {
-                hintTile.State.HintState = HintState.Cleared;
-                Say(response: Configs.HintTileConfig.ViewedHintTileAlreadyVisited, args: [hintTile.LocationKey]);
-            }
-            else if (hintTile.Usefulness == LocationUsefulness.Mandatory)
-            {
-                hintTile.State.HintState = HintState.Viewed;
-                Say(response: Configs.HintTileConfig.ViewedHintTileMandatory, args: [hintTile.LocationKey]);
-            }
-            else if (hintTile.Usefulness == LocationUsefulness.Useless)
-            {
-                hintTile.State.HintState = HintState.Viewed;
-                Say(response: Configs.HintTileConfig.ViewedHintTileUseless, args: [hintTile.LocationKey]);
-            }
-            else
-            {
-                hintTile.State.HintState = HintState.Viewed;
-                Say(response: Configs.HintTileConfig.ViewedHintTile);
-            }
-        }
-
-        OnHintTileUpdated(new HintTileUpdatedEventArgs(hintTile));
-    }
-
-    public override void UpdateLastMarkedLocations(List<Location> locations)
-    {
-        LastViewedObject = new ViewedObject { ViewedLocations = locations };
-    }
-
-    public override void ClearLastViewedObject(float confidence)
-    {
-        if (LastViewedObject?.ViewedLocations?.Count > 0)
-        {
-            LocationTracker.Clear(LastViewedObject.ViewedLocations, confidence);
-        }
-        else if (LastViewedObject?.HintTile != null)
-        {
-            var hintTile = LastViewedObject.HintTile;
-
-            if (hintTile?.State == null)
-            {
-                Say(response: Configs.HintTileConfig.NoPreviousHintTile);
-            }
-            else if (hintTile.State.HintState != HintState.Cleared && hintTile.Locations?.Count() > 0)
-            {
-                var locations = hintTile.Locations.Select(x => World.FindLocation(x))
-                    .Where(x => x.State is { Cleared: false, Autotracked: false }).ToList();
-                if (locations.Count != 0)
-                {
-                    LocationTracker.Clear(locations, confidence);
-                    hintTile.State.HintState = HintState.Cleared;
-                    UpdateHintTile(hintTile);
-                }
-                else
-                {
-                    Say(response: Configs.HintTileConfig.ClearHintTileFailed);
-                }
-            }
-            else
-            {
-                Say(response: Configs.HintTileConfig.ClearHintTileFailed);
-            }
-        }
-        else
-        {
-            Say(x => x.NoMarkedLocations);
-        }
-    }
-
-    public override void CountHyperBeamShots(int count)
-    {
-        Say(responses: Responses.CountHyperBeamShots, tieredKey: count, args: [count]);
-    }
-
-    /// <summary>
     /// Resets the timers for tracker mentioning nothing has happened
     /// </summary>
     public override void RestartIdleTimers()
@@ -808,6 +627,26 @@ public sealed class Tracker : TrackerBase, IDisposable
     public override (Action Action, DateTime UndoTime) PopUndo() => _undoHistory.Pop();
 
     public override void MarkAsDirty(bool isDirty = true) => IsDirty = isDirty;
+
+    public override void UpdateAllAccessibility(bool forceRefreshAll, params Item[] items)
+    {
+        // Skip if the items don't affect anything
+        if (items.Length > 0 && !forceRefreshAll && items.All(x =>
+                x.Type.IsInCategory(ItemCategory.NeverProgression) ||
+                (x.TrackingState > 1 && x.Type.IsInCategory(ItemCategory.ProgressionOnlyOnFirst))))
+        {
+            return;
+        }
+
+        ItemService.ResetProgression();
+
+        var actualProgression = ItemService.GetProgression(false);
+        var assumedKeysProgression = ItemService.GetProgression(true);
+
+        LocationTracker.UpdateAccessibility(!forceRefreshAll, actualProgression, assumedKeysProgression);
+        RewardTracker.UpdateAccessibility(actualProgression, assumedKeysProgression);
+        BossTracker.UpdateAccessibility(actualProgression, assumedKeysProgression);
+    }
 
     /// <summary>
     /// Cleans up resources used by this class.

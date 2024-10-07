@@ -49,8 +49,6 @@ public class InnerMaridia : SMRegion, IHasBoss, IHasReward
 
     public bool IsShuffledReward => false;
 
-    public TrackerBossState BossState { get; set; } = null!;
-
     public WateringHoleRoom WateringHole { get; }
 
     public PseudoPlasmaSparkRoom PseudoPlasmaSpark { get; }

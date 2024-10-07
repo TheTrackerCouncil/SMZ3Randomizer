@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
@@ -14,6 +15,8 @@ namespace TrackerCouncil.Smz3.Data.WorldData;
 /// </summary>
 public class Reward
 {
+    private Accessibility _accessibility;
+
     public Reward(RewardType type, World world, IMetadataService? metadata)
     {
         Type = type;
@@ -30,5 +33,66 @@ public class Reward
     public IHasReward? Region { get; set; }
 
     public TrackerRewardState State => Region?.RewardState ?? new TrackerRewardState();
+
+    public bool HasReceivedReward
+    {
+        get => State.HasReceivedReward;
+        set
+        {
+            State.HasReceivedReward = value;
+            UpdatedRewardState?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    public RewardType? MarkedReward
+    {
+        get => State.MarkedReward;
+        set
+        {
+            State.MarkedReward = value;
+            UpdatedRewardState?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    public Accessibility Accessibility
+    {
+        get => _accessibility;
+        set
+        {
+            if (_accessibility == value) return;
+            _accessibility = value;
+            UpdatedAccessibility?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    public void UpdateAccessibility(Progression actualProgression, Progression withKeysProgression)
+    {
+        if (HasReceivedReward)
+        {
+            Accessibility = Accessibility.Cleared;
+        }
+        else if (Region == null)
+        {
+            Accessibility = Accessibility.Unknown;
+        }
+        else if (Region.CanRetrieveReward(actualProgression))
+        {
+            Accessibility = Accessibility.Available;
+        }
+        else if (Region.CanRetrieveReward(withKeysProgression))
+        {
+            Accessibility = Accessibility.AvailableWithKeys;
+        }
+        else
+        {
+            Accessibility = Accessibility.OutOfLogic;
+        }
+    }
+
+    public bool HasCorrectlyMarkedReward => MarkedReward == Type;
+
+    public event EventHandler? UpdatedRewardState;
+
+    public event EventHandler? UpdatedAccessibility;
 
 }

@@ -7,6 +7,7 @@ using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.Logic;
 using TrackerCouncil.Smz3.Data.Services;
+using TrackerCouncil.Smz3.Data.Tracking;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Shared;
@@ -15,22 +16,15 @@ using TrackerCouncil.Smz3.Tracking.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.TrackingServices;
 
-public class TrackerLocationService(ILogger<TrackerTreasureService> logger, ItemService itemService, IMetadataService metadataService) : TrackerService, ITrackerLocationService
+internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, IItemService itemService, IMetadataService metadataService, IWorldService worldService) : TrackerService, ITrackerLocationService
 {
     private IEnumerable<ItemType>? _previousMissingItems;
 
-    /// <summary>
-    /// Clears an item from the specified location.
-    /// </summary>
-    /// <param name="location">The location to clear.</param>
-    /// <param name="confidence">The speech recognition confidence.</param>
-    /// <param name="autoTracked">If this was tracked by the auto tracker</param>
-    /// <param name="stateResponse"></param>
-    /// <param name="allowLocationComments"></param>
-    public void Clear(Location location, float? confidence = null, bool autoTracked = false, bool stateResponse = true, bool allowLocationComments = false)
-    {
-        itemService.ResetProgression();
+    public event EventHandler<LocationClearedEventArgs>? LocationCleared;
+    public event EventHandler<LocationClearedEventArgs>? LocationMarked;
 
+    public void Clear(Location location, float? confidence = null, bool autoTracked = false, bool stateResponse = true, bool allowLocationComments = false, bool updateTreasureCount = true)
+    {
         if (!stateResponse && allowLocationComments)
         {
             GiveLocationComment(location.Item.Type, location, isTracking: true, confidence, location.Item.Metadata);
@@ -45,18 +39,21 @@ public class TrackerLocationService(ILogger<TrackerTreasureService> logger, Item
         }
 
         ItemType? prevMarkedItem = null;
-        if (location.State.HasMarkedItem)
+        if (location.HasMarkedItem)
         {
-            prevMarkedItem = location.State.MarkedItem;
-            location.State.MarkedItem = null;
+            prevMarkedItem = location.MarkedItem;
+            location.MarkedItem = null;
         }
 
-        var undoTrackTreasure = Tracker.TreasureTracker.TryTrackDungeonTreasure(location, confidence, stateResponse: stateResponse);
+        var undoTrackTreasure = updateTreasureCount
+            ? Tracker.TreasureTracker.TryTrackDungeonTreasure(location, confidence, stateResponse: stateResponse)
+            : null;
 
         // Important: clear only after tracking dungeon treasure, as
         // the "guess dungeon from location" algorithm excludes
         // cleared items
-        location.State.Cleared = true;
+        location.Cleared = true;
+        location.Accessibility = Accessibility.Cleared;
         World.LastClearedLocation = location;
 
         Action? undoStopPegWorldMode = null;
@@ -126,26 +123,45 @@ public class TrackerLocationService(ILogger<TrackerTreasureService> logger, Item
             }
         }
 
+        LocationCleared?.Invoke(this, new LocationClearedEventArgs(location, confidence, autoTracked));
+
         IsDirty = true;
 
-        if (!autoTracked)
+        AddUndo(autoTracked, () =>
         {
-            AddUndo(() =>
-            {
-                location.State.Cleared = false;
-                location.State.MarkedItem = prevMarkedItem;
-                undoTrackTreasure?.Invoke();
-                undoStopPegWorldMode?.Invoke();
-                itemService.ResetProgression();
-            });
-        }
+            location.Cleared = false;
+            location.MarkedItem = prevMarkedItem;
+            UpdateAccessibility(location);
+            undoTrackTreasure?.Invoke();
+            undoStopPegWorldMode?.Invoke();
+            LocationCleared?.Invoke(this, new LocationClearedEventArgs(location, null, false));
+        });
     }
 
-    /// <summary>
-    /// Clears an item from the specified locations.
-    /// </summary>
-    /// <param name="locations">The locations to clear.</param>
-    /// <param name="confidence">The speech recognition confidence</param>
+    public void Unclear(Location location, bool updateTreasureCount = true)
+    {
+        var undoTrackTreasure = updateTreasureCount
+            ? Tracker.TreasureTracker.TryUntrackDungeonTreasure(location)
+            : null;
+
+        // Important: clear only after tracking dungeon treasure, as
+        // the "guess dungeon from location" algorithm excludes
+        // cleared items
+        location.Cleared = false;
+        UpdateAccessibility(location);
+
+        LocationCleared?.Invoke(this, new LocationClearedEventArgs(location, null, false));
+
+        IsDirty = true;
+
+        AddUndo(() =>
+        {
+            location.Cleared = true;
+            location.Accessibility = Accessibility.Cleared;
+            undoTrackTreasure?.Invoke();
+        });
+    }
+
     public void Clear(List<Location> locations, float? confidence = null)
     {
         if (locations.Count == 1)
@@ -154,26 +170,28 @@ public class TrackerLocationService(ILogger<TrackerTreasureService> logger, Item
             return;
         }
 
-        itemService.ResetProgression();
-
         var originalClearedValues = new Dictionary<Location, bool>();
         var originalMarkedItems = new Dictionary<Location, ItemType>();
 
         // Clear the locations
         foreach (var location in locations)
         {
-            originalClearedValues.Add(location, location.State.Cleared);
-            if (location.State.MarkedItem != null)
+            originalClearedValues.Add(location, location.Cleared);
+            if (location.MarkedItem != null)
             {
-                originalMarkedItems.Add(location, location.State.MarkedItem.Value);
+                originalMarkedItems.Add(location, location.MarkedItem.Value);
             }
-            location.State.Cleared = true;
-            location.State.MarkedItem = null;
+            location.Cleared = true;
+            location.MarkedItem = null;
+            location.Accessibility = Accessibility.Cleared;
+            LocationCleared?.Invoke(this, new LocationClearedEventArgs(location, null, false));
         }
 
         Action? undoDungeonTreasure = null;
+        var allSameRegion = false;
         if (locations.Select(x => x.Region).Distinct().Count() == 1)
         {
+            allSameRegion = true;
             Tracker.Say(x => x.LocationsClearedSameRegion, args: [locations.Count, locations.First().Region.GetName()]);
             if (locations.First().Region is IHasTreasure dungeon)
             {
@@ -191,44 +209,27 @@ public class TrackerLocationService(ILogger<TrackerTreasureService> logger, Item
         {
             foreach (var location in locations)
             {
-                location.State.Cleared = originalClearedValues[location];
+                location.Cleared = originalClearedValues[location];
                 if (originalMarkedItems.TryGetValue(location, out var item))
                 {
-                    location.State.MarkedItem = item;
+                    location.MarkedItem = item;
                 }
+                LocationCleared?.Invoke(this, new LocationClearedEventArgs(location, null, false));
             }
+
+            UpdateAccessibility(locations, allSameRegion ? itemService.GetProgression(locations[0].Region) : null);
             undoDungeonTreasure?.Invoke();
-            itemService.ResetProgression();
         });
 
         World.LastClearedLocation = locations.First();
         IsDirty = true;
     }
 
-    /// <summary>
-    /// Marks an item at the specified location.
-    /// </summary>
-    /// <param name="location">The location to mark.</param>
-    /// <param name="item">
-    /// The item that is found at <paramref name="location"/>.
-    /// </param>
-    /// <param name="confidence">The speech recognition confidence.</param>
-    /// <param name="autoTracked">If the marked location was auto tracked</param>
     public void MarkLocation(Location location, Item item, float? confidence = null, bool autoTracked = false)
     {
         MarkLocation(location, item.Type, confidence, autoTracked, item.Metadata);
     }
 
-    /// <summary>
-    /// Marks an item at the specified location.
-    /// </summary>
-    /// <param name="location">The location to mark.</param>
-    /// <param name="item">
-    /// The item that is found at <paramref name="location"/>.
-    /// </param>
-    /// <param name="confidence">The speech recognition confidence.</param>
-    /// <param name="autoTracked">If the marked location was auto tracked</param>
-    /// <param name="metadata">The metadata of the item</param>
     public void MarkLocation(Location location, ItemType item, float? confidence = null, bool autoTracked = false, ItemData? metadata = null)
     {
         var locationName = location.Metadata.Name;
@@ -242,30 +243,28 @@ public class TrackerLocationService(ILogger<TrackerTreasureService> logger, Item
             Clear(location);
             Tracker.Say(response: Responses.LocationMarkedAsBullshit, args: [locationName]);
         }
-        else if (location.State.MarkedItem != null)
+        else if (location.MarkedItem != null)
         {
-            var oldType = location.State.MarkedItem;
-            location.State.MarkedItem = item;
+            var oldType = location.MarkedItem;
+            location.MarkedItem = item;
             Tracker.Say(x => x.LocationMarkedAgain, args: [locationName, metadata?.Name ?? item.GetDescription(), oldType.GetDescription()]);
-            if (!autoTracked)
+            LocationMarked?.Invoke(this, new LocationClearedEventArgs(location, confidence, autoTracked));
+            AddUndo(autoTracked, () =>
             {
-                AddUndo(() =>
-                {
-                    location.State.MarkedItem = oldType;
-                });
-            }
+                location.MarkedItem = oldType;
+                LocationMarked?.Invoke(this, new LocationClearedEventArgs(location, confidence, autoTracked));
+            });
         }
         else
         {
-            location.State.MarkedItem = item;
+            location.MarkedItem = item;
             Tracker.Say(x => x.LocationMarked, args: [locationName, metadata?.Name ?? item.GetDescription()]);
-            if (!autoTracked)
+            LocationMarked?.Invoke(this, new LocationClearedEventArgs(location, confidence, autoTracked));
+            AddUndo(autoTracked, () =>
             {
-                AddUndo(() =>
-                {
-                    location.State.MarkedItem = null;
-                });
-            }
+                location.MarkedItem = null;
+                LocationMarked?.Invoke(this, new LocationClearedEventArgs(location, confidence, autoTracked));
+            });
         }
 
         GivePreConfiguredLocationSass(location);
@@ -273,28 +272,10 @@ public class TrackerLocationService(ILogger<TrackerTreasureService> logger, Item
         IsDirty = true;
     }
 
-    /// <summary>
-    /// Clears every item in the specified area, optionally tracking the
-    /// cleared items.
-    /// </summary>
-    /// <param name="area">The area whose items to clear.</param>
-    /// <param name="trackItems">
-    /// <c>true</c> to track any items found; <c>false</c> to only clear the
-    /// affected locations.
-    /// </param>
-    /// <param name="includeUnavailable">
-    /// <c>true</c> to include every item in <paramref name="area"/>, even
-    /// those that are not in logic. <c>false</c> to only include chests
-    /// available with current items.
-    /// </param>
-    /// <param name="confidence">The speech recognition confidence.</param>
-    /// <param name="assumeKeys">
-    /// Set to true to ignore keys when clearing the location.
-    /// </param>
     public void ClearArea(IHasLocations area, bool trackItems, bool includeUnavailable = false, float? confidence = null, bool assumeKeys = false)
     {
         var locations = area.Locations
-            .Where(x => x.State.Cleared == false)
+            .Where(x => x.Cleared == false)
             .WhereUnless(includeUnavailable, x => x.IsAvailable(itemService.GetProgression(area)))
             .ToImmutableList();
 
@@ -303,7 +284,7 @@ public class TrackerLocationService(ILogger<TrackerTreasureService> logger, Item
         if (locations.Count == 0)
         {
             var outOfLogicLocations = area.Locations
-                .Count(x => x.State.Cleared == false);
+                .Count(x => x.Cleared == false);
 
             if (outOfLogicLocations > 0)
                 Tracker.Say(responses: Responses.TrackedNothingOutOfLogic, tieredKey: outOfLogicLocations, args: [area.Name, outOfLogicLocations]);
@@ -312,20 +293,23 @@ public class TrackerLocationService(ILogger<TrackerTreasureService> logger, Item
         }
         else
         {
-            // If there is only one (available) item here, just call the
-            // regular TrackItem instead
+            // If there is only one location...
             var onlyLocation = locations.TrySingle();
             if (onlyLocation != null)
             {
+                // Use the basic clear if we're not tracking items
                 if (!trackItems)
                 {
                     Tracker.LocationTracker.Clear(onlyLocation, confidence);
                 }
+                // Use the item tracker if we're tracking an item
                 else
                 {
                     var item = onlyLocation.Item;
                     Tracker.ItemTracker.TrackItem(item: item, trackedAs: null, confidence: confidence, tryClear: true, autoTracked: false, location: onlyLocation);
                 }
+
+                return;
             }
             else
             {
@@ -340,7 +324,8 @@ public class TrackerLocationService(ILogger<TrackerTreasureService> logger, Item
                     {
                         if (location.Item.IsTreasure || World.Config.ZeldaKeysanity)
                             treasureTracked++;
-                        location.State.Cleared = true;
+                        location.Cleared = true;
+                        location.Accessibility = Accessibility.Cleared;
                         World.LastClearedLocation = location;
                         continue;
                     }
@@ -353,7 +338,8 @@ public class TrackerLocationService(ILogger<TrackerTreasureService> logger, Item
                     if (location.Item.IsTreasure || World.Config.ZeldaKeysanity)
                         treasureTracked++;
 
-                    location.State.Cleared = true;
+                    location.Cleared = true;
+                    location.Accessibility = Accessibility.Cleared;
                 }
 
                 if (trackItems)
@@ -410,6 +396,11 @@ public class TrackerLocationService(ILogger<TrackerTreasureService> logger, Item
             }
         }
 
+        foreach (var location in locations)
+        {
+            location.Accessibility = Accessibility.Cleared;
+        }
+
         IsDirty = true;
 
         AddUndo(() =>
@@ -419,13 +410,17 @@ public class TrackerLocationService(ILogger<TrackerTreasureService> logger, Item
                 if (trackItems)
                 {
                     var item = location.Item;
-                    if (item.Type != ItemType.Nothing && item.State.TrackingState > 0)
-                        item.State.TrackingState--;
+                    if (item.Type != ItemType.Nothing && item.TrackingState > 0)
+                        item.TrackingState--;
                 }
 
-                location.State.Cleared = false;
+                location.Cleared = false;
             }
+
             itemService.ResetProgression();
+            UpdateAccessibility(locations, itemService.GetProgression(area));
+            Tracker.BossTracker.UpdateAccessibility();
+            Tracker.RewardTracker.UpdateAccessibility();
         });
     }
 
@@ -485,11 +480,6 @@ public class TrackerLocationService(ILogger<TrackerTreasureService> logger, Item
         }
     }
 
-    /// <summary>
-    /// Makes Tracker respond to a location if it was pre-configured by the user.
-    /// </summary>
-    /// <param name="location">The location at which an item was marked or tracked.</param>
-    /// <param name="marking"><see langword="true"/> if marking, <see langword="false"/> if tracking.</param>
     private void GivePreConfiguredLocationSass(Location location, bool marking = false)
     {
         // "What a surprise."
@@ -498,5 +488,29 @@ public class TrackerLocationService(ILogger<TrackerTreasureService> logger, Item
             // I guess we're not storing the other options? We could respond to those, too, if we had those here.
             Tracker.Say(x => marking ? x.LocationMarkedPreConfigured : x.TrackedPreConfigured, args: [location.Metadata.Name]);
         }
+    }
+
+    public void UpdateAccessibility(bool unclearedOnly = true, Progression? actualProgression = null, Progression? withKeysProgression = null)
+    {
+        actualProgression ??= itemService.GetProgression(false);
+        withKeysProgression ??= itemService.GetProgression(true);
+        UpdateAccessibility(worldService.AllLocations().Where(x => !unclearedOnly || !x.Cleared), actualProgression, withKeysProgression);
+    }
+
+    public void UpdateAccessibility(IEnumerable<Location> locations, Progression? actualProgression = null, Progression? withKeysProgression = null)
+    {
+        actualProgression ??= itemService.GetProgression(false);
+        withKeysProgression ??= itemService.GetProgression(true);
+        foreach (var location in locations)
+        {
+            UpdateAccessibility(location, actualProgression, withKeysProgression);
+        }
+    }
+
+    public void UpdateAccessibility(Location location, Progression? actualProgression = null, Progression? withKeysProgression = null)
+    {
+        actualProgression ??= itemService.GetProgression(false);
+        withKeysProgression ??= itemService.GetProgression(true);
+        location.UpdateAccessibility(actualProgression, withKeysProgression);
     }
 }

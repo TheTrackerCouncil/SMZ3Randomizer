@@ -162,6 +162,14 @@ public interface IItemService
     Progression GetProgression(IHasLocations area);
 
     /// <summary>
+    /// Retrieves the progression containing all of the tracked items, rewards, and bosses
+    /// for determining in logic locations
+    /// </summary>
+    /// <param name="location">The location being looked at to see if keys/keycards should be assumed or not</param>
+    /// <returns></returns>
+    Progression GetProgression(Location location);
+
+    /// <summary>
     /// Clears cached progression
     /// </summary>
     void ResetProgression();

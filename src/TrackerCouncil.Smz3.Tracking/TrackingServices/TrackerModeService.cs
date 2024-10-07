@@ -5,13 +5,19 @@ using TrackerCouncil.Smz3.Tracking.VoiceCommands;
 using BunLabs;
 namespace TrackerCouncil.Smz3.Tracking.TrackingServices;
 
-public class TrackerModeService : TrackerService, ITrackerModeService
+internal class TrackerModeService : TrackerService, ITrackerModeService
 {
+    public bool GoMode { get; set; }
+    public bool PegWorldMode { get; set; }
+    public bool ShaktoolMode { get; set; }
+    public int PegsPegged { get; set; }
+    
+    public event EventHandler<TrackerEventArgs>? ToggledPegWorldModeOn;
+    public event EventHandler<TrackerEventArgs>? ToggledShaktoolMode;
+    public event EventHandler<TrackerEventArgs>? PegPegged;
+    public event EventHandler<TrackerEventArgs>? GoModeToggledOn;
+    public event EventHandler<TrackerEventArgs>? GoModeToggledOff;
 
-    /// <summary>
-    /// Toggles Go Mode on.
-    /// </summary>
-    /// <param name="confidence">The speech recognition confidence.</param>
     public void ToggleGoMode(float? confidence = null)
     {
         Tracker.ShutUp();
@@ -38,11 +44,6 @@ public class TrackerModeService : TrackerService, ITrackerModeService
         });
     }
 
-
-    /// <summary>
-    /// Pegs a Peg World peg.
-    /// </summary>
-    /// <param name="confidence">The speech recognition confidence.</param>
     public void Peg(float? confidence = null)
     {
         if (!PegWorldMode)
@@ -90,10 +91,6 @@ public class TrackerModeService : TrackerService, ITrackerModeService
         }
     }
 
-    /// <summary>
-    /// Starts Peg World mode.
-    /// </summary>
-    /// <param name="confidence">The speech recognition confidence.</param>
     public void StartPegWorldMode(float? confidence = null)
     {
         Tracker.ShutUp();
@@ -107,10 +104,6 @@ public class TrackerModeService : TrackerService, ITrackerModeService
         });
     }
 
-    /// <summary>
-    /// Turns Peg World mode off.
-    /// </summary>
-    /// <param name="confidence">The speech recognition confidence.</param>
     public void StopPegWorldMode(float? confidence = null)
     {
         PegWorldMode = false;
@@ -123,10 +116,6 @@ public class TrackerModeService : TrackerService, ITrackerModeService
         });
     }
 
-    /// <summary>
-    /// Starts Peg World mode.
-    /// </summary>
-    /// <param name="confidence">The speech recognition confidence.</param>
     public void StartShaktoolMode(float? confidence = null)
     {
         ShaktoolMode = true;
@@ -138,10 +127,6 @@ public class TrackerModeService : TrackerService, ITrackerModeService
         });
     }
 
-    /// <summary>
-    /// Turns Peg World mode off.
-    /// </summary>
-    /// <param name="confidence">The speech recognition confidence.</param>
     public void StopShaktoolMode(float? confidence = null)
     {
         ShaktoolMode = false;
@@ -152,15 +137,4 @@ public class TrackerModeService : TrackerService, ITrackerModeService
             ToggledShaktoolMode?.Invoke(this, new TrackerEventArgs(confidence));
         });
     }
-
-
-    public bool GoMode { get; set; }
-    public bool PegWorldMode { get; set; }
-    public bool ShaktoolMode { get; set; }
-    public int PegsPegged { get; set; }
-    public event EventHandler<TrackerEventArgs>? ToggledPegWorldModeOn;
-    public event EventHandler<TrackerEventArgs>? ToggledShaktoolMode;
-    public event EventHandler<TrackerEventArgs>? PegPegged;
-    public event EventHandler<TrackerEventArgs>? GoModeToggledOn;
-    public event EventHandler<TrackerEventArgs>? GoModeToggledOff;
 }

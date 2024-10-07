@@ -151,12 +151,12 @@ public class TreasureTrackingModule : TrackerModule
         {
             var dungeon = (IHasReward)GetDungeonFromResult(TrackerBase, result);
             var reward = (RewardType)result.Semantics[RewardKey].Value;
-            TrackerBase.RewardTracker.SetDungeonReward(dungeon, reward, result.Confidence);
+            TrackerBase.RewardTracker.SetAreaReward(dungeon, reward, result.Confidence);
         });
 
         AddCommand("Mark remaining dungeons", GetMarkRemainingDungeonRewardsRule(), (result) =>
         {
-            TrackerBase.RewardTracker.SetUnmarkedDungeonReward(RewardType.CrystalBlue, result.Confidence);
+            TrackerBase.RewardTracker.SetUnmarkedRewards(RewardType.CrystalBlue, result.Confidence);
         });
 
         AddCommand("Mark dungeon as cleared", GetClearDungeonRule(), (result) =>

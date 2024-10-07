@@ -44,6 +44,7 @@ public class Smz3GeneratedRomLoader
 
         _randomizerContext.Entry(trackerState).Collection(x => x.LocationStates).Load();
         _randomizerContext.Entry(trackerState).Collection(x => x.ItemStates).Load();
+        _randomizerContext.Entry(trackerState).Collection(x => x.TreasureStates).Load();
         _randomizerContext.Entry(trackerState).Collection(x => x.BossStates).Load();
         _randomizerContext.Entry(trackerState).Collection(x => x.RewardStates).Load();
         _randomizerContext.Entry(trackerState).Collection(x => x.PrerequisiteStates).Load();

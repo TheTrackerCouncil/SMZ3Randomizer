@@ -211,7 +211,7 @@ public class LocationTrackingModule : TrackerModule
 
         AddCommand("Clear recent marked locations", GetClearViewedObjectRule(), (result) =>
         {
-            TrackerBase.ClearLastViewedObject(result.Confidence);
+            TrackerBase.GameStateTracker.ClearLastViewedObject(result.Confidence);
         });
     }
 }

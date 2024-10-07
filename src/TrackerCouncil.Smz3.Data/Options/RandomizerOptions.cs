@@ -59,12 +59,13 @@ public class RandomizerOptions : INotifyPropertyChanged
     [JsonIgnore, YamlIgnore]
     public string? FilePath { get; set; }
 
+    public string ApplicationVersion { get; set; }
+
     public bool IsAdvancedMode { get; set; }
 
     public double WindowWidth { get; set; } = 500d;
 
     public double WindowHeight { get; set; } = 600d;
-
     public string MultiplayerUrl { get; set; } = "";
 
     [YamlIgnore]

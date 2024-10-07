@@ -1,4 +1,5 @@
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
+using TrackerCouncil.Smz3.Data.Tracking;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Shared.Enums;
@@ -7,13 +8,25 @@ namespace TrackerCouncil.Smz3.Abstractions;
 
 public interface ITrackerLocationService
 {
+    public event EventHandler<LocationClearedEventArgs> LocationCleared;
+
+    public event EventHandler<LocationClearedEventArgs> LocationMarked;
+
     /// <summary>
     /// Clears an item from the specified location.
     /// </summary>
     /// <param name="location">The location to clear.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
     /// <param name="autoTracked">If this was tracked by the auto tracker</param>
-    void Clear(Location location, float? confidence = null, bool autoTracked = false, bool stateResponse = true, bool allowLocationComments = false);
+    void Clear(Location location, float? confidence = null, bool autoTracked = false, bool stateResponse = true, bool allowLocationComments = false, bool updateTreasureCount = true);
+
+    /// <summary>
+    /// Unclears an item from the specified location.
+    /// </summary>
+    /// <param name="location">The location to clear.</param>
+    /// <param name="confidence">The speech recognition confidence.</param>
+    /// <param name="autoTracked">If this was tracked by the auto tracker</param>
+    void Unclear(Location location, bool updateTreasureCount = true);
 
     /// <summary>
     /// Clears an item from the specified locations.
@@ -66,4 +79,10 @@ public interface ITrackerLocationService
     /// </param>
     public void ClearArea(IHasLocations area, bool trackItems, bool includeUnavailable = false,
         float? confidence = null, bool assumeKeys = false);
+
+    public void UpdateAccessibility(bool unclearedOnly = true, Progression? actualProgression = null, Progression? withKeysProgression = null);
+
+    public void UpdateAccessibility(IEnumerable<Location> locations, Progression? actualProgression = null, Progression? withKeysProgression = null);
+
+    public void UpdateAccessibility(Location location, Progression? actualProgression = null, Progression? withKeysProgression = null);
 }

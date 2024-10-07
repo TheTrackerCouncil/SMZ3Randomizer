@@ -24,11 +24,22 @@ public interface IHasLocations
 
     public IHasTreasure? GetTreasureRegion()
     {
-        return this switch
+        return Region as IHasTreasure;
+    }
+
+    public Region? Region => this switch
+    {
+        Room room => room.Region,
+        Region region => region,
+        _ => null
+    };
+
+    public bool IsKeysanityForArea
+    {
+        get
         {
-            Room room => room.Region as IHasTreasure,
-            Region region => region as IHasTreasure,
-            _ => null
-        };
+            if (Region is Z3Region && Region.Config.ZeldaKeysanity) return true;
+            return Region is SMRegion && Region.Config.MetroidKeysanity;
+        }
     }
 }

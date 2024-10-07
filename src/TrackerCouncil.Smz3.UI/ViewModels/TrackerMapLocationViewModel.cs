@@ -65,7 +65,7 @@ public class TrackerMapLocationViewModel : ViewModelBase
     public IHasBoss? BossRegion { get; set; }
     public string Name { get; set; }
     public List<TrackerMapSubLocationViewModel>? Locations { get; set; }
-    [Reactive] public bool IconVisibility { get; set; } = true;
+    public bool IconVisibility => HasImage && (IsInLogic || ShowOutOfLogic);
     [Reactive] public bool MarkedVisibility { get; set; } = true;
     [Reactive] public bool NumberVisibility { get; set; } = true;
     public int Size { get; set; } = 36;
@@ -80,4 +80,16 @@ public class TrackerMapLocationViewModel : ViewModelBase
     [Reactive]
     [ReactiveLinkedProperties(nameof(X), nameof(Y))]
     public Size Offset { get; set; }
+
+    [Reactive]
+    [ReactiveLinkedProperties(nameof(IconVisibility))]
+    public bool HasImage { get; set; }
+
+    [Reactive]
+    [ReactiveLinkedProperties(nameof(IconVisibility))]
+    public bool IsInLogic { get; set; } = true;
+
+    [Reactive]
+    [ReactiveLinkedProperties(nameof(IconVisibility))]
+    public bool ShowOutOfLogic { get; set; }
 }

@@ -19,31 +19,6 @@ public abstract class TrackerBase
     public event EventHandler<TrackerEventArgs>? SpeechRecognized;
 
     /// <summary>
-    /// Occurs when one or more items have been tracked.
-    /// </summary>
-    public event EventHandler<ItemTrackedEventArgs>? ItemTracked;
-
-    /// <summary>
-    /// Occurs when a location has been cleared.
-    /// </summary>
-    public event EventHandler<LocationClearedEventArgs>? LocationCleared;
-
-    /// <summary>
-    /// Occurs when the properties of a dungeon have changed.
-    /// </summary>
-    public event EventHandler<DungeonTrackedEventArgs>? DungeonUpdated;
-
-    /// <summary>
-    /// Occurs when the properties of a boss have changed.
-    /// </summary>
-    public event EventHandler<BossTrackedEventArgs>? BossUpdated;
-
-    /// <summary>
-    /// Occurs when the marked locations have changed
-    /// </summary>
-    public event EventHandler<TrackerEventArgs>? MarkedLocationsUpdated;
-
-    /// <summary>
     /// Occurs when the last action was undone.
     /// </summary>
     public event EventHandler<TrackerEventArgs>? ActionUndone;
@@ -52,36 +27,6 @@ public abstract class TrackerBase
     /// Occurs when the tracker state has been loaded.
     /// </summary>
     public event EventHandler? StateLoaded;
-
-    /// <summary>
-    /// Occurs when the map has been updated
-    /// </summary>
-    public event EventHandler? MapUpdated;
-
-    /// <summary>
-    /// Occurs when the map has been updated
-    /// </summary>
-    public event EventHandler<TrackerEventArgs>? BeatGame;
-
-    /// <summary>
-    /// Occurs when the map has died
-    /// </summary>
-    public event EventHandler<TrackerEventArgs>? PlayerDied;
-
-    /// <summary>
-    /// Occurs when the current played track number is updated
-    /// </summary>
-    public event EventHandler<TrackNumberEventArgs>? TrackNumberUpdated;
-
-    /// <summary>
-    /// Occurs when the current track has changed
-    /// </summary>
-    public event EventHandler<TrackChangedEventArgs>? TrackChanged;
-
-    /// <summary>
-    /// Occurs when a hint tile is viewed that is for a region, dungeon, or group of locations
-    /// </summary>
-    public event EventHandler<HintTileUpdatedEventArgs>? HintTileUpdated;
 
     /// <summary>
     /// Occurs when the voice recognition has been enabled or disabled
@@ -106,6 +51,8 @@ public abstract class TrackerBase
     public ITrackerPrerequisiteService PrerequisiteTracker { get; protected set; } = null!;
 
     public ITrackerModeService ModeTracker { get; protected set; } = null!;
+
+    public ITrackerGameStateService GameStateTracker { get; protected set; } = null!;
 
     /// <summary>
     /// Gets the world for the currently tracked playthrough.
@@ -164,21 +111,6 @@ public abstract class TrackerBase
     public string? RomPath { get; protected set; }
 
     /// <summary>
-    /// The region the player is currently in according to the Auto Tracker
-    /// </summary>
-    public Region? CurrentRegion { get; protected set; }
-
-    /// <summary>
-    /// The map to display for the player
-    /// </summary>
-    public string CurrentMap { get; protected set; } = "";
-
-    /// <summary>
-    /// The current track number being played
-    /// </summary>
-    public int CurrentTrackNumber { get; protected set; }
-
-    /// <summary>
     /// Gets a string describing tracker's mood.
     /// </summary>
     public string Mood { get; protected set; } = "";
@@ -219,16 +151,6 @@ public abstract class TrackerBase
     /// when asked about items or locations.
     /// </summary>
     public bool SpoilersEnabled { get; set; }
-
-    /// <summary>
-    /// Gets if the local player has beaten the game or not
-    /// </summary>
-    public bool HasBeatenGame { get; protected set; }
-
-    /// <summary>
-    /// The last viewed hint tile or set of locations
-    /// </summary>
-    public ViewedObject? LastViewedObject { get; set; }
 
     /// <summary>
     /// Attempts to replace a user name with a pronunciation-corrected
@@ -391,69 +313,6 @@ public abstract class TrackerBase
     public abstract void Error();
 
     /// <summary>
-    /// Updates the region that the player is in
-    /// </summary>
-    /// <param name="region">The region the player is in</param>
-    /// <param name="updateMap">Set to true to update the map for the player to match the region</param>
-    /// <param name="resetTime">If the time should be reset if this is the first region update</param>
-    public abstract void UpdateRegion(Region region, bool updateMap = false, bool resetTime = false);
-
-    /// <summary>
-    /// Updates the map to display for the user
-    /// </summary>
-    /// <param name="map">The name of the map</param>
-    public abstract void UpdateMap(string map);
-
-    /// <summary>
-    /// Called when the game is beaten by entering triforce room
-    /// or entering the ship after beating both bosses
-    /// </summary>
-    /// <param name="autoTracked">If this was triggered by the auto tracker</param>
-    public abstract void GameBeaten(bool autoTracked);
-
-    /// <summary>
-    /// Called when the player has died
-    /// </summary>
-    public abstract void TrackDeath(bool autoTracked);
-
-    /// <summary>
-    /// Updates the current track number being played
-    /// </summary>
-    /// <param name="number">The number of the track</param>
-    public abstract void UpdateTrackNumber(int number);
-
-    /// <summary>
-    /// Updates the current track being played
-    /// </summary>
-    /// <param name="msu">The current MSU pack</param>
-    /// <param name="track">The current track</param>
-    /// <param name="outputText">Formatted output text matching the requested style</param>
-    public abstract void UpdateTrack(Msu msu, Track track, string outputText);
-
-    /// <summary>
-    /// Marks a hint tile as viewed or cleared
-    /// </summary>
-    /// <param name="playerHintTile">Details about the hint for the player</param>
-    public abstract void UpdateHintTile(PlayerHintTile playerHintTile);
-
-    /// <summary>
-    /// Updates the most recently marked locations to be able to clear later
-    /// </summary>
-    /// <param name="locations">List of locations that were just marked</param>
-    public abstract void UpdateLastMarkedLocations(List<Location> locations);
-
-    /// <summary>
-    /// Clears the most recently marked locations
-    /// </summary>
-    /// <param name="confidence">Voice recognition confidence</param>
-    public abstract void ClearLastViewedObject(float confidence);
-
-    /// <summary>
-    /// Reports how many Hyper Beam shots were needed to defeat Mother Brain
-    /// </summary>
-    public abstract void CountHyperBeamShots(int count);
-
-    /// <summary>
     /// Resets the idle timers when tracker will comment on nothing happening
     /// </summary>
     public abstract void RestartIdleTimers();
@@ -467,6 +326,8 @@ public abstract class TrackerBase
     public abstract void AddUndo(Action undo);
 
     public abstract (Action Action, DateTime UndoTime) PopUndo();
+
+    public abstract void UpdateAllAccessibility(bool forceRefreshAll, params Item[] items);
 
     /// <summary>
     /// Formats a string so that it will be pronounced correctly by the
@@ -487,51 +348,6 @@ public abstract class TrackerBase
     }
 
     /// <summary>
-    /// Invokes the ItemTracked event
-    /// </summary>
-    /// <param name="args"></param>
-    protected virtual void OnItemTracked(ItemTrackedEventArgs args)
-    {
-        ItemTracked?.Invoke(this, args);
-    }
-
-    /// <summary>
-    /// Invokes the LocationCleared event
-    /// </summary>
-    /// <param name="args"></param>
-    protected virtual void OnLocationCleared(LocationClearedEventArgs args)
-    {
-        LocationCleared?.Invoke(this, args);
-    }
-
-    /// <summary>
-    /// Invokes the DungeonUpdated event
-    /// </summary>
-    /// <param name="args"></param>
-    protected virtual void OnDungeonUpdated(DungeonTrackedEventArgs args)
-    {
-        DungeonUpdated?.Invoke(this, args);
-    }
-
-    /// <summary>
-    /// Invokes the BossUpdated event
-    /// </summary>
-    /// <param name="args"></param>
-    protected virtual void OnBossUpdated(BossTrackedEventArgs args)
-    {
-        BossUpdated?.Invoke(this, args);
-    }
-
-    /// <summary>
-    /// Invokes the MarkedLocationsUpdated event
-    /// </summary>
-    /// <param name="args"></param>
-    protected virtual void OnMarkedLocationsUpdated(TrackerEventArgs args)
-    {
-        MarkedLocationsUpdated?.Invoke(this, args);
-    }
-
-    /// <summary>
     /// Invokes the ActionUndone event
     /// </summary>
     /// <param name="args"></param>
@@ -546,59 +362,6 @@ public abstract class TrackerBase
     protected virtual void OnStateLoaded()
     {
         StateLoaded?.Invoke(this, EventArgs.Empty);
-    }
-
-    /// <summary>
-    /// Invokes the MapUpdated event
-    /// </summary>
-    protected virtual void OnMapUpdated()
-    {
-        MapUpdated?.Invoke(this, EventArgs.Empty);
-    }
-
-    /// <summary>
-    /// Invokes the BeatGame event
-    /// </summary>
-    /// <param name="args"></param>
-    protected virtual void OnBeatGame(TrackerEventArgs args)
-    {
-        BeatGame?.Invoke(this, args);
-    }
-
-    /// <summary>
-    /// Invokes the PlayerDied event
-    /// </summary>
-    /// <param name="args"></param>
-    protected virtual void OnPlayerDied(TrackerEventArgs args)
-    {
-        PlayerDied?.Invoke(this, args);
-    }
-
-    /// <summary>
-    /// Invokes the TrackNumberUpdated event
-    /// </summary>
-    /// <param name="args"></param>
-    protected virtual void OnTrackNumberUpdated(TrackNumberEventArgs args)
-    {
-        TrackNumberUpdated?.Invoke(this, args);
-    }
-
-    /// <summary>
-    /// Invokes the TrackChanged event
-    /// </summary>
-    /// <param name="args"></param>
-    protected virtual void OnTrackChanged(TrackChangedEventArgs args)
-    {
-        TrackChanged?.Invoke(this, args);
-    }
-
-    /// <summary>
-    /// Invokes the HintTileUpdated event
-    /// </summary>
-    /// <param name="args"></param>
-    protected virtual void OnHintTileUpdated(HintTileUpdatedEventArgs args)
-    {
-        HintTileUpdated?.Invoke(this, args);
     }
 
     /// <summary>

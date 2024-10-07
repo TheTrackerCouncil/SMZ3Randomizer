@@ -100,7 +100,7 @@ public class FinalBossCheck(TrackerBase tracker, ISnesConnectorService snesConne
                 }
 
                 Logger.LogInformation("Counted {Count} Hyper Beam shot(s) for {Health} health", count, health);
-                Tracker.CountHyperBeamShots(count);
+                Tracker.Say(responses: Tracker.Responses.CountHyperBeamShots, tieredKey: count, args: [count]);
             }
         }
         catch (Exception e)

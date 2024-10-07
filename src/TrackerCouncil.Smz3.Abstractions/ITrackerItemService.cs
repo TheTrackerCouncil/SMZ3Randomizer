@@ -1,3 +1,4 @@
+using TrackerCouncil.Smz3.Data.Tracking;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 
@@ -5,6 +6,8 @@ namespace TrackerCouncil.Smz3.Abstractions;
 
 public interface ITrackerItemService
 {
+    public event EventHandler<ItemTrackedEventArgs>? ItemTracked;
+
     /// <summary>
     /// Tracks the specifies item.
     /// </summary>

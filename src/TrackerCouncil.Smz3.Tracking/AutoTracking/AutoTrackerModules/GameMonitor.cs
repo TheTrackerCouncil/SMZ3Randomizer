@@ -81,7 +81,7 @@ public class GameMonitor(TrackerBase tracker, ISnesConnectorService snesConnecto
         else if (value == 0x11)
         {
             game = Game.Credits;
-            Tracker.UpdateTrackNumber(99);
+            Tracker.GameStateTracker.UpdateTrackNumber(99);
         }
 
         if (game != AutoTracker.CurrentGame)

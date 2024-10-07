@@ -158,7 +158,7 @@ public class ViewedMap : IZeldaStateCheck
 
             if (region.HasCorrectlyMarkedReward) continue;
             rewards.Add(region.RewardType);
-            _tracker!.RewardTracker.SetDungeonReward(region, region.RewardType);
+            _tracker!.RewardTracker.SetAreaReward(region, region.RewardType);
         }
 
         return rewards;

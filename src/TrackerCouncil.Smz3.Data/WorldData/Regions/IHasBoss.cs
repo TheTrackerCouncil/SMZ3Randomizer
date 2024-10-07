@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
+using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Models;
 
@@ -28,10 +30,23 @@ public interface IHasBoss
 
     LocationId? BossLocationId { get; }
 
+    Region Region => (Region)this;
+
     public bool BossDefeated
     {
-        get => BossState.Defeated;
-        set => BossState.Defeated = value;
+        get => Boss.Defeated;
+        set => Boss.Defeated = value;
+    }
+
+    public Accessibility BossAccessibility
+    {
+        get => Boss.Accessibility;
+        set => Boss.Accessibility = value;
+    }
+
+    public Accessibility GetKeysanityAdjustedBossAccessibility()
+    {
+        return Region.GetKeysanityAdjustedAccessibility(BossAccessibility);
     }
 
     public void SetBossType(BossType bossType)

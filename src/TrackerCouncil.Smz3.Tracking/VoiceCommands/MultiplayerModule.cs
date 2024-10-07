@@ -35,11 +35,11 @@ public class MultiplayerModule : TrackerModule
 
         if (TrackerBase.Rom is { MultiplayerGameDetails: null }) return;
 
-        TrackerBase.LocationCleared += TrackerOnLocationCleared;
-        TrackerBase.BossUpdated += TrackerOnBossUpdated;
-        TrackerBase.ItemTracked += TrackerOnItemTracked;
-        TrackerBase.BeatGame += TrackerOnBeatGame;
-        TrackerBase.PlayerDied += TrackerOnPlayerDied;
+        TrackerBase.LocationTracker.LocationCleared += TrackerOnLocationCleared;
+        TrackerBase.BossTracker.BossUpdated += TrackerOnBossUpdated;
+        TrackerBase.ItemTracker.ItemTracked += TrackerOnItemTracked;
+        TrackerBase.GameStateTracker.BeatGame += TrackerOnBeatGame;
+        TrackerBase.GameStateTracker.PlayerDied += TrackerOnPlayerDied;
         autoTrackerBase.AutoTrackerConnected += AutoTrackerOnAutoTrackerConnected;
 
         _multiplayerGameService.PlayerTrackedLocation += PlayerTrackedLocation;

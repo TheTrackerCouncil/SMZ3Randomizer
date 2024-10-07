@@ -37,8 +37,6 @@ public class WreckedShip : SMRegion, IHasBoss, IHasReward
 
     public LocationId? BossLocationId => LocationId.WreckedShipWestSuper;
 
-    public TrackerBossState BossState { get; set; } = null!;
-
     public Reward Reward { get; set; } = null!;
 
     public RewardType DefaultRewardType => RewardType.MetroidBoss;

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.Services;
@@ -13,6 +14,8 @@ namespace TrackerCouncil.Smz3.Data.WorldData;
 /// </summary>
 public class Boss
 {
+    private Accessibility _accessibility;
+
     /// <summary>
     /// Constructor
     /// </summary>
@@ -60,7 +63,11 @@ public class Boss
     public bool Defeated
     {
         get => State.Defeated;
-        set => State.Defeated = value;
+        set
+        {
+            State.Defeated = value;
+            UpdatedBossState?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     public bool AutoTracked
@@ -68,6 +75,45 @@ public class Boss
         get => State.AutoTracked;
         set => State.AutoTracked = value;
     }
+
+    public Accessibility Accessibility
+    {
+        get => _accessibility;
+        set
+        {
+            if (_accessibility == value) return;
+            _accessibility = value;
+            UpdatedAccessibility?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    public void UpdateAccessibility(Progression actualProgression, Progression withKeysProgression)
+    {
+        if (Defeated)
+        {
+            Accessibility = Accessibility.Cleared;
+        }
+        else if (Region == null)
+        {
+            Accessibility = Accessibility.Unknown;
+        }
+        else if (Region.CanBeatBoss(actualProgression))
+        {
+            Accessibility = Accessibility.Available;
+        }
+        else if (Region.CanBeatBoss(withKeysProgression))
+        {
+            Accessibility = Accessibility.AvailableWithKeys;
+        }
+        else
+        {
+            Accessibility = Accessibility.OutOfLogic;
+        }
+    }
+
+    public event EventHandler? UpdatedBossState;
+
+    public event EventHandler? UpdatedAccessibility;
 
     /// <summary>
     /// Determines if an item matches the type or name

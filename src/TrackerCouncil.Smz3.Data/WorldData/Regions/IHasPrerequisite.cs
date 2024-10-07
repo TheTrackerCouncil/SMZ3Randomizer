@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Models;
@@ -32,7 +33,16 @@ public interface IHasPrerequisite
     ItemType? MarkedItem
     {
         get => PrerequisiteState.MarkedItem;
-        set => PrerequisiteState.MarkedItem = value;
+        set
+        {
+            if (PrerequisiteState.MarkedItem == value)
+            {
+                return;
+            }
+
+            PrerequisiteState.MarkedItem = value;
+            OnUpdatedPrerequisite();
+        }
     }
 
     /// <summary>
@@ -66,4 +76,8 @@ public interface IHasPrerequisite
             RequiredItem = PrerequisiteState?.RequiredItem ?? DefaultRequiredItem;
         }
     }
+
+    event EventHandler? UpdatedPrerequisite;
+
+    void OnUpdatedPrerequisite();
 }

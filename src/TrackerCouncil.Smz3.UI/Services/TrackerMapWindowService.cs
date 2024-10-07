@@ -11,7 +11,6 @@ using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
-using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Tracking.Services;
@@ -38,252 +37,224 @@ public class TrackerMapWindowService(
         _markedImageGoodPath = Path.Combine(Sprite.SpritePath, "Maps", "marked_good.png");
         _markedImageUselessPath = Path.Combine(Sprite.SpritePath, "Maps", "marked_useless.png");
 
-        var locations = worldAccessor.World.Locations.ToList();
+        var allLocations = worldAccessor.World.Locations.ToList();
 
         // To make querying easier for the viewmodel, compile a list of all
         // locations on each map by combining all of their regions, making
-        // any location adjusments needed
+        // any location adjustments needed
         foreach (var map in _model.Maps)
         {
             var locationModels = new List<TrackerMapLocationViewModel>();
 
             foreach (var mapRegion in map.Regions)
             {
-                var configRegion = trackerMapConfig.Regions.First(region => mapRegion.Name == region.Name);
-                var worldRegion = worldService.Region(configRegion.TypeName) ?? throw new InvalidOperationException();
-
-                var regionLocations = locations.Where(loc => configRegion.TypeName == loc.Region.GetType().FullName).ToList();
-
-                if (configRegion.Rooms != null)
+                if (mapRegion.Type == TrackerMapLocation.MapLocationType.Item)
                 {
-                    locationModels.AddRange(configRegion.Rooms.Select(room =>
-                        new TrackerMapLocationViewModel(configRegion,
-                            mapRegion, room, worldRegion,
-                            regionLocations.Where(loc => room.Name == loc.Name ||
-                                                         room.Name == loc.Room?.Name ||
-                                                         configRegion.Name == room.Name).ToList())));
+                    locationModels.AddRange(GetItemLocationModels(mapRegion, allLocations));
                 }
-
-                if (configRegion is { BossX: not null, BossY: not null })
+                else if (mapRegion.Type == TrackerMapLocation.MapLocationType.Boss)
                 {
-                    locationModels.Add(new TrackerMapLocationViewModel(configRegion, mapRegion, worldRegion));
+                    locationModels.Add(GetBossLocationModel(mapRegion));
                 }
-
-                if (configRegion.Doors != null)
+                else if (mapRegion.Type == TrackerMapLocation.MapLocationType.SMDoor)
                 {
-                    locationModels.AddRange(configRegion.Doors.Select(door =>
-                        new TrackerMapLocationViewModel(configRegion, mapRegion, worldRegion, door)).ToList());
+                    locationModels.AddRange(GetDoorLocationModels(mapRegion));
                 }
             }
 
             _mapLocations[map] = locationModels;
         }
 
-        tracker.LocationCleared += (_, _) => UpdateLocations();
-        tracker.DungeonUpdated += (_, _) => UpdateLocations();
-        tracker.ItemTracked += (_, _) => UpdateLocations();
-        tracker.ActionUndone += (_, _) => UpdateLocations();
-        tracker.StateLoaded += (_, _) => UpdateLocations();
-        tracker.BossUpdated += (_, _) => UpdateLocations();
-        tracker.MapUpdated += TrackerOnMapUpdated;
-        tracker.MarkedLocationsUpdated += (_, _) => UpdateLocations();
+        tracker.GameStateTracker.MapUpdated += TrackerOnMapUpdated;
 
         _model.SelectedMap = _model.Maps.Last();
         UpdateMap();
         return _model;
     }
 
-    private void TrackerOnMapUpdated(object? sender, EventArgs e)
+    private List<TrackerMapLocationViewModel> GetItemLocationModels(TrackerMapLocation mapRegion, List<Location> allLocations)
     {
-        if (_model.SelectedMap?.ToString() == tracker.CurrentMap)
+        var configRegion = trackerMapConfig.Regions.First(region => mapRegion.Name == region.Name);
+        var worldRegion = worldService.Region(configRegion.TypeName) ?? throw new InvalidOperationException();
+        var regionLocations = allLocations.Where(loc => configRegion.TypeName == loc.Region.GetType().FullName).ToList();
+        var toReturn = new List<TrackerMapLocationViewModel>();
+
+        foreach (var room in configRegion.Rooms!)
         {
-            return;
+            var roomLocations = regionLocations.Where(loc =>
+                room.Name == loc.Name || room.Name == loc.Room?.Name || configRegion.Name == room.Name).ToList();
+
+            var roomModel = new TrackerMapLocationViewModel(configRegion, mapRegion, room, worldRegion, roomLocations);
+
+            foreach (var location in roomLocations)
+            {
+                location.AccessibilityUpdated += (_, _) => UpdateItemLocationModel(roomModel);
+            }
+
+            UpdateItemLocationModel(roomModel);
+
+            toReturn.Add(roomModel);
         }
 
-        _model.Locations = [];
-        var newMap = _model.Maps.FirstOrDefault(x => x.ToString() == tracker.CurrentMap);
-        if (newMap != null)
-        {
-            _model.SelectedMap = newMap;
-            UpdateMap();
-        }
+        return toReturn;
     }
 
-    public void UpdateLocations(List<TrackerMapLocationViewModel>? locations = null)
+    private void UpdateItemLocationModel(TrackerMapLocationViewModel model)
     {
-        if (_model.SelectedMap == null)
-        {
-            return;
-        }
-
-        locations ??= _model.Locations;
-
-        if (locations.Count == 0)
-        {
-            return;
-        }
-
-        var world = locations.First().Region.World;
-        var hintTileLocations = world.ActiveHintTileLocations.ToList();
-
-        foreach (var location in locations)
-        {
-            UpdateLocationModel(location, world, hintTileLocations);
-        }
-    }
-
-    private void UpdateLocationModel(TrackerMapLocationViewModel location, World world, List<LocationId> hintTileLocations)
-    {
-        var region = location.Region;
+        var region = model.Region;
         var image = "";
         var displayNumber = 0;
-        if (location.Type == TrackerMapLocation.MapLocationType.Item)
+
+        var locationStatuses = region.Locations
+            .Select(x => (Location: x, Status: x.GetKeysanityAdjustedAccessibility())).ToList();
+
+        var clearableLocationsCount = displayNumber = locationStatuses.Count(x => x.Status == Accessibility.Available);
+        var relevantLocationsCount = locationStatuses.Count(x => x.Status == Accessibility.Relevant);
+        var outOfLogicLocationsCount = _model.ShowOutOfLogicLocations ? locationStatuses.Count(x => x.Status == Accessibility.OutOfLogic) : 0;
+        var unclearedLocationsCount = locationStatuses.Count(x => x.Status != Accessibility.Cleared);
+
+        if (clearableLocationsCount > 0 && clearableLocationsCount == unclearedLocationsCount)
         {
-            var progression = itemService.GetProgression(!(region is HyruleCastle || region.World.Config.KeysanityForRegion(region)));
-            var locationStatuses = location.Locations!.Select(x => (Location: x.Location, Status: x.Location.GetStatus(progression))).ToList();
+            model.IsInLogic = true;
+            image = "accessible.png";
+        }
+        else if (relevantLocationsCount > 0 && relevantLocationsCount + clearableLocationsCount == unclearedLocationsCount)
+        {
+            model.IsInLogic = true;
+            image = "relevant.png";
+        }
+        else if (relevantLocationsCount > 0 && clearableLocationsCount == 0)
+        {
+            model.IsInLogic = true;
+            image = "partial_relevance.png";
+        }
+        else if (clearableLocationsCount > 0 && clearableLocationsCount < unclearedLocationsCount)
+        {
+            model.IsInLogic = true;
+            image = "partial.png";
+        }
+        else if (clearableLocationsCount == 0 && outOfLogicLocationsCount > 0)
+        {
+            model.IsInLogic = false;
+            image = "outoflogic.png";
+        }
 
-            var clearableLocationsCount = displayNumber = locationStatuses.Count(x => x.Status == LocationStatus.Available);
-            var relevantLocationsCount = locationStatuses.Count(x => x.Status == LocationStatus.Relevant);
-            var outOfLogicLocationsCount = _model.ShowOutOfLogicLocations ? locationStatuses.Count(x => x.Status == LocationStatus.OutOfLogic) : 0;
-            var unclearedLocationsCount = locationStatuses.Count(x => x.Status != LocationStatus.Cleared);
+        // If there are any valid locations, see if anything was marked
+        if (clearableLocationsCount > 0 || relevantLocationsCount > 0)
+        {
+            var usefulness = locationStatuses
+                .Where(x => x.Status is Accessibility.Available or Accessibility.Relevant)
+                .Max(x => x.Location.MarkedUsefulness);
 
-            if (clearableLocationsCount > 0 && clearableLocationsCount == unclearedLocationsCount)
+            if (usefulness is null)
             {
-                image = "accessible.png";
+                model.MarkedVisibility = false;
             }
-            else if (relevantLocationsCount > 0 && relevantLocationsCount + clearableLocationsCount == unclearedLocationsCount)
+            else if (usefulness == LocationUsefulness.Useless)
             {
-                image = "relevant.png";
-            }
-            else if (relevantLocationsCount > 0 && clearableLocationsCount == 0)
-            {
-                image = "partial_relevance.png";
-            }
-            else if (clearableLocationsCount > 0 && clearableLocationsCount < unclearedLocationsCount)
-            {
-                image = "partial.png";
-            }
-            else if (clearableLocationsCount == 0 && outOfLogicLocationsCount > 0)
-            {
-                image = "outoflogic.png";
-            }
-
-            // If there are any valid locations, see if anything was marked
-            if (clearableLocationsCount > 0 || relevantLocationsCount > 0)
-            {
-                var markedLocations = locationStatuses
-                    .Where(x => x.Status is LocationStatus.Available or LocationStatus.Relevant &&
-                                hintTileLocations.Contains(x.Location.Id)).ToList();
-
-                if (markedLocations.Any())
-                {
-                    var activeLocationIds = markedLocations.Select(x => x.Location.Id);
-                    var hintTile = world.HintTiles.FirstOrDefault(x => x.Locations?.Intersect(activeLocationIds).Any() == true);
-                    if (hintTile?.Usefulness is LocationUsefulness.Mandatory or LocationUsefulness.Sword
-                        or LocationUsefulness.NiceToHave)
-                    {
-                        location.MarkedImagePath = _markedImageGoodPath;
-                    }
-                    else if (hintTile?.Usefulness == LocationUsefulness.Useless)
-                    {
-                        location.MarkedImagePath = _markedImageUselessPath;
-                    }
-                    else if (markedLocations.Any(x => x.Location.Item.Type.IsPossibleProgression(x.Location.World.Config.ZeldaKeysanity, x.Location.World.Config.MetroidKeysanity)))
-                    {
-                        location.MarkedImagePath = _markedImageGoodPath;
-                    }
-                    else
-                    {
-                        location.MarkedImagePath = _markedImageUselessPath;
-                    }
-
-                    location.MarkedVisibility = true;
-                }
-                // For marked items, we compare the marked items at the locations
-                else
-                {
-                    markedLocations = locationStatuses
-                        .Where(x => x.Status is LocationStatus.Available or LocationStatus.Relevant &&
-                                    x.Location.State.MarkedItem != null).ToList();
-
-                    if (markedLocations.Any())
-                    {
-                        if (markedLocations.Any(x => x.Location.State.MarkedItem!.Value.IsPossibleProgression(x.Location.World.Config.ZeldaKeysanity, x.Location.World.Config.MetroidKeysanity)))
-                        {
-                            location.MarkedImagePath = _markedImageGoodPath;
-                        }
-                        else
-                        {
-                            location.MarkedImagePath = _markedImageUselessPath;
-                        }
-
-                        location.MarkedVisibility = true;
-                    }
-                    else
-                    {
-                        location.MarkedVisibility = false;
-                    }
-                }
+                model.MarkedImagePath = _markedImageUselessPath;
+                model.MarkedVisibility = true;
             }
             else
             {
-                location.MarkedVisibility = false;
+                model.MarkedImagePath = _markedImageGoodPath;
+                model.MarkedVisibility = true;
             }
-
-        }
-        else if (location.Type == TrackerMapLocation.MapLocationType.Boss)
-        {
-            var progression = itemService.GetProgression(region);
-            var actualProgression = itemService.GetProgression(false);
-            if (location.BossRegion is { BossDefeated: false } && location.BossRegion.CanBeatBoss(progression))
-            {
-                image = "boss.png";
-            }
-            else if (location.RewardRegion is { HasReceivedReward: false })
-            {
-                var regionLocations = (IHasLocations)location.Region;
-
-                // If the player can complete the region with the current actual progression
-                // or if they can access all locations in the dungeon (unless this is Castle Tower
-                // in Keysanity because it doesn't have a location for Aga himself)
-                if (location.RewardRegion.CanRetrieveReward(actualProgression)
-                    || (regionLocations.Locations.All(x => x.IsAvailable(progression, true))
-                        && !(location.Region.Config.ZeldaKeysanity && location.RewardRegion is CastleTower)))
-                {
-                    var dungeon = (IHasReward)location.Region;
-                    image = dungeon.MarkedReward.GetDescription().ToLowerInvariant() + ".png";
-                }
-            }
-        }
-        else if (location.Type == TrackerMapLocation.MapLocationType.SMDoor && world.Config.MetroidKeysanity)
-        {
-            var item = itemService.FirstOrDefault(location.Name);
-            if (item?.State.TrackingState > 0)
-            {
-                image = "";
-            }
-            else if (item?.Type.IsInCategory(ItemCategory.KeycardL1) == true)
-            {
-                image = "door1.png";
-            }
-            else if (item?.Type.IsInCategory(ItemCategory.KeycardL2) == true)
-            {
-                image = "door2.png";
-            }
-            else if (item?.Type.IsInCategory(ItemCategory.KeycardBoss) == true)
-            {
-                image = "doorb.png";
-            }
-        }
-
-        if (!string.IsNullOrEmpty(image))
-        {
-            location.ImagePath = Path.Combine(Sprite.SpritePath, "Maps", image);
-            location.IconVisibility = true;
         }
         else
         {
-            location.IconVisibility = false;
+            model.MarkedVisibility = false;
+        }
+
+        UpdateLocationModel(model, image, displayNumber);
+    }
+
+    private TrackerMapLocationViewModel GetBossLocationModel(TrackerMapLocation mapRegion)
+    {
+        var configRegion = trackerMapConfig.Regions.First(region => mapRegion.Name == region.Name);
+        var worldRegion = worldService.Region(configRegion.TypeName) ?? throw new InvalidOperationException();
+        if (worldRegion is not IHasBoss bossRegion) throw new InvalidOperationException();
+        var model = new TrackerMapLocationViewModel(configRegion, mapRegion, worldRegion);
+        bossRegion.Boss.UpdatedAccessibility += (_, _) => UpdateBossLocationModel(model);
+        UpdateBossLocationModel(model);
+        return model;
+    }
+
+    private void UpdateBossLocationModel(TrackerMapLocationViewModel location)
+    {
+        var image = "";
+
+        if (location.RewardRegion is { HasReceivedReward: false } rewardRegion && rewardRegion.GetKeysanityAdjustedBossAccessibility() == Accessibility.Available)
+        {
+            image = rewardRegion.MarkedReward.GetDescription().ToLowerInvariant() + ".png";
+            location.IsInLogic = true;
+        }
+        /*else if (location.BossRegion is { BossDefeated: false } && location.BossRegion.GetKeysanityAdjustedBossAccessibility() == Accessibility.Available)
+        {
+            image = "boss.png";
+            location.IsInLogic = true;
+        }*/
+        else
+        {
+            location.IsInLogic = false;
+        }
+
+        UpdateLocationModel(location, image);
+    }
+
+    private List<TrackerMapLocationViewModel> GetDoorLocationModels(TrackerMapLocation mapRegion)
+    {
+        var configRegion = trackerMapConfig.Regions.First(region => mapRegion.Name == region.Name);
+        var doors = configRegion.Doors ?? throw new InvalidOperationException();
+        var worldRegion = worldService.Region(configRegion.TypeName) ?? throw new InvalidOperationException();
+        var toReturn = new List<TrackerMapLocationViewModel>();
+
+        foreach (var door in doors)
+        {
+            var model = new TrackerMapLocationViewModel(configRegion, mapRegion, worldRegion, door);
+            var item = itemService.FirstOrDefault(door.Item) ?? throw new InvalidOperationException();
+            item.UpdatedItemState += (_, _) => UpdateDoorLocationModel(model, item);
+            toReturn.Add(model);
+            UpdateDoorLocationModel(model, item);
+        }
+
+        return toReturn;
+    }
+
+    private void UpdateDoorLocationModel(TrackerMapLocationViewModel location, Item? item)
+    {
+        var image = "";
+        item ??= itemService.FirstOrDefault(location.Name);
+        if (item?.TrackingState > 0)
+        {
+            image = "";
+        }
+        else if (item?.Type.IsInCategory(ItemCategory.KeycardL1) == true)
+        {
+            image = "door1.png";
+        }
+        else if (item?.Type.IsInCategory(ItemCategory.KeycardL2) == true)
+        {
+            image = "door2.png";
+        }
+        else if (item?.Type.IsInCategory(ItemCategory.KeycardBoss) == true)
+        {
+            image = "doorb.png";
+        }
+
+        UpdateLocationModel(location, image);
+    }
+
+    private void UpdateLocationModel(TrackerMapLocationViewModel location, string image, int displayNumber = 0)
+    {
+        if (!string.IsNullOrEmpty(image))
+        {
+            location.ImagePath = Path.Combine(Sprite.SpritePath, "Maps", image);
+            location.HasImage = true;
+        }
+        else
+        {
+            location.HasImage = false;
         }
 
         if (displayNumber > 1)
@@ -298,6 +269,30 @@ public class TrackerMapWindowService(
         }
     }
 
+    private void TrackerOnMapUpdated(object? sender, EventArgs e)
+    {
+        if (_model.SelectedMap?.ToString() == tracker.GameStateTracker.CurrentMap)
+        {
+            return;
+        }
+
+        _model.Locations = [];
+        var newMap = _model.Maps.FirstOrDefault(x => x.ToString() == tracker.GameStateTracker.CurrentMap);
+        if (newMap != null)
+        {
+            _model.SelectedMap = newMap;
+            UpdateMap();
+        }
+    }
+
+    public void UpdateOutOfLogic()
+    {
+        foreach (var location in _mapLocations.Values.SelectMany(x => x))
+        {
+            location.ShowOutOfLogic = _model.ShowOutOfLogicLocations;
+        }
+    }
+
     public void UpdateMap()
     {
         var selectedMap = _model.SelectedMap;
@@ -307,7 +302,6 @@ public class TrackerMapWindowService(
         }
 
         var locations = _mapLocations[selectedMap];
-        UpdateLocations(locations);
         UpdateSize(_model.GridSize, locations);
         _model.Locations = locations;
     }
@@ -350,7 +344,7 @@ public class TrackerMapWindowService(
     {
         if (model.Type == TrackerMapLocation.MapLocationType.Item)
         {
-            model.Locations?.Where(x => x.Location.State.Cleared == false)
+            model.Locations?.Where(x => x.Location.Cleared == false)
                 .ToList()
                 .ForEach(x => tracker.LocationTracker.Clear(x.Location));
         }

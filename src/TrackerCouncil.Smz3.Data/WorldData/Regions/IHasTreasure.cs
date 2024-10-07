@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Shared.Enums;
@@ -39,7 +40,11 @@ public interface IHasTreasure
     public int RemainingTreasure
     {
         get => TreasureState.RemainingTreasure;
-        set => TreasureState.RemainingTreasure = value;
+        set
+        {
+            TreasureState.RemainingTreasure = value;
+            OnUpdatedTreasure();
+        }
     }
 
     /// <summary>
@@ -70,4 +75,8 @@ public interface IHasTreasure
                 x.WorldId == region.World.Id && x.RegionName == GetType().Name);
         }
     }
+
+    event EventHandler? UpdatedTreasure;
+
+    void OnUpdatedTreasure();
 }

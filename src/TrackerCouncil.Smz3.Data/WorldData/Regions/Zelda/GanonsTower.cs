@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
@@ -124,9 +125,11 @@ public class GanonsTower : Z3Region, IHasTreasure, IHasBoss
 
     public BossType DefaultBossType => BossType.Ganon;
 
-    public TrackerBossState BossState { get; set; } = null!;
-
     public TrackerTreasureState TreasureState { get; set; } = null!;
+
+    public event EventHandler? UpdatedTreasure;
+
+    public void OnUpdatedTreasure() => UpdatedTreasure?.Invoke(this, EventArgs.Empty);
 
     public Boss Boss { get; set; } = null!;
 

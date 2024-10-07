@@ -6,7 +6,7 @@ using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.Tracking.TrackingServices;
 
-public class TrackerPrerequisiteService() : TrackerService, ITrackerPrerequisiteService
+internal class TrackerPrerequisiteService() : TrackerService, ITrackerPrerequisiteService
 {
     public void SetDungeonRequirement(IHasPrerequisite region, ItemType? medallion = null, float? confidence = null, bool autoTracked = false)
     {
@@ -38,7 +38,7 @@ public class TrackerPrerequisiteService() : TrackerService, ITrackerPrerequisite
             Tracker.Say(response: Responses.DungeonRequirementMarked, args: [medallion.ToString(), region.Metadata.Name]);
         }
 
-        AddUndo(() =>
+        AddUndo(autoTracked, () =>
         {
             region.MarkedItem = originalRequirement;
         });

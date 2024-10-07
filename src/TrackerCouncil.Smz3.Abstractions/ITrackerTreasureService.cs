@@ -27,8 +27,12 @@ public interface ITrackerTreasureService
     bool TrackDungeonTreasure(IHasTreasure region, float? confidence = null, int amount = 1,
         bool autoTracked = false, bool stateResponse = true);
 
+    public bool UntrackDungeonTreasure(IHasTreasure region, int amount = 1);
+
     Action? TryTrackDungeonTreasure(Location location, float? confidence, bool autoTracked = false,
         bool stateResponse = true);
+
+    public Action? TryUntrackDungeonTreasure(Location location);
 
     /// <summary>
     /// Marks all locations and treasure within a dungeon as cleared.

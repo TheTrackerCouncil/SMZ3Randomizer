@@ -55,7 +55,7 @@ public class MetroidDeath : IMetroidStateCheck
             tracker.Say(response: region.Metadata.WhenDiedInRoom[currentState.CurrentRoomInRegion.Value], once: true);
         }
 
-        tracker.TrackDeath(true);
+        tracker.GameStateTracker.TrackDeath(true);
 
         var death = Items.FirstOrDefault("Death");
         if (death is not null)

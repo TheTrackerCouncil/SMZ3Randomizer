@@ -26,20 +26,20 @@ public class ZeldaDeath(IItemService itemService) : IZeldaStateCheck
         var silent = tracker.GameService!.PlayerRecentlyKilled;
 
         // Say specific message for dying in the particular screen/room the player is in
-        if (!silent && tracker.CurrentRegion?.Metadata is { WhenDiedInRoom: not null })
+        if (!silent && tracker.GameStateTracker.CurrentRegion?.Metadata is { WhenDiedInRoom: not null })
         {
-            var region = tracker.CurrentRegion as Z3Region;
-            if (region is { IsOverworld: true } && prevState.OverworldScreen != null && tracker.CurrentRegion?.Metadata.WhenDiedInRoom?.TryGetValue(prevState.OverworldScreen.Value, out var locationResponse) == true)
+            var region = tracker.GameStateTracker.CurrentRegion as Z3Region;
+            if (region is { IsOverworld: true } && prevState.OverworldScreen != null && tracker.GameStateTracker.CurrentRegion?.Metadata.WhenDiedInRoom?.TryGetValue(prevState.OverworldScreen.Value, out var locationResponse) == true)
             {
                 tracker.Say(response: locationResponse);
             }
-            else if (region is { IsOverworld: false } && prevState.CurrentRoom != null && tracker.CurrentRegion?.Metadata.WhenDiedInRoom?.TryGetValue(prevState.CurrentRoom.Value, out locationResponse) == true)
+            else if (region is { IsOverworld: false } && prevState.CurrentRoom != null && tracker.GameStateTracker.CurrentRegion?.Metadata.WhenDiedInRoom?.TryGetValue(prevState.CurrentRoom.Value, out locationResponse) == true)
             {
                 tracker.Say(response: locationResponse);
             }
         }
 
-        tracker.TrackDeath(true);
+        tracker.GameStateTracker.TrackDeath(true);
 
         var death = Items.FirstOrDefault("Death");
         if (death is not null)

@@ -34,8 +34,6 @@ public class LowerNorfairEast : SMRegion, IHasBoss, IHasReward
 
     public BossType DefaultBossType => BossType.Ridley;
 
-    public TrackerBossState BossState { get; set; } = null!;
-
     public LocationId? BossLocationId => LocationId.LowerNorfairRidleyTank;
 
     public Reward Reward { get; set; } = null!;
