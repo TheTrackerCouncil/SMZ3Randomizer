@@ -53,7 +53,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, II
         // the "guess dungeon from location" algorithm excludes
         // cleared items
         location.Cleared = true;
-        location.Accessibility = Accessibility.Cleared;
+        location.SetAccessibility(Accessibility.Cleared);
         World.LastClearedLocation = location;
 
         Action? undoStopPegWorldMode = null;
@@ -157,7 +157,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, II
         AddUndo(() =>
         {
             location.Cleared = true;
-            location.Accessibility = Accessibility.Cleared;
+            location.SetAccessibility(Accessibility.Cleared);
             undoTrackTreasure?.Invoke();
         });
     }
@@ -183,7 +183,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, II
             }
             location.Cleared = true;
             location.MarkedItem = null;
-            location.Accessibility = Accessibility.Cleared;
+            location.SetAccessibility(Accessibility.Cleared);
             LocationCleared?.Invoke(this, new LocationClearedEventArgs(location, null, false));
         }
 
@@ -325,7 +325,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, II
                         if (location.Item.IsTreasure || World.Config.ZeldaKeysanity)
                             treasureTracked++;
                         location.Cleared = true;
-                        location.Accessibility = Accessibility.Cleared;
+                        location.SetAccessibility(Accessibility.Cleared);
                         World.LastClearedLocation = location;
                         continue;
                     }
@@ -339,7 +339,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, II
                         treasureTracked++;
 
                     location.Cleared = true;
-                    location.Accessibility = Accessibility.Cleared;
+                    location.SetAccessibility(Accessibility.Cleared);
                 }
 
                 if (trackItems)
@@ -398,7 +398,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, II
 
         foreach (var location in locations)
         {
-            location.Accessibility = Accessibility.Cleared;
+            location.SetAccessibility(Accessibility.Cleared);
         }
 
         IsDirty = true;

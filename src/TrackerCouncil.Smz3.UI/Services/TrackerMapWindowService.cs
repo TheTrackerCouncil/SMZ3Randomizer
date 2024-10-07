@@ -88,10 +88,10 @@ public class TrackerMapWindowService(
 
             foreach (var location in roomLocations)
             {
-                location.AccessibilityUpdated += (_, _) => UpdateItemLocationModel(roomModel);
+                location.AccessibilityUpdated += (_, _) => UpdateItemLocationModel(roomModel, roomLocations);
             }
 
-            UpdateItemLocationModel(roomModel);
+            UpdateItemLocationModel(roomModel, roomLocations);
 
             toReturn.Add(roomModel);
         }
@@ -99,13 +99,16 @@ public class TrackerMapWindowService(
         return toReturn;
     }
 
-    private void UpdateItemLocationModel(TrackerMapLocationViewModel model)
+    private void UpdateItemLocationModel(TrackerMapLocationViewModel model, List<Location>? locations)
     {
         var region = model.Region;
         var image = "";
         var displayNumber = 0;
 
-        var locationStatuses = region.Locations
+        locations ??= region.Locations.Where(loc =>
+            model.Name == loc.Name || model.Name == loc.Room?.Name || region.Name == model.Name).ToList();
+
+        var locationStatuses = locations
             .Select(x => (Location: x, Status: x.GetKeysanityAdjustedAccessibility())).ToList();
 
         var clearableLocationsCount = displayNumber = locationStatuses.Count(x => x.Status == Accessibility.Available);

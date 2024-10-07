@@ -295,24 +295,18 @@ public class Location
     /// name="items"/>; otherwise, <see langword="false"/>.
     public bool IsRelevant(Progression items) => Region.CanEnter(items, false) && _relevanceRequirement(items) && _trackerLogic(items);
 
-    public Accessibility Accessibility { get; set; }
-
-    /// <summary>
-    /// Returns the status of a location based on the given items
-    /// </summary>
-    /// <param name="items">The available items</param>
-    /// <returns>The LocationStatus enum of the location</returns>
-    public Accessibility GetAccessibility(Progression items)
-    {
-        if (State.Cleared) return Accessibility.Cleared;
-        else if (IsAvailable(items) && _trackerLogic(items)) return Accessibility.Available;
-        else if (IsRelevant(items) && _trackerLogic(items)) return Accessibility.Relevant;
-        else return Accessibility.OutOfLogic;
-    }
+    public Accessibility Accessibility { get; private set; }
 
     public Accessibility GetKeysanityAdjustedAccessibility()
     {
         return Region.GetKeysanityAdjustedAccessibility(Accessibility);
+    }
+
+    public void SetAccessibility(Accessibility newValue)
+    {
+        if (Accessibility == newValue) return;
+        Accessibility = newValue;
+        AccessibilityUpdated?.Invoke(this, EventArgs.Empty);
     }
 
     /// <summary>
