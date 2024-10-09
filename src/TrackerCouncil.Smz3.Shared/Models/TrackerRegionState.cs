@@ -10,6 +10,7 @@ public class TrackerRegionState
     [Key]
     public long Id { get; set; }
     public TrackerState? TrackerState { get; set; }
+    [MaxLength(50)]
     public string TypeName { get; set; } = string.Empty;
     public RewardType? Reward { get; set; }
     public ItemType? Medallion { get; set; }
