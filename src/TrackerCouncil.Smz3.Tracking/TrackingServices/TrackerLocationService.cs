@@ -10,6 +10,7 @@ using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.Tracking;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
+using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Tracking.Services;
@@ -43,6 +44,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, II
         {
             prevMarkedItem = location.MarkedItem;
             location.MarkedItem = null;
+            LocationMarked?.Invoke(this, new LocationClearedEventArgs(location, confidence, autoTracked));
         }
 
         var undoTrackTreasure = updateTreasureCount
@@ -130,7 +132,13 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, II
         AddUndo(autoTracked, () =>
         {
             location.Cleared = false;
-            location.MarkedItem = prevMarkedItem;
+
+            if (prevMarkedItem != null)
+            {
+                location.MarkedItem = prevMarkedItem;
+                LocationMarked?.Invoke(this, new LocationClearedEventArgs(location, null, false));
+            }
+
             UpdateAccessibility(location);
             undoTrackTreasure?.Invoke();
             undoStopPegWorldMode?.Invoke();
@@ -180,11 +188,13 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, II
             if (location.MarkedItem != null)
             {
                 originalMarkedItems.Add(location, location.MarkedItem.Value);
+                location.MarkedItem = null;
+                LocationMarked?.Invoke(this, new LocationClearedEventArgs(location, confidence, false));
             }
+
             location.Cleared = true;
-            location.MarkedItem = null;
             location.SetAccessibility(Accessibility.Cleared);
-            LocationCleared?.Invoke(this, new LocationClearedEventArgs(location, null, false));
+            LocationCleared?.Invoke(this, new LocationClearedEventArgs(location, confidence, false));
         }
 
         Action? undoDungeonTreasure = null;
@@ -213,6 +223,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, II
                 if (originalMarkedItems.TryGetValue(location, out var item))
                 {
                     location.MarkedItem = item;
+                    LocationMarked?.Invoke(this, new LocationClearedEventArgs(location, null, false));
                 }
                 LocationCleared?.Invoke(this, new LocationClearedEventArgs(location, null, false));
             }
@@ -511,6 +522,10 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, II
     {
         actualProgression ??= itemService.GetProgression(false);
         withKeysProgression ??= itemService.GetProgression(true);
+        if (location.Region is HyruleCastle)
+        {
+            withKeysProgression = actualProgression;
+        }
         location.UpdateAccessibility(actualProgression, withKeysProgression);
     }
 }

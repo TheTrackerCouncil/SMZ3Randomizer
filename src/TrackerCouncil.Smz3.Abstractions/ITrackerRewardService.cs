@@ -27,6 +27,8 @@ public interface ITrackerRewardService
     /// <param name="stateResponse">If the response should be stated</param>
     public void GiveAreaReward(IHasReward rewardRegion, bool isAutoTracked, bool stateResponse);
 
+    public void RemoveAreaReward(IHasReward rewardRegion, bool stateResponse);
+
     /// <summary>
     /// Sets the reward of all unmarked dungeons.
     /// </summary>

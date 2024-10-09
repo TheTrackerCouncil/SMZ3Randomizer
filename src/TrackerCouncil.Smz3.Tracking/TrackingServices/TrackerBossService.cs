@@ -58,7 +58,7 @@ internal class TrackerBossService(IItemService itemService) : TrackerService, IT
         }
 
         // Auto track the region's reward
-        if (region is IHasReward rewardRegion && autoTracked)
+        if (region is IHasReward rewardRegion)
         {
             Tracker.RewardTracker.GiveAreaReward(rewardRegion, autoTracked, true);
         }
@@ -92,7 +92,7 @@ internal class TrackerBossService(IItemService itemService) : TrackerService, IT
 
         if (boss.Region != null)
         {
-            MarkRegionBossAsNotDefeated(boss.Region, confidence);
+            MarkRegionBossAsDefeated(boss.Region, confidence, autoTracked, admittedGuilt);
             return;
         }
 
@@ -190,8 +190,13 @@ internal class TrackerBossService(IItemService itemService) : TrackerService, IT
             }
         }
 
+        if (region is IHasReward rewardRegion)
+        {
+            Tracker.RewardTracker.RemoveAreaReward(rewardRegion, true);
+        }
+
         IsDirty = true;
-        UpdateAllAccessibility(false);
+        UpdateAllAccessibility(true);
 
         AddUndo(() =>
         {
@@ -203,7 +208,7 @@ internal class TrackerBossService(IItemService itemService) : TrackerService, IT
             {
                 undo.Invoke();
             }
-            UpdateAllAccessibility(true);
+            UpdateAllAccessibility(false);
         });
     }
 

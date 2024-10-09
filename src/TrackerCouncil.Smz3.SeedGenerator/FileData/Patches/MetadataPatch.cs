@@ -16,7 +16,7 @@ public class MetadataPatch : RomPatch
     private static readonly int s_addrPlayerIndex = Snes(0x80FF50);
     private static readonly int s_addrRng = 0x420000;
     private static readonly int s_addrTitle1 = Snes(0x00FFC0);
-    private static readonly int s_addrTitle2 = Snes(0xF47006);
+    private static readonly int s_addrTitle2 = Snes(0x80FFC0);
 
     private GetPatchesRequest _data = null!;
 

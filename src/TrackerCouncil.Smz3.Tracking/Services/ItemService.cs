@@ -217,9 +217,9 @@ public class ItemService : IItemService
     {
         var key = $"{assumeKeys}";
 
-        if (_progression.ContainsKey(key))
+        if (_progression.TryGetValue(key, out var prevProgression))
         {
-            return _progression[key];
+            return prevProgression;
         }
 
         var progression = new Progression();
@@ -233,7 +233,7 @@ public class ItemService : IItemService
 
         foreach (var item in TrackedItems().Select(x => x.State).Distinct())
         {
-            if (item.Type == null || item.Type == ItemType.Nothing) continue;
+            if (item.Type is null or ItemType.Nothing) continue;
             progression.AddRange(Enumerable.Repeat(item.Type.Value, item.TrackingState));
         }
 

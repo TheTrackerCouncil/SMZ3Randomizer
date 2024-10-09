@@ -39,7 +39,7 @@ public class TrackerMapLocationViewModel : ViewModelBase
         RegionName = mapRegion.Name;
         Region = region;
 
-        if (RewardRegion != null)
+        if (region is IHasTreasure)
         {
             _yOffset = -22;
         }

@@ -70,6 +70,26 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IItemS
         });
     }
 
+    public void RemoveAreaReward(IHasReward rewardRegion, bool stateResponse)
+    {
+        if (!rewardRegion.HasReceivedReward)
+        {
+            return;
+        }
+
+        rewardRegion.HasReceivedReward = false;
+
+        UpdateAllAccessibility(true);
+
+        // TODO: Add a response
+
+        AddUndo(() =>
+        {
+            rewardRegion.HasReceivedReward = false;
+            UpdateAllAccessibility(false);
+        });
+    }
+
     public void SetUnmarkedRewards(RewardType reward, float? confidence = null)
     {
         var unmarkedRegions = World.RewardRegions

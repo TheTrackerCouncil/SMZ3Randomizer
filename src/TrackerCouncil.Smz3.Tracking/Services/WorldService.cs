@@ -89,7 +89,7 @@ public class WorldService : IWorldService
     /// </summary>
     /// <returns></returns>
     public IEnumerable<Location> MarkedLocations()
-        => AllLocations().Where(x => !x.Cleared && x.MarkedItem != null && x.MarkedItem != ItemType.Nothing).ToImmutableList();
+        => AllLocations().Where(x => x is { Cleared: false, MarkedItem: not null } && x.MarkedItem != ItemType.Nothing).ToImmutableList();
 
     /// <summary>
     /// Retrieves a collection of locations for the current player's world that match the given filter criteria

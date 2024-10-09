@@ -142,11 +142,11 @@ internal class TrackerGameStateService : TrackerService, ITrackerGameStateServic
             if (location is { Cleared: false, Autotracked: false, HasMarkedCorrectItem: false })
             {
                 Tracker.LocationTracker.MarkLocation(location, location.Item, null, true);
-                hintTile.State.HintState = HintState.Viewed;
+                hintTile.HintState = HintState.Viewed;
             }
             else
             {
-                hintTile.State.HintState = HintState.Cleared;
+                hintTile.HintState = HintState.Cleared;
             }
         }
         else if (hintTile.Type == HintTileType.Requirement)
@@ -155,11 +155,11 @@ internal class TrackerGameStateService : TrackerService, ITrackerGameStateServic
             if (!dungeon.HasMarkedCorrectly)
             {
                 Tracker.PrerequisiteTracker.SetDungeonRequirement(dungeon, hintTile.MedallionType, null, true);
-                hintTile.State.HintState = HintState.Viewed;
+                hintTile.HintState = HintState.Viewed;
             }
             else
             {
-                hintTile.State.HintState = HintState.Cleared;
+                hintTile.HintState = HintState.Cleared;
             }
         }
         else
@@ -167,7 +167,7 @@ internal class TrackerGameStateService : TrackerService, ITrackerGameStateServic
             var locations = hintTile.Locations!.Select(x => World.FindLocation(x)).ToList();
             if (locations.All(x => x.Autotracked || x.Cleared))
             {
-                hintTile.State.HintState = HintState.Cleared;
+                hintTile.HintState = HintState.Cleared;
                 Tracker.Say(response: Configs.HintTileConfig.ViewedHintTileAlreadyVisited, args: [hintTile.LocationKey]);
             }
             else
@@ -175,15 +175,15 @@ internal class TrackerGameStateService : TrackerService, ITrackerGameStateServic
                 switch (hintTile.Usefulness)
                 {
                     case LocationUsefulness.Mandatory:
-                        hintTile.State.HintState = HintState.Viewed;
+                        hintTile.HintState = HintState.Viewed;
                         Tracker.Say(response: Configs.HintTileConfig.ViewedHintTileMandatory, args: [hintTile.LocationKey]);
                         break;
                     case LocationUsefulness.Useless:
-                        hintTile.State.HintState = HintState.Viewed;
+                        hintTile.HintState = HintState.Viewed;
                         Tracker.Say(response: Configs.HintTileConfig.ViewedHintTileUseless, args: [hintTile.LocationKey]);
                         break;
                     default:
-                        hintTile.State.HintState = HintState.Viewed;
+                        hintTile.HintState = HintState.Viewed;
                         Tracker.Say(response: Configs.HintTileConfig.ViewedHintTile);
                         break;
                 }
@@ -224,7 +224,7 @@ internal class TrackerGameStateService : TrackerService, ITrackerGameStateServic
                 if (locations.Count != 0)
                 {
                     Tracker.LocationTracker.Clear(locations, confidence);
-                    hintTile.State.HintState = HintState.Cleared;
+                    hintTile.HintState = HintState.Cleared;
                     UpdateHintTile(hintTile);
                 }
                 else

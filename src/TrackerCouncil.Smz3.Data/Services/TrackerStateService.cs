@@ -72,7 +72,12 @@ public class TrackerStateService : ITrackerStateService
 
         var rewardStates = worlds
             .SelectMany(x => x.RewardRegions)
-            .Select(x => new TrackerRewardState { RegionName = x.GetType().Name, RewardType = x.RewardType })
+            .Select(x => new TrackerRewardState
+            {
+                RegionName = x.GetType().Name,
+                RewardType = x.RewardType,
+                MarkedReward = x.MarkedReward
+            })
             .ToList();
 
         var treasureStates = worlds

@@ -46,19 +46,23 @@ public class TrackerMapWindowService(
         {
             var locationModels = new List<TrackerMapLocationViewModel>();
 
-            foreach (var mapRegion in map.Regions)
+            foreach (var mapLocation in map.Regions)
             {
-                if (mapRegion.Type == TrackerMapLocation.MapLocationType.Item)
+                var mapRegion = trackerMapConfig.Regions.First(region => mapLocation.Name == region.Name);
+
+                if (mapLocation.Type == TrackerMapLocation.MapLocationType.Item)
                 {
-                    locationModels.AddRange(GetItemLocationModels(mapRegion, allLocations));
+                    locationModels.AddRange(GetItemLocationModels(mapRegion, mapLocation, allLocations));
                 }
-                else if (mapRegion.Type == TrackerMapLocation.MapLocationType.Boss)
+
+                if (mapRegion is { BossX: not null, BossY: not null })
                 {
-                    locationModels.Add(GetBossLocationModel(mapRegion));
+                    locationModels.Add(GetBossLocationModel(mapRegion, mapLocation));
                 }
-                else if (mapRegion.Type == TrackerMapLocation.MapLocationType.SMDoor)
+
+                if (mapRegion.Doors != null && worldAccessor.World.Config.MetroidKeysanity)
                 {
-                    locationModels.AddRange(GetDoorLocationModels(mapRegion));
+                    locationModels.AddRange(GetDoorLocationModels(mapRegion, mapLocation));
                 }
             }
 
@@ -72,19 +76,18 @@ public class TrackerMapWindowService(
         return _model;
     }
 
-    private List<TrackerMapLocationViewModel> GetItemLocationModels(TrackerMapLocation mapRegion, List<Location> allLocations)
+    private List<TrackerMapLocationViewModel> GetItemLocationModels(TrackerMapRegion mapRegion, TrackerMapLocation mapLocation, List<Location> allLocations)
     {
-        var configRegion = trackerMapConfig.Regions.First(region => mapRegion.Name == region.Name);
-        var worldRegion = worldService.Region(configRegion.TypeName) ?? throw new InvalidOperationException();
-        var regionLocations = allLocations.Where(loc => configRegion.TypeName == loc.Region.GetType().FullName).ToList();
+        var worldRegion = worldService.Region(mapRegion.TypeName) ?? throw new InvalidOperationException();
+        var regionLocations = allLocations.Where(loc => mapRegion.TypeName == loc.Region.GetType().FullName).ToList();
         var toReturn = new List<TrackerMapLocationViewModel>();
 
-        foreach (var room in configRegion.Rooms!)
+        foreach (var room in mapRegion.Rooms!)
         {
             var roomLocations = regionLocations.Where(loc =>
-                room.Name == loc.Name || room.Name == loc.Room?.Name || configRegion.Name == room.Name).ToList();
+                room.Name == loc.Name || room.Name == loc.Room?.Name || mapRegion.Name == room.Name).ToList();
 
-            var roomModel = new TrackerMapLocationViewModel(configRegion, mapRegion, room, worldRegion, roomLocations);
+            var roomModel = new TrackerMapLocationViewModel(mapRegion, mapLocation, room, worldRegion, roomLocations);
 
             foreach (var location in roomLocations)
             {
@@ -113,7 +116,7 @@ public class TrackerMapWindowService(
 
         var clearableLocationsCount = displayNumber = locationStatuses.Count(x => x.Status == Accessibility.Available);
         var relevantLocationsCount = locationStatuses.Count(x => x.Status == Accessibility.Relevant);
-        var outOfLogicLocationsCount = _model.ShowOutOfLogicLocations ? locationStatuses.Count(x => x.Status == Accessibility.OutOfLogic) : 0;
+        var outOfLogicLocationsCount = locationStatuses.Count(x => x.Status == Accessibility.OutOfLogic);
         var unclearedLocationsCount = locationStatuses.Count(x => x.Status != Accessibility.Cleared);
 
         if (clearableLocationsCount > 0 && clearableLocationsCount == unclearedLocationsCount)
@@ -172,13 +175,23 @@ public class TrackerMapWindowService(
         UpdateLocationModel(model, image, displayNumber);
     }
 
-    private TrackerMapLocationViewModel GetBossLocationModel(TrackerMapLocation mapRegion)
+    private TrackerMapLocationViewModel GetBossLocationModel(TrackerMapRegion mapRegion, TrackerMapLocation mapLocation)
     {
-        var configRegion = trackerMapConfig.Regions.First(region => mapRegion.Name == region.Name);
-        var worldRegion = worldService.Region(configRegion.TypeName) ?? throw new InvalidOperationException();
-        if (worldRegion is not IHasBoss bossRegion) throw new InvalidOperationException();
-        var model = new TrackerMapLocationViewModel(configRegion, mapRegion, worldRegion);
-        bossRegion.Boss.UpdatedAccessibility += (_, _) => UpdateBossLocationModel(model);
+        var worldRegion = worldService.Region(mapRegion.TypeName) ?? throw new InvalidOperationException();
+        var model = new TrackerMapLocationViewModel(mapRegion, mapLocation, worldRegion);
+
+        if (worldRegion is IHasBoss bossRegion)
+        {
+            bossRegion.Boss.UpdatedAccessibility += (_, _) => UpdateBossLocationModel(model);
+            bossRegion.Boss.UpdatedBossState += (_, _) => UpdateBossLocationModel(model);
+        }
+
+        if (worldRegion is IHasReward rewardRegion)
+        {
+            rewardRegion.Reward.UpdatedAccessibility += (_, _) => UpdateBossLocationModel(model);
+            rewardRegion.Reward.UpdatedRewardState += (_, _) => UpdateBossLocationModel(model);
+        }
+
         UpdateBossLocationModel(model);
         return model;
     }
@@ -192,11 +205,11 @@ public class TrackerMapWindowService(
             image = rewardRegion.MarkedReward.GetDescription().ToLowerInvariant() + ".png";
             location.IsInLogic = true;
         }
-        /*else if (location.BossRegion is { BossDefeated: false } && location.BossRegion.GetKeysanityAdjustedBossAccessibility() == Accessibility.Available)
+        else if (location.BossRegion is { BossDefeated: false } && location.BossRegion.GetKeysanityAdjustedBossAccessibility() == Accessibility.Available)
         {
             image = "boss.png";
             location.IsInLogic = true;
-        }*/
+        }
         else
         {
             location.IsInLogic = false;
@@ -205,16 +218,15 @@ public class TrackerMapWindowService(
         UpdateLocationModel(location, image);
     }
 
-    private List<TrackerMapLocationViewModel> GetDoorLocationModels(TrackerMapLocation mapRegion)
+    private List<TrackerMapLocationViewModel> GetDoorLocationModels(TrackerMapRegion mapRegion, TrackerMapLocation mapLocation)
     {
-        var configRegion = trackerMapConfig.Regions.First(region => mapRegion.Name == region.Name);
-        var doors = configRegion.Doors ?? throw new InvalidOperationException();
-        var worldRegion = worldService.Region(configRegion.TypeName) ?? throw new InvalidOperationException();
+        var doors = mapRegion.Doors ?? throw new InvalidOperationException();
+        var worldRegion = worldService.Region(mapRegion.TypeName) ?? throw new InvalidOperationException();
         var toReturn = new List<TrackerMapLocationViewModel>();
 
         foreach (var door in doors)
         {
-            var model = new TrackerMapLocationViewModel(configRegion, mapRegion, worldRegion, door);
+            var model = new TrackerMapLocationViewModel(mapRegion, mapLocation, worldRegion, door);
             var item = itemService.FirstOrDefault(door.Item) ?? throw new InvalidOperationException();
             item.UpdatedItemState += (_, _) => UpdateDoorLocationModel(model, item);
             toReturn.Add(model);
@@ -355,11 +367,11 @@ public class TrackerMapWindowService(
         {
             if (model.BossRegion != null)
             {
-                tracker.BossTracker.MarkBossAsDefeated(model.BossRegion.Boss);
+                tracker.BossTracker.MarkRegionBossAsDefeated(model.BossRegion, admittedGuilt: true);
             }
-            else if(model.RewardRegion is IHasBoss dungeon)
+            else if(model.RewardRegion != null)
             {
-                tracker.BossTracker.MarkRegionBossAsDefeated(dungeon);
+                tracker.RewardTracker.GiveAreaReward(model.RewardRegion, false, true);
             }
         }
     }

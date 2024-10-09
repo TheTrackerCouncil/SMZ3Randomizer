@@ -156,7 +156,7 @@ public class ViewedText : IZeldaStateCheck
             {
                 locations.Remove(location);
                 if (locations.Count != 0) return;
-                hintTile.State!.HintState = HintState.Cleared;
+                hintTile.HintState = HintState.Cleared;
                 _pendingHintTiles.Remove(hintTile);
                 _tracker.GameStateTracker.UpdateHintTile(hintTile);
             };
