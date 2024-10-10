@@ -49,7 +49,7 @@ public class MetroidLocations(TrackerBase tracker, ISnesConnectorService snesCon
                 var flag = location.MemoryFlag ?? 0;
                 var currentCleared = data.CheckUInt8Flag(loc, flag);
                 var prevCleared = prevData.CheckUInt8Flag(loc, flag);
-                if (location.State.Autotracked == false && currentCleared && prevCleared)
+                if (location.Autotracked == false && currentCleared && prevCleared)
                 {
                     TrackLocation(location);
                 }

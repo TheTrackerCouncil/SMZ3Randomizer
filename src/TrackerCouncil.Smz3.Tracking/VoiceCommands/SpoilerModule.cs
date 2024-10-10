@@ -100,7 +100,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
         }
 
         var locations = area.Locations
-            .Where(x => x.State.Cleared == false)
+            .Where(x => x.Cleared == false)
             .ToImmutableList();
         if (locations.Count == 0)
         {
@@ -153,19 +153,19 @@ public class SpoilerModule : TrackerModule, IOptionalModule
     /// <param name="item">The item to find.</param>
     private void RevealItemLocation(Item item)
     {
-        if (item.Metadata.HasStages && item.State.TrackingState >= item.Metadata.MaxStage)
+        if (item.Metadata.HasStages && item.TrackingState >= item.Metadata.MaxStage)
         {
             TrackerBase.Say(x => x.Spoilers.TrackedAllItemsAlready, args: [item.Name]);
             return;
         }
-        else if (!item.Metadata.Multiple && item.State.TrackingState > 0)
+        else if (!item.Metadata.Multiple && item.TrackingState > 0)
         {
             TrackerBase.Say(x => x.Spoilers.TrackedItemAlready, args: [item.Metadata.NameWithArticle]);
             return;
         }
 
         var markedLocation = WorldService.MarkedLocations()
-            .Where(x => x.State.MarkedItem == item.Type && !x.State.Cleared)
+            .Where(x => x.MarkedItem == item.Type && !x.Cleared)
             .Random();
         if (markedLocation != null)
         {
@@ -193,7 +193,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
                 TrackerBase.Say(x => x.Spoilers.ItemNotFound, args: [item.Metadata.NameWithArticle]);
             return;
         }
-        else if (locations.Count > 0 && locations.All(x => x.State.Cleared))
+        else if (locations.Count > 0 && locations.All(x => x.Cleared))
         {
             // The item exists, but all locations are cleared
             TrackerBase.Say(x => x.Spoilers.LocationsCleared, args: [item.Metadata.NameWithArticle]);
@@ -228,7 +228,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
     private void RevealLocationItem(Location location)
     {
         var locationName = location.Metadata.Name;
-        if (location.State.Cleared)
+        if (location.Cleared)
         {
             if (TrackerBase.HintsEnabled || TrackerBase.SpoilersEnabled)
             {
@@ -243,9 +243,9 @@ public class SpoilerModule : TrackerModule, IOptionalModule
             }
         }
 
-        if (location.State.MarkedItem != null)
+        if (location.MarkedItem != null)
         {
-            var markedItem = ItemService.FirstOrDefault(location.State.MarkedItem.Value);
+            var markedItem = ItemService.FirstOrDefault(location.MarkedItem.Value);
             if (markedItem != null)
             {
                 TrackerBase.Say(x => x.Spoilers.MarkedLocation, args: [locationName, markedItem.Metadata.NameWithArticle]);
@@ -379,21 +379,25 @@ public class SpoilerModule : TrackerModule, IOptionalModule
 
     private Reward? GetRewardForHint(IHasLocations area)
     {
-        if (area is not IHasReward rewardArea || rewardArea.RewardType == RewardType.Agahnim ||
-            rewardArea.RewardType == RewardType.None || area is not IDungeon dungeon) return null;
+        if (area is not IHasReward rewardArea || !rewardArea.RewardType.IsInAnyCategory(RewardCategory.Crystal, RewardCategory.Pendant) ||
+            rewardArea.RewardType == RewardType.None || area is not IHasBoss bossRegion) return null;
 
-        var bossLocation = area.Locations.First(x => x.Id == dungeon.BossLocationId);
+        var bossLocation = area.Locations.FirstOrDefault(x => x.Id == bossRegion.BossLocationId);
+
+        if (bossLocation == null)
+        {
+            return null;
+        }
 
         // For pendant dungeons, only factor it in if the player has not gotten it so that they get hints
         // that factor in Saha/Ped
-        if (rewardArea.RewardType is RewardType.PendantBlue or RewardType.PendantGreen
-                or RewardType.PendantRed && (bossLocation.State.Cleared || bossLocation.State.Autotracked))
+        if (rewardArea.RewardType.IsInCategory(RewardCategory.Pendant) && (bossLocation.Cleared || bossLocation.Autotracked))
         {
             return rewardArea.Reward;
         }
         // For crystal dungeons, always act like the player has them so that it only gives a hint based on
         // the actual items in the dungeon
-        else if (rewardArea.RewardType is RewardType.CrystalBlue or RewardType.CrystalRed)
+        else if (rewardArea.RewardType.IsInCategory(RewardCategory.Crystal))
         {
             return rewardArea.Reward;
         }
@@ -673,7 +677,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
                     var areaWithoutItem = TrackerBase.World.Regions
                         .GroupBy(x => x.Area)
                         .Where(x => x.SelectMany(r => r.Locations)
-                            .Where(l => l.State.Cleared == false)
+                            .Where(l => l.Cleared == false)
                             .All(l => l.Item.Type != item.Type))
                         .Select(x => x.Key)
                         .Random();
@@ -703,13 +707,13 @@ public class SpoilerModule : TrackerModule, IOptionalModule
 
                     if (randomLocation?.Region is Z3Region and IHasReward dungeon && dungeon.RewardType != RewardType.Agahnim)
                     {
-                        if (randomLocation.Region.Locations.Any(x => x.State.Cleared))
+                        if (randomLocation.Region.Locations.Any(x => x.Cleared))
                             return GiveItemHint(x => x.ItemInPreviouslyVisitedDungeon, item);
                         else
                             return GiveItemHint(x => x.ItemInUnvisitedDungeon, item);
                     }
 
-                    if (randomLocation?.Region?.Locations.Any(x => x.State.Cleared) == true)
+                    if (randomLocation?.Region?.Locations.Any(x => x.Cleared) == true)
                         return GiveItemHint(x => x.ItemInPreviouslyVisitedRegion, item);
                     else
                         return GiveItemHint(x => x.ItemInUnvisitedRegion, item);

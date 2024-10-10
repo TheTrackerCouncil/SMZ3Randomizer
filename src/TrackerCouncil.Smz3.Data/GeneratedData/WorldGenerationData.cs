@@ -4,6 +4,8 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData;
+using TrackerCouncil.Smz3.Data.WorldData.Regions;
+using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Multiplayer;
 
 namespace TrackerCouncil.Smz3.Data.GeneratedData;
@@ -33,8 +35,13 @@ public class WorldGenerationData
     {
         var locationItems = World.Locations
             .Select(x => new PlayerGenerationLocationData(x.Id, x.Item.World.Id, x.Item.Type)).ToList();
-        var dungeonData = World.Dungeons
-            .Select(x => new PlayerGenerationDungeonData(x.DungeonName, x.DungeonRewardType, x.Medallion)).ToList();
+        var dungeonData = World.TreasureRegions
+            .Select(x =>
+            {
+                var rewardRegion = x as IHasReward;
+                var requirementRegion = x as IHasPrerequisite;
+                return new PlayerGenerationDungeonData(x.Name, rewardRegion?.RewardType, requirementRegion?.RequiredItem ?? ItemType.Nothing);
+            }).ToList();
         return new MultiplayerPlayerGenerationData(World.Guid, World.Id, locationItems, dungeonData, World.HintTiles.ToList());
     }
 

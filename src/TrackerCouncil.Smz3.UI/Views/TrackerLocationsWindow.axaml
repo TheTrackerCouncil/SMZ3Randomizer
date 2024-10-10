@@ -25,7 +25,7 @@
                        Grid.RowSpan="2"
                        Grid.Column="0" />
 
-                <TextBlock Text="{Binding Location}"
+                <TextBlock Text="{Binding LocationName}"
                            Grid.Row="0"
                            Grid.Column="2"
                            Opacity="{Binding Opacity}"
@@ -47,7 +47,7 @@
                   Margin="10 10">
           <ItemsControl.ItemTemplate>
             <DataTemplate>
-              <StackPanel Orientation="Horizontal">
+              <StackPanel Orientation="Horizontal" IsVisible="{Binding IsVisible}">
                 <TextBlock Text="{Binding Name}"
                            FontWeight="Bold" />
                 <TextBlock Margin="0 0 5 0">: </TextBlock>
@@ -80,7 +80,7 @@
                   <ItemsControl ItemsSource="{Binding Locations}" Margin="14 10" HorizontalAlignment="Stretch">
                     <ItemsControl.ItemTemplate>
                       <DataTemplate>
-                        <StackPanel Orientation="Horizontal" Opacity="{Binding Opacity}">
+                        <StackPanel Orientation="Horizontal" Opacity="{Binding Opacity}" IsVisible="{Binding IsVisible}">
                           <TextBlock Text="{Binding Name}"></TextBlock>
                           <Image Source="{Binding KeyImage, Converter={StaticResource StringToImageConverter}}" Height="16" Margin="2 0" IsVisible="{Binding ShowKeyIcon}" />
                           <controls:ImageButton Margin="0 -4 0 0" Click="ClearLocationButton_OnClick" Tag="{Binding}" Background="Transparent">

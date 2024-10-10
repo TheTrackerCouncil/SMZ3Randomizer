@@ -249,7 +249,7 @@ public class MetaModule : TrackerModule
 
         AddCommand("Beat game", GetBeatGameRule(), (_) =>
         {
-            TrackerBase.GameBeaten(false);
+            TrackerBase.GameStateTracker.GameBeaten(false);
         });
     }
 }

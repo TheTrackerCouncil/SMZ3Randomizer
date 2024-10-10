@@ -50,7 +50,7 @@ public class HintTileModule : TrackerModule
                 var hintTile = GetHintTileFromResult(result);
                 var text = _gameHintService.GetHintTileText(hintTile.PlayerHintTile, WorldService.World, WorldService.Worlds);
                 TrackerBase.Say(response: _hintTileConfig.RequestedHintTile, args: [text]);
-                TrackerBase.UpdateHintTile(hintTile.PlayerHintTile);
+                TrackerBase.GameStateTracker.UpdateHintTile(hintTile.PlayerHintTile);
             }
             else
             {

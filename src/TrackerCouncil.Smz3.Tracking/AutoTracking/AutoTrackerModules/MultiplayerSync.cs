@@ -77,7 +77,7 @@ public class MultiplayerSync(
 
         var otherCollectedItems = worldService.Worlds.SelectMany(x => x.Locations)
             .Where(x => x.State.ItemWorldId == Tracker.World.Id && x.State.WorldId != Tracker.World.Id &&
-                        x.State.Autotracked && (!x.World.HasCompleted || !x.Item.Type.IsInCategory(ItemCategory.IgnoreOnMultiplayerCompletion)))
+                        x.Autotracked && (!x.World.HasCompleted || !x.Item.Type.IsInCategory(ItemCategory.IgnoreOnMultiplayerCompletion)))
             .Select(x => (x.State.Item, x.State.WorldId)).ToList();
 
         foreach (var item in previouslyGiftedItems)

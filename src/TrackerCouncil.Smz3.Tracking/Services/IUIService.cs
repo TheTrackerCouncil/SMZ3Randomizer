@@ -47,9 +47,9 @@ public interface IUIService
     /// <summary>
     /// Returns the path of the sprite for the dungeon
     /// </summary>
-    /// <param name="dungeon">The dungeon requested</param>
+    /// <param name="hasTreasure">The dungeon requested</param>
     /// <returns>The full path of the sprite or null if it's not found</returns>
-    public string? GetSpritePath(IDungeon dungeon);
+    public string? GetSpritePath(IHasTreasure hasTreasure);
 
     /// <summary>
     /// Returns the path of the sprite for the reward

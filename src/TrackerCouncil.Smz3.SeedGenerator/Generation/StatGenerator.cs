@@ -140,7 +140,7 @@ public class StatGenerator(Smz3Randomizer randomizer): IStatGenerator
 
         var total = (double)numberOfSeeds;
         var dungeonItems = locations
-            .Where(x => x.Region is IDungeon)
+            .Where(x => x.Region is IHasTreasure)
             .OrderBy(x => x.Region.Name)
             .Select(location => new
             {

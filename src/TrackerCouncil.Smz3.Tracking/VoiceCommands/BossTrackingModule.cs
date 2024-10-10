@@ -2,6 +2,7 @@
 using System.Runtime.Versioning;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Abstractions;
+using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Tracking.Services;
 
@@ -93,11 +94,11 @@ public class BossTrackingModule : TrackerModule
     {
         AddCommand("Mark boss as defeated", GetMarkBossAsDefeatedRule(), (result) =>
         {
-            var dungeon = GetBossDungeonFromResult(TrackerBase, result);
+            var dungeon = GetBossDungeonFromResult(TrackerBase, result) as IHasBoss;
             if (dungeon != null)
             {
                 // Track boss with associated dungeon
-                TrackerBase.MarkDungeonAsCleared(dungeon, result.Confidence);
+                TrackerBase.BossTracker.MarkRegionBossAsDefeated(dungeon, result.Confidence);
                 return;
             }
 
@@ -107,7 +108,7 @@ public class BossTrackingModule : TrackerModule
                 // Track standalone boss
                 var admittedGuilt = result.Text.ContainsAny("killed", "beat", "defeated", "dead")
                                     && !result.Text.ContainsAny("beat off", "beaten off");
-                TrackerBase.MarkBossAsDefeated(boss, admittedGuilt, result.Confidence);
+                TrackerBase.BossTracker.MarkBossAsDefeated(boss, admittedGuilt, result.Confidence);
                 return;
             }
 
@@ -116,11 +117,11 @@ public class BossTrackingModule : TrackerModule
 
         AddCommand("Mark boss as alive", GetMarkBossAsNotDefeatedRule(), (result) =>
         {
-            var dungeon = GetBossDungeonFromResult(TrackerBase, result);
+            var dungeon = GetBossDungeonFromResult(TrackerBase, result) as IHasBoss;
             if (dungeon != null)
             {
                 // Untrack boss with associated dungeon
-                TrackerBase.MarkDungeonAsIncomplete(dungeon, result.Confidence);
+                TrackerBase.BossTracker.MarkRegionBossAsNotDefeated(dungeon, result.Confidence);
                 return;
             }
 
@@ -128,7 +129,7 @@ public class BossTrackingModule : TrackerModule
             if (boss != null)
             {
                 // Untrack standalone boss
-                TrackerBase.MarkBossAsNotDefeated(boss, result.Confidence);
+                TrackerBase.BossTracker.MarkBossAsNotDefeated(boss, result.Confidence);
                 return;
             }
 
@@ -139,17 +140,17 @@ public class BossTrackingModule : TrackerModule
         {
             var contentItemData = ItemService.FirstOrDefault("Content");
 
-            var dungeon = GetBossDungeonFromResult(TrackerBase, result);
+            var dungeon = GetBossDungeonFromResult(TrackerBase, result) as IHasBoss;
             if (dungeon != null)
             {
                 if (contentItemData != null)
                 {
                     TrackerBase.Say(x => x.DungeonBossClearedAddContent);
-                    TrackerBase.TrackItem(contentItemData);
+                    TrackerBase.ItemTracker.TrackItem(contentItemData);
                 }
 
                 // Track boss with associated dungeon
-                TrackerBase.MarkDungeonAsCleared(dungeon, result.Confidence);
+                TrackerBase.BossTracker.MarkRegionBossAsDefeated(dungeon, result.Confidence);
                 return;
             }
 
@@ -159,13 +160,13 @@ public class BossTrackingModule : TrackerModule
                 if (contentItemData != null)
                 {
                     TrackerBase.Say(x => x.DungeonBossClearedAddContent);
-                    TrackerBase.TrackItem(contentItemData);
+                    TrackerBase.ItemTracker.TrackItem(contentItemData);
                 }
 
                 // Track standalone boss
                 var admittedGuilt = result.Text.ContainsAny("killed", "beat", "defeated", "dead")
                                     && !result.Text.ContainsAny("beat off", "beaten off");
-                TrackerBase.MarkBossAsDefeated(boss, admittedGuilt, result.Confidence);
+                TrackerBase.BossTracker.MarkBossAsDefeated(boss, admittedGuilt, result.Confidence);
                 return;
             }
 

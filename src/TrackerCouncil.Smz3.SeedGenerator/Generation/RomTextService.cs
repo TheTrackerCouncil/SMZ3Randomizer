@@ -265,8 +265,8 @@ public class RomTextService(ILogger<RomTextService> logger, IGameHintService gam
 
             foreach (var region in world.Regions)
             {
-                if (region is INeedsMedallion medallionRegion)
-                    log.AppendLine($"{region.Name}: {medallionRegion.Medallion}");
+                if (region is IHasPrerequisite medallionRegion)
+                    log.AppendLine($"{region.Name}: {medallionRegion.RequiredItem}");
             }
             log.AppendLine();
         }

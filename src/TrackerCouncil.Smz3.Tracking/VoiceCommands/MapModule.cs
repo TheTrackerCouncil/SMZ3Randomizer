@@ -91,7 +91,7 @@ public class MapModule : TrackerModule
         AddCommand("Update map", GetChangeMapRule(), (result) =>
         {
             var mapName = (string)result.Semantics[MapKey].Value;
-            TrackerBase.UpdateMap(mapName);
+            TrackerBase.GameStateTracker.UpdateMap(mapName);
             TrackerBase.Say(x => x.Map.UpdateMap, args: [mapName]);
         });
 
@@ -116,12 +116,12 @@ public class MapModule : TrackerModule
                     return;
                 }
 
-                _prevMap = TrackerBase.CurrentMap;
+                _prevMap = TrackerBase.GameStateTracker.CurrentMap;
                 if (string.IsNullOrEmpty(_prevMap))
                 {
                     _prevMap = _config.Maps.Last().ToString();
                 }
-                TrackerBase.UpdateMap(map.ToString());
+                TrackerBase.GameStateTracker.UpdateMap(map.ToString());
                 TrackerBase.Say(x => x.Map.ShowDarkRoomMap, args: [map.Name]);
             }
             else
@@ -138,7 +138,7 @@ public class MapModule : TrackerModule
             }
             else
             {
-                TrackerBase.UpdateMap(_prevMap);
+                TrackerBase.GameStateTracker.UpdateMap(_prevMap);
                 TrackerBase.Say(x => x.Map.HideDarkRoomMap, args: [_prevMap]);
                 _prevMap = "";
             }

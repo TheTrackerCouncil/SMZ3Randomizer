@@ -68,11 +68,13 @@ public class PlaythroughService
     /// </summary>
     /// <param name="allLocations">List of locations to iterate through</param>
     /// <param name="defaultRewards"></param>
+    /// <param name="defaultReward"></param>
     /// <returns>A list of the spheres</returns>
     /// <exception cref="RandomizerGenerationException">When not all locations are </exception>
     public IEnumerable<Playthrough.Sphere> GenerateSpheres(IEnumerable<Location> allLocations, Reward? defaultReward = null)
     {
-        var worlds = allLocations.Select(x => x.Region.World).Distinct();
+        var allLocationsList = allLocations.ToList();
+        var worlds = allLocationsList.Select(x => x.Region.World).Distinct().ToList();
 
         var spheres = new List<Playthrough.Sphere>();
         var locations = new List<Location>();
@@ -83,13 +85,11 @@ public class PlaythroughService
             defaultRewards.Add(defaultReward);
         }
 
-        var allRewards = worlds.SelectMany(w => w.Regions).OfType<IHasReward>().Select(x => x.Reward);
-        var regions = new List<Region>();
-        var rewards = defaultRewards;
+        var rewardRegions = worlds.SelectMany(x => x.RewardRegions).ToList();
+        List<Reward> rewards;
 
-        var allBosses = worlds.SelectMany(w => w.GoldenBosses);
-        var bossRegions = worlds.SelectMany(w => w.GoldenBosses).Select(x => x.Region).Cast<IHasBoss>();
-        var bosses = new List<Boss>();
+        var bossRegions = worlds.SelectMany(x => x.BossRegions).ToList();
+        List<Boss> bosses;
 
         foreach (var world in worlds)
         {
@@ -103,17 +103,22 @@ public class PlaythroughService
         }
 
         var initInventoryCount = items.Count;
-        var totalItemCount = allLocations.Select(x => x.Item).Count();
+        var totalItemCount = allLocationsList.Select(x => x.Item).Count();
         var prevRewardCount = 0;
         while (items.Count - initInventoryCount < totalItemCount)
         {
             var sphere = new Playthrough.Sphere();
 
             var tempProgression = new Progression(items, new List<Reward>(), new List<Boss>());
-            rewards = allRewards.Where(x => x.Region.CanComplete(tempProgression)).Concat(defaultRewards).ToList();
-            bosses = bossRegions.Where(x => x.CanBeatBoss(tempProgression)).Select(x => x.Boss).ToList();
+            rewards = rewardRegions.Where(x => x.CanRetrieveReward(tempProgression))
+                .Select(x => x.Reward)
+                .Concat(defaultRewards).ToList();
+            bosses = bossRegions.Where(x => x.CanBeatBoss(tempProgression))
+                .Select(x => x.Boss).ToList();
 
-            var accessibleLocations = allLocations.Where(l => l.IsAvailable(new Progression(items.Where(i => i.World == l.World), rewards.Where(r => r.World == l.World), bosses.Where(b => b.World == l.World))));
+            var accessibleLocations = allLocationsList.Where(l =>
+                l.IsAvailable(new Progression(items.Where(i => i.World == l.World),
+                    rewards.Where(r => r.World == l.World), bosses.Where(b => b.World == l.World)))).ToList();
             var newLocations = accessibleLocations.Except(locations).ToList();
             var newItems = newLocations.Select(l => l.Item).ToList();
 
@@ -125,7 +130,7 @@ public class PlaythroughService
             if (!newItems.Any() && prevRewardCount == rewards.Count)
             {
                 /* With no new items added we might have a problem, so list inaccessable items */
-                var inaccessibleLocations = allLocations.Where(l => !locations.Contains(l)).ToList();
+                var inaccessibleLocations = allLocationsList.Where(l => !locations.Contains(l)).ToList();
 
                 _logger.LogDebug("Inaccesible locations: {}", string.Join(", ", inaccessibleLocations.Select(x => x.Id.ToString())));
 
@@ -133,7 +138,7 @@ public class PlaythroughService
                 // We determine this on if all players can beat all 4 golden bosses, access the
                 if (inaccessibleLocations.Select(l => l.Item).Count() >= (15 * worlds.Count()))
                 {
-                    var vitalLocations = allLocations.Where(x => x.Id is LocationId.GanonsTowerMoldormChest or LocationId.KraidsLairVariaSuit or LocationId.WreckedShipEastSuper or LocationId.InnerMaridiaSpaceJump or LocationId.LowerNorfairRidleyTank).ToList();
+                    var vitalLocations = allLocationsList.Where(x => x.Id is LocationId.GanonsTowerMoldormChest or LocationId.KraidsLairVariaSuit or LocationId.WreckedShipEastSuper or LocationId.InnerMaridiaSpaceJump or LocationId.LowerNorfairRidleyTank).ToList();
                     var crateriaBossKeys = items.Count(x => x.Type == ItemType.CardCrateriaBoss);
                     if (accessibleLocations.Count(x => vitalLocations.Contains(x)) != vitalLocations.Count() || crateriaBossKeys != worlds.Count())
                     {

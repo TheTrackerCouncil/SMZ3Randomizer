@@ -23,7 +23,7 @@ public class ChangedMetroidRegion : IMetroidStateCheck
     public bool ExecuteCheck(TrackerBase tracker, AutoTrackerMetroidState currentState, AutoTrackerMetroidState prevState)
     {
         if ((currentState.CurrentRegion == _previousMetroidRegionValue &&
-             tracker.CurrentRegion is not Z3Region) || currentState.CurrentRegion == null)
+             tracker.GameStateTracker.CurrentRegion is not Z3Region) || currentState.CurrentRegion == null)
         {
             return false;
         }
@@ -32,7 +32,7 @@ public class ChangedMetroidRegion : IMetroidStateCheck
         var newRegion = tracker.World.Regions.OfType<SMRegion>().FirstOrDefault(x => x.MemoryRegionId == currentState.CurrentRegion);
         if (newRegion != null)
         {
-            tracker.UpdateRegion(newRegion, tracker.Options.AutoTrackerChangeMap, startedAtShip);
+            tracker.GameStateTracker.UpdateRegion(newRegion, tracker.Options.AutoTrackerChangeMap, startedAtShip);
         }
         _previousMetroidRegionValue = currentState.CurrentRegion.Value;
         return true;

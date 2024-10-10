@@ -66,9 +66,6 @@ public class MultiplayerDbService
             var gameItems = dbContext.MultiplayerItemStates
                 .Where(x => x.GameId == gameState.Id)
                 .ToList();
-            var gameDungeons = dbContext.MultiplayerDungeonStates
-                .Where(x => x.GameId == gameState.Id)
-                .ToList();
             var gameBosses = dbContext.MultiplayerBossStates
                 .Where(x => x.GameId == gameState.Id)
                 .ToList();
@@ -77,7 +74,6 @@ public class MultiplayerDbService
             {
                 player.Locations = gameLocations.Where(x => x.PlayerId == player.Id).ToList();
                 player.Items = gameItems.Where(x => x.PlayerId == player.Id).ToList();
-                player.Dungeons = gameDungeons.Where(x => x.PlayerId == player.Id).ToList();
                 player.Bosses = gameBosses.Where(x => x.PlayerId == player.Id).ToList();
             }
 
@@ -253,30 +249,6 @@ public class MultiplayerDbService
     }
 
     /// <summary>
-    /// Saves the current status of a dungeon to the database
-    /// </summary>
-    /// <param name="gameState">The game state the dungeon belongs to</param>
-    /// <param name="dungeonState">The dungeon state being saved</param>
-    public async Task SaveDungeonState(MultiplayerGameState gameState, MultiplayerDungeonState dungeonState)
-    {
-        if (!_isDatabaseEnabled || !gameState.SaveToDatabase) return;
-        try
-        {
-            await using var dbContext = await _contextFactory.CreateDbContextAsync();
-            var dbState = await dbContext.MultiplayerDungeonStates.FindAsync(dungeonState.Id);
-            if (dbState == null) return;
-            dbState.Tracked = dungeonState.Tracked;
-            dbState.TrackedTime = dungeonState.TrackedTime;
-            await SaveChanges(dbContext, $"Unable to save dungeon state");
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Unable to save dungeon state");
-        }
-
-    }
-
-    /// <summary>
     /// Saves the current status of a boss to the database
     /// </summary>
     /// <param name="gameState">The game state the boss belongs to</param>
@@ -348,25 +320,6 @@ public class MultiplayerDbService
                 else
                 {
                     dbContext.MultiplayerItemStates.Add(updateData);
-                }
-            }
-
-            // Update dungeons
-            updateIds = updates.Dungeons.Select(x => x.Id).ToList();
-            var dbDungeons = dbContext.MultiplayerDungeonStates
-                .Where(x => x.PlayerId == playerState.Id && updateIds.Contains(x.Id))
-                .ToDictionary(x => x.Id, x => x);
-            foreach (var updateData in updates.Dungeons)
-            {
-                if (dbDungeons.ContainsKey(updateData.Id))
-                {
-                    var dbData = dbDungeons[updateData.Id];
-                    dbData.Tracked = updateData.Tracked;
-                    dbData.TrackedTime = updateData.TrackedTime;
-                }
-                else
-                {
-                    dbContext.MultiplayerDungeonStates.Add(updateData);
                 }
             }
 

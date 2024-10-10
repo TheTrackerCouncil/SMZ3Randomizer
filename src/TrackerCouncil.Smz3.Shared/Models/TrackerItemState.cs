@@ -9,9 +9,10 @@ public class TrackerItemState
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Key]
     public long Id { get; set; }
-    public TrackerState? TrackerState { get; set; }
-    public ItemType? Type { get; set; }
-    public string ItemName { get; set; } = string.Empty;
+    public TrackerState? TrackerState { get; init; }
+    public ItemType? Type { get; init; }
+    [MaxLength(50)]
+    public string ItemName { get; init; } = string.Empty;
     public int TrackingState { get; set; }
-    public int WorldId { get; set; }
+    public int WorldId { get; init; }
 }

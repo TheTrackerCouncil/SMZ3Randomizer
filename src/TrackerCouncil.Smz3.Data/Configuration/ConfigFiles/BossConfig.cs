@@ -25,84 +25,29 @@ public class BossConfig : List<BossInfo>, IMergeable<BossInfo>, IConfigFile<Boss
     /// <returns></returns>
     public static BossConfig Default()
     {
-        return new BossConfig
-        {
-            new()
-            {
-                Boss = "Spore Spawn",
-                MemoryAddress = 1,
-                MemoryFlag = 0x2,
-            },
-            new()
-            {
-                Boss = "Botwoon",
-                MemoryAddress = 4,
-                MemoryFlag = 0x2,
-            },
-            new()
-            {
-                Boss = "Kraid",
-                Type = BossType.Kraid,
-                MemoryAddress = 1,
-                MemoryFlag = 0x1,
-            },
-            new()
-            {
-                Boss = "Crocomire",
-                MemoryAddress = 2,
-                MemoryFlag = 0x2,
-            },
-            new()
-            {
-                Boss = "Phantoon",
-                Type = BossType.Phantoon,
-                MemoryAddress = 3,
-                MemoryFlag = 0x1,
-            },
-            new()
-            {
-                Boss = "Shaktool",
-            },
-            new()
-            {
-                Boss = "Draygon",
-                Type = BossType.Draygon,
-                MemoryAddress = 4,
-                MemoryFlag = 0x1,
-            },
-            new()
-            {
-                Boss = "Ridley",
-                Type = BossType.Ridley,
-                MemoryAddress = 2,
-                MemoryFlag = 0x1,
-            },
-            new()
-            {
-                Boss = "Mother Brain",
-            },
-            new()
-            {
-                Boss = "Bomb Torizo",
-                MemoryAddress = 0,
-                MemoryFlag = 0x4,
-            },
-            new()
-            {
-                Boss = "Golden Torizo",
-                MemoryAddress = 2,
-                MemoryFlag = 0x4,
-            },
-        };
+        return
+        [
+            new BossInfo("Spore Spawn") { MemoryAddress = 1, MemoryFlag = 0x2, },
+            new BossInfo("Botwoon") { MemoryAddress = 4, MemoryFlag = 0x2, },
+            new BossInfo("Kraid") { Type = BossType.Kraid, MemoryAddress = 1, MemoryFlag = 0x1, },
+            new BossInfo("Crocomire") { MemoryAddress = 2, MemoryFlag = 0x2, },
+            new BossInfo("Phantoon") { Type = BossType.Phantoon, MemoryAddress = 3, MemoryFlag = 0x1, },
+            new BossInfo("Shaktool"),
+            new BossInfo("Draygon") { Type = BossType.Draygon, MemoryAddress = 4, MemoryFlag = 0x1, },
+            new BossInfo("Ridley") { Type = BossType.Ridley, MemoryAddress = 2, MemoryFlag = 0x1, },
+            new BossInfo("Mother Brain"),
+            new BossInfo("Bomb Torizo") { MemoryAddress = 0, MemoryFlag = 0x4, },
+            new BossInfo("Golden Torizo") { MemoryAddress = 2, MemoryFlag = 0x4, }
+
+        ];
     }
 
     public static object Example()
     {
         return new BossConfig
         {
-            new()
+            new BossInfo("Bomb Torizo")
             {
-                Boss = "Bomb Torizo",
                 Name = new("Bomb Torizo", "Bomb Chozo", new Possibility("Bozo", 0.1)),
                 WhenTracked = new SchrodingersString("Message when clearing the boss", new Possibility("Another message when clearing the boss", 0.1)),
                 WhenDefeated = new SchrodingersString("Message when defeating the boss", new Possibility("Another message when defeating the boss", 0.1)),

@@ -165,99 +165,104 @@ public class RomGenerationService : IRomGenerationService
             localConfig.LinkName = linkSpriteName;
         }
 
-        if (options.PatchOptions.CasPatches.Respin)
+        ApplyCasPatches(rom, options.PatchOptions);
+
+        Rom.UpdateChecksum(rom);
+
+        return rom;
+    }
+
+    public void ApplyCasPatches(byte[] rom, PatchOptions options)
+    {
+        if (options.CasPatches.Respin)
         {
             using var patch = IpsPatch.Respin();
             Rom.ApplySuperMetroidIps(rom, patch);
         }
 
-        if (options.PatchOptions.CasPatches.NerfedCharge)
+        if (options.CasPatches.NerfedCharge)
         {
             using var patch = IpsPatch.NerfedCharge();
             Rom.ApplySuperMetroidIps(rom, patch);
         }
 
-        if (options.PatchOptions.CasPatches.RefillAtSaveStation)
+        if (options.CasPatches.RefillAtSaveStation)
         {
             using var patch = IpsPatch.RefillAtSaveStation();
             Rom.ApplySuperMetroidIps(rom, patch);
         }
 
-        if (options.PatchOptions.CasPatches.FastDoors)
+        if (options.CasPatches.FastDoors)
         {
             using var patch = IpsPatch.FastDoors();
             Rom.ApplySuperMetroidIps(rom, patch);
         }
 
-        if (options.PatchOptions.CasPatches.FastElevators)
+        if (options.CasPatches.FastElevators)
         {
             using var patch = IpsPatch.FastElevators();
             Rom.ApplySuperMetroidIps(rom, patch);
         }
 
-        if (options.PatchOptions.CasPatches.AimAnyButton)
+        if (options.CasPatches.AimAnyButton)
         {
             using var patch = IpsPatch.AimAnyButton();
             Rom.ApplySuperMetroidIps(rom, patch);
         }
 
-        if (options.PatchOptions.CasPatches.Speedkeep)
+        if (options.CasPatches.Speedkeep)
         {
             using var patch = IpsPatch.SpeedKeep();
             Rom.ApplySuperMetroidIps(rom, patch);
         }
 
-        if (options.PatchOptions.CasPatches.DisableFlashing)
+        if (options.CasPatches.DisableFlashing)
         {
             using var patch = IpsPatch.DisableMetroidFlashing();
             Rom.ApplySuperMetroidIps(rom, patch);
         }
 
-        if (options.PatchOptions.CasPatches.DisableScreenShake)
+        if (options.CasPatches.DisableScreenShake)
         {
             using var patch = IpsPatch.DisableMetroidScreenShake();
             Rom.ApplySuperMetroidIps(rom, patch);
         }
 
-        if (options.PatchOptions.CasPatches.EasierWallJumps)
+        if (options.CasPatches.EasierWallJumps)
         {
             using var patch = IpsPatch.EasierWallJumps();
             Rom.ApplySuperMetroidIps(rom, patch);
         }
 
-        if (options.PatchOptions.CasPatches.SnapMorph)
+        if (options.CasPatches.SnapMorph)
         {
             using var patch = IpsPatch.SnapMorph();
             Rom.ApplySuperMetroidIps(rom, patch);
         }
 
-        if (options.PatchOptions.CasPatches.SandPitPlatforms)
+        if (options.CasPatches.SandPitPlatforms)
         {
             using var patch = IpsPatch.SandPitPlatforms();
             Rom.ApplySuperMetroidIps(rom, patch);
         }
 
-        if (options.PatchOptions.MetroidControls.RunButtonBehavior == RunButtonBehavior.AutoRun)
+        if (options.MetroidControls.RunButtonBehavior == RunButtonBehavior.AutoRun)
         {
             using var patch = IpsPatch.AutoRun();
             Rom.ApplySuperMetroidIps(rom, patch);
         }
 
-        if (options.PatchOptions.MetroidControls.ItemCancelBehavior != ItemCancelBehavior.Vanilla)
+        if (options.MetroidControls.ItemCancelBehavior != ItemCancelBehavior.Vanilla)
         {
-            using var patch = options.PatchOptions.MetroidControls.ItemCancelBehavior == ItemCancelBehavior.Toggle ? IpsPatch.ItemCancelToggle() : IpsPatch.ItemCancelHoldFire();
+            using var patch = options.MetroidControls.ItemCancelBehavior == ItemCancelBehavior.Toggle ? IpsPatch.ItemCancelToggle() : IpsPatch.ItemCancelHoldFire();
             Rom.ApplySuperMetroidIps(rom, patch);
         }
 
-        if (options.PatchOptions.MetroidControls.AimButtonBehavior == AimButtonBehavior.UnifiedAim)
+        if (options.MetroidControls.AimButtonBehavior == AimButtonBehavior.UnifiedAim)
         {
             using var patch = IpsPatch.UnifiedAim();
             Rom.ApplySuperMetroidIps(rom, patch);
         }
-
-        Rom.UpdateChecksum(rom);
-
-        return rom;
     }
 
 

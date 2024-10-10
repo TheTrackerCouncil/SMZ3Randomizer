@@ -8,6 +8,7 @@ using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.GeneratedData;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData;
+using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
 using TrackerCouncil.Smz3.SeedGenerator.FileData;
 using TrackerCouncil.Smz3.SeedGenerator.Infrastructure;
@@ -113,6 +114,15 @@ public class Smz3Randomizer : ISeededRandomizer
             var worldGenerationData = new WorldGenerationData(world, patches);
             _logger.LogInformation("Patch created for world {WorldId}", world.Id);
             seedData.WorldGenerationData.Add(worldGenerationData);
+        }
+
+        // Mark Agahnim and the Golden Four Metroid bosses as known
+        var bossRewardRegions = worlds.SelectMany(x => x.BossRegions)
+            .Where(x => x.BossType is BossType.Agahnim || x.BossType.IsInCategory(BossCategory.GoldenFour))
+            .OfType<IHasReward>();
+        foreach (var region in bossRewardRegions)
+        {
+            region.MarkedReward = region.RewardType;
         }
 
         Debug.WriteLine("Generated seed on randomizer instance " + GetHashCode());

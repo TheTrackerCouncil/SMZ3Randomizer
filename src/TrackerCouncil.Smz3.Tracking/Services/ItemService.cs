@@ -61,9 +61,7 @@ public class ItemService : IItemService
     /// specified name.
     /// </returns>
     public Item? FirstOrDefault(string name)
-        => LocalPlayersItems().FirstOrDefault(x => x.Name == name)
-           ?? LocalPlayersItems().FirstOrDefault(x => x.Metadata.Name?.Contains(name, StringComparison.OrdinalIgnoreCase) == true)
-           ?? LocalPlayersItems().FirstOrDefault(x => x.Metadata.GetStage(name) != null);
+        => LocalPlayersItems().FirstOrDefault(x => x.Is(name));
 
     /// <summary>
     /// Finds an item with the specified item type for the local player.
@@ -88,7 +86,7 @@ public class ItemService : IItemService
     /// tracked at least once; otherwise, <see langword="false"/>.
     /// </returns>
     public virtual bool IsTracked(ItemType itemType)
-        => LocalPlayersItems().Any(x => x.Type == itemType && x.State.TrackingState > 0);
+        => LocalPlayersItems().Any(x => x.Type == itemType && x.TrackingState > 0);
 
     /// <summary>
     /// Enumerates all items that can be tracked for all players.
@@ -111,7 +109,7 @@ public class ItemService : IItemService
     /// A collection of items that have been tracked at least once.
     /// </returns>
     public IEnumerable<Item> TrackedItems()
-        => LocalPlayersItems().Where(x => x.State.TrackingState > 0);
+        => LocalPlayersItems().Where(x => x.TrackingState > 0);
 
     /// <summary>
     /// Returns a random name for the specified item including article, e.g.
@@ -127,7 +125,6 @@ public class ItemService : IItemService
         var item = FirstOrDefault(itemType);
         return item?.Metadata.NameWithArticle ?? itemType.GetDescription();
     }
-
 
     /// <summary>
     /// Finds an reward with the specified item type.
@@ -182,7 +179,8 @@ public class ItemService : IItemService
     /// A collection of reward that have been tracked.
     /// </returns>
     public virtual IEnumerable<Reward> TrackedRewards()
-        => _world.World.Dungeons.Where(x => x.HasReward && x.DungeonState.Cleared).Select(x => new Reward(x.MarkedReward, _world.World, (IHasReward)x));
+        => _world.World.RewardRegions.Where(x => x.HasReceivedReward)
+                .Select(x => x.Reward);
 
     /// <summary>
     /// Enumerates all bosses that can be tracked for all players.
@@ -207,7 +205,7 @@ public class ItemService : IItemService
     /// A collection of bosses that have been tracked.
     /// </returns>
     public virtual IEnumerable<Boss> TrackedBosses()
-        => LocalPlayersBosses().Where(x => x.State.Defeated);
+        => LocalPlayersBosses().Where(x => x.Defeated);
 
     /// <summary>
     /// Gets the current progression based on the items the user has collected,
@@ -219,9 +217,9 @@ public class ItemService : IItemService
     {
         var key = $"{assumeKeys}";
 
-        if (_progression.ContainsKey(key))
+        if (_progression.TryGetValue(key, out var prevProgression))
         {
-            return _progression[key];
+            return prevProgression;
         }
 
         var progression = new Progression();
@@ -235,7 +233,7 @@ public class ItemService : IItemService
 
         foreach (var item in TrackedItems().Select(x => x.State).Distinct())
         {
-            if (item.Type == null || item.Type == ItemType.Nothing) continue;
+            if (item.Type is null or ItemType.Nothing) continue;
             progression.AddRange(Enumerable.Repeat(item.Type.Value, item.TrackingState));
         }
 
@@ -273,6 +271,13 @@ public class ItemService : IItemService
             default:
                 return GetProgression(assumeKeys: _world.World.Config.KeysanityMode == KeysanityMode.None);
         }
+    }
+
+    public Progression GetProgression(Location location)
+    {
+        return location.Region is Z3Region
+            ? GetProgression(assumeKeys: !_world.World.Config.ZeldaKeysanity)
+            : GetProgression(assumeKeys: !_world.World.Config.MetroidKeysanity);
     }
 
     /// <summary>

@@ -8,6 +8,7 @@ using AvaloniaControls.Models;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.UI.Services;
 using TrackerCouncil.Smz3.UI.ViewModels;
+using Location = TrackerCouncil.Smz3.Data.WorldData.Location;
 
 namespace TrackerCouncil.Smz3.UI.Views;
 
@@ -24,30 +25,19 @@ public partial class TrackerLocationsWindow : RestorableWindow
     public TrackerLocationsWindow()
     {
         InitializeComponent();
+        var mockLocationsNames = new List<string>();
+        for (var i = 0; i < 20; i++)
+        {
+            mockLocationsNames.Add($"Location {i}");
+        }
+
         DataContext = _model = new TrackerLocationsViewModel()
         {
             Regions =
             [
-                new RegionViewModel()
-                {
-                    RegionName = "Test Region",
-                    Locations = CreateMockLocations()
-                }
+                new RegionViewModel("Test Region", mockLocationsNames)
             ]
         };
-        return;
-
-        List<LocationViewModel> CreateMockLocations()
-        {
-            var toReturn = new List<LocationViewModel>();
-
-            for (var i = 0; i < 20; i++)
-            {
-                toReturn.Add(new LocationViewModel(null, true, true) { Name = $"Location {i}"});
-            }
-
-            return toReturn;
-        }
     }
 
     public TrackerLocationsWindow(TrackerLocationsWindowService service)
@@ -76,14 +66,14 @@ public partial class TrackerLocationsWindow : RestorableWindow
     private void ToggleShowOutOfLogicButton_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
     {
         _model.ShowOutOfLogic = (sender as CheckBox)?.IsChecked == true;
-        _service?.UpdateModel();
+        // _service?.UpdateModel();
         OutOfLogicChanged?.Invoke(this, new OutOfLogicChangedEventArgs() { ShowOutOfLogic = _model.ShowOutOfLogic });
     }
 
     private void EnumComboBox_OnValueChanged(object sender, EnumValueChangedEventArgs args)
     {
         _model.Filter = (sender as EnumComboBox)?.Value as RegionFilter? ?? RegionFilter.None;
-        _service?.UpdateModel();
+        // _service?.UpdateModel();
     }
 }
 

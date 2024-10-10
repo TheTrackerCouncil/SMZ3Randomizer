@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
@@ -9,15 +10,11 @@ using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda;
 
-public class GanonsTower : Z3Region, IDungeon
+public class GanonsTower : Z3Region, IHasTreasure, IHasBoss
 {
-    public static readonly int[] MusicAddresses = new[] {
-        0x02D5C9
-    };
-
     public GanonsTower(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
-        RegionItems = new[] { ItemType.KeyGT, ItemType.BigKeyGT, ItemType.MapGT, ItemType.CompassGT };
+        RegionItems = [ItemType.KeyGT, ItemType.BigKeyGT, ItemType.MapGT, ItemType.CompassGT];
 
         BobsTorch = new Location(this, LocationId.GanonsTowerBobsTorch, 0x308161, LocationType.Regular,
             name: "Bob's Torch",
@@ -116,20 +113,25 @@ public class GanonsTower : Z3Region, IDungeon
         MiniHelmasaurRoom = new MiniHelmasaurRoomRoom(this, metadata, trackerState);
         StartingRooms = new List<int> { 0xC };
         Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Ganon's Tower");
-        DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Ganon's Tower", "Ganon");
-        DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
         MapName = "Dark World";
+
+        ((IHasTreasure)this).ApplyState(trackerState);
+        ((IHasBoss)this).ApplyState(trackerState);
     }
 
     public override string Name => "Ganon's Tower";
 
-    public int SongIndex { get; init; } = 11;
-    public string Abbreviation => "GT";
     public LocationId? BossLocationId => null;
 
-    public DungeonInfo DungeonMetadata { get; set; }
+    public BossType DefaultBossType => BossType.Ganon;
 
-    public TrackerDungeonState DungeonState { get; set; }
+    public TrackerTreasureState TreasureState { get; set; } = null!;
+
+    public event EventHandler? UpdatedTreasure;
+
+    public void OnUpdatedTreasure() => UpdatedTreasure?.Invoke(this, EventArgs.Empty);
+
+    public Boss Boss { get; set; } = null!;
 
     public Location BobsTorch { get; }
 
@@ -158,8 +160,6 @@ public class GanonsTower : Z3Region, IDungeon
     public BigKeyRoomRoom BigKeyRoom { get; }
 
     public MiniHelmasaurRoomRoom MiniHelmasaurRoom { get; }
-
-    public Region ParentRegion => World.DarkWorldDeathMountainWest;
 
     public override bool CanEnter(Progression items, bool requireRewards)
     {
@@ -190,6 +190,9 @@ public class GanonsTower : Z3Region, IDungeon
 
         return base.CanFill(item, items);
     }
+
+    public bool CanBeatBoss(Progression items) => MoldormChest.IsAvailable(items) && items.MasterSword &&
+                                                  items.Contains(ItemType.SilverArrows);
 
     private bool TowerAscend(Progression items)
     {

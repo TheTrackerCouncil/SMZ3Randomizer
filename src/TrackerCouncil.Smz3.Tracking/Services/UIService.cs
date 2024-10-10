@@ -79,7 +79,7 @@ public class UIService: IUIService
         if (item.Metadata.HasStages || item.Metadata.Multiple)
         {
             var baseFileName = GetSpritePath("Items", $"{item.Metadata.Item.ToLowerInvariant()}.png", out var profilePath);
-            fileName = GetSpritePath("Items", $"{item.Metadata.Item.ToLowerInvariant()} ({item.State.TrackingState}).png", out _, profilePath);
+            fileName = GetSpritePath("Items", $"{item.Metadata.Item.ToLowerInvariant()} ({item.TrackingState}).png", out _, profilePath);
             if (File.Exists(fileName))
                 return fileName;
             else
@@ -111,10 +111,10 @@ public class UIService: IUIService
     /// <summary>
     /// Returns the path of the sprite for the dungeon
     /// </summary>
-    /// <param name="dungeon">The dungeon requested</param>
+    /// <param name="hasTreasure">The dungeon requested</param>
     /// <returns>The full path of the sprite or null if it's not found</returns>
-    public string? GetSpritePath(IDungeon dungeon) => GetSpritePath("Dungeons",
-        $"{dungeon.DungeonName.ToLowerInvariant()}.png", out _);
+    public string? GetSpritePath(IHasTreasure hasTreasure) => GetSpritePath("Dungeons",
+        $"{hasTreasure.Name.ToLowerInvariant()}.png", out _);
 
     /// <summary>
     /// Returns the path of the sprite for the reward

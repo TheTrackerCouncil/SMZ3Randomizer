@@ -181,18 +181,29 @@ public abstract class Region : IHasLocations
     protected IEnumerable<Room> GetRooms()
         => GetType().GetPropertyValues<Room>(this);
 
-    public bool CheckDungeonMedallion(Progression items, IDungeon dungeon)
+    public Accessibility GetKeysanityAdjustedAccessibility(Accessibility accessibility)
+    {
+        if (Config.KeysanityForRegion(this))
+        {
+            return accessibility;
+        }
+        else if (accessibility == Accessibility.AvailableWithKeys)
+        {
+            return Accessibility.Available;
+        }
+        else if (accessibility == Accessibility.RelevantWithKeys)
+        {
+            return Accessibility.Relevant;
+        }
+
+        return accessibility;
+    }
+
+    /*public bool CheckDungeonMedallion(Progression items, IDungeon dungeon)
     {
         if (!dungeon.NeedsMedallion) return true;
         var medallionItem = dungeon.MarkedMedallion;
         return (medallionItem != ItemType.Nothing && items.Contains(medallionItem)) ||
                (items.Bombos && items.Ether && items.Quake);
-    }
-
-    public int CountReward(Progression items, RewardType reward)
-    {
-        return World.Dungeons
-            .Where(x => x is IHasReward rewardRegion && x.MarkedReward == reward)
-            .Count(x => x.DungeonState.Cleared);
-    }
+    }*/
 }
