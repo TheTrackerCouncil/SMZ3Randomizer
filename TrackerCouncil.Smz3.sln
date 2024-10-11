@@ -11,11 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrackerCouncil.Smz3.Shared"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrackerCouncil.Smz3.Tools", "src\TrackerCouncil.Smz3.Tools\TrackerCouncil.Smz3.Tools.csproj", "{B594A95C-7B87-447A-8A80-EBF6991EB04C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrackerCouncil.Smz3.UI.Legacy", "src\TrackerCouncil.Smz3.UI.Legacy\TrackerCouncil.Smz3.UI.Legacy.csproj", "{CCEDE012-894B-48F6-811E-B2324E74C604}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A9465041-3416-4C60-A160-1454A045B90F} = {A9465041-3416-4C60-A160-1454A045B90F}
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F11C9119-7B5E-46E4-9A58-E157B80C7E9F}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -69,10 +64,6 @@ Global
 		{B594A95C-7B87-447A-8A80-EBF6991EB04C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B594A95C-7B87-447A-8A80-EBF6991EB04C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B594A95C-7B87-447A-8A80-EBF6991EB04C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CCEDE012-894B-48F6-811E-B2324E74C604}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CCEDE012-894B-48F6-811E-B2324E74C604}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CCEDE012-894B-48F6-811E-B2324E74C604}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CCEDE012-894B-48F6-811E-B2324E74C604}.Release|Any CPU.Build.0 = Release|Any CPU
 		{286CCBD5-FB69-4120-A0DB-FBDAD5C43072}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{286CCBD5-FB69-4120-A0DB-FBDAD5C43072}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{286CCBD5-FB69-4120-A0DB-FBDAD5C43072}.Release|Any CPU.ActiveCfg = Release|Any CPU
