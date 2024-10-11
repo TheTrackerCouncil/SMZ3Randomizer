@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AvaloniaControls.ControlServices;
+using AvaloniaControls.Services;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Shared.Enums;
@@ -17,44 +19,55 @@ public class TrackerLocationsWindowService(TrackerBase trackerBase, IWorldServic
 
     public TrackerLocationsViewModel GetViewModel()
     {
-        InitMarkedLocations();
-        InitHintTiles();
-        InitRegions();
-
-        trackerBase.LocationTracker.LocationMarked += (_, args) =>
+        ITaskService.Run(() =>
         {
-            AddUpdateMarkedLocation(args.Location);
-        };
+            InitMarkedLocations();
+            InitHintTiles();
+            InitRegions();
+
+            trackerBase.LocationTracker.LocationMarked += (_, args) =>
+            {
+                AddUpdateMarkedLocation(args.Location);
+            };
+        });
 
         return _model;
     }
 
-    /*public void UpdateModel()
+    public void UpdateShowOutOfLogic(bool showOutOfLogic)
     {
-        var markedLocations = new List<MarkedLocationViewModel>();
-
-        var progressionWithoutKeys = itemService.GetProgression(false);
-        var progressionWithKeys = itemService.GetProgression(true);
-
-        foreach (var markedLocation in worldService.MarkedLocations())
+        // Because the map update is snappy while this is slow, run this in a separate
+        // thread to avoid locking up the map
+        ITaskService.Run(() =>
         {
-            var markedItemType = markedLocation.MarkedItem ?? ItemType.Nothing;
-            if (markedItemType == ItemType.Nothing) continue;
-            var item = itemService.FirstOrDefault(markedItemType);
-            if (item == null) continue;
-            markedLocations.Add(new MarkedLocationViewModel(markedLocation, item, uiService.GetSpritePath(item),
-                markedLocation.IsAvailable(progressionWithoutKeys)));
+            _model.ShowOutOfLogic = showOutOfLogic;
+
+            foreach (var region in _allRegions)
+            {
+                foreach (var location in region.Locations)
+                {
+                    location.ShowOutOfLogic = showOutOfLogic;
+                }
+
+                region.ShowOutOfLogic = showOutOfLogic;
+                region.UpdateLocationCount();
+                region.SortLocations();
+            }
+
+            ShowSortedRegions();
+        });
+
+    }
+
+    public void UpdateFilter(RegionFilter filter)
+    {
+        _model.Filter = filter;
+
+        foreach (var region in _allRegions)
+        {
+            region.MatchesFilter = region.Region?.MatchesFilter(filter) == true;
         }
-
-        //_model.MarkedLocations = markedLocations;
-
-        _model.HintTiles = worldService.ViewedHintTiles
-            .Where(x => x.Locations?.Count() > 1)
-            .Select(x => new HintTileViewModel(x))
-            .ToList();
-
-
-    }*/
+    }
 
     public void InitMarkedLocations()
     {
@@ -122,15 +135,12 @@ public class TrackerLocationsWindowService(TrackerBase trackerBase, IWorldServic
                 }
 
                 _lastRegion = regionModel;
-                _model.Regions = _allRegions.Where(x => x.VisibleLocations > 0).OrderByDescending(x => x.SortOrder)
-                    .ThenByDescending(x => x.VisibleLocations)
-                    .ToList();
+                ShowSortedRegions();
             };
         }
 
         _allRegions = regionModels;
-        _model.Regions = _allRegions.Where(x => x.VisibleLocations > 0).OrderByDescending(x => x.SortOrder)
-            .ThenByDescending(x => x.VisibleLocations).ToList();;
+        ShowSortedRegions();
         _lastRegion = _model.Regions.First();
         _lastRegion.SortOrder = 1;
     }
@@ -142,5 +152,12 @@ public class TrackerLocationsWindowService(TrackerBase trackerBase, IWorldServic
             return;
         }
         trackerBase.LocationTracker.Clear(model.Location);
+    }
+
+    private void ShowSortedRegions()
+    {
+        _model.Regions = _allRegions.Where(x => x.VisibleLocations > 0).OrderByDescending(x => x.SortOrder)
+            .ThenByDescending(x => x.InLogicLocationCount)
+            .ToList();
     }
 }

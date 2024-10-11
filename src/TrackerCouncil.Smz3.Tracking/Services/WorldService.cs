@@ -114,7 +114,7 @@ public class WorldService : IWorldService
             // Then get that region with all of its valid locations for the filter options
             // Order by last cleared region, then by location count per region
             return Regions
-                .Where(x => RegionMatchesFilter(regionFilter, x))
+                .Where(x => x.MatchesFilter(regionFilter))
                 .Select(x => (Region: x, Locations: x.Locations.Where(l => IsValidLocation(l, unclearedOnly, outOfLogic, progression, itemFilter, inRegion))))
                 .OrderBy(x => x.Region != World.LastClearedLocation?.Region)
                 .ThenByDescending(x => x.Locations.Count())
@@ -187,20 +187,6 @@ public class WorldService : IWorldService
 
     public IEnumerable<PlayerHintTile> ViewedHintTiles
         => World.HintTiles.Where(x => x.State?.HintState == HintState.Viewed);
-
-    /// <summary>
-    /// Returns if a given region matches the LocationFilter
-    /// </summary>
-    /// <param name="filter">The filter to apply</param>
-    /// <param name="region">The SMZ3 region to check</param>
-    /// <returns>True if the region matches, false otherwise</returns>
-    private static bool RegionMatchesFilter(RegionFilter filter, Region region) => filter switch
-    {
-        RegionFilter.None => true,
-        RegionFilter.ZeldaOnly => region is Z3Region,
-        RegionFilter.MetroidOnly => region is SMRegion,
-        _ => throw new InvalidEnumArgumentException(nameof(filter), (int)filter, typeof(RegionFilter)),
-    };
 
     private bool IsKeysanityForLocation(Location location)
         => World.Config.KeysanityForRegion(location.Region);

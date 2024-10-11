@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
@@ -198,6 +199,19 @@ public abstract class Region : IHasLocations
 
         return accessibility;
     }
+
+    /// <summary>
+    /// Returns if the region matches the LocationFilter
+    /// </summary>
+    /// <param name="filter">The filter to apply</param>
+    /// <returns>True if the region matches, false otherwise</returns>
+    public bool MatchesFilter(RegionFilter filter) => filter switch
+    {
+        RegionFilter.None => true,
+        RegionFilter.ZeldaOnly => this is Z3Region,
+        RegionFilter.MetroidOnly => this is SMRegion,
+        _ => throw new InvalidEnumArgumentException(nameof(filter), (int)filter, typeof(RegionFilter)),
+    };
 
     /*public bool CheckDungeonMedallion(Progression items, IDungeon dungeon)
     {

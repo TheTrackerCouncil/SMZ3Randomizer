@@ -5,6 +5,7 @@ using System.Linq;
 using Avalonia;
 using AvaloniaControls;
 using AvaloniaControls.ControlServices;
+using AvaloniaControls.Services;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
@@ -25,8 +26,8 @@ public class TrackerMapWindowService(
     IWorldService worldService,
     IItemService itemService) : ControlService
 {
-    private TrackerMapWindowViewModel _model = new();
-    private Dictionary<TrackerMap, List<TrackerMapLocationViewModel>> _mapLocations = new();
+    private readonly TrackerMapWindowViewModel _model = new();
+    private readonly Dictionary<TrackerMap, List<TrackerMapLocationViewModel>> _mapLocations = new();
     private string _markedImageGoodPath = "";
     private string _markedImageUselessPath = "";
 
@@ -34,6 +35,14 @@ public class TrackerMapWindowService(
     {
         _model.Maps = trackerMapConfig.Maps.ToList();
 
+        // The map initializes really slowly, so actually initialize the data in a separate thread
+        ITaskService.Run(InitViewModelData);
+
+        return _model;
+    }
+
+    private void InitViewModelData()
+    {
         _markedImageGoodPath = Path.Combine(Sprite.SpritePath, "Maps", "marked_good.png");
         _markedImageUselessPath = Path.Combine(Sprite.SpritePath, "Maps", "marked_useless.png");
 
@@ -73,7 +82,6 @@ public class TrackerMapWindowService(
 
         _model.SelectedMap = _model.Maps.Last();
         UpdateMap();
-        return _model;
     }
 
     private List<TrackerMapLocationViewModel> GetItemLocationModels(TrackerMapRegion mapRegion, TrackerMapLocation mapLocation, List<Location> allLocations)

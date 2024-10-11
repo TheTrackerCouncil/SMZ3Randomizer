@@ -28,20 +28,21 @@ public class LocationViewModel : ViewModelBase
     public double Opacity => InLogic || InLogicWithKeys ? 1.0 : 0.33;
     public bool ShowKeyIcon => InLogicWithKeys && !InLogic;
 
-    [ReactiveLinkedProperties(nameof(Opacity), nameof(IsVisible))]
+    [Reactive]
+    [ReactiveLinkedProperties(nameof(IsVisible))]
     public bool ShowOutOfLogic { get; set; }
 
+    [Reactive]
     [ReactiveLinkedProperties(nameof(Opacity), nameof(ShowKeyIcon))]
     public bool InLogic { get; set; }
 
+    [Reactive]
     [ReactiveLinkedProperties(nameof(Opacity), nameof(ShowKeyIcon), nameof(IsVisible))]
     public bool InLogicWithKeys { get; set; }
 
     public bool Cleared { get; set; }
 
     public bool IsVisible => !Cleared && (InLogic || InLogicWithKeys || ShowOutOfLogic);
-
-
 
     public Location? Location { get; }
 }

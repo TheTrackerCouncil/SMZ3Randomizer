@@ -27,16 +27,12 @@ public class RegionViewModel : ViewModelBase
 
         foreach (var location in AllLocations.Values.Where(x => x.Location != null))
         {
-            if (location.InLogic)
-            {
-                locations.Add(location);
-            }
-
+            locations.Add(location);
             location.Location!.AccessibilityUpdated += LocationOnAccessibilityUpdated;
         }
 
         Locations = locations;
-        VisibleLocations = Locations.Count(x => x.IsVisible);
+        UpdateLocationCount();
     }
 
     private void LocationOnAccessibilityUpdated(object? sender, EventArgs e)
@@ -46,8 +42,8 @@ public class RegionViewModel : ViewModelBase
         model.InLogic = location.Accessibility == Accessibility.Available;
         model.InLogicWithKeys = location.Accessibility == Accessibility.AvailableWithKeys;
         model.Cleared = location.Cleared;
-        Locations = AllLocations.Values.OrderBy(x => !x.InLogic).ToList();
-        VisibleLocations = Locations.Count(x => x.IsVisible);
+        SortLocations();
+        UpdateLocationCount();
 
         if (location.Accessibility == Accessibility.Cleared)
         {
@@ -58,16 +54,32 @@ public class RegionViewModel : ViewModelBase
     public Region? Region { get; set; }
     public static string? ChestImage { get; set; }
     public string RegionName { get; set; }
-    public string LocationCount => Locations.Count.ToString();
-    public int VisibleLocations { get; set; }
+    [Reactive] public string LocationCount { get; set; } = "";
+    public int InLogicLocationCount => Locations.Count(x => x.InLogic || x.InLogicWithKeys);
     public int SortOrder { get; set; }
     public bool ShowOutOfLogic { get; set; }
-
-    [Reactive]
-    [ReactiveLinkedProperties(nameof(LocationCount))]
-    public List<LocationViewModel> Locations { get; set; }
-
+    public bool IsVisible => VisibleLocations > 0 && MatchesFilter;
+    [Reactive] public List<LocationViewModel> Locations { get; set; }
     public Dictionary<LocationId, LocationViewModel> AllLocations { get; set; } = [];
 
+    [Reactive]
+    [ReactiveLinkedProperties(nameof(IsVisible))]
+    public bool MatchesFilter { get; set; }
+
+    [Reactive]
+    [ReactiveLinkedProperties(nameof(IsVisible))]
+    public int VisibleLocations { get; set; }
+
     public event EventHandler? RegionUpdated;
+
+    public void UpdateLocationCount()
+    {
+        VisibleLocations = Locations.Count(x => x.IsVisible);
+        LocationCount = VisibleLocations.ToString();
+    }
+
+    public void SortLocations()
+    {
+        Locations = AllLocations.Values.OrderBy(x => !x.InLogic).ToList();
+    }
 }

@@ -70,7 +70,7 @@
           <ItemsControl ItemsSource="{Binding Regions}" Margin="10 0 ">
             <ItemsControl.ItemTemplate>
               <DataTemplate>
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" IsVisible="{Binding IsVisible}">
                   <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding LocationCount}" FontWeight="Bold"></TextBlock>
                     <Image Source="{Binding ChestImage, Converter={StaticResource StringToImageConverter}}" Height="16" Margin="5 0" />

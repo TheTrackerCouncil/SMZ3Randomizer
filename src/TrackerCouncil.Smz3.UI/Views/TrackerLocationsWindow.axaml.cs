@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using AvaloniaControls.Controls;
 using AvaloniaControls.Models;
+using AvaloniaControls.Services;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.UI.Services;
 using TrackerCouncil.Smz3.UI.ViewModels;
@@ -65,15 +67,14 @@ public partial class TrackerLocationsWindow : RestorableWindow
 
     private void ToggleShowOutOfLogicButton_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
     {
-        _model.ShowOutOfLogic = (sender as CheckBox)?.IsChecked == true;
-        // _service?.UpdateModel();
-        OutOfLogicChanged?.Invoke(this, new OutOfLogicChangedEventArgs() { ShowOutOfLogic = _model.ShowOutOfLogic });
+        var newValue = (sender as CheckBox)?.IsChecked == true;
+        OutOfLogicChanged?.Invoke(this, new OutOfLogicChangedEventArgs() { ShowOutOfLogic = newValue });
+        _service?.UpdateShowOutOfLogic(newValue);
     }
 
     private void EnumComboBox_OnValueChanged(object sender, EnumValueChangedEventArgs args)
     {
-        _model.Filter = (sender as EnumComboBox)?.Value as RegionFilter? ?? RegionFilter.None;
-        // _service?.UpdateModel();
+        _service?.UpdateFilter((sender as EnumComboBox)?.Value as RegionFilter? ?? RegionFilter.None);
     }
 }
 
