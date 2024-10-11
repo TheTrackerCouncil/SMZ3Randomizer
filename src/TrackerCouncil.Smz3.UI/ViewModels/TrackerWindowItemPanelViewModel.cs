@@ -34,8 +34,6 @@ public class TrackerWindowItemPanelViewModel : TrackerWindowPanelViewModel
 
     public Dictionary<Item, string>? Items { get; set; }
 
-    public List<Item> AllItems { get; set; }
-
     public Dictionary<string, string?> ItemReplacementImages { get; set; } = [];
 
     public List<Item>? ConnectedItems { get; set; }

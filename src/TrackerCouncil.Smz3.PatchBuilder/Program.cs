@@ -54,12 +54,12 @@ if (!File.Exists(yamlPath))
             new Item(location.VanillaItem == ItemType.Nothing ? ItemType.TwentyRupees : location.VanillaItem, world);
     }
 
-    foreach (var dungeon in world.RewardRegions)
+    foreach (var rewardRegion in world.RewardRegions)
     {
-        dungeon.Reward = new Reward(dungeon.DefaultRewardType, world, dungeon);
+        rewardRegion.SetRewardType(rewardRegion.DefaultRewardType);
     }
 
-    foreach (var dungeon in world.Dungeons.Where(x => x is IHasPrerequisite).Cast<IHasPrerequisite>())
+    foreach (var dungeon in world.PrerequisiteRegions)
     {
         dungeon.RequiredItem = dungeon.DefaultRequiredItem;
     }

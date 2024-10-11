@@ -78,8 +78,7 @@ public class ZeldaRewardsPatch : RomPatch
 
         }
 
-        var a = "1";
-
+        // var a = "1";
     }
 
     private IEnumerable<GeneratedPatch> RewardPatches(IEnumerable<IHasReward> regions, IEnumerable<int> rewards, Func<int, byte[]> rewardValues)

@@ -312,7 +312,8 @@ public class Location
     /// <summary>
     /// Returns the status of a location based on the given items
     /// </summary>
-    /// <param name="items">The available items</param>
+    /// <param name="actualProgression">The available items</param>
+    /// <param name="withKeysProgression">The available items plus additional keys</param>
     /// <returns>The LocationStatus enum of the location</returns>
     public Accessibility GetAccessibility(Progression actualProgression, Progression withKeysProgression)
     {
@@ -327,7 +328,8 @@ public class Location
     /// <summary>
     /// Returns the status of a location based on the given items
     /// </summary>
-    /// <param name="items">The available items</param>
+    /// <param name="actualProgression">The available items</param>
+    /// <param name="withKeysProgression">The available items plus additional keys</param>
     /// <returns>The LocationStatus enum of the location</returns>
     public void UpdateAccessibility(Progression actualProgression, Progression withKeysProgression)
     {

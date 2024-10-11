@@ -485,7 +485,6 @@ public class TrackerWindowService(
         var model = new TrackerWindowItemPanelViewModel()
         {
             Items = items,
-            AllItems = allItems,
             ItemReplacementImages = replacementImages,
             ConnectedItems = connectedItems,
             LabelImage = labelImage,
