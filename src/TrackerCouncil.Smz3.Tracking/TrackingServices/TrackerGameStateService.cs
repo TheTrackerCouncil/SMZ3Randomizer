@@ -127,7 +127,7 @@ internal class TrackerGameStateService : TrackerService, ITrackerGameStateServic
         {
             return;
         }
-        else if (hintTile.State.HintState == HintState.Cleared)
+        else if (hintTile.HintState == HintState.Cleared)
         {
             HintTileUpdated?.Invoke(this, new HintTileUpdatedEventArgs(hintTile));
             return;
@@ -213,11 +213,11 @@ internal class TrackerGameStateService : TrackerService, ITrackerGameStateServic
         {
             var hintTile = LastViewedObject.HintTile;
 
-            if (hintTile?.State == null)
+            if (hintTile.State == null)
             {
                 Tracker.Say(response: Configs.HintTileConfig.NoPreviousHintTile);
             }
-            else if (hintTile.State.HintState != HintState.Cleared && hintTile.Locations?.Count() > 0)
+            else if (hintTile.HintState != HintState.Cleared && hintTile.Locations?.Count() > 0)
             {
                 var locations = hintTile.Locations.Select(x => World.FindLocation(x))
                     .Where(x => x is { Cleared: false, Autotracked: false }).ToList();

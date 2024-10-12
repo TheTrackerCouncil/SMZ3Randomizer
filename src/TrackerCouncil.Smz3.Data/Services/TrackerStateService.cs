@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -211,7 +212,7 @@ public class TrackerStateService : ITrackerStateService
                     MedallionType = hint.MedallionType,
                     HintTileCode = hint.HintTileCode,
                     State = hint
-                });
+                }).ToImmutableList();
             world.State = trackerState;
         }
 

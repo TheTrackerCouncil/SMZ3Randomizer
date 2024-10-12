@@ -70,7 +70,7 @@ public class ViewedText : IZeldaStateCheck
     {
         foreach (var hintTile in hintTiles)
         {
-            if (hintTile.State?.HintState != HintState.Viewed || hintTile.Locations?.Any() != true)
+            if (hintTile.HintState != HintState.Viewed || hintTile.Locations?.Any() != true)
             {
                 continue;
             }
@@ -132,14 +132,14 @@ public class ViewedText : IZeldaStateCheck
 
         _viewedHintTileRooms.Add(_lastHintTile.Room);
 
-        if (hintTile.State.HintState != HintState.Default)
+        if (hintTile.HintState != HintState.Default)
         {
             return;
         }
 
         _tracker.GameStateTracker.UpdateHintTile(hintTile);
 
-        if (hintTile.State.HintState == HintState.Viewed && hintTile.Locations?.Any() == true)
+        if (hintTile.HintState == HintState.Viewed && hintTile.Locations?.Any() == true)
         {
             AddPendingHintTile(hintTile);
         }

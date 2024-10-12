@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using AvaloniaControls.ControlServices;
 using AvaloniaControls.Services;
 using TrackerCouncil.Smz3.Abstractions;
@@ -13,7 +12,7 @@ namespace TrackerCouncil.Smz3.UI.Services;
 
 public class TrackerLocationsWindowService(TrackerBase trackerBase, IWorldService worldService, IUIService uiService, IItemService itemService) : ControlService
 {
-    private TrackerLocationsViewModel _model = new();
+    private readonly TrackerLocationsViewModel _model = new();
     private RegionViewModel? _lastRegion;
     private List<RegionViewModel> _allRegions = [];
 
@@ -69,7 +68,16 @@ public class TrackerLocationsWindowService(TrackerBase trackerBase, IWorldServic
         }
     }
 
-    public void InitMarkedLocations()
+    public void ClearLocation(LocationViewModel model)
+    {
+        if (model.Location == null)
+        {
+            return;
+        }
+        trackerBase.LocationTracker.Clear(model.Location);
+    }
+
+    private void InitMarkedLocations()
     {
         foreach (var markedLocation in worldService.MarkedLocations())
         {
@@ -77,7 +85,7 @@ public class TrackerLocationsWindowService(TrackerBase trackerBase, IWorldServic
         }
     }
 
-    public void AddUpdateMarkedLocation(Location location)
+    private void AddUpdateMarkedLocation(Location location)
     {
         if (location.MarkedItem == null)
         {
@@ -107,15 +115,22 @@ public class TrackerLocationsWindowService(TrackerBase trackerBase, IWorldServic
         }
     }
 
-    public void InitHintTiles()
+    private void InitHintTiles()
     {
-        _model.HintTiles = worldService.World.HintTiles
-            .Where(x => x.Locations?.Count() > 1)
-            .Select(x => new HintTileViewModel(x))
-            .ToList();
+        var world = worldService.World;
+        var hintTiles = new List<HintTileViewModel>();
+
+        foreach (var worldHintTile in world.HintTiles.Where(x => x.Locations?.Any() == true))
+        {
+            var locationIds = worldHintTile.Locations!.ToHashSet();
+            var locations = world.Locations.Where(x => locationIds.Contains(x.Id));
+            hintTiles.Add(new HintTileViewModel(worldHintTile, locations));
+        }
+
+        _model.HintTiles = hintTiles;
     }
 
-    public void InitRegions()
+    private void InitRegions()
     {
         var regions = worldService.World.Regions;
         var regionModels = new List<RegionViewModel>();
@@ -143,15 +158,6 @@ public class TrackerLocationsWindowService(TrackerBase trackerBase, IWorldServic
         ShowSortedRegions();
         _lastRegion = _model.Regions.First();
         _lastRegion.SortOrder = 1;
-    }
-
-    public void ClearLocation(LocationViewModel model)
-    {
-        if (model.Location == null)
-        {
-            return;
-        }
-        trackerBase.LocationTracker.Clear(model.Location);
     }
 
     private void ShowSortedRegions()

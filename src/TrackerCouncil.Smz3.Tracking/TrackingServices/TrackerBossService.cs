@@ -38,7 +38,7 @@ internal class TrackerBossService(IItemService itemService) : TrackerService, IT
         // If all treasures have been retrieved and the boss is defeated, clear all locations in the dungeon
         if (region is IHasTreasure treasureRegion)
         {
-            if (treasureRegion.RemainingTreasure > 0)
+            if (treasureRegion.RemainingTreasure == 0)
             {
                 foreach (var location in ((Region)region).Locations.Where(x => !x.Cleared))
                 {

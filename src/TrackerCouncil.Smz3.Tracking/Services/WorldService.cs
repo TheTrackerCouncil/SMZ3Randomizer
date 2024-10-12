@@ -186,7 +186,7 @@ public class WorldService : IWorldService
         => World.Regions.FirstOrDefault(x => x.Name == name || x.GetType().FullName == name);
 
     public IEnumerable<PlayerHintTile> ViewedHintTiles
-        => World.HintTiles.Where(x => x.State?.HintState == HintState.Viewed);
+        => World.HintTiles.Where(x => x.HintState == HintState.Viewed);
 
     private bool IsKeysanityForLocation(Location location)
         => World.Config.KeysanityForRegion(location.Region);
