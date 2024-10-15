@@ -34,7 +34,7 @@ public class World
 
         Logic = new Smz3.Data.Logic.Logic(this);
 
-        CreateBosses(metadata);
+        CreateBosses(metadata, trackerState);
         CreateRewards(metadata);
 
         CastleTower = new(this, Config, metadata, trackerState);
@@ -187,7 +187,7 @@ public class World
     {
         RewardType[] rewardTypes = [ RewardType.PendantGreen, RewardType.PendantRed, RewardType.PendantBlue, RewardType.CrystalRed, RewardType.CrystalRed,
             RewardType.CrystalBlue, RewardType.CrystalBlue, RewardType.CrystalBlue, RewardType.CrystalBlue, RewardType.CrystalBlue, RewardType.Agahnim,
-            RewardType.MetroidBoss, RewardType.MetroidBoss, RewardType.MetroidBoss, RewardType.MetroidBoss ];
+            RewardType.KraidToken, RewardType.PhantoonToken, RewardType.DraygonToken, RewardType.RidleyToken ];
 
         foreach (var rewardType in rewardTypes)
         {
@@ -195,7 +195,7 @@ public class World
         }
     }
 
-    public void CreateBosses(IMetadataService? metadata)
+    public void CreateBosses(IMetadataService? metadata, TrackerState? trackerState)
     {
         BossType[] bossTypes =
         [
@@ -207,7 +207,8 @@ public class World
 
         foreach (var bossType in bossTypes)
         {
-            Bosses.Add(new Boss(bossType, this, metadata));
+            var state = trackerState?.BossStates.FirstOrDefault(x => x.Type == bossType && x.WorldId == Id);
+            Bosses.Add(new Boss(bossType, this, metadata, state));
         }
     }
 

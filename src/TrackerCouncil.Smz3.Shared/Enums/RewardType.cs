@@ -37,4 +37,20 @@ public enum RewardType
     [Description("Metroid Boss Token")]
     [RewardCategory(RewardCategory.Metroid)]
     MetroidBoss,
+
+    [Description("Kraid Boss Token")]
+    [RewardCategory(RewardCategory.Metroid)]
+    KraidToken,
+
+    [Description("Phantoon Boss Token")]
+    [RewardCategory(RewardCategory.Metroid)]
+    PhantoonToken,
+
+    [Description("Draygon Boss Token")]
+    [RewardCategory(RewardCategory.Metroid)]
+    DraygonToken,
+
+    [Description("Ridley Boss Token")]
+    [RewardCategory(RewardCategory.Metroid)]
+    RidleyToken,
 }

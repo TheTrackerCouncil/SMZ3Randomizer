@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using AvaloniaControls.Models;
 using ReactiveUI.Fody.Helpers;
 using TrackerCouncil.Smz3.Shared.Enums;
 
@@ -12,4 +13,5 @@ public class TrackerLocationsViewModel : ViewModelBase
     [Reactive] public List<RegionViewModel> Regions { get; set; } = [];
     [Reactive] public RegionFilter Filter { get; set; }
     [Reactive] public bool ShowOutOfLogic { get; set; }
+    [Reactive] public bool FinishedLoading { get; set; }
 }

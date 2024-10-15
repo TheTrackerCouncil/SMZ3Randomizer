@@ -82,6 +82,8 @@ public class TrackerMapWindowService(
 
         _model.SelectedMap = _model.Maps.Last();
         UpdateMap();
+
+        _model.FinishedLoading = true;
     }
 
     private List<TrackerMapLocationViewModel> GetItemLocationModels(TrackerMapRegion mapRegion, TrackerMapLocation mapLocation, List<Location> allLocations)

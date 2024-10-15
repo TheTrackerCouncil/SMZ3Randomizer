@@ -38,7 +38,7 @@ public class LowerNorfairEast : SMRegion, IHasBoss, IHasReward
 
     public Reward Reward { get; set; } = null!;
 
-    public RewardType DefaultRewardType => RewardType.MetroidBoss;
+    public RewardType DefaultRewardType => RewardType.RidleyToken;
 
     public TrackerRewardState RewardState { get; set; } = null!;
 

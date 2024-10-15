@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TrackerCouncil.Smz3.Shared.Enums;
 
@@ -11,7 +12,7 @@ public class TrackerBossState
     public long Id { get; set; }
     public TrackerState? TrackerState { get; init; }
     [MaxLength(50)]
-    public string RegionName { get; init; } = string.Empty;
+    public string RegionName { get; set; } = string.Empty;
     [MaxLength(50)]
     public string BossName { get; init; } = string.Empty;
     public bool Defeated { get; set; }

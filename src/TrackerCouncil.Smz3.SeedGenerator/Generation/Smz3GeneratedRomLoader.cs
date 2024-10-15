@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.WorldData;
+using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Models;
@@ -50,6 +52,8 @@ public class Smz3GeneratedRomLoader
         _randomizerContext.Entry(trackerState).Collection(x => x.PrerequisiteStates).Load();
         _randomizerContext.Entry(trackerState).Collection(x => x.History).Load();
         _randomizerContext.Entry(trackerState).Collection(x => x.Hints).Load();
+
+        UpdateGeneratedRom(rom);
 
         var configs = Config.FromConfigString(rom.Settings);
         var worlds = configs.Select(config => new World(config, config.PlayerName, config.Id, config.PlayerGuid,
@@ -110,7 +114,7 @@ public class Smz3GeneratedRomLoader
         // Create custom bosses for metadata items not in the world
         foreach (var world in worlds)
         {
-            foreach (var bossMetadata in _metadata.Bosses.Where(m => !world.AllBosses.Any(b => b.Is(BossType.None, m.Boss))))
+            foreach (var bossMetadata in _metadata.Bosses.Where(m => m.Type == BossType.None && !world.AllBosses.Any(b => b.Is(BossType.None, m.Boss))))
             {
                 var bossState = new TrackerBossState()
                 {
@@ -129,4 +133,128 @@ public class Smz3GeneratedRomLoader
         _worldAccessor.World = worlds.First(x => x.IsLocalWorld);
         return worlds;
     }
+
+#pragma warning disable CS0618 // Type or member is obsolete
+    private void UpdateGeneratedRom(GeneratedRom rom)
+    {
+        if (!RandomizerVersion.IsVersionPreReplaceDungeonState(rom.GeneratorVersion) || rom.TrackerState?.PrerequisiteStates.Count > 0)
+        {
+            return;
+        }
+
+        var trackerState = rom.TrackerState!;
+
+        _randomizerContext.Entry(trackerState).Collection(x => x.DungeonStates).Load();
+
+        foreach (var boss in trackerState.BossStates.Where(x => x.Type != BossType.None))
+        {
+            boss.RegionName = MetroidBossRegions[boss.Type];
+
+            trackerState.RewardStates.Add(new TrackerRewardState()
+            {
+                TrackerState = trackerState,
+                RewardType = MetroidBossRewards[boss.Type],
+                MarkedReward = MetroidBossRewards[boss.Type],
+                HasReceivedReward = boss.Defeated,
+                RegionName = MetroidBossRegions[boss.Type],
+                AutoTracked = boss.AutoTracked,
+                WorldId = boss.WorldId
+            });
+        }
+
+        var motherBrain =
+            trackerState.BossStates.FirstOrDefault(x => x is { BossName: "Mother Brain", Type: BossType.None });
+        if (motherBrain != null)
+        {
+            motherBrain.Type = BossType.MotherBrain;
+        }
+
+        foreach (var dungeon in trackerState.DungeonStates)
+        {
+            var bossType = DungeonBosses[dungeon.Name];
+
+            trackerState.BossStates.Add(new TrackerBossState()
+            {
+                TrackerState = trackerState,
+                RegionName = dungeon.Name,
+                BossName = bossType.GetDescription(),
+                Defeated = dungeon.Cleared,
+                AutoTracked = dungeon.AutoTracked,
+                Type = bossType,
+                WorldId = dungeon.WorldId
+            });
+
+            trackerState.TreasureStates.Add(new TrackerTreasureState()
+            {
+                TrackerState = trackerState,
+                RegionName = dungeon.Name,
+                RemainingTreasure = dungeon.RemainingTreasure,
+                TotalTreasure = dungeon.RemainingTreasure,
+                HasManuallyClearedTreasure = dungeon.HasManuallyClearedTreasure,
+                WorldId = dungeon.WorldId
+            });
+
+            if (dungeon.RequiredMedallion != null)
+            {
+                trackerState.PrerequisiteStates.Add(new TrackerPrerequisiteState()
+                {
+                    TrackerState = trackerState,
+                    RegionName = dungeon.Name,
+                    WorldId = dungeon.WorldId,
+                    AutoTracked = dungeon.AutoTracked,
+                    RequiredItem = dungeon.RequiredMedallion!.Value,
+                    MarkedItem = dungeon.MarkedMedallion
+                });
+            }
+
+            if (dungeon.Reward != null)
+            {
+                trackerState.RewardStates.Add(new TrackerRewardState()
+                {
+                    TrackerState = trackerState,
+                    RewardType = dungeon.Reward!.Value,
+                    MarkedReward = dungeon.MarkedReward,
+                    HasReceivedReward = dungeon.Cleared,
+                    RegionName = dungeon.Name,
+                    AutoTracked = dungeon.AutoTracked,
+                    WorldId = dungeon.WorldId
+                });
+            }
+        }
+    }
+
+    private Dictionary<string, BossType> DungeonBosses = new()
+    {
+        { "CastleTower", BossType.Agahnim },
+        { "EasternPalace", BossType.ArmosKnights },
+        { "DesertPalace", BossType.Lanmolas },
+        { "TowerOfHera", BossType.Moldorm },
+        { "PalaceOfDarkness", BossType.HelmasaurKing },
+        { "SwampPalace", BossType.Arrghus },
+        { "SkullWoods", BossType.Mothula },
+        { "ThievesTown", BossType.Blind },
+        { "IcePalace", BossType.Kholdstare },
+        { "MiseryMire", BossType.Vitreous },
+        { "TurtleRock", BossType.Trinexx },
+        { "GanonsTower", BossType.Ganon },
+        { "HyruleCastle", BossType.CastleGuard },
+    };
+
+    private Dictionary<BossType, string> MetroidBossRegions = new()
+    {
+        { BossType.Kraid, "KraidsLair" },
+        { BossType.Phantoon, "WreckedShip" },
+        { BossType.Draygon, "InnerMaridia" },
+        { BossType.Ridley, "LowerNorfairEast" },
+    };
+
+    private Dictionary<BossType, RewardType> MetroidBossRewards = new()
+    {
+        { BossType.Kraid, RewardType.KraidToken },
+        { BossType.Phantoon, RewardType.PhantoonToken },
+        { BossType.Draygon, RewardType.DraygonToken },
+        { BossType.Ridley, RewardType.RidleyToken },
+    };
+
+#pragma warning restore CS0618 // Type or member is obsolete
 }

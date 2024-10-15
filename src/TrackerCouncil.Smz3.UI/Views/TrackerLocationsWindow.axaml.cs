@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Threading;
 using AvaloniaControls.Controls;
 using AvaloniaControls.Models;
-using AvaloniaControls.Services;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.UI.Services;
 using TrackerCouncil.Smz3.UI.ViewModels;
-using Location = TrackerCouncil.Smz3.Data.WorldData.Location;
 
 namespace TrackerCouncil.Smz3.UI.Views;
 

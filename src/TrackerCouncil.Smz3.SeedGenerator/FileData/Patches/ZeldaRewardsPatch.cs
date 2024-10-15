@@ -54,10 +54,10 @@ public class ZeldaRewardsPatch : RomPatch
             { string.Join(",", CrystalValues(5)), RewardType.CrystalRed },
             { string.Join(",", CrystalValues(6)), RewardType.CrystalRed },
             { string.Join(",", CrystalValues(7)), RewardType.CrystalBlue },
-            { string.Join(",", BossTokenValues(1)), RewardType.MetroidBoss },
-            { string.Join(",", BossTokenValues(2)), RewardType.MetroidBoss },
-            { string.Join(",", BossTokenValues(3)), RewardType.MetroidBoss },
-            { string.Join(",", BossTokenValues(4)), RewardType.MetroidBoss },
+            { string.Join(",", BossTokenValues(1)), RewardType.KraidToken },
+            { string.Join(",", BossTokenValues(2)), RewardType.PhantoonToken },
+            { string.Join(",", BossTokenValues(3)), RewardType.DraygonToken },
+            { string.Join(",", BossTokenValues(4)), RewardType.RidleyToken },
         };
 
         var regionRewards = new Dictionary<Region, RewardType>();

@@ -35,7 +35,7 @@ public class BossConfig : List<BossInfo>, IMergeable<BossInfo>, IConfigFile<Boss
             new BossInfo("Shaktool"),
             new BossInfo("Draygon") { Type = BossType.Draygon, MemoryAddress = 4, MemoryFlag = 0x1, },
             new BossInfo("Ridley") { Type = BossType.Ridley, MemoryAddress = 2, MemoryFlag = 0x1, },
-            new BossInfo("Mother Brain"),
+            new BossInfo("Mother Brain") { Type = BossType.MotherBrain },
             new BossInfo("Bomb Torizo") { MemoryAddress = 0, MemoryFlag = 0x4, },
             new BossInfo("Golden Torizo") { MemoryAddress = 2, MemoryFlag = 0x4, }
 

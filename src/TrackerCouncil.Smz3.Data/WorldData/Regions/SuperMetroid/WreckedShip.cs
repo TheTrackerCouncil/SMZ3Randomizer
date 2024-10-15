@@ -39,7 +39,7 @@ public class WreckedShip : SMRegion, IHasBoss, IHasReward
 
     public Reward Reward { get; set; } = null!;
 
-    public RewardType DefaultRewardType => RewardType.MetroidBoss;
+    public RewardType DefaultRewardType => RewardType.PhantoonToken;
 
     public TrackerRewardState RewardState { get; set; } = null!;
 

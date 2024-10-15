@@ -15,7 +15,7 @@
     <DockPanel>
       <StackPanel Orientation="Vertical" DockPanel.Dock="Top" Margin="5">
         <TextBlock Text="Marked locations" FontSize="20"/>
-        <ItemsControl ItemsSource="{Binding MarkedLocations}" Margin="5 10 ">
+        <ItemsControl ItemsSource="{Binding MarkedLocations}" Margin="5 10" IsVisible="{Binding FinishedLoading}">
           <ItemsControl.ItemTemplate>
             <DataTemplate>
               <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="32,7,*" Margin="2">
@@ -47,7 +47,7 @@
                   Margin="10 10">
           <ItemsControl.ItemTemplate>
             <DataTemplate>
-              <StackPanel Orientation="Horizontal" IsVisible="{Binding IsVisible}" Opacity="{Binding Opacity}">
+              <StackPanel Orientation="Horizontal" Opacity="{Binding Opacity}" IsVisible="{Binding IsVisible}">
                 <TextBlock Text="{Binding Name}"
                            FontWeight="Bold" />
                 <TextBlock Margin="0 0 5 0">: </TextBlock>
@@ -67,10 +67,10 @@
 
       <Grid Margin="5">
         <ScrollViewer>
-          <ItemsControl ItemsSource="{Binding Regions}" Margin="10 0 ">
+          <ItemsControl ItemsSource="{Binding Regions}" Margin="10 0">
             <ItemsControl.ItemTemplate>
               <DataTemplate>
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" IsVisible="{Binding IsVisible}">
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
                   <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding LocationCount}" FontWeight="Bold"></TextBlock>
                     <Image Source="{Binding ChestImage, Converter={StaticResource StringToImageConverter}}" Height="16" Margin="5 0" />

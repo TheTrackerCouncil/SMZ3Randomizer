@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Avalonia.Threading;
 using AvaloniaControls.ControlServices;
 using AvaloniaControls.Services;
 using TrackerCouncil.Smz3.Abstractions;
@@ -28,6 +29,8 @@ public class TrackerLocationsWindowService(TrackerBase trackerBase, IWorldServic
             {
                 AddUpdateMarkedLocation(args.Location);
             };
+
+            _model.FinishedLoading = true;
         });
 
         return _model;
@@ -120,7 +123,7 @@ public class TrackerLocationsWindowService(TrackerBase trackerBase, IWorldServic
         var world = worldService.World;
         var hintTiles = new List<HintTileViewModel>();
 
-        foreach (var worldHintTile in world.HintTiles.Where(x => x.Locations?.Any() == true))
+        foreach (var worldHintTile in world.HintTiles.Where(x => x.Locations?.Count() > 1))
         {
             var locationIds = worldHintTile.Locations!.ToHashSet();
             var locations = world.Locations.Where(x => locationIds.Contains(x.Id));
