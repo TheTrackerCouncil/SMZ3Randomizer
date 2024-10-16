@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.ComponentModel;
 using System.Linq;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.WorldData;
@@ -14,20 +13,20 @@ namespace TrackerCouncil.Smz3.Tracking.Services;
 /// <summary>
 /// Service for finding locations in the world
 /// </summary>
-public class WorldService : IWorldService
+public class WorldQueryService : IWorldQueryService
 {
     private readonly IWorldAccessor _worldAccessor;
-    private readonly IItemService _itemService;
+    private readonly IPlayerProgressionService _playerProgressionService;
 
     /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="world"></param>
-    /// <param name="itemService"></param>
-    public WorldService(IWorldAccessor world, IItemService itemService)
+    /// <param name="playerProgressionService"></param>
+    public WorldQueryService(IWorldAccessor world, IPlayerProgressionService playerProgressionService)
     {
         _worldAccessor = world;
-        _itemService = itemService;
+        _playerProgressionService = playerProgressionService;
     }
 
     /// <summary>
@@ -136,6 +135,115 @@ public class WorldService : IWorldService
     }
 
     /// <summary>
+    /// Enumerates all items that can be tracked for all players.
+    /// </summary>
+    /// <returns>A collection of items.</returns>
+    public IEnumerable<Item> AllItems() // I really want to discourage this, but necessary for now
+        => Worlds.SelectMany(x => x.AllItems);
+
+    /// <summary>
+    /// Enumerates all items that can be tracked for the local player.
+    /// </summary>
+    /// <returns>A collection of items.</returns>
+    public IEnumerable<Item> LocalPlayersItems()
+        => AllItems().Where(x => x.World.Id == World.Id);
+
+    /// <summary>
+    /// Enumerates all rewards that can be tracked for all players.
+    /// </summary>
+    /// <returns>A collection of rewards.</returns>
+
+    public virtual IEnumerable<Reward> AllRewards()
+        => Worlds.SelectMany(x => x.Rewards);
+
+    /// <summary>
+    /// Enumerates all rewards that can be tracked for the local player.
+    /// </summary>
+    /// <returns>A collection of rewards.</returns>
+
+    public virtual IEnumerable<Reward> LocalPlayersRewards()
+        => World.Rewards;
+
+    /// <summary>
+    /// Enumarates all currently tracked rewards for the local player.
+    /// This uses what the player marked as the reward for dungeons,
+    /// not the actual dungeon reward.
+    /// </summary>
+    /// <returns>
+    /// A collection of reward that have been tracked.
+    /// </returns>
+    public virtual IEnumerable<Reward> TrackedRewards()
+        => World.RewardRegions.Where(x => x.HasReceivedReward)
+            .Select(x => x.Reward);
+
+    /// <summary>
+    /// Enumerates all bosses that can be tracked for all players.
+    /// </summary>
+    /// <returns>A collection of bosses.</returns>
+
+    public virtual IEnumerable<Boss> AllBosses()
+        => Worlds.SelectMany(x => x.AllBosses);
+
+    /// <summary>
+    /// Enumerates all bosses that can be tracked for the local player.
+    /// </summary>
+    /// <returns>A collection of bosses.</returns>
+
+    public virtual IEnumerable<Boss> LocalPlayersBosses()
+        => World.AllBosses;
+
+    /// <summary>
+    /// Enumarates all currently tracked bosses for the local player.
+    /// </summary>
+    /// <returns>
+    /// A collection of bosses that have been tracked.
+    /// </returns>
+    public virtual IEnumerable<Boss> TrackedBosses()
+        => LocalPlayersBosses().Where(x => x.Defeated);
+
+
+    /// <summary>
+    /// Finds the item with the specified name for the local player.
+    /// </summary>
+    /// <param name="name">
+    /// The name of the item or item stage to find.
+    /// </param>
+    /// <returns>
+    /// An <see cref="Item"/> representing the item with the specified
+    /// name, or <see langword="null"/> if there is no item that has the
+    /// specified name.
+    /// </returns>
+    public Item? FirstOrDefault(string name)
+        => LocalPlayersItems().FirstOrDefault(x => x.Is(name));
+
+    /// <summary>
+    /// Finds an item with the specified item type for the local player.
+    /// </summary>
+    /// <param name="itemType">The type of item to find.</param>
+    /// <returns>
+    /// An <see cref="Item"/> representing the item. If there are
+    /// multiple configured items with the same type, this method returns
+    /// one at random. If there no configured items with the specified type,
+    /// this method returns <see langword="null"/>.
+    /// </returns>
+    public Item? FirstOrDefault(ItemType itemType)
+        => LocalPlayersItems().FirstOrDefault(x => x.Type == itemType);
+
+    /// <summary>
+    /// Finds an reward with the specified item type.
+    /// </summary>
+    /// <param name="rewardType">The type of reward to find.</param>
+    /// <returns>
+    /// An <see cref="Reward"/> representing the reward. If there are
+    /// multiple configured rewards with the same type, this method returns
+    /// one at random. If there no configured rewards with the specified type,
+    /// this method returns <see langword="null"/>.
+    /// </returns>
+    public Reward? FirstOrDefault(RewardType rewardType)
+        => World.Rewards.FirstOrDefault(x => x.Type == rewardType);
+
+
+    /// <summary>
     /// Returns the specific location matching the given id
     /// </summary>
     /// <param name="id"></param>
@@ -192,10 +300,10 @@ public class WorldService : IWorldService
         => World.Config.KeysanityForRegion(location.Region);
 
     private Progression Progression(bool assumeKeys)
-        => _itemService.GetProgression(assumeKeys);
+        => _playerProgressionService.GetProgression(assumeKeys);
 
     private Progression Progression(Region region)
-        => _itemService.GetProgression(region);
+        => _playerProgressionService.GetProgression(region);
 
 
 }

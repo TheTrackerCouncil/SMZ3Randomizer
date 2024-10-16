@@ -31,21 +31,17 @@ namespace TrackerCouncil.Smz3.UI.Services;
 public class TrackerWindowService(
     TrackerBase tracker,
     IUIService uiService,
-    IItemService itemService,
     OptionsFactory optionsFactory,
     IWorldAccessor world,
     ITrackerTimerService trackerTimerService,
     IServiceProvider serviceProvider,
+    IWorldQueryService worldQueryService,
     ILogger<TrackerWindowService> logger) : ControlService
 {
     private RandomizerOptions? _options;
     private TrackerWindow _window = null!;
     private readonly DispatcherTimer _dispatcherTimer = new();
     private readonly TrackerWindowViewModel _model = new();
-    private readonly Dictionary<string, TrackerWindowBossPanelViewModel> _bossModels = new();
-    private readonly Dictionary<string, TrackerWindowDungeonPanelViewModel> _dungeonModels = new();
-    private readonly Dictionary<string, TrackerWindowItemPanelViewModel> _itemModels = new();
-    private readonly List<TrackerWindowItemPanelViewModel> _medallions = new();
     private TrackerMapWindow? _trackerMapWindow;
     private TrackerLocationsWindow? _trackerLocationsWindow;
     private TrackerHelpWindow? _trackerHelpWindow;
@@ -345,11 +341,6 @@ public class TrackerWindowService(
 
     public void SetLayout(UILayout layout, bool automatic = false)
     {
-        _bossModels.Clear();
-        _dungeonModels.Clear();
-        _itemModels.Clear();
-        _medallions.Clear();
-
         _model.LayoutName = layout.Name;
         _model.CurrentLayout = layout;
 
@@ -452,7 +443,7 @@ public class TrackerWindowService(
 
         foreach (var itemName in gridLocation.Identifiers)
         {
-            var currentItems = itemService.LocalPlayersItems().Where(x => x.Is(itemName)).ToList();
+            var currentItems = worldQueryService.LocalPlayersItems().Where(x => x.Is(itemName)).ToList();
             allItems.AddRange(currentItems);
             var item = currentItems.FirstOrDefault();
             if (item == null)
@@ -463,7 +454,7 @@ public class TrackerWindowService(
 
             if (item.Type == ItemType.Bottle)
             {
-                connectedItems = itemService.LocalPlayersItems()
+                connectedItems = worldQueryService.LocalPlayersItems()
                     .Where(x => x.Type.IsInCategory(ItemCategory.Bottle)).ToList();
                 allItems.AddRange(connectedItems);
             }
@@ -504,11 +495,6 @@ public class TrackerWindowService(
             };
         }
 
-        foreach (var item in items.Keys.Concat(connectedItems ?? []))
-        {
-            _itemModels[item.Name] = model;
-        }
-
         if (model.IsMedallion)
         {
             var miseryMire = world.World.MiseryMire;
@@ -524,8 +510,6 @@ public class TrackerWindowService(
             {
                 model.IsTRRequirement = turtleRock.PrerequisiteState.MarkedItem == items.Keys.First().Type;
             };
-
-            _medallions.Add(model);
         }
 
         model.UpdateItem(null, null);
@@ -613,8 +597,6 @@ public class TrackerWindowService(
             model.RewardSet += (_, args) => tracker.RewardTracker.SetAreaReward(rewardRegion, args.RewardType);
         }
 
-        _dungeonModels.Add(dungeon.Name, model);
-
         return model;
     }
 
@@ -643,8 +625,6 @@ public class TrackerWindowService(
             Column = gridLocation.Column,
             AddShadows = _model.AddShadows
         };
-
-        _bossModels.Add(boss.Name, model);
 
         boss.UpdatedBossState += (_, _) =>
         {

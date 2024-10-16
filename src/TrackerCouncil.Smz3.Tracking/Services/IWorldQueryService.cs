@@ -6,7 +6,11 @@ using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Tracking.Services;
 
-public interface IWorldService
+/// <summary>
+/// Service for looking up various information about the world
+/// (or worlds for multiworld games)
+/// </summary>
+public interface IWorldQueryService
 {
     /// <summary>
     /// Retrieves the world for the current player
@@ -120,4 +124,54 @@ public interface IWorldService
     /// Returns the list of hint tiles that have been viewed but not cleared
     /// </summary>
     public IEnumerable<PlayerHintTile> ViewedHintTiles { get; }
+
+    /// <summary>
+    /// Enumerates all items that can be tracked for all players.
+    /// </summary>
+    /// <returns>A collection of items.</returns>
+    IEnumerable<Item> AllItems();
+
+    /// <summary>
+    /// Enumerates all items that can be tracked for the local player.
+    /// </summary>
+    /// <returns>A collection of items.</returns>
+    IEnumerable<Item> LocalPlayersItems();
+
+    /// <summary>
+    /// Finds the item with the specified name for the local player.
+    /// </summary>
+    /// <param name="name">
+    /// The name of the item or item stage to find.
+    /// </param>
+    /// <returns>
+    /// An <see cref="Item"/> representing the item with the specified
+    /// name, or <see langword="null"/> if there is no item that has the
+    /// specified name.
+    /// </returns>
+    Item? FirstOrDefault(string name);
+
+    /// <summary>
+    /// Finds an item with the specified item type for the local player.
+    /// </summary>
+    /// <param name="itemType">The type of item to find.</param>
+    /// <returns>
+    /// An <see cref="Item"/> representing the item. If there are
+    /// multiple configured items with the same type, this method returns
+    /// one at random. If there no configured items with the specified type,
+    /// this method returns <see langword="null"/>.
+    /// </returns>
+    Item? FirstOrDefault(ItemType itemType);
+
+    /// <summary>
+    /// Finds an reward with the specified item type.
+    /// </summary>
+    /// <param name="rewardType">The type of reward to find.</param>
+    /// <returns>
+    /// An <see cref="Reward"/> representing the reward. If there are
+    /// multiple configured rewards with the same type, this method returns
+    /// one at random. If there no configured rewards with the specified type,
+    /// this method returns <see langword="null"/>.
+    /// </returns>
+    Reward? FirstOrDefault(RewardType rewardType);
+
 }

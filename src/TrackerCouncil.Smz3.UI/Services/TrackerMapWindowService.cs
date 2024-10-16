@@ -23,8 +23,7 @@ public class TrackerMapWindowService(
     TrackerBase tracker,
     TrackerMapConfig trackerMapConfig,
     IWorldAccessor worldAccessor,
-    IWorldService worldService,
-    IItemService itemService) : ControlService
+    IWorldQueryService worldQueryService) : ControlService
 {
     private readonly TrackerMapWindowViewModel _model = new();
     private readonly Dictionary<TrackerMap, List<TrackerMapLocationViewModel>> _mapLocations = new();
@@ -88,7 +87,7 @@ public class TrackerMapWindowService(
 
     private List<TrackerMapLocationViewModel> GetItemLocationModels(TrackerMapRegion mapRegion, TrackerMapLocation mapLocation, List<Location> allLocations)
     {
-        var worldRegion = worldService.Region(mapRegion.TypeName) ?? throw new InvalidOperationException();
+        var worldRegion = worldQueryService.Region(mapRegion.TypeName) ?? throw new InvalidOperationException();
         var regionLocations = allLocations.Where(loc => mapRegion.TypeName == loc.Region.GetType().FullName).ToList();
         var toReturn = new List<TrackerMapLocationViewModel>();
 
@@ -187,7 +186,7 @@ public class TrackerMapWindowService(
 
     private TrackerMapLocationViewModel GetBossLocationModel(TrackerMapRegion mapRegion, TrackerMapLocation mapLocation)
     {
-        var worldRegion = worldService.Region(mapRegion.TypeName) ?? throw new InvalidOperationException();
+        var worldRegion = worldQueryService.Region(mapRegion.TypeName) ?? throw new InvalidOperationException();
         var model = new TrackerMapLocationViewModel(mapRegion, mapLocation, worldRegion);
 
         if (worldRegion is IHasBoss bossRegion)
@@ -231,13 +230,13 @@ public class TrackerMapWindowService(
     private List<TrackerMapLocationViewModel> GetDoorLocationModels(TrackerMapRegion mapRegion, TrackerMapLocation mapLocation)
     {
         var doors = mapRegion.Doors ?? throw new InvalidOperationException();
-        var worldRegion = worldService.Region(mapRegion.TypeName) ?? throw new InvalidOperationException();
+        var worldRegion = worldQueryService.Region(mapRegion.TypeName) ?? throw new InvalidOperationException();
         var toReturn = new List<TrackerMapLocationViewModel>();
 
         foreach (var door in doors)
         {
             var model = new TrackerMapLocationViewModel(mapRegion, mapLocation, worldRegion, door);
-            var item = itemService.FirstOrDefault(door.Item) ?? throw new InvalidOperationException();
+            var item = worldQueryService.FirstOrDefault(door.Item) ?? throw new InvalidOperationException();
             item.UpdatedItemState += (_, _) => UpdateDoorLocationModel(model, item);
             toReturn.Add(model);
             UpdateDoorLocationModel(model, item);
@@ -249,7 +248,7 @@ public class TrackerMapWindowService(
     private void UpdateDoorLocationModel(TrackerMapLocationViewModel location, Item? item)
     {
         var image = "";
-        item ??= itemService.FirstOrDefault(location.Name);
+        item ??= worldQueryService.FirstOrDefault(location.Name);
         if (item?.TrackingState > 0)
         {
             image = "";

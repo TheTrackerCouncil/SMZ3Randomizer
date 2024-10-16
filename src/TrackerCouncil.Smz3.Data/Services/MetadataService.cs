@@ -287,4 +287,9 @@ public class MetadataService : IMetadataService
     /// <returns></returns>
     public RewardInfo? Reward(RewardType type)
         => Rewards.FirstOrDefault(x => x.RewardType == type);
+
+    public string GetName(ItemType itemType) => Item(itemType)?.NameWithArticle ?? itemType.GetDescription();
+
+    public string GetName(RewardType rewardType) => Reward(rewardType)?.NameWithArticle ?? rewardType.GetDescription();
+
 }

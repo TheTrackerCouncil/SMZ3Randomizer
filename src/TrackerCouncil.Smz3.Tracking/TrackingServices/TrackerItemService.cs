@@ -14,7 +14,7 @@ using TrackerCouncil.Smz3.Tracking.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.TrackingServices;
 
-internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IItemService itemService, ICommunicator communicator, IWorldService worldService) : TrackerService, ITrackerItemService
+internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlayerProgressionService playerProgressionService, ICommunicator communicator, IWorldQueryService worldQueryService) : TrackerService, ITrackerItemService
 {
     private List<Item> _pendingSpeechItems = [];
 
@@ -28,14 +28,14 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IItemS
     public bool TrackItem(Item item, string? trackedAs = null, float? confidence = null, bool tryClear = true, bool autoTracked = false, Location? location = null, bool giftedItem = false, bool silent = false)
     {
         var didTrack = false;
-        var accessibleBefore = worldService.AccessibleLocations(false);
+        var accessibleBefore = worldQueryService.AccessibleLocations(false);
         var itemName = item.Name;
         var originalTrackingState = item.TrackingState;
 
         var isGTPreBigKey = !World.Config.ZeldaKeysanity
                             && autoTracked
                             && location?.Region.GetType() == typeof(GanonsTower)
-                            && !itemService.GetProgression(false).BigKeyGT;
+                            && !playerProgressionService.GetProgression(false).BigKeyGT;
         var stateResponse = !isGTPreBigKey && !silent && (!autoTracked
                                                           || !item.Metadata.IsDungeonItem()
                                                           || World.Config.ZeldaKeysanity);
@@ -165,7 +165,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IItemS
             () => {
                 item.TrackingState = originalTrackingState;
                 ItemTracked?.Invoke(this, new ItemTrackedEventArgs(item, trackedAs, null, false));
-                itemService.ResetProgression();
+                playerProgressionService.ResetProgression();
             }
         ];
 
@@ -174,7 +174,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IItemS
         {
             if (location == null && !World.Config.MultiWorld)
             {
-                location = worldService.Locations(outOfLogic: true, itemFilter: item.Type).TrySingle();
+                location = worldQueryService.Locations(outOfLogic: true, itemFilter: item.Type).TrySingle();
             }
 
             // Clear the location if it's for the local player's world
@@ -228,7 +228,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IItemS
         IsDirty = true;
 
         // Check if we can remove something from the marked location
-        var location = worldService.Locations(itemFilter: item.Type, inRegion: hasTreasure as Region).TrySingle();
+        var location = worldQueryService.Locations(itemFilter: item.Type, inRegion: hasTreasure as Region).TrySingle();
         if (location != null)
         {
             Tracker.LocationTracker.Clear(location, stateResponse: false, updateTreasureCount: false);
@@ -329,7 +329,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IItemS
         {
             item.TrackingState = oldItemCount;
             ItemTracked?.Invoke(this, new ItemTrackedEventArgs(item, null, confidence, false));
-            itemService.ResetProgression();
+            playerProgressionService.ResetProgression();
             UpdateAllAccessibility(true, item);
         });
     }
@@ -358,7 +358,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IItemS
     public void UntrackItem(Item item, float? confidence = null)
     {
         var originalTrackingState = item.TrackingState;
-        itemService.ResetProgression();
+        playerProgressionService.ResetProgression();
 
         if (!item.Untrack())
         {
@@ -393,7 +393,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IItemS
         AddUndo(() =>
         {
             item.TrackingState = originalTrackingState;
-            itemService.ResetProgression();
+            playerProgressionService.ResetProgression();
             UpdateAllAccessibility(false, item);
         });
     }
@@ -414,7 +414,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IItemS
 
     private IHasTreasure? GetDungeonFromItem(Item item, IHasTreasure? dungeon = null)
     {
-        var locations = worldService.Locations(itemFilter: item.Type)
+        var locations = worldQueryService.Locations(itemFilter: item.Type)
             .Where(x => x.Type != LocationType.NotInDungeon)
             .ToImmutableList();
 
@@ -482,7 +482,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IItemS
 
     private void GiveLocationHint(IEnumerable<Location> accessibleBefore)
     {
-        var accessibleAfter = worldService.AccessibleLocations(false);
+        var accessibleAfter = worldQueryService.AccessibleLocations(false);
         var newlyAccessible = accessibleAfter.Except(accessibleBefore).ToList();
         if (newlyAccessible.Any())
         {

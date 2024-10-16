@@ -25,11 +25,11 @@ public class TreasureTrackingModule : TrackerModule
     /// cref="TreasureTrackingModule"/> class.
     /// </summary>
     /// <param name="tracker">The tracker instance.</param>
-    /// <param name="itemService">Service to get item information</param>
-    /// <param name="worldService">Service to get world information</param>
+    /// <param name="playerProgressionService">Service to get item information</param>
+    /// <param name="worldQueryService">Service to get world information</param>
     /// <param name="logger">Used to log information.</param>
-    public TreasureTrackingModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<TreasureTrackingModule> logger)
-        : base(tracker, itemService, worldService, logger)
+    public TreasureTrackingModule(TrackerBase tracker, IPlayerProgressionService playerProgressionService, IWorldQueryService worldQueryService, ILogger<TreasureTrackingModule> logger)
+        : base(tracker, playerProgressionService, worldQueryService, logger)
     {
 
     }
@@ -42,7 +42,7 @@ public class TreasureTrackingModule : TrackerModule
         var rewardNames = new Choices();
         foreach (var reward in Enum.GetValues<RewardType>())
         {
-            foreach (var name in ItemService?.FirstOrDefault(reward)?.Metadata.Name ?? new SchrodingersString())
+            foreach (var name in WorldQueryService?.FirstOrDefault(reward)?.Metadata.Name ?? new SchrodingersString())
                 rewardNames.Add(new SemanticResultValue(name, (int)reward));
         }
 

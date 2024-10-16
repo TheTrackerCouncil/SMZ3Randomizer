@@ -3,14 +3,16 @@ using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Abstractions;
+using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
+using TrackerCouncil.Smz3.Tracking.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.TrackingServices;
 
-internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IItemService itemService) : TrackerService, ITrackerRewardService
+internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlayerProgressionService playerProgressionService, IMetadataService metadataService) : TrackerService, ITrackerRewardService
 {
     public void SetAreaReward(IHasReward rewardRegion, RewardType? reward = null, float? confidence = null, bool autoTracked = false)
     {
@@ -98,7 +100,7 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IItemS
 
         if (unmarkedRegions.Count > 0)
         {
-            Tracker.Say(response: Responses.RemainingDungeonsMarked, args: [itemService.GetName(reward)]);
+            Tracker.Say(response: Responses.RemainingDungeonsMarked, args: [metadataService.GetName(reward)]);
             unmarkedRegions.ForEach(dungeon => dungeon.MarkedReward = reward);
             AddUndo(() =>
             {
@@ -113,8 +115,8 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IItemS
 
     public void UpdateAccessibility(Progression? actualProgression = null, Progression? withKeysProgression = null)
     {
-        actualProgression ??= itemService.GetProgression(false);
-        withKeysProgression ??= itemService.GetProgression(true);
+        actualProgression ??= playerProgressionService.GetProgression(false);
+        withKeysProgression ??= playerProgressionService.GetProgression(true);
 
         foreach (var region in Tracker.World.RewardRegions)
         {
@@ -136,8 +138,8 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IItemS
             return;
         }
 
-        actualProgression ??= itemService.GetProgression(false);
-        withKeysProgression ??= itemService.GetProgression(true);
+        actualProgression ??= playerProgressionService.GetProgression(false);
+        withKeysProgression ??= playerProgressionService.GetProgression(true);
         region.Reward.UpdateAccessibility(actualProgression, withKeysProgression);
     }
 }

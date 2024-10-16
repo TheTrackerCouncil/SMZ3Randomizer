@@ -3,7 +3,6 @@ using System.Linq;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Tracking;
 using TrackerCouncil.Smz3.Data.WorldData;
-using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda.DarkWorld;
 using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain;
 using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda.LightWorld;
@@ -19,22 +18,14 @@ namespace TrackerCouncil.Smz3.Tracking.AutoTracking.ZeldaStateChecks;
 /// Zelda State check for viewing the map
 /// Checks if the game state is viewing the map and the value for viewing the full map is set
 /// </summary>
-public class ViewedMap : IZeldaStateCheck
+public class ViewedMap(IWorldAccessor worldAccessor, IPlayerProgressionService playerProgressionService) : IZeldaStateCheck
 {
     private TrackerBase? _tracker;
-    private readonly IWorldAccessor _worldAccessor;
     private bool _lightWorldUpdated;
     private bool _darkWorldUpdated;
 
-    public ViewedMap(IWorldAccessor worldAccessor, IItemService itemService)
-    {
-        _worldAccessor = worldAccessor;
-        Items = itemService;
-    }
+    private World World => worldAccessor.World;
 
-    private World World => _worldAccessor.World;
-
-    private IItemService Items { get; }
 
     /// <summary>
     /// Executes the check for the current state
@@ -153,7 +144,7 @@ public class ViewedMap : IZeldaStateCheck
 
         foreach (var (region, map) in dungeons)
         {
-            if (World.Config.ZeldaKeysanity && !Items.IsTracked(map))
+            if (World.Config.ZeldaKeysanity && !playerProgressionService.IsTracked(map))
                 continue;
 
             if (region.HasCorrectlyMarkedReward) continue;

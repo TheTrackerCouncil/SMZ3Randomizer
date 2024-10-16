@@ -19,11 +19,11 @@ public class ItemTrackingModule : TrackerModule
     /// class.
     /// </summary>
     /// <param name="tracker">The tracker instance.</param>
-    /// <param name="itemService">Service to get item information</param>
-    /// <param name="worldService">Service to get world information</param>
+    /// <param name="playerProgressionService">Service to get item information</param>
+    /// <param name="worldQueryService">Service to get world information</param>
     /// <param name="logger">Used to log information.</param>
-    public ItemTrackingModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<ItemTrackingModule> logger)
-        : base(tracker, itemService, worldService, logger)
+    public ItemTrackingModule(TrackerBase tracker, IPlayerProgressionService playerProgressionService, IWorldQueryService worldQueryService, ILogger<ItemTrackingModule> logger)
+        : base(tracker, playerProgressionService, worldQueryService, logger)
     {
 
     }
@@ -188,7 +188,7 @@ public class ItemTrackingModule : TrackerModule
     [SupportedOSPlatform("windows")]
     public override void AddCommands()
     {
-        var isMultiworld = WorldService.World.Config.MultiWorld;
+        var isMultiworld = WorldQueryService.World.Config.MultiWorld;
 
         AddCommand("Track item", GetTrackItemRule(isMultiworld), (result) =>
         {
@@ -228,7 +228,7 @@ public class ItemTrackingModule : TrackerModule
 
         AddCommand("Track death", GetTrackDeathRule(), (result) =>
         {
-            var death = ItemService.FirstOrDefault("Death");
+            var death = WorldQueryService.FirstOrDefault("Death");
             if (death == null)
             {
                 Logger.LogError("Tried to track death, but could not find an item named 'Death'.");

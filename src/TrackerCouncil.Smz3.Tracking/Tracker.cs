@@ -64,7 +64,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     /// <param name="chatClient"></param>
     /// <param name="logger">Used to write logging information.</param>
     /// <param name="trackerOptions">Provides Tracker preferences.</param>
-    /// <param name="itemService"></param>
+    /// <param name="playerProgressionService"></param>
     /// <param name="communicator"></param>
     /// <param name="historyService">Service for</param>
     /// <param name="configs"></param>
@@ -76,7 +76,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         IChatClient chatClient,
         ILogger<Tracker> logger,
         TrackerOptionsAccessor trackerOptions,
-        IItemService itemService,
+        IPlayerProgressionService playerProgressionService,
         ICommunicator communicator,
         IHistoryService historyService,
         Configs configs,
@@ -94,7 +94,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         _chatClient = chatClient;
         _logger = logger;
         _trackerOptions = trackerOptions;
-        ItemService = itemService;
+        PlayerProgressionService = playerProgressionService;
         _communicator = communicator;
         _stateService = stateService;
         _timerService = timerService;
@@ -103,7 +103,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         Configs = configs;
         Responses = configs.Responses;
         Requests = configs.Requests;
-        ItemService.ResetProgression();
+        PlayerProgressionService.ResetProgression();
 
         History = historyService;
 
@@ -638,10 +638,10 @@ public sealed class Tracker : TrackerBase, IDisposable
             return;
         }
 
-        ItemService.ResetProgression();
+        PlayerProgressionService.ResetProgression();
 
-        var actualProgression = ItemService.GetProgression(false);
-        var assumedKeysProgression = ItemService.GetProgression(true);
+        var actualProgression = PlayerProgressionService.GetProgression(false);
+        var assumedKeysProgression = PlayerProgressionService.GetProgression(true);
 
         LocationTracker.UpdateAccessibility(!forceRefreshAll, actualProgression, assumedKeysProgression);
         RewardTracker.UpdateAccessibility(actualProgression, assumedKeysProgression);

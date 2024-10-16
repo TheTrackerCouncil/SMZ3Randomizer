@@ -1,6 +1,7 @@
 ﻿using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Tracking;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
+using TrackerCouncil.Smz3.Tracking.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.AutoTracking.ZeldaStateChecks;
 
@@ -8,10 +9,8 @@ namespace TrackerCouncil.Smz3.Tracking.AutoTracking.ZeldaStateChecks;
 /// Zelda State check for when dying
 /// Checks if the player is in the death spiral animation without a fairy
 /// </summary>
-public class ZeldaDeath(IItemService itemService) : IZeldaStateCheck
+public class ZeldaDeath(IWorldQueryService worldQueryService) : IZeldaStateCheck
 {
-    public IItemService Items { get; } = itemService;
-
     /// <summary>
     /// Executes the check for the current state
     /// </summary>
@@ -41,7 +40,7 @@ public class ZeldaDeath(IItemService itemService) : IZeldaStateCheck
 
         tracker.GameStateTracker.TrackDeath(true);
 
-        var death = Items.FirstOrDefault("Death");
+        var death = worldQueryService.FirstOrDefault("Death");
         if (death is not null)
         {
             tracker.ItemTracker.TrackItem(death, autoTracked: true, silent: silent);

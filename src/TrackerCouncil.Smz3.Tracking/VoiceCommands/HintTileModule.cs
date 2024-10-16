@@ -26,12 +26,12 @@ public class HintTileModule : TrackerModule
     /// Constructor
     /// </summary>
     /// <param name="tracker"></param>
-    /// <param name="itemService"></param>
-    /// <param name="worldService"></param>
+    /// <param name="playerProgressionService"></param>
+    /// <param name="worldQueryService"></param>
     /// <param name="logger"></param>
     /// <param name="gameHintService"></param>
     /// <param name="configs"></param>
-    public HintTileModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<HintTileModule> logger, IGameHintService gameHintService, Configs configs) : base(tracker, itemService, worldService, logger)
+    public HintTileModule(TrackerBase tracker, IPlayerProgressionService playerProgressionService, IWorldQueryService worldQueryService, ILogger<HintTileModule> logger, IGameHintService gameHintService, Configs configs) : base(tracker, playerProgressionService, worldQueryService, logger)
     {
         _gameHintService = gameHintService;
         _hintTileConfig = configs.HintTileConfig;
@@ -45,10 +45,10 @@ public class HintTileModule : TrackerModule
     {
         AddCommand("Hint Tile", GetHintTileRules(), (result) =>
         {
-            if (WorldService.World.HintTiles.Any())
+            if (WorldQueryService.World.HintTiles.Any())
             {
                 var hintTile = GetHintTileFromResult(result);
-                var text = _gameHintService.GetHintTileText(hintTile.PlayerHintTile, WorldService.World, WorldService.Worlds);
+                var text = _gameHintService.GetHintTileText(hintTile.PlayerHintTile, WorldQueryService.World, WorldQueryService.Worlds);
                 TrackerBase.Say(response: _hintTileConfig.RequestedHintTile, args: [text]);
                 TrackerBase.GameStateTracker.UpdateHintTile(hintTile.PlayerHintTile);
             }
@@ -100,7 +100,7 @@ public class HintTileModule : TrackerModule
         var key = (string)result.Semantics[_hintTileKey].Value;
         var hintTile = _hintTileConfig.HintTiles?.FirstOrDefault(x => x.HintTileKey == key) ??
                        throw new Exception($"Could not find hint tile {key}");
-        var playerHintTile = WorldService.World.HintTiles.FirstOrDefault(x => x.HintTileCode == key) ??
+        var playerHintTile = WorldQueryService.World.HintTiles.FirstOrDefault(x => x.HintTileCode == key) ??
                              throw new Exception($"Could not find player hint tile {key}");
         return (hintTile, playerHintTile);
     }

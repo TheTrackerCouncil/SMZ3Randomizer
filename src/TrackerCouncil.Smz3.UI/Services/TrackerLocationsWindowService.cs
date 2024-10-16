@@ -11,7 +11,7 @@ using TrackerCouncil.Smz3.UI.ViewModels;
 
 namespace TrackerCouncil.Smz3.UI.Services;
 
-public class TrackerLocationsWindowService(TrackerBase trackerBase, IWorldService worldService, IUIService uiService, IItemService itemService) : ControlService
+public class TrackerLocationsWindowService(TrackerBase trackerBase, IWorldQueryService worldQueryService, IUIService uiService) : ControlService
 {
     private readonly TrackerLocationsViewModel _model = new();
     private RegionViewModel? _lastRegion;
@@ -82,7 +82,7 @@ public class TrackerLocationsWindowService(TrackerBase trackerBase, IWorldServic
 
     private void InitMarkedLocations()
     {
-        foreach (var markedLocation in worldService.MarkedLocations())
+        foreach (var markedLocation in worldQueryService.MarkedLocations())
         {
             AddUpdateMarkedLocation(markedLocation);
         }
@@ -102,7 +102,7 @@ public class TrackerLocationsWindowService(TrackerBase trackerBase, IWorldServic
         else
         {
             if (location.MarkedItem == ItemType.Nothing) return;
-            var item = itemService.FirstOrDefault(location.MarkedItem.Value);
+            var item = worldQueryService.FirstOrDefault(location.MarkedItem.Value);
             if (item == null) return;
 
             var previousModel = _model.MarkedLocations.FirstOrDefault(x => x.Location == location);
@@ -120,7 +120,7 @@ public class TrackerLocationsWindowService(TrackerBase trackerBase, IWorldServic
 
     private void InitHintTiles()
     {
-        var world = worldService.World;
+        var world = worldQueryService.World;
         var hintTiles = new List<HintTileViewModel>();
 
         foreach (var worldHintTile in world.HintTiles.Where(x => x.Locations?.Count() > 1))
@@ -135,7 +135,7 @@ public class TrackerLocationsWindowService(TrackerBase trackerBase, IWorldServic
 
     private void InitRegions()
     {
-        var regions = worldService.World.Regions;
+        var regions = worldQueryService.World.Regions;
         var regionModels = new List<RegionViewModel>();
 
         foreach (var region in regions)

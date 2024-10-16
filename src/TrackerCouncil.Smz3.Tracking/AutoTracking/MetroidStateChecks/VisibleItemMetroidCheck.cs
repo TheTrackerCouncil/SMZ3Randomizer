@@ -12,11 +12,9 @@ public class VisibleItemMetroidCheck : IMetroidStateCheck
 {
     private readonly Dictionary<int, VisibleItemMetroid> _items;
     private readonly HashSet<VisibleItemArea> _trackedAreas = new();
-    private readonly IWorldService _worldService;
 
-    public VisibleItemMetroidCheck(IWorldService worldService)
+    public VisibleItemMetroidCheck(IWorldQueryService worldQueryService)
     {
-        _worldService = worldService;
         var visibleItems = VisibleItems.GetVisibleItems().MetroidItems;
         _items = visibleItems
             .ToDictionary(s => s.Room, s => s);

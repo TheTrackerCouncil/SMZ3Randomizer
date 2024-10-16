@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Logic;
+using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Shared;
@@ -11,7 +12,7 @@ using TrackerCouncil.Smz3.Tracking.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.TrackingServices;
 
-internal class TrackerTreasureService(ILogger<TrackerTreasureService> logger, IItemService itemService) : TrackerService, ITrackerTreasureService
+internal class TrackerTreasureService(ILogger<TrackerTreasureService> logger, IPlayerProgressionService playerProgressionService, IWorldQueryService worldQueryService) : TrackerService, ITrackerTreasureService
 {
     public bool TrackDungeonTreasure(IHasTreasure region, float? confidence = null, int amount = 1,
         bool autoTracked = false, bool stateResponse = true)
@@ -155,7 +156,7 @@ internal class TrackerTreasureService(ILogger<TrackerTreasureService> logger, II
         List<Action> undoActions = [];
 
         var region = (Region)treasureRegion;
-        var progress = itemService.GetProgression(assumeKeys: !World.Config.ZeldaKeysanity);
+        var progress = playerProgressionService.GetProgression(assumeKeys: !World.Config.ZeldaKeysanity);
         var locations = region.Locations.Where(x => !x.Cleared).ToList();
 
         if (remaining <= 0 && locations.Count <= 0)
@@ -182,7 +183,7 @@ internal class TrackerTreasureService(ILogger<TrackerTreasureService> logger, II
             if (missingItemCombinations.Any())
             {
                 var missingItems = (missingItemCombinations.Random(Random) ?? missingItemCombinations.First())
-                    .Select(itemService.FirstOrDefault)
+                    .Select(worldQueryService.FirstOrDefault)
                     .NonNull();
                 var missingItemsText = NaturalLanguage.Join(missingItems, World.Config);
                 Tracker.Say(x => x.DungeonClearedWithInaccessibleItems, args: [treasureRegion.Metadata.Name, locationInfo.Name, missingItemsText]);
@@ -192,7 +193,7 @@ internal class TrackerTreasureService(ILogger<TrackerTreasureService> logger, II
                 Tracker.Say(x => x.DungeonClearedWithTooManyInaccessibleItems, args: [treasureRegion.Metadata.Name, locationInfo.Name]);
             }
         }
-        itemService.ResetProgression();
+        playerProgressionService.ResetProgression();
 
         AddUndo(() =>
         {
@@ -201,7 +202,7 @@ internal class TrackerTreasureService(ILogger<TrackerTreasureService> logger, II
             {
                 undo();
             }
-            itemService.ResetProgression();
+            playerProgressionService.ResetProgression();
         });
     }
 }

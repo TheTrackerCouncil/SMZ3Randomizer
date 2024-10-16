@@ -12,7 +12,7 @@ using TrackerCouncil.Smz3.Tracking.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.AutoTracking.AutoTrackerModules;
 
-public class GameMonitor(TrackerBase tracker, ISnesConnectorService snesConnector, ILogger<GameMonitor> logger, IWorldService worldService) : AutoTrackerModule(tracker, snesConnector, logger)
+public class GameMonitor(TrackerBase tracker, ISnesConnectorService snesConnector, ILogger<GameMonitor> logger, IWorldQueryService worldQueryService) : AutoTrackerModule(tracker, snesConnector, logger)
 {
     public override void Initialize()
     {
@@ -52,10 +52,10 @@ public class GameMonitor(TrackerBase tracker, ISnesConnectorService snesConnecto
             Logger.LogInformation("Game started");
             AutoTracker.HasStarted = true;
 
-            if (Tracker.World.Config.MultiWorld && worldService.Worlds.Count > 1)
+            if (Tracker.World.Config.MultiWorld && worldQueryService.Worlds.Count > 1)
             {
-                var worldCount = worldService.Worlds.Count;
-                var otherPlayerName = worldService.Worlds.Where(x => x != worldService.World).Random(new Random())!.Config.PhoneticName;
+                var worldCount = worldQueryService.Worlds.Count;
+                var otherPlayerName = worldQueryService.Worlds.Where(x => x != worldQueryService.World).Random(new Random())!.Config.PhoneticName;
                 Tracker.Say(x => x.AutoTracker.GameStartedMultiplayer, args: [worldCount, otherPlayerName]);
             }
             else

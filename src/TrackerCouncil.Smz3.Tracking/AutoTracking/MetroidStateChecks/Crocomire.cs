@@ -8,7 +8,7 @@ namespace TrackerCouncil.Smz3.Tracking.AutoTracking.MetroidStateChecks;
 /// Metroid state check for nearing Crocomire
 /// Player is in the room above Crocomire and is near the door to Crocomire
 /// </summary>
-public class Crocomire(IItemService itemService) : IMetroidStateCheck
+public class Crocomire(IPlayerProgressionService playerProgressionService) : IMetroidStateCheck
 {
 
     /// <summary>
@@ -20,7 +20,7 @@ public class Crocomire(IItemService itemService) : IMetroidStateCheck
     /// <returns>True if the check was identified, false otherwise</returns>
     public bool ExecuteCheck(TrackerBase tracker, AutoTrackerMetroidState currentState, AutoTrackerMetroidState prevState)
     {
-        if (currentState is { CurrentRegion: 2, CurrentRoomInRegion: 9, SamusX: >= 3000, SamusY: > 500 } && (!tracker.World.Config.MetroidKeysanity || itemService.IsTracked(ItemType.CardNorfairBoss)))
+        if (currentState is { CurrentRegion: 2, CurrentRoomInRegion: 9, SamusX: >= 3000, SamusY: > 500 } && playerProgressionService.GetProgression(false).Contains(ItemType.CardNorfairBoss))
         {
             tracker.Say(x => x.AutoTracker.NearCrocomire, args: [currentState.SuperMissiles, currentState.MaxSuperMissiles], once: true);
             return true;

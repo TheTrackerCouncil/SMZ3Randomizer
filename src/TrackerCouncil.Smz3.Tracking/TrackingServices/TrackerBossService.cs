@@ -9,7 +9,7 @@ using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.Tracking.TrackingServices;
 
-internal class TrackerBossService(IItemService itemService) : TrackerService, ITrackerBossService
+internal class TrackerBossService(IPlayerProgressionService playerProgressionService) : TrackerService, ITrackerBossService
 {
     public event EventHandler<BossTrackedEventArgs>? BossUpdated;
 
@@ -69,7 +69,7 @@ internal class TrackerBossService(IItemService itemService) : TrackerService, IT
 
         AddUndo(autoTracked, () =>
         {
-            itemService.ResetProgression();
+            playerProgressionService.ResetProgression();
             region.BossDefeated = false;
             BossUpdated?.Invoke(this, new BossTrackedEventArgs(region.Boss, null, false));
             foreach (var undo in undoActions)
@@ -214,8 +214,8 @@ internal class TrackerBossService(IItemService itemService) : TrackerService, IT
 
     public void UpdateAccessibility(Progression? actualProgression = null, Progression? withKeysProgression = null)
     {
-        actualProgression ??= itemService.GetProgression(false);
-        withKeysProgression ??= itemService.GetProgression(true);
+        actualProgression ??= playerProgressionService.GetProgression(false);
+        withKeysProgression ??= playerProgressionService.GetProgression(true);
         foreach (var region in Tracker.World.BossRegions)
         {
             UpdateAccessibility(region, actualProgression, withKeysProgression);
@@ -225,8 +225,8 @@ internal class TrackerBossService(IItemService itemService) : TrackerService, IT
     public void UpdateAccessibility(Boss boss, Progression? actualProgression = null, Progression? withKeysProgression = null)
     {
         if (boss.Region == null) return;
-        actualProgression ??= itemService.GetProgression(false);
-        withKeysProgression ??= itemService.GetProgression(true);
+        actualProgression ??= playerProgressionService.GetProgression(false);
+        withKeysProgression ??= playerProgressionService.GetProgression(true);
         UpdateAccessibility(boss.Region, actualProgression, withKeysProgression);
     }
 
@@ -238,8 +238,8 @@ internal class TrackerBossService(IItemService itemService) : TrackerService, IT
             return;
         }
 
-        actualProgression ??= itemService.GetProgression(false);
-        withKeysProgression ??= itemService.GetProgression(true);
+        actualProgression ??= playerProgressionService.GetProgression(false);
+        withKeysProgression ??= playerProgressionService.GetProgression(true);
 
         region.Boss.UpdateAccessibility(actualProgression, withKeysProgression);
     }

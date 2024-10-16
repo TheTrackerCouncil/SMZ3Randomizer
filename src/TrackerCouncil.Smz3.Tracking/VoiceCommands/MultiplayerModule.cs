@@ -22,14 +22,14 @@ public class MultiplayerModule : TrackerModule
     /// class.
     /// </summary>
     /// <param name="tracker">The tracker instance.</param>
-    /// <param name="itemService">Service to get item information</param>
-    /// <param name="worldService">Service to get world information</param>
+    /// <param name="playerProgressionService">Service to get item information</param>
+    /// <param name="worldQueryService">Service to get world information</param>
     /// <param name="logger">Used to write logging information.</param>
     /// <param name="multiplayerGameService">The multiplayer game service</param>
     /// <param name="autoTrackerBase"></param>
-    public MultiplayerModule(TrackerBase tracker, IItemService itemService, IWorldService worldService,
+    public MultiplayerModule(TrackerBase tracker, IPlayerProgressionService playerProgressionService, IWorldQueryService worldQueryService,
         ILogger<MultiplayerModule> logger, MultiplayerGameService multiplayerGameService, AutoTrackerBase autoTrackerBase)
-        : base(tracker, itemService, worldService, logger)
+        : base(tracker, playerProgressionService, worldQueryService, logger)
     {
         _multiplayerGameService = multiplayerGameService;
 
@@ -49,7 +49,7 @@ public class MultiplayerModule : TrackerModule
         _multiplayerGameService.PlayerSyncReceived += PlayerSyncReceived;
         _multiplayerGameService.PlayerEndedGame += PlayerEndedGame;
 
-        _multiplayerGameService.SetTrackerState(worldService.World.State!);
+        _multiplayerGameService.SetTrackerState(worldQueryService.World.State!);
         _multiplayerGameService.OnTrackingStarted();
 
         Logger.LogInformation("Multiplayer module initialized");
@@ -85,14 +85,14 @@ public class MultiplayerModule : TrackerModule
         // Ignore the sync if auto tracker is not connected as we don't want to lose out on items
         if (TrackerBase.AutoTracker?.HasValidState != true) return;
         if (args.PlayerId == null || args.ItemsToGive == null || args.ItemsToGive.Count == 0 || args.IsLocalPlayer) return;
-        var items = args.ItemsToGive.Select(x => ItemService.FirstOrDefault(x)).NonNull().ToList();
+        var items = args.ItemsToGive.Select(x => WorldQueryService.FirstOrDefault(x)).NonNull().ToList();
 
         Logger.LogInformation("Giving player {Count} items", items.Count());
         _ = TrackerBase.GameService!.TryGiveItemsAsync(items, args.PlayerId.Value);
 
-        if ((args.DidForfeit || args.DidComplete) && WorldService.Worlds.Any(x => x.Id == args.PlayerId))
+        if ((args.DidForfeit || args.DidComplete) && WorldQueryService.Worlds.Any(x => x.Id == args.PlayerId))
         {
-            WorldService.Worlds.First(x => x.Id == args.PlayerId).HasCompleted = true;
+            WorldQueryService.Worlds.First(x => x.Id == args.PlayerId).HasCompleted = true;
         }
 
         foreach (var locationState in args.UpdatedLocationStates)
@@ -133,7 +133,7 @@ public class MultiplayerModule : TrackerModule
     {
         args.ItemState.TrackingState = args.TrackingValue;
         if (args.ItemState.Type == null || args.IsLocalPlayer) return;
-        var item = ItemService.FirstOrDefault(args.ItemState.Type.Value);
+        var item = WorldQueryService.FirstOrDefault(args.ItemState.Type.Value);
         if (item == null || item.State.TrackingState >= args.TrackingValue || !item.Progression)
         {
             return;
@@ -148,7 +148,7 @@ public class MultiplayerModule : TrackerModule
         // Ignore the sync if auto tracker is not connected as we don't want to lose out on items
         if (TrackerBase.AutoTracker?.HasValidState != true) return;
         if (args.ItemToGive == ItemType.Nothing) return;
-        var item = ItemService.FirstOrDefault(args.ItemToGive);
+        var item = WorldQueryService.FirstOrDefault(args.ItemToGive);
         if (item == null)
             throw new InvalidOperationException($"Player retrieved invalid item {args.ItemToGive}");
         _ = TrackerBase.GameService!.TryGiveItemAsync(item, args.PlayerId);
@@ -176,7 +176,7 @@ public class MultiplayerModule : TrackerModule
             return;
         }
 
-        var boss = WorldService.Worlds.FirstOrDefault(x => x.Id == args.PlayerId)?.Bosses
+        var boss = WorldQueryService.Worlds.FirstOrDefault(x => x.Id == args.PlayerId)?.Bosses
             .FirstOrDefault(x => x.Type == args.BossState.Type);
         if (boss?.Region == null)
         {
@@ -242,7 +242,7 @@ public class MultiplayerModule : TrackerModule
         if (!e.AutoTracked) return;
         await _multiplayerGameService.TrackLocation(e.Location);
         if (e.Location.World == e.Location.Item.World || !e.Location.Item.Progression) return;
-        var localItem = ItemService.FirstOrDefault(e.Location.Item.Type);
+        var localItem = WorldQueryService.FirstOrDefault(e.Location.Item.Type);
         if (localItem == null || localItem.State.TrackingState >= e.Location.Item.State.TrackingState) return;
         var otherPlayer = e.Location.Item.World.Config.PhoneticName;
         TrackerBase.Say(x => x.Multiplayer.GiftedUsefulItemToOtherPlayer,

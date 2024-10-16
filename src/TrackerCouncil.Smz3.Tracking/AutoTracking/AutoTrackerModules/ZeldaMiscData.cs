@@ -13,13 +13,13 @@ using TrackerCouncil.Smz3.Tracking.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.AutoTracking.AutoTrackerModules;
 
-public class ZeldaMiscData(TrackerBase tracker, ISnesConnectorService snesConnector, ILogger<ZeldaMiscData> logger, IWorldService worldService, IItemService itemService) : AutoTrackerModule(tracker, snesConnector, logger)
+public class ZeldaMiscData(TrackerBase tracker, ISnesConnectorService snesConnector, ILogger<ZeldaMiscData> logger, IWorldQueryService worldQueryService) : AutoTrackerModule(tracker, snesConnector, logger)
 {
     private List<Location> _locations = new();
 
     public override void Initialize()
     {
-        _locations = worldService.AllLocations().Where(x =>
+        _locations = worldQueryService.AllLocations().Where(x =>
             x.MemoryType == LocationMemoryType.ZeldaMisc && (int)x.Id >= 256).ToList();
 
         SnesConnector.AddRecurringMemoryRequest(new SnesRecurringMemoryRequest()
@@ -60,7 +60,7 @@ public class ZeldaMiscData(TrackerBase tracker, ISnesConnectorService snesConnec
         // Activated flute
         if (data.CheckUInt8Flag(0x10C, 0x01) && !prevData.CheckUInt8Flag(0x10C, 0x01))
         {
-            var duckItem = itemService.FirstOrDefault("Duck");
+            var duckItem = worldQueryService.FirstOrDefault("Duck");
             if (duckItem?.TrackingState == 0)
             {
                 Tracker.ItemTracker.TrackItem(duckItem, null, null, false, true);

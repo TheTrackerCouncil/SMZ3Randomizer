@@ -25,12 +25,12 @@ public class MetaModule : TrackerModule
     /// Initializes a new instance of the <see cref="MetaModule"/> class.
     /// </summary>
     /// <param name="tracker">The tracker instance.</param>
-    /// <param name="itemService">Service to get item information</param>
-    /// <param name="worldService">Service to get world information</param>
+    /// <param name="playerProgressionService">Service to get item information</param>
+    /// <param name="worldQueryService">Service to get world information</param>
     /// <param name="logger">Used to write logging information.</param>
     /// <param name="communicator">Used to communicate information to the user</param>
-    public MetaModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<MetaModule> logger, ICommunicator communicator)
-        : base(tracker, itemService, worldService, logger)
+    public MetaModule(TrackerBase tracker, IPlayerProgressionService playerProgressionService, IWorldQueryService worldQueryService, ILogger<MetaModule> logger, ICommunicator communicator)
+        : base(tracker, playerProgressionService, worldQueryService, logger)
     {
         _communicator = communicator;
     }

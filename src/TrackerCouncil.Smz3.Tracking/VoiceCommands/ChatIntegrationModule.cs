@@ -25,7 +25,7 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
     private static readonly Random s_random = new();
     private const string WinningGuessKey = "WinningGuess";
     private readonly Dictionary<string, int> _usersGreetedTimes = new();
-    private readonly IItemService _itemService;
+    private readonly IPlayerProgressionService _playerProgressionService;
     private readonly ITrackerTimerService _timerService;
     private bool _askChatAboutContentCheckPollResults = true;
     private string? _askChatAboutContentPollId;
@@ -41,16 +41,16 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
     /// dependencies.
     /// </summary>
     /// <param name="tracker">The tracker instance to use.</param>
-    /// <param name="itemService">Service to get item information</param>
-    /// <param name="worldService">Service to get world information</param>
+    /// <param name="playerProgressionService">Service to get item information</param>
+    /// <param name="worldQueryService">Service to get world information</param>
     /// <param name="timerService"></param>
     /// <param name="chatClient">The chat client to use.</param>
     /// <param name="logger">Used to write logging information.</param>
-    public ChatIntegrationModule(TrackerBase tracker, IChatClient chatClient, IItemService itemService, IWorldService worldService, ITrackerTimerService timerService, ILogger<ChatIntegrationModule> logger)
-        : base(tracker, itemService, worldService, logger)
+    public ChatIntegrationModule(TrackerBase tracker, IChatClient chatClient, IPlayerProgressionService playerProgressionService, IWorldQueryService worldQueryService, ITrackerTimerService timerService, ILogger<ChatIntegrationModule> logger)
+        : base(tracker, playerProgressionService, worldQueryService, logger)
     {
         ChatClient = chatClient;
-        _itemService = itemService;
+        _playerProgressionService = playerProgressionService;
         _timerService = timerService;
         ChatClient.Connected += ChatClient_Connected;
         ChatClient.Reconnected += ChatClient_Reconnected;
@@ -302,7 +302,7 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
     /// <returns></returns>
     public async Task AskChatAboutContent()
     {
-        var contentItemData = _itemService.FirstOrDefault("Content");
+        var contentItemData = WorldQueryService.FirstOrDefault("Content");
         if (contentItemData == null)
         {
             Logger.LogError("Unable to determine content item data");

@@ -245,4 +245,28 @@ public interface IMetadataService
     /// <param name="type">The type of the reward</param>
     /// <returns></returns>
     public RewardInfo? Reward(RewardType type);
+
+    /// <summary>
+    /// Returns a random name for the specified item including article, e.g.
+    /// "an E-Tank" or "the Book of Mudora".
+    /// </summary>
+    /// <param name="itemType">The type of item whose name to get.</param>
+    /// <returns>
+    /// The name of the type of item, including "a", "an" or "the" if
+    /// applicable.
+    /// </returns>
+    string GetName(ItemType itemType);
+
+
+    /// <summary>
+    /// Returns a random name for the specified item including article, e.g.
+    /// "a blue crystal" or "the green pendant".
+    /// </summary>
+    /// <param name="rewardType">The reward of item whose name to get.</param>
+    /// <returns>
+    /// The name of the reward of item, including "a", "an" or "the" if
+    /// applicable.
+    /// </returns>
+    string GetName(RewardType rewardType);
+
 }

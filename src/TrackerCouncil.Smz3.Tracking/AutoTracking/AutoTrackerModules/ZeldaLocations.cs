@@ -15,14 +15,14 @@ using TrackerCouncil.Smz3.Tracking.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.AutoTracking.AutoTrackerModules;
 
-public class ZeldaLocations(TrackerBase tracker, ISnesConnectorService snesConnector, ILogger<ZeldaLocations> logger, IWorldService worldService)
+public class ZeldaLocations(TrackerBase tracker, ISnesConnectorService snesConnector, ILogger<ZeldaLocations> logger, IWorldQueryService worldQueryService)
     : AutoTrackerModule(tracker, snesConnector, logger)
 {
     private List<Location> _locations = new();
 
     public override void Initialize()
     {
-        _locations = worldService.AllLocations().Where(x =>
+        _locations = worldQueryService.AllLocations().Where(x =>
             x.MemoryType == LocationMemoryType.Default && (int)x.Id >= 256).ToList();
 
         SnesConnector.AddRecurringMemoryRequest(new SnesRecurringMemoryRequest()

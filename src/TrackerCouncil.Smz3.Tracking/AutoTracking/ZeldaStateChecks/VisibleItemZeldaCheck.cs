@@ -13,11 +13,11 @@ public class VisibleItemZeldaCheck : IZeldaStateCheck
     private readonly Dictionary<int, VisibleItemZelda> _overworldVisibleItems;
     private readonly Dictionary<int, VisibleItemZelda> _underworldVisibleItems;
     private readonly HashSet<VisibleItemArea> _trackedAreas = new();
-    private readonly IWorldService _worldService;
+    private readonly IWorldQueryService _worldQueryService;
 
-    public VisibleItemZeldaCheck(IWorldService worldService)
+    public VisibleItemZeldaCheck(IWorldQueryService worldQueryService)
     {
-        _worldService = worldService;
+        _worldQueryService = worldQueryService;
         var visibleItems = VisibleItems.GetVisibleItems().ZeldaItems;
         _overworldVisibleItems = visibleItems.Where(x => x.OverworldScreen > 0)
             .ToDictionary(s => (int)s.OverworldScreen!, s => s);

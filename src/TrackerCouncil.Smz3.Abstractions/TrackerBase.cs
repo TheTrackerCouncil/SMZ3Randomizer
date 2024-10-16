@@ -1,11 +1,9 @@
-using MSURandomizerLibrary.Configs;
 using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Tracking;
 using TrackerCouncil.Smz3.Data.WorldData;
-using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Abstractions;
@@ -34,9 +32,9 @@ public abstract class TrackerBase
     public event EventHandler? VoiceRecognitionEnabledChanged;
 
     /// <summary>
-    /// Gets a reference to the <see cref="ItemService"/>.
+    /// Gets a reference to the <see cref="PlayerProgressionService"/>.
     /// </summary>
-    public IItemService ItemService { get; protected init; } = null!;
+    public IPlayerProgressionService PlayerProgressionService { get; protected init; } = null!;
 
     public ITrackerTreasureService TreasureTracker { get; protected set; } = null!;
 

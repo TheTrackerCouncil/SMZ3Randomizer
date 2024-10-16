@@ -39,10 +39,10 @@ public static class TrackerServiceCollectionExtensions
         services.AddScoped<TrackerOptionsAccessor>();
         services.AddScoped<ITrackerTimerService, TrackerTimerService>();
         services.AddScoped<IHistoryService, HistoryService>();
-        services.AddScoped<IItemService, ItemService>();
+        services.AddScoped<IPlayerProgressionService, PlayerProgressionService>();
         services.AddScoped<ICommunicator, TextToSpeechCommunicator>();
         services.AddScoped<IUIService, UIService>();
-        services.AddScoped<IWorldService, WorldService>();
+        services.AddScoped<IWorldQueryService, WorldQueryService>();
         services.AddScoped<IRandomizerConfigService, RandomizerConfigService>();
         services.AddScoped<TrackerBase, Tracker>();
         services.AddSnesConnectorServices();

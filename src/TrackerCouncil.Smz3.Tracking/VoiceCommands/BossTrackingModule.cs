@@ -18,11 +18,11 @@ public class BossTrackingModule : TrackerModule
     /// class.
     /// </summary>
     /// <param name="tracker">The tracker instance.</param>
-    /// <param name="itemService">Service to get item information</param>
-    /// <param name="worldService">Service to get world information</param>
+    /// <param name="playerProgressionService">Service to get item information</param>
+    /// <param name="worldQueryService">Service to get world information</param>
     /// <param name="logger">Used to write logging information.</param>
-    public BossTrackingModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<BossTrackingModule> logger)
-        : base(tracker, itemService, worldService, logger)
+    public BossTrackingModule(TrackerBase tracker, IPlayerProgressionService playerProgressionService, IWorldQueryService worldQueryService, ILogger<BossTrackingModule> logger)
+        : base(tracker, playerProgressionService, worldQueryService, logger)
     {
 
     }
@@ -138,7 +138,7 @@ public class BossTrackingModule : TrackerModule
 
         AddCommand("Mark boss as defeated with content", GetBossDefeatedWithContentRule(), (result) =>
         {
-            var contentItemData = ItemService.FirstOrDefault("Content");
+            var contentItemData = WorldQueryService.FirstOrDefault("Content");
 
             var dungeon = GetBossDungeonFromResult(TrackerBase, result) as IHasBoss;
             if (dungeon != null)

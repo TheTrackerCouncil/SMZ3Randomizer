@@ -18,12 +18,12 @@ public class GoModeModule : TrackerModule
     /// Initializes a new instance of the <see cref="GoModeModule"/> class.
     /// </summary>
     /// <param name="tracker">The tracker instance.</param>
-    /// <param name="itemService">Service to get item information</param>
-    /// <param name="worldService">Service to get world information</param>
+    /// <param name="playerProgressionService">Service to get item information</param>
+    /// <param name="worldQueryService">Service to get world information</param>
     /// <param name="logger">Used to log information.</param>
     /// <param name="responseConfig"></param>
-    public GoModeModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<GoModeModule> logger, ResponseConfig responseConfig)
-        : base(tracker, itemService, worldService, logger)
+    public GoModeModule(TrackerBase tracker, IPlayerProgressionService playerProgressionService, IWorldQueryService worldQueryService, ILogger<GoModeModule> logger, ResponseConfig responseConfig)
+        : base(tracker, playerProgressionService, worldQueryService, logger)
     {
         _responseConfig = responseConfig;
     }

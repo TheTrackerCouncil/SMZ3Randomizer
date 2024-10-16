@@ -17,7 +17,7 @@ using TrackerCouncil.Smz3.Tracking.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.TrackingServices;
 
-internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, IItemService itemService, IMetadataService metadataService, IWorldService worldService) : TrackerService, ITrackerLocationService
+internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, IPlayerProgressionService playerProgressionService, IMetadataService metadataService, IWorldQueryService worldQueryService) : TrackerService, ITrackerLocationService
 {
     private IEnumerable<ItemType>? _previousMissingItems;
 
@@ -74,7 +74,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, II
         {
             var item = location.Item;
             var isKeysanityForLocation = (location.Region is Z3Region && World.Config.ZeldaKeysanity) || (location.Region is SMRegion && World.Config.MetroidKeysanity);
-            var items = itemService.GetProgression(!isKeysanityForLocation);
+            var items = playerProgressionService.GetProgression(!isKeysanityForLocation);
 
             if (!location.IsAvailable(items) && (confidence >= Options.MinimumSassConfidence || autoTracked))
             {
@@ -114,7 +114,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, II
 
                         if (itemsChanged && !onlyKeys)
                         {
-                            var missingItemNames = NaturalLanguage.Join(missingItems.Select(itemService.GetName));
+                            var missingItemNames = NaturalLanguage.Join(missingItems.Select(metadataService.GetName));
                             Tracker.Say(x => x.TrackedOutOfLogicItem, args: [item.Metadata.Name, locationInfo.Name, missingItemNames]);
                         }
                     }
@@ -228,7 +228,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, II
                 LocationCleared?.Invoke(this, new LocationClearedEventArgs(location, null, false));
             }
 
-            UpdateAccessibility(locations, allSameRegion ? itemService.GetProgression(locations[0].Region) : null);
+            UpdateAccessibility(locations, allSameRegion ? playerProgressionService.GetProgression(locations[0].Region) : null);
             undoDungeonTreasure?.Invoke();
         });
 
@@ -287,10 +287,10 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, II
     {
         var locations = area.Locations
             .Where(x => x.Cleared == false)
-            .WhereUnless(includeUnavailable, x => x.IsAvailable(itemService.GetProgression(area)))
+            .WhereUnless(includeUnavailable, x => x.IsAvailable(playerProgressionService.GetProgression(area)))
             .ToImmutableList();
 
-        itemService.ResetProgression();
+        playerProgressionService.ResetProgression();
 
         if (locations.Count == 0)
         {
@@ -373,7 +373,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, II
                     }
                     else
                     {
-                        var progression = itemService.GetProgression(area);
+                        var progression = playerProgressionService.GetProgression(area);
                         var someOutOfLogicLocation = locations.Where(x => !x.IsAvailable(progression)).Random(Random);
                         if (someOutOfLogicLocation != null && confidence >= Options.MinimumSassConfidence)
                         {
@@ -381,7 +381,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, II
                             var missingItems = Logic.GetMissingRequiredItems(someOutOfLogicLocation, progression, out _).MinBy(x => x.Length);
                             if (missingItems != null)
                             {
-                                var missingItemNames = NaturalLanguage.Join(missingItems.Select(itemService.GetName));
+                                var missingItemNames = NaturalLanguage.Join(missingItems.Select(metadataService.GetName));
                                 Tracker.Say(x => x.TrackedOutOfLogicItem, args: [someOutOfLogicItem.Metadata.Name, someOutOfLogicLocation.Metadata.Name, missingItemNames]);
                             }
                             else
@@ -428,8 +428,8 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, II
                 location.Cleared = false;
             }
 
-            itemService.ResetProgression();
-            UpdateAccessibility(locations, itemService.GetProgression(area));
+            playerProgressionService.ResetProgression();
+            UpdateAccessibility(locations, playerProgressionService.GetProgression(area));
             Tracker.BossTracker.UpdateAccessibility();
             Tracker.RewardTracker.UpdateAccessibility();
         });
@@ -451,7 +451,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, II
             if (confidence == null || confidence < Options.MinimumSassConfidence)
                 return;
 
-            var actualItemName = itemService.GetName(location.Item.Type);
+            var actualItemName = metadataService.GetName(location.Item.Type);
             if (HintsEnabled) actualItemName = "another item";
 
             Tracker.Say(response: Responses.LocationHasDifferentItem, args: [metadata?.NameWithArticle ?? item.GetDescription(), actualItemName]);
@@ -503,15 +503,15 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, II
 
     public void UpdateAccessibility(bool unclearedOnly = true, Progression? actualProgression = null, Progression? withKeysProgression = null)
     {
-        actualProgression ??= itemService.GetProgression(false);
-        withKeysProgression ??= itemService.GetProgression(true);
-        UpdateAccessibility(worldService.AllLocations().Where(x => !unclearedOnly || !x.Cleared), actualProgression, withKeysProgression);
+        actualProgression ??= playerProgressionService.GetProgression(false);
+        withKeysProgression ??= playerProgressionService.GetProgression(true);
+        UpdateAccessibility(worldQueryService.AllLocations().Where(x => !unclearedOnly || !x.Cleared), actualProgression, withKeysProgression);
     }
 
     public void UpdateAccessibility(IEnumerable<Location> locations, Progression? actualProgression = null, Progression? withKeysProgression = null)
     {
-        actualProgression ??= itemService.GetProgression(false);
-        withKeysProgression ??= itemService.GetProgression(true);
+        actualProgression ??= playerProgressionService.GetProgression(false);
+        withKeysProgression ??= playerProgressionService.GetProgression(true);
         foreach (var location in locations)
         {
             UpdateAccessibility(location, actualProgression, withKeysProgression);
@@ -520,8 +520,8 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, II
 
     public void UpdateAccessibility(Location location, Progression? actualProgression = null, Progression? withKeysProgression = null)
     {
-        actualProgression ??= itemService.GetProgression(false);
-        withKeysProgression ??= itemService.GetProgression(true);
+        actualProgression ??= playerProgressionService.GetProgression(false);
+        withKeysProgression ??= playerProgressionService.GetProgression(true);
         if (location.Region is HyruleCastle)
         {
             withKeysProgression = actualProgression;
