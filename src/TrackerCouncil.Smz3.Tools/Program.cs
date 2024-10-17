@@ -68,7 +68,7 @@ public static class Program
         }));
     }
 
-    private static string GenerateStats(Config config, int count = 10000)
+    private static string GenerateStats(Config config, int count = 1000)
     {
         var start = DateTime.Now;
         var stats = new ConcurrentBag<StatsDetails>();
@@ -76,10 +76,17 @@ public static class Program
         var pedProgression = 0;
         var pedNice = 0;
         var pedJunk = 0;
+        var pedItems = new ConcurrentBag<ItemType>();
 
         var treeProgression = 0;
         var treeNice = 0;
         var treeJunk = 0;
+        var treeItems = new ConcurrentBag<ItemType>();
+
+        var sahaProgression = 0;
+        var sahaNice = 0;
+        var sahaJunk = 0;
+        var sahaItems = new ConcurrentBag<ItemType>();
 
         var hintService = s_services.GetRequiredService<IGameHintService>();
         var playthroughService = s_services.GetRequiredService<PlaythroughService>();
@@ -104,6 +111,7 @@ public static class Program
                 {
                     case LocationUsefulness.Mandatory:
                         pedProgression++;
+                        pedItems.Add(location.Item.Type);
                         break;
                     case LocationUsefulness.NiceToHave:
                     case LocationUsefulness.Sword:
@@ -122,6 +130,7 @@ public static class Program
                 {
                     case LocationUsefulness.Mandatory:
                         treeProgression++;
+                        treeItems.Add(location.Item.Type);
                         break;
                     case LocationUsefulness.NiceToHave:
                     case LocationUsefulness.Sword:
@@ -129,6 +138,25 @@ public static class Program
                         break;
                     default:
                         treeJunk++;
+                        break;
+                }
+
+                location =
+                    seed.WorldGenerationData.LocalWorld.World.FindLocation(LocationId.Sahasrahla);
+                usefulness = hintService.GetLocationUsefulness(location,
+                    seed.WorldGenerationData.Worlds.ToList(), playthrough);
+                switch (usefulness)
+                {
+                    case LocationUsefulness.Mandatory:
+                        sahaProgression++;
+                        sahaItems.Add(location.Item.Type);
+                        break;
+                    case LocationUsefulness.NiceToHave:
+                    case LocationUsefulness.Sword:
+                        sahaNice++;
+                        break;
+                    default:
+                        sahaJunk++;
                         break;
                 }
             }
@@ -194,9 +222,15 @@ public static class Program
         sb.AppendLine($"Ped Progression: {pedProgression * 1f / stats.Count * 100f}%");
         sb.AppendLine($"Ped Nice: {pedNice * 1f / stats.Count * 100f}%");
         sb.AppendLine($"Ped Junk: {pedJunk * 1f / stats.Count * 100f}%");
+        sb.AppendLine($"Ped items: {string.Join(',', pedItems.Distinct())}");
         sb.AppendLine($"Tree Progression: {treeProgression * 1f / stats.Count * 100f}%");
         sb.AppendLine($"Tree Nice: {treeNice * 1f / stats.Count * 100f}%");
         sb.AppendLine($"Tree Junk: {treeJunk * 1f / stats.Count * 100f}%");
+        sb.AppendLine($"Tree items: {string.Join(',', treeItems.Distinct())}");
+        sb.AppendLine($"Saha Progression: {sahaProgression * 1f / stats.Count * 100f}%");
+        sb.AppendLine($"Saha Nice: {sahaNice * 1f / stats.Count * 100f}%");
+        sb.AppendLine($"Saha Junk: {sahaJunk * 1f / stats.Count * 100f}%");
+        sb.AppendLine($"Saha items: {string.Join(',', sahaItems.Distinct())}");
         sb.AppendLine("Run time: " + ts.TotalSeconds + "s");
         sb.AppendLine();
         return sb.ToString();
