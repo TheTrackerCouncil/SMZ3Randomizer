@@ -82,7 +82,7 @@ public abstract class MultiplayerGameTypeService : IDisposable
             .ToList();
         var locations = world.Locations.ToDictionary(x => x.Id, _ => false);
         var items = playerItemTypes.ToDictionary(x => x, _ => 0);
-        var bosses = world.GoldenBosses.Select(x => x.Type).ToDictionary(x => x, _ => false);
+        var bosses = world.Bosses.Select(x => x.Type).ToDictionary(x => x, _ => false);
         var state = new MultiplayerWorldState(locations, items, bosses);
         return state;
     }
