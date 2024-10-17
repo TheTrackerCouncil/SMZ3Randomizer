@@ -163,7 +163,7 @@ public class TreasureTrackingModule : TrackerModule
         {
             if (GetDungeonFromResult(TrackerBase, result) is IHasBoss dungeon)
             {
-                TrackerBase.BossTracker.MarkRegionBossAsDefeated(dungeon, result.Confidence);
+                TrackerBase.BossTracker.MarkBossAsDefeated(dungeon, result.Confidence);
             }
         });
 

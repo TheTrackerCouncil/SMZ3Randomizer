@@ -32,7 +32,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, IP
             GivePreConfiguredLocationSass(location);
         }
 
-        if (confidence != null && !stateResponse)
+        if (confidence != null && stateResponse)
         {
             // Only use TTS if called from a voice command
             var locationName = location.Metadata.Name;

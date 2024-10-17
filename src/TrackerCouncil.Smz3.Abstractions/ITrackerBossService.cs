@@ -14,7 +14,11 @@ public interface ITrackerBossService
     /// <param name="region">The dungeon that was cleared.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
     /// <param name="autoTracked">If this was cleared by the auto tracker</param>
-    public void MarkRegionBossAsDefeated(IHasBoss region, float? confidence = null, bool autoTracked = false, bool admittedGuilt = false);
+    /// <param name="admittedGuilt">
+    /// <see langword="true"/> if the command implies the boss was killed;
+    /// <see langword="false"/> if the boss was simply "tracked".
+    /// </param>
+    public void MarkBossAsDefeated(IHasBoss region, float? confidence = null, bool autoTracked = false, bool admittedGuilt = false);
 
     /// <summary>
     /// Marks a boss as defeated.
@@ -42,7 +46,7 @@ public interface ITrackerBossService
     /// </summary>
     /// <param name="region">The dungeon that should be un-cleared.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void MarkRegionBossAsNotDefeated(IHasBoss region, float? confidence = null);
+    public void MarkBossAsNotDefeated(IHasBoss region, float? confidence = null);
 
     public void UpdateAccessibility(Progression? actualProgression = null, Progression? withKeysProgression = null);
 

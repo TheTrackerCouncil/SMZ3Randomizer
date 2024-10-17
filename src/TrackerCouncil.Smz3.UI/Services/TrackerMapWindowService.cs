@@ -376,7 +376,7 @@ public class TrackerMapWindowService(
         {
             if (model.BossRegion != null)
             {
-                tracker.BossTracker.MarkRegionBossAsDefeated(model.BossRegion, admittedGuilt: true);
+                tracker.BossTracker.MarkBossAsDefeated(model.BossRegion, admittedGuilt: true);
             }
             else if(model.RewardRegion != null)
             {

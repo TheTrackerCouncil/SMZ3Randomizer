@@ -69,7 +69,7 @@ public partial class TrackerLocationsWindow : RestorableWindow
         _service?.UpdateShowOutOfLogic(newValue);
     }
 
-    private void EnumComboBox_OnValueChanged(object sender, EnumValueChangedEventArgs args)
+    private void FilterComboBox_OnValueChanged(object sender, EnumValueChangedEventArgs args)
     {
         _service?.UpdateFilter((sender as EnumComboBox)?.Value as RegionFilter? ?? RegionFilter.None);
     }

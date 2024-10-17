@@ -577,8 +577,8 @@ public class TrackerWindowService(
         if (bossRegion != null)
         {
             bossRegion.Boss.UpdatedBossState += (_, _) => model.DungeonCleared = bossRegion.BossDefeated;
-            model.Clicked += (_, _) => tracker.BossTracker.MarkRegionBossAsDefeated(bossRegion);
-            model.ResetCleared += (_, _) => tracker.BossTracker.MarkRegionBossAsNotDefeated(bossRegion);
+            model.Clicked += (_, _) => tracker.BossTracker.MarkBossAsDefeated(bossRegion);
+            model.ResetCleared += (_, _) => tracker.BossTracker.MarkBossAsNotDefeated(bossRegion);
         }
 
         dungeon.UpdatedTreasure += (_, _) => model.DungeonTreasure = dungeon.RemainingTreasure;

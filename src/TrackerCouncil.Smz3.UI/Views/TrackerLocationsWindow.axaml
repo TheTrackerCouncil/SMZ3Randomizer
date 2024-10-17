@@ -61,7 +61,7 @@
             <TextBlock Text="All locations" FontSize="20" Margin="0" Grid.Column="0" />
             <CheckBox Content="Show out-of-logic" VerticalAlignment="Center" Grid.Column="1" Margin="15 0" IsChecked="{Binding ShowOutOfLogic}" IsCheckedChanged="ToggleShowOutOfLogicButton_OnIsCheckedChanged" />
             <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="5 0">Filter:</TextBlock>
-            <controls:EnumComboBox Grid.Column="3" MinWidth="100" Value="{Binding Filter}" EnumType="{Binding Filter, Converter={StaticResource TypeConverter}}" ValueChanged="EnumComboBox_OnValueChanged" />
+            <controls:EnumComboBox Grid.Column="3" MinWidth="100" Value="{Binding Filter}" EnumType="{Binding Filter, Converter={StaticResource TypeConverter}}" ValueChanged="FilterComboBox_OnValueChanged" />
         </Grid>
       </StackPanel>
 
@@ -70,7 +70,7 @@
           <ItemsControl ItemsSource="{Binding Regions}" Margin="10 0">
             <ItemsControl.ItemTemplate>
               <DataTemplate>
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" IsVisible="{Binding IsVisible}">
                   <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding LocationCount}" FontWeight="Bold"></TextBlock>
                     <Image Source="{Binding ChestImage, Converter={StaticResource StringToImageConverter}}" Height="16" Margin="5 0" />

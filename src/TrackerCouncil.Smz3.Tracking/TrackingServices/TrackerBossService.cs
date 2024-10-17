@@ -13,13 +13,11 @@ internal class TrackerBossService(IPlayerProgressionService playerProgressionSer
 {
     public event EventHandler<BossTrackedEventArgs>? BossUpdated;
 
-    public void MarkRegionBossAsDefeated(IHasBoss region, float? confidence = null, bool autoTracked = false, bool admittedGuilt = false)
+    public void MarkBossAsDefeated(IHasBoss region, float? confidence = null, bool autoTracked = false, bool admittedGuilt = false)
     {
-        if (region.BossDefeated)
+        if (region.BossDefeated && !autoTracked)
         {
-            if (!autoTracked)
-                Tracker.Say(response: Responses.DungeonBossAlreadyCleared, args: [region.Metadata.Name, region.BossMetadata.Name]);
-
+            Tracker.Say(response: Responses.DungeonBossAlreadyCleared, args: [region.Metadata.Name, region.BossMetadata.Name]);
             return;
         }
 
@@ -92,7 +90,7 @@ internal class TrackerBossService(IPlayerProgressionService playerProgressionSer
 
         if (boss.Region != null)
         {
-            MarkRegionBossAsDefeated(boss.Region, confidence, autoTracked, admittedGuilt);
+            MarkBossAsDefeated(boss.Region, confidence, autoTracked, admittedGuilt);
             return;
         }
 
@@ -135,7 +133,8 @@ internal class TrackerBossService(IPlayerProgressionService playerProgressionSer
 
         if (boss.Region != null)
         {
-            MarkRegionBossAsNotDefeated(boss.Region, confidence);
+            MarkBossAsNotDefeated(boss.Region, confidence);
+            return;
         }
 
         boss.Defeated = false;
@@ -159,7 +158,7 @@ internal class TrackerBossService(IPlayerProgressionService playerProgressionSer
     /// </summary>
     /// <param name="region">The dungeon that should be un-cleared.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void MarkRegionBossAsNotDefeated(IHasBoss region, float? confidence = null)
+    public void MarkBossAsNotDefeated(IHasBoss region, float? confidence = null)
     {
         if (!region.BossDefeated)
         {

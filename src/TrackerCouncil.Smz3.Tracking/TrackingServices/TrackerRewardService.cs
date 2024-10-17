@@ -55,9 +55,11 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlaye
         var previousMarkedReward = rewardRegion.MarkedReward;
         rewardRegion.HasReceivedReward = true;
 
-        if (isAutoTracked)
+        if (isAutoTracked && !rewardRegion.HasCorrectlyMarkedReward)
         {
             rewardRegion.MarkedReward = rewardRegion.RewardType;
+            var rewardObj = rewardRegion.Reward;
+            Tracker.Say(response: Responses.DungeonRewardMarked, args: [rewardRegion.Metadata.Name, rewardObj.Metadata.Name ?? rewardObj.Type.GetDescription()]);
         }
 
         UpdateAllAccessibility(false);

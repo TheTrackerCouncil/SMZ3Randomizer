@@ -48,7 +48,7 @@ public class FinalBossCheck(TrackerBase tracker, ISnesConnectorService snesConne
             if (!ganon.Defeated)
             {
                 Logger.LogInformation("Auto tracked Ganon's Tower");
-                Tracker.BossTracker.MarkRegionBossAsDefeated(Tracker.World.GanonsTower, confidence: null, autoTracked: true);
+                Tracker.BossTracker.MarkBossAsDefeated(Tracker.World.GanonsTower, confidence: null, autoTracked: true);
                 didUpdate = true;
             }
         }

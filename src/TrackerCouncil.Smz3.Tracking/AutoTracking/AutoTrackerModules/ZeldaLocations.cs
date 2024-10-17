@@ -73,7 +73,7 @@ public class ZeldaLocations(TrackerBase tracker, ISnesConnectorService snesConne
                     // Mark HC as cleared if this was Zelda's Cell
                     if (location.Id == LocationId.HyruleCastleZeldasCell && !Tracker.World.HyruleCastle.Boss.Defeated)
                     {
-                        Tracker.BossTracker.MarkRegionBossAsDefeated(Tracker.World.HyruleCastle, autoTracked: true);
+                        Tracker.BossTracker.MarkBossAsDefeated(Tracker.World.HyruleCastle, autoTracked: true);
                     }
                 }
 
@@ -105,7 +105,7 @@ public class ZeldaLocations(TrackerBase tracker, ISnesConnectorService snesConne
                 if (dungeon.BossState.AutoTracked == false && prevValue && currentValue)
                 {
                     dungeon.BossState.AutoTracked = true;
-                    Tracker.BossTracker.MarkRegionBossAsDefeated(dungeon, autoTracked: true, admittedGuilt: true);
+                    Tracker.BossTracker.MarkBossAsDefeated(dungeon, autoTracked: true, admittedGuilt: true);
                     Logger.LogInformation("Auto tracked {DungeonName} as cleared", dungeon.Name);
                 }
 

@@ -94,46 +94,35 @@ public class BossTrackingModule : TrackerModule
     {
         AddCommand("Mark boss as defeated", GetMarkBossAsDefeatedRule(), (result) =>
         {
-            var dungeon = GetBossDungeonFromResult(TrackerBase, result) as IHasBoss;
-            if (dungeon != null)
+            var boss = GetBossFromResult(TrackerBase, result) ??
+                       throw new Exception($"Could not find boss or dungeon in command: '{result.Text}'");
+
+            var admittedGuilt = result.Text.ContainsAny("killed", "beat", "defeated", "dead")
+                                && !result.Text.ContainsAny("beat off", "beaten off");
+
+            if (boss.Region != null)
             {
-                // Track boss with associated dungeon
-                TrackerBase.BossTracker.MarkRegionBossAsDefeated(dungeon, result.Confidence);
+                // Track boss with associated dungeon or region
+                TrackerBase.BossTracker.MarkBossAsDefeated(boss.Region, result.Confidence, false, admittedGuilt);
                 return;
             }
 
-            var boss = GetBossFromResult(TrackerBase, result);
-            if (boss != null)
-            {
-                // Track standalone boss
-                var admittedGuilt = result.Text.ContainsAny("killed", "beat", "defeated", "dead")
-                                    && !result.Text.ContainsAny("beat off", "beaten off");
-                TrackerBase.BossTracker.MarkBossAsDefeated(boss, admittedGuilt, result.Confidence);
-                return;
-            }
-
-            throw new Exception($"Could not find boss or dungeon in command: '{result.Text}'");
+            // Track standalone boss
+            TrackerBase.BossTracker.MarkBossAsDefeated(boss, admittedGuilt, result.Confidence);
         });
 
         AddCommand("Mark boss as alive", GetMarkBossAsNotDefeatedRule(), (result) =>
         {
-            var dungeon = GetBossDungeonFromResult(TrackerBase, result) as IHasBoss;
-            if (dungeon != null)
+            var boss = GetBossFromResult(TrackerBase, result) ?? throw new Exception($"Could not find boss or dungeon in command: '{result.Text}'");
+            if (boss.Region != null)
             {
-                // Untrack boss with associated dungeon
-                TrackerBase.BossTracker.MarkRegionBossAsNotDefeated(dungeon, result.Confidence);
+                // Untrack boss with associated dungeon or region
+                TrackerBase.BossTracker.MarkBossAsNotDefeated(boss.Region, result.Confidence);
                 return;
             }
 
-            var boss = GetBossFromResult(TrackerBase, result);
-            if (boss != null)
-            {
-                // Untrack standalone boss
-                TrackerBase.BossTracker.MarkBossAsNotDefeated(boss, result.Confidence);
-                return;
-            }
-
-            throw new Exception($"Could not find boss or dungeon in command: '{result.Text}'");
+            // Untrack standalone boss
+            TrackerBase.BossTracker.MarkBossAsNotDefeated(boss, result.Confidence);
         });
 
         AddCommand("Mark boss as defeated with content", GetBossDefeatedWithContentRule(), (result) =>
@@ -150,7 +139,7 @@ public class BossTrackingModule : TrackerModule
                 }
 
                 // Track boss with associated dungeon
-                TrackerBase.BossTracker.MarkRegionBossAsDefeated(dungeon, result.Confidence);
+                TrackerBase.BossTracker.MarkBossAsDefeated(dungeon, result.Confidence);
                 return;
             }
 
