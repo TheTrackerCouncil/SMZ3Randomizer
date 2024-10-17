@@ -49,6 +49,7 @@ public class Reward
             CreatePlayerReward(RewardType.CrystalBlue, world, regions),
             CreatePlayerReward(RewardType.CrystalRed, world, regions),
             CreatePlayerReward(RewardType.CrystalRed, world, regions),
+            CreatePlayerReward(RewardType.Agahnim, world, regions),
         };
     }
 
