@@ -18,11 +18,7 @@ public static class SchrodingersStringExtensions
     /// </returns>
     public static SchrodingersString GetName(this IHasLocations area)
     {
-        if (area is IDungeon dungeon)
-        {
-            return dungeon.DungeonMetadata.Name ?? new SchrodingersString(dungeon.DungeonName);
-        }
-        else if (area is Region region)
+        if (area is Region region)
         {
             return region.Metadata.Name ?? new SchrodingersString(region.Name);
         }

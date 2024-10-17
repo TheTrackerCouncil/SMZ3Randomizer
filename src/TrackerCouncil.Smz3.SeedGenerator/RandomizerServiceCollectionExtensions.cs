@@ -26,6 +26,7 @@ public static class RandomizerServiceCollectionExtensions
         services.AddTransient<RomLauncherService>();
         services.AddTransient<PlaythroughService>();
         services.AddTransient<IStatGenerator, StatGenerator>();
+        services.AddTransient<RomParserService>();
         return services;
     }
 

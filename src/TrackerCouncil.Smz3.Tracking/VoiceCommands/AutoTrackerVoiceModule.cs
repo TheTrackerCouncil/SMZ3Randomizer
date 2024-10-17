@@ -18,12 +18,12 @@ public class AutoTrackerVoiceModule : TrackerModule, IDisposable
     /// class.
     /// </summary>
     /// <param name="tracker">The tracker instance.</param>
-    /// <param name="itemService">Service to get item information</param>
-    /// <param name="worldService">Service to get world information</param>
+    /// <param name="playerProgressionService">Service to get item information</param>
+    /// <param name="worldQueryService">Service to get world information</param>
     /// <param name="logger">Used to write logging information.</param>
     /// <param name="autoTrackerBase">The auto tracker to associate with this module</param>
-    public AutoTrackerVoiceModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<AutoTrackerVoiceModule> logger, AutoTrackerBase autoTrackerBase)
-        : base(tracker, itemService, worldService, logger)
+    public AutoTrackerVoiceModule(TrackerBase tracker, IPlayerProgressionService playerProgressionService, IWorldQueryService worldQueryService, ILogger<AutoTrackerVoiceModule> logger, AutoTrackerBase autoTrackerBase)
+        : base(tracker, playerProgressionService, worldQueryService, logger)
     {
         TrackerBase.AutoTracker = autoTrackerBase;
         _autoTrackerBase = autoTrackerBase;

@@ -39,8 +39,8 @@ public class PlandoConfig // TODO: Consider using this instead of SeedData?
             .ToDictionary(x => x.ToString(), x => x.Item.Type);
         Rewards = world.Regions.Where(x => x is IHasReward)
             .ToDictionary(x => x.ToString(), x => ((IHasReward)x).RewardType);
-        Medallions = world.Regions.Where(x => x is INeedsMedallion)
-            .ToDictionary(x => x.ToString(), x => ((INeedsMedallion)x).Medallion);
+        Medallions = world.Regions.Where(x => x is IHasPrerequisite)
+            .ToDictionary(x => x.ToString(), x => ((IHasPrerequisite)x).RequiredItem);
         Logic = world.Config.LogicConfig.Clone();
         StartingInventory = world.Config.ItemOptions;
         var prizes = DropPrizes.GetPool(world.Config.CasPatches.ZeldaDrops);

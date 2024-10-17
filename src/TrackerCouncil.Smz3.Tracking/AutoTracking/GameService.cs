@@ -26,7 +26,6 @@ public class GameService : TrackerModule, IGameService
     private ISnesConnectorService _snesConnectorService;
     private readonly ILogger<GameService> _logger;
     private readonly int _trackerPlayerId;
-    private int _itemCounter;
     private readonly Dictionary<int, EmulatorAction> _emulatorActions = new();
 
     /// <summary>
@@ -34,13 +33,13 @@ public class GameService : TrackerModule, IGameService
     /// class.
     /// </summary>
     /// <param name="tracker">The tracker instance.</param>
-    /// <param name="itemService">Service to get item information</param>
-    /// <param name="worldService">Service to get world information</param>
+    /// <param name="playerProgressionService">Service to get item information</param>
+    /// <param name="worldQueryService">Service to get world information</param>
     /// <param name="logger">The logger to associate with this module</param>
     /// <param name="worldAccessor">The accesor to determine the tracker player id</param>
     /// <param name="snesConnectorService"></param>
-    public GameService(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<GameService> logger, IWorldAccessor worldAccessor, ISnesConnectorService snesConnectorService)
-        : base(tracker, itemService, worldService, logger)
+    public GameService(TrackerBase tracker, IPlayerProgressionService playerProgressionService, IWorldQueryService worldQueryService, ILogger<GameService> logger, IWorldAccessor worldAccessor, ISnesConnectorService snesConnectorService)
+        : base(tracker, playerProgressionService, worldQueryService, logger)
     {
         TrackerBase.GameService = this;
         _logger = logger;
@@ -106,7 +105,7 @@ public class GameService : TrackerModule, IGameService
             return false;
         }
 
-        TrackerBase.TrackItems(items, true, true);
+        TrackerBase.ItemTracker.TrackItems(items, true, true);
 
         return await TryGiveItemTypesAsync(items.Select(x => (x.Type, fromPlayerId)).ToList());
     }
@@ -668,11 +667,9 @@ public class GameService : TrackerModule, IGameService
             previouslyGiftedItems.Add((item, playerId));
         }
 
-        _itemCounter = previouslyGiftedItems.Count;
-
-        var otherCollectedItems = WorldService.Worlds.SelectMany(x => x.Locations)
+        var otherCollectedItems = WorldQueryService.Worlds.SelectMany(x => x.Locations)
             .Where(x => x.State.ItemWorldId == TrackerBase.World.Id && x.State.WorldId != TrackerBase.World.Id &&
-                        x.State.Autotracked && (!x.World.HasCompleted || !x.Item.Type.IsInCategory(ItemCategory.IgnoreOnMultiplayerCompletion)))
+                        x.Autotracked && (!x.World.HasCompleted || !x.Item.Type.IsInCategory(ItemCategory.IgnoreOnMultiplayerCompletion)))
             .Select(x => (x.State.Item, x.State.WorldId)).ToList();
 
         foreach (var item in previouslyGiftedItems)

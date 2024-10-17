@@ -8,7 +8,7 @@ using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Data.WorldData.Regions.SuperMetroid.Norfair;
 
-public class LowerNorfairEast : SMRegion, IHasBoss
+public class LowerNorfairEast : SMRegion, IHasBoss, IHasReward
 {
     public LowerNorfairEast(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
@@ -19,16 +19,30 @@ public class LowerNorfairEast : SMRegion, IHasBoss
         RidleyTank = new RidleyTankRoom(this, metadata, trackerState);
         Fireflea = new FirefleaRoom(this, metadata, trackerState);
         MemoryRegionId = 2;
-        Boss = new Boss(Shared.Enums.BossType.Ridley, world, this, metadata, trackerState);
         Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Lower Norfair East");
         MapName = "Norfair";
+
+        ((IHasReward)this).ApplyState(trackerState);
+        ((IHasBoss)this).ApplyState(trackerState);
     }
 
     public override string Name => "Lower Norfair, East";
 
     public override string Area => "Lower Norfair";
 
-    public Boss Boss { get; set; }
+    public Boss Boss { get; set; } = null!;
+
+    public BossType DefaultBossType => BossType.Ridley;
+
+    public LocationId? BossLocationId => LocationId.LowerNorfairRidleyTank;
+
+    public Reward Reward { get; set; } = null!;
+
+    public RewardType DefaultRewardType => RewardType.RidleyToken;
+
+    public TrackerRewardState RewardState { get; set; } = null!;
+
+    public bool IsShuffledReward => false;
 
     public SpringBallMazeRoom SpringBallMaze { get; }
 
@@ -57,6 +71,10 @@ public class LowerNorfairEast : SMRegion, IHasBoss
     {
         return CanEnter(items, true) && CanExit(items) && items.CardLowerNorfairBoss && Logic.CanUsePowerBombs(items) && items.Super;
     }
+
+    public bool CanRetrieveReward(Progression items) => CanBeatBoss(items);
+
+    public bool CanSeeReward(Progression items) => true;
 
     private bool CanExit(Progression items)
     {

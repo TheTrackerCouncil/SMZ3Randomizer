@@ -171,14 +171,14 @@ public class MetadataService : IMetadataService
     /// <summary>
     /// Returns extra information for the specified dungeon.
     /// </summary>
-    /// <param name="dungeon">
+    /// <param name="hasTreasure">
     /// The dungeon to get extra information for.
     /// </param>
     /// <returns>
     /// A new <see cref="DungeonInfo"/> for the specified dungeon region.
     /// </returns>
-    public DungeonInfo Dungeon(IDungeon dungeon)
-        => Dungeon(dungeon.GetType());
+    public DungeonInfo Dungeon(IHasTreasure hasTreasure)
+        => Dungeon(hasTreasure.GetType());
 
     /// <summary>
     /// Returns extra information for the specified room.
@@ -287,4 +287,9 @@ public class MetadataService : IMetadataService
     /// <returns></returns>
     public RewardInfo? Reward(RewardType type)
         => Rewards.FirstOrDefault(x => x.RewardType == type);
+
+    public string GetName(ItemType itemType) => Item(itemType)?.NameWithArticle ?? itemType.GetDescription();
+
+    public string GetName(RewardType rewardType) => Reward(rewardType)?.NameWithArticle ?? rewardType.GetDescription();
+
 }

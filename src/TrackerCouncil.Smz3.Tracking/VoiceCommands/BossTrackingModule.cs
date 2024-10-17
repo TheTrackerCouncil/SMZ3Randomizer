@@ -2,6 +2,7 @@
 using System.Runtime.Versioning;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Abstractions;
+using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Tracking.Services;
 
@@ -17,11 +18,11 @@ public class BossTrackingModule : TrackerModule
     /// class.
     /// </summary>
     /// <param name="tracker">The tracker instance.</param>
-    /// <param name="itemService">Service to get item information</param>
-    /// <param name="worldService">Service to get world information</param>
+    /// <param name="playerProgressionService">Service to get item information</param>
+    /// <param name="worldQueryService">Service to get world information</param>
     /// <param name="logger">Used to write logging information.</param>
-    public BossTrackingModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<BossTrackingModule> logger)
-        : base(tracker, itemService, worldService, logger)
+    public BossTrackingModule(TrackerBase tracker, IPlayerProgressionService playerProgressionService, IWorldQueryService worldQueryService, ILogger<BossTrackingModule> logger)
+        : base(tracker, playerProgressionService, worldQueryService, logger)
     {
 
     }
@@ -93,63 +94,52 @@ public class BossTrackingModule : TrackerModule
     {
         AddCommand("Mark boss as defeated", GetMarkBossAsDefeatedRule(), (result) =>
         {
-            var dungeon = GetBossDungeonFromResult(TrackerBase, result);
-            if (dungeon != null)
+            var boss = GetBossFromResult(TrackerBase, result) ??
+                       throw new Exception($"Could not find boss or dungeon in command: '{result.Text}'");
+
+            var admittedGuilt = result.Text.ContainsAny("killed", "beat", "defeated", "dead")
+                                && !result.Text.ContainsAny("beat off", "beaten off");
+
+            if (boss.Region != null)
             {
-                // Track boss with associated dungeon
-                TrackerBase.MarkDungeonAsCleared(dungeon, result.Confidence);
+                // Track boss with associated dungeon or region
+                TrackerBase.BossTracker.MarkBossAsDefeated(boss.Region, result.Confidence, false, admittedGuilt);
                 return;
             }
 
-            var boss = GetBossFromResult(TrackerBase, result);
-            if (boss != null)
-            {
-                // Track standalone boss
-                var admittedGuilt = result.Text.ContainsAny("killed", "beat", "defeated", "dead")
-                                    && !result.Text.ContainsAny("beat off", "beaten off");
-                TrackerBase.MarkBossAsDefeated(boss, admittedGuilt, result.Confidence);
-                return;
-            }
-
-            throw new Exception($"Could not find boss or dungeon in command: '{result.Text}'");
+            // Track standalone boss
+            TrackerBase.BossTracker.MarkBossAsDefeated(boss, admittedGuilt, result.Confidence);
         });
 
         AddCommand("Mark boss as alive", GetMarkBossAsNotDefeatedRule(), (result) =>
         {
-            var dungeon = GetBossDungeonFromResult(TrackerBase, result);
-            if (dungeon != null)
+            var boss = GetBossFromResult(TrackerBase, result) ?? throw new Exception($"Could not find boss or dungeon in command: '{result.Text}'");
+            if (boss.Region != null)
             {
-                // Untrack boss with associated dungeon
-                TrackerBase.MarkDungeonAsIncomplete(dungeon, result.Confidence);
+                // Untrack boss with associated dungeon or region
+                TrackerBase.BossTracker.MarkBossAsNotDefeated(boss.Region, result.Confidence);
                 return;
             }
 
-            var boss = GetBossFromResult(TrackerBase, result);
-            if (boss != null)
-            {
-                // Untrack standalone boss
-                TrackerBase.MarkBossAsNotDefeated(boss, result.Confidence);
-                return;
-            }
-
-            throw new Exception($"Could not find boss or dungeon in command: '{result.Text}'");
+            // Untrack standalone boss
+            TrackerBase.BossTracker.MarkBossAsNotDefeated(boss, result.Confidence);
         });
 
         AddCommand("Mark boss as defeated with content", GetBossDefeatedWithContentRule(), (result) =>
         {
-            var contentItemData = ItemService.FirstOrDefault("Content");
+            var contentItemData = WorldQueryService.FirstOrDefault("Content");
 
-            var dungeon = GetBossDungeonFromResult(TrackerBase, result);
+            var dungeon = GetBossDungeonFromResult(TrackerBase, result) as IHasBoss;
             if (dungeon != null)
             {
                 if (contentItemData != null)
                 {
                     TrackerBase.Say(x => x.DungeonBossClearedAddContent);
-                    TrackerBase.TrackItem(contentItemData);
+                    TrackerBase.ItemTracker.TrackItem(contentItemData);
                 }
 
                 // Track boss with associated dungeon
-                TrackerBase.MarkDungeonAsCleared(dungeon, result.Confidence);
+                TrackerBase.BossTracker.MarkBossAsDefeated(dungeon, result.Confidence);
                 return;
             }
 
@@ -159,13 +149,13 @@ public class BossTrackingModule : TrackerModule
                 if (contentItemData != null)
                 {
                     TrackerBase.Say(x => x.DungeonBossClearedAddContent);
-                    TrackerBase.TrackItem(contentItemData);
+                    TrackerBase.ItemTracker.TrackItem(contentItemData);
                 }
 
                 // Track standalone boss
                 var admittedGuilt = result.Text.ContainsAny("killed", "beat", "defeated", "dead")
                                     && !result.Text.ContainsAny("beat off", "beaten off");
-                TrackerBase.MarkBossAsDefeated(boss, admittedGuilt, result.Confidence);
+                TrackerBase.BossTracker.MarkBossAsDefeated(boss, admittedGuilt, result.Confidence);
                 return;
             }
 

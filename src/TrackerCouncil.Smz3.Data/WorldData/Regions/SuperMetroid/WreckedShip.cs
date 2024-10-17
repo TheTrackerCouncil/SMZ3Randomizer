@@ -8,7 +8,7 @@ using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Data.WorldData.Regions.SuperMetroid;
 
-public class WreckedShip : SMRegion, IHasBoss
+public class WreckedShip : SMRegion, IHasBoss, IHasReward
 {
     public WreckedShip(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
@@ -20,17 +20,30 @@ public class WreckedShip : SMRegion, IHasBoss
         EastSuper = new EastSuperRoom(this, metadata, trackerState);
         GravitySuit = new GravitySuitRoom(this, metadata, trackerState);
         MemoryRegionId = 3;
-        Boss = new Boss(Shared.Enums.BossType.Phantoon, world, this, metadata, trackerState);
         Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Wrecked Ship");
         MapName = "Wrecked Ship";
 
+        ((IHasReward)this).ApplyState(trackerState);
+        ((IHasBoss)this).ApplyState(trackerState);
     }
 
     public override string Name => "Wrecked Ship";
 
     public override string Area => "Wrecked Ship";
 
-    public Boss Boss { get; set; }
+    public Boss Boss { get; set; } = null!;
+
+    public BossType DefaultBossType => BossType.Phantoon;
+
+    public LocationId? BossLocationId => LocationId.WreckedShipWestSuper;
+
+    public Reward Reward { get; set; } = null!;
+
+    public RewardType DefaultRewardType => RewardType.PhantoonToken;
+
+    public TrackerRewardState RewardState { get; set; } = null!;
+
+    public bool IsShuffledReward => false;
 
     public MainShaftRoom MainShaft { get; }
 
@@ -91,6 +104,10 @@ public class WreckedShip : SMRegion, IHasBoss
     {
         return items.CardWreckedShipBoss && Logic.CanPassBombPassages(items);
     }
+
+    public bool CanRetrieveReward(Progression items) => CanEnter(items, true) && CanUnlockShip(items);
+
+    public bool CanSeeReward(Progression items) => true;
 
     public class MainShaftRoom : Room
     {

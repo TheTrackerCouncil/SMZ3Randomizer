@@ -37,8 +37,7 @@ public class MetroidBosses(TrackerBase tracker, ISnesConnectorService snesConnec
         {
             if (data.CheckUInt8Flag(boss.Metadata.MemoryAddress ?? 0, boss.Metadata.MemoryFlag ?? 100))
             {
-                boss.State.AutoTracked = true;
-                Tracker.MarkBossAsDefeated(boss, true, null, true);
+                Tracker.BossTracker.MarkBossAsDefeated(boss, true, null, true);
                 Logger.LogInformation("Auto tracked {BossName} as defeated", boss.Name);
             }
         }

@@ -1,21 +1,194 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
+using TrackerCouncil.Smz3.Data.WorldData.Regions.SuperMetroid.Crateria;
 using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
 
+public class ArchipelagoLocation
+{
+    public required LocationId Location { get; set; }
+    public required bool IsLocalPlayerItem { get; set; }
+    public required string PlayerName{ get; set; }
+    public required ItemType? ItemType { get; set; }
+    public required bool IsProgression { get; set; }
+    public required string ItemName { get; set; }
+}
+
 public class LocationsPatch : RomPatch
 {
+    private static Dictionary<int, string> s_smCharMap = new Dictionary<int, string>()
+    {
+        { 0x3CE0, "A" },
+        { 0x3CE1, "B" },
+        { 0x3CE2, "C" },
+        { 0x3CE3, "D" },
+        { 0x3CE4, "E" },
+        { 0x3CE5, "F" },
+        { 0x3CE6, "G" },
+        { 0x3CE7, "H" },
+        { 0x3CE8, "I" },
+        { 0x3CE9, "J" },
+        { 0x3CEA, "K" },
+        { 0x3CEB, "L" },
+        { 0x3CEC, "M" },
+        { 0x3CED, "N" },
+        { 0x3CEE, "O" },
+        { 0x3CEF, "P" },
+        { 0x3CF0, "Q" },
+        { 0x3CF1, "R" },
+        { 0x3CF2, "S" },
+        { 0x3CF3, "T" },
+        { 0x3CF4, "U" },
+        { 0x3CF5, "V" },
+        { 0x3CF6, "W" },
+        { 0x3CF7, "X" },
+        { 0x3CF8, "Y" },
+        { 0x3CF9, "Z" },
+        { 0x3C4E, " " },
+        { 0x3CFF, "!" },
+        { 0x3CFE, "?" },
+        { 0x3CFD, "'" },
+        { 0x3CFB, "," },
+        { 0x3CFA, "." },
+        { 0x3CCF, "-" },
+        { 0x3C80, "1" },
+        { 0x3C81, "2" },
+        { 0x3C82, "3" },
+        { 0x3C83, "4" },
+        { 0x3C84, "5" },
+        { 0x3C85, "6" },
+        { 0x3C86, "7" },
+        { 0x3C87, "8" },
+        { 0x3C88, "9" },
+        { 0x3C89, "0" },
+        { 0x3C0A, "%" },
+        { 0x3C90, "a" },
+        { 0x3C91, "b" },
+        { 0x3C92, "c" },
+        { 0x3C93, "d" },
+        { 0x3C94, "e" },
+        { 0x3C95, "f" },
+        { 0x3C96, "g" },
+        { 0x3C97, "h" },
+        { 0x3C98, "i" },
+        { 0x3C99, "j" },
+        { 0x3C9A, "k" },
+        { 0x3C9B, "l" },
+        { 0x3C9C, "m" },
+        { 0x3C9D, "n" },
+        { 0x3C9E, "o" },
+        { 0x3C9F, "p" },
+        { 0x3CA0, "q" },
+        { 0x3CA1, "r" },
+        { 0x3CA2, "s" },
+        { 0x3CA3, "t" },
+        { 0x3CA4, "u" },
+        { 0x3CA5, "v" },
+        { 0x3CA6, "w" },
+        { 0x3CA7, "x" },
+        { 0x3CA8, "y" },
+        { 0x3CA9, "z" },
+        { 0x3CAA, "\"" },
+        { 0x3CAB, ":" },
+        { 0x3CAC, "~" },
+        { 0x3CAD, "@" },
+        { 0x3CAE, "#" },
+        { 0x3CAF, "+" },
+        { 0x000E, "_" }
+    };
+
     public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
     {
         var patches = new List<GeneratedPatch>();
         patches.AddRange(WriteMetroidLocations(data));
         patches.AddRange(WriteZ3Locations(data));
         return patches;
+    }
+
+    public static List<ArchipelagoLocation> GetLocationsFromRom(byte[] rom, List<string> playerNames)
+    {
+        var toReturn = new List<ArchipelagoLocation>();
+        var testWorld = new World(new Config(), "", 1, "");
+
+        foreach (var location in testWorld.Regions.OfType<SMRegion>().SelectMany(x => x.Locations))
+        {
+            toReturn.Add(GetArchipelagoLocation(rom, location.Id, true, playerNames));
+        }
+
+        foreach (var location in testWorld.Regions.OfType<Z3Region>().SelectMany(x => x.Locations))
+        {
+            toReturn.Add(GetArchipelagoLocation(rom, location.Id, false, playerNames));
+        }
+
+        return toReturn;
+    }
+
+    private static ArchipelagoLocation GetArchipelagoLocation(byte[] rom, LocationId locationId, bool isSuperMetroidLocation, List<string> playerNames)
+    {
+        var address = 0x386000 + (int)locationId * 8;
+        var bytes = rom.Skip(address).Take(8).ToArray();
+        var isLocal = BitConverter.ToInt16(bytes, 0) == 0;
+        var itemNumber = BitConverter.ToInt16(bytes, 2);
+        var ownerPlayerId = BitConverter.ToInt16(bytes, 4);
+        var archipelagoFlags = BitConverter.ToInt16(bytes, 6);
+        var isProgression = archipelagoFlags > 0;
+        var itemName = "";
+
+        if (!isLocal)
+        {
+            itemName = isSuperMetroidLocation
+                ? GetSuperMetroidItemName(rom, archipelagoFlags, isProgression)
+                : GetZeldaItemName(rom, archipelagoFlags, isProgression);
+        }
+        else
+        {
+            itemName = ((ItemType)itemNumber).GetDescription();
+        }
+
+        return new ArchipelagoLocation()
+        {
+            Location = locationId,
+            IsLocalPlayerItem = isLocal,
+            ItemType = isLocal ? (ItemType)itemNumber : ItemType.OtherGameItem,
+            PlayerName = playerNames[ownerPlayerId],
+            IsProgression = isProgression,
+            ItemName = itemName
+        };
+    }
+
+    private static string GetSuperMetroidItemName(byte[] rom, short archipelagoFlags, bool isProgression)
+    {
+        var mod = isProgression ? 0 : 0x8000;
+        var textLocation = 0x390000 + (archipelagoFlags - 1 + mod) * 64;
+        var textBytes = rom.Skip(textLocation).Take(64).ToArray();
+
+        var text = "";
+        for (var i = 0; i < 64; i += 2)
+        {
+            var value = BitConverter.ToInt16(textBytes, i);
+            if (s_smCharMap.TryGetValue(value, out var character))
+            {
+                text += character;
+            }
+        }
+
+        return text.Replace("___", "").Trim();
+    }
+
+    private static string GetZeldaItemName(byte[] rom, short archipelagoFlags, bool isProgression)
+    {
+        var mod = isProgression ? 0 : 0x8000;
+        var textLocation = 0x390000 + 100 * 64 + (archipelagoFlags - 1 + mod) * 20;
+        var textBytes = rom.Skip(textLocation).Take(20).ToArray();
+        var text = Encoding.UTF8.GetString(textBytes);
+        return text.Replace("___", "").Replace("\0", "").Trim();
     }
 
     private IEnumerable<GeneratedPatch> WriteMetroidLocations(GetPatchesRequest data)
@@ -95,7 +268,7 @@ public class LocationsPatch : RomPatch
         {
             if (location.Type == LocationType.HeraStandingKey)
             {
-                yield return new GeneratedPatch(Snes(0x9E3BB), location.Item.Type == ItemType.KeyTH ? new byte[] { 0xE4 } : new byte[] { 0xEB });
+                yield return new GeneratedPatch(Snes(0x9E3BB), location.Item.Type == ItemType.KeyTH ? [0xE4] : [0xEB]);
             }
 
             if (GetPatchesRequest.EnableMultiworld)

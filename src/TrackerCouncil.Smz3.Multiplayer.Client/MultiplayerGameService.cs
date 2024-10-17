@@ -31,7 +31,6 @@ public class MultiplayerGameService : IDisposable
         _client.LocationTracked += ClientOnLocationTracked;
         _client.ItemTracked += ClientOnItemTracked;
         _client.BossTracked += ClientOnBossTracked;
-        _client.DungeonTracked += ClientOnDungeonTracked;
         _client.DeathTracked += ClientOnDeathTracked;
         _client.PlayerUpdated += ClientOnPlayerUpdated;
         _client.PlayerStateRequested += ClientOnPlayerStateRequested;
@@ -55,8 +54,6 @@ public class MultiplayerGameService : IDisposable
     public PlayerTrackedItemEventHandler? PlayerTrackedItem;
 
     public PlayerTrackedBossEventHandler? PlayerTrackedBoss;
-
-    public PlayerTrackedDungeonEventHandler? PlayerTrackedDungeon;
 
     public PlayerTrackedDeathEventHandler? PlayerTrackedDeath;
 
@@ -159,15 +156,6 @@ public class MultiplayerGameService : IDisposable
     }
 
     /// <summary>
-    /// Sends a dungeon tracked event to the server
-    /// </summary>
-    /// <param name="dungeon">The dungeon that was tracked</param>
-    public async Task TrackDungeon(IDungeon dungeon)
-    {
-        await _currentGameService.TrackDungeon(dungeon);
-    }
-
-    /// <summary>
     /// Sends a boss tracked event to the server
     /// </summary>
     /// <param name="boss">The boss that was tracked</param>
@@ -226,7 +214,6 @@ public class MultiplayerGameService : IDisposable
         _client.LocationTracked -= ClientOnLocationTracked;
         _client.ItemTracked -= ClientOnItemTracked;
         _client.BossTracked -= ClientOnBossTracked;
-        _client.DungeonTracked -= ClientOnDungeonTracked;
         _client.PlayerUpdated -= ClientOnPlayerUpdated;
         _client.PlayerStateRequested -= ClientOnPlayerStateRequested;
         _client.PlayerForfeited -= ClientOnPlayerForfeited;
@@ -237,13 +224,6 @@ public class MultiplayerGameService : IDisposable
     }
 
     #region Multiplayer Client Events
-    private void ClientOnDungeonTracked(MultiplayerPlayerState playerState, string dungeonName)
-    {
-        var args = _currentGameService.PlayerTrackedDungeon(playerState, dungeonName,
-            playerState.Guid == _client.CurrentPlayerGuid);
-        if (args != null) PlayerTrackedDungeon?.Invoke(args);
-    }
-
     private void ClientOnBossTracked(MultiplayerPlayerState playerState, BossType bossType)
     {
         var args = _currentGameService.PlayerTrackedBoss(playerState, bossType,

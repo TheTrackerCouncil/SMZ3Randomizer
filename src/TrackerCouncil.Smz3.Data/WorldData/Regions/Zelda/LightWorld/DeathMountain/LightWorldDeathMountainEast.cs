@@ -36,7 +36,7 @@ public class LightWorldDeathMountainEast : Z3Region
             access: items => items.Mirror && items.KeyTR >= 2 && World.TurtleRock.CanEnter(items, true),
             memoryAddress: 0x10C,
             memoryFlag: 0x4,
-            trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState.MarkedMedallion),
+            trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.PrerequisiteState.MarkedItem),
             metadata: metadata,
             trackerState: trackerState);
 

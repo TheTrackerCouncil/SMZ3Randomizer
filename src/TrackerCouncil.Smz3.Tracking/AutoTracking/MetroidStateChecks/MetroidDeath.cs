@@ -2,6 +2,7 @@
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Tracking;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
+using TrackerCouncil.Smz3.Tracking.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.AutoTracking.MetroidStateChecks;
 
@@ -9,22 +10,8 @@ namespace TrackerCouncil.Smz3.Tracking.AutoTracking.MetroidStateChecks;
 /// Metroid state check for detecting deaths in Metroid
 /// Checks if the player has 0 health and 0 reserve tanks
 /// </summary>
-public class MetroidDeath : IMetroidStateCheck
+public class MetroidDeath(IWorldQueryService worldQueryService) : IMetroidStateCheck
 {
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="itemService"></param>
-    public MetroidDeath(IItemService itemService)
-    {
-        Items = itemService;
-    }
-
-    /// <summary>
-    /// Service for retrieving item data
-    /// </summary>
-    protected IItemService Items { get; }
-
     /// <summary>
     /// Executes the check for the current state
     /// </summary>
@@ -55,12 +42,12 @@ public class MetroidDeath : IMetroidStateCheck
             tracker.Say(response: region.Metadata.WhenDiedInRoom[currentState.CurrentRoomInRegion.Value], once: true);
         }
 
-        tracker.TrackDeath(true);
+        tracker.GameStateTracker.TrackDeath(true);
 
-        var death = Items.FirstOrDefault("Death");
+        var death = worldQueryService.FirstOrDefault("Death");
         if (death is not null)
         {
-            tracker.TrackItem(death, autoTracked: true, silent: silent);
+            tracker.ItemTracker.TrackItem(death, autoTracked: true, silent: silent);
             return true;
         }
         return false;

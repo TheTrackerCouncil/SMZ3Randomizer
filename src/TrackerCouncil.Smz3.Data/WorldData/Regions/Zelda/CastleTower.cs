@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.Options;
@@ -8,56 +9,64 @@ using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda;
 
-public class CastleTower : Z3Region, IHasReward, IDungeon
+public class CastleTower : Z3Region, IHasReward, IHasTreasure, IHasBoss
 {
     public CastleTower(World world, Config config, IMetadataService? metadata, TrackerState? trackerState)
         : base(world, config, metadata, trackerState)
     {
-        RegionItems = new[] { ItemType.KeyCT };
+        RegionItems = [ItemType.KeyCT];
 
         Foyer = new FoyerRoom(this, metadata, trackerState);
         DarkMaze = new DarkMazeRoom(this, metadata, trackerState);
 
         StartingRooms = new List<int>() { 224 };
         Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Castle Tower");
-        DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Castle Tower", "Agahnim");
-        DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
-        Reward = new Reward(RewardType.Agahnim, world, this, metadata, DungeonState);
         MapName = "Light World";
+
+        ((IHasReward)this).ApplyState(trackerState);
+        ((IHasTreasure)this).ApplyState(trackerState);
+        ((IHasBoss)this).ApplyState(trackerState);
     }
 
     public override string Name => "Castle Tower";
 
     public RewardType DefaultRewardType => RewardType.Agahnim;
 
-    public override List<string> AlsoKnownAs { get; }
-        = new List<string>() { "Agahnim's Tower", "Hyrule Castle Tower" };
+    public BossType DefaultBossType => BossType.Agahnim;
 
-    public int SongIndex { get; init; } = 2;
-    public string Abbreviation => "AT";
+    public bool IsShuffledReward => false;
+
+    public override List<string> AlsoKnownAs { get; } = ["Agahnim's Tower", "Hyrule Castle Tower"];
+
     public LocationId? BossLocationId => null;
 
-    public Reward Reward { get; set; }
+    public Reward Reward { get; set; } = null!;
 
     public FoyerRoom Foyer { get; }
 
     public DarkMazeRoom DarkMaze { get; }
 
-    public DungeonInfo DungeonMetadata { get; set; }
+    public TrackerRewardState RewardState { get; set; } = null!;
 
-    public TrackerDungeonState DungeonState { get; set; }
+    public TrackerTreasureState TreasureState { get; set; } = null!;
+    public event EventHandler? UpdatedTreasure;
+    public void OnUpdatedTreasure() => UpdatedTreasure?.Invoke(this, EventArgs.Empty);
 
-    public Region ParentRegion => World.LightWorldNorthEast;
+    public Boss Boss { get; set; } = null!;
 
     public override bool CanEnter(Progression items, bool requireRewards)
     {
         return Logic.CanKillManyEnemies(items) && (items.Cape || items.MasterSword);
     }
 
-    public bool CanComplete(Progression items)
+    public bool CanBeatBoss(Progression items) => CanRetrieveReward(items);
+
+    public bool CanRetrieveReward(Progression items)
     {
         return CanEnter(items, true) && items.Lamp && items.KeyCT >= 2 && items.Sword;
     }
+
+    public bool CanSeeReward(Progression items) => true;
 
     public class FoyerRoom : Room
     {

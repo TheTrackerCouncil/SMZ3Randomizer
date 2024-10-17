@@ -9,6 +9,7 @@ using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.GeneratedData;
 using TrackerCouncil.Smz3.Data.Logic;
 using TrackerCouncil.Smz3.Data.Options;
+using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
@@ -39,25 +40,28 @@ public class SpoilerModule : TrackerModule, IOptionalModule
     private readonly bool _isMultiworld;
     private readonly IGameHintService _gameHintService;
     private readonly PlaythroughService _playthroughService;
+    private readonly IMetadataService _metadataService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SpoilerModule"/> class.
     /// </summary>
     /// <param name="tracker">The tracker instance.</param>
-    /// <param name="itemService">Service to get item information</param>
-    /// <param name="worldService">Service to get world information</param>
+    /// <param name="playerProgressionService">Service to get item information</param>
+    /// <param name="worldQueryService">Service to get world information</param>
     /// <param name="logger">Used to write logging information.</param>
     /// <param name="randomizerConfigService">Service for retrieving the randomizer config for the world</param>
     /// <param name="gameHintService">Service for getting hints for how important locations are</param>
     /// <param name="playthroughService"></param>
-    public SpoilerModule(TrackerBase tracker, IItemService itemService, ILogger<SpoilerModule> logger, IWorldService worldService, IRandomizerConfigService randomizerConfigService, IGameHintService gameHintService, PlaythroughService playthroughService)
-        : base(tracker, itemService, worldService, logger)
+    /// <param name="metadataService"></param>
+    public SpoilerModule(TrackerBase tracker, IPlayerProgressionService playerProgressionService, ILogger<SpoilerModule> logger, IWorldQueryService worldQueryService, IRandomizerConfigService randomizerConfigService, IGameHintService gameHintService, PlaythroughService playthroughService, IMetadataService metadataService)
+        : base(tracker, playerProgressionService, worldQueryService, logger)
     {
         TrackerBase.HintsEnabled = tracker.World.Config is { Race: false, DisableTrackerHints: false } && tracker.Options.HintsEnabled;
         TrackerBase.SpoilersEnabled = tracker.World.Config is { Race: false, DisableTrackerSpoilers: false } && tracker.Options.SpoilersEnabled;
         _randomizerConfigService = randomizerConfigService;
         _gameHintService = gameHintService;
         _playthroughService = playthroughService;
+        _metadataService = metadataService;
         _isMultiworld = tracker.World.Config.MultiWorld;
     }
 
@@ -74,9 +78,9 @@ public class SpoilerModule : TrackerModule, IOptionalModule
             return;
         }
 
-        var locations = WorldService.Locations(keysanityByRegion: true).ToList();
+        var locations = WorldQueryService.Locations(keysanityByRegion: true).ToList();
 
-        var result = _gameHintService.FindMostValueableLocation(WorldService.Worlds, locations);
+        var result = _gameHintService.FindMostValueableLocation(WorldQueryService.Worlds, locations);
 
         if (result is not { Usefulness: LocationUsefulness.Mandatory })
         {
@@ -100,7 +104,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
         }
 
         var locations = area.Locations
-            .Where(x => x.State.Cleared == false)
+            .Where(x => x.Cleared == false)
             .ToImmutableList();
         if (locations.Count == 0)
         {
@@ -119,7 +123,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
         else if (TrackerBase.HintsEnabled)
         {
             var areaReward = GetRewardForHint(area);
-            var usefulness = _gameHintService.GetUsefulness(locations.ToList(), WorldService.Worlds, areaReward);
+            var usefulness = _gameHintService.GetUsefulness(locations.ToList(), WorldQueryService.Worlds, areaReward);
 
             if (usefulness == LocationUsefulness.Mandatory)
             {
@@ -153,19 +157,19 @@ public class SpoilerModule : TrackerModule, IOptionalModule
     /// <param name="item">The item to find.</param>
     private void RevealItemLocation(Item item)
     {
-        if (item.Metadata.HasStages && item.State.TrackingState >= item.Metadata.MaxStage)
+        if (item.Metadata.HasStages && item.TrackingState >= item.Metadata.MaxStage)
         {
             TrackerBase.Say(x => x.Spoilers.TrackedAllItemsAlready, args: [item.Name]);
             return;
         }
-        else if (!item.Metadata.Multiple && item.State.TrackingState > 0)
+        else if (!item.Metadata.Multiple && item.TrackingState > 0)
         {
             TrackerBase.Say(x => x.Spoilers.TrackedItemAlready, args: [item.Metadata.NameWithArticle]);
             return;
         }
 
-        var markedLocation = WorldService.MarkedLocations()
-            .Where(x => x.State.MarkedItem == item.Type && !x.State.Cleared)
+        var markedLocation = WorldQueryService.MarkedLocations()
+            .Where(x => x.MarkedItem == item.Type && !x.Cleared)
             .Random();
         if (markedLocation != null)
         {
@@ -183,7 +187,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
         }
 
         // Once we're done being a smartass, see if the item can be found at all
-        var locations = WorldService.Locations(unclearedOnly: false, outOfLogic: true, itemFilter: item.Type, checkAllWorlds: true)
+        var locations = WorldQueryService.Locations(unclearedOnly: false, outOfLogic: true, itemFilter: item.Type, checkAllWorlds: true)
             .ToImmutableList();
         if (locations.Count == 0)
         {
@@ -193,7 +197,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
                 TrackerBase.Say(x => x.Spoilers.ItemNotFound, args: [item.Metadata.NameWithArticle]);
             return;
         }
-        else if (locations.Count > 0 && locations.All(x => x.State.Cleared))
+        else if (locations.Count > 0 && locations.All(x => x.Cleared))
         {
             // The item exists, but all locations are cleared
             TrackerBase.Say(x => x.Spoilers.LocationsCleared, args: [item.Metadata.NameWithArticle]);
@@ -228,11 +232,11 @@ public class SpoilerModule : TrackerModule, IOptionalModule
     private void RevealLocationItem(Location location)
     {
         var locationName = location.Metadata.Name;
-        if (location.State.Cleared)
+        if (location.Cleared)
         {
             if (TrackerBase.HintsEnabled || TrackerBase.SpoilersEnabled)
             {
-                var itemName = ItemService.GetName(location.Item.Type);
+                var itemName = _metadataService.GetName(location.Item.Type);
                 TrackerBase.Say(x => x.Hints.LocationAlreadyClearedSpoiler, args: [locationName, itemName]);
                 return;
             }
@@ -243,9 +247,9 @@ public class SpoilerModule : TrackerModule, IOptionalModule
             }
         }
 
-        if (location.State.MarkedItem != null)
+        if (location.MarkedItem != null)
         {
-            var markedItem = ItemService.FirstOrDefault(location.State.MarkedItem.Value);
+            var markedItem = WorldQueryService.FirstOrDefault(location.MarkedItem.Value);
             if (markedItem != null)
             {
                 TrackerBase.Say(x => x.Spoilers.MarkedLocation, args: [locationName, markedItem.Metadata.NameWithArticle]);
@@ -379,21 +383,25 @@ public class SpoilerModule : TrackerModule, IOptionalModule
 
     private Reward? GetRewardForHint(IHasLocations area)
     {
-        if (area is not IHasReward rewardArea || rewardArea.RewardType == RewardType.Agahnim ||
-            rewardArea.RewardType == RewardType.None || area is not IDungeon dungeon) return null;
+        if (area is not IHasReward rewardArea || !rewardArea.RewardType.IsInAnyCategory(RewardCategory.Crystal, RewardCategory.Pendant) ||
+            rewardArea.RewardType == RewardType.None || area is not IHasBoss bossRegion) return null;
 
-        var bossLocation = area.Locations.First(x => x.Id == dungeon.BossLocationId);
+        var bossLocation = area.Locations.FirstOrDefault(x => x.Id == bossRegion.BossLocationId);
+
+        if (bossLocation == null)
+        {
+            return null;
+        }
 
         // For pendant dungeons, only factor it in if the player has not gotten it so that they get hints
         // that factor in Saha/Ped
-        if (rewardArea.RewardType is RewardType.PendantBlue or RewardType.PendantGreen
-                or RewardType.PendantRed && (bossLocation.State.Cleared || bossLocation.State.Autotracked))
+        if (rewardArea.RewardType.IsInCategory(RewardCategory.Pendant) && (bossLocation.Cleared || bossLocation.Autotracked))
         {
             return rewardArea.Reward;
         }
         // For crystal dungeons, always act like the player has them so that it only gives a hint based on
         // the actual items in the dungeon
-        else if (rewardArea.RewardType is RewardType.CrystalBlue or RewardType.CrystalRed)
+        else if (rewardArea.RewardType.IsInCategory(RewardCategory.Crystal))
         {
             return rewardArea.Reward;
         }
@@ -409,7 +417,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
             case 0:
 
                 var areaReward = GetRewardForHint(location.Region);
-                var usefulness = _gameHintService.GetUsefulness([ location ], WorldService.Worlds, areaReward);
+                var usefulness = _gameHintService.GetUsefulness([ location ], WorldQueryService.Worlds, areaReward);
 
                 var characterName = location.Item.Type.IsInCategory(ItemCategory.Metroid)
                     ? TrackerBase.CorrectPronunciation(location.World.Config.SamusName)
@@ -433,7 +441,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
             // Consult the Book of Mudora
             case 2:
                 var pedText = location.Item.Metadata.PedestalHints;
-                var bookOfMudoraName = ItemService.GetName(ItemType.Book);
+                var bookOfMudoraName = _metadataService.GetName(ItemType.Book);
                 return GiveLocationHint(x => x.BookHint, location, pedText, bookOfMudoraName);
         }
 
@@ -454,7 +462,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
         {
             if (_isMultiworld)
             {
-                TrackerBase.Say(x => location.Item.World == WorldService.World ? x.Spoilers.LocationHasItemOwnWorld : x.Spoilers.LocationHasItemOtherWorld,
+                TrackerBase.Say(x => location.Item.World == WorldQueryService.World ? x.Spoilers.LocationHasItemOwnWorld : x.Spoilers.LocationHasItemOtherWorld,
                     args: [
                         locationName,
                         item.Metadata.NameWithArticle,
@@ -480,7 +488,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
         if (item.Metadata == null)
             throw new InvalidOperationException($"No metadata for item '{item.Name}'");
 
-        var reachableLocation = WorldService.Locations(itemFilter: item.Type, keysanityByRegion: true, checkAllWorlds: true)
+        var reachableLocation = WorldQueryService.Locations(itemFilter: item.Type, keysanityByRegion: true, checkAllWorlds: true)
             .Random();
         if (reachableLocation != null)
         {
@@ -491,7 +499,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
             {
                 if (item.Metadata.Multiple || item.Metadata.HasStages)
                 {
-                    TrackerBase.Say(x => reachableLocation.World == WorldService.World ? x.Spoilers.ItemsAreAtLocationOwnWorld : x.Spoilers.ItemsAreAtLocationOtherWorld,
+                    TrackerBase.Say(x => reachableLocation.World == WorldQueryService.World ? x.Spoilers.ItemsAreAtLocationOwnWorld : x.Spoilers.ItemsAreAtLocationOtherWorld,
                         args: [
                             item.Metadata.NameWithArticle,
                             locationName,
@@ -501,7 +509,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
                 }
                 else
                 {
-                    TrackerBase.Say(x => reachableLocation.World == WorldService.World ? x.Spoilers.ItemIsAtLocationOwnWorld : x.Spoilers.ItemIsAtLocationOtherWorld,
+                    TrackerBase.Say(x => reachableLocation.World == WorldQueryService.World ? x.Spoilers.ItemIsAtLocationOwnWorld : x.Spoilers.ItemIsAtLocationOtherWorld,
                         args: [
                             item.Metadata.NameWithArticle,
                             locationName,
@@ -521,7 +529,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
             return true;
         }
 
-        var worldLocation = WorldService.Locations(outOfLogic: true, itemFilter: item.Type, checkAllWorlds: true)
+        var worldLocation = WorldQueryService.Locations(outOfLogic: true, itemFilter: item.Type, checkAllWorlds: true)
             .Random();
         if (worldLocation != null)
         {
@@ -532,7 +540,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
             {
                 if (item.Metadata.Multiple || item.Metadata.HasStages)
                 {
-                    TrackerBase.Say(x => worldLocation.World == WorldService.World ? x.Spoilers.ItemsAreAtOutOfLogicLocationOwnWorld : x.Spoilers.ItemsAreAtOutOfLogicLocationOtherWorld,
+                    TrackerBase.Say(x => worldLocation.World == WorldQueryService.World ? x.Spoilers.ItemsAreAtOutOfLogicLocationOwnWorld : x.Spoilers.ItemsAreAtOutOfLogicLocationOtherWorld,
                         args: [
                             item.Metadata.NameWithArticle,
                             locationName,
@@ -542,7 +550,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
                 }
                 else
                 {
-                    TrackerBase.Say(x => worldLocation.World == WorldService.World ? x.Spoilers.ItemIsAtOutOfLogicLocationOwnWorld : x.Spoilers.ItemIsAtOutOfLogicLocationOtherWorld,
+                    TrackerBase.Say(x => worldLocation.World == WorldQueryService.World ? x.Spoilers.ItemIsAtOutOfLogicLocationOwnWorld : x.Spoilers.ItemIsAtOutOfLogicLocationOtherWorld,
                         args: [
                             item.Metadata.NameWithArticle,
                             locationName,
@@ -567,7 +575,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
 
     private bool GiveItemLocationHint(Item item)
     {
-        var itemLocations = WorldService.Locations(outOfLogic: true, itemFilter: item.Type, checkAllWorlds: true).ToList();
+        var itemLocations = WorldQueryService.Locations(outOfLogic: true, itemFilter: item.Type, checkAllWorlds: true).ToList();
 
         if (!itemLocations.Any())
         {
@@ -585,7 +593,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
             case 0:
                 {
 
-                    var isInLogic = itemLocations.Any(x => x.IsRelevant(ItemService.GetProgression(x.Region)) && x.World.IsLocalWorld);
+                    var isInLogic = itemLocations.Any(x => x.IsRelevant(PlayerProgressionService.GetProgression(x.Region)) && x.World.IsLocalWorld);
                     if (isInLogic)
                     {
                         var isOnlyInSuperMetroid = itemLocations.Select(x => x.Region).All(x => x is SMRegion);
@@ -613,9 +621,9 @@ public class SpoilerModule : TrackerModule, IOptionalModule
             // - Exactly which player's world is the item in?
             case 1:
                 {
-                    if (itemLocations.All(x => !x.IsRelevant(ItemService.GetProgression(x.Region))))
+                    if (itemLocations.All(x => !x.IsRelevant(PlayerProgressionService.GetProgression(x.Region))))
                     {
-                        var randomLocation = itemLocations.Where(x => !x.IsRelevant(ItemService.GetProgression(x.Region))).Random();
+                        var randomLocation = itemLocations.Where(x => !x.IsRelevant(PlayerProgressionService.GetProgression(x.Region))).Random();
 
                         if (randomLocation == null)
                         {
@@ -628,7 +636,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
                                 randomLocation.World.Config.PhoneticName);
                         }
 
-                        var progression = ItemService.GetProgression(randomLocation.Region);
+                        var progression = PlayerProgressionService.GetProgression(randomLocation.Region);
                         var missingItemSets = Logic.GetMissingRequiredItems(randomLocation, progression, out _);
                         if (!missingItemSets.Any())
                         {
@@ -639,7 +647,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
                             var randomMissingItem = Logic.GetMissingRequiredItems(randomLocation, progression, out _)
                                 .SelectMany(x => x)
                                 .Where(x => x != item.Type)
-                                .Select(x => ItemService.FirstOrDefault(x))
+                                .Select(x => WorldQueryService.FirstOrDefault(x))
                                 .Random();
                             if (randomMissingItem != null)
                                 return GiveItemHint(x => x.ItemRequiresOtherItem, item, randomMissingItem.Metadata.NameWithArticle);
@@ -673,7 +681,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
                     var areaWithoutItem = TrackerBase.World.Regions
                         .GroupBy(x => x.Area)
                         .Where(x => x.SelectMany(r => r.Locations)
-                            .Where(l => l.State.Cleared == false)
+                            .Where(l => l.Cleared == false)
                             .All(l => l.Item.Type != item.Type))
                         .Select(x => x.Key)
                         .Random();
@@ -703,13 +711,13 @@ public class SpoilerModule : TrackerModule, IOptionalModule
 
                     if (randomLocation?.Region is Z3Region and IHasReward dungeon && dungeon.RewardType != RewardType.Agahnim)
                     {
-                        if (randomLocation.Region.Locations.Any(x => x.State.Cleared))
+                        if (randomLocation.Region.Locations.Any(x => x.Cleared))
                             return GiveItemHint(x => x.ItemInPreviouslyVisitedDungeon, item);
                         else
                             return GiveItemHint(x => x.ItemInUnvisitedDungeon, item);
                     }
 
-                    if (randomLocation?.Region?.Locations.Any(x => x.State.Cleared) == true)
+                    if (randomLocation?.Region?.Locations.Any(x => x.Cleared) == true)
                         return GiveItemHint(x => x.ItemInPreviouslyVisitedRegion, item);
                     else
                         return GiveItemHint(x => x.ItemInUnvisitedRegion, item);
@@ -786,7 +794,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
                             return GiveItemHint(x => x.ItemHasBadVanillaLocationName, item, randomLocation.Name);
                         }
 
-                        var vanillaItem = ItemService.FirstOrDefault(randomLocation.VanillaItem);
+                        var vanillaItem = WorldQueryService.FirstOrDefault(randomLocation.VanillaItem);
                         return GiveItemHint(x => x.ItemIsInVanillaJunkLocation, item, vanillaItem?.Metadata.Name ?? randomLocation.VanillaItem.GetDescription());
                     }
 
@@ -807,7 +815,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
 
     private Location? GetRandomItemLocationWithFilter(Item item, Func<Location, bool> predicate)
     {
-        var randomLocation = WorldService.Locations(itemFilter: item.Type, keysanityByRegion: true, checkAllWorlds: true)
+        var randomLocation = WorldQueryService.Locations(itemFilter: item.Type, keysanityByRegion: true, checkAllWorlds: true)
             .Where(predicate)
             .Random();
 
@@ -815,7 +823,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
         {
             // If the item is not at any accessible location, try to look in
             // out-of-logic places, too.
-            randomLocation = WorldService.Locations(outOfLogic: true,  itemFilter: item.Type, keysanityByRegion: true, checkAllWorlds: true)
+            randomLocation = WorldQueryService.Locations(outOfLogic: true,  itemFilter: item.Type, keysanityByRegion: true, checkAllWorlds: true)
                 .Where(predicate)
                 .Random();
         }

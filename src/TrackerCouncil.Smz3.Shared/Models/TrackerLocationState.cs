@@ -13,9 +13,11 @@ public class TrackerLocationState
     public LocationId LocationId { get; init; }
     public ItemType Item { get; init; }
     public ItemType? MarkedItem { get; set; }
+    public LocationUsefulness? MarkedUsefulness { get; set; }
     public bool Cleared { get; set; }
     public bool Autotracked { get; set; }
     public int WorldId { get; init; }
     public int ItemWorldId { get; init; }
     public bool HasMarkedItem => MarkedItem != null && MarkedItem != ItemType.Nothing;
+    public bool HasMarkedCorrectItem => Item.IsEquivalentTo(MarkedItem);
 }

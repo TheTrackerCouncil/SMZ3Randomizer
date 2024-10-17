@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
@@ -9,15 +10,11 @@ using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda;
 
-public class PalaceOfDarkness : Z3Region, IHasReward, IDungeon
+public class PalaceOfDarkness : Z3Region, IHasReward, IHasTreasure, IHasBoss
 {
-    public static readonly int[] MusicAddresses = new[] {
-        0x02D5B8
-    };
-
     public PalaceOfDarkness(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
-        RegionItems = new[] { ItemType.KeyPD, ItemType.BigKeyPD, ItemType.MapPD, ItemType.CompassPD };
+        RegionItems = [ItemType.KeyPD, ItemType.BigKeyPD, ItemType.MapPD, ItemType.CompassPD];
 
         ShooterRoom = new Location(this, LocationId.PalaceOfDarknessShooterRoom, 0x1EA5B, LocationType.Regular,
             name: "Shooter Room",
@@ -120,29 +117,36 @@ public class PalaceOfDarkness : Z3Region, IHasReward, IDungeon
         MemoryFlag = 0xB;
         StartingRooms = new List<int> { 74 };
         Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Palace of Darkness");
-        DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Palace of Darkness", "Helmasaur King");
-        DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
-        Reward = new Reward(DungeonState.Reward ?? RewardType.None, world, this, metadata, DungeonState);
         MapName = "Dark World";
+
+        ((IHasReward)this).ApplyState(trackerState);
+        ((IHasTreasure)this).ApplyState(trackerState);
+        ((IHasBoss)this).ApplyState(trackerState);
     }
 
     public override string Name => "Palace of Darkness";
 
     public RewardType DefaultRewardType => RewardType.CrystalBlue;
 
+    public BossType DefaultBossType => BossType.HelmasaurKing;
+
+    public bool IsShuffledReward => true;
+
     public override string Area => "Dark Palace";
 
-    public int SongIndex { get; init; } = 4;
-    public string Abbreviation => "PD";
     public LocationId? BossLocationId => LocationId.PalaceOfDarknessHelmasaurKing;
 
-    public Reward Reward { get; set; }
+    public Reward Reward { get; set; } = null!;
 
-    public DungeonInfo DungeonMetadata { get; set; }
+    public TrackerTreasureState TreasureState { get; set; } = null!;
 
-    public TrackerDungeonState DungeonState { get; set; }
+    public event EventHandler? UpdatedTreasure;
 
-    public Region ParentRegion => World.DarkWorldNorthEast;
+    public void OnUpdatedTreasure() => UpdatedTreasure?.Invoke(this, EventArgs.Empty);
+
+    public TrackerRewardState RewardState { get; set; } = null!;
+
+    public Boss Boss { get; set; } = null!;
 
     public Location ShooterRoom { get; }
 
@@ -173,10 +177,11 @@ public class PalaceOfDarkness : Z3Region, IHasReward, IDungeon
         return items.MoonPearl && World.DarkWorldNorthEast.CanEnter(items, requireRewards);
     }
 
-    public bool CanComplete(Progression items)
-    {
-        return HelmasaurKingReward.IsAvailable(items);
-    }
+    public bool CanBeatBoss(Progression items) => HelmasaurKingReward.IsAvailable(items);
+
+    public bool CanRetrieveReward(Progression items) => HelmasaurKingReward.IsAvailable(items);
+
+    public bool CanSeeReward(Progression items) => !World.Config.ZeldaKeysanity || items.Contains(ItemType.MapPD);
 
     public class DarkMazeRoom : Room
     {

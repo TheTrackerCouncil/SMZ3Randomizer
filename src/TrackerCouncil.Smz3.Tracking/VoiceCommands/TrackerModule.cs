@@ -64,14 +64,14 @@ public abstract class TrackerModule
     /// with the specified tracker.
     /// </summary>
     /// <param name="tracker">The tracker instance to use.</param>
-    /// <param name="itemService">Service to get item information</param>
-    /// <param name="worldService">Service to get world information</param>
+    /// <param name="playerProgressionService">Service to get item information</param>
+    /// <param name="worldQueryService">Service to get world information</param>
     /// <param name="logger">Used to log information.</param>
-    protected TrackerModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger logger)
+    protected TrackerModule(TrackerBase tracker, IPlayerProgressionService playerProgressionService, IWorldQueryService worldQueryService, ILogger logger)
     {
         TrackerBase = tracker;
-        ItemService = itemService;
-        WorldService = worldService;
+        PlayerProgressionService = playerProgressionService;
+        WorldQueryService = worldQueryService;
         Logger = logger;
     }
 
@@ -101,12 +101,12 @@ public abstract class TrackerModule
     /// <summary>
     /// Service for getting item data
     /// </summary>
-    protected IItemService ItemService { get; }
+    protected IPlayerProgressionService PlayerProgressionService { get; }
 
     /// <summary>
     /// Service for getting world data
     /// </summary>
-    protected IWorldService WorldService { get; }
+    protected IWorldQueryService WorldQueryService { get; }
 
     /// <summary>
     /// Gets a list of speech recognition grammars provided by the module.
@@ -144,10 +144,10 @@ public abstract class TrackerModule
     /// A <see cref="DungeonInfo"/> from the recognition result.
     /// </returns>
     [SupportedOSPlatform("windows")]
-    protected static IDungeon GetDungeonFromResult(TrackerBase tracker, RecognitionResult result)
+    protected static IHasTreasure GetDungeonFromResult(TrackerBase tracker, RecognitionResult result)
     {
         var name = (string)result.Semantics[DungeonKey].Value;
-        var dungeon = tracker.World.Dungeons.FirstOrDefault(x => x.DungeonName == name);
+        var dungeon = tracker.World.TreasureRegions.FirstOrDefault(x => x.Name == name);
         return dungeon ?? throw new Exception($"Could not find dungeon {name} (\"{result.Text}\").");
     }
 
@@ -161,10 +161,10 @@ public abstract class TrackerModule
     /// A <see cref="DungeonInfo"/> from the recognition result.
     /// </returns>
     [SupportedOSPlatform("windows")]
-    protected static IDungeon? GetBossDungeonFromResult(TrackerBase tracker, RecognitionResult result)
+    protected static IHasTreasure? GetBossDungeonFromResult(TrackerBase tracker, RecognitionResult result)
     {
         var name = (string)result.Semantics[BossKey].Value;
-        return tracker.World.Dungeons.FirstOrDefault(x => x.DungeonName == name);
+        return tracker.World.TreasureRegions.FirstOrDefault(x => x.Name == name);
     }
 
     /// <summary>
@@ -199,7 +199,7 @@ public abstract class TrackerModule
     protected Item GetItemFromResult(TrackerBase tracker, RecognitionResult result, out string itemName)
     {
         itemName = (string)result.Semantics[ItemNameKey].Value;
-        var item = ItemService.FirstOrDefault(itemName);
+        var item = WorldQueryService.FirstOrDefault(itemName);
 
         return item ?? throw new Exception($"Could not find recognized item '{itemName}' (\"{result.Text}\")");
     }
@@ -389,7 +389,7 @@ public abstract class TrackerModule
     protected virtual Choices GetPluralItemNames()
     {
         var itemNames = new Choices();
-        foreach (var item in ItemService.LocalPlayersItems().Where(x => x.Metadata is { Multiple: true, HasStages: false }))
+        foreach (var item in WorldQueryService.LocalPlayersItems().Where(x => x.Metadata is { Multiple: true, HasStages: false }))
         {
             if (item.Metadata.Plural == null)
             {
@@ -417,7 +417,7 @@ public abstract class TrackerModule
         where ??= _ => true;
 
         var itemNames = new Choices();
-        foreach (var item in ItemService.LocalPlayersItems().Where(where))
+        foreach (var item in WorldQueryService.LocalPlayersItems().Where(where))
         {
             if (item.Metadata.Name != null)
             {
@@ -454,19 +454,20 @@ public abstract class TrackerModule
     protected virtual Choices GetDungeonNames(bool includeDungeonsWithoutReward = false)
     {
         var dungeonNames = new Choices();
-        foreach (var dungeon in TrackerBase.World.Dungeons)
+        foreach (var dungeon in TrackerBase.World.TreasureRegions)
         {
-            if ((dungeon.DungeonState.HasReward || includeDungeonsWithoutReward))
+            var rewardRegion = dungeon as IHasReward;
+
+            if (rewardRegion == null && !includeDungeonsWithoutReward) continue;
+
+            if (dungeon.Metadata.Name != null)
             {
-                if (dungeon.DungeonMetadata.Name != null)
-                {
-                    foreach (var name in dungeon.DungeonMetadata.Name)
-                        dungeonNames.Add(new SemanticResultValue(name.Text, dungeon.DungeonName));
-                }
-                else
-                {
-                    dungeonNames.Add(new SemanticResultValue(dungeon.DungeonName, dungeon.DungeonName));
-                }
+                foreach (var name in dungeon.Metadata.Name)
+                    dungeonNames.Add(new SemanticResultValue(name.Text, dungeon.Name));
+            }
+            else
+            {
+                dungeonNames.Add(new SemanticResultValue(dungeon.Name, dungeon.Name));
             }
         }
 
@@ -484,14 +485,9 @@ public abstract class TrackerModule
     protected virtual Choices GetBossNames()
     {
         var bossNames = new Choices();
-        foreach (var dungeon in TrackerBase.World.Dungeons.Where(x => x.DungeonMetadata.Boss != null))
+        foreach (var boss in TrackerBase.World.AllBosses)
         {
-            foreach (var name in dungeon.DungeonMetadata.Boss!)
-                bossNames.Add(new SemanticResultValue(name.Text, dungeon.DungeonName));
-        }
-        foreach (var boss in TrackerBase.World.AllBosses.Where(x => x.Metadata.Name != null))
-        {
-            foreach (var name in boss.Metadata.Name!)
+            foreach (var name in boss.Metadata.Name)
                 bossNames.Add(new SemanticResultValue(name.Text, boss.Name));
         }
         return bossNames;
@@ -563,7 +559,7 @@ public abstract class TrackerModule
         foreach (var region in TrackerBase.World.Regions)
         {
             var regionName = region.GetType().FullName;
-            if (excludeDungeons && region is IDungeon || regionName == null || region.Metadata.Name == null)
+            if (excludeDungeons && region is IHasTreasure || regionName == null || region.Metadata.Name == null)
                 continue;
 
             foreach (var name in region.Metadata.Name)
@@ -588,7 +584,7 @@ public abstract class TrackerModule
         var medallionTypes = new List<ItemType>(Enum.GetValues<ItemType>());
         foreach (var medallion in medallionTypes.Where(x => x == ItemType.Nothing || x.IsInCategory(ItemCategory.Medallion)))
         {
-            var item = ItemService.FirstOrDefault(medallion);
+            var item = WorldQueryService.FirstOrDefault(medallion);
             if (item?.Metadata?.Name != null)
             {
                 foreach (var name in item.Metadata.Name)

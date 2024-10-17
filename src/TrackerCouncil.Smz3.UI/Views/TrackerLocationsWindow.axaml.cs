@@ -24,30 +24,19 @@ public partial class TrackerLocationsWindow : RestorableWindow
     public TrackerLocationsWindow()
     {
         InitializeComponent();
+        var mockLocationsNames = new List<string>();
+        for (var i = 0; i < 20; i++)
+        {
+            mockLocationsNames.Add($"Location {i}");
+        }
+
         DataContext = _model = new TrackerLocationsViewModel()
         {
             Regions =
             [
-                new RegionViewModel()
-                {
-                    RegionName = "Test Region",
-                    Locations = CreateMockLocations()
-                }
+                new RegionViewModel("Test Region", mockLocationsNames)
             ]
         };
-        return;
-
-        List<LocationViewModel> CreateMockLocations()
-        {
-            var toReturn = new List<LocationViewModel>();
-
-            for (var i = 0; i < 20; i++)
-            {
-                toReturn.Add(new LocationViewModel(null, true, true) { Name = $"Location {i}"});
-            }
-
-            return toReturn;
-        }
     }
 
     public TrackerLocationsWindow(TrackerLocationsWindowService service)
@@ -75,15 +64,14 @@ public partial class TrackerLocationsWindow : RestorableWindow
 
     private void ToggleShowOutOfLogicButton_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
     {
-        _model.ShowOutOfLogic = (sender as CheckBox)?.IsChecked == true;
-        _service?.UpdateModel();
-        OutOfLogicChanged?.Invoke(this, new OutOfLogicChangedEventArgs() { ShowOutOfLogic = _model.ShowOutOfLogic });
+        var newValue = (sender as CheckBox)?.IsChecked == true;
+        OutOfLogicChanged?.Invoke(this, new OutOfLogicChangedEventArgs() { ShowOutOfLogic = newValue });
+        _service?.UpdateShowOutOfLogic(newValue);
     }
 
-    private void EnumComboBox_OnValueChanged(object sender, EnumValueChangedEventArgs args)
+    private void FilterComboBox_OnValueChanged(object sender, EnumValueChangedEventArgs args)
     {
-        _model.Filter = (sender as EnumComboBox)?.Value as RegionFilter? ?? RegionFilter.None;
-        _service?.UpdateModel();
+        _service?.UpdateFilter((sender as EnumComboBox)?.Value as RegionFilter? ?? RegionFilter.None);
     }
 }
 

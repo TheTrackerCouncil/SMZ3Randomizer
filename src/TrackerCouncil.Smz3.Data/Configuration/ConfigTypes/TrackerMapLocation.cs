@@ -88,9 +88,9 @@ public class TrackerMapLocation
         if (room?.Metadata != null)
             return room.Metadata.Name?[0] ?? Name;
 
-        var dungeon = world.Dungeons.SingleOrDefault(x => x.DungeonName.Equals(Name, StringComparison.OrdinalIgnoreCase));
-        if (dungeon?.DungeonMetadata != null)
-            return dungeon.DungeonMetadata.Name?[0] ?? Name;
+        var dungeon = world.Regions.SingleOrDefault(x => x.Name.Equals(Name, StringComparison.OrdinalIgnoreCase));
+        if (dungeon?.Metadata != null)
+            return dungeon.Metadata.Name?[0] ?? Name;
 
         var location = world.Locations.SingleOrDefault(x => x.Name.Equals(Name, StringComparison.OrdinalIgnoreCase));
         if (location?.Metadata != null)
