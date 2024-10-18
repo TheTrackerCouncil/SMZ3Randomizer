@@ -182,13 +182,26 @@ public abstract class MultiplayerGameTypeService : IDisposable
     {
         var worldList = worlds.ToList();
         var itemHashCode = string.Join(",",
-            worldList.SelectMany(x => x.Locations).OrderBy(x => x.World.Id).ThenBy(x => x.Id)
+            worldList.SelectMany(x => x.Locations)
+                .OrderBy(x => x.World.Id)
+                .ThenBy(x => x.Id)
                 .Select(x => x.Item.Type.ToString()));
         var rewardHashCode = string.Join(",",
-            worldList.SelectMany(x => x.Regions).OrderBy(x => x.World.Id)
+            worldList.SelectMany(x => x.RewardRegions)
+                .OrderBy(x => x.World.Id)
                 .ThenBy(x => x.Name)
-                .OfType<IHasReward>().Select(x => x.RewardType.ToString()));
-        return $"{NonCryptographicHash.Fnv1a(itemHashCode)}{NonCryptographicHash.Fnv1a(rewardHashCode)}";
+                .Select(x => x.RewardType.ToString()));
+        var bossHashCode = string.Join(",",
+            worldList.SelectMany(x => x.BossRegions)
+                .OrderBy(x => x.World.Id)
+                .ThenBy(x => x.Name)
+                .Select(x => x.BossType.ToString()));
+        var prereqHashCode = string.Join(",",
+            worldList.SelectMany(x => x.PrerequisiteRegions)
+                .OrderBy(x => x.World.Id)
+                .ThenBy(x => x.Name)
+                .Select(x => x.RequiredItem.ToString()));
+        return $"{NonCryptographicHash.Fnv1a(itemHashCode)}{NonCryptographicHash.Fnv1a(rewardHashCode)}{NonCryptographicHash.Fnv1a(bossHashCode)}{NonCryptographicHash.Fnv1a(prereqHashCode)}";
     }
 
     /// <summary>
