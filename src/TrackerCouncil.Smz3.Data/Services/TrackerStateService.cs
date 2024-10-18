@@ -77,7 +77,8 @@ public class TrackerStateService : ITrackerStateService
             {
                 RegionName = x.GetType().Name,
                 RewardType = x.RewardType,
-                MarkedReward = x.MarkedReward
+                MarkedReward = x.MarkedReward,
+                WorldId = x.World.Id
             })
             .ToList();
 
