@@ -33,17 +33,11 @@ public class WorldGenerationData
 
     public MultiplayerPlayerGenerationData GetPlayerGenerationData()
     {
-        var locationItems = World.Locations
-            .Select(x => new PlayerGenerationLocationData(x.Id, x.Item.World.Id, x.Item.Type)).ToList();
-        var dungeonData = World.TreasureRegions
-            .Select(x =>
-            {
-                var rewardRegion = x as IHasReward;
-                var requirementRegion = x as IHasPrerequisite;
-                return new PlayerGenerationDungeonData(x.Name, rewardRegion?.RewardType, requirementRegion?.RequiredItem ?? ItemType.Nothing);
-            }).ToList();
-        return new MultiplayerPlayerGenerationData(World.Guid, World.Id, locationItems, dungeonData, World.HintTiles.ToList());
+        var locations = World.Locations.Select(x => new PlayerGenerationLocationData(x.Id, x.Item.World.Id, x.Item.Type)).ToList();
+        var bosses = World.BossRegions.ToDictionary(x => x.GetType().Name, x => x.BossType);
+        var rewards = World.RewardRegions.ToDictionary(x => x.GetType().Name, x => x.RewardType);
+        var prerequisites = World.PrerequisiteRegions.ToDictionary(x => x.GetType().Name, x => x.RequiredItem);
+        return new MultiplayerPlayerGenerationData(World.Guid, World.Id, locations, bosses, rewards, prerequisites, World.HintTiles.ToList());
     }
-
 
 }
