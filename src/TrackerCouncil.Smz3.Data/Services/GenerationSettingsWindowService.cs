@@ -218,8 +218,10 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
                 .WithNamingConvention(PascalCaseNamingConvention.Instance)
                 .IgnoreUnmatchedProperties()
                 .Build();
-            var configString = File.ReadAllText(file);
-            LoadPlando(deserializer.Deserialize<PlandoConfig>(configString));
+            var configString = File.ReadAllText(file, Encoding.UTF8);
+            var config = deserializer.Deserialize<PlandoConfig>(configString);
+            config.FileName = Path.GetFileNameWithoutExtension(file);
+            LoadPlando(config);
             return true;
         }
         catch (Exception e)

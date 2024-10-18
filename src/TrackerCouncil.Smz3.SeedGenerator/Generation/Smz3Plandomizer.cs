@@ -57,7 +57,9 @@ public class Smz3Plandomizer : IRandomizer
             playthrough = new Playthrough(config, Enumerable.Empty<Playthrough.Sphere>());
         }
 
-        var plandoName = config.PlandoConfig?.FileName ?? "unknown";
+        var plandoName = string.IsNullOrEmpty(config.PlandoConfig?.FileName)
+            ? config.Seed
+            : config.PlandoConfig.FileName;
 
         // If matching base plando file name, just use the date for the seed name
         if (Regex.IsMatch(plandoName, "^Spoiler_Plando_(.*)_[0-9]+$"))
