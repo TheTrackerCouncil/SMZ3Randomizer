@@ -300,7 +300,7 @@ public class RomGenerationService : IRomGenerationService
     {
         var bytes = GenerateRomBytes(options, seed);
         var config = seed.Playthrough.Config;
-        var safeSeed = seed.Seed.ReplaceAny(Path.GetInvalidFileNameChars(), '_');
+        var safeSeed = seed.Seed.ReplaceAny(Path.GetInvalidFileNameChars(), '_').Trim();
 
         var folderPath = Path.Combine(options.RomOutputPath, $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{safeSeed}");
         Directory.CreateDirectory(folderPath);
