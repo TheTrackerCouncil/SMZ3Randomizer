@@ -68,7 +68,7 @@ public static class Program
         }));
     }
 
-    private static string GenerateStats(Config config, int count = 1000)
+    private static string GenerateStats(Config config, int count = 10000)
     {
         var start = DateTime.Now;
         var stats = new ConcurrentBag<StatsDetails>();
@@ -88,6 +88,10 @@ public static class Program
         var sahaJunk = 0;
         var sahaItems = new ConcurrentBag<ItemType>();
 
+        var anyProgression = 0;
+        var anyNice = 0;
+        var anyJunk = 0;
+
         var hintService = s_services.GetRequiredService<IGameHintService>();
         var playthroughService = s_services.GetRequiredService<PlaythroughService>();
 
@@ -95,6 +99,9 @@ public static class Program
         {
             try
             {
+                bool anyHaveMandatory = false;
+                bool anyHaveNice = false;
+
                 var seed = s_services.GetRequiredService<Smz3Randomizer>().GenerateSeed(config);
                 var playthrough = playthroughService.Generate(seed.WorldGenerationData.Select(x => x.World).ToList(), config);
                 stats.Add(new StatsDetails
@@ -112,10 +119,12 @@ public static class Program
                     case LocationUsefulness.Mandatory:
                         pedProgression++;
                         pedItems.Add(location.Item.Type);
+                        anyHaveMandatory = true;
                         break;
                     case LocationUsefulness.NiceToHave:
                     case LocationUsefulness.Sword:
                         pedNice++;
+                        anyHaveNice = true;
                         break;
                     default:
                         pedJunk++;
@@ -131,10 +140,12 @@ public static class Program
                     case LocationUsefulness.Mandatory:
                         treeProgression++;
                         treeItems.Add(location.Item.Type);
+                        anyHaveMandatory = true;
                         break;
                     case LocationUsefulness.NiceToHave:
                     case LocationUsefulness.Sword:
                         treeNice++;
+                        anyHaveNice = true;
                         break;
                     default:
                         treeJunk++;
@@ -150,14 +161,29 @@ public static class Program
                     case LocationUsefulness.Mandatory:
                         sahaProgression++;
                         sahaItems.Add(location.Item.Type);
+                        anyHaveMandatory = true;
                         break;
                     case LocationUsefulness.NiceToHave:
                     case LocationUsefulness.Sword:
                         sahaNice++;
+                        anyHaveNice = true;
                         break;
                     default:
                         sahaJunk++;
                         break;
+                }
+
+                if (anyHaveMandatory)
+                {
+                    anyProgression++;
+                }
+                else if (anyHaveNice)
+                {
+                    anyNice++;
+                }
+                else
+                {
+                    anyJunk++;
                 }
             }
             catch (Exception e)
@@ -231,6 +257,9 @@ public static class Program
         sb.AppendLine($"Saha Nice: {sahaNice * 1f / stats.Count * 100f}%");
         sb.AppendLine($"Saha Junk: {sahaJunk * 1f / stats.Count * 100f}%");
         sb.AppendLine($"Saha items: {string.Join(',', sahaItems.Distinct())}");
+        sb.AppendLine($"Ped, Tree, or Saha Progression: {anyProgression * 1f / stats.Count * 100f}%");
+        sb.AppendLine($"Ped, Tree, or Saha Nice: {anyNice * 1f / stats.Count * 100f}%");
+        sb.AppendLine($"Ped, Tree, or Saha Junk: {anyJunk * 1f / stats.Count * 100f}%");
         sb.AppendLine("Run time: " + ts.TotalSeconds + "s");
         sb.AppendLine();
         return sb.ToString();
