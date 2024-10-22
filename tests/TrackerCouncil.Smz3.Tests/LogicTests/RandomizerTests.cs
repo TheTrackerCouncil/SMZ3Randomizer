@@ -24,7 +24,7 @@ public class RandomizerTests
 {
     // If this test breaks, update Smz3Randomizer.Version
     [Theory]
-    [InlineData("test", -1013652069)] // Smz3Randomizer v7
+    [InlineData("test", -1216945357)] // Smz3Randomizer v7
     public void StandardFillerWithSameSeedGeneratesSameWorld(string seed, int expectedHash)
     {
         var filler = new StandardFiller(GetLogger<StandardFiller>());

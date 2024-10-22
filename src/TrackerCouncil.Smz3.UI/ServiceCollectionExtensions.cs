@@ -55,7 +55,6 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IGitHubConfigDownloaderService, GitHubConfigDownloaderService>();
         services.AddSingleton<IGitHubSpriteDownloaderService, GitHubSpriteDownloaderService>();
         services.AddSingleton<OptionsFactory>();
-        services.AddSingleton<IMicrophoneService, NullMicrophoneService>();
 
         services.AddAvaloniaControlServices<Program>();
         services.AddWindows<Program>();

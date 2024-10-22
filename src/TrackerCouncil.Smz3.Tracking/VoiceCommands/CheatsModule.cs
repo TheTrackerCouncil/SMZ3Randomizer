@@ -213,7 +213,9 @@ public class CheatsModule : TrackerModule
         return new GrammarBuilder()
             .Append("Hey tracker,")
             .Optional("please", "would you kindly")
-            .OneOf("charge a shine spark", "ready a spine shark");
+            .OneOf("charge", "ready", "give me", "enable", "activate", "turn on")
+            .Optional("a")
+            .Append("shine spark");
     }
 
     [SupportedOSPlatform("windows")]
