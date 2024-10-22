@@ -152,6 +152,10 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
                 }
             }
         }
+        else if (location != null)
+        {
+            Tracker.LocationTracker.Clear(location, confidence, autoTracked, stateResponse: false, allowLocationComments: true, updateTreasureCount: true);
+        }
 
         if (!didTrack)
         {
