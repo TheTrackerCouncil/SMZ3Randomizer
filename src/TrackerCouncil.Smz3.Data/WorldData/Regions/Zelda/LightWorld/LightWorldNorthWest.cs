@@ -23,8 +23,7 @@ public class LightWorldNorthWest : Z3Region
                 memoryFlag: 0x40,
                 memoryType: LocationMemoryType.ZeldaMisc,
                 metadata: metadata,
-                trackerState: trackerState)
-            .Weighted(4);
+                trackerState: trackerState);
 
         Mushroom = new Location(this, LocationId.Mushroom, 0x308013, LocationType.Regular,
                 name: "Mushroom",
@@ -53,8 +52,7 @@ public class LightWorldNorthWest : Z3Region
                 memoryAddress: 0xE2,
                 memoryFlag: 0x9,
                 metadata: metadata,
-                trackerState: trackerState)
-            .Weighted(4);
+                trackerState: trackerState);
 
         PegasusRocks = new Location(this, LocationId.PegasusRocks, 0x1EB3F, LocationType.Regular,
             name: "Pegasus Rocks",

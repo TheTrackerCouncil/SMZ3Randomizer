@@ -705,6 +705,7 @@ public class ItemConfig : List<ItemData>, IMergeable<ItemData>, IConfigFile<Item
             {
                 Item = "Spazer",
                 InternalItemType = ItemType.Spazer,
+                Multiple = true,
             },
             new()
             {
