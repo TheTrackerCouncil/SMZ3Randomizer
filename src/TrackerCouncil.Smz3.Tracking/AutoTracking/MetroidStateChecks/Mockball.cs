@@ -10,11 +10,11 @@ namespace TrackerCouncil.Smz3.Tracking.AutoTracking.MetroidStateChecks;
 /// </summary>
 public class Mockball : IMetroidStateCheck
 {
-    private readonly IItemService _itemService;
+    private readonly IPlayerProgressionService _playerProgressionService;
 
-    public Mockball(IItemService itemService)
+    public Mockball(IPlayerProgressionService playerProgressionService)
     {
-        _itemService = itemService;
+        _playerProgressionService = playerProgressionService;
     }
 
     /// <summary>
@@ -26,7 +26,7 @@ public class Mockball : IMetroidStateCheck
     /// <returns>True if the check was identified, false otherwise</returns>
     public bool ExecuteCheck(TrackerBase tracker, AutoTrackerMetroidState currentState, AutoTrackerMetroidState prevState)
     {
-        if (_itemService.IsTracked(ItemType.SpeedBooster))
+        if (_playerProgressionService.GetProgression(false).Contains(ItemType.CardNorfairBoss))
             return false;
 
         // Brinstar Mockball

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
@@ -14,49 +15,84 @@ namespace TrackerCouncil.Smz3.Data.WorldData;
 /// </summary>
 public class Reward
 {
-    public Reward(RewardType type, World world, IHasReward region, IMetadataService? metadata = null, TrackerDungeonState? dungeonState = null)
+    private Accessibility _accessibility;
+
+    public Reward(RewardType type, World world, IMetadataService? metadata)
     {
         Type = type;
         World = world;
-        Region = region;
         Metadata = metadata?.Reward(type) ?? new RewardInfo(type);
-        State = dungeonState ?? new TrackerDungeonState();
     }
 
-    public RewardType Type { get; set; }
+    public RewardType Type { get; }
 
-    public World World { get; set; }
+    public World World { get; }
 
-    public IHasReward Region { get; set; }
+    public RewardInfo Metadata { get; }
 
-    public RewardInfo Metadata { get; set; }
+    public IHasReward? Region { get; set; }
 
-    public TrackerDungeonState State { get; set; }
+    public TrackerRewardState State => Region?.RewardState ?? new TrackerRewardState();
 
-    public static ICollection<Reward> CreatePool(World world)
+    public bool HasReceivedReward
     {
-        var regions = world.Regions.OfType<IHasReward>().ToList();
-
-        return new List<Reward>()
+        get => State.HasReceivedReward;
+        set
         {
-            CreatePlayerReward(RewardType.PendantGreen, world, regions),
-            CreatePlayerReward(RewardType.PendantRed, world, regions),
-            CreatePlayerReward(RewardType.PendantBlue, world, regions),
-            CreatePlayerReward(RewardType.CrystalBlue, world, regions),
-            CreatePlayerReward(RewardType.CrystalBlue, world, regions),
-            CreatePlayerReward(RewardType.CrystalBlue, world, regions),
-            CreatePlayerReward(RewardType.CrystalBlue, world, regions),
-            CreatePlayerReward(RewardType.CrystalBlue, world, regions),
-            CreatePlayerReward(RewardType.CrystalRed, world, regions),
-            CreatePlayerReward(RewardType.CrystalRed, world, regions),
-            CreatePlayerReward(RewardType.Agahnim, world, regions),
-        };
+            State.HasReceivedReward = value;
+            UpdatedRewardState?.Invoke(this, EventArgs.Empty);
+        }
     }
 
-    private static Reward CreatePlayerReward(RewardType reward, World world, ICollection<IHasReward> regions)
+    public RewardType? MarkedReward
     {
-        var region = regions.First(x => x.RewardType == reward);
-        regions.Remove(region);
-        return new(reward, world, region);
+        get => State.MarkedReward;
+        set
+        {
+            State.MarkedReward = value;
+            UpdatedRewardState?.Invoke(this, EventArgs.Empty);
+        }
     }
+
+    public Accessibility Accessibility
+    {
+        get => _accessibility;
+        set
+        {
+            if (_accessibility == value) return;
+            _accessibility = value;
+            UpdatedAccessibility?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    public void UpdateAccessibility(Progression actualProgression, Progression withKeysProgression)
+    {
+        if (HasReceivedReward)
+        {
+            Accessibility = Accessibility.Cleared;
+        }
+        else if (Region == null)
+        {
+            Accessibility = Accessibility.Unknown;
+        }
+        else if (Region.CanRetrieveReward(actualProgression))
+        {
+            Accessibility = Accessibility.Available;
+        }
+        else if (Region.CanRetrieveReward(withKeysProgression))
+        {
+            Accessibility = Accessibility.AvailableWithKeys;
+        }
+        else
+        {
+            Accessibility = Accessibility.OutOfLogic;
+        }
+    }
+
+    public bool HasCorrectlyMarkedReward => MarkedReward == Type;
+
+    public event EventHandler? UpdatedRewardState;
+
+    public event EventHandler? UpdatedAccessibility;
+
 }

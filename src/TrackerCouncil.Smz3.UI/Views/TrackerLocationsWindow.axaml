@@ -12,10 +12,10 @@
         Icon="/Assets/smz3.ico"
         Title="Tracker Locations — SMZ3 Cas' Randomizer">
   <LayoutTransformControl x:Name="MainLayout">
-    <DockPanel>
+    <DockPanel IsVisible="{Binding FinishedLoading}">
       <StackPanel Orientation="Vertical" DockPanel.Dock="Top" Margin="5">
         <TextBlock Text="Marked locations" FontSize="20"/>
-        <ItemsControl ItemsSource="{Binding MarkedLocations}" Margin="5 10 ">
+        <ItemsControl ItemsSource="{Binding MarkedLocations}" Margin="5 10">
           <ItemsControl.ItemTemplate>
             <DataTemplate>
               <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="32,7,*" Margin="2">
@@ -25,7 +25,7 @@
                        Grid.RowSpan="2"
                        Grid.Column="0" />
 
-                <TextBlock Text="{Binding Location}"
+                <TextBlock Text="{Binding LocationName}"
                            Grid.Row="0"
                            Grid.Column="2"
                            Opacity="{Binding Opacity}"
@@ -47,7 +47,7 @@
                   Margin="10 10">
           <ItemsControl.ItemTemplate>
             <DataTemplate>
-              <StackPanel Orientation="Horizontal">
+              <StackPanel Orientation="Horizontal" Opacity="{Binding Opacity}" IsVisible="{Binding IsVisible}">
                 <TextBlock Text="{Binding Name}"
                            FontWeight="Bold" />
                 <TextBlock Margin="0 0 5 0">: </TextBlock>
@@ -61,16 +61,16 @@
             <TextBlock Text="All locations" FontSize="20" Margin="0" Grid.Column="0" />
             <CheckBox Content="Show out-of-logic" VerticalAlignment="Center" Grid.Column="1" Margin="15 0" IsChecked="{Binding ShowOutOfLogic}" IsCheckedChanged="ToggleShowOutOfLogicButton_OnIsCheckedChanged" />
             <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="5 0">Filter:</TextBlock>
-            <controls:EnumComboBox Grid.Column="3" MinWidth="100" Value="{Binding Filter}" EnumType="{Binding Filter, Converter={StaticResource TypeConverter}}" ValueChanged="EnumComboBox_OnValueChanged" />
+            <controls:EnumComboBox Grid.Column="3" MinWidth="100" Value="{Binding Filter}" EnumType="{Binding Filter, Converter={StaticResource TypeConverter}}" ValueChanged="FilterComboBox_OnValueChanged" />
         </Grid>
       </StackPanel>
 
       <Grid Margin="5">
         <ScrollViewer>
-          <ItemsControl ItemsSource="{Binding Regions}" Margin="10 0 ">
+          <ItemsControl ItemsSource="{Binding Regions}" Margin="10 0">
             <ItemsControl.ItemTemplate>
               <DataTemplate>
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" IsVisible="{Binding IsVisible}">
                   <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding LocationCount}" FontWeight="Bold"></TextBlock>
                     <Image Source="{Binding ChestImage, Converter={StaticResource StringToImageConverter}}" Height="16" Margin="5 0" />
@@ -80,7 +80,7 @@
                   <ItemsControl ItemsSource="{Binding Locations}" Margin="14 10" HorizontalAlignment="Stretch">
                     <ItemsControl.ItemTemplate>
                       <DataTemplate>
-                        <StackPanel Orientation="Horizontal" Opacity="{Binding Opacity}">
+                        <StackPanel Orientation="Horizontal" Opacity="{Binding Opacity}" IsVisible="{Binding IsVisible}">
                           <TextBlock Text="{Binding Name}"></TextBlock>
                           <Image Source="{Binding KeyImage, Converter={StaticResource StringToImageConverter}}" Height="16" Margin="2 0" IsVisible="{Binding ShowKeyIcon}" />
                           <controls:ImageButton Margin="0 -4 0 0" Click="ClearLocationButton_OnClick" Tag="{Binding}" Background="Transparent">

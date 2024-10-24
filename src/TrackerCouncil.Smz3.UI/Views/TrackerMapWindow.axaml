@@ -10,7 +10,7 @@
         Loaded="Control_OnLoaded"
         Icon="/Assets/smz3.ico"
         Title="Tracker Map — SMZ3 Cas' Randomizer">
-  <Grid RowDefinitions="Auto, *">
+  <Grid RowDefinitions="Auto, *" IsVisible="{Binding FinishedLoading}">
     <controls:HeaderFooter Grid.Row="0" BorderSize="0 0 0 2">
       <Grid ColumnDefinitions="Auto, *" Margin="5">
         <TextBlock Grid.Column="0" VerticalAlignment="Center" Margin="0 0 5 0">Map: </TextBlock>

@@ -10,5 +10,6 @@ public class TrackerMarkedLocation
     public long Id { get; set; }
     public TrackerState? TrackerState { get; set; }
     public int LocationId { get; set; }
+    [MaxLength(50)]
     public string ItemName { get; set; } = string.Empty;
 }

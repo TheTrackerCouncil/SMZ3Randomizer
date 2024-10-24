@@ -19,11 +19,11 @@ public class ItemTrackingModule : TrackerModule
     /// class.
     /// </summary>
     /// <param name="tracker">The tracker instance.</param>
-    /// <param name="itemService">Service to get item information</param>
-    /// <param name="worldService">Service to get world information</param>
+    /// <param name="playerProgressionService">Service to get item information</param>
+    /// <param name="worldQueryService">Service to get world information</param>
     /// <param name="logger">Used to log information.</param>
-    public ItemTrackingModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<ItemTrackingModule> logger)
-        : base(tracker, itemService, worldService, logger)
+    public ItemTrackingModule(TrackerBase tracker, IPlayerProgressionService playerProgressionService, IWorldQueryService worldQueryService, ILogger<ItemTrackingModule> logger)
+        : base(tracker, playerProgressionService, worldQueryService, logger)
     {
 
     }
@@ -188,7 +188,7 @@ public class ItemTrackingModule : TrackerModule
     [SupportedOSPlatform("windows")]
     public override void AddCommands()
     {
-        var isMultiworld = WorldService.World.Config.MultiWorld;
+        var isMultiworld = WorldQueryService.World.Config.MultiWorld;
 
         AddCommand("Track item", GetTrackItemRule(isMultiworld), (result) =>
         {
@@ -197,21 +197,21 @@ public class ItemTrackingModule : TrackerModule
             if (result.Semantics.ContainsKey(DungeonKey))
             {
                 var dungeon = GetDungeonFromResult(TrackerBase, result);
-                TrackerBase.TrackItem(item, dungeon,
+                TrackerBase.ItemTracker.TrackItemFrom(item, dungeon,
                     trackedAs: itemName,
                     confidence: result.Confidence);
             }
             else if (result.Semantics.ContainsKey(RoomKey))
             {
                 var room = GetRoomFromResult(TrackerBase, result);
-                TrackerBase.TrackItem(item, room,
+                TrackerBase.ItemTracker.TrackItemFrom(item, room,
                     trackedAs: itemName,
                     confidence: result.Confidence);
             }
             else if (result.Semantics.ContainsKey(LocationKey))
             {
                 var location = GetLocationFromResult(TrackerBase, result);
-                TrackerBase.TrackItem(item: item,
+                TrackerBase.ItemTracker.TrackItem(item: item,
                     trackedAs: itemName,
                     confidence: result.Confidence,
                     tryClear: true,
@@ -220,7 +220,7 @@ public class ItemTrackingModule : TrackerModule
             }
             else
             {
-                TrackerBase.TrackItem(item,
+                TrackerBase.ItemTracker.TrackItem(item,
                     trackedAs: itemName,
                     confidence: result.Confidence);
             }
@@ -228,7 +228,7 @@ public class ItemTrackingModule : TrackerModule
 
         AddCommand("Track death", GetTrackDeathRule(), (result) =>
         {
-            var death = ItemService.FirstOrDefault("Death");
+            var death = WorldQueryService.FirstOrDefault("Death");
             if (death == null)
             {
                 Logger.LogError("Tried to track death, but could not find an item named 'Death'.");
@@ -236,7 +236,7 @@ public class ItemTrackingModule : TrackerModule
                 return;
             }
 
-            TrackerBase.TrackItem(death, confidence: result.Confidence, tryClear: false);
+            TrackerBase.ItemTracker.TrackItem(death, confidence: result.Confidence, tryClear: false);
         });
 
         if (!isMultiworld)
@@ -246,7 +246,7 @@ public class ItemTrackingModule : TrackerModule
                 if (result.Semantics.ContainsKey(RoomKey))
                 {
                     var room = GetRoomFromResult(TrackerBase, result);
-                    TrackerBase.ClearArea(room,
+                    TrackerBase.LocationTracker.ClearArea(room,
                         trackItems: true,
                         includeUnavailable: false,
                         confidence: result.Confidence);
@@ -254,7 +254,7 @@ public class ItemTrackingModule : TrackerModule
                 else if (result.Semantics.ContainsKey(RegionKey))
                 {
                     var region = GetRegionFromResult(TrackerBase, result);
-                    TrackerBase.ClearArea(region,
+                    TrackerBase.LocationTracker.ClearArea(region,
                         trackItems: true,
                         includeUnavailable: false,
                         confidence: result.Confidence);
@@ -266,7 +266,7 @@ public class ItemTrackingModule : TrackerModule
                 if (result.Semantics.ContainsKey(RoomKey))
                 {
                     var room = GetRoomFromResult(TrackerBase, result);
-                    TrackerBase.ClearArea(room,
+                    TrackerBase.LocationTracker.ClearArea(room,
                         trackItems: true,
                         includeUnavailable: true,
                         confidence: result.Confidence);
@@ -274,7 +274,7 @@ public class ItemTrackingModule : TrackerModule
                 else if (result.Semantics.ContainsKey(RegionKey))
                 {
                     var region = GetRegionFromResult(TrackerBase, result);
-                    TrackerBase.ClearArea(region,
+                    TrackerBase.LocationTracker.ClearArea(region,
                         trackItems: true,
                         includeUnavailable: true,
                         confidence: result.Confidence);
@@ -285,14 +285,14 @@ public class ItemTrackingModule : TrackerModule
         AddCommand("Untrack an item", GetUntrackItemRule(), (result) =>
         {
             var item = GetItemFromResult(TrackerBase, result, out _);
-            TrackerBase.UntrackItem(item, result.Confidence);
+            TrackerBase.ItemTracker.UntrackItem(item, result.Confidence);
         });
 
         AddCommand("Set item count", GetSetItemCountRule(), (result) =>
         {
             var item = GetItemFromResult(TrackerBase, result, out _);
             var count = (int)result.Semantics[ItemCountKey].Value;
-            TrackerBase.TrackItemAmount(item, count, result.Confidence);
+            TrackerBase.ItemTracker.TrackItemAmount(item, count, result.Confidence);
         });
     }
 }

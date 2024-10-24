@@ -7,543 +7,700 @@ using TrackerCouncil.Smz3.Shared.Models;
 
 #nullable disable
 
-namespace TrackerCouncil.Smz3.Shared.Migrations;
-
-[DbContext(typeof(RandomizerContext))]
-partial class RandomizerContextModelSnapshot : ModelSnapshot
+namespace TrackerCouncil.Smz3.Shared.Migrations
 {
-    protected override void BuildModel(ModelBuilder modelBuilder)
+    [DbContext(typeof(RandomizerContext))]
+    partial class RandomizerContextModelSnapshot : ModelSnapshot
     {
+        protected override void BuildModel(ModelBuilder modelBuilder)
+        {
 #pragma warning disable 612, 618
-        modelBuilder.HasAnnotation("ProductVersion", "8.0.3");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.7");
 
-        modelBuilder.Entity("Randomizer.Shared.Models.GeneratedRom", b =>
-        {
-            b.Property<long>("Id")
-                .ValueGeneratedOnAdd()
-                .HasColumnType("INTEGER");
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.GeneratedRom", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-            b.Property<DateTimeOffset>("Date")
-                .HasColumnType("TEXT");
+                    b.Property<DateTimeOffset>("Date")
+                        .HasColumnType("TEXT");
 
-            b.Property<int>("GeneratorVersion")
-                .HasColumnType("INTEGER");
+                    b.Property<int>("GeneratorVersion")
+                        .HasColumnType("INTEGER");
 
-            b.Property<string>("Label")
-                .IsRequired()
-                .HasColumnType("TEXT");
+                    b.Property<string>("Label")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-            b.Property<string>("MsuPaths")
-                .HasColumnType("TEXT");
+                    b.Property<string>("MsuPaths")
+                        .HasColumnType("TEXT");
 
-            b.Property<int?>("MsuRandomizationStyle")
-                .HasColumnType("INTEGER");
+                    b.Property<int?>("MsuRandomizationStyle")
+                        .HasColumnType("INTEGER");
 
-            b.Property<int?>("MsuShuffleStyle")
-                .HasColumnType("INTEGER");
+                    b.Property<int?>("MsuShuffleStyle")
+                        .HasColumnType("INTEGER");
 
-            b.Property<long?>("MultiplayerGameDetailsId")
-                .HasColumnType("INTEGER");
+                    b.Property<long?>("MultiplayerGameDetailsId")
+                        .HasColumnType("INTEGER");
 
-            b.Property<string>("RomPath")
-                .IsRequired()
-                .HasColumnType("TEXT");
+                    b.Property<string>("RomPath")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-            b.Property<string>("Seed")
-                .IsRequired()
-                .HasColumnType("TEXT");
+                    b.Property<string>("Seed")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-            b.Property<string>("Settings")
-                .IsRequired()
-                .HasColumnType("TEXT");
+                    b.Property<string>("Settings")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-            b.Property<string>("SpoilerPath")
-                .IsRequired()
-                .HasColumnType("TEXT");
+                    b.Property<string>("SpoilerPath")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-            b.Property<long?>("TrackerStateId")
-                .HasColumnType("INTEGER");
+                    b.Property<long?>("TrackerStateId")
+                        .HasColumnType("INTEGER");
 
-            b.HasKey("Id");
+                    b.HasKey("Id");
 
-            b.HasIndex("MultiplayerGameDetailsId");
+                    b.HasIndex("MultiplayerGameDetailsId");
 
-            b.HasIndex("TrackerStateId");
+                    b.HasIndex("TrackerStateId");
 
-            b.ToTable("GeneratedRoms");
-        });
+                    b.ToTable("GeneratedRoms");
+                });
 
-        modelBuilder.Entity("Randomizer.Shared.Models.MultiplayerGameDetails", b =>
-        {
-            b.Property<long>("Id")
-                .ValueGeneratedOnAdd()
-                .HasColumnType("INTEGER");
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.MultiplayerGameDetails", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-            b.Property<string>("ConnectionUrl")
-                .IsRequired()
-                .HasColumnType("TEXT");
+                    b.Property<string>("ConnectionUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-            b.Property<string>("GameGuid")
-                .IsRequired()
-                .HasColumnType("TEXT");
+                    b.Property<string>("GameGuid")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-            b.Property<string>("GameUrl")
-                .IsRequired()
-                .HasColumnType("TEXT");
+                    b.Property<string>("GameUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-            b.Property<long?>("GeneratedRomId")
-                .HasColumnType("INTEGER");
+                    b.Property<long?>("GeneratedRomId")
+                        .HasColumnType("INTEGER");
 
-            b.Property<DateTimeOffset>("JoinedDate")
-                .HasColumnType("TEXT");
+                    b.Property<DateTimeOffset>("JoinedDate")
+                        .HasColumnType("TEXT");
 
-            b.Property<string>("PlayerGuid")
-                .IsRequired()
-                .HasColumnType("TEXT");
+                    b.Property<string>("PlayerGuid")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-            b.Property<string>("PlayerKey")
-                .IsRequired()
-                .HasColumnType("TEXT");
+                    b.Property<string>("PlayerKey")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-            b.Property<int>("Status")
-                .HasColumnType("INTEGER");
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
 
-            b.Property<int>("Type")
-                .HasColumnType("INTEGER");
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
 
-            b.HasKey("Id");
+                    b.HasKey("Id");
 
-            b.HasIndex("GeneratedRomId")
-                .IsUnique();
+                    b.HasIndex("GeneratedRomId")
+                        .IsUnique();
 
-            b.ToTable("MultiplayerGames");
-        });
+                    b.ToTable("MultiplayerGames");
+                });
 
-        modelBuilder.Entity("Randomizer.Shared.Models.TrackerBossState", b =>
-        {
-            b.Property<long>("Id")
-                .ValueGeneratedOnAdd()
-                .HasColumnType("INTEGER");
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.TrackerBossState", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-            b.Property<bool>("AutoTracked")
-                .HasColumnType("INTEGER");
+                    b.Property<bool>("AutoTracked")
+                        .HasColumnType("INTEGER");
 
-            b.Property<string>("BossName")
-                .IsRequired()
-                .HasColumnType("TEXT");
+                    b.Property<string>("BossName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
-            b.Property<bool>("Defeated")
-                .HasColumnType("INTEGER");
+                    b.Property<bool>("Defeated")
+                        .HasColumnType("INTEGER");
 
-            b.Property<long?>("TrackerStateId")
-                .HasColumnType("INTEGER");
+                    b.Property<string>("RegionName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
-            b.Property<int>("Type")
-                .HasColumnType("INTEGER");
+                    b.Property<long?>("TrackerStateId")
+                        .HasColumnType("INTEGER");
 
-            b.Property<int>("WorldId")
-                .HasColumnType("INTEGER");
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
 
-            b.HasKey("Id");
+                    b.Property<int>("WorldId")
+                        .HasColumnType("INTEGER");
 
-            b.HasIndex("TrackerStateId");
+                    b.HasKey("Id");
 
-            b.ToTable("TrackerBossStates");
-        });
+                    b.HasIndex("TrackerStateId");
 
-        modelBuilder.Entity("Randomizer.Shared.Models.TrackerDungeonState", b =>
-        {
-            b.Property<long>("Id")
-                .ValueGeneratedOnAdd()
-                .HasColumnType("INTEGER");
+                    b.ToTable("TrackerBossStates");
+                });
 
-            b.Property<bool>("AutoTracked")
-                .HasColumnType("INTEGER");
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.TrackerDungeonState", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-            b.Property<bool>("Cleared")
-                .HasColumnType("INTEGER");
+                    b.Property<bool>("AutoTracked")
+                        .HasColumnType("INTEGER");
 
-            b.Property<bool>("HasManuallyClearedTreasure")
-                .HasColumnType("INTEGER");
+                    b.Property<bool>("Cleared")
+                        .HasColumnType("INTEGER");
 
-            b.Property<byte?>("MarkedMedallion")
-                .HasColumnType("INTEGER");
+                    b.Property<bool>("HasManuallyClearedTreasure")
+                        .HasColumnType("INTEGER");
 
-            b.Property<int?>("MarkedReward")
-                .HasColumnType("INTEGER");
+                    b.Property<byte?>("MarkedMedallion")
+                        .HasColumnType("INTEGER");
 
-            b.Property<string>("Name")
-                .IsRequired()
-                .HasColumnType("TEXT");
+                    b.Property<int?>("MarkedReward")
+                        .HasColumnType("INTEGER");
 
-            b.Property<int>("RemainingTreasure")
-                .HasColumnType("INTEGER");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
-            b.Property<byte?>("RequiredMedallion")
-                .HasColumnType("INTEGER");
+                    b.Property<int>("RemainingTreasure")
+                        .HasColumnType("INTEGER");
 
-            b.Property<int?>("Reward")
-                .HasColumnType("INTEGER");
+                    b.Property<byte?>("RequiredMedallion")
+                        .HasColumnType("INTEGER");
 
-            b.Property<long?>("TrackerStateId")
-                .HasColumnType("INTEGER");
+                    b.Property<int?>("Reward")
+                        .HasColumnType("INTEGER");
 
-            b.Property<int>("WorldId")
-                .HasColumnType("INTEGER");
+                    b.Property<long?>("TrackerStateId")
+                        .HasColumnType("INTEGER");
 
-            b.HasKey("Id");
+                    b.Property<int>("WorldId")
+                        .HasColumnType("INTEGER");
 
-            b.HasIndex("TrackerStateId");
+                    b.HasKey("Id");
 
-            b.ToTable("TrackerDungeonStates");
-        });
+                    b.HasIndex("TrackerStateId");
 
-        modelBuilder.Entity("Randomizer.Shared.Models.TrackerHintState", b =>
-        {
-            b.Property<long>("Id")
-                .ValueGeneratedOnAdd()
-                .HasColumnType("INTEGER");
+                    b.ToTable("TrackerDungeonStates");
+                });
 
-            b.Property<int>("HintState")
-                .HasColumnType("INTEGER");
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.TrackerHintState", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-            b.Property<string>("HintTileCode")
-                .IsRequired()
-                .HasColumnType("TEXT");
+                    b.Property<int>("HintState")
+                        .HasColumnType("INTEGER");
 
-            b.Property<string>("LocationKey")
-                .IsRequired()
-                .HasColumnType("TEXT");
+                    b.Property<string>("HintTileCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
-            b.Property<string>("LocationString")
-                .HasColumnType("TEXT");
+                    b.Property<string>("LocationKey")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
-            b.Property<int?>("LocationWorldId")
-                .HasColumnType("INTEGER");
+                    b.Property<string>("LocationString")
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
-            b.Property<byte?>("MedallionType")
-                .HasColumnType("INTEGER");
+                    b.Property<int?>("LocationWorldId")
+                        .HasColumnType("INTEGER");
 
-            b.Property<long?>("TrackerStateId")
-                .HasColumnType("INTEGER");
+                    b.Property<byte?>("MedallionType")
+                        .HasColumnType("INTEGER");
 
-            b.Property<int>("Type")
-                .HasColumnType("INTEGER");
+                    b.Property<long?>("TrackerStateId")
+                        .HasColumnType("INTEGER");
 
-            b.Property<int?>("Usefulness")
-                .HasColumnType("INTEGER");
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
 
-            b.Property<int>("WorldId")
-                .HasColumnType("INTEGER");
+                    b.Property<int?>("Usefulness")
+                        .HasColumnType("INTEGER");
 
-            b.HasKey("Id");
+                    b.Property<int>("WorldId")
+                        .HasColumnType("INTEGER");
 
-            b.HasIndex("TrackerStateId");
+                    b.HasKey("Id");
 
-            b.ToTable("TrackerHintStates");
-        });
+                    b.HasIndex("TrackerStateId");
 
-        modelBuilder.Entity("Randomizer.Shared.Models.TrackerHistoryEvent", b =>
-        {
-            b.Property<long>("Id")
-                .ValueGeneratedOnAdd()
-                .HasColumnType("INTEGER");
+                    b.ToTable("TrackerHintStates");
+                });
 
-            b.Property<bool>("IsImportant")
-                .HasColumnType("INTEGER");
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.TrackerHistoryEvent", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-            b.Property<bool>("IsUndone")
-                .HasColumnType("INTEGER");
+                    b.Property<bool>("IsImportant")
+                        .HasColumnType("INTEGER");
 
-            b.Property<int?>("LocationId")
-                .HasColumnType("INTEGER");
+                    b.Property<bool>("IsUndone")
+                        .HasColumnType("INTEGER");
 
-            b.Property<string>("LocationName")
-                .HasColumnType("TEXT");
+                    b.Property<int?>("LocationId")
+                        .HasColumnType("INTEGER");
 
-            b.Property<string>("ObjectName")
-                .IsRequired()
-                .HasColumnType("TEXT");
+                    b.Property<string>("LocationName")
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
-            b.Property<double>("Time")
-                .HasColumnType("REAL");
+                    b.Property<string>("ObjectName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
-            b.Property<long?>("TrackerStateId")
-                .HasColumnType("INTEGER");
+                    b.Property<double>("Time")
+                        .HasColumnType("REAL");
 
-            b.Property<int>("Type")
-                .HasColumnType("INTEGER");
+                    b.Property<long?>("TrackerStateId")
+                        .HasColumnType("INTEGER");
 
-            b.HasKey("Id");
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
 
-            b.HasIndex("TrackerStateId");
+                    b.HasKey("Id");
 
-            b.ToTable("TrackerHistoryEvents");
-        });
+                    b.HasIndex("TrackerStateId");
 
-        modelBuilder.Entity("Randomizer.Shared.Models.TrackerItemState", b =>
-        {
-            b.Property<long>("Id")
-                .ValueGeneratedOnAdd()
-                .HasColumnType("INTEGER");
+                    b.ToTable("TrackerHistoryEvents");
+                });
 
-            b.Property<string>("ItemName")
-                .IsRequired()
-                .HasColumnType("TEXT");
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.TrackerItemState", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-            b.Property<long?>("TrackerStateId")
-                .HasColumnType("INTEGER");
+                    b.Property<string>("ItemName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
-            b.Property<int>("TrackingState")
-                .HasColumnType("INTEGER");
+                    b.Property<long?>("TrackerStateId")
+                        .HasColumnType("INTEGER");
 
-            b.Property<byte?>("Type")
-                .HasColumnType("INTEGER");
+                    b.Property<int>("TrackingState")
+                        .HasColumnType("INTEGER");
 
-            b.Property<int>("WorldId")
-                .HasColumnType("INTEGER");
+                    b.Property<byte?>("Type")
+                        .HasColumnType("INTEGER");
 
-            b.HasKey("Id");
+                    b.Property<int>("WorldId")
+                        .HasColumnType("INTEGER");
 
-            b.HasIndex("TrackerStateId");
+                    b.HasKey("Id");
 
-            b.ToTable("TrackerItemStates");
-        });
+                    b.HasIndex("TrackerStateId");
 
-        modelBuilder.Entity("Randomizer.Shared.Models.TrackerLocationState", b =>
-        {
-            b.Property<long>("Id")
-                .ValueGeneratedOnAdd()
-                .HasColumnType("INTEGER");
+                    b.ToTable("TrackerItemStates");
+                });
 
-            b.Property<bool>("Autotracked")
-                .HasColumnType("INTEGER");
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.TrackerLocationState", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-            b.Property<bool>("Cleared")
-                .HasColumnType("INTEGER");
+                    b.Property<bool>("Autotracked")
+                        .HasColumnType("INTEGER");
 
-            b.Property<byte>("Item")
-                .HasColumnType("INTEGER");
+                    b.Property<bool>("Cleared")
+                        .HasColumnType("INTEGER");
 
-            b.Property<int>("ItemWorldId")
-                .HasColumnType("INTEGER");
+                    b.Property<byte>("Item")
+                        .HasColumnType("INTEGER");
 
-            b.Property<int>("LocationId")
-                .HasColumnType("INTEGER");
+                    b.Property<int>("ItemWorldId")
+                        .HasColumnType("INTEGER");
 
-            b.Property<byte?>("MarkedItem")
-                .HasColumnType("INTEGER");
+                    b.Property<int>("LocationId")
+                        .HasColumnType("INTEGER");
 
-            b.Property<long?>("TrackerStateId")
-                .HasColumnType("INTEGER");
+                    b.Property<byte?>("MarkedItem")
+                        .HasColumnType("INTEGER");
 
-            b.Property<int>("WorldId")
-                .HasColumnType("INTEGER");
+                    b.Property<int?>("MarkedUsefulness")
+                        .HasColumnType("INTEGER");
 
-            b.HasKey("Id");
+                    b.Property<long?>("TrackerStateId")
+                        .HasColumnType("INTEGER");
 
-            b.HasIndex("TrackerStateId");
+                    b.Property<int>("WorldId")
+                        .HasColumnType("INTEGER");
 
-            b.ToTable("TrackerLocationStates");
-        });
+                    b.HasKey("Id");
 
-        modelBuilder.Entity("Randomizer.Shared.Models.TrackerMarkedLocation", b =>
-        {
-            b.Property<long>("Id")
-                .ValueGeneratedOnAdd()
-                .HasColumnType("INTEGER");
+                    b.HasIndex("TrackerStateId");
 
-            b.Property<string>("ItemName")
-                .IsRequired()
-                .HasColumnType("TEXT");
+                    b.ToTable("TrackerLocationStates");
+                });
 
-            b.Property<int>("LocationId")
-                .HasColumnType("INTEGER");
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.TrackerMarkedLocation", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-            b.Property<long?>("TrackerStateId")
-                .HasColumnType("INTEGER");
+                    b.Property<string>("ItemName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
-            b.HasKey("Id");
+                    b.Property<int>("LocationId")
+                        .HasColumnType("INTEGER");
 
-            b.HasIndex("TrackerStateId");
+                    b.Property<long?>("TrackerStateId")
+                        .HasColumnType("INTEGER");
 
-            b.ToTable("TrackerMarkedLocations");
-        });
+                    b.HasKey("Id");
 
-        modelBuilder.Entity("Randomizer.Shared.Models.TrackerRegionState", b =>
-        {
-            b.Property<long>("Id")
-                .ValueGeneratedOnAdd()
-                .HasColumnType("INTEGER");
+                    b.HasIndex("TrackerStateId");
 
-            b.Property<byte?>("Medallion")
-                .HasColumnType("INTEGER");
+                    b.ToTable("TrackerMarkedLocations");
+                });
 
-            b.Property<int?>("Reward")
-                .HasColumnType("INTEGER");
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.TrackerPrerequisiteState", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-            b.Property<long?>("TrackerStateId")
-                .HasColumnType("INTEGER");
+                    b.Property<bool>("AutoTracked")
+                        .HasColumnType("INTEGER");
 
-            b.Property<string>("TypeName")
-                .IsRequired()
-                .HasColumnType("TEXT");
+                    b.Property<byte?>("MarkedItem")
+                        .HasColumnType("INTEGER");
 
-            b.HasKey("Id");
+                    b.Property<string>("RegionName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
-            b.HasIndex("TrackerStateId");
+                    b.Property<byte>("RequiredItem")
+                        .HasColumnType("INTEGER");
 
-            b.ToTable("TrackerRegionStates");
-        });
+                    b.Property<long?>("TrackerStateId")
+                        .HasColumnType("INTEGER");
 
-        modelBuilder.Entity("Randomizer.Shared.Models.TrackerState", b =>
-        {
-            b.Property<long>("Id")
-                .ValueGeneratedOnAdd()
-                .HasColumnType("INTEGER");
+                    b.Property<int>("WorldId")
+                        .HasColumnType("INTEGER");
 
-            b.Property<int>("LocalWorldId")
-                .HasColumnType("INTEGER");
+                    b.HasKey("Id");
 
-            b.Property<int>("PercentageCleared")
-                .HasColumnType("INTEGER");
+                    b.HasIndex("TrackerStateId");
 
-            b.Property<double>("SecondsElapsed")
-                .HasColumnType("REAL");
+                    b.ToTable("TrackerPrerequisiteStates");
+                });
 
-            b.Property<DateTimeOffset>("StartDateTime")
-                .HasColumnType("TEXT");
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.TrackerRegionState", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-            b.Property<DateTimeOffset>("UpdatedDateTime")
-                .HasColumnType("TEXT");
+                    b.Property<byte?>("Medallion")
+                        .HasColumnType("INTEGER");
 
-            b.HasKey("Id");
+                    b.Property<int?>("Reward")
+                        .HasColumnType("INTEGER");
 
-            b.ToTable("TrackerStates");
-        });
+                    b.Property<long?>("TrackerStateId")
+                        .HasColumnType("INTEGER");
 
-        modelBuilder.Entity("Randomizer.Shared.Models.GeneratedRom", b =>
-        {
-            b.HasOne("Randomizer.Shared.Models.MultiplayerGameDetails", "MultiplayerGameDetails")
-                .WithMany()
-                .HasForeignKey("MultiplayerGameDetailsId");
+                    b.Property<string>("TypeName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
-            b.HasOne("Randomizer.Shared.Models.TrackerState", "TrackerState")
-                .WithMany()
-                .HasForeignKey("TrackerStateId");
+                    b.HasKey("Id");
 
-            b.Navigation("MultiplayerGameDetails");
+                    b.HasIndex("TrackerStateId");
 
-            b.Navigation("TrackerState");
-        });
+                    b.ToTable("TrackerRegionStates");
+                });
 
-        modelBuilder.Entity("Randomizer.Shared.Models.MultiplayerGameDetails", b =>
-        {
-            b.HasOne("Randomizer.Shared.Models.GeneratedRom", "GeneratedRom")
-                .WithOne()
-                .HasForeignKey("Randomizer.Shared.Models.MultiplayerGameDetails", "GeneratedRomId");
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.TrackerRewardState", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-            b.Navigation("GeneratedRom");
-        });
+                    b.Property<bool>("AutoTracked")
+                        .HasColumnType("INTEGER");
 
-        modelBuilder.Entity("Randomizer.Shared.Models.TrackerBossState", b =>
-        {
-            b.HasOne("Randomizer.Shared.Models.TrackerState", "TrackerState")
-                .WithMany("BossStates")
-                .HasForeignKey("TrackerStateId")
-                .OnDelete(DeleteBehavior.Cascade);
+                    b.Property<bool>("HasReceivedReward")
+                        .HasColumnType("INTEGER");
 
-            b.Navigation("TrackerState");
-        });
+                    b.Property<int?>("MarkedReward")
+                        .HasColumnType("INTEGER");
 
-        modelBuilder.Entity("Randomizer.Shared.Models.TrackerDungeonState", b =>
-        {
-            b.HasOne("Randomizer.Shared.Models.TrackerState", "TrackerState")
-                .WithMany("DungeonStates")
-                .HasForeignKey("TrackerStateId")
-                .OnDelete(DeleteBehavior.Cascade);
+                    b.Property<string>("RegionName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
-            b.Navigation("TrackerState");
-        });
+                    b.Property<int>("RewardType")
+                        .HasColumnType("INTEGER");
 
-        modelBuilder.Entity("Randomizer.Shared.Models.TrackerHintState", b =>
-        {
-            b.HasOne("Randomizer.Shared.Models.TrackerState", "TrackerState")
-                .WithMany("Hints")
-                .HasForeignKey("TrackerStateId")
-                .OnDelete(DeleteBehavior.Cascade);
+                    b.Property<long?>("TrackerStateId")
+                        .HasColumnType("INTEGER");
 
-            b.Navigation("TrackerState");
-        });
+                    b.Property<int>("WorldId")
+                        .HasColumnType("INTEGER");
 
-        modelBuilder.Entity("Randomizer.Shared.Models.TrackerHistoryEvent", b =>
-        {
-            b.HasOne("Randomizer.Shared.Models.TrackerState", "TrackerState")
-                .WithMany("History")
-                .HasForeignKey("TrackerStateId")
-                .OnDelete(DeleteBehavior.Cascade);
+                    b.HasKey("Id");
 
-            b.Navigation("TrackerState");
-        });
+                    b.HasIndex("TrackerStateId");
 
-        modelBuilder.Entity("Randomizer.Shared.Models.TrackerItemState", b =>
-        {
-            b.HasOne("Randomizer.Shared.Models.TrackerState", "TrackerState")
-                .WithMany("ItemStates")
-                .HasForeignKey("TrackerStateId")
-                .OnDelete(DeleteBehavior.Cascade);
+                    b.ToTable("TrackerRewardStates");
+                });
 
-            b.Navigation("TrackerState");
-        });
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.TrackerState", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-        modelBuilder.Entity("Randomizer.Shared.Models.TrackerLocationState", b =>
-        {
-            b.HasOne("Randomizer.Shared.Models.TrackerState", "TrackerState")
-                .WithMany("LocationStates")
-                .HasForeignKey("TrackerStateId")
-                .OnDelete(DeleteBehavior.Cascade);
+                    b.Property<int>("LocalWorldId")
+                        .HasColumnType("INTEGER");
 
-            b.Navigation("TrackerState");
-        });
+                    b.Property<int>("PercentageCleared")
+                        .HasColumnType("INTEGER");
 
-        modelBuilder.Entity("Randomizer.Shared.Models.TrackerMarkedLocation", b =>
-        {
-            b.HasOne("Randomizer.Shared.Models.TrackerState", "TrackerState")
-                .WithMany("MarkedLocations")
-                .HasForeignKey("TrackerStateId")
-                .OnDelete(DeleteBehavior.Cascade);
+                    b.Property<double>("SecondsElapsed")
+                        .HasColumnType("REAL");
 
-            b.Navigation("TrackerState");
-        });
+                    b.Property<DateTimeOffset>("StartDateTime")
+                        .HasColumnType("TEXT");
 
-        modelBuilder.Entity("Randomizer.Shared.Models.TrackerRegionState", b =>
-        {
-            b.HasOne("Randomizer.Shared.Models.TrackerState", "TrackerState")
-                .WithMany("RegionStates")
-                .HasForeignKey("TrackerStateId")
-                .OnDelete(DeleteBehavior.Cascade);
+                    b.Property<DateTimeOffset>("UpdatedDateTime")
+                        .HasColumnType("TEXT");
 
-            b.Navigation("TrackerState");
-        });
+                    b.HasKey("Id");
 
-        modelBuilder.Entity("Randomizer.Shared.Models.TrackerState", b =>
-        {
-            b.Navigation("BossStates");
+                    b.ToTable("TrackerStates");
+                });
 
-            b.Navigation("DungeonStates");
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.TrackerTreasureState", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-            b.Navigation("Hints");
+                    b.Property<bool>("HasManuallyClearedTreasure")
+                        .HasColumnType("INTEGER");
 
-            b.Navigation("History");
+                    b.Property<string>("RegionName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
-            b.Navigation("ItemStates");
+                    b.Property<int>("RemainingTreasure")
+                        .HasColumnType("INTEGER");
 
-            b.Navigation("LocationStates");
+                    b.Property<int>("TotalTreasure")
+                        .HasColumnType("INTEGER");
 
-            b.Navigation("MarkedLocations");
+                    b.Property<long?>("TrackerStateId")
+                        .HasColumnType("INTEGER");
 
-            b.Navigation("RegionStates");
-        });
+                    b.Property<int>("WorldId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TrackerStateId");
+
+                    b.ToTable("TrackerTreasureStates");
+                });
+
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.GeneratedRom", b =>
+                {
+                    b.HasOne("TrackerCouncil.Smz3.Shared.Models.MultiplayerGameDetails", "MultiplayerGameDetails")
+                        .WithMany()
+                        .HasForeignKey("MultiplayerGameDetailsId");
+
+                    b.HasOne("TrackerCouncil.Smz3.Shared.Models.TrackerState", "TrackerState")
+                        .WithMany()
+                        .HasForeignKey("TrackerStateId");
+
+                    b.Navigation("MultiplayerGameDetails");
+
+                    b.Navigation("TrackerState");
+                });
+
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.MultiplayerGameDetails", b =>
+                {
+                    b.HasOne("TrackerCouncil.Smz3.Shared.Models.GeneratedRom", "GeneratedRom")
+                        .WithOne()
+                        .HasForeignKey("TrackerCouncil.Smz3.Shared.Models.MultiplayerGameDetails", "GeneratedRomId");
+
+                    b.Navigation("GeneratedRom");
+                });
+
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.TrackerBossState", b =>
+                {
+                    b.HasOne("TrackerCouncil.Smz3.Shared.Models.TrackerState", "TrackerState")
+                        .WithMany("BossStates")
+                        .HasForeignKey("TrackerStateId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("TrackerState");
+                });
+
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.TrackerDungeonState", b =>
+                {
+                    b.HasOne("TrackerCouncil.Smz3.Shared.Models.TrackerState", "TrackerState")
+                        .WithMany("DungeonStates")
+                        .HasForeignKey("TrackerStateId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("TrackerState");
+                });
+
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.TrackerHintState", b =>
+                {
+                    b.HasOne("TrackerCouncil.Smz3.Shared.Models.TrackerState", "TrackerState")
+                        .WithMany("Hints")
+                        .HasForeignKey("TrackerStateId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("TrackerState");
+                });
+
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.TrackerHistoryEvent", b =>
+                {
+                    b.HasOne("TrackerCouncil.Smz3.Shared.Models.TrackerState", "TrackerState")
+                        .WithMany("History")
+                        .HasForeignKey("TrackerStateId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("TrackerState");
+                });
+
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.TrackerItemState", b =>
+                {
+                    b.HasOne("TrackerCouncil.Smz3.Shared.Models.TrackerState", "TrackerState")
+                        .WithMany("ItemStates")
+                        .HasForeignKey("TrackerStateId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("TrackerState");
+                });
+
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.TrackerLocationState", b =>
+                {
+                    b.HasOne("TrackerCouncil.Smz3.Shared.Models.TrackerState", "TrackerState")
+                        .WithMany("LocationStates")
+                        .HasForeignKey("TrackerStateId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("TrackerState");
+                });
+
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.TrackerMarkedLocation", b =>
+                {
+                    b.HasOne("TrackerCouncil.Smz3.Shared.Models.TrackerState", "TrackerState")
+                        .WithMany("MarkedLocations")
+                        .HasForeignKey("TrackerStateId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("TrackerState");
+                });
+
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.TrackerPrerequisiteState", b =>
+                {
+                    b.HasOne("TrackerCouncil.Smz3.Shared.Models.TrackerState", "TrackerState")
+                        .WithMany("PrerequisiteStates")
+                        .HasForeignKey("TrackerStateId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("TrackerState");
+                });
+
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.TrackerRegionState", b =>
+                {
+                    b.HasOne("TrackerCouncil.Smz3.Shared.Models.TrackerState", "TrackerState")
+                        .WithMany("RegionStates")
+                        .HasForeignKey("TrackerStateId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("TrackerState");
+                });
+
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.TrackerRewardState", b =>
+                {
+                    b.HasOne("TrackerCouncil.Smz3.Shared.Models.TrackerState", "TrackerState")
+                        .WithMany("RewardStates")
+                        .HasForeignKey("TrackerStateId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("TrackerState");
+                });
+
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.TrackerTreasureState", b =>
+                {
+                    b.HasOne("TrackerCouncil.Smz3.Shared.Models.TrackerState", "TrackerState")
+                        .WithMany("TreasureStates")
+                        .HasForeignKey("TrackerStateId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("TrackerState");
+                });
+
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.TrackerState", b =>
+                {
+                    b.Navigation("BossStates");
+
+                    b.Navigation("DungeonStates");
+
+                    b.Navigation("Hints");
+
+                    b.Navigation("History");
+
+                    b.Navigation("ItemStates");
+
+                    b.Navigation("LocationStates");
+
+                    b.Navigation("MarkedLocations");
+
+                    b.Navigation("PrerequisiteStates");
+
+                    b.Navigation("RegionStates");
+
+                    b.Navigation("RewardStates");
+
+                    b.Navigation("TreasureStates");
+                });
 #pragma warning restore 612, 618
+        }
     }
 }

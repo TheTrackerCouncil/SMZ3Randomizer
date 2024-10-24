@@ -40,7 +40,6 @@ public class MultiplayerClientService
     public event GameStartedEventHandler? GameStarted;
     public event TrackLocationEventHandler? LocationTracked;
     public event TrackItemEventHandler? ItemTracked;
-    public event TrackDungeonEventHandler? DungeonTracked;
     public event TrackBossEventHandler? BossTracked;
     public event TrackDeathEventHandler? DeathTracked;
 
@@ -121,8 +120,6 @@ public class MultiplayerClientService
         _connection.On<TrackLocationResponse>("TrackLocation", OnTrackLocation);
 
         _connection.On<TrackItemResponse>("TrackItem", OnTrackItem);
-
-        _connection.On<TrackDungeonResponse>("TrackDungeon", OnTrackDungeon);
 
         _connection.On<TrackBossResponse>("TrackBoss", OnTrackBoss);
 
@@ -394,17 +391,6 @@ public class MultiplayerClientService
     }
 
     /// <summary>
-    /// Notifies the server that a dungeon has been cleared
-    /// </summary>
-    /// <param name="dungeonName">The name of the dungeon that has been cleared</param>
-    /// <param name="playerGuid">The player whose dungeon was cleared. Set to null to use the local player.</param>
-    public async Task TrackDungeon(string dungeonName, string? playerGuid = null)
-    {
-        playerGuid ??= CurrentPlayerGuid;
-        await MakeRequest("TrackDungeon", new TrackDungeonRequest(playerGuid ?? CurrentPlayerGuid!, dungeonName));
-    }
-
-    /// <summary>
     /// Notifies the server that a boss has been defeated
     /// </summary>
     /// <param name="bossType">The boss that has been defeated</param>
@@ -616,18 +602,6 @@ public class MultiplayerClientService
         var player = Players!.First(x => x.Guid == response.PlayerGuid);
         _logger.LogInformation("{Player} tracked death", player.PlayerName);
         DeathTracked?.Invoke(player);
-    }
-
-    /// <summary>
-    /// On retrieving a player clearing a dungeon
-    /// </summary>
-    /// <param name="response"></param>
-    private void OnTrackDungeon(TrackDungeonResponse response)
-    {
-        var player = Players!.First(x => x.Guid == response.PlayerGuid);
-        player.TrackDungeon(response.DungeonName);
-        _logger.LogInformation("{Player} tracked dungeon {DungeonName}", player.PlayerName, response.DungeonName);
-        DungeonTracked?.Invoke(player, response.DungeonName);
     }
 
     /// <summary>

@@ -348,3 +348,6 @@ healthchecksdb
 setup/Output/
 patch-config*
 **/.DS_Store
+**/*.db
+**/*.db-shm
+**/*.db-wal

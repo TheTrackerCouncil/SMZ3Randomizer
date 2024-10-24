@@ -34,6 +34,9 @@ public class World
 
         Logic = new Smz3.Data.Logic.Logic(this);
 
+        CreateBosses(metadata, trackerState);
+        CreateRewards(metadata);
+
         CastleTower = new(this, Config, metadata, trackerState);
         EasternPalace = new(this, Config, metadata, trackerState);
         DesertPalace = new(this, Config, metadata, trackerState);
@@ -90,9 +93,14 @@ public class World
             WreckedShip
         };
         Locations = Regions.SelectMany(x => x.Locations).ToImmutableList();
+        LocationMap = Locations.ToImmutableDictionary(x => x.Id, x => x);
         Rooms = Regions.SelectMany(x => x.Rooms).ToImmutableList();
         State = trackerState ?? new TrackerState();
         ItemPools = new WorldItemPools(this);
+        TreasureRegions = Regions.OfType<IHasTreasure>().ToImmutableList();
+        RewardRegions = Regions.OfType<IHasReward>().ToImmutableList();
+        BossRegions = Regions.OfType<IHasBoss>().ToImmutableList();
+        PrerequisiteRegions = Regions.OfType<IHasPrerequisite>().ToImmutableList();
     }
 
     public Config Config { get; }
@@ -101,18 +109,25 @@ public class World
     public int Id { get; }
     public bool HasCompleted { get; set; }
     public bool IsLocalWorld { get; set; }
+    public IEnumerable<IHasReward> RewardRegions { get; set; }
+    public IEnumerable<IHasTreasure> TreasureRegions { get; set; }
+    public IEnumerable<IHasBoss> BossRegions { get; set; }
+    public IEnumerable<IHasPrerequisite> PrerequisiteRegions { get; set; }
     public IEnumerable<Region> Regions { get; }
     public IEnumerable<Room> Rooms { get; }
     public IEnumerable<Location> Locations { get; }
+    public IDictionary<LocationId, Location> LocationMap { get; }
+    public List<Reward> Rewards = [];
+    public List<Boss> Bosses = [];
     public IEnumerable<Item> LocationItems => Locations.Select(l => l.Item);
-    public List<Item> TrackerItems { get; } = new List<Item>();
-    public IEnumerable<Item> AllItems => TrackerItems.Concat(LocationItems);
+    public List<Item> CustomItems { get; } = [];
+    public IEnumerable<Item> AllItems => CustomItems.Concat(LocationItems);
     public ILogic Logic { get; }
-    public IEnumerable<Reward> Rewards => Regions.OfType<IHasReward>().Select(x => x.Reward);
-    public List<Boss> TrackerBosses { get; } = new List<Boss>();
-    public IEnumerable<Boss> GoldenBosses => Regions.OfType<IHasBoss>().Select(x => x.Boss);
-    public IEnumerable<Boss> AllBosses => GoldenBosses.Concat(TrackerBosses);
-    public IEnumerable<IDungeon> Dungeons => Regions.OfType<IDungeon>();
+    public List<Boss> CustomBosses { get; } = [];
+
+    public IEnumerable<Boss> GoldenBosses => Bosses.Where(x =>
+        x.Type is BossType.Kraid or BossType.Phantoon or BossType.Draygon or BossType.Ridley);
+    public IEnumerable<Boss> AllBosses => Bosses.Concat(CustomBosses);
     public CastleTower CastleTower { get; }
     public EasternPalace EasternPalace { get; }
     public DesertPalace DesertPalace { get; }
@@ -154,7 +169,7 @@ public class World
     public LowerNorfairEast LowerNorfairEast { get; }
     public WreckedShip WreckedShip { get; }
     public WorldItemPools ItemPools { get; }
-    public IEnumerable<PlayerHintTile> HintTiles { get; set; } = new List<PlayerHintTile>();
+    public IEnumerable<PlayerHintTile> HintTiles { get; set; } = [];
 
     public IEnumerable<LocationId> ActiveHintTileLocations => HintTiles
         .Where(x => x.State?.HintState == HintState.Viewed && x.Locations?.Any() == true && x.WorldId == Id)
@@ -166,6 +181,35 @@ public class World
     {
         return Locations.FirstOrDefault(x => x.Name.Equals(name, comparisonType))
                ?? Locations.FirstOrDefault(x => x.ToString().Equals(name, comparisonType));
+    }
+
+    public void CreateRewards(IMetadataService? metadata)
+    {
+        RewardType[] rewardTypes = [ RewardType.PendantGreen, RewardType.PendantRed, RewardType.PendantBlue, RewardType.CrystalRed, RewardType.CrystalRed,
+            RewardType.CrystalBlue, RewardType.CrystalBlue, RewardType.CrystalBlue, RewardType.CrystalBlue, RewardType.CrystalBlue, RewardType.Agahnim,
+            RewardType.KraidToken, RewardType.PhantoonToken, RewardType.DraygonToken, RewardType.RidleyToken ];
+
+        foreach (var rewardType in rewardTypes)
+        {
+            Rewards.Add(new Reward(rewardType, this, metadata));
+        }
+    }
+
+    public void CreateBosses(IMetadataService? metadata, TrackerState? trackerState)
+    {
+        BossType[] bossTypes =
+        [
+            BossType.Kraid, BossType.Phantoon, BossType.Draygon, BossType.Ridley, BossType.MotherBrain,
+            BossType.CastleGuard, BossType.ArmosKnights, BossType.Lanmolas, BossType.Moldorm, BossType.HelmasaurKing,
+            BossType.Arrghus, BossType.Blind, BossType.Mothula, BossType.Kholdstare, BossType.Vitreous,
+            BossType.Trinexx, BossType.Agahnim, BossType.Ganon
+        ];
+
+        foreach (var bossType in bossTypes)
+        {
+            var state = trackerState?.BossStates.FirstOrDefault(x => x.Type == bossType && x.WorldId == Id);
+            Bosses.Add(new Boss(bossType, this, metadata, state));
+        }
     }
 
     /// <summary>
@@ -181,22 +225,32 @@ public class World
     public bool CanAquire(Progression items, RewardType reward)
     {
         var dungeonWithReward = Regions.OfType<IHasReward>().FirstOrDefault(x => reward == x.RewardType);
-        return dungeonWithReward != null && dungeonWithReward.CanComplete(items);
+        return dungeonWithReward != null && dungeonWithReward.CanRetrieveReward(items);
     }
 
     public bool CanAquireAll(Progression items, params RewardType[] rewards)
     {
-        return Regions.OfType<IHasReward>().Where(x => rewards.Contains(x.RewardType)).All(x => x.CanComplete(items));
+        return Regions.OfType<IHasReward>().Where(x => rewards.Contains(x.RewardType)).All(x => x.CanRetrieveReward(items));
     }
 
     public bool CanDefeatAll(Progression items, params BossType[] bosses)
     {
-        return Regions.OfType<IHasBoss>().Where(x => bosses.Contains(x.BossType)).All(x => x.CanBeatBoss(items));
+        return BossRegions.Where(x => bosses.Contains(x.BossType)).All(x => x.CanBeatBoss(items));
     }
 
     public int CanDefeatBossCount(Progression items, params BossType[] bosses)
     {
-        return Regions.OfType<IHasBoss>().Where(x => bosses.Contains(x.BossType)).Count(x => x.CanBeatBoss(items));
+        return BossRegions.Where(x => bosses.Contains(x.BossType)).Count(x => x.CanBeatBoss(items));
+    }
+
+    public bool HasDefeated(params BossType[] bosses)
+    {
+        return Bosses.Where(x => bosses.Contains(x.Type)).All(x => x.Defeated);
+    }
+
+    public Boss GetBossOfType(BossType type)
+    {
+        return Bosses.First(x => x.Type == type);
     }
 
     public void Setup(Random rnd)
@@ -210,9 +264,9 @@ public class World
 
     private void SetMedallions(Random rnd)
     {
-        foreach (var region in Regions.OfType<INeedsMedallion>())
+        foreach (var region in Regions.OfType<IHasPrerequisite>())
         {
-            region.Medallion = rnd.Next(3) switch
+            region.RequiredItem = rnd.Next(3) switch
             {
                 0 => ItemType.Bombos,
                 1 => ItemType.Ether,
@@ -223,13 +277,11 @@ public class World
 
     private void SetRewards(Random rnd)
     {
-        var rewards = new[] {
-            RewardType.PendantGreen, RewardType.PendantRed, RewardType.PendantBlue, RewardType.CrystalRed, RewardType.CrystalRed,
-            RewardType.CrystalBlue, RewardType.CrystalBlue, RewardType.CrystalBlue, RewardType.CrystalBlue, RewardType.CrystalBlue }.Shuffle(rnd);
-        foreach (var region in Regions.OfType<IHasReward>().Where(x => x.RewardType == RewardType.None))
+        var rewards = Rewards.Where(x => x.Type.IsInCategory(RewardCategory.Zelda) && !x.Type.IsInCategory(RewardCategory.NonRandomized)).Shuffle(rnd);
+        foreach (var region in RewardRegions.Where(x => x.IsShuffledReward))
         {
-            region.Reward = new Reward(rewards.First(), this, region);
-            rewards.Remove(region.RewardType);
+            region.SetReward(rewards.First());
+            rewards.Remove(region.Reward);
         }
     }
 
@@ -251,5 +303,17 @@ public class World
             var newType = bottleTypes.Random(rnd);
             bottleItem.UpdateItemType(newType);
         }
+    }
+
+    public int CountReceivedReward(Progression items, RewardType reward)
+    {
+        return CountReceivedRewards(items, [reward]);
+    }
+
+    public int CountReceivedRewards(Progression items, IList<RewardType> rewards)
+    {
+        return RewardRegions
+            .Where(x => rewards.Contains(x.MarkedReward))
+            .Count(x => x.HasReceivedReward);
     }
 }

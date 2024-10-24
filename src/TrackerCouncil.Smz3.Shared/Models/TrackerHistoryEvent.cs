@@ -12,7 +12,9 @@ public class TrackerHistoryEvent
     public TrackerState? TrackerState { get; set; }
     public HistoryEventType Type { get; set; }
     public LocationId? LocationId { get; set; }
+    [MaxLength(50)]
     public string? LocationName { get; set; }
+    [MaxLength(50)]
     public string ObjectName { get; set; } = string.Empty;
     public bool IsImportant { get; set; }
     public bool IsUndone { get; set; }

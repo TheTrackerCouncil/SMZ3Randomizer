@@ -4,6 +4,8 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData;
+using TrackerCouncil.Smz3.Data.WorldData.Regions;
+using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Multiplayer;
 
 namespace TrackerCouncil.Smz3.Data.GeneratedData;
@@ -31,12 +33,11 @@ public class WorldGenerationData
 
     public MultiplayerPlayerGenerationData GetPlayerGenerationData()
     {
-        var locationItems = World.Locations
-            .Select(x => new PlayerGenerationLocationData(x.Id, x.Item.World.Id, x.Item.Type)).ToList();
-        var dungeonData = World.Dungeons
-            .Select(x => new PlayerGenerationDungeonData(x.DungeonName, x.DungeonRewardType, x.Medallion)).ToList();
-        return new MultiplayerPlayerGenerationData(World.Guid, World.Id, locationItems, dungeonData, World.HintTiles.ToList());
+        var locations = World.Locations.Select(x => new PlayerGenerationLocationData(x.Id, x.Item.World.Id, x.Item.Type)).ToList();
+        var bosses = World.BossRegions.ToDictionary(x => x.GetType().Name, x => x.BossType);
+        var rewards = World.RewardRegions.ToDictionary(x => x.GetType().Name, x => x.RewardType);
+        var prerequisites = World.PrerequisiteRegions.ToDictionary(x => x.GetType().Name, x => x.RequiredItem);
+        return new MultiplayerPlayerGenerationData(World.Guid, World.Id, locations, bosses, rewards, prerequisites, World.HintTiles.ToList());
     }
-
 
 }

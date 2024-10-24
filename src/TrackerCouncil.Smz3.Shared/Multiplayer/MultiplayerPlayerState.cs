@@ -30,15 +30,13 @@ public class MultiplayerPlayerState
     public ICollection<MultiplayerLocationState>? Locations { get; set; }
     public ICollection<MultiplayerItemState>? Items { get; set; }
     public ICollection<MultiplayerBossState>? Bosses { get; set; }
-    public ICollection<MultiplayerDungeonState>? Dungeons { get; set; }
+
     public string? AdditionalData { get; set; }
     [JsonIgnore] public string? GenerationData { get; set; }
 
     public MultiplayerLocationState? GetLocation(LocationId id) => Locations?.FirstOrDefault(x => x.LocationId == id);
     public MultiplayerItemState? GetItem(ItemType type) => Items?.FirstOrDefault(x => x.Item == type);
     public MultiplayerBossState? GetBoss(BossType type) => Bosses?.FirstOrDefault(x => x.Boss == type);
-    public MultiplayerDungeonState? GetDungeon(string name) => Dungeons?.FirstOrDefault(x => x.Dungeon == name);
-
 
     /// <summary>
     /// Marks a location as accessed
@@ -86,26 +84,10 @@ public class MultiplayerPlayerState
         return boss;
     }
 
-    /// <summary>
-    /// Marks a dungeon as completed
-    /// </summary>
-    /// <param name="name"></param>
-    public MultiplayerDungeonState? TrackDungeon(string name)
-    {
-        var dungeon = GetDungeon(name);
-        if (dungeon != null)
-        {
-            dungeon.Tracked = true;
-            dungeon.TrackedTime = DateTimeOffset.Now;
-        }
-        return dungeon;
-    }
-
     public PlayerWorldUpdates SyncPlayerWorld(MultiplayerWorldState world)
     {
         if (Locations == null) Locations = new List<MultiplayerLocationState>();
         if (Items == null) Items = new List<MultiplayerItemState>();
-        if (Dungeons == null) Dungeons = new List<MultiplayerDungeonState>();
         if (Bosses == null) Bosses = new List<MultiplayerBossState>();
         var worldUpdate = new PlayerWorldUpdates();
 
@@ -162,34 +144,6 @@ public class MultiplayerPlayerState
                 };
                 Items!.Add(dbData);
                 worldUpdate.Items.Add(dbData);
-            }
-        }
-
-        // Sync dungeons
-        foreach (var playerData in world.Dungeons)
-        {
-            var dbData = Dungeons!.FirstOrDefault(x => x.Dungeon == playerData.Key);
-            if (dbData != null)
-            {
-                if (playerData.Value && !dbData.Tracked)
-                {
-                    dbData.Tracked = playerData.Value;
-                    dbData.TrackedTime = DateTimeOffset.Now;
-                    worldUpdate.Dungeons.Add(dbData);
-                }
-            }
-            else
-            {
-                dbData = new MultiplayerDungeonState()
-                {
-                    GameId = GameId,
-                    PlayerId = Id,
-                    Dungeon = playerData.Key,
-                    Tracked = playerData.Value,
-                    TrackedTime = playerData.Value ? DateTimeOffset.Now : null
-                };
-                Dungeons!.Add(dbData);
-                worldUpdate.Dungeons.Add(dbData);
             }
         }
 

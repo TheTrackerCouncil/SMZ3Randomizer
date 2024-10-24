@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
@@ -9,14 +10,11 @@ using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda;
 
-public class IcePalace : Z3Region, IHasReward, IDungeon
+public class IcePalace : Z3Region, IHasReward, IHasTreasure, IHasBoss
 {
-    public static readonly int[] MusicAddresses = new[] {
-        0x02D5BF
-    };
     public IcePalace(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
-        RegionItems = new[] { ItemType.KeyIP, ItemType.BigKeyIP, ItemType.MapIP, ItemType.CompassIP };
+        RegionItems = [ItemType.KeyIP, ItemType.BigKeyIP, ItemType.MapIP, ItemType.CompassIP];
 
         CompassChest = new Location(this, LocationId.IcePalaceCompassChest, 0x1E9D4, LocationType.Regular,
             name: "Compass Chest",
@@ -99,27 +97,34 @@ public class IcePalace : Z3Region, IHasReward, IDungeon
         MemoryFlag = 0xB;
         StartingRooms = new List<int> { 14 };
         Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Ice Palace");
-        DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Ice Palace", "Kholdstare");
-        DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
-        Reward = new Reward(DungeonState.Reward ?? RewardType.None, world, this, metadata, DungeonState);
         MapName = "Dark World";
+
+        ((IHasReward)this).ApplyState(trackerState);
+        ((IHasTreasure)this).ApplyState(trackerState);
+        ((IHasBoss)this).ApplyState(trackerState);
     }
 
     public override string Name => "Ice Palace";
 
     public RewardType DefaultRewardType => RewardType.CrystalRed;
 
-    public int SongIndex { get; init; } = 7;
-    public string Abbreviation => "IP";
+    public BossType DefaultBossType => BossType.Kholdstare;
+
+    public bool IsShuffledReward => true;
+
     public LocationId? BossLocationId => LocationId.IcePalaceKholdstare;
 
-    public Reward Reward { get; set; }
+    public Reward Reward { get; set; } = null!;
 
-    public DungeonInfo DungeonMetadata { get; set; }
+    public TrackerTreasureState TreasureState { get; set; } = null!;
 
-    public TrackerDungeonState DungeonState { get; set; }
+    public event EventHandler? UpdatedTreasure;
 
-    public Region ParentRegion => World.DarkWorldSouth;
+    public void OnUpdatedTreasure() => UpdatedTreasure?.Invoke(this, EventArgs.Empty);
+
+    public TrackerRewardState RewardState { get; set; } = null!;
+
+    public Boss Boss { get; set; } = null!;
 
     public Location CompassChest { get; }
 
@@ -142,10 +147,11 @@ public class IcePalace : Z3Region, IHasReward, IDungeon
         return items.MoonPearl && items.Flippers && Logic.CanLiftHeavy(items) && Logic.CanMeltFreezors(items);
     }
 
-    public bool CanComplete(Progression items)
-    {
-        return KholdstareReward.IsAvailable(items);
-    }
+    public bool CanBeatBoss(Progression items) => KholdstareReward.IsAvailable(items);
+
+    public bool CanRetrieveReward(Progression items) => KholdstareReward.IsAvailable(items);
+
+    public bool CanSeeReward(Progression items) => !World.Config.ZeldaKeysanity || items.Contains(ItemType.MapIP);
 
     private bool CanNotWasteKeysBeforeAccessible(Progression items, params Location[] locations)
     {

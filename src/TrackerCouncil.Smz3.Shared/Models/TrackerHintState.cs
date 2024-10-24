@@ -12,11 +12,14 @@ public class TrackerHintState
     public TrackerState? TrackerState { get; set; }
     public HintTileType Type { get; set; }
     public int WorldId { get; set; }
+    [MaxLength(50)]
     public string LocationKey { get; set; } = string.Empty;
     public int? LocationWorldId { get; set; }
+    [MaxLength(50)]
     public string? LocationString { get; set; }
     public LocationUsefulness? Usefulness { get; set; }
     public ItemType? MedallionType { get; set; }
+    [MaxLength(50)]
     public string HintTileCode { get; set; } = string.Empty;
     public HintState HintState { get; set; }
 

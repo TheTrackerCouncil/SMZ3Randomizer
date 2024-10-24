@@ -11,4 +11,8 @@ public class RandomizerVersion
     public static string VersionString => Version.ToString();
 
     public static int MajorVersion => Version.Major;
+
+    public static Version PreReplaceDungeonStateVersion => new Version(6, 0);
+
+    public static bool IsVersionPreReplaceDungeonState(int version) => version <= PreReplaceDungeonStateVersion.Major;
 }

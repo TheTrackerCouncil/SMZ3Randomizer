@@ -22,12 +22,12 @@ public class MapModule : TrackerModule
     /// Constructor
     /// </summary>
     /// <param name="tracker"></param>
-    /// <param name="itemService">Service to get item information</param>
-    /// <param name="worldService">Service to get world information</param>
+    /// <param name="playerProgressionService">Service to get item information</param>
+    /// <param name="worldQueryService">Service to get world information</param>
     /// <param name="logger"></param>
     /// <param name="config"></param>
-    public MapModule(TrackerBase tracker, IItemService itemService, ILogger<MapModule> logger, IWorldService worldService, TrackerMapConfig config)
-        : base(tracker, itemService, worldService, logger)
+    public MapModule(TrackerBase tracker, IPlayerProgressionService playerProgressionService, ILogger<MapModule> logger, IWorldQueryService worldQueryService, TrackerMapConfig config)
+        : base(tracker, playerProgressionService, worldQueryService, logger)
     {
         _logger = logger;
         _config = config;
@@ -91,7 +91,7 @@ public class MapModule : TrackerModule
         AddCommand("Update map", GetChangeMapRule(), (result) =>
         {
             var mapName = (string)result.Semantics[MapKey].Value;
-            TrackerBase.UpdateMap(mapName);
+            TrackerBase.GameStateTracker.UpdateMap(mapName);
             TrackerBase.Say(x => x.Map.UpdateMap, args: [mapName]);
         });
 
@@ -110,18 +110,18 @@ public class MapModule : TrackerModule
 
             if (map != null)
             {
-                if (ItemService.IsTracked(ItemType.Lamp))
+                if (PlayerProgressionService.IsTracked(ItemType.Lamp))
                 {
                     TrackerBase.Say(x => x.Map.HasLamp);
                     return;
                 }
 
-                _prevMap = TrackerBase.CurrentMap;
+                _prevMap = TrackerBase.GameStateTracker.CurrentMap;
                 if (string.IsNullOrEmpty(_prevMap))
                 {
                     _prevMap = _config.Maps.Last().ToString();
                 }
-                TrackerBase.UpdateMap(map.ToString());
+                TrackerBase.GameStateTracker.UpdateMap(map.ToString());
                 TrackerBase.Say(x => x.Map.ShowDarkRoomMap, args: [map.Name]);
             }
             else
@@ -138,7 +138,7 @@ public class MapModule : TrackerModule
             }
             else
             {
-                TrackerBase.UpdateMap(_prevMap);
+                TrackerBase.GameStateTracker.UpdateMap(_prevMap);
                 TrackerBase.Say(x => x.Map.HideDarkRoomMap, args: [_prevMap]);
                 _prevMap = "";
             }

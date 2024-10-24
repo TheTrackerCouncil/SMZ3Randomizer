@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Data.GeneratedData;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
@@ -11,15 +12,13 @@ namespace TrackerCouncil.Smz3.Multiplayer.Client.GameServices;
 /// <summary>
 /// Service for handling multiworld games
 /// </summary>
-public class MultiworldGameService : MultiplayerGameTypeService
+public class MultiworldGameService(
+    Smz3Randomizer randomizer,
+    Smz3MultiplayerRomGenerator multiplayerRomGenerator,
+    MultiplayerClientService client,
+    ILogger<MultiplayerGameTypeService> logger)
+    : MultiplayerGameTypeService(randomizer, multiplayerRomGenerator, client, logger)
 {
-    private ITrackerStateService _trackerStateService;
-
-    public MultiworldGameService(Smz3Randomizer randomizer, Smz3MultiplayerRomGenerator multiplayerRomGenerator,  MultiplayerClientService client, ITrackerStateService trackerStateService, ILogger<MultiplayerGameTypeService> logger) : base(randomizer, multiplayerRomGenerator, client, logger)
-    {
-        _trackerStateService = trackerStateService;
-    }
-
     /// <summary>
     /// Generates a multiworld seed
     /// </summary>
@@ -43,6 +42,8 @@ public class MultiworldGameService : MultiplayerGameTypeService
             player.Config = Config.ToConfigString(config);
             generationConfigs.Add(config);
         }
+
+        Logger.LogDebug("{Json}", JsonSerializer.Serialize(generationConfigs));
 
         return GenerateSeedInternal(generationConfigs, seed, out error);
     }
@@ -71,6 +72,8 @@ public class MultiworldGameService : MultiplayerGameTypeService
             config.MultiplayerPlayerGenerationData = playerGenerationData.Single(x => x.WorldId == config.Id);
             generationConfigs.Add(config);
         }
+
+        Logger.LogDebug("{Json}", JsonSerializer.Serialize(generationConfigs));
 
         return RegenerateSeedInternal(generationConfigs, seed, out error);
     }

@@ -17,7 +17,7 @@ public class MultiplayerSync(
     ISnesConnectorService snesConnector,
     ILogger<MultiplayerSync> logger,
     IGameService gameService,
-    IWorldService worldService) : AutoTrackerModule(tracker, snesConnector, logger)
+    IWorldQueryService worldQueryService) : AutoTrackerModule(tracker, snesConnector, logger)
 {
     public override void Initialize()
     {
@@ -75,9 +75,9 @@ public class MultiplayerSync(
             previouslyGiftedItems.Add((item, playerId));
         }
 
-        var otherCollectedItems = worldService.Worlds.SelectMany(x => x.Locations)
+        var otherCollectedItems = worldQueryService.Worlds.SelectMany(x => x.Locations)
             .Where(x => x.State.ItemWorldId == Tracker.World.Id && x.State.WorldId != Tracker.World.Id &&
-                        x.State.Autotracked && (!x.World.HasCompleted || !x.Item.Type.IsInCategory(ItemCategory.IgnoreOnMultiplayerCompletion)))
+                        x.Autotracked && (!x.World.HasCompleted || !x.Item.Type.IsInCategory(ItemCategory.IgnoreOnMultiplayerCompletion)))
             .Select(x => (x.State.Item, x.State.WorldId)).ToList();
 
         foreach (var item in previouslyGiftedItems)

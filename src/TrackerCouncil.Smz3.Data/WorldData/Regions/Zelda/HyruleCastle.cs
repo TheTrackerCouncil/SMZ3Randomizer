@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
@@ -9,13 +10,13 @@ using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda;
 
-public class HyruleCastle : Z3Region, IDungeon
+public class HyruleCastle : Z3Region, IHasTreasure, IHasBoss
 {
     public const int SphereOne = -10;
 
     public HyruleCastle(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
-        RegionItems = new[] { ItemType.KeyHC, ItemType.MapHC };
+        RegionItems = [ItemType.KeyHC, ItemType.MapHC];
 
         Sanctuary = new Location(this, LocationId.Sanctuary, 0x1EA79, LocationType.Regular,
                 name: "Sanctuary",
@@ -80,20 +81,27 @@ public class HyruleCastle : Z3Region, IDungeon
 
         StartingRooms = new List<int> { 96, 97, 98 };
         Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Hyrule Castle");
-        DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Hyrule Castle",  "Ball and Chain Soldier");
-        DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
         MapName = "Light World";
+
+        ((IHasTreasure)this).ApplyState(trackerState);
+        ((IHasBoss)this).ApplyState(trackerState);
     }
 
     public override string Name => "Hyrule Castle";
 
-    public int SongIndex { get; init; } = 0;
-    public string Abbreviation => "HC";
+    public BossType DefaultBossType => BossType.CastleGuard;
+
     public LocationId? BossLocationId => null;
 
-    public DungeonInfo DungeonMetadata { get; set; }
+    public TrackerTreasureState TreasureState { get; set; } = null!;
 
-    public TrackerDungeonState DungeonState { get; set; }
+    public event EventHandler? UpdatedTreasure;
+
+    public void OnUpdatedTreasure() => UpdatedTreasure?.Invoke(this, EventArgs.Empty);
+
+    public Boss Boss { get; set; } = null!;
+
+    public bool CanBeatBoss(Progression items) => ZeldasCell.IsAvailable(items);
 
     public Location Sanctuary { get; }
 
@@ -108,8 +116,6 @@ public class HyruleCastle : Z3Region, IDungeon
     public Location SecretPassage { get; }
 
     public BackOfEscapeRoom BackOfEscape { get; }
-
-    public Region ParentRegion => World.LightWorldNorthEast;
 
     public class BackOfEscapeRoom : Room
     {

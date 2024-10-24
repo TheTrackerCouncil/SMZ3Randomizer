@@ -1,68 +1,72 @@
 using System.Collections.Generic;
 using System.Linq;
+using Avalonia.Threading;
 using AvaloniaControls.ControlServices;
+using AvaloniaControls.Services;
+using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Abstractions;
+using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Tracking.Services;
 using TrackerCouncil.Smz3.UI.ViewModels;
 
 namespace TrackerCouncil.Smz3.UI.Services;
 
-public class TrackerLocationsWindowService(TrackerBase trackerBase, IWorldService worldService, IUIService uiService, IItemService itemService) : ControlService
+public class TrackerLocationsWindowService(TrackerBase trackerBase, IWorldQueryService worldQueryService, IUIService uiService) : ControlService
 {
-    private TrackerLocationsViewModel _model = new();
+    private readonly TrackerLocationsViewModel _model = new();
+    private RegionViewModel? _lastRegion;
+    private List<RegionViewModel> _allRegions = [];
 
     public TrackerLocationsViewModel GetViewModel()
     {
-        UpdateModel();
+        InitMarkedLocations();
+        InitHintTiles();
+        InitRegions();
 
-        trackerBase.MarkedLocationsUpdated += (_, _) => UpdateModel();
-        trackerBase.LocationCleared += (_, _) => UpdateModel();
-        trackerBase.DungeonUpdated += (_, _) => UpdateModel();
-        trackerBase.ItemTracked += (_, _) => UpdateModel();
-        trackerBase.ActionUndone += (_, _) => UpdateModel();
-        trackerBase.StateLoaded += (_, _) => UpdateModel();
-        trackerBase.BossUpdated += (_, _) => UpdateModel();
-        trackerBase.HintTileUpdated += (_, _) => UpdateModel();
+        trackerBase.LocationTracker.LocationMarked += (_, args) =>
+        {
+            AddUpdateMarkedLocation(args.Location);
+        };
+
+        _model.FinishedLoading = true;
 
         return _model;
     }
 
-    public void UpdateModel()
+    public void UpdateShowOutOfLogic(bool showOutOfLogic)
     {
-        var markedLocations = new List<MarkedLocationViewModel>();
-
-        var progressionWithoutKeys = itemService.GetProgression(false);
-        var progressionWithKeys = itemService.GetProgression(true);
-
-        foreach (var markedLocation in worldService.MarkedLocations())
+        // Because the map update is snappy while this is slow, run this in a separate
+        // thread to avoid locking up the map
+        ITaskService.Run(() =>
         {
-            var markedItemType = markedLocation.State.MarkedItem ?? ItemType.Nothing;
-            if (markedItemType == ItemType.Nothing) continue;
-            var item = itemService.FirstOrDefault(markedItemType);
-            if (item == null) continue;
-            markedLocations.Add(new MarkedLocationViewModel(markedLocation, item, uiService.GetSpritePath(item),
-                markedLocation.IsAvailable(progressionWithoutKeys)));
+            _model.ShowOutOfLogic = showOutOfLogic;
+
+            foreach (var region in _allRegions)
+            {
+                foreach (var location in region.Locations)
+                {
+                    location.ShowOutOfLogic = showOutOfLogic;
+                }
+
+                region.ShowOutOfLogic = showOutOfLogic;
+                region.UpdateLocationCount();
+                region.SortLocations();
+            }
+
+            ShowSortedRegions();
+        });
+
+    }
+
+    public void UpdateFilter(RegionFilter filter)
+    {
+        _model.Filter = filter;
+
+        foreach (var region in _allRegions)
+        {
+            region.MatchesFilter = region.Region?.MatchesFilter(filter) == true;
         }
-
-        _model.MarkedLocations = markedLocations;
-
-        _model.HintTiles = worldService.ViewedHintTiles
-            .Where(x => x.Locations?.Count() > 1)
-            .Select(x => new HintTileViewModel(x))
-            .ToList();
-
-        var locations = worldService.Locations(unclearedOnly: true, outOfLogic: _model.ShowOutOfLogic, assumeKeys: true,
-            sortByTopRegion: true, regionFilter: _model.Filter).ToList();
-
-        _model.Regions = locations.Select(x => x.Region).Distinct().Select(region => new RegionViewModel()
-        {
-            RegionName = region.ToString(),
-            Locations = locations.Where(loc => loc.Region == region)
-                .Select(loc => new LocationViewModel(loc, loc.IsAvailable(progressionWithoutKeys),
-                    loc.IsAvailable(progressionWithKeys)))
-                .ToList()
-        }).ToList();
     }
 
     public void ClearLocation(LocationViewModel model)
@@ -71,6 +75,96 @@ public class TrackerLocationsWindowService(TrackerBase trackerBase, IWorldServic
         {
             return;
         }
-        trackerBase.Clear(model.Location);
+        trackerBase.LocationTracker.Clear(model.Location);
+    }
+
+    private void InitMarkedLocations()
+    {
+        foreach (var markedLocation in worldQueryService.MarkedLocations())
+        {
+            AddUpdateMarkedLocation(markedLocation);
+        }
+    }
+
+    private void AddUpdateMarkedLocation(Location location)
+    {
+        if (location.MarkedItem == null)
+        {
+            var previousModel = _model.MarkedLocations.FirstOrDefault(x => x.Location == location);
+            if (previousModel != null)
+            {
+                location.AccessibilityUpdated -= previousModel.LocationOnAccessibilityUpdated;
+                _model.MarkedLocations.Remove(previousModel);
+            }
+        }
+        else
+        {
+            if (location.MarkedItem == ItemType.Nothing) return;
+            var item = worldQueryService.FirstOrDefault(location.MarkedItem.Value);
+            if (item == null) return;
+
+            var previousModel = _model.MarkedLocations.FirstOrDefault(x => x.Location == location);
+            if (previousModel != null)
+            {
+                location.AccessibilityUpdated -= previousModel.LocationOnAccessibilityUpdated;
+                _model.MarkedLocations.Remove(previousModel);
+            }
+
+            var newModel = new MarkedLocationViewModel(location, item, uiService.GetSpritePath(item));
+            location.AccessibilityUpdated += newModel.LocationOnAccessibilityUpdated;
+            _model.MarkedLocations.Add(newModel);
+        }
+    }
+
+    private void InitHintTiles()
+    {
+        var world = worldQueryService.World;
+        var hintTiles = new List<HintTileViewModel>();
+
+        foreach (var worldHintTile in world.HintTiles.Where(x => x.Locations?.Count() > 1))
+        {
+            var locationIds = worldHintTile.Locations!.ToHashSet();
+            var locations = world.Locations.Where(x => locationIds.Contains(x.Id));
+            hintTiles.Add(new HintTileViewModel(worldHintTile, locations));
+        }
+
+        _model.HintTiles = hintTiles;
+    }
+
+    private void InitRegions()
+    {
+        var regions = worldQueryService.World.Regions;
+        var regionModels = new List<RegionViewModel>();
+
+        foreach (var region in regions)
+        {
+            var regionModel = new RegionViewModel(region);
+            regionModels.Add(regionModel);
+            regionModel.RegionUpdated += (_, _) =>
+            {
+                if (_lastRegion == regionModel) return;
+
+                regionModel.SortOrder = 1;
+                if (_lastRegion != null)
+                {
+                    _lastRegion.SortOrder = 0;
+                }
+
+                _lastRegion = regionModel;
+                ShowSortedRegions();
+            };
+        }
+
+        _allRegions = regionModels;
+        ShowSortedRegions();
+        _lastRegion = _model.Regions.First();
+        _lastRegion.SortOrder = 1;
+    }
+
+    private void ShowSortedRegions()
+    {
+        _model.Regions = _allRegions.Where(x => x.VisibleLocations > 0).OrderByDescending(x => x.SortOrder)
+            .ThenByDescending(x => x.InLogicLocationCount)
+            .ToList();
     }
 }

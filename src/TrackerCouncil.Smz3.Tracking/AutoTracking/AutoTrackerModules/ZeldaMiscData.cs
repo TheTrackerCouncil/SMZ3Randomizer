@@ -13,13 +13,13 @@ using TrackerCouncil.Smz3.Tracking.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.AutoTracking.AutoTrackerModules;
 
-public class ZeldaMiscData(TrackerBase tracker, ISnesConnectorService snesConnector, ILogger<ZeldaMiscData> logger, IWorldService worldService, IItemService itemService) : AutoTrackerModule(tracker, snesConnector, logger)
+public class ZeldaMiscData(TrackerBase tracker, ISnesConnectorService snesConnector, ILogger<ZeldaMiscData> logger, IWorldQueryService worldQueryService) : AutoTrackerModule(tracker, snesConnector, logger)
 {
     private List<Location> _locations = new();
 
     public override void Initialize()
     {
-        _locations = worldService.AllLocations().Where(x =>
+        _locations = worldQueryService.AllLocations().Where(x =>
             x.MemoryType == LocationMemoryType.ZeldaMisc && (int)x.Id >= 256).ToList();
 
         SnesConnector.AddRecurringMemoryRequest(new SnesRecurringMemoryRequest()
@@ -60,10 +60,10 @@ public class ZeldaMiscData(TrackerBase tracker, ISnesConnectorService snesConnec
         // Activated flute
         if (data.CheckUInt8Flag(0x10C, 0x01) && !prevData.CheckUInt8Flag(0x10C, 0x01))
         {
-            var duckItem = itemService.FirstOrDefault("Duck");
-            if (duckItem?.State.TrackingState == 0)
+            var duckItem = worldQueryService.FirstOrDefault("Duck");
+            if (duckItem?.TrackingState == 0)
             {
-                Tracker.TrackItem(duckItem, null, null, false, true);
+                Tracker.ItemTracker.TrackItem(duckItem, null, null, false, true);
             }
         }
 
@@ -71,9 +71,9 @@ public class ZeldaMiscData(TrackerBase tracker, ISnesConnectorService snesConnec
         if (data.ReadUInt8(0x145) >= 3)
         {
             var castleTower = Tracker.World.CastleTower;
-            if (castleTower.DungeonState.Cleared == false)
+            if (castleTower.Boss.State.Defeated)
             {
-                Tracker.MarkDungeonAsCleared(castleTower, null, autoTracked: true);
+                Tracker.BossTracker.MarkBossAsDefeated(castleTower, null, autoTracked: true);
                 Logger.LogInformation("Auto tracked {Name} as cleared", castleTower.Name);
             }
         }
@@ -89,7 +89,7 @@ public class ZeldaMiscData(TrackerBase tracker, ISnesConnectorService snesConnec
                 var flag = location.MemoryFlag ?? 0;
                 var currentCleared = data.CheckUInt8Flag(loc, flag);
                 var prevCleared = prevData.CheckUInt8Flag(loc, flag);
-                if (location.State.Autotracked == false && currentCleared && prevCleared)
+                if (location.Autotracked == false && currentCleared && prevCleared)
                 {
                     TrackLocation(location);
                 }

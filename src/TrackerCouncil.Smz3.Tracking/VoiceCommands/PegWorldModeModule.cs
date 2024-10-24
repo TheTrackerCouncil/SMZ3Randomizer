@@ -17,11 +17,11 @@ public class PegWorldModeModule : TrackerModule, IOptionalModule
     /// class.
     /// </summary>
     /// <param name="tracker">The tracker instance.</param>
-    /// <param name="itemService">Service to get item information</param>
-    /// <param name="worldService">Service to get world information</param>
+    /// <param name="playerProgressionService">Service to get item information</param>
+    /// <param name="worldQueryService">Service to get world information</param>
     /// <param name="logger">Used to log information.</param>
-    public PegWorldModeModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<PegWorldModeModule> logger)
-        : base(tracker, itemService, worldService, logger)
+    public PegWorldModeModule(TrackerBase tracker, IPlayerProgressionService playerProgressionService, IWorldQueryService worldQueryService, ILogger<PegWorldModeModule> logger)
+        : base(tracker, playerProgressionService, worldQueryService, logger)
     {
 
     }
@@ -35,7 +35,7 @@ public class PegWorldModeModule : TrackerModule, IOptionalModule
             "Hey tracker, let's go to Peg World!"
         }, (result) =>
         {
-            TrackerBase.StartPegWorldMode(result.Confidence);
+            TrackerBase.ModeTracker.StartPegWorldMode(result.Confidence);
         });
 
         AddCommand("Toggle Peg World mode off", new[] {
@@ -46,7 +46,7 @@ public class PegWorldModeModule : TrackerModule, IOptionalModule
             "Hey tracker, release me from Peg World"
         }, (result) =>
         {
-            TrackerBase.StopPegWorldMode(result.Confidence);
+            TrackerBase.ModeTracker.StopPegWorldMode(result.Confidence);
         });
 
         AddCommand("Track Peg World peg", new[] {
@@ -54,9 +54,9 @@ public class PegWorldModeModule : TrackerModule, IOptionalModule
             "Hey tracker, peg."
         }, (result) =>
         {
-            if (TrackerBase.PegsPegged < TotalPegs)
+            if (TrackerBase.ModeTracker.PegsPegged < TotalPegs)
             {
-                TrackerBase.Peg(result.Confidence);
+                TrackerBase.ModeTracker.Peg(result.Confidence);
             }
         });
     }

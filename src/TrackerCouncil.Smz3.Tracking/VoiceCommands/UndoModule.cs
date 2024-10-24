@@ -14,11 +14,11 @@ public class UndoModule : TrackerModule
     /// Initializes a new instance of the <see cref="UndoModule"/> class.
     /// </summary>
     /// <param name="tracker">The tracker instance.</param>
-    /// <param name="itemService">Service to get item information</param>
-    /// <param name="worldService">Service to get world information</param>
+    /// <param name="playerProgressionService">Service to get item information</param>
+    /// <param name="worldQueryService">Service to get world information</param>
     /// <param name="logger">Used to log information.</param>
-    public UndoModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<UndoModule> logger)
-        : base(tracker, itemService, worldService, logger)
+    public UndoModule(TrackerBase tracker, IPlayerProgressionService playerProgressionService, IWorldQueryService worldQueryService, ILogger<UndoModule> logger)
+        : base(tracker, playerProgressionService, worldQueryService, logger)
     {
 
     }

@@ -93,11 +93,18 @@ public class GameDbService(RandomizerContext context, OptionsFactory optionsFact
         {
             context.Entry(rom.TrackerState).Collection(x => x.ItemStates).Load();
             context.Entry(rom.TrackerState).Collection(x => x.LocationStates).Load();
+            context.Entry(rom.TrackerState).Collection(x => x.BossStates).Load();
+            context.Entry(rom.TrackerState).Collection(x => x.RewardStates).Load();
+            context.Entry(rom.TrackerState).Collection(x => x.PrerequisiteStates).Load();
+            context.Entry(rom.TrackerState).Collection(x => x.TreasureStates).Load();
+            context.Entry(rom.TrackerState).Collection(x => x.Hints).Load();
+            context.Entry(rom.TrackerState).Collection(x => x.History).Load();
+
+#pragma warning disable CS0618 // Type or member is obsolete
             context.Entry(rom.TrackerState).Collection(x => x.RegionStates).Load();
             context.Entry(rom.TrackerState).Collection(x => x.DungeonStates).Load();
             context.Entry(rom.TrackerState).Collection(x => x.MarkedLocations).Load();
-            context.Entry(rom.TrackerState).Collection(x => x.BossStates).Load();
-            context.Entry(rom.TrackerState).Collection(x => x.History).Load();
+#pragma warning restore CS0618 // Type or member is obsolete
 
             context.TrackerStates.Remove(rom.TrackerState);
         }

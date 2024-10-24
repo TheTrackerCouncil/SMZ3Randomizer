@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
@@ -9,15 +10,11 @@ using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda;
 
-public class ThievesTown : Z3Region, IHasReward, IDungeon
+public class ThievesTown : Z3Region, IHasReward, IHasTreasure, IHasBoss
 {
-    public static readonly int[] MusicAddresses = new[] {
-        0x02D5C6
-    };
-
     public ThievesTown(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
-        RegionItems = new[] { ItemType.KeyTT, ItemType.BigKeyTT, ItemType.MapTT, ItemType.CompassTT };
+        RegionItems = [ItemType.KeyTT, ItemType.BigKeyTT, ItemType.MapTT, ItemType.CompassTT];
 
         MapChest = new Location(this, LocationId.ThievesTownMapChest, 0x1EA01, LocationType.Regular,
             name: "Map Chest",
@@ -82,7 +79,7 @@ public class ThievesTown : Z3Region, IHasReward, IDungeon
         BlindReward = new Location(this, LocationId.ThievesTownBlind, 0x308156, LocationType.Regular,
             name: "Blind",
             vanillaItem: ItemType.HeartContainer,
-            access: items => items.BigKeyTT && items.KeyTT && CanBeatBoss(items),
+            access: items => items.BigKeyTT && items.KeyTT && CanBeatBlind(items),
             memoryAddress: 0xAC,
             memoryFlag: 0xB,
             metadata: metadata,
@@ -92,27 +89,34 @@ public class ThievesTown : Z3Region, IHasReward, IDungeon
         MemoryFlag = 0xB;
         StartingRooms = new List<int> { 219 };
         Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Thieves' Town");
-        DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Thieves' Town", "Blind");
-        DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
-        Reward = new Reward(DungeonState.Reward ?? RewardType.None, world, this, metadata, DungeonState);
         MapName = "Dark World";
+
+        ((IHasReward)this).ApplyState(trackerState);
+        ((IHasTreasure)this).ApplyState(trackerState);
+        ((IHasBoss)this).ApplyState(trackerState);
     }
 
     public override string Name => "Thieves' Town";
 
     public RewardType DefaultRewardType => RewardType.CrystalBlue;
 
-    public int SongIndex { get; init; } = 9;
-    public string Abbreviation => "TT";
+    public BossType DefaultBossType => BossType.Blind;
+
+    public bool IsShuffledReward => true;
+
     public LocationId? BossLocationId => LocationId.ThievesTownBlind;
 
-    public Reward Reward { get; set; }
+    public Reward Reward { get; set; } = null!;
 
-    public DungeonInfo DungeonMetadata { get; set; }
+    public TrackerTreasureState TreasureState { get; set; } = null!;
 
-    public TrackerDungeonState DungeonState { get; set; }
+    public event EventHandler? UpdatedTreasure;
 
-    public Region ParentRegion => World.DarkWorldNorthWest;
+    public void OnUpdatedTreasure() => UpdatedTreasure?.Invoke(this, EventArgs.Empty);
+
+    public TrackerRewardState RewardState { get; set; } = null!;
+
+    public Boss Boss { get; set; } = null!;
 
     public Location MapChest { get; }
 
@@ -135,12 +139,13 @@ public class ThievesTown : Z3Region, IHasReward, IDungeon
         return items.MoonPearl && World.DarkWorldNorthWest.CanEnter(items, requireRewards);
     }
 
-    public bool CanComplete(Progression items)
-    {
-        return BlindReward.IsAvailable(items);
-    }
+    public bool CanBeatBoss(Progression items) =>BlindReward.IsAvailable(items);
 
-    private bool CanBeatBoss(Progression items)
+    public bool CanRetrieveReward(Progression items) =>BlindReward.IsAvailable(items);
+
+    public bool CanSeeReward(Progression items) => !World.Config.ZeldaKeysanity || items.Contains(ItemType.MapTT);
+
+    private bool CanBeatBlind(Progression items)
     {
         return items.Sword || items.Hammer ||
                items.Somaria || items.Byrna;
