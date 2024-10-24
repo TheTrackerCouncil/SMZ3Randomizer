@@ -3,6 +3,7 @@ using System.Linq;
 using Avalonia.Threading;
 using AvaloniaControls.ControlServices;
 using AvaloniaControls.Services;
+using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Shared.Enums;
@@ -19,19 +20,16 @@ public class TrackerLocationsWindowService(TrackerBase trackerBase, IWorldQueryS
 
     public TrackerLocationsViewModel GetViewModel()
     {
-        ITaskService.Run(() =>
+        InitMarkedLocations();
+        InitHintTiles();
+        InitRegions();
+
+        trackerBase.LocationTracker.LocationMarked += (_, args) =>
         {
-            InitMarkedLocations();
-            InitHintTiles();
-            InitRegions();
+            AddUpdateMarkedLocation(args.Location);
+        };
 
-            trackerBase.LocationTracker.LocationMarked += (_, args) =>
-            {
-                AddUpdateMarkedLocation(args.Location);
-            };
-
-            _model.FinishedLoading = true;
-        });
+        _model.FinishedLoading = true;
 
         return _model;
     }

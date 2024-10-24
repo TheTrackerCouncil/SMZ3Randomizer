@@ -12,10 +12,10 @@
         Icon="/Assets/smz3.ico"
         Title="Tracker Locations — SMZ3 Cas' Randomizer">
   <LayoutTransformControl x:Name="MainLayout">
-    <DockPanel>
+    <DockPanel IsVisible="{Binding FinishedLoading}">
       <StackPanel Orientation="Vertical" DockPanel.Dock="Top" Margin="5">
         <TextBlock Text="Marked locations" FontSize="20"/>
-        <ItemsControl ItemsSource="{Binding MarkedLocations}" Margin="5 10" IsVisible="{Binding FinishedLoading}">
+        <ItemsControl ItemsSource="{Binding MarkedLocations}" Margin="5 10">
           <ItemsControl.ItemTemplate>
             <DataTemplate>
               <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="32,7,*" Margin="2">
