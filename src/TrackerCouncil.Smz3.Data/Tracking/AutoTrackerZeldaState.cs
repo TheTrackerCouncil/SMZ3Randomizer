@@ -104,6 +104,8 @@ public class AutoTrackerZeldaState
     /// <returns></returns>
     public int? ReadUInt16(int address) => _data.ReadUInt16(address);
 
+    public bool IsValid => State is >= 0x01 and <= 0x1b && LinkState is >= 0x00 and <= 0x1E;
+
     /// <summary>
     /// Get debug string
     /// </summary>
