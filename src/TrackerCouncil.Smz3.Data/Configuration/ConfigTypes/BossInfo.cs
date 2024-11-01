@@ -13,10 +13,10 @@ namespace TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 /// </remarks>
 public class BossInfo : IMergeable<BossInfo>
 {
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    public BossInfo() { }
+    public BossInfo()
+    {
+        Name = [];
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BossInfo"/> class.
@@ -33,6 +33,7 @@ public class BossInfo : IMergeable<BossInfo>
     /// <param name="name">The name of the boss.</param>
     public BossInfo(string name)
     {
+        Boss = name;
         Name = new SchrodingersString(name);
     }
 
@@ -45,7 +46,7 @@ public class BossInfo : IMergeable<BossInfo>
     /// <summary>
     /// Gets the name of the boss.
     /// </summary>
-    public SchrodingersString? Name { get; set; }
+    public SchrodingersString Name { get; set; }
 
     /// <summary>
     /// Gets the phrases to respond with when the boss has been tracked (but

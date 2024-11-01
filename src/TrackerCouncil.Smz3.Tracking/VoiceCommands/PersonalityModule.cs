@@ -18,11 +18,11 @@ public class PersonalityModule : TrackerModule
     /// Initializes a new instance of the <see cref="PersonalityModule"/> class.
     /// </summary>
     /// <param name="tracker">The tracker instance to use.</param>
-    /// <param name="itemService">Service to get item information</param>
-    /// <param name="worldService">Service to get world information</param>
+    /// <param name="playerProgressionService">Service to get item information</param>
+    /// <param name="worldQueryService">Service to get world information</param>
     /// <param name="logger">Used to write logging information.</param>
-    public PersonalityModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<PersonalityModule> logger)
-        : base(tracker, itemService, worldService, logger)
+    public PersonalityModule(TrackerBase tracker, IPlayerProgressionService playerProgressionService, IWorldQueryService worldQueryService, ILogger<PersonalityModule> logger)
+        : base(tracker, playerProgressionService, worldQueryService, logger)
     {
 
     }

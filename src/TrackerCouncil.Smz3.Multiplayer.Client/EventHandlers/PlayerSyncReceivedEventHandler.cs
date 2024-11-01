@@ -14,7 +14,6 @@ public class PlayerSyncReceivedEventHandlerArgs
     public ICollection<TrackerLocationState> UpdatedLocationStates { get; init; } = null!;
     public ICollection<(TrackerItemState State, int TrackingValue)> UpdatedItemStates { get; init; } = null!;
     public ICollection<TrackerBossState> UpdatedBossStates { get; init; } = null!;
-    public ICollection<TrackerDungeonState> UpdatedDungeonStates { get; init; } = null!;
     public ICollection<ItemType>? ItemsToGive { get; init; }
     public bool IsLocalPlayer { get; init; }
     public bool DidForfeit { get; init; }

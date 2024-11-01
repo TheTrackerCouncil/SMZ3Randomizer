@@ -191,19 +191,20 @@ public class SharedCrossplatformService(
         }
     }
 
-    public void LaunchRom(GeneratedRom? rom)
+    public TrackerWindow? LaunchRom(GeneratedRom? rom)
     {
         if (rom == null)
         {
             DisplayError("Invalid rom");
-            return;
+            return null;
         }
 
         var launchButtonOptions = Options.GeneralOptions.LaunchButtonOption;
+        TrackerWindow? trackerWindow = null;
 
         if (launchButtonOptions is LaunchButtonOptions.PlayAndTrack or LaunchButtonOptions.OpenFolderAndTrack or LaunchButtonOptions.TrackOnly)
         {
-            LaunchTracker(rom);
+            trackerWindow = LaunchTracker(rom);
         }
 
         if (launchButtonOptions is LaunchButtonOptions.OpenFolderAndTrack or LaunchButtonOptions.OpenFolderOnly)
@@ -215,6 +216,8 @@ public class SharedCrossplatformService(
         {
             PlayRom(rom);
         }
+
+        return trackerWindow;
     }
 
     public void CopyRomSeed(GeneratedRom? rom)

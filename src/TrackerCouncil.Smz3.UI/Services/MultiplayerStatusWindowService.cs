@@ -131,15 +131,28 @@ public class MultiplayerStatusWindowService(MultiplayerClientService multiplayer
     public void LaunchTracker()
     {
         _trackerWindow = sharedCrossplatformService.LaunchTracker(_model.GeneratedRom);
-        if (_trackerWindow != null)
-        {
-            _trackerWindow.Closed += (_, _) => _trackerWindow = null;
-        }
+        FinalizeLaunch();
     }
 
     public void LaunchRom()
     {
-        sharedCrossplatformService.LaunchRom(_model.GeneratedRom);
+        _trackerWindow = sharedCrossplatformService.LaunchRom(_model.GeneratedRom);
+        FinalizeLaunch();
+    }
+
+    private void FinalizeLaunch()
+    {
+        if (_trackerWindow != null)
+        {
+            _trackerWindow.Closed += (_, _) =>
+            {
+                _trackerWindow = null;
+                if (!_window.IsVisible)
+                {
+                    _window.Show(MessageWindow.GlobalParentWindow!);
+                }
+            };
+        }
     }
 
     private async void MultiplayerClientServiceOnGameStarted(List<MultiplayerPlayerGenerationData> playerGenerationData)

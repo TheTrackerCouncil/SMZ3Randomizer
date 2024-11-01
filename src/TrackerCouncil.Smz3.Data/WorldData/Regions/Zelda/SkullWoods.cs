@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
@@ -9,22 +10,11 @@ using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda;
 
-public class SkullWoods : Z3Region, IHasReward, IDungeon
+public class SkullWoods : Z3Region, IHasReward, IHasTreasure, IHasBoss
 {
-    public static readonly int[] MusicAddresses = new[] {
-        0x02D5BA,
-        0x02D5BB,
-        0x02D5BC,
-        0x02D5BD,
-        0x02D608,
-        0x02D609,
-        0x02D60A,
-        0x02D60B
-    };
-
     public SkullWoods(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
-        RegionItems = new[] { ItemType.KeySW, ItemType.BigKeySW, ItemType.MapSW, ItemType.CompassSW };
+        RegionItems = [ItemType.KeySW, ItemType.BigKeySW, ItemType.MapSW, ItemType.CompassSW];
 
         PotPrison = new Location(this, LocationId.SkullWoodsPotPrison, 0x1E9A1, LocationType.Regular,
             name: "Pot Prison",
@@ -99,30 +89,36 @@ public class SkullWoods : Z3Region, IHasReward, IDungeon
         MemoryFlag = 0xB;
         StartingRooms = new List<int> { 86, 87, 88, 89, 103, 104 };
         Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Skull Woods");
-        DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Skull Woods", "Mothula");
-        DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
-        Reward = new Reward(DungeonState.Reward ?? RewardType.None, world, this, metadata, DungeonState);
         MapName = "Dark World";
+
+        ((IHasReward)this).ApplyState(trackerState);
+        ((IHasTreasure)this).ApplyState(trackerState);
+        ((IHasBoss)this).ApplyState(trackerState);
     }
 
     public override string Name => "Skull Woods";
 
     public RewardType DefaultRewardType => RewardType.CrystalBlue;
 
-    public override List<string> AlsoKnownAs { get; }
-        = new List<string>() { "Skill Woods" };
+    public BossType DefaultBossType => BossType.Mothula;
 
-    public int SongIndex { get; init; } = 6;
-    public string Abbreviation => "SW";
+    public bool IsShuffledReward => true;
+
+    public override List<string> AlsoKnownAs { get; } = ["Skill Woods"];
+
     public LocationId? BossLocationId => LocationId.SkullWoodsMothula;
 
-    public Reward Reward { get; set; }
+    public Reward Reward { get; set; } = null!;
 
-    public DungeonInfo DungeonMetadata { get; set; }
+    public TrackerTreasureState TreasureState { get; set; } = null!;
 
-    public TrackerDungeonState DungeonState { get; set; }
+    public event EventHandler? UpdatedTreasure;
 
-    public Region ParentRegion => World.DarkWorldNorthWest;
+    public void OnUpdatedTreasure() => UpdatedTreasure?.Invoke(this, EventArgs.Empty);
+
+    public TrackerRewardState RewardState { get; set; } = null!;
+
+    public Boss Boss { get; set; } = null!;
 
     public Location PotPrison { get; }
 
@@ -145,8 +141,9 @@ public class SkullWoods : Z3Region, IHasReward, IDungeon
         return items.MoonPearl && World.DarkWorldNorthWest.CanEnter(items, requireRewards);
     }
 
-    public bool CanComplete(Progression items)
-    {
-        return MothulaReward.IsAvailable(items);
-    }
+    public bool CanBeatBoss(Progression items) => MothulaReward.IsAvailable(items);
+
+    public bool CanRetrieveReward(Progression items) => MothulaReward.IsAvailable(items);
+
+    public bool CanSeeReward(Progression items) => !World.Config.ZeldaKeysanity || items.Contains(ItemType.MapSW);
 }

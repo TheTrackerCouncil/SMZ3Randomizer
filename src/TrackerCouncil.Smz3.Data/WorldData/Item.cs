@@ -84,6 +84,21 @@ public class Item
     /// </summary>
     public TrackerItemState State { get; set; }
 
+    public int TrackingState
+    {
+        get => State.TrackingState;
+        set
+        {
+            if (value == State.TrackingState)
+            {
+                return;
+            }
+
+            State.TrackingState = value;
+            UpdatedItemState?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
     /// <summary>
     /// Indicates whether the item is a dungeon-specific item.
     /// </summary>
@@ -118,15 +133,15 @@ public class Item
     /// </summary>
     public bool IsKeycard => Type.IsInCategory(ItemCategory.Keycard);
 
+    public bool IsTreasure => !IsDungeonItem;
+
     /// <summary>
     /// Gets the number of actual items as displayed or mentioned by
     /// tracker, or <c>0</c> if the item does not have copies.
     /// </summary>
-    public int Counter => State == null || Metadata == null
-        ? 0
-        : Metadata.Multiple && !Metadata.HasStages
-            ? State.TrackingState * (Metadata.CounterMultiplier ?? 1)
-            : 0;
+    public int Counter => Metadata is { Multiple: true, HasStages: false }
+        ? TrackingState * (Metadata.CounterMultiplier ?? 1)
+        : 0;
 
     /// <summary>
     /// Tracks the item.
@@ -144,11 +159,11 @@ public class Item
         if (State == null)
             throw new InvalidOperationException($"State not loaded for item '{Name}'");
 
-        if (State.TrackingState == 0 // Item hasn't been tracked yet (any case)
-            || (Metadata?.HasStages == false && Metadata?.Multiple == true) // State.Multiple items always track
-            || (Metadata?.HasStages == true && State.TrackingState < Metadata?.MaxStage)) // Hasn't reached max. stage yet
+        if (TrackingState == 0 // Item hasn't been tracked yet (any case)
+            || Metadata is { HasStages: false, Multiple: true } // State.Multiple items always track
+            || (Metadata.HasStages && TrackingState < Metadata.MaxStage)) // Hasn't reached max. stage yet
         {
-            State.TrackingState++;
+            TrackingState++;
             return true;
         }
 
@@ -167,10 +182,10 @@ public class Item
         if (State == null)
             throw new InvalidOperationException($"State not loaded for item '{Name}'");
 
-        if (State.TrackingState == 0)
+        if (TrackingState == 0)
             return false;
 
-        State.TrackingState--;
+        TrackingState--;
         return true;
     }
 
@@ -190,15 +205,15 @@ public class Item
         if (State == null)
             throw new InvalidOperationException($"State not loaded for item '{Name}'");
 
-        if (Metadata?.HasStages == false)
+        if (Metadata.HasStages == false)
             throw new ArgumentException($"The item '{Name}' does not have Multiple stages.");
 
-        if (stage > Metadata?.MaxStage)
+        if (stage > Metadata.MaxStage)
             throw new ArgumentOutOfRangeException($"Cannot advance item '{Name}' to stage {stage} as the highest state is {Metadata.MaxStage}.");
 
-        if (State?.TrackingState < stage)
+        if (TrackingState < stage)
         {
-            State.TrackingState = stage;
+            TrackingState = stage;
             return true;
         }
 
@@ -221,7 +236,7 @@ public class Item
     {
         if (Metadata == null || State == null)
             throw new InvalidOperationException($"State or metadata not loaded item '{Name}'");
-        return Metadata.TryGetTrackingResponse(State.TrackingState, out response);
+        return Metadata.TryGetTrackingResponse(TrackingState, out response);
     }
 
     /// <summary>
@@ -263,6 +278,15 @@ public class Item
         => (Type != ItemType.Nothing && Type == type) || (Type == ItemType.Nothing && Name == name);
 
     /// <summary>
+    /// Determines if an item matches name
+    /// </summary>
+    /// <param name="name">The name to compare against if the item type is set to Nothing</param>
+    /// <see langword="true"/> if the item matches the given name otherwise, <see langword="false"/>.
+    public bool Is(string name)
+        => Name == name || Metadata.Name?.Contains(name, StringComparison.OrdinalIgnoreCase) == true ||
+           Metadata.GetStage(name) != null;
+
+    /// <summary>
     /// Updates an item in the middle of world generation
     /// </summary>
     /// <param name="type">The item type change to</param>
@@ -271,6 +295,8 @@ public class Item
         Type = type;
         Name = type.GetDescription();
     }
+
+    public event EventHandler? UpdatedItemState;
 
     /// <summary>
     /// Returns a string that represents the item.

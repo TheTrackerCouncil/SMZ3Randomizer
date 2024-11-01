@@ -10,6 +10,7 @@ using AvaloniaControls.Models;
 using TrackerCouncil.Smz3.Data.Interfaces;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
+using TrackerCouncil.Smz3.SeedGenerator.Generation;
 using TrackerCouncil.Smz3.UI.ViewModels;
 using TrackerCouncil.Smz3.UI.Views;
 
@@ -18,7 +19,8 @@ namespace TrackerCouncil.Smz3.UI.Services;
 public class SoloRomListService(IRomGenerationService romGenerationService,
     IGameDbService gameDbService,
     OptionsFactory optionsFactory,
-    SharedCrossplatformService sharedCrossplatformService) : ControlService
+    SharedCrossplatformService sharedCrossplatformService,
+    RomParserService romParserService) : ControlService
 {
     private SoloRomListViewModel _model = new();
     private SoloRomListPanel _panel = null!;
@@ -141,6 +143,62 @@ public class SoloRomListService(IRomGenerationService romGenerationService,
     public void LaunchTracker(GeneratedRomViewModel rom)
     {
         sharedCrossplatformService.LaunchTracker(rom.Rom);
+    }
+
+    public async Task OpenArchipelagoModeAsync()
+    {
+        var storageItem = await CrossPlatformTools.OpenFileDialogAsync(ParentWindow, FileInputControlType.OpenFile,
+                    "Rom file (*.sfc)|*.sfc|All files (*.*)|*.*", "/home/matt/Games/Randomizers/Archipelago");
+
+        var pathString = HttpUtility.UrlDecode(storageItem?.Path.AbsolutePath);
+
+        if (pathString == null)
+        {
+            return;
+        }
+
+        romParserService.ParseRomFile(pathString);
+
+        // archipelagoScannerService.ScanArchipelagoRom(rom);
+
+        /*var rom = await File.ReadAllBytesAsync(pathString);
+        romGenerationService.ApplyCasPatches(rom, new PatchOptions()
+        {
+            CasPatches = new CasPatches()
+            {
+                AimAnyButton = true,
+                DisableFlashing = true,
+                DisableScreenShake = true,
+                EasierWallJumps = true,
+                FastDoors = true,
+                FastElevators = true,
+                InfiniteSpaceJump = true,
+                MetroidAutoSave = true,
+                NerfedCharge = true,
+                SnapMorph = true,
+                Respin = true,
+                RefillAtSaveStation = true,
+                SandPitPlatforms = true,
+            },
+            MetroidControls = new MetroidControlOptions()
+            {
+                RunButtonBehavior = RunButtonBehavior.AutoRun,
+                ItemCancelBehavior = ItemCancelBehavior.HoldSupersOnly,
+                AimButtonBehavior = AimButtonBehavior.UnifiedAim,
+                Shoot = MetroidButton.Y,
+                Jump = MetroidButton.B,
+                Dash = MetroidButton.X,
+                ItemSelect = MetroidButton.Select,
+                ItemCancel = MetroidButton.R,
+                AimUp = MetroidButton.L,
+                AimDown = MetroidButton.R
+            }
+        });
+
+        var folder = Path.GetDirectoryName(pathString)!;
+        var fileName = Path.GetFileNameWithoutExtension(pathString)+"_updated";
+        var extension = Path.GetExtension(pathString);
+        await File.WriteAllBytesAsync(Path.Combine(folder, fileName + extension), rom);*/
     }
 
     private void OpenMessageWindow(string message, MessageWindowIcon icon = MessageWindowIcon.Error, MessageWindowButtons buttons = MessageWindowButtons.OK)

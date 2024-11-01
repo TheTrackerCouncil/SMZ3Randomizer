@@ -15,11 +15,11 @@ public class LocationTrackingModule : TrackerModule
     /// cref="LocationTrackingModule"/> class.
     /// </summary>
     /// <param name="tracker">The tracker instance.</param>
-    /// <param name="itemService">Service to get item information</param>
-    /// <param name="worldService">Service to get world information</param>
+    /// <param name="playerProgressionService">Service to get item information</param>
+    /// <param name="worldQueryService">Service to get world information</param>
     /// <param name="logger">Used to log information.</param>
-    public LocationTrackingModule(TrackerBase tracker, IItemService itemService, IWorldService worldService, ILogger<LocationTrackingModule> logger)
-        : base(tracker, itemService, worldService, logger)
+    public LocationTrackingModule(TrackerBase tracker, IPlayerProgressionService playerProgressionService, IWorldQueryService worldQueryService, ILogger<LocationTrackingModule> logger)
+        : base(tracker, playerProgressionService, worldQueryService, logger)
     {
 
     }
@@ -150,13 +150,13 @@ public class LocationTrackingModule : TrackerModule
         {
             var item = GetItemFromResult(TrackerBase, result, out _);
             var location = GetLocationFromResult(TrackerBase, result);
-            TrackerBase.MarkLocation(location, item, result.Confidence);
+            TrackerBase.LocationTracker.MarkLocation(location, item, result.Confidence);
         });
 
         AddCommand("Clear specific item location", GetClearLocationRule(), (result) =>
         {
             var location = GetLocationFromResult(TrackerBase, result);
-            TrackerBase.Clear(location, result.Confidence);
+            TrackerBase.LocationTracker.Clear(location, result.Confidence);
         });
 
         AddCommand("Clear available items in an area", GetClearAreaRule(), (result) =>
@@ -164,7 +164,7 @@ public class LocationTrackingModule : TrackerModule
             if (result.Semantics.ContainsKey(RoomKey))
             {
                 var room = GetRoomFromResult(TrackerBase, result);
-                TrackerBase.ClearArea(room,
+                TrackerBase.LocationTracker.ClearArea(room,
                     trackItems: false,
                     includeUnavailable: false,
                     confidence: result.Confidence);
@@ -172,12 +172,12 @@ public class LocationTrackingModule : TrackerModule
             else if (result.Semantics.ContainsKey(DungeonKey))
             {
                 var dungeon = GetDungeonFromResult(TrackerBase, result);
-                TrackerBase.ClearDungeon(dungeon, result.Confidence);
+                TrackerBase.TreasureTracker.ClearDungeon(dungeon, result.Confidence);
             }
             else if (result.Semantics.ContainsKey(RegionKey))
             {
                 var region = GetRegionFromResult(TrackerBase, result);
-                TrackerBase.ClearArea(region,
+                TrackerBase.LocationTracker.ClearArea(region,
                     trackItems:false,
                     includeUnavailable: false,
                     confidence: result.Confidence);
@@ -189,7 +189,7 @@ public class LocationTrackingModule : TrackerModule
             if (result.Semantics.ContainsKey(RoomKey))
             {
                 var room = GetRoomFromResult(TrackerBase, result);
-                TrackerBase.ClearArea(room,
+                TrackerBase.LocationTracker.ClearArea(room,
                     trackItems: false,
                     includeUnavailable: true,
                     confidence: result.Confidence);
@@ -197,12 +197,12 @@ public class LocationTrackingModule : TrackerModule
             else if (result.Semantics.ContainsKey(DungeonKey))
             {
                 var dungeon = GetDungeonFromResult(TrackerBase, result);
-                TrackerBase.ClearDungeon(dungeon, result.Confidence);
+                TrackerBase.TreasureTracker.ClearDungeon(dungeon, result.Confidence);
             }
             else if (result.Semantics.ContainsKey(RegionKey))
             {
                 var region = GetRegionFromResult(TrackerBase, result);
-                TrackerBase.ClearArea(region,
+                TrackerBase.LocationTracker.ClearArea(region,
                     trackItems:false,
                     includeUnavailable: true,
                     confidence: result.Confidence);
@@ -211,7 +211,7 @@ public class LocationTrackingModule : TrackerModule
 
         AddCommand("Clear recent marked locations", GetClearViewedObjectRule(), (result) =>
         {
-            TrackerBase.ClearLastViewedObject(result.Confidence);
+            TrackerBase.GameStateTracker.ClearLastViewedObject(result.Confidence);
         });
     }
 }

@@ -48,7 +48,7 @@ public class PegWorld(TrackerBase tracker, ISnesConnectorService snesConnector) 
 
         if (count != null)
         {
-            tracker.SetPegs((int)count);
+            tracker.ModeTracker.SetPegs((int)count);
         }
     }
 }

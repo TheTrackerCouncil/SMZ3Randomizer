@@ -76,7 +76,7 @@ public class DarkWorldNorthEast : Z3Region
                     relevanceRequirement: items => CanAccessPyramidFairy(items, requireRewards: false),
                     memoryAddress: 0x116,
                     memoryFlag: 0x4,
-                    trackerLogic: items => region.CountReward(items, RewardType.CrystalRed) == 2,
+                    trackerLogic: items => World.CountReceivedReward(items, RewardType.CrystalRed) == 2,
                     metadata: metadata,
                     trackerState: trackerState),
                 new Location(this, LocationId.PyramidFairyRight, 0x1E983, LocationType.Regular,
@@ -86,7 +86,7 @@ public class DarkWorldNorthEast : Z3Region
                     relevanceRequirement: items => CanAccessPyramidFairy(items, requireRewards: false),
                     memoryAddress: 0x116,
                     memoryFlag: 0x5,
-                    trackerLogic: items => region.CountReward(items, RewardType.CrystalRed) == 2,
+                    trackerLogic: items => World.CountReceivedReward(items, RewardType.CrystalRed) == 2,
                     metadata: metadata,
                     trackerState: trackerState)
             };

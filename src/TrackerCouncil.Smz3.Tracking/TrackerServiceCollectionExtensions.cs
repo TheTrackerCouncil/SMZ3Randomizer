@@ -14,6 +14,7 @@ using TrackerCouncil.Smz3.Tracking.AutoTracking.MetroidStateChecks;
 using TrackerCouncil.Smz3.Tracking.AutoTracking.ZeldaStateChecks;
 using TrackerCouncil.Smz3.Tracking.Services;
 using TrackerCouncil.Smz3.Tracking.Services.Speech;
+using TrackerCouncil.Smz3.Tracking.TrackingServices;
 using TrackerCouncil.Smz3.Tracking.VoiceCommands;
 
 namespace TrackerCouncil.Smz3.Tracking;
@@ -32,15 +33,16 @@ public static class TrackerServiceCollectionExtensions
     /// <returns>A reference to <paramref name="services"/>.</returns>
     public static IServiceCollection AddTracker(this IServiceCollection services)
     {
+        services.AddTrackerServices<TrackerService>();
         services.AddBasicTrackerModules<TrackerModuleFactory>();
         services.AddScoped<TrackerModuleFactory>();
         services.AddScoped<TrackerOptionsAccessor>();
         services.AddScoped<ITrackerTimerService, TrackerTimerService>();
         services.AddScoped<IHistoryService, HistoryService>();
-        services.AddScoped<IItemService, ItemService>();
+        services.AddScoped<IPlayerProgressionService, PlayerProgressionService>();
         services.AddScoped<ICommunicator, TextToSpeechCommunicator>();
         services.AddScoped<IUIService, UIService>();
-        services.AddScoped<IWorldService, WorldService>();
+        services.AddScoped<IWorldQueryService, WorldQueryService>();
         services.AddScoped<IRandomizerConfigService, RandomizerConfigService>();
         services.AddScoped<TrackerBase, Tracker>();
         services.AddSnesConnectorServices();
@@ -113,6 +115,30 @@ public static class TrackerServiceCollectionExtensions
         foreach (var moduleType in moduleTypes)
         {
             services.TryAddEnumerable(ServiceDescriptor.Scoped(typeof(TrackerModule), moduleType));
+        }
+
+        return services;
+    }
+
+    private static IServiceCollection AddTrackerServices<TAssembly>(this IServiceCollection services)
+    {
+        var interfaceNamespace = typeof(TrackerBase).Namespace;
+        if (string.IsNullOrEmpty(interfaceNamespace))
+        {
+            throw new InvalidOperationException("Could not determine TrackerBase namespace");
+        }
+
+        var serviceTypes = typeof(TAssembly).Assembly.GetTypes()
+            .Where(x => x.IsSubclassOf(typeof(TrackerService)));
+
+        foreach (var serviceType in serviceTypes)
+        {
+            services.TryAddEnumerable(ServiceDescriptor.Scoped(typeof(TrackerService), serviceType));
+            var serviceInterface = serviceType.GetInterfaces().FirstOrDefault(x => x.Namespace == interfaceNamespace);
+            if (serviceInterface != null)
+            {
+                services.TryAddScoped(serviceInterface, serviceType);
+            }
         }
 
         return services;

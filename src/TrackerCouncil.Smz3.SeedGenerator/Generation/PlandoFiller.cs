@@ -70,7 +70,7 @@ public class PlandoFiller : IFiller
 
     private static void EnsureDungeonsHaveMedallions(World world)
     {
-        var emptyMedallions = world.Regions.Where(x => x is INeedsMedallion { Medallion: ItemType.Nothing }).ToList();
+        var emptyMedallions = world.Regions.Where(x => x is IHasPrerequisite { RequiredItem: ItemType.Nothing }).ToList();
         if (emptyMedallions.Any())
         {
             throw new PlandoConfigurationException($"Not all dungeons have had their medallions set. Missing:\n"
@@ -107,10 +107,10 @@ public class PlandoFiller : IFiller
             if (region == null)
                 throw new PlandoConfigurationException($"Could not find a region with the specified name.\nName: '{regionName}'");
 
-            if (region is not INeedsMedallion dungeon)
+            if (region is not IHasPrerequisite dungeon)
                 throw new PlandoConfigurationException($"{region.Name} is configured with a medallion but that region cannot be configured with medallions.");
 
-            dungeon.Medallion = medallion switch
+            dungeon.RequiredItem = medallion switch
             {
                 ItemType.Bombos => ItemType.Bombos,
                 ItemType.Ether => ItemType.Ether,
@@ -124,6 +124,11 @@ public class PlandoFiller : IFiller
 
     private void AssignRewards(World world)
     {
+        foreach (var reward in world.Rewards)
+        {
+            reward.Region = null;
+        }
+
         foreach (var regionName in PlandoConfig.Rewards.Keys)
         {
             var rewardType = PlandoConfig.Rewards[regionName];
@@ -131,10 +136,10 @@ public class PlandoFiller : IFiller
             if (region == null)
                 throw new PlandoConfigurationException($"Could not find a region with the specified name.\nName: '{regionName}'");
 
-            if (region is not IHasReward dungeon)
+            if (region is not IHasReward rewardRegion)
                 throw new PlandoConfigurationException($"{region.Name} is configured with a reward but that region cannot be configured with rewards.");
 
-            dungeon.Reward = new Reward(rewardType, world, dungeon);
+            rewardRegion.SetRewardType(rewardType);
         }
 
         EnsureDungeonsHaveRewards(world);

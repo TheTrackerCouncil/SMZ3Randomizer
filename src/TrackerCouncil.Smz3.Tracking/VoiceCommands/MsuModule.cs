@@ -40,8 +40,8 @@ public class MsuModule : TrackerModule, IDisposable
     /// Constructor
     /// </summary>
     /// <param name="tracker"></param>
-    /// <param name="itemService">Service to get item information</param>
-    /// <param name="worldService">Service to get world information</param>
+    /// <param name="playerProgressionService">Service to get item information</param>
+    /// <param name="worldQueryService">Service to get world information</param>
     /// <param name="logger"></param>
     /// <param name="msuLookupService"></param>
     /// <param name="msuMonitorService"></param>
@@ -52,8 +52,8 @@ public class MsuModule : TrackerModule, IDisposable
     /// <param name="msuMessageReceiver"></param>
     public MsuModule(
         TrackerBase tracker,
-        IItemService itemService,
-        IWorldService worldService,
+        IPlayerProgressionService playerProgressionService,
+        IWorldQueryService worldQueryService,
         ILogger<MsuModule> logger,
         IMsuLookupService msuLookupService,
         IMsuMonitorService msuMonitorService,
@@ -62,7 +62,7 @@ public class MsuModule : TrackerModule, IDisposable
         Configs config,
         IGameService gameService,
         IMsuMessageReceiver msuMessageReceiver)
-        : base(tracker, itemService, worldService, logger)
+        : base(tracker, playerProgressionService, worldQueryService, logger)
     {
         _gameService = gameService;
         _msuMessageReceiver = msuMessageReceiver;

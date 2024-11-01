@@ -1,6 +1,7 @@
 ﻿using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Tracking;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
+using TrackerCouncil.Smz3.Tracking.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.AutoTracking.ZeldaStateChecks;
 
@@ -8,10 +9,8 @@ namespace TrackerCouncil.Smz3.Tracking.AutoTracking.ZeldaStateChecks;
 /// Zelda State check for when dying
 /// Checks if the player is in the death spiral animation without a fairy
 /// </summary>
-public class ZeldaDeath(IItemService itemService) : IZeldaStateCheck
+public class ZeldaDeath(IWorldQueryService worldQueryService) : IZeldaStateCheck
 {
-    public IItemService Items { get; } = itemService;
-
     /// <summary>
     /// Executes the check for the current state
     /// </summary>
@@ -26,25 +25,25 @@ public class ZeldaDeath(IItemService itemService) : IZeldaStateCheck
         var silent = tracker.GameService!.PlayerRecentlyKilled;
 
         // Say specific message for dying in the particular screen/room the player is in
-        if (!silent && tracker.CurrentRegion?.Metadata is { WhenDiedInRoom: not null })
+        if (!silent && tracker.GameStateTracker.CurrentRegion?.Metadata is { WhenDiedInRoom: not null })
         {
-            var region = tracker.CurrentRegion as Z3Region;
-            if (region is { IsOverworld: true } && prevState.OverworldScreen != null && tracker.CurrentRegion?.Metadata.WhenDiedInRoom?.TryGetValue(prevState.OverworldScreen.Value, out var locationResponse) == true)
+            var region = tracker.GameStateTracker.CurrentRegion as Z3Region;
+            if (region is { IsOverworld: true } && prevState.OverworldScreen != null && tracker.GameStateTracker.CurrentRegion?.Metadata.WhenDiedInRoom?.TryGetValue(prevState.OverworldScreen.Value, out var locationResponse) == true)
             {
                 tracker.Say(response: locationResponse);
             }
-            else if (region is { IsOverworld: false } && prevState.CurrentRoom != null && tracker.CurrentRegion?.Metadata.WhenDiedInRoom?.TryGetValue(prevState.CurrentRoom.Value, out locationResponse) == true)
+            else if (region is { IsOverworld: false } && prevState.CurrentRoom != null && tracker.GameStateTracker.CurrentRegion?.Metadata.WhenDiedInRoom?.TryGetValue(prevState.CurrentRoom.Value, out locationResponse) == true)
             {
                 tracker.Say(response: locationResponse);
             }
         }
 
-        tracker.TrackDeath(true);
+        tracker.GameStateTracker.TrackDeath(true);
 
-        var death = Items.FirstOrDefault("Death");
+        var death = worldQueryService.FirstOrDefault("Death");
         if (death is not null)
         {
-            tracker.TrackItem(death, autoTracked: true, silent: silent);
+            tracker.ItemTracker.TrackItem(death, autoTracked: true, silent: silent);
             return true;
         }
         return false;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
@@ -9,24 +10,18 @@ using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda;
 
-public class TurtleRock : Z3Region, IHasReward, INeedsMedallion, IDungeon
+public class TurtleRock : Z3Region, IHasReward, IHasPrerequisite, IHasTreasure, IHasBoss
 {
-    public static readonly int[] MusicAddresses = new[] {
-        0x02D5C7,
-        0x02D5A7,
-        0x02D5AA,
-        0x02D5AB
-    };
     public TurtleRock(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
-        RegionItems = new[] { ItemType.KeyTR, ItemType.BigKeyTR, ItemType.MapTR, ItemType.CompassTR };
+        RegionItems = [ItemType.KeyTR, ItemType.BigKeyTR, ItemType.MapTR, ItemType.CompassTR];
 
         CompassChest = new Location(this, LocationId.TurtleRockCompassChest, 0x1EA22, LocationType.Regular,
             name: "Compass Chest",
             vanillaItem: ItemType.CompassTR,
             memoryAddress: 0xD6,
             memoryFlag: 0x4,
-            trackerLogic: items => items.HasMarkedMedallion(DungeonState!.MarkedMedallion),
+            trackerLogic: items => items.HasMarkedMedallion(PrerequisiteState?.MarkedItem),
             metadata: metadata,
             trackerState: trackerState);
 
@@ -36,7 +31,7 @@ public class TurtleRock : Z3Region, IHasReward, INeedsMedallion, IDungeon
             access: items => items.KeyTR >= 1,
             memoryAddress: 0xB6,
             memoryFlag: 0x4,
-            trackerLogic: items => items.HasMarkedMedallion(DungeonState!.MarkedMedallion),
+            trackerLogic: items => items.HasMarkedMedallion(PrerequisiteState?.MarkedItem),
             metadata: metadata,
             trackerState: trackerState);
 
@@ -48,7 +43,7 @@ public class TurtleRock : Z3Region, IHasReward, INeedsMedallion, IDungeon
                         BigKeyChest.ItemIs(ItemType.KeyTR, World) ? 3 : 4),
                 memoryAddress: 0x14,
                 memoryFlag: 0x4,
-                trackerLogic: items => items.HasMarkedMedallion(DungeonState!.MarkedMedallion),
+                trackerLogic: items => items.HasMarkedMedallion(PrerequisiteState?.MarkedItem),
                 metadata: metadata,
                 trackerState: trackerState)
             .AlwaysAllow((item, items) => item.Is(ItemType.KeyTR, World) && items.KeyTR >= 3);
@@ -59,7 +54,7 @@ public class TurtleRock : Z3Region, IHasReward, INeedsMedallion, IDungeon
                 access: items => items.BigKeyTR && items.KeyTR >= 2,
                 memoryAddress: 0x24,
                 memoryFlag: 0x4,
-                trackerLogic: items => items.HasMarkedMedallion(DungeonState!.MarkedMedallion),
+                trackerLogic: items => items.HasMarkedMedallion(PrerequisiteState?.MarkedItem),
                 metadata: metadata,
                 trackerState: trackerState)
             .Allow((item, items) => item.IsNot(ItemType.BigKeyTR, World));
@@ -70,17 +65,17 @@ public class TurtleRock : Z3Region, IHasReward, INeedsMedallion, IDungeon
             access: items => items.BigKeyTR && items.KeyTR >= 2,
             memoryAddress: 0x4,
             memoryFlag: 0x4,
-            trackerLogic: items => items.HasMarkedMedallion(DungeonState!.MarkedMedallion),
+            trackerLogic: items => items.HasMarkedMedallion(PrerequisiteState?.MarkedItem),
             metadata: metadata,
             trackerState: trackerState);
 
         TrinexxReward = new Location(this, LocationId.TurtleRockTrinexx, 0x308159, LocationType.Regular,
             name: "Trinexx",
             vanillaItem: ItemType.HeartContainer,
-            access: items => items.BigKeyTR && items.KeyTR >= 4 && Logic.CanPassSwordOnlyDarkRooms(items) && CanBeatBoss(items),
+            access: items => items.BigKeyTR && items.KeyTR >= 4 && Logic.CanPassSwordOnlyDarkRooms(items) && CanBeatTrinexx(items),
             memoryAddress: 0xA4,
             memoryFlag: 0xB,
-            trackerLogic: items => items.HasMarkedMedallion(DungeonState!.MarkedMedallion),
+            trackerLogic: items => items.HasMarkedMedallion(PrerequisiteState?.MarkedItem),
             metadata: metadata,
             trackerState: trackerState);
 
@@ -91,32 +86,43 @@ public class TurtleRock : Z3Region, IHasReward, INeedsMedallion, IDungeon
         MemoryFlag = 0xB;
         StartingRooms = new List<int> { 35, 36, 213, 214 };
         Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Turtle Rock");
-        DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Turtle Rock", "Trinexx");
-        DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
-        Reward = new Reward(DungeonState.Reward ?? RewardType.None, world, this, metadata, DungeonState);
-        Medallion = DungeonState.RequiredMedallion ?? ItemType.Nothing;
         MapName = "Dark World";
+
+        ((IHasReward)this).ApplyState(trackerState);
+        ((IHasPrerequisite)this).ApplyState(trackerState);
+        ((IHasTreasure)this).ApplyState(trackerState);
+        ((IHasBoss)this).ApplyState(trackerState);
     }
 
     public override string Name => "Turtle Rock";
 
     public RewardType DefaultRewardType => RewardType.CrystalBlue;
 
-    public ItemType DefaultMedallion => ItemType.Quake;
+    public bool IsShuffledReward => true;
 
-    public int SongIndex { get; init; } = 10;
-    public string Abbreviation => "TR";
+    public ItemType DefaultRequiredItem => ItemType.Quake;
+
+    public BossType DefaultBossType => BossType.Trinexx;
+
     public LocationId? BossLocationId => LocationId.TurtleRockTrinexx;
 
-    public Reward Reward { get; set; }
+    public Reward Reward { get; set; } = null!;
 
-    public DungeonInfo DungeonMetadata { get; set; }
+    public TrackerTreasureState TreasureState { get; set; } = null!;
 
-    public TrackerDungeonState DungeonState { get; set; }
+    public event EventHandler? UpdatedTreasure;
 
-    public Region ParentRegion => World.DarkWorldDeathMountainEast;
+    public void OnUpdatedTreasure() => UpdatedTreasure?.Invoke(this, EventArgs.Empty);
 
-    public ItemType Medallion { get; set; }
+    public TrackerRewardState RewardState { get; set; } = null!;
+
+    public TrackerPrerequisiteState PrerequisiteState { get; set; } = null!;
+
+    public event EventHandler? UpdatedPrerequisite;
+
+    public void OnUpdatedPrerequisite() => UpdatedPrerequisite?.Invoke(this, EventArgs.Empty);
+
+    public Boss Boss { get; set; } = null!;
 
     public Location CompassChest { get; }
 
@@ -136,19 +142,20 @@ public class TurtleRock : Z3Region, IHasReward, INeedsMedallion, IDungeon
 
     public override bool CanEnter(Progression items, bool requireRewards)
     {
-        return items.Contains(Medallion) && items.Sword && items.MoonPearl &&
+        return items.Contains(PrerequisiteState.RequiredItem) && items.Sword && items.MoonPearl &&
                Logic.CanLiftHeavy(items) && items.Hammer && items.Somaria &&
                World.LightWorldDeathMountainEast.CanEnter(items, requireRewards);
     }
 
-    public bool CanComplete(Progression items)
-    {
-        return TrinexxReward.IsAvailable(items);
-    }
+    public bool CanBeatBoss(Progression items) => TrinexxReward.IsAvailable(items);
 
-    private bool CanBeatBoss(Progression items)
+    public bool CanRetrieveReward(Progression items) => TrinexxReward.IsAvailable(items);
+
+    public bool CanSeeReward(Progression items) => !World.Config.ZeldaKeysanity || items.Contains(ItemType.MapTR);
+
+    private bool CanBeatTrinexx(Progression items)
     {
-        return items.FireRod && items.IceRod;
+        return items is { FireRod: true, IceRod: true };
     }
 
     public class RollerRoomRoom : Room
@@ -164,7 +171,7 @@ public class TurtleRock : Z3Region, IHasReward, INeedsMedallion, IDungeon
                     access: items => items.FireRod,
                     memoryAddress: 0xB7,
                     memoryFlag: 0x4,
-                    trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState.MarkedMedallion),
+                    trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.PrerequisiteState.MarkedItem),
                     metadata: metadata,
                     trackerState: trackerState),
                 new Location(this, LocationId.TurtleRockRollerRoomRight, 0x1EA1F, LocationType.Regular,
@@ -173,7 +180,7 @@ public class TurtleRock : Z3Region, IHasReward, INeedsMedallion, IDungeon
                     access: items => items.FireRod,
                     memoryAddress: 0xB7,
                     memoryFlag: 0x5,
-                    trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState.MarkedMedallion),
+                    trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.PrerequisiteState.MarkedItem),
                     metadata: metadata,
                     trackerState: trackerState)
             };
@@ -193,7 +200,7 @@ public class TurtleRock : Z3Region, IHasReward, INeedsMedallion, IDungeon
                     access: CanAccess,
                     memoryAddress: 0xD5,
                     memoryFlag: 0x4,
-                    trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState.MarkedMedallion),
+                    trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.PrerequisiteState.MarkedItem),
                     metadata: metadata,
                     trackerState: trackerState),
                 new Location(this, LocationId.TurtleRockEyeBridgeTopLeft, 0x1EA2B, LocationType.Regular,
@@ -202,7 +209,7 @@ public class TurtleRock : Z3Region, IHasReward, INeedsMedallion, IDungeon
                     access: CanAccess,
                     memoryAddress: 0xD5,
                     memoryFlag: 0x5,
-                    trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState.MarkedMedallion),
+                    trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.PrerequisiteState.MarkedItem),
                     metadata: metadata,
                     trackerState: trackerState),
                 new Location(this, LocationId.TurtleRockEyeBridgeBottomRight, 0x1EA2E, LocationType.Regular,
@@ -211,7 +218,7 @@ public class TurtleRock : Z3Region, IHasReward, INeedsMedallion, IDungeon
                     access: CanAccess,
                     memoryAddress: 0xD5,
                     memoryFlag: 0x6,
-                    trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState.MarkedMedallion),
+                    trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.PrerequisiteState.MarkedItem),
                     metadata: metadata,
                     trackerState: trackerState),
                 new Location(this, LocationId.TurtleRockEyeBridgeBottomLeft, 0x1EA31, LocationType.Regular,
@@ -220,7 +227,7 @@ public class TurtleRock : Z3Region, IHasReward, INeedsMedallion, IDungeon
                     access: CanAccess,
                     memoryAddress: 0xD5,
                     memoryFlag: 0x7,
-                    trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState.MarkedMedallion),
+                    trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.PrerequisiteState.MarkedItem),
                     metadata: metadata,
                     trackerState: trackerState)
             };

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
@@ -9,15 +10,11 @@ using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda;
 
-public class SwampPalace : Z3Region, IHasReward, IDungeon
+public class SwampPalace : Z3Region, IHasReward, IHasTreasure, IHasBoss
 {
-    public static readonly int[] MusicAddresses = new[] {
-        0x02D5B7
-    };
-
     public SwampPalace(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
-        RegionItems = new[] { ItemType.KeySP, ItemType.BigKeySP, ItemType.MapSP, ItemType.CompassSP };
+        RegionItems = [ItemType.KeySP, ItemType.BigKeySP, ItemType.MapSP, ItemType.CompassSP];
 
         Entrance = new Location(this, LocationId.SwampPalaceEntrance, 0x1EA9D, LocationType.Regular,
                 name: "Entrance",
@@ -98,27 +95,34 @@ public class SwampPalace : Z3Region, IHasReward, IDungeon
         MemoryFlag = 0xB;
         StartingRooms = new List<int> { 40 };
         Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Swamp Palace");
-        DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Swamp Palace", "Arrghus");
-        DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
-        Reward = new Reward(DungeonState.Reward ?? RewardType.None, world, this, metadata, DungeonState);
         MapName = "Dark World";
+
+        ((IHasReward)this).ApplyState(trackerState);
+        ((IHasTreasure)this).ApplyState(trackerState);
+        ((IHasBoss)this).ApplyState(trackerState);
     }
 
     public override string Name => "Swamp Palace";
 
     public RewardType DefaultRewardType => RewardType.CrystalBlue;
 
-    public int SongIndex { get; init; } = 3;
-    public string Abbreviation => "SP";
+    public BossType DefaultBossType => BossType.Arrghus;
+
+    public bool IsShuffledReward => true;
+
     public LocationId? BossLocationId => LocationId.SwampPalaceArrghus;
 
-    public Reward Reward { get; set; }
+    public Reward Reward { get; set; } = null!;
 
-    public DungeonInfo DungeonMetadata { get; set; }
+    public TrackerTreasureState TreasureState { get; set; } = null!;
 
-    public TrackerDungeonState DungeonState { get; set; }
+    public event EventHandler? UpdatedTreasure;
 
-    public Region ParentRegion => World.DarkWorldSouth;
+    public void OnUpdatedTreasure() => UpdatedTreasure?.Invoke(this, EventArgs.Empty);
+
+    public TrackerRewardState RewardState { get; set; } = null!;
+
+    public Boss Boss { get; set; } = null!;
 
     public Location Entrance { get; }
 
@@ -143,10 +147,11 @@ public class SwampPalace : Z3Region, IHasReward, IDungeon
         return items.MoonPearl && items.Mirror && items.Flippers && World.DarkWorldSouth.CanEnter(items, requireRewards);
     }
 
-    public bool CanComplete(Progression items)
-    {
-        return ArrghusReward.IsAvailable(items);
-    }
+    public bool CanBeatBoss(Progression items) => ArrghusReward.IsAvailable(items);
+
+    public bool CanRetrieveReward(Progression items) => ArrghusReward.IsAvailable(items);
+
+    public bool CanSeeReward(Progression items) => !World.Config.ZeldaKeysanity || items.Contains(ItemType.MapSP);
 
     public class FloodedRoomRoom : Room
     {

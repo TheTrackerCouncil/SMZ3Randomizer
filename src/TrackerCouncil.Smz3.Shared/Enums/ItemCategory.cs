@@ -102,4 +102,8 @@ public enum ItemCategory
     /// If this should not be given out when completing multiplayer games
     /// </summary>
     IgnoreOnMultiplayerCompletion,
+
+    NeverProgression,
+
+    ProgressionOnlyOnFirst
 }

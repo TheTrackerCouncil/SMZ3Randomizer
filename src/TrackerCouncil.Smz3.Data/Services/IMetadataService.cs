@@ -141,13 +141,13 @@ public interface IMetadataService
     /// <summary>
     /// Returns extra information for the specified dungeon.
     /// </summary>
-    /// <param name="dungeon">
+    /// <param name="hasTreasure">
     /// The dungeon to get extra information for.
     /// </param>
     /// <returns>
     /// A new <see cref="DungeonInfo"/> for the specified dungeon region.
     /// </returns>
-    public DungeonInfo Dungeon(IDungeon dungeon);
+    public DungeonInfo Dungeon(IHasTreasure hasTreasure);
 
     /// <summary>
     /// Returns extra information for the specified room.
@@ -245,4 +245,28 @@ public interface IMetadataService
     /// <param name="type">The type of the reward</param>
     /// <returns></returns>
     public RewardInfo? Reward(RewardType type);
+
+    /// <summary>
+    /// Returns a random name for the specified item including article, e.g.
+    /// "an E-Tank" or "the Book of Mudora".
+    /// </summary>
+    /// <param name="itemType">The type of item whose name to get.</param>
+    /// <returns>
+    /// The name of the type of item, including "a", "an" or "the" if
+    /// applicable.
+    /// </returns>
+    string GetName(ItemType itemType);
+
+
+    /// <summary>
+    /// Returns a random name for the specified item including article, e.g.
+    /// "a blue crystal" or "the green pendant".
+    /// </summary>
+    /// <param name="rewardType">The reward of item whose name to get.</param>
+    /// <returns>
+    /// The name of the reward of item, including "a", "an" or "the" if
+    /// applicable.
+    /// </returns>
+    string GetName(RewardType rewardType);
+
 }

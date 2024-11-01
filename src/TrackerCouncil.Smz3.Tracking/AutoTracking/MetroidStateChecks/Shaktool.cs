@@ -21,20 +21,20 @@ public class Shaktool : IMetroidStateCheck
     public bool ExecuteCheck(TrackerBase tracker, AutoTrackerMetroidState currentState, AutoTrackerMetroidState prevState)
     {
         if (currentState is { CurrentRegion: 4, CurrentRoomInRegion: 36 } && prevState.CurrentRoomInRegion == 28 &&
-            tracker.World.FindLocation(LocationId.InnerMaridiaSpringBall).State.Cleared != true &&
-            tracker.World.AllBosses.FirstOrDefault(x => x.Name == "Shaktool")?.State.Defeated != true)
+            tracker.World.FindLocation(LocationId.InnerMaridiaSpringBall).Cleared != true &&
+            tracker.World.AllBosses.FirstOrDefault(x => x.Name == "Shaktool")?.Defeated != true)
         {
             tracker.ShutUp();
             tracker.Say(x => x.AutoTracker.NearShaktool, once: true);
-            tracker.StartShaktoolMode();
+            tracker.ModeTracker.StartShaktoolMode();
             return true;
         }
 
-        if (tracker.ShaktoolMode &&
+        if (tracker.ModeTracker.ShaktoolMode &&
             ((currentState is { CurrentRegion: 4, CurrentRoomInRegion: 28 } && prevState.CurrentRoomInRegion == 36) ||
              currentState.CurrentRegion != 4))
         {
-            tracker.StopShaktoolMode();
+            tracker.ModeTracker.StopShaktoolMode();
             return true;
         }
 

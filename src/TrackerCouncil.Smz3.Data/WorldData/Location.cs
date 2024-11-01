@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.Logic;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
+using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Models;
 
@@ -103,6 +105,64 @@ public class Location
     /// Current state of the location
     /// </summary>
     public TrackerLocationState State { get; set; }
+
+    public ItemType ItemType => Item.Type;
+
+    public bool Cleared
+    {
+        get => State.Cleared;
+        set
+        {
+            if (State.Cleared == value) return;
+            State.Cleared = value;
+            ClearedUpdated?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    public bool Autotracked
+    {
+        get => State.Autotracked;
+        set => State.Autotracked = value;
+    }
+
+    public ItemType? MarkedItem
+    {
+        get => State.MarkedItem;
+        set
+        {
+            if (State.MarkedItem == value) return;
+            State.MarkedItem = value;
+
+            if (value != null)
+            {
+                State.MarkedUsefulness =
+                    Item.Type.IsPossibleProgression(World.Config.ZeldaKeysanity, World.Config.MetroidKeysanity)
+                        ? LocationUsefulness.NiceToHave
+                        : LocationUsefulness.Useless;
+            }
+            else
+            {
+                State.MarkedUsefulness = null;
+            }
+
+            MarkedItemUpdated?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    public LocationUsefulness? MarkedUsefulness
+    {
+        get => State.MarkedUsefulness;
+        set
+        {
+            if (State.MarkedUsefulness == value) return;
+            State.MarkedUsefulness = value;
+            MarkedItemUpdated?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    public bool HasMarkedItem => State.HasMarkedItem;
+
+    public bool HasMarkedCorrectItem => State.HasMarkedCorrectItem;
 
     /// <summary>
     /// Gets the type of location.
@@ -235,17 +295,48 @@ public class Location
     /// name="items"/>; otherwise, <see langword="false"/>.
     public bool IsRelevant(Progression items) => Region.CanEnter(items, false) && _relevanceRequirement(items) && _trackerLogic(items);
 
+    public Accessibility Accessibility { get; private set; }
+
+    public Accessibility GetKeysanityAdjustedAccessibility()
+    {
+        return Region.GetKeysanityAdjustedAccessibility(Accessibility);
+    }
+
+    public void SetAccessibility(Accessibility newValue)
+    {
+        if (Accessibility == newValue) return;
+        Accessibility = newValue;
+        AccessibilityUpdated?.Invoke(this, EventArgs.Empty);
+    }
+
     /// <summary>
     /// Returns the status of a location based on the given items
     /// </summary>
-    /// <param name="items">The available items</param>
+    /// <param name="actualProgression">The available items</param>
+    /// <param name="withKeysProgression">The available items plus additional keys</param>
     /// <returns>The LocationStatus enum of the location</returns>
-    public LocationStatus GetStatus(Progression items)
+    public Accessibility GetAccessibility(Progression actualProgression, Progression withKeysProgression)
     {
-        if (State.Cleared) return LocationStatus.Cleared;
-        else if (IsAvailable(items) && _trackerLogic(items)) return LocationStatus.Available;
-        else if (IsRelevant(items) && _trackerLogic(items)) return LocationStatus.Relevant;
-        else return LocationStatus.OutOfLogic;
+        if (State.Cleared) return Accessibility.Cleared;
+        else if (IsAvailable(actualProgression) && _trackerLogic(actualProgression)) return Accessibility.Available;
+        else if (IsAvailable(withKeysProgression) && _trackerLogic(withKeysProgression)) return Accessibility.AvailableWithKeys;
+        else if (IsRelevant(actualProgression) && _trackerLogic(actualProgression)) return Accessibility.Relevant;
+        else if (IsRelevant(withKeysProgression) && _trackerLogic(withKeysProgression)) return Accessibility.RelevantWithKeys;
+        else return Accessibility.OutOfLogic;
+    }
+
+    /// <summary>
+    /// Returns the status of a location based on the given items
+    /// </summary>
+    /// <param name="actualProgression">The available items</param>
+    /// <param name="withKeysProgression">The available items plus additional keys</param>
+    /// <returns>The LocationStatus enum of the location</returns>
+    public void UpdateAccessibility(Progression actualProgression, Progression withKeysProgression)
+    {
+        var newValue = GetAccessibility(actualProgression, withKeysProgression);
+        if (newValue == Accessibility) return;
+        Accessibility = newValue;
+        AccessibilityUpdated?.Invoke(this, EventArgs.Empty);
     }
 
     /// <summary>
@@ -290,7 +381,6 @@ public class Location
                || (Item.IsKeycard && keysanity is KeysanityMode.Both or KeysanityMode.SuperMetroid);
     }
 
-
     /// <summary>
     /// Returns a string that represents the location.
     /// </summary>
@@ -301,4 +391,10 @@ public class Location
             ? $"{Room} - {Name}"
             : $"{Region} - {Name}";
     }
+
+    public IHasTreasure? GetTreasureRegion() => Region as IHasTreasure;
+
+    public event EventHandler? ClearedUpdated;
+    public event EventHandler? MarkedItemUpdated;
+    public event EventHandler? AccessibilityUpdated;
 }

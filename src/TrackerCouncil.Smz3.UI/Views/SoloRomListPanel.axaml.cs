@@ -1,8 +1,10 @@
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
+using AvaloniaControls;
 using AvaloniaControls.Services;
 using TrackerCouncil.Smz3.UI.Services;
 using TrackerCouncil.Smz3.UI.ViewModels;
@@ -206,6 +208,12 @@ public partial class SoloRomListPanel : UserControl
 
         model = rom;
         return true;
+    }
+
+    private async void ArchipelagoButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (_service == null) return;
+        await _service.OpenArchipelagoModeAsync();
     }
 }
 

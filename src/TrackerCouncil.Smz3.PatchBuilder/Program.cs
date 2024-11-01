@@ -54,14 +54,14 @@ if (!File.Exists(yamlPath))
             new Item(location.VanillaItem == ItemType.Nothing ? ItemType.TwentyRupees : location.VanillaItem, world);
     }
 
-    foreach (var dungeon in world.Dungeons.Where(x => x is IHasReward).Cast<IHasReward>())
+    foreach (var rewardRegion in world.RewardRegions)
     {
-        dungeon.Reward = new Reward(dungeon.DefaultRewardType, world, dungeon);
+        rewardRegion.SetRewardType(rewardRegion.DefaultRewardType);
     }
 
-    foreach (var dungeon in world.Dungeons.Where(x => x is INeedsMedallion).Cast<INeedsMedallion>())
+    foreach (var dungeon in world.PrerequisiteRegions)
     {
-        dungeon.Medallion = dungeon.DefaultMedallion;
+        dungeon.RequiredItem = dungeon.DefaultRequiredItem;
     }
 
     config.PlandoConfig = new PlandoConfig(world);

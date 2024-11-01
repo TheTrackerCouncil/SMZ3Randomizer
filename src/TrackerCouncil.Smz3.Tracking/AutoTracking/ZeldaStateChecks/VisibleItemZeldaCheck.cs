@@ -13,11 +13,11 @@ public class VisibleItemZeldaCheck : IZeldaStateCheck
     private readonly Dictionary<int, VisibleItemZelda> _overworldVisibleItems;
     private readonly Dictionary<int, VisibleItemZelda> _underworldVisibleItems;
     private readonly HashSet<VisibleItemArea> _trackedAreas = new();
-    private readonly IWorldService _worldService;
+    private readonly IWorldQueryService _worldQueryService;
 
-    public VisibleItemZeldaCheck(IWorldService worldService)
+    public VisibleItemZeldaCheck(IWorldQueryService worldQueryService)
     {
-        _worldService = worldService;
+        _worldQueryService = worldQueryService;
         var visibleItems = VisibleItems.GetVisibleItems().ZeldaItems;
         _overworldVisibleItems = visibleItems.Where(x => x.OverworldScreen > 0)
             .ToDictionary(s => (int)s.OverworldScreen!, s => s);
@@ -57,24 +57,24 @@ public class VisibleItemZeldaCheck : IZeldaStateCheck
             {
                 var locations = area.Locations.Select(x => tracker.World.FindLocation(x)).ToList();
 
-                if (locations.All(x => x.State.Cleared || x.State.Autotracked || x.State.MarkedItem == x.State.Item))
+                if (locations.All(x => x.Cleared || x.Autotracked || x.HasMarkedItem))
                 {
                     _trackedAreas.Add(area);
                     continue;
                 }
 
-                toClearLocations.AddRange(locations.Where(x => x.State is { Cleared: false, Autotracked: false } &&
-                                                               !x.State.Item.IsEquivalentTo(x.State.MarkedItem)));
+                toClearLocations.AddRange(locations.Where(x => x is
+                    { Cleared: false, Autotracked: false, HasMarkedCorrectItem: false }));
             }
 
             foreach (var location in toClearLocations)
             {
-                tracker.MarkLocation(location, location.Item.Type.GetGenericType());
+                tracker.LocationTracker.MarkLocation(location, location.Item.Type.GetGenericType());
             }
 
             if (toClearLocations.Any())
             {
-                tracker.UpdateLastMarkedLocations(toClearLocations);
+                tracker.GameStateTracker.UpdateLastMarkedLocations(toClearLocations);
             }
 
             // Remove overworld/dungeon room if all items have been collected or marked
@@ -87,8 +87,7 @@ public class VisibleItemZeldaCheck : IZeldaStateCheck
 
             if (itemsDictionary[key.Value].Areas
                 .SelectMany(x => x.Locations.Select(l => tracker.World.FindLocation(l)))
-                .All(x => x.State.Cleared || x.State.Autotracked ||
-                          x.State.Item.IsEquivalentTo(x.State.MarkedItem)))
+                .All(x => x.Cleared || x.Autotracked || x.HasMarkedCorrectItem))
             {
                 itemsDictionary.Remove(key.Value);
             }

@@ -84,7 +84,7 @@ public class LightWorldNorthEast : Z3Region
                     memoryAddress: 0x190,
                     memoryFlag: 0x10,
                     memoryType: LocationMemoryType.ZeldaMisc,
-                    trackerLogic: items => region.CountReward(items, RewardType.PendantGreen) == 1,
+                    trackerLogic: items =>  World.CountReceivedReward(items, RewardType.PendantGreen) == 1,
                     metadata: metadata,
                     trackerState: trackerState)
             };
