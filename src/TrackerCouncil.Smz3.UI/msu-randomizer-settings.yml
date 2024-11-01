@@ -16,3 +16,4 @@ MsuTypeNameOverrides:
 Smz3MsuTypes:
   - SMZ3 Classic (Metroid First)
   - SMZ3 Combo Randomizer
+DisableMessenger: true

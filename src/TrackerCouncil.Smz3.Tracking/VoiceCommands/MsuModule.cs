@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Speech.Recognition;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MSURandomizerLibrary;
 using MSURandomizerLibrary.Configs;
+using MSURandomizerLibrary.Messenger;
 using MSURandomizerLibrary.Models;
 using MSURandomizerLibrary.Services;
 using TrackerCouncil.Smz3.Abstractions;
@@ -24,11 +26,15 @@ public class MsuModule : TrackerModule, IDisposable
     private readonly MsuConfig _msuConfig;
     private readonly IMsuMonitorService _msuMonitorService;
     private readonly IGameService _gameService;
+    private readonly IMsuLookupService _msuLookupService;
+    private readonly IMsuMessageReceiver _msuMessageReceiver;
+    private readonly IMsuUserOptionsService _msuUserOptionsService;
     private readonly string _msuKey = "MsuKey";
     private int _currentTrackNumber;
     private readonly HashSet<int> _validTrackNumbers;
     private Track? _currentTrack;
     private readonly bool _isSetup;
+    private readonly bool _isLocal;
 
     /// <summary>
     /// Constructor
@@ -43,6 +49,7 @@ public class MsuModule : TrackerModule, IDisposable
     /// <param name="msuUserOptionsService"></param>
     /// <param name="config"></param>
     /// <param name="gameService"></param>
+    /// <param name="msuMessageReceiver"></param>
     public MsuModule(
         TrackerBase tracker,
         IItemService itemService,
@@ -53,11 +60,15 @@ public class MsuModule : TrackerModule, IDisposable
         IMsuTypeService msuTypeService,
         IMsuUserOptionsService msuUserOptionsService,
         Configs config,
-        IGameService gameService)
+        IGameService gameService,
+        IMsuMessageReceiver msuMessageReceiver)
         : base(tracker, itemService, worldService, logger)
     {
         _gameService = gameService;
+        _msuMessageReceiver = msuMessageReceiver;
         _msuMonitorService = msuMonitorService;
+        _msuLookupService = msuLookupService;
+        _msuUserOptionsService = msuUserOptionsService;
         var msuType = msuTypeService.GetSMZ3MsuType();
         _msuConfig = config.MsuConfig;
         _validTrackNumbers = msuType!.ValidTrackNumbers;
@@ -67,12 +78,22 @@ public class MsuModule : TrackerModule, IDisposable
             throw new InvalidOperationException("No tracker rom file found");
         }
 
-        if (string.IsNullOrEmpty(tracker.Rom?.MsuPaths))
+        if (!string.IsNullOrEmpty(tracker.Rom?.MsuPaths))
         {
-            return;
+            InitializeLocalMsuSupport(msuType);
+            _isLocal = true;
+        }
+        else
+        {
+            InitializeRemoteMsuSupport();
         }
 
-        var romFileInfo = new FileInfo(tracker.RomPath);
+        _isSetup = true;
+    }
+
+    private void InitializeLocalMsuSupport(MsuType msuType)
+    {
+        var romFileInfo = new FileInfo(TrackerBase.Rom!.RomPath);
         var msuPath = romFileInfo.FullName.Replace(romFileInfo.Extension, ".msu");
 
         if (!File.Exists(msuPath))
@@ -82,7 +103,7 @@ public class MsuModule : TrackerModule, IDisposable
 
         try
         {
-            _currentMsu = msuLookupService.LoadMsu(msuPath, msuType, false, true, true);
+            _currentMsu = _msuLookupService.LoadMsu(msuPath, msuType, false, true, true);
         }
         catch (Exception e)
         {
@@ -92,47 +113,55 @@ public class MsuModule : TrackerModule, IDisposable
 
         if (_currentMsu == null)
         {
-            logger.LogWarning("MSU file found but unable to load MSU");
+            Logger.LogWarning("MSU file found but unable to load MSU");
             return;
         }
 
-        msuUserOptionsService.MsuUserOptions.MsuCurrentSongOutputFilePath = TrackerBase.Options.MsuTrackOutputPath;
-        msuUserOptionsService.MsuUserOptions.TrackDisplayFormat = TrackerBase.Options.TrackDisplayFormat;
-        msuUserOptionsService.MsuUserOptions.MsuShuffleStyle =
-            tracker.Rom!.MsuShuffleStyle ?? MsuShuffleStyle.StandardShuffle;
+        _msuUserOptionsService.MsuUserOptions.MsuCurrentSongOutputFilePath = TrackerBase.Options.MsuTrackOutputPath;
+        _msuUserOptionsService.MsuUserOptions.TrackDisplayFormat = TrackerBase.Options.TrackDisplayFormat;
+        _msuUserOptionsService.MsuUserOptions.MsuShuffleStyle =
+            TrackerBase.Rom!.MsuShuffleStyle ?? MsuShuffleStyle.StandardShuffle;
 
-        if (tracker.Rom!.MsuRandomizationStyle == MsuRandomizationStyle.Continuous)
+        if (TrackerBase.Rom!.MsuRandomizationStyle == MsuRandomizationStyle.Continuous)
         {
-            var inputMsus = tracker.Rom!.MsuPaths?.Split("|");
-            msuMonitorService.StartShuffle(new MsuSelectorRequest()
+            var inputMsus = TrackerBase.Rom!.MsuPaths?.Split("|");
+            _msuMonitorService.StartShuffle(new MsuSelectorRequest()
             {
                 MsuPaths = inputMsus,
                 OutputMsuType = msuType,
                 OutputPath = msuPath,
                 PrevMsu = _currentMsu,
-                ShuffleStyle = msuUserOptionsService.MsuUserOptions.MsuShuffleStyle
+                ShuffleStyle = _msuUserOptionsService.MsuUserOptions.MsuShuffleStyle
             });
         }
         else
         {
-            msuMonitorService.StartMonitor(_currentMsu, msuType);
+            _msuMonitorService.StartMonitor(_currentMsu, msuType);
         }
 
-        msuMonitorService.MsuTrackChanged += MsuMonitorServiceOnMsuTrackChanged;
-        msuMonitorService.PreMsuShuffle += MsuMonitorServiceOnPreMsuShuffle;
+        _msuMonitorService.MsuTrackChanged += MsuMonitorServiceOnMsuTrackChanged;
+        _msuMonitorService.PreMsuShuffle += MsuMonitorServiceOnPreMsuShuffle;
+    }
 
-        _isSetup = true;
-
+    private void InitializeRemoteMsuSupport()
+    {
+        _msuMessageReceiver.Initialize();
+        _msuMessageReceiver.TrackChanged += MsuMonitorServiceOnMsuTrackChanged;
+        _msuMessageReceiver.MsuGenerated += MsuMonitorServiceOnPreMsuShuffle;
     }
 
     private void MsuMonitorServiceOnPreMsuShuffle(object? sender, EventArgs e)
     {
+        Logger.LogInformation("Msu Reshuffling - Try Cancel MSU Resume");
         _gameService.TryCancelMsuResume();
     }
 
-    private void MsuMonitorServiceOnMsuTrackChanged(object sender, MsuTrackChangedEventArgs e)
+    private void MsuMonitorServiceOnMsuTrackChanged(object? sender, MsuTrackChangedEventArgs e)
     {
         if (!_validTrackNumbers.Contains(e.Track.Number)) return;
+
+        Logger.LogInformation("Msu Track Changed - Have tracker response");
+
         _currentTrack = e.Track;
         _currentTrackNumber = e.Track.Number;
 
@@ -271,6 +300,8 @@ public class MsuModule : TrackerModule, IDisposable
 
     public void Dispose()
     {
+        _msuMessageReceiver.TrackChanged -= MsuMonitorServiceOnMsuTrackChanged;
+        _msuMessageReceiver.MsuGenerated -= MsuMonitorServiceOnPreMsuShuffle;
         _msuMonitorService.MsuTrackChanged -= MsuMonitorServiceOnMsuTrackChanged;
         _msuMonitorService.Stop();
     }
@@ -283,45 +314,48 @@ public class MsuModule : TrackerModule, IDisposable
             return;
         }
 
-        AddCommand("location song", GetLocationSongRules(), (result) =>
+        if (_isLocal)
         {
-            if (_currentMsu == null)
+            AddCommand("location song", GetLocationSongRules(), (result) =>
             {
-                TrackerBase.Say(response: _msuConfig.UnknownSong);
-                return;
-            }
+                if (_currentMsu == null)
+                {
+                    TrackerBase.Say(response: _msuConfig.UnknownSong);
+                    return;
+                }
 
-            var trackNumber = (int)result.Semantics[_msuKey].Value;
-            var track = _currentMsu.GetTrackFor(trackNumber);
-            if (track != null)
-            {
-                TrackerBase.Say(response: _msuConfig.CurrentSong, args: [track.GetDisplayText(TrackDisplayFormat.SpeechStyle)]);
-            }
-            else
-            {
-                TrackerBase.Say(response: _msuConfig.UnknownSong);
-            }
-        });
+                var trackNumber = (int)result.Semantics[_msuKey].Value;
+                var track = _currentMsu.GetTrackFor(trackNumber);
+                if (track != null)
+                {
+                    TrackerBase.Say(response: _msuConfig.CurrentSong, args: [track.GetDisplayText(TrackDisplayFormat.SpeechStyle)]);
+                }
+                else
+                {
+                    TrackerBase.Say(response: _msuConfig.UnknownSong);
+                }
+            });
 
-        AddCommand("location msu", GetLocationMsuRules(), (result) =>
-        {
-            if (_currentMsu == null)
+            AddCommand("location msu", GetLocationMsuRules(), (result) =>
             {
-                TrackerBase.Say(response: _msuConfig.UnknownSong);
-                return;
-            }
+                if (_currentMsu == null)
+                {
+                    TrackerBase.Say(response: _msuConfig.UnknownSong);
+                    return;
+                }
 
-            var trackNumber = (int)result.Semantics[_msuKey].Value;
-            var track = _currentMsu.GetTrackFor(trackNumber);
-            if (track?.GetMsuName() != null)
-            {
-                TrackerBase.Say(response: _msuConfig.CurrentMsu, args: [track.GetMsuName()]);
-            }
-            else
-            {
-                TrackerBase.Say(response: _msuConfig.UnknownSong);
-            }
-        });
+                var trackNumber = (int)result.Semantics[_msuKey].Value;
+                var track = _currentMsu.GetTrackFor(trackNumber);
+                if (track?.GetMsuName() != null)
+                {
+                    TrackerBase.Say(response: _msuConfig.CurrentMsu, args: [track.GetMsuName()]);
+                }
+                else
+                {
+                    TrackerBase.Say(response: _msuConfig.UnknownSong);
+                }
+            });
+        }
 
         AddCommand("current song", GetCurrentSongRules(), (_) =>
         {
