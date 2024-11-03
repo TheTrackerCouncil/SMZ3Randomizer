@@ -47,33 +47,15 @@ public class MultiplayerFiller : IFiller
         foreach (var world in worlds)
         {
             FillItems(world, worlds);
-            FillDungeonData(world);
+            FillRewards(world);
+            FillBosses(world);
+            FillPrerequisites(world);
         }
     }
 
     public void SetRandom(Random random)
     {
         _random = random ?? throw new ArgumentNullException(nameof(random));
-    }
-
-    private static void EnsureDungeonsHaveMedallions(World world)
-    {
-        var emptyMedallions = world.Regions.Where(x => x is INeedsMedallion { Medallion: ItemType.Nothing }).ToList();
-        if (emptyMedallions.Any())
-        {
-            throw new PlandoConfigurationException($"Not all dungeons have had their medallions set. Missing:\n"
-                                                   + string.Join('\n', emptyMedallions.Select(x => x.Name)));
-        }
-    }
-
-    private static void EnsureDungeonsHaveRewards(World world)
-    {
-        var emptyDungeons = world.Regions.Where(x => x is IHasReward { RewardType: RewardType.None }).ToList();
-        if (emptyDungeons.Any())
-        {
-            throw new PlandoConfigurationException($"Not all dungeons have had their rewards set. Missing:\n"
-                                                   + string.Join('\n', emptyDungeons.Select(x => x.Name)));
-        }
     }
 
     private static void EnsureLocationsHaveItems(World world)
@@ -84,27 +66,6 @@ public class MultiplayerFiller : IFiller
             throw new PlandoConfigurationException($"Not all locations have been filled. Missing:\n"
                                                    + string.Join('\n', emptyLocations.Select(x => x.Name)));
         }
-    }
-
-    private void FillDungeonData(World world)
-    {
-        var generatedDungeonData = world.Config.MultiplayerPlayerGenerationData!.Dungeons;
-        foreach (var dungeon in world.Dungeons)
-        {
-            var generatedData = generatedDungeonData.Single(x => x.Name == dungeon.DungeonName);
-            if (generatedData.Medallion != ItemType.Nothing && dungeon is INeedsMedallion medallionRegion)
-            {
-                medallionRegion.Medallion = generatedData.Medallion;
-                _logger.LogDebug("Marked {Dungeon} as requiring {Medallion}", generatedData.Name, generatedData.Medallion);
-            }
-            if (generatedData.Reward != null && dungeon is IHasReward rewardRegion)
-            {
-                rewardRegion.Reward = new Reward(generatedData.Reward.Value, world, rewardRegion);
-                _logger.LogDebug("Marked {Dungeon} as having {Medallion}", generatedData.Name, generatedData.Reward);
-            }
-        }
-        EnsureDungeonsHaveMedallions(world);
-        EnsureDungeonsHaveRewards(world);
     }
 
     private void FillItems(World world, List<World> worlds)
@@ -119,5 +80,52 @@ public class MultiplayerFiller : IFiller
             _logger.LogDebug("Fast-filled {Item} at {Location}", generatedData.Item, location.Name);
         }
         EnsureLocationsHaveItems(world);
+    }
+
+    private void FillRewards(World world)
+    {
+        foreach (var reward in world.Rewards)
+        {
+            reward.Region = null;
+        }
+
+        var rewards = world.Config.MultiplayerPlayerGenerationData!.Rewards;
+
+        foreach (var region in world.RewardRegions)
+        {
+            var rewardType = rewards[region.GetType().Name];
+            region.SetRewardType(rewardType);
+
+            if (rewardType.IsInAnyCategory(RewardCategory.Metroid, RewardCategory.NonRandomized))
+            {
+                region.MarkedReward = rewardType;
+            }
+        }
+    }
+
+    private void FillBosses(World world)
+    {
+        foreach (var boss in world.Bosses)
+        {
+            boss.Region = null;
+        }
+
+        var bosses = world.Config.MultiplayerPlayerGenerationData!.Bosses;
+
+        foreach (var region in world.BossRegions)
+        {
+            var bossType = bosses[region.GetType().Name];
+            region.SetBossType(bossType);
+        }
+    }
+
+    private void FillPrerequisites(World world)
+    {
+        var items = world.Config.MultiplayerPlayerGenerationData!.Prerequisites;
+        foreach (var region in world.PrerequisiteRegions)
+        {
+            var item = items[region.GetType().Name];
+            region.RequiredItem = item;
+        }
     }
 }

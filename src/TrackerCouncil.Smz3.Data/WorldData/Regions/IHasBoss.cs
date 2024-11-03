@@ -1,4 +1,9 @@
-﻿using TrackerCouncil.Smz3.Shared.Enums;
+﻿using System;
+using System.Linq;
+using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
+using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda;
+using TrackerCouncil.Smz3.Shared.Enums;
+using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Data.WorldData.Regions;
 
@@ -7,15 +12,70 @@ namespace TrackerCouncil.Smz3.Data.WorldData.Regions;
 /// </summary>
 public interface IHasBoss
 {
-    /// <summary>
-    /// Gets or sets the SM golden boss for the region
-    /// </summary>
-    Boss Boss { get; set; }
+    string Name { get; }
 
-    /// <summary>
-    /// The boss type
-    /// </summary>
-    BossType BossType => Boss?.Type ?? BossType.None;
+    RegionInfo Metadata { get; set; }
+
+    World World { get; }
+
+    Boss Boss { get; protected set; }
+
+    BossInfo BossMetadata => Boss.Metadata;
+
+    BossType BossType => Boss.Type;
+
+    BossType DefaultBossType { get; }
+
+    TrackerBossState BossState => Boss.State;
+
+    LocationId? BossLocationId { get; }
+
+    Region Region => (Region)this;
+
+    public bool BossDefeated
+    {
+        get => Boss.Defeated;
+        set => Boss.Defeated = value;
+    }
+
+    public Accessibility BossAccessibility
+    {
+        get => Boss.Accessibility;
+        set => Boss.Accessibility = value;
+    }
+
+    public Accessibility GetKeysanityAdjustedBossAccessibility()
+    {
+        return Region.GetKeysanityAdjustedAccessibility(BossAccessibility);
+    }
+
+    public void SetBossType(BossType bossType)
+    {
+        Boss = World.Bosses.First(x => x.Type == bossType && x.Region == null);
+        Boss.Region = this;
+    }
+
+    public void ApplyState(TrackerState? state)
+    {
+        if (state == null)
+        {
+            SetBossType(DefaultBossType);
+            Boss.State = new TrackerBossState
+            {
+                WorldId = World.Id,
+                RegionName = GetType().Name,
+                Type = DefaultBossType,
+                BossName = Boss.Name
+            };
+        }
+        else
+        {
+            var bossState = state.BossStates.First(x =>
+                x.WorldId == World.Id && x.RegionName == GetType().Name);
+            SetBossType(bossState.Type);
+            Boss.State = bossState;
+        }
+    }
 
     /// <summary>
     /// Determines whether the boss for the region can be defeated.

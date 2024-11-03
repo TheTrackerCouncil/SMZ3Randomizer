@@ -12,13 +12,13 @@ using TrackerCouncil.Smz3.Tracking.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.AutoTracking.AutoTrackerModules;
 
-public class MetroidLocations(TrackerBase tracker, ISnesConnectorService snesConnector, ILogger<MetroidLocations> logger, IWorldService worldService) : AutoTrackerModule(tracker, snesConnector, logger)
+public class MetroidLocations(TrackerBase tracker, ISnesConnectorService snesConnector, ILogger<MetroidLocations> logger, IWorldQueryService worldQueryService) : AutoTrackerModule(tracker, snesConnector, logger)
 {
     private List<Location> _locations = new();
 
     public override void Initialize()
     {
-        _locations = worldService.AllLocations().Where(x => (int)x.Id < 256).ToList();
+        _locations = worldQueryService.AllLocations().Where(x => (int)x.Id < 256).ToList();
 
         SnesConnector.AddRecurringMemoryRequest(new SnesRecurringMemoryRequest()
         {
@@ -49,7 +49,7 @@ public class MetroidLocations(TrackerBase tracker, ISnesConnectorService snesCon
                 var flag = location.MemoryFlag ?? 0;
                 var currentCleared = data.CheckUInt8Flag(loc, flag);
                 var prevCleared = prevData.CheckUInt8Flag(loc, flag);
-                if (location.State.Autotracked == false && currentCleared && prevCleared)
+                if (location.Autotracked == false && currentCleared && prevCleared)
                 {
                     TrackLocation(location);
                 }

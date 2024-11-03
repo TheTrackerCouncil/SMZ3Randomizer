@@ -82,9 +82,8 @@ public abstract class MultiplayerGameTypeService : IDisposable
             .ToList();
         var locations = world.Locations.ToDictionary(x => x.Id, _ => false);
         var items = playerItemTypes.ToDictionary(x => x, _ => 0);
-        var bosses = world.GoldenBosses.Select(x => x.Type).ToDictionary(x => x, _ => false);
-        var dungeons = world.Dungeons.ToDictionary(x => x.GetType().Name, _ => false);
-        var state = new MultiplayerWorldState(locations, items, bosses, dungeons);
+        var bosses = world.Bosses.Select(x => x.Type).ToDictionary(x => x, _ => false);
+        var state = new MultiplayerWorldState(locations, items, bosses);
         return state;
     }
 
@@ -181,14 +180,28 @@ public abstract class MultiplayerGameTypeService : IDisposable
     /// <returns>A unique hash for all of the location items and dungeon rewards</returns>
     public string GetValidationHash(IEnumerable<World> worlds)
     {
+        var worldList = worlds.ToList();
         var itemHashCode = string.Join(",",
-            worlds.SelectMany(x => x.Locations).OrderBy(x => x.World.Id).ThenBy(x => x.Id)
+            worldList.SelectMany(x => x.Locations)
+                .OrderBy(x => x.World.Id)
+                .ThenBy(x => x.Id)
                 .Select(x => x.Item.Type.ToString()));
         var rewardHashCode = string.Join(",",
-            worlds.SelectMany(x => x.Regions).OrderBy(x => x.World.Id)
+            worldList.SelectMany(x => x.RewardRegions)
+                .OrderBy(x => x.World.Id)
                 .ThenBy(x => x.Name)
-                .OfType<IHasReward>().Select(x => x.RewardType.ToString()));
-        return $"{NonCryptographicHash.Fnv1a(itemHashCode)}{NonCryptographicHash.Fnv1a(rewardHashCode)}";
+                .Select(x => x.RewardType.ToString()));
+        var bossHashCode = string.Join(",",
+            worldList.SelectMany(x => x.BossRegions)
+                .OrderBy(x => x.World.Id)
+                .ThenBy(x => x.Name)
+                .Select(x => x.BossType.ToString()));
+        var prereqHashCode = string.Join(",",
+            worldList.SelectMany(x => x.PrerequisiteRegions)
+                .OrderBy(x => x.World.Id)
+                .ThenBy(x => x.Name)
+                .Select(x => x.RequiredItem.ToString()));
+        return $"{NonCryptographicHash.Fnv1a(itemHashCode)}{NonCryptographicHash.Fnv1a(rewardHashCode)}{NonCryptographicHash.Fnv1a(bossHashCode)}{NonCryptographicHash.Fnv1a(prereqHashCode)}";
     }
 
     /// <summary>
@@ -206,16 +219,7 @@ public abstract class MultiplayerGameTypeService : IDisposable
     /// <param name="item">The item that has been tracked</param>
     public async Task TrackItem(Item item)
     {
-        await Client.TrackItem(item.Type, item.State.TrackingState, item.World.Guid);
-    }
-
-    /// <summary>
-    /// Notifies the server that a dungeon has been tracked by the local player
-    /// </summary>
-    /// <param name="dungeon">The dungeon that has been tracked</param>
-    public async Task TrackDungeon(IDungeon dungeon)
-    {
-        await Client.TrackDungeon(dungeon.DungeonState.Name, (dungeon as Region)!.World.Guid);
+        await Client.TrackItem(item.Type, item.TrackingState, item.World.Guid);
     }
 
     /// <summary>
@@ -335,29 +339,6 @@ public abstract class MultiplayerGameTypeService : IDisposable
     }
 
     /// <summary>
-    /// Creates arguments to send to Tracker when a player tracks a dungeon
-    /// </summary>
-    /// <param name="player">The player that tracked the dungeon</param>
-    /// <param name="dungeonName">The name of the dungeon that was tracked</param>
-    /// <param name="isLocalPlayer">If it was the local player tracking the item</param>
-    public PlayerTrackedDungeonEventHandlerArgs? PlayerTrackedDungeon(MultiplayerPlayerState player, string dungeonName, bool isLocalPlayer)
-    {
-        if (TrackerState == null || isLocalPlayer) return null;
-        var dungeonState =
-            TrackerState.DungeonStates.FirstOrDefault(x => x.WorldId == player.WorldId && x.Name == dungeonName);
-        if (dungeonState == null || dungeonState.AutoTracked) return null;
-
-        return new PlayerTrackedDungeonEventHandlerArgs()
-        {
-            PlayerId = player.WorldId!.Value,
-            PlayerName = player.PlayerName,
-            PhoneticName = player.PhoneticName,
-            IsLocalPlayer = isLocalPlayer,
-            DungeonState = dungeonState,
-        };
-    }
-
-    /// <summary>
     /// Creates arguments for when receiving a player state from the server by determining what locations, items, etc.
     /// mismatch with the tracker state
     /// </summary>
@@ -368,7 +349,7 @@ public abstract class MultiplayerGameTypeService : IDisposable
     public PlayerSyncReceivedEventHandlerArgs? PlayerSyncReceived(MultiplayerPlayerState player,
         MultiplayerPlayerState? previousState, bool isLocalPlayer)
     {
-        if (TrackerState == null || isLocalPlayer || player.Locations == null || player.Items == null || player.Bosses == null || player.Dungeons == null) return null;
+        if (TrackerState == null || isLocalPlayer || player.Locations == null || player.Items == null || player.Bosses == null) return null;
 
         var didEndGame = player.HasForfeited || player.HasCompleted;
 
@@ -390,11 +371,6 @@ public abstract class MultiplayerGameTypeService : IDisposable
         var updatedBossStates = TrackerState.BossStates.Where(x =>
             x.WorldId == player.WorldId && x.Type != BossType.None && !x.AutoTracked && defeatedBosses.Contains(x.Type)).ToList();
 
-        // Gather dungeons that have been cleared
-        var clearedDungeons = player.Dungeons.Where(x => x.Tracked).Select(x => x.Dungeon).ToList();
-        var updatedDungeonStates = TrackerState.DungeonStates.Where(x =>
-            x.WorldId == player.WorldId && !x.AutoTracked && clearedDungeons.Contains(x.Name)).ToList();
-
         return new PlayerSyncReceivedEventHandlerArgs()
         {
             PlayerId = player.WorldId,
@@ -404,7 +380,6 @@ public abstract class MultiplayerGameTypeService : IDisposable
             UpdatedLocationStates = updatedLocationStates,
             UpdatedItemStates = updatedItemStates,
             UpdatedBossStates = updatedBossStates,
-            UpdatedDungeonStates = updatedDungeonStates,
             ItemsToGive = itemsToGive,
             DidForfeit = player.HasForfeited && previousState?.HasForfeited != true,
             DidComplete = player.HasCompleted && previousState?.HasCompleted != true
@@ -433,11 +408,7 @@ public abstract class MultiplayerGameTypeService : IDisposable
             .Where(x => x.WorldId == state.WorldId && x.Type != BossType.None)
             .ToDictionary(x => x.Type, x => x.AutoTracked);
 
-        var dungeons = trackerState.DungeonStates
-            .Where(x => x.WorldId == state.WorldId)
-            .ToDictionary(x => x.Name, x => x.AutoTracked);
-
-        return new MultiplayerWorldState(locations, items, bosses, dungeons);
+        return new MultiplayerWorldState(locations, items, bosses);
     }
 
     /// <summary>

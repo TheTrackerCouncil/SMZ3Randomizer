@@ -100,7 +100,7 @@ public static class Program
         // Boss Template
         var bossConfig = configProvider.GetBossConfig(new List<string>(), null);
         var templateBossConfig = new BossConfig();
-        templateBossConfig.AddRange(bossConfig.Select(boss => new BossInfo { Boss = boss.Boss }));
+        templateBossConfig.AddRange(bossConfig.Select(boss => new BossInfo(boss.Boss)));
         var exampleBossConfig = BossConfig.Example();
         WriteTemplate(templatePath, "bosses", templateBossConfig, exampleBossConfig);
 

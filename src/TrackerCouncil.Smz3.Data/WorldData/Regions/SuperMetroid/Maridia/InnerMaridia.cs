@@ -9,7 +9,7 @@ using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Data.WorldData.Regions.SuperMetroid.Maridia;
 
-public class InnerMaridia : SMRegion, IHasBoss
+public class InnerMaridia : SMRegion, IHasBoss, IHasReward
 {
     public InnerMaridia(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
@@ -24,16 +24,30 @@ public class InnerMaridia : SMRegion, IHasBoss
         Botwoons = new BotwoonsRoom(this, metadata, trackerState);
         SpaceJump = new SpaceJumpRoom(this, metadata, trackerState);
         MemoryRegionId = 4;
-        Boss = new Boss(Shared.Enums.BossType.Draygon, world, this, metadata, trackerState);
         Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Inner Maridia");
         MapName = "Maridia";
+
+        ((IHasReward)this).ApplyState(trackerState);
+        ((IHasBoss)this).ApplyState(trackerState);
     }
 
     public override string Name => "Inner Maridia";
 
     public override string Area => "Maridia";
 
-    public Boss Boss{ get; set; }
+    public Boss Boss { get; set; } = null!;
+
+    public BossType DefaultBossType => BossType.Draygon;
+
+    public LocationId? BossLocationId => LocationId.InnerMaridiaSpaceJump;
+
+    public Reward Reward { get; set; } = null!;
+
+    public RewardType DefaultRewardType => RewardType.DraygonToken;
+
+    public TrackerRewardState RewardState { get; set; } = null!;
+
+    public bool IsShuffledReward => false;
 
     public WateringHoleRoom WateringHole { get; }
 
@@ -62,6 +76,10 @@ public class InnerMaridia : SMRegion, IHasBoss
 
     public bool CanBeatBoss(Progression items)
         => CanEnter(items, true) && CanDefeatDraygon(items, true);
+
+    public bool CanRetrieveReward(Progression items) => CanBeatBoss(items);
+
+    public bool CanSeeReward(Progression items) => true;
 
     private static bool CanReachAqueduct(Progression items, ILogic logic, bool requireRewards)
         => (items.CardMaridiaL1 && CanPassMountDeath(items, logic))

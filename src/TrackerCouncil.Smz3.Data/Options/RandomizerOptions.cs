@@ -36,10 +36,10 @@ public class RandomizerOptions : INotifyPropertyChanged
         PatchOptions patchOptions,
         LogicConfig logicConfig)
     {
-        GeneralOptions = generalOptions ?? new();
-        SeedOptions = seedOptions ?? new();
-        PatchOptions = patchOptions ?? new();
-        LogicConfig = logicConfig ?? new();
+        GeneralOptions = generalOptions;
+        SeedOptions = seedOptions;
+        PatchOptions = patchOptions;
+        LogicConfig = logicConfig;
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -59,12 +59,13 @@ public class RandomizerOptions : INotifyPropertyChanged
     [JsonIgnore, YamlIgnore]
     public string? FilePath { get; set; }
 
+    public string? ApplicationVersion { get; set; }
+
     public bool IsAdvancedMode { get; set; }
 
     public double WindowWidth { get; set; } = 500d;
 
     public double WindowHeight { get; set; } = 600d;
-
     public string MultiplayerUrl { get; set; } = "";
 
     [YamlIgnore]

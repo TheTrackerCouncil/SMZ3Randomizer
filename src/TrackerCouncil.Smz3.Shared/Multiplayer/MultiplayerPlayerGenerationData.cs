@@ -10,28 +10,27 @@ using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Shared.Multiplayer;
 
-public class MultiplayerPlayerGenerationData
+public class MultiplayerPlayerGenerationData(
+    string playerGuid,
+    int worldId,
+    List<PlayerGenerationLocationData> locations,
+    Dictionary<string, BossType> bosses,
+    Dictionary<string, RewardType> rewards,
+    Dictionary<string, ItemType> prerequisites,
+    List<PlayerHintTile> hints)
 {
     private static readonly JsonSerializerOptions s_options = new()
     {
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
 
-    public MultiplayerPlayerGenerationData(string playerGuid, int worldId, List<PlayerGenerationLocationData> locations,
-        List<PlayerGenerationDungeonData> dungeons, List<PlayerHintTile> hints)
-    {
-        PlayerGuid = playerGuid;
-        WorldId = worldId;
-        Locations = locations;
-        Dungeons = dungeons;
-        Hints = hints;
-    }
-
-    public string PlayerGuid { get; }
-    public int WorldId { get; }
-    public List<PlayerGenerationLocationData> Locations { get; }
-    public List<PlayerGenerationDungeonData> Dungeons { get; }
-    public List<PlayerHintTile> Hints { get; }
+    public string PlayerGuid { get; } = playerGuid;
+    public int WorldId { get; } = worldId;
+    public List<PlayerGenerationLocationData> Locations { get; } = locations;
+    public Dictionary<string, BossType> Bosses { get; } = bosses;
+    public Dictionary<string, RewardType> Rewards { get; } = rewards;
+    public Dictionary<string, ItemType> Prerequisites { get; } = prerequisites;
+    public List<PlayerHintTile> Hints { get; } = hints;
 
     /// <summary>
     /// Converts the generation data into a compressed string of the json
@@ -84,30 +83,9 @@ public class MultiplayerPlayerGenerationData
     }
 }
 
-public class PlayerGenerationLocationData
+public class PlayerGenerationLocationData(LocationId id, int itemWorldId, ItemType item)
 {
-    public PlayerGenerationLocationData(LocationId id, int itemWorldId, ItemType item)
-    {
-        Id = id;
-        ItemWorldId = itemWorldId;
-        Item = item;
-    }
-
-    public LocationId Id { get; }
-    public int ItemWorldId { get; }
-    public ItemType Item { get; }
-}
-
-public class PlayerGenerationDungeonData
-{
-    public PlayerGenerationDungeonData(string name, RewardType? reward, ItemType medallion)
-    {
-        Name = name;
-        Reward = reward;
-        Medallion = medallion;
-    }
-
-    public string Name { get; } = "";
-    public RewardType? Reward { get; }
-    public ItemType Medallion { get; }
+    public LocationId Id { get; } = id;
+    public int ItemWorldId { get; } = itemWorldId;
+    public ItemType Item { get; } = item;
 }

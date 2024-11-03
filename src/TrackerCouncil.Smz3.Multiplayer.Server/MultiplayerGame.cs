@@ -459,18 +459,6 @@ public class MultiplayerGame
         return boss;
     }
 
-    /// <summary>
-    /// Marks a dungeon as completed
-    /// </summary>
-    /// <param name="player"></param>
-    /// <param name="name"></param>
-    public MultiplayerDungeonState? TrackDungeon(MultiplayerPlayer player, string name)
-    {
-        var dungeon = player.State.TrackDungeon(name);
-        State.LastMessage = DateTimeOffset.Now;
-        return dungeon;
-    }
-
     private static string CleanPlayerName(string name)
     {
         name = s_illegalPlayerNameCharacters.Replace(name, " ");

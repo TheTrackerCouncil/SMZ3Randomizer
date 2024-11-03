@@ -29,7 +29,7 @@ public partial class TrackerMapWindow : RestorableWindow
     public void UpdateShowOutOfLogic(bool value)
     {
         _model.ShowOutOfLogicLocations = value;
-        _service?.UpdateLocations();
+        _service?.UpdateOutOfLogic();
     }
 
     private void MapCanvas_OnSizeChanged(object? sender, SizeChangedEventArgs e)
@@ -45,7 +45,6 @@ public partial class TrackerMapWindow : RestorableWindow
     private void Control_OnLoaded(object? sender, RoutedEventArgs e)
     {
         _service?.UpdateSize(MainGrid.Bounds.Size);
-        _service?.UpdateLocations();
     }
 
     protected override string RestoreFilePath => Path.Combine(Directories.AppDataFolder, "Windows", "tracker-map-window.json");

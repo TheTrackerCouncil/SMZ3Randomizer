@@ -24,17 +24,14 @@ public class ViewedText : IZeldaStateCheck
     private readonly Dictionary<int, HintTile> _hintTiles;
     private HashSet<int> _viewedHintTileRooms = new();
     private HintTile? _lastHintTile;
-    private Dictionary<PlayerHintTile, List<Location>> _pendingHintTiles;
+    private Dictionary<PlayerHintTile, List<Location>> _pendingHintTiles = [];
 
     public ViewedText(IWorldAccessor worldAccessor, TrackerBase tracker, HintTileConfig hintTileConfig)
     {
         _worldAccessor = worldAccessor;
-        _hintTiles = hintTileConfig.HintTiles?.ToDictionary(x => x.Room, x => x) ?? new();
+        _hintTiles = hintTileConfig.HintTiles?.ToDictionary(x => x.Room, x => x) ?? [];
         _tracker = tracker;
-        _tracker.LocationCleared += TrackerOnLocationCleared;
-        _pendingHintTiles = _worldAccessor.World.HintTiles
-            .Where(x => x.State is { HintState: HintState.Viewed } && x.Locations?.Any() == true).ToDictionary(h => h,
-                h => h.Locations!.Select(l => _worldAccessor.World.FindLocation(l)).ToList());
+        InitHintTiles(_worldAccessor.World.HintTiles);
     }
 
     private World World => _worldAccessor.World;
@@ -69,13 +66,26 @@ public class ViewedText : IZeldaStateCheck
         return false;
     }
 
+    private void InitHintTiles(IEnumerable<PlayerHintTile> hintTiles)
+    {
+        foreach (var hintTile in hintTiles)
+        {
+            if (hintTile.HintState != HintState.Viewed || hintTile.Locations?.Any() != true)
+            {
+                continue;
+            }
+
+            AddPendingHintTile(hintTile);
+        }
+    }
+
     /// <summary>
     /// Marks the dungeon with the green pendant
     /// </summary>
     private void MarkGreenPendantDungeons()
     {
-        var dungeon = World.Dungeons.FirstOrDefault(x =>
-            x.DungeonRewardType == RewardType.PendantGreen && x.MarkedReward != RewardType.PendantGreen);
+        var dungeon = World.RewardRegions.FirstOrDefault(x =>
+            x is { RewardType: RewardType.PendantGreen, HasCorrectlyMarkedReward: false });
 
         if (dungeon == null)
         {
@@ -83,7 +93,7 @@ public class ViewedText : IZeldaStateCheck
             return;
         }
 
-        _tracker.SetDungeonReward(dungeon, dungeon.DungeonRewardType);
+        _tracker.RewardTracker.SetAreaReward(dungeon, dungeon.RewardType);
         _greenPendantUpdated = true;
     }
 
@@ -92,10 +102,10 @@ public class ViewedText : IZeldaStateCheck
     /// </summary>
     private void MarkRedCrystalDungeons()
     {
-        var dungeons = World.Dungeons.Where(x =>
-            x.DungeonRewardType == RewardType.CrystalRed && x.MarkedReward != RewardType.CrystalRed).ToList();
+        var dungeons = World.RewardRegions.Where(x =>
+            x is { RewardType: RewardType.PendantGreen, HasCorrectlyMarkedReward: false }).ToList();
 
-        if (!dungeons.Any())
+        if (dungeons.Count == 0)
         {
             _redCrystalsUpdated = true;
             return;
@@ -103,7 +113,7 @@ public class ViewedText : IZeldaStateCheck
 
         foreach (var dungeon in dungeons)
         {
-            _tracker.SetDungeonReward(dungeon, dungeon.DungeonRewardType);
+            _tracker.RewardTracker.SetAreaReward(dungeon, dungeon.RewardType);
         }
 
         _redCrystalsUpdated = true;
@@ -122,30 +132,34 @@ public class ViewedText : IZeldaStateCheck
 
         _viewedHintTileRooms.Add(_lastHintTile.Room);
 
-        if (hintTile.State.HintState != HintState.Default)
+        if (hintTile.HintState != HintState.Default)
         {
             return;
         }
 
-        _tracker.UpdateHintTile(hintTile);
+        _tracker.GameStateTracker.UpdateHintTile(hintTile);
 
-        if (hintTile.State.HintState == HintState.Viewed && hintTile.Locations?.Any() == true)
+        if (hintTile.HintState == HintState.Viewed && hintTile.Locations?.Any() == true)
         {
-            var locations = hintTile.Locations!.Select(x => World.FindLocation(x)).ToList();
-            _pendingHintTiles.Add(hintTile, locations);
+            AddPendingHintTile(hintTile);
         }
     }
 
-    private void TrackerOnLocationCleared(object? sender, LocationClearedEventArgs e)
+    private void AddPendingHintTile(PlayerHintTile hintTile)
     {
-        foreach (var (hintTile, locations) in _pendingHintTiles)
+        var locations = hintTile.Locations!.Select(x => World.FindLocation(x)).ToList();
+        _pendingHintTiles.Add(hintTile, locations);
+
+        foreach (var location in locations)
         {
-            if (locations.All(x => x.State.Autotracked || x.State.Cleared))
+            location.ClearedUpdated += (sender, args) =>
             {
-                hintTile.State!.HintState = HintState.Cleared;
+                locations.Remove(location);
+                if (locations.Count != 0) return;
+                hintTile.HintState = HintState.Cleared;
                 _pendingHintTiles.Remove(hintTile);
-                _tracker.UpdateHintTile(hintTile);
-            }
+                _tracker.GameStateTracker.UpdateHintTile(hintTile);
+            };
         }
     }
 }

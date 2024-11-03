@@ -21,6 +21,7 @@ public class TrackerMapWindowViewModel : ViewModelBase
         : Path.Combine(Sprite.SpritePath, "Maps", SelectedMap.Image);
 
     [Reactive] public List<TrackerMapLocationViewModel> Locations { get; set; } = [];
+    [Reactive] public bool FinishedLoading { get; set; }
 
     public Size GridSize { get; set; }
 

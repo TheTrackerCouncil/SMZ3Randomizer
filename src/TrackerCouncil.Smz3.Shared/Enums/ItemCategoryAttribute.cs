@@ -5,8 +5,7 @@ namespace TrackerCouncil.Smz3.Shared.Enums;
 /// <summary>
 /// Specifies the item categories for an item type.
 /// </summary>
-[AttributeUsage(AttributeTargets.Field,
-    Inherited = false, AllowMultiple = false)]
+[AttributeUsage(AttributeTargets.Field)]
 public sealed class ItemCategoryAttribute : Attribute
 {
     /// <summary>
@@ -14,7 +13,7 @@ public sealed class ItemCategoryAttribute : Attribute
     /// cref="ItemCategoryAttribute"/> class with the specified categories.
     /// </summary>
     /// <param name="categories">
-    /// The categories to assing to the item type.
+    /// The categories to assign to the item type.
     /// </param>
     public ItemCategoryAttribute(params ItemCategory[] categories)
     {

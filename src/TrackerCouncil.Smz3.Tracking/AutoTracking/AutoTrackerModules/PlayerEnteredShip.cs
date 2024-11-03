@@ -32,7 +32,7 @@ public class PlayerEnteredShip(TrackerBase tracker, ISnesConnectorService snesCo
         }
         if (data.ReadUInt16(0) == 0xAA4F)
         {
-            Tracker.GameBeaten(true);
+            Tracker.GameStateTracker.GameBeaten(true);
         }
     }
 }

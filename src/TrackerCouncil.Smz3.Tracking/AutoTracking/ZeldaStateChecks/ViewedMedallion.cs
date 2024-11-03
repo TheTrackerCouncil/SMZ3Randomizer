@@ -1,6 +1,7 @@
 ﻿using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Tracking;
 using TrackerCouncil.Smz3.Data.WorldData;
+using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
 
 namespace TrackerCouncil.Smz3.Tracking.AutoTracking.ZeldaStateChecks;
@@ -8,22 +9,12 @@ namespace TrackerCouncil.Smz3.Tracking.AutoTracking.ZeldaStateChecks;
 /// <summary>
 /// Zelda state check for marking medallion requirements for Misery Mire or Turtle Rock
 /// </summary>
-public class ViewedMedallion : IZeldaStateCheck
+public class ViewedMedallion(IWorldAccessor worldAccessor) : IZeldaStateCheck
 {
     private TrackerBase? _tracker;
-    private readonly IWorldAccessor _worldAccessor;
     private bool _mireUpdated;
     private bool _turtleRockUpdated;
-
-    public ViewedMedallion(IWorldAccessor worldAccessor, IItemService itemService)
-    {
-        _worldAccessor = worldAccessor;
-        Items = itemService;
-    }
-
-    protected World World => _worldAccessor.World;
-
-    protected IItemService Items { get; }
+    private World World => worldAccessor.World;
 
     /// <summary>
     /// Executes the check for the current state
@@ -41,12 +32,12 @@ public class ViewedMedallion : IZeldaStateCheck
         var x = currentState.LinkX;
         var y = currentState.LinkY;
 
-        if (!_mireUpdated && currentState.OverworldScreen == 112 && x is >= 172 and <= 438 && y is >= 3200 and <= 3432)
+        if (!_mireUpdated && currentState.OverworldScreen == 112 && x is >= 172 and <= 438 && y is >= 3200 and <= 3432 && !((IHasPrerequisite)World.MiseryMire).HasMarkedCorrectly)
         {
             tracker.AutoTracker.SetLatestViewAction("MarkMiseryMireMedallion", MarkMiseryMireMedallion);
             return true;
         }
-        else if (!_turtleRockUpdated && currentState.OverworldScreen == 71 && x is >= 3708 and <= 4016 && y is >= 128 and <= 368)
+        else if (!_turtleRockUpdated && currentState.OverworldScreen == 71 && x is >= 3708 and <= 4016 && y is >= 128 and <= 368 && !((IHasPrerequisite)World.TurtleRock).HasMarkedCorrectly)
         {
             tracker.AutoTracker.SetLatestViewAction("MarkTurtleRockMedallion", MarkTurtleRockMedallion);
             return true;
@@ -59,7 +50,7 @@ public class ViewedMedallion : IZeldaStateCheck
     {
         if (_tracker == null || _mireUpdated) return;
         var dungeon = _tracker.World.MiseryMire;
-        _tracker.SetDungeonRequirement(dungeon, dungeon.DungeonState.RequiredMedallion, null, true);
+        _tracker.PrerequisiteTracker.SetDungeonRequirement(dungeon, dungeon.PrerequisiteState.RequiredItem, null, true);
         _mireUpdated = true;
     }
 
@@ -67,7 +58,7 @@ public class ViewedMedallion : IZeldaStateCheck
     {
         if (_tracker == null || _turtleRockUpdated) return;
         var dungeon = _tracker.World.TurtleRock;
-        _tracker.SetDungeonRequirement(dungeon, dungeon.DungeonState.RequiredMedallion, null, true);
+        _tracker.PrerequisiteTracker.SetDungeonRequirement(dungeon, dungeon.PrerequisiteState.RequiredItem, null, true);
         _turtleRockUpdated = true;
     }
 

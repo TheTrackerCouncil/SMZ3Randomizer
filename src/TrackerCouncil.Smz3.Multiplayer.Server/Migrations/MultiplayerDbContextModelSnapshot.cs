@@ -7,341 +7,290 @@ using TrackerCouncil.Smz3.Multiplayer.Server;
 
 #nullable disable
 
-namespace TrackerCouncil.Smz3.Multiplayer.Server.Migrations;
-
-[DbContext(typeof(MultiplayerDbContext))]
-partial class MultiplayerDbContextModelSnapshot : ModelSnapshot
+namespace TrackerCouncil.Smz3.Multiplayer.Server.Migrations
 {
-    protected override void BuildModel(ModelBuilder modelBuilder)
+    [DbContext(typeof(MultiplayerDbContext))]
+    partial class MultiplayerDbContextModelSnapshot : ModelSnapshot
     {
+        protected override void BuildModel(ModelBuilder modelBuilder)
+        {
 #pragma warning disable 612, 618
-        modelBuilder.HasAnnotation("ProductVersion", "6.0.11");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.7");
 
-        modelBuilder.Entity("Randomizer.Shared.Multiplayer.MultiplayerBossState", b =>
-        {
-            b.Property<long>("Id")
-                .ValueGeneratedOnAdd()
-                .HasColumnType("INTEGER");
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Multiplayer.MultiplayerBossState", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-            b.Property<int>("Boss")
-                .HasColumnType("INTEGER");
+                    b.Property<int>("Boss")
+                        .HasColumnType("INTEGER");
 
-            b.Property<long>("GameId")
-                .HasColumnType("INTEGER");
+                    b.Property<long>("GameId")
+                        .HasColumnType("INTEGER");
 
-            b.Property<long>("PlayerId")
-                .HasColumnType("INTEGER");
+                    b.Property<long>("PlayerId")
+                        .HasColumnType("INTEGER");
 
-            b.Property<bool>("Tracked")
-                .HasColumnType("INTEGER");
+                    b.Property<bool>("Tracked")
+                        .HasColumnType("INTEGER");
 
-            b.Property<DateTimeOffset?>("TrackedTime")
-                .HasColumnType("TEXT");
+                    b.Property<DateTimeOffset?>("TrackedTime")
+                        .HasColumnType("TEXT");
 
-            b.HasKey("Id");
+                    b.HasKey("Id");
 
-            b.HasIndex("GameId");
+                    b.HasIndex("GameId");
 
-            b.HasIndex("PlayerId");
+                    b.HasIndex("PlayerId");
 
-            b.ToTable("MultiplayerBossStates");
-        });
+                    b.ToTable("MultiplayerBossStates");
+                });
 
-        modelBuilder.Entity("Randomizer.Shared.Multiplayer.MultiplayerDungeonState", b =>
-        {
-            b.Property<long>("Id")
-                .ValueGeneratedOnAdd()
-                .HasColumnType("INTEGER");
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Multiplayer.MultiplayerGameState", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-            b.Property<string>("Dungeon")
-                .IsRequired()
-                .HasColumnType("TEXT");
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("TEXT");
 
-            b.Property<long>("GameId")
-                .HasColumnType("INTEGER");
+                    b.Property<bool>("DeathLink")
+                        .HasColumnType("INTEGER");
 
-            b.Property<long>("PlayerId")
-                .HasColumnType("INTEGER");
+                    b.Property<string>("Guid")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-            b.Property<bool>("Tracked")
-                .HasColumnType("INTEGER");
+                    b.Property<DateTimeOffset>("LastMessage")
+                        .HasColumnType("TEXT");
 
-            b.Property<DateTimeOffset?>("TrackedTime")
-                .HasColumnType("TEXT");
+                    b.Property<bool>("SaveToDatabase")
+                        .HasColumnType("INTEGER");
 
-            b.HasKey("Id");
+                    b.Property<string>("Seed")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-            b.HasIndex("GameId");
+                    b.Property<bool>("SendItemsOnComplete")
+                        .HasColumnType("INTEGER");
 
-            b.HasIndex("PlayerId");
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
 
-            b.ToTable("MultiplayerDungeonStates");
-        });
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
 
-        modelBuilder.Entity("Randomizer.Shared.Multiplayer.MultiplayerGameState", b =>
-        {
-            b.Property<long>("Id")
-                .ValueGeneratedOnAdd()
-                .HasColumnType("INTEGER");
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-            b.Property<DateTimeOffset>("CreatedDate")
-                .HasColumnType("TEXT");
+                    b.Property<string>("ValidationHash")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-            b.Property<bool>("DeathLink")
-                .HasColumnType("INTEGER");
+                    b.Property<string>("Version")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-            b.Property<string>("Guid")
-                .IsRequired()
-                .HasColumnType("TEXT");
+                    b.HasKey("Id");
 
-            b.Property<DateTimeOffset>("LastMessage")
-                .HasColumnType("TEXT");
+                    b.ToTable("MultiplayerGameStates");
+                });
 
-            b.Property<bool>("SaveToDatabase")
-                .HasColumnType("INTEGER");
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Multiplayer.MultiplayerItemState", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-            b.Property<string>("Seed")
-                .IsRequired()
-                .HasColumnType("TEXT");
+                    b.Property<long>("GameId")
+                        .HasColumnType("INTEGER");
 
-            b.Property<bool>("SendItemsOnComplete")
-                .HasColumnType("INTEGER");
+                    b.Property<byte>("Item")
+                        .HasColumnType("INTEGER");
 
-            b.Property<int>("Status")
-                .HasColumnType("INTEGER");
+                    b.Property<long>("PlayerId")
+                        .HasColumnType("INTEGER");
 
-            b.Property<int>("Type")
-                .HasColumnType("INTEGER");
+                    b.Property<DateTimeOffset?>("TrackedTime")
+                        .HasColumnType("TEXT");
 
-            b.Property<string>("Url")
-                .IsRequired()
-                .HasColumnType("TEXT");
+                    b.Property<int>("TrackingValue")
+                        .HasColumnType("INTEGER");
 
-            b.Property<string>("ValidationHash")
-                .IsRequired()
-                .HasColumnType("TEXT");
+                    b.HasKey("Id");
 
-            b.Property<string>("Version")
-                .IsRequired()
-                .HasColumnType("TEXT");
+                    b.HasIndex("GameId");
 
-            b.HasKey("Id");
+                    b.HasIndex("PlayerId");
 
-            b.ToTable("MultiplayerGameStates");
-        });
+                    b.ToTable("MultiplayerItemStates");
+                });
 
-        modelBuilder.Entity("Randomizer.Shared.Multiplayer.MultiplayerItemState", b =>
-        {
-            b.Property<long>("Id")
-                .ValueGeneratedOnAdd()
-                .HasColumnType("INTEGER");
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Multiplayer.MultiplayerLocationState", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-            b.Property<long>("GameId")
-                .HasColumnType("INTEGER");
+                    b.Property<long>("GameId")
+                        .HasColumnType("INTEGER");
 
-            b.Property<byte>("Item")
-                .HasColumnType("INTEGER");
+                    b.Property<int>("LocationId")
+                        .HasColumnType("INTEGER");
 
-            b.Property<long>("PlayerId")
-                .HasColumnType("INTEGER");
+                    b.Property<long>("PlayerId")
+                        .HasColumnType("INTEGER");
 
-            b.Property<DateTimeOffset?>("TrackedTime")
-                .HasColumnType("TEXT");
+                    b.Property<bool>("Tracked")
+                        .HasColumnType("INTEGER");
 
-            b.Property<int>("TrackingValue")
-                .HasColumnType("INTEGER");
+                    b.Property<DateTimeOffset?>("TrackedTime")
+                        .HasColumnType("TEXT");
 
-            b.HasKey("Id");
+                    b.HasKey("Id");
 
-            b.HasIndex("GameId");
+                    b.HasIndex("GameId");
 
-            b.HasIndex("PlayerId");
+                    b.HasIndex("PlayerId");
 
-            b.ToTable("MultiplayerItemStates");
-        });
+                    b.ToTable("MultiplayerLocationStates");
+                });
 
-        modelBuilder.Entity("Randomizer.Shared.Multiplayer.MultiplayerLocationState", b =>
-        {
-            b.Property<long>("Id")
-                .ValueGeneratedOnAdd()
-                .HasColumnType("INTEGER");
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Multiplayer.MultiplayerPlayerState", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-            b.Property<long>("GameId")
-                .HasColumnType("INTEGER");
+                    b.Property<string>("AdditionalData")
+                        .HasColumnType("TEXT");
 
-            b.Property<int>("LocationId")
-                .HasColumnType("INTEGER");
+                    b.Property<string>("Config")
+                        .HasColumnType("TEXT");
 
-            b.Property<long>("PlayerId")
-                .HasColumnType("INTEGER");
+                    b.Property<long>("GameId")
+                        .HasColumnType("INTEGER");
 
-            b.Property<bool>("Tracked")
-                .HasColumnType("INTEGER");
+                    b.Property<string>("GenerationData")
+                        .HasColumnType("TEXT");
 
-            b.Property<DateTimeOffset?>("TrackedTime")
-                .HasColumnType("TEXT");
+                    b.Property<string>("Guid")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-            b.HasKey("Id");
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("INTEGER");
 
-            b.HasIndex("GameId");
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-            b.HasIndex("PlayerId");
+                    b.Property<string>("PhoneticName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-            b.ToTable("MultiplayerLocationStates");
-        });
+                    b.Property<string>("PlayerName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-        modelBuilder.Entity("Randomizer.Shared.Multiplayer.MultiplayerPlayerState", b =>
-        {
-            b.Property<long>("Id")
-                .ValueGeneratedOnAdd()
-                .HasColumnType("INTEGER");
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
 
-            b.Property<string>("AdditionalData")
-                .HasColumnType("TEXT");
+                    b.Property<int?>("WorldId")
+                        .HasColumnType("INTEGER");
 
-            b.Property<string>("Config")
-                .HasColumnType("TEXT");
+                    b.HasKey("Id");
 
-            b.Property<long>("GameId")
-                .HasColumnType("INTEGER");
+                    b.HasIndex("GameId");
 
-            b.Property<string>("GenerationData")
-                .HasColumnType("TEXT");
+                    b.ToTable("MultiplayerPlayerStates");
+                });
 
-            b.Property<string>("Guid")
-                .IsRequired()
-                .HasColumnType("TEXT");
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Multiplayer.MultiplayerBossState", b =>
+                {
+                    b.HasOne("TrackerCouncil.Smz3.Shared.Multiplayer.MultiplayerGameState", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-            b.Property<bool>("IsAdmin")
-                .HasColumnType("INTEGER");
+                    b.HasOne("TrackerCouncil.Smz3.Shared.Multiplayer.MultiplayerPlayerState", "Player")
+                        .WithMany("Bosses")
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-            b.Property<string>("Key")
-                .IsRequired()
-                .HasColumnType("TEXT");
+                    b.Navigation("Game");
 
-            b.Property<string>("PhoneticName")
-                .IsRequired()
-                .HasColumnType("TEXT");
+                    b.Navigation("Player");
+                });
 
-            b.Property<string>("PlayerName")
-                .IsRequired()
-                .HasColumnType("TEXT");
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Multiplayer.MultiplayerItemState", b =>
+                {
+                    b.HasOne("TrackerCouncil.Smz3.Shared.Multiplayer.MultiplayerGameState", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-            b.Property<int>("Status")
-                .HasColumnType("INTEGER");
+                    b.HasOne("TrackerCouncil.Smz3.Shared.Multiplayer.MultiplayerPlayerState", "Player")
+                        .WithMany("Items")
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-            b.Property<int?>("WorldId")
-                .HasColumnType("INTEGER");
+                    b.Navigation("Game");
 
-            b.HasKey("Id");
+                    b.Navigation("Player");
+                });
 
-            b.HasIndex("GameId");
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Multiplayer.MultiplayerLocationState", b =>
+                {
+                    b.HasOne("TrackerCouncil.Smz3.Shared.Multiplayer.MultiplayerGameState", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-            b.ToTable("MultiplayerPlayerStates");
-        });
+                    b.HasOne("TrackerCouncil.Smz3.Shared.Multiplayer.MultiplayerPlayerState", "Player")
+                        .WithMany("Locations")
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-        modelBuilder.Entity("Randomizer.Shared.Multiplayer.MultiplayerBossState", b =>
-        {
-            b.HasOne("Randomizer.Shared.Multiplayer.MultiplayerGameState", "Game")
-                .WithMany()
-                .HasForeignKey("GameId")
-                .OnDelete(DeleteBehavior.Cascade)
-                .IsRequired();
+                    b.Navigation("Game");
 
-            b.HasOne("Randomizer.Shared.Multiplayer.MultiplayerPlayerState", "Player")
-                .WithMany("Bosses")
-                .HasForeignKey("PlayerId")
-                .OnDelete(DeleteBehavior.Cascade)
-                .IsRequired();
+                    b.Navigation("Player");
+                });
 
-            b.Navigation("Game");
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Multiplayer.MultiplayerPlayerState", b =>
+                {
+                    b.HasOne("TrackerCouncil.Smz3.Shared.Multiplayer.MultiplayerGameState", "Game")
+                        .WithMany("Players")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-            b.Navigation("Player");
-        });
+                    b.Navigation("Game");
+                });
 
-        modelBuilder.Entity("Randomizer.Shared.Multiplayer.MultiplayerDungeonState", b =>
-        {
-            b.HasOne("Randomizer.Shared.Multiplayer.MultiplayerGameState", "Game")
-                .WithMany()
-                .HasForeignKey("GameId")
-                .OnDelete(DeleteBehavior.Cascade)
-                .IsRequired();
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Multiplayer.MultiplayerGameState", b =>
+                {
+                    b.Navigation("Players");
+                });
 
-            b.HasOne("Randomizer.Shared.Multiplayer.MultiplayerPlayerState", "Player")
-                .WithMany("Dungeons")
-                .HasForeignKey("PlayerId")
-                .OnDelete(DeleteBehavior.Cascade)
-                .IsRequired();
+            modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Multiplayer.MultiplayerPlayerState", b =>
+                {
+                    b.Navigation("Bosses");
 
-            b.Navigation("Game");
+                    b.Navigation("Items");
 
-            b.Navigation("Player");
-        });
-
-        modelBuilder.Entity("Randomizer.Shared.Multiplayer.MultiplayerItemState", b =>
-        {
-            b.HasOne("Randomizer.Shared.Multiplayer.MultiplayerGameState", "Game")
-                .WithMany()
-                .HasForeignKey("GameId")
-                .OnDelete(DeleteBehavior.Cascade)
-                .IsRequired();
-
-            b.HasOne("Randomizer.Shared.Multiplayer.MultiplayerPlayerState", "Player")
-                .WithMany("Items")
-                .HasForeignKey("PlayerId")
-                .OnDelete(DeleteBehavior.Cascade)
-                .IsRequired();
-
-            b.Navigation("Game");
-
-            b.Navigation("Player");
-        });
-
-        modelBuilder.Entity("Randomizer.Shared.Multiplayer.MultiplayerLocationState", b =>
-        {
-            b.HasOne("Randomizer.Shared.Multiplayer.MultiplayerGameState", "Game")
-                .WithMany()
-                .HasForeignKey("GameId")
-                .OnDelete(DeleteBehavior.Cascade)
-                .IsRequired();
-
-            b.HasOne("Randomizer.Shared.Multiplayer.MultiplayerPlayerState", "Player")
-                .WithMany("Locations")
-                .HasForeignKey("PlayerId")
-                .OnDelete(DeleteBehavior.Cascade)
-                .IsRequired();
-
-            b.Navigation("Game");
-
-            b.Navigation("Player");
-        });
-
-        modelBuilder.Entity("Randomizer.Shared.Multiplayer.MultiplayerPlayerState", b =>
-        {
-            b.HasOne("Randomizer.Shared.Multiplayer.MultiplayerGameState", "Game")
-                .WithMany("Players")
-                .HasForeignKey("GameId")
-                .OnDelete(DeleteBehavior.Cascade)
-                .IsRequired();
-
-            b.Navigation("Game");
-        });
-
-        modelBuilder.Entity("Randomizer.Shared.Multiplayer.MultiplayerGameState", b =>
-        {
-            b.Navigation("Players");
-        });
-
-        modelBuilder.Entity("Randomizer.Shared.Multiplayer.MultiplayerPlayerState", b =>
-        {
-            b.Navigation("Bosses");
-
-            b.Navigation("Dungeons");
-
-            b.Navigation("Items");
-
-            b.Navigation("Locations");
-        });
+                    b.Navigation("Locations");
+                });
 #pragma warning restore 612, 618
+        }
     }
 }

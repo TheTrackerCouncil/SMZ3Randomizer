@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TrackerCouncil.Smz3.Shared.Enums;
 
@@ -19,10 +20,23 @@ public class PlayerHintTile
     public string HintTileCode { get; set; } = "";
     public TrackerHintState? State { get; set; }
 
+    public HintState HintState
+    {
+        get => State?.HintState ?? HintState.Default;
+        set
+        {
+            if (State == null || State.HintState == value) return;
+            State.HintState = value;
+            HintStateUpdated?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
     public PlayerHintTile GetHintTile(string code)
     {
         var clone = MemberwiseClone() as PlayerHintTile;
         clone!.HintTileCode = code;
         return clone;
     }
+
+    public event EventHandler? HintStateUpdated;
 }
