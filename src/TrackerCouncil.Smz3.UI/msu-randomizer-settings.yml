@@ -13,7 +13,14 @@ MsuWindowTitle: SMZ3 Cas' Randomizer
 MsuTypeNameOverrides:
   "Super Metroid / A Link to the Past Combination Randomizer Legacy": "SMZ3 Classic (Metroid First)"
   "Super Metroid / A Link to the Past Combination Randomizer": "SMZ3 Combo Randomizer"
+  "The Legend of Zelda": "Zelda 1 SNES Port"
+  "Metroid": "Metroid 1 SNES Port"
 Smz3MsuTypes:
   - SMZ3 Classic (Metroid First)
   - SMZ3 Combo Randomizer
 DisableMessenger: true
+MsuTypeFilter:
+  - SMZ3 Combo Randomizer
+  - SMZ3 Classic (Metroid First)
+  - Super Metroid
+  - "The Legend of Zelda: A Link to the Past"

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Speech.Recognition;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MSURandomizerLibrary;
 using MSURandomizerLibrary.Configs;
@@ -160,10 +159,10 @@ public class MsuModule : TrackerModule, IDisposable
     {
         if (!_validTrackNumbers.Contains(e.Track.Number)) return;
 
-        Logger.LogInformation("Msu Track Changed - Have tracker response");
-
         _currentTrack = e.Track;
         _currentTrackNumber = e.Track.Number;
+
+        Logger.LogDebug("Msu track changed to: {SongName}", e.Track.GetDisplayText(TrackDisplayFormat.Horizontal));
 
         // Respond if we have lines to the song number, song name, or msu name
         if (_msuConfig.SongResponses?.TryGetValue(_currentTrack.MsuName ?? "", out var response) == true)
