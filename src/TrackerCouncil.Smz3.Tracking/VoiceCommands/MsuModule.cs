@@ -82,7 +82,7 @@ public class MsuModule : TrackerModule, IDisposable
             InitializeLocalMsuSupport(msuType);
             _isLocal = true;
         }
-        else
+        else if (!tracker.Options.DisableMsuMessageReceiver)
         {
             InitializeRemoteMsuSupport();
         }
