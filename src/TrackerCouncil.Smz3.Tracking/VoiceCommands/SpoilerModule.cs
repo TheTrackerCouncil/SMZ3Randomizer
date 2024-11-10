@@ -958,13 +958,27 @@ public class SpoilerModule : TrackerModule, IOptionalModule
         {
             AddCommand("Enable hints", GetEnableHintsRule(), (_) =>
             {
-                TrackerBase.HintsEnabled = true;
-                TrackerBase.Say(x => x.Hints.EnabledHints);
+                if (!TrackerBase.HintsEnabled)
+                {
+                    TrackerBase.HintsEnabled = true;
+                    TrackerBase.Say(x => x.Hints.EnabledHints);
+                }
+                else
+                {
+                    TrackerBase.Say(x => x.Hints.AlreadyEnabledHints);
+                }
             });
             AddCommand("Disable hints", GetDisableHintsRule(), (_) =>
             {
-                TrackerBase.HintsEnabled = false;
-                TrackerBase.Say(x => x.Hints.DisabledHints);
+                if (TrackerBase.HintsEnabled)
+                {
+                    TrackerBase.HintsEnabled = false;
+                    TrackerBase.Say(x => x.Hints.DisabledHints);
+                }
+                else
+                {
+                    TrackerBase.Say(x => x.Hints.AlreadyDisabledHints);
+                }
             });
             AddCommand("Give progression hint", GetProgressionHintRule(), (_) =>
             {
@@ -982,13 +996,27 @@ public class SpoilerModule : TrackerModule, IOptionalModule
         {
             AddCommand("Enable spoilers", GetEnableSpoilersRule(), (_) =>
             {
-                TrackerBase.SpoilersEnabled = true;
-                TrackerBase.Say(x => x.Spoilers.EnabledSpoilers);
+                if (!TrackerBase.SpoilersEnabled)
+                {
+                    TrackerBase.SpoilersEnabled = true;
+                    TrackerBase.Say(x => x.Spoilers.EnabledSpoilers);
+                }
+                else
+                {
+                    TrackerBase.Say(x => x.Spoilers.AlreadyEnabledSpoilers);
+                }
             });
             AddCommand("Disable spoilers", GetDisableSpoilersRule(), (_) =>
             {
-                TrackerBase.SpoilersEnabled = false;
-                TrackerBase.Say(x => x.Spoilers.DisabledSpoilers);
+                if (TrackerBase.SpoilersEnabled)
+                {
+                    TrackerBase.SpoilersEnabled = false;
+                    TrackerBase.Say(x => x.Spoilers.DisabledSpoilers);
+                }
+                else
+                {
+                    TrackerBase.Say(x => x.Spoilers.AlreadyDisabledSpoilers);
+                }
             });
 
             AddCommand("Reveal item location", GetItemSpoilerRule(), (result) =>
