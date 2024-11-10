@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -29,6 +30,7 @@ public class SharedCrossplatformService(
     IServiceProvider serviceProvider,
     IMsuLookupService msuLookupService,
     Smz3GeneratedRomLoader smz3GeneratedRomLoader,
+    IMsuTypeService msuTypeService,
     ILogger<SharedCrossplatformService> logger)
 {
     private static TrackerWindow? s_trackerWindow;
@@ -316,7 +318,11 @@ public class SharedCrossplatformService(
 
         ITaskService.Run(() =>
         {
-            msuLookupService.LookupMsus(msuDirectory);
+            var smz3MsuType = msuTypeService.GetSMZ3MsuType() ?? throw new InvalidOperationException();
+            msuLookupService.LookupMsus(msuDirectory, new Dictionary<string, string>()
+            {
+                { msuDirectory, smz3MsuType.DisplayName }
+            });
         });
     }
 

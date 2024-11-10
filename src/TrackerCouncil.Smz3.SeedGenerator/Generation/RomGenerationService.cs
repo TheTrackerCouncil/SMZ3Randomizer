@@ -387,9 +387,13 @@ public class RomGenerationService : IRomGenerationService
             return false;
         }
 
-        if (!_msuLookupService.Msus.Any())
+        if (!_msuLookupService.Msus.Any() && !string.IsNullOrEmpty(options.GeneralOptions.MsuPath))
         {
-            _msuLookupService.LookupMsus(options.GeneralOptions.MsuPath);
+            var smz3MsuType = _msuTypeService.GetSMZ3MsuType() ?? throw new InvalidOperationException();
+            _msuLookupService.LookupMsus(options.GeneralOptions.MsuPath, new Dictionary<string, string>()
+            {
+                { options.GeneralOptions.MsuPath, smz3MsuType.DisplayName }
+            });
         }
 
         var romFileInfo = new FileInfo(romPath);
