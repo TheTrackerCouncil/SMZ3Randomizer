@@ -395,6 +395,9 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
         {
             var senderName = TrackerBase.CorrectUserNamePronunciation(e.Message.Sender);
 
+            if (e.Message.SenderUserName.Equals("Dr_Dubz", StringComparison.OrdinalIgnoreCase))
+                ProcessDrDubzChatMessage(e.Message, senderName);
+
             if (ShouldRespondToGreetings)
                 TryRespondToGreetings(e.Message, senderName);
 
@@ -488,6 +491,15 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
         if (closeGuessesPattern.IsMatch(message.Text))
         {
             var _ = CloseGanonsTowerGuessingGameGuesses(senderNamePronunciation);
+        }
+    }
+
+    private void ProcessDrDubzChatMessage(ChatMessage message, string senderNamePronunciation)
+    {
+        var drDubzArtLinkPattern = new Regex("(https://(i\\.)?imgur\\.com/)", RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(500));
+        if (drDubzArtLinkPattern.IsMatch(message.Text))
+        {
+            TrackerBase.Say(x => x.Chat.DrDubzArtPosted);
         }
     }
 
