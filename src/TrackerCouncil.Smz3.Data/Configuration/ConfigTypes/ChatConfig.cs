@@ -199,4 +199,9 @@ public class ChatConfig : IMergeable<ChatConfig>
     /// Gets the phrases for when the poll was terminated before any results came in
     /// </summary>
     public SchrodingersString? PollErrorTerminated { get; init; }
+
+    /// <summary>
+    /// Gets the phrases to say when Dr_Dubz posts an art link in the chat.
+    /// </summary>
+    public SchrodingersString? DrDubzArtPosted { get; init; }
 }
