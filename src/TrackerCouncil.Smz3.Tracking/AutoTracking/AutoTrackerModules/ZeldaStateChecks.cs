@@ -35,6 +35,8 @@ public class ZeldaStateChecks(TrackerBase tracker, ISnesConnectorService snesCon
         Logger.LogDebug("{StateDetails}", zeldaState.ToString());
         if (prevState == null) return;
 
+        AutoTracker.UpdateValidState(zeldaState.IsValid);
+
         if (!_seenGTTorch
             && zeldaState is { CurrentRoom: 140, IsOnBottomHalfOfRoom: false, IsOnRightHalfOfRoom: false }
             && zeldaState.Substate != 14)

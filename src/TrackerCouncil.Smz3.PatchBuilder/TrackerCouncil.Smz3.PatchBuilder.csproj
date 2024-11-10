@@ -13,8 +13,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="MattEqualsCoder.MSURandomizer.Library" Version="2.1.0" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
+      <PackageReference Include="MattEqualsCoder.MSURandomizer.Library" Version="3.0.0-rc.5" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.1" />
     </ItemGroup>
 
     <ItemGroup>
