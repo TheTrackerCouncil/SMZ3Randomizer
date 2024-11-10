@@ -182,9 +182,9 @@ public class GeneralOptions : INotifyPropertyChanged
     public bool DisplayTrackerSpeechWindow { get; set; }
 
     /// <summary>
-    /// If the gRPC server for receiving MSU randomizer messages should be disabled
+    /// If the gRPC server for receiving MSU randomizer messages should be enabled
     /// </summary>
-    public bool DisableMsuMessageReceiver { get; set; }
+    public bool MsuMessageReceiverEnabled { get; set; } = true;
 
     /// <summary>
     /// Check for new releases on GitHub on startup
@@ -268,7 +268,7 @@ public class GeneralOptions : INotifyPropertyChanged
         PushToTalkKey = PushToTalkKey,
         PushToTalkDevice = PushToTalkDevice,
         TrackerTimerEnabled = TrackerTimerEnabled,
-        DisableMsuMessageReceiver = DisableMsuMessageReceiver
+        MsuMessageReceiverEnabled = MsuMessageReceiverEnabled
     };
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)

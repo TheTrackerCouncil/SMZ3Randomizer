@@ -81,8 +81,8 @@ public class OptionsWindowTrackerOptions
     [DynamicFormFieldCheckBox(checkBoxText: "Enable timer", groupName: "Bottom")]
     public bool TrackerTimerEnabled { get; set; } = true;
 
-    [DynamicFormFieldCheckBox(checkBoxText: "Disable MSU Randomizer message server", groupName: "Bottom", toolTipText: "Disables the gRPC server that allows the separate MSU Randomizer application from informing Tracker of when the MSU was shuffled and when the playing track is changed.")]
-    public bool DisableMsuMessageReceiver { get; set; } = false;
+    [DynamicFormFieldCheckBox(checkBoxText: "Enable MSU Randomizer message server", groupName: "Bottom", toolTipText: "Enables the gRPC server that allows the separate MSU Randomizer application from informing Tracker of when the MSU was shuffled and when the playing track is changed.")]
+    public bool MsuMessageReceiverEnabled { get; set; } = true;
 
     public Dictionary<string, string> AudioDevices { get; set; } = new();
 }

@@ -56,7 +56,7 @@ public class OptionsWindowViewModel
         TrackerOptions.TrackerSpoilersEnabled = options.TrackerSpoilersEnabled;
         TrackerOptions.AudioDevices = audioInputDevices;
         TrackerOptions.TrackerTimerEnabled = options.TrackerTimerEnabled;
-        TrackerOptions.DisableMsuMessageReceiver = options.DisableMsuMessageReceiver;
+        TrackerOptions.MsuMessageReceiverEnabled = options.MsuMessageReceiverEnabled;
 
         TwitchIntegration.TwitchUserName = options.TwitchUserName;
         TwitchIntegration.TwitchChannel = options.TwitchChannel;
@@ -108,7 +108,7 @@ public class OptionsWindowViewModel
         options.TrackerHintsEnabled = TrackerOptions.TrackerHintsEnabled;
         options.TrackerSpoilersEnabled = TrackerOptions.TrackerSpoilersEnabled;
         options.TrackerTimerEnabled = TrackerOptions.TrackerTimerEnabled;
-        options.DisableMsuMessageReceiver = TrackerOptions.DisableMsuMessageReceiver;
+        options.MsuMessageReceiverEnabled = TrackerOptions.MsuMessageReceiverEnabled;
 
         options.TwitchUserName = TwitchIntegration.TwitchUserName;
         options.TwitchChannel = TwitchIntegration.TwitchChannel;
