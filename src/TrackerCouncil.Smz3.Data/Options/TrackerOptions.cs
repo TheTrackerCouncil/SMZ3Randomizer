@@ -111,6 +111,11 @@ public record TrackerOptions
     public TrackDisplayFormat TrackDisplayFormat { get; set; }
 
     /// <summary>
+    /// If the gRPC server for receiving MSU randomizer messages should be enabled
+    /// </summary>
+    public bool MsuMessageReceiverEnabled { get; set; } = true;
+
+    /// <summary>
     /// The file to write the current song to
     /// </summary>
     public string? MsuTrackOutputPath { get; set; }

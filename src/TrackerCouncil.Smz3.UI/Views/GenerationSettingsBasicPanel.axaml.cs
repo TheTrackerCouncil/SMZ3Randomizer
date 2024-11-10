@@ -198,6 +198,7 @@ public partial class GenerationSettingsBasicPanel : UserControl
         }
 
         var window = _serviceProvider.GetRequiredService<MsuWindow>();
+        window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
         window.Closed += (sender, args) =>
         {
@@ -209,7 +210,7 @@ public partial class GenerationSettingsBasicPanel : UserControl
             _generationSettingsWindowService.SetMsuPaths(window.GetSelectedMsus().ToList(), randomizationStyle);
         };
 
-        window.ShowDialog((Window)TopLevel.GetTopLevel(this)!, randomizationStyle == null, _generationSettingsWindowService.GetMsuDirectory());
+        window.ShowDialog(ParentWindow, randomizationStyle == null, _generationSettingsWindowService.GetMsuDirectory());
     }
 
     private Window ParentWindow => (Window)TopLevel.GetTopLevel(this)!;
