@@ -16,6 +16,16 @@ public class SpoilerConfig : IMergeable<SpoilerConfig>
     public SchrodingersString? DisabledSpoilers { get; init; }
 
     /// <summary>
+    /// Gets the phrases to respond with when spoilers are turned on, and the user just said "Enable spoilers".
+    /// </summary>
+    public SchrodingersString? AlreadyEnabledSpoilers { get; init; }
+
+    /// <summary>
+    /// Gets the phrases to respond with when spoilers are turned off, and the user just said "Disable spoilers".
+    /// </summary>
+    public SchrodingersString? AlreadyDisabledSpoilers { get; init; }
+
+    /// <summary>
     /// Gets the phrases to respond with when asked about an item and
     /// spoilers are disabled.
     /// </summary>

@@ -16,6 +16,16 @@ public class HintsConfig : IMergeable<HintsConfig>
     public SchrodingersString? DisabledHints { get; init; }
 
     /// <summary>
+    /// Gets the phrases to respond with when hints are turned on, and the user just said "Enable hints".
+    /// </summary>
+    public SchrodingersString? AlreadyEnabledHints { get; init; }
+
+    /// <summary>
+    /// Gets the phrases to respond with when hints are turned off, and the user just said "Disable hints".
+    /// </summary>
+    public SchrodingersString? AlreadyDisabledHints { get; init; }
+
+    /// <summary>
     /// Gets the phrases to respond with when asked about an item and hints
     /// are turned off.
     /// </summary>
