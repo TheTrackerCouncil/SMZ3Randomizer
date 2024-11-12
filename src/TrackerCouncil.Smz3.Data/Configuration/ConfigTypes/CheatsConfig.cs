@@ -16,6 +16,16 @@ public class CheatsConfig : IMergeable<CheatsConfig>
     public SchrodingersString? DisabledCheats { get; init; }
 
     /// <summary>
+    /// Gets the phrases to respond with when asked to turn on cheats but cheats are already enabled.
+    /// </summary>
+    public SchrodingersString? AlreadyEnabledCheats { get; init; }
+
+    /// <summary>
+    /// Gets the phrases to repsond with when asked to turn off cheats but cheats are already disabled.
+    /// </summary>
+    public SchrodingersString? AlreadyDisabledCheats { get; set; }
+
+    /// <summary>
     /// Gets the phrases to respond when a cheat command is given and cheats
     /// are turned off
     /// </summary>
@@ -42,4 +52,9 @@ public class CheatsConfig : IMergeable<CheatsConfig>
     /// themselves an item that does not exist.
     /// </summary>
     public SchrodingersString? CheatInvalidItem { get; init; }
+
+    /// <summary>
+    /// Gets the phrases to respond with after successfully killing the player.
+    /// </summary>
+    public SchrodingersString? KilledPlayer { get; init; }
 }
