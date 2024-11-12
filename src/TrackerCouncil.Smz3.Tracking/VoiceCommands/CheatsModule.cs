@@ -225,14 +225,28 @@ public class CheatsModule : TrackerModule
 
         AddCommand("Enable cheats", GetEnableCheatsRule(), (result) =>
         {
-            _cheatsEnabled = true;
-            TrackerBase.Say(x => x.Cheats.EnabledCheats);
+            if (!_cheatsEnabled)
+            {
+                _cheatsEnabled = true;
+                TrackerBase.Say(x => x.Cheats.EnabledCheats);
+            }
+            else
+            {
+                TrackerBase.Say(x => x.Cheats.AlreadyEnabledCheats);
+            }
         });
 
         AddCommand("Disable cheats", GetDisableHintsRule(), (result) =>
         {
-            _cheatsEnabled = false;
-            TrackerBase.Say(x => x.Cheats.DisabledCheats);
+            if (_cheatsEnabled)
+            {
+                _cheatsEnabled = false;
+                TrackerBase.Say(x => x.Cheats.DisabledCheats);
+            }
+            else
+            {
+                TrackerBase.Say(x => x.Cheats.AlreadyDisabledCheats);
+            }
         });
 
         AddCommand("Fill rule", FillRule(), (result) =>
