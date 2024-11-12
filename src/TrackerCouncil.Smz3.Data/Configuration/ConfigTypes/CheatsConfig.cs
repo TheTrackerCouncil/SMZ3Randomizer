@@ -42,4 +42,9 @@ public class CheatsConfig : IMergeable<CheatsConfig>
     /// themselves an item that does not exist.
     /// </summary>
     public SchrodingersString? CheatInvalidItem { get; init; }
+
+    /// <summary>
+    /// Gets the phrases to respond with after successfully killing the player.
+    /// </summary>
+    public SchrodingersString? KilledPlayer { get; init; }
 }

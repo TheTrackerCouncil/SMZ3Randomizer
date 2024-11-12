@@ -253,7 +253,7 @@ public class CheatsModule : TrackerModule
 
             if (TrackerBase.GameService?.TryKillPlayer() == true)
             {
-                TrackerBase.Say(x => x.Cheats.CheatPerformed);
+                TrackerBase.Say(x => x.Cheats.KilledPlayer ?? x.Cheats.CheatPerformed);
             }
             else
             {
