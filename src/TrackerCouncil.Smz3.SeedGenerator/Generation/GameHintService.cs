@@ -397,7 +397,7 @@ public class GameHintService : IGameHintService
             var canBeatPhantoon = CheckSphereLocationCount(sphereLocations, locations, LocationId.WreckedShipEastSuper, allWorlds.Count);
             var canBeatDraygon = CheckSphereLocationCount(sphereLocations, locations, LocationId.InnerMaridiaSpaceJump, allWorlds.Count);
             var canBeatRidley = CheckSphereLocationCount(sphereLocations, locations, LocationId.LowerNorfairRidleyTank, allWorlds.Count);
-            var allCrateriaBosSKeys = CheckSphereCrateriaBossKeys(sphereLocations);
+            var allCrateriaBossKeys = CheckSphereCrateriaBossKeys(sphereLocations);
 
             // Make sure all players have the silver arrows
             if (sphereLocations.Count(x => x.Item.Type == ItemType.SilverArrows) < allWorlds.Count)
@@ -432,7 +432,7 @@ public class GameHintService : IGameHintService
                 }
             }
 
-            if (!canBeatGT || !canBeatKraid || !canBeatPhantoon || !canBeatDraygon || !canBeatRidley || !allCrateriaBosSKeys)
+            if (!canBeatGT || !canBeatKraid || !canBeatPhantoon || !canBeatDraygon || !canBeatRidley || !allCrateriaBossKeys)
             {
                 return LocationUsefulness.Mandatory;
             }
@@ -468,8 +468,8 @@ public class GameHintService : IGameHintService
     private bool CheckSphereCrateriaBossKeys(List<Location> sphereLocations)
     {
         var numKeysanity = sphereLocations.Select(x => x.World).Distinct().Count(x => x.Config.MetroidKeysanity);
-        var numCratieriaBossKeys = sphereLocations.Select(x => x.Item.Type).Count(x => x == ItemType.CardMaridiaBoss);
-        return numKeysanity == numCratieriaBossKeys;
+        var numCrateriaBossKeys = sphereLocations.Select(x => x.Item.Type).Count(x => x == ItemType.CardCrateriaBoss);
+        return numKeysanity == numCrateriaBossKeys;
     }
 
     private List<Hint> GetMedallionHints(World hintPlayerWorld)
