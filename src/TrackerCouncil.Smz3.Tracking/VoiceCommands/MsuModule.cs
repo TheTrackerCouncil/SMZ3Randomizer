@@ -92,7 +92,12 @@ public class MsuModule : TrackerModule, IDisposable
 
     private void InitializeLocalMsuSupport(MsuType msuType)
     {
-        var romFileInfo = new FileInfo(TrackerBase.Rom!.RomPath);
+        if (string.IsNullOrEmpty(TrackerBase.RomPath))
+        {
+            return;
+        }
+
+        var romFileInfo = new FileInfo(TrackerBase.RomPath);
         var msuPath = romFileInfo.FullName.Replace(romFileInfo.Extension, ".msu");
 
         if (!File.Exists(msuPath))
