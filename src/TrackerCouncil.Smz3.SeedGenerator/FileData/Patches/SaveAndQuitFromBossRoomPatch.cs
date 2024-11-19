@@ -2,6 +2,7 @@
 
 namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
 
+[SkipForParsedRoms]
 public class SaveAndQuitFromBossRoomPatch : RomPatch
 {
     public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)

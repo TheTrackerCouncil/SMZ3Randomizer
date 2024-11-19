@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SnesConnectorLibrary;
-using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.GeneratedData;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
@@ -17,9 +16,9 @@ namespace TrackerCouncil.Smz3.SeedGenerator.Generation;
 
 public class RomTextService(ILogger<RomTextService> logger, IGameHintService gameHintService, ISnesConnectorService snesConnectorService)
 {
-    public async Task<string> WriteSpoilerLog(RandomizerOptions options, SeedData seed, Config config, string folderPath, string fileSuffix)
+    public async Task<string> WriteSpoilerLog(RandomizerOptions options, SeedData seed, Config config, string folderPath, string fileSuffix, bool isParsedRom = false)
     {
-        var spoilerLog = GetSpoilerLog(options, seed, config.Race || config.DisableSpoilerLog);
+        var spoilerLog = GetSpoilerLog(options, seed, config.Race || config.DisableSpoilerLog, isParsedRom);
         var spoilerFileName = $"Spoiler_Log_{fileSuffix}.txt";
         var spoilerPath = Path.Combine(folderPath, spoilerFileName);
         await File.WriteAllTextAsync(spoilerPath, spoilerLog);
@@ -65,40 +64,6 @@ public class RomTextService(ILogger<RomTextService> logger, IGameHintService gam
         }
     }
 
-    private void CopyDirectory(string source, string dest, bool recursive, bool overwrite)
-    {
-        var sourceDir = new DirectoryInfo(source);
-
-        var sourceSubDirs = sourceDir.GetDirectories();
-
-        if (!Directory.Exists(dest))
-        {
-            Directory.CreateDirectory(dest);
-        }
-
-        foreach (var file in sourceDir.GetFiles())
-        {
-            if (overwrite && File.Exists(Path.Combine(dest, file.Name)))
-            {
-                File.Delete(Path.Combine(dest, file.Name));
-            }
-
-            if (!File.Exists(Path.Combine(dest, file.Name)))
-            {
-                file.CopyTo(Path.Combine(dest, file.Name));
-            }
-        }
-
-        if (recursive)
-        {
-            foreach (var subDir in sourceSubDirs)
-            {
-                var destSubDir = Path.Combine(dest, subDir.Name);
-                CopyDirectory(subDir.FullName, destSubDir, recursive, overwrite);
-            }
-        }
-    }
-
     private string? ExportPlandoConfig(SeedData seed)
     {
         try
@@ -131,18 +96,33 @@ public class RomTextService(ILogger<RomTextService> logger, IGameHintService gam
     private static string Underline(string text, char line = '-')
         => text + "\n" + new string(line, text.Length);
 
+    private string SectionTitle(string text)
+    {
+        return "\n" + Underline(text, '=') + "\n";
+    }
+
     /// <summary>
     /// Gets the spoiler log of a given seed
     /// </summary>
     /// <param name="options">The randomizer generation options</param>
     /// <param name="seed">The previously generated seed data</param>
     /// <param name="configOnly">If the spoiler log should only have config settings printed</param>
+    /// <param name="isParsedRom">If this is a spoiler log for a parsed rom from a file</param>
     /// <returns>The string output of the spoiler log file</returns>
-    private string GetSpoilerLog(RandomizerOptions options, SeedData seed, bool configOnly)
+    private string GetSpoilerLog(RandomizerOptions options, SeedData seed, bool configOnly, bool isParsedRom = false)
     {
         var log = new StringBuilder();
         log.AppendLine(Underline($"SMZ3 Cas’ spoiler log", '='));
-        log.AppendLine($"Generated on {DateTime.Now:F}");
+
+        if (isParsedRom)
+        {
+            log.AppendLine($"Parsed rom details on {DateTime.Now:F}");
+        }
+        else
+        {
+            log.AppendLine($"Generated on {DateTime.Now:F}");
+        }
+
         log.AppendLine($"Seed: {options.SeedOptions.Seed} (actual: {seed.Seed})");
 
         if (options.SeedOptions.Race)
@@ -150,33 +130,38 @@ public class RomTextService(ILogger<RomTextService> logger, IGameHintService gam
             log.AppendLine("[Race]");
         }
 
-        log.AppendLine();
-        log.AppendLine(Underline("Settings", '='));
-        log.AppendLine();
+        log.AppendLine(SectionTitle("Settings"));
 
         foreach (var world in seed.WorldGenerationData.Worlds)
         {
-            if (world.Config.MultiWorld)
+            if (!isParsedRom)
             {
-                log.AppendLine(Underline("Player: " + world.Player));
-                log.AppendLine();
+                if (world.Config.MultiWorld)
+                {
+                    log.AppendLine(Underline("Player: " + world.Player));
+                    log.AppendLine();
+                }
+
+                log.AppendLine($"Settings String: {Config.ToConfigString(world.Config, true)}");
+                log.AppendLine($"Early Items: {string.Join(',', ItemSettingOptions.GetEarlyItemTypes(world.Config).Select(x => x.ToString()).ToArray())}");
             }
 
-            log.AppendLine($"Settings String: {Config.ToConfigString(world.Config, true)}");
-            log.AppendLine($"Early Items: {string.Join(',', ItemSettingOptions.GetEarlyItemTypes(world.Config).Select(x => x.ToString()).ToArray())}");
             log.AppendLine($"Starting Inventory: {string.Join(',', ItemSettingOptions.GetStartingItemTypes(world.Config).Select(x => x.ToString()).ToArray())}");
 
-            var locationPrefs = new List<string>();
-            foreach (var (locationId, value) in world.Config.LocationItems)
+            if (!isParsedRom)
             {
-                var itemPref = value < Enum.GetValues(typeof(ItemPool)).Length ? ((ItemPool)value).ToString() : ((ItemType)value).ToString();
-                locationPrefs.Add($"{world.Locations.First(x => x.Id == locationId).Name} - {itemPref}");
-            }
-            log.AppendLine($"Location Preferences: {string.Join(',', locationPrefs.ToArray())}");
+                var locationPrefs = new List<string>();
+                foreach (var (locationId, value) in world.Config.LocationItems)
+                {
+                    var itemPref = value < Enum.GetValues(typeof(ItemPool)).Length ? ((ItemPool)value).ToString() : ((ItemType)value).ToString();
+                    locationPrefs.Add($"{world.Locations.First(x => x.Id == locationId).Name} - {itemPref}");
+                }
+                log.AppendLine($"Location Preferences: {string.Join(',', locationPrefs.ToArray())}");
 
-            var type = options.LogicConfig.GetType();
-            var logicOptions = string.Join(',', type.GetProperties().Select(x => $"{x.Name}: {x.GetValue(world.Config.LogicConfig)}"));
-            log.AppendLine($"Logic Options: {logicOptions}");
+                var type = options.LogicConfig.GetType();
+                var logicOptions = string.Join(',', type.GetProperties().Select(x => $"{x.Name}: {x.GetValue(world.Config.LogicConfig)}"));
+                log.AppendLine($"Logic Options: {logicOptions}");
+            }
 
             if (world.Config.Keysanity)
             {
@@ -192,60 +177,54 @@ public class RomTextService(ILogger<RomTextService> logger, IGameHintService gam
             log.AppendLine();
         }
 
-        if (File.Exists(options.PatchOptions.Msu1Path))
-            log.AppendLine($"MSU-1 pack: {Path.GetFileNameWithoutExtension(options.PatchOptions.Msu1Path)}");
-        log.AppendLine();
-
         if (configOnly)
         {
             return log.ToString();
         }
 
-        log.AppendLine();
-        log.AppendLine(Underline("Hints", '='));
-        log.AppendLine();
-
-        foreach (var worldGenerationData in seed.WorldGenerationData)
+        if (!isParsedRom)
         {
-            if (worldGenerationData.Config.MultiWorld)
+            log.AppendLine(SectionTitle("Hints"));
+
+            foreach (var worldGenerationData in seed.WorldGenerationData)
             {
-                log.AppendLine(Underline("Player: " + worldGenerationData.World.Player));
+                if (worldGenerationData.Config.MultiWorld)
+                {
+                    log.AppendLine(Underline("Player: " + worldGenerationData.World.Player));
+                    log.AppendLine();
+                }
+
+                foreach (var hint in worldGenerationData.World.HintTiles)
+                {
+                    var hintText = gameHintService.GetHintTileText(hint, worldGenerationData.World,
+                        seed.WorldGenerationData.Worlds.ToList());
+                    log.AppendLine($"{hint.HintTileCode} - {hintText}");
+                }
                 log.AppendLine();
             }
 
-            foreach (var hint in worldGenerationData.World.HintTiles)
+            log.AppendLine(SectionTitle("Spheres"));
+
+            var spheres = seed.Playthrough.GetPlaythroughText();
+            for (var i = 0; i < spheres.Count; i++)
             {
-                var hintText = gameHintService.GetHintTileText(hint, worldGenerationData.World,
-                    seed.WorldGenerationData.Worlds.ToList());
-                log.AppendLine($"{hint.HintTileCode} - {hintText}");
+                if (spheres[i].Count == 0)
+                    continue;
+
+                log.AppendLine(Underline($"Sphere {i + 1}"));
+                log.AppendLine();
+                foreach (var (location, item) in spheres[i])
+                    log.AppendLine($"{location}: {item}");
+                log.AppendLine();
             }
-            log.AppendLine();
         }
 
-        log.AppendLine();
-        log.AppendLine(Underline("Spheres", '='));
-        log.AppendLine();
 
-        var spheres = seed.Playthrough.GetPlaythroughText();
-        for (var i = 0; i < spheres.Count; i++)
-        {
-            if (spheres[i].Count == 0)
-                continue;
-
-            log.AppendLine(Underline($"Sphere {i + 1}"));
-            log.AppendLine();
-            foreach (var (location, item) in spheres[i])
-                log.AppendLine($"{location}: {item}");
-            log.AppendLine();
-        }
-
-        log.AppendLine();
-        log.AppendLine(Underline("Dungeons", '='));
-        log.AppendLine();
+        log.AppendLine(SectionTitle("Dungeons"));
 
         foreach (var world in seed.WorldGenerationData.Worlds)
         {
-            log.AppendLine(world.Config.MultiWorld
+            log.AppendLine(!isParsedRom && world.Config.MultiWorld
                 ? Underline("Player " + world.Player + " Rewards")
                 : Underline("Rewards"));
 
@@ -258,7 +237,7 @@ public class RomTextService(ILogger<RomTextService> logger, IGameHintService gam
             }
             log.AppendLine();
 
-            log.AppendLine(world.Config.MultiWorld
+            log.AppendLine(!isParsedRom && world.Config.MultiWorld
                 ? Underline("Player " + world.Player + " Medallions")
                 : Underline("Medallions"));
             log.AppendLine();
@@ -271,13 +250,11 @@ public class RomTextService(ILogger<RomTextService> logger, IGameHintService gam
             log.AppendLine();
         }
 
-        log.AppendLine();
-        log.AppendLine(Underline("All Items", '='));
-        log.AppendLine();
+        log.AppendLine(SectionTitle("All Items"));
 
         foreach (var world in seed.WorldGenerationData.Worlds)
         {
-            if (world.Config.MultiWorld)
+            if (!isParsedRom && world.Config.MultiWorld)
             {
                 log.AppendLine(Underline("Player: " + world.Player));
                 log.AppendLine();
@@ -293,16 +270,5 @@ public class RomTextService(ILogger<RomTextService> logger, IGameHintService gam
         }
 
         return log.ToString();
-    }
-
-    private string GetSourceDirectory()
-    {
-        var currentDirectory = Directory.GetCurrentDirectory();
-        var directory = Directory.GetParent(currentDirectory);
-        while (directory != null && directory.Name != "src")
-        {
-            directory = Directory.GetParent(directory.FullName);
-        }
-        return directory?.FullName ?? currentDirectory;
     }
 }

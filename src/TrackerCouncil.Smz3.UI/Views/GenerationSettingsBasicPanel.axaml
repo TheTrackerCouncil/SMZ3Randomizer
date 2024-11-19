@@ -118,25 +118,17 @@
           <StackPanel Grid.Column="1" Orientation="Horizontal"
                       HorizontalAlignment="Right"
                       Margin="5 0 0 0">
-            <Button x:Name="SelectMsuButton" Click="SelectMsuButton_OnClick">Select _MSU</Button>
-            <Button x:Name="MsuOptionsButton"
-                    MinWidth="0"
-                    Width="23"
-                    Content="▼"
-                    FontSize="8"
-                    Click="MsuOptionsButton_OnClick"
-                    BorderThickness="0,1,1,1"
-                    Margin="0,0,0,0">
-              <Button.ContextMenu>
-                <ContextMenu>
+            <SplitButton Content="Select _MSU" Click="SelectMsuButton_OnClick">
+              <SplitButton.Flyout>
+                <MenuFlyout Placement="Bottom">
                   <MenuItem Header="Pick _Random MSU from List" Name="RandomMsuMenuItem" Click="RandomMsuMenuItem_OnClick"></MenuItem>
                   <MenuItem Header="Create _Shuffled MSU" Name="ShuffledMsuMenuItem" Click="ShuffledMsuMenuItem_OnClick"></MenuItem>
                   <MenuItem Header="_Continuously Reshuffle MSU" Name="ContinuousShuffleMsuMenuItem" Click="ContinuousShuffleMsuMenuItem_OnClick"></MenuItem>
                   <MenuItem Header="Select MSU _File" Name="SelectMsuFileMenuItem" Click="SelectMsuFileMenuItem_OnClick"></MenuItem>
                   <MenuItem Header="Play _Vanilla Music" Name="VanillaMusicMenuItem" Click="VanillaMusicMenuItem_OnClick"></MenuItem>
-                </ContextMenu>
-              </Button.ContextMenu>
-            </Button>
+                </MenuFlyout>
+              </SplitButton.Flyout>
+            </SplitButton>
           </StackPanel>
         </Grid>
         <TextBlock Margin="0 3 0 3" IsVisible="{Binding Basic.IsShuffleStyleVisible}">Shuffle style:</TextBlock>

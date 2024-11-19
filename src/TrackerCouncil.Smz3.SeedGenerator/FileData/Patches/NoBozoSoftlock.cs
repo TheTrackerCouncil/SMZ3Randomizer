@@ -5,6 +5,7 @@ namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
 /// <summary>
 /// Represents an SMZ3 ROM patch that updates the Bozo Door Time
 /// </summary>
+[SkipForParsedRoms]
 public class NoBozoSoftlock : RomPatch
 {
     /// <summary>

@@ -7,6 +7,7 @@ namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
 /// <summary>
 /// Patch for setting the starting equipment in both games
 /// </summary>
+[SkipForParsedRoms]
 public class StartingEquipmentPatch : RomPatch
 {
     /// <summary>

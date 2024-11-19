@@ -5,6 +5,7 @@ using AvaloniaControls.Controls;
 using AvaloniaControls.Models;
 using Microsoft.Extensions.DependencyInjection;
 using TrackerCouncil.Smz3.Data.Interfaces;
+using TrackerCouncil.Smz3.Data.ParsedRom;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.ViewModels;
 using TrackerCouncil.Smz3.Shared.Models;
@@ -47,6 +48,17 @@ public partial class GenerationSettingsWindow : ScalableWindow
         _model.IsMultiplayer = true;
     }
 
+    public void EnableImportMode(ParsedRomDetails importDetails)
+    {
+        if (_model == null)
+        {
+            return;
+        }
+
+        _model.IsImportMode = true;
+        _model.ImportDetails = importDetails;
+    }
+
     public bool LoadPlando(string file, out string? error)
     {
         error = null;
@@ -62,11 +74,6 @@ public partial class GenerationSettingsWindow : ScalableWindow
         }
 
         return true;
-    }
-
-    private void GenerateMenuButton_OnClick(object sender, RoutedEventArgs e)
-    {
-        GenerateMenuButton.ContextMenu?.Open();
     }
 
     private async void GenerateGameButton_OnClick(object sender, RoutedEventArgs e)

@@ -51,5 +51,9 @@ public class GetPatchesRequest
     /// </summary>
     public Config Config => World.Config;
 
+    /// <summary>
+    /// If this is patching a rom that was generated externally
+    /// </summary>
+    public bool IsParsedRom { get; init; }
 
 }

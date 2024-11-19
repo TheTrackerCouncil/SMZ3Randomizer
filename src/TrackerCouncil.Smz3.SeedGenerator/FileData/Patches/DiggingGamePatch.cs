@@ -3,7 +3,7 @@ using TrackerCouncil.Smz3.Shared;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
 
-[Order(-8)]
+[Order(-8), SkipForParsedRoms]
 public class DiggingGamePatch : RomPatch
 {
     public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)

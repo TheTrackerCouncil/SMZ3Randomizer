@@ -599,6 +599,25 @@ public enum ItemType : byte
     [ItemCategory(ItemCategory.Metroid, ItemCategory.NonRandomized, ItemCategory.Keycard, ItemCategory.KeycardBoss)]
     CardBoss = 0xF2,
 
+    [Description("Brinstar Map")]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.MetroidMap)]
+    SmMapBrinstar = 0xCA,
+
+    [Description("Wrecked Ship Map")]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.MetroidMap)]
+    SmMapWreckedShip = 0xCB,
+
+    [Description("Maridia Map")]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.MetroidMap)]
+    SmMapMaridia = 0xCC,
+
+    [Description("Lower Norfair Map")]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.MetroidMap)]
+    SmMapLowerNorfair = 0xCD,
+
     [ItemCategory(ItemCategory.NonRandomized)]
-    OtherGameItem = 0xFF
+    OtherGameItem = 0xFE,
+
+    [ItemCategory(ItemCategory.NonRandomized)]
+    OtherGameProgressionItem = 0xFF
 }

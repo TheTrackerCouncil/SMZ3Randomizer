@@ -107,11 +107,6 @@ public partial class GenerationSettingsBasicPanel : UserControl
         OpenMsuSelectionWindow(null);
     }
 
-    private void MsuOptionsButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        MsuOptionsButton.ContextMenu?.Open();
-    }
-
     private void RandomMsuMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
         OpenMsuSelectionWindow(MsuRandomizationStyle.Single);

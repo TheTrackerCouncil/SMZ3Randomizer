@@ -19,6 +19,7 @@ public static class RandomizerServiceCollectionExtensions
         services.AddGeneratedRomLoader();
         services.AddSmz3Randomizer();
         services.AddPlandomizer();
+        services.AddRomParser();
         services.AddSmz3MultiplayerRomGenerator();
         services.AddSingleton<IRomGenerationService, RomGenerationService>();
         services.AddSingleton<SpritePatcherService>();
@@ -26,7 +27,6 @@ public static class RandomizerServiceCollectionExtensions
         services.AddTransient<RomLauncherService>();
         services.AddTransient<PlaythroughService>();
         services.AddTransient<IStatGenerator, StatGenerator>();
-        services.AddTransient<RomParserService>();
         return services;
     }
 
@@ -46,6 +46,13 @@ public static class RandomizerServiceCollectionExtensions
         services.AddSingleton<IPlandoConfigLoader, PlandoConfigLoader>();
         services.AddSingleton<PlandoFillerFactory>();
         services.AddSingleton<Smz3Plandomizer>();
+        return services;
+    }
+
+    private static IServiceCollection AddRomParser(this IServiceCollection services)
+    {
+        services.AddSingleton<Smz3RomParser>();
+        services.AddSingleton<ParsedRomFiller>();
         return services;
     }
 

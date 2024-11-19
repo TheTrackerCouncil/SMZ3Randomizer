@@ -56,14 +56,16 @@
     </ListBox>
     <controls:HeaderFooter Grid.Row="1">
       <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
-        <!--<Button x:Name="ArchipelagoButton"
-                Click="ArchipelagoButton_OnClick" Margin="0 0 5 0">_Archipelago mode</Button>-->
         <Button x:Name="QuickPlayButton"
                 Click="QuickPlayButton_OnClick" Margin="0 0 5 0">_Quick play</Button>
-        <Button x:Name="StartPlandoButton"
-                Click="StartPlandoButton_OnClick" Margin="0 0 5 0">Start plando...</Button>
-        <Button x:Name="GenerateRomButton"
-                Click="GenerateRomButton_OnClick">Generate custom game...</Button>
+        <SplitButton Content="Generate custom game..." Click="GenerateRomButton_OnClick">
+          <SplitButton.Flyout>
+            <MenuFlyout Placement="Bottom">
+              <MenuItem Header="_Start plando..." Click="StartPlandoButton_OnClick" />
+              <!--<MenuItem Header="_Import archipelago rom..." Click="ArchipelagoButton_OnClick" />-->
+            </MenuFlyout>
+          </SplitButton.Flyout>
+        </SplitButton>
       </StackPanel>
     </controls:HeaderFooter>
   </Grid>

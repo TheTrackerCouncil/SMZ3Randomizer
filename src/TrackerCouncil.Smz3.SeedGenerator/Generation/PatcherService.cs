@@ -24,7 +24,7 @@ public class PatcherService : IPatcherService
     {
         var patches = new List<GeneratedPatch>();
 
-        foreach (var patch in _romPatchFactory.GetPatches())
+        foreach (var patch in _romPatchFactory.GetPatches(data.IsParsedRom))
         {
             var updates = patch.GetChanges(data).ToList();
             _logger.LogInformation("Retrieving {Number} updates from {Name}", updates.Count, patch.GetType().Name);

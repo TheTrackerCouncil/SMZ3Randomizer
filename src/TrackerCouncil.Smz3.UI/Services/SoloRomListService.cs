@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using Avalonia.Controls;
+using Avalonia.Platform.Storage;
 using AvaloniaControls;
 using AvaloniaControls.Controls;
 using AvaloniaControls.ControlServices;
@@ -20,7 +21,7 @@ public class SoloRomListService(IRomGenerationService romGenerationService,
     IGameDbService gameDbService,
     OptionsFactory optionsFactory,
     SharedCrossplatformService sharedCrossplatformService,
-    RomParserService romParserService) : ControlService
+    Smz3RomParser smz3RomParser) : ControlService
 {
     private SoloRomListViewModel _model = new();
     private SoloRomListPanel _panel = null!;
@@ -150,14 +151,19 @@ public class SoloRomListService(IRomGenerationService romGenerationService,
         var storageItem = await CrossPlatformTools.OpenFileDialogAsync(ParentWindow, FileInputControlType.OpenFile,
                     "Rom file (*.sfc)|*.sfc|All files (*.*)|*.*", "/home/matt/Games/Randomizers/Archipelago");
 
-        var pathString = HttpUtility.UrlDecode(storageItem?.Path.AbsolutePath);
+        var pathString = storageItem?.TryGetLocalPath();
 
         if (pathString == null)
         {
             return;
         }
 
-        romParserService.ParseRomFile(pathString);
+        var parsedRomDetails = smz3RomParser.ParseRomFile(pathString);
+
+        if (await sharedCrossplatformService.OpenGenerationWindow(importDetails: parsedRomDetails) != null)
+        {
+            UpdateList();
+        }
 
         // archipelagoScannerService.ScanArchipelagoRom(rom);
 

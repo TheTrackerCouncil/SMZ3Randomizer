@@ -7,7 +7,7 @@ using TrackerCouncil.Smz3.Data;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
 
-[Order(-9)]
+[Order(-9), SkipForParsedRoms]
 public class MetadataPatch : RomPatch
 {
     private static readonly int s_addrMultiworldFlag = Snes(0xF47000);
@@ -47,7 +47,7 @@ public class MetadataPatch : RomPatch
     public static string GetGameTitle(byte[] rom)
     {
         var nameBytes = rom.Skip(s_addrTitle1).Take(21).ToArray();
-        return Encoding.ASCII.GetString(nameBytes);
+        return Encoding.ASCII.GetString(nameBytes).Replace("\0", "").Trim();
     }
 
     public static List<string> GetPlayerNames(byte[] rom)
@@ -61,7 +61,7 @@ public class MetadataPatch : RomPatch
             {
                 break;
             }
-            toReturn.Add(name.Trim());
+            toReturn.Add(name.Replace("\0", string.Empty).Trim());
         }
 
         return toReturn;
@@ -129,9 +129,9 @@ public class MetadataPatch : RomPatch
     {
         /* Common Combo Configuration flags at [asm]/config.asm */
         // Enable multiworld (for cheats)
-        yield return new GeneratedPatch(Snes(0xF47000), UshortBytes(0x0001));
+        yield return new GeneratedPatch(s_addrMultiworldFlag, UshortBytes(0x0001));
         // Enable keysanity if applicable
         if (_data.World.Config.Keysanity)
-            yield return new GeneratedPatch(Snes(0xF47006), UshortBytes(0x0001));
+            yield return new GeneratedPatch(s_addrKeysanityFlag, UshortBytes(0x0001));
     }
 }

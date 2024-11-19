@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TrackerCouncil.Smz3.Shared;
+using TrackerCouncil.Smz3.Data.ParsedRom;
+using TrackerCouncil.Smz3.Data.WorldData.Regions;
+using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda;
 using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
 
+[SkipForParsedRoms]
 public class MedallionPatch : RomPatch
 {
     private static readonly int[] s_turtleRockAddresses = { Snes(0x308023), Snes(0xD020), Snes(0xD0FF), Snes(0xD1DE) };
@@ -35,11 +38,33 @@ public class MedallionPatch : RomPatch
         return patches;
     }
 
-    public static (ItemType miseryMire, ItemType turtleRock) GetRequiredMedallions(byte[] rom)
+    public static List<ParsedRomPrerequisiteDetails> GetPrerequisitesFromRom(byte[] rom, IEnumerable<IHasPrerequisite> examplePrerequisiteRegions)
     {
         var types = new[] { ItemType.Bombos, ItemType.Ether, ItemType.Quake };
         var mmMedallion = types[rom.Skip(s_miseryMireAddresses[0]).First()];
         var trMedallion = types[rom.Skip(s_turtleRockAddresses[0]).First()];
-        return (mmMedallion, trMedallion);
+
+        // ReSharper disable PossibleMultipleEnumeration
+        var miseryMireRegion = examplePrerequisiteRegions.First(x => x is MiseryMire);
+        var turtleRockRegion = examplePrerequisiteRegions.First(x => x is TurtleRock);
+        // ReSharper restore PossibleMultipleEnumeration
+
+        var toReturn = new List<ParsedRomPrerequisiteDetails>
+        {
+            new()
+            {
+                RegionType = miseryMireRegion.GetType(),
+                RegionName = miseryMireRegion.Name,
+                PrerequisiteItem = mmMedallion,
+            },
+            new()
+            {
+                RegionType = turtleRockRegion.GetType(),
+                RegionName = turtleRockRegion.Name,
+                PrerequisiteItem = trMedallion,
+            }
+        };
+
+        return toReturn;
     }
 }

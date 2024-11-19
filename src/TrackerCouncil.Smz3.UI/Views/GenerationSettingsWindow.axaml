@@ -20,7 +20,7 @@
         <TabItem Header="Basic">
           <views:GenerationSettingsBasicPanel DataContext="{Binding}" x:Name="BasicPanel" Displayed="BasicPanel_OnDisplayed"></views:GenerationSettingsBasicPanel>
         </TabItem>
-        <TabItem Header="Game Settings" IsVisible="{Binding !IsPlando}">
+        <TabItem Header="Game Settings" IsVisible="{Binding CanChangeGameSettings}">
           <ScrollViewer>
             <avalonia:DynamicFormControl Data="{Binding GameSettings}" Grid.IsSharedSizeScope="True" />
           </ScrollViewer>
@@ -30,7 +30,7 @@
             <avalonia:DynamicFormControl Data="{Binding Logic}" Grid.IsSharedSizeScope="True" Margin="0 0 5 5"></avalonia:DynamicFormControl>
           </ScrollViewer>
         </TabItem>
-        <TabItem Header="Items/Locations" IsVisible="{Binding !IsPlando}">
+        <TabItem Header="Items/Locations" IsVisible="{Binding CanChangeGameSettings}">
           <ScrollViewer>
             <StackPanel Orientation="Vertical" Margin="0 0 5 0">
               <views:GenerationSettingsItemPanel Data="{Binding}" Grid.IsSharedSizeScope="True" />
@@ -49,35 +49,26 @@
                     HorizontalAlignment="Right"
                     Margin="5">
 
-          <Button x:Name="SubmitConfigsButton"
-                  IsVisible="{Binding IsMultiplayer}"
-                  Click="GenerateGameButton_OnClick"
-                  Margin="0 0 8 0">_Submit Settings
+          <Button x:Name="ArchipelagoButton"
+                  IsVisible="{Binding IsImportMode}"
+                  Click="GenerateGameButton_OnClick">_Update Rom
           </Button>
 
-          <StackPanel Orientation="Horizontal"
-                      HorizontalAlignment="Right">
-            <Button x:Name="GenerateGameButton"
-                    IsVisible="{Binding IsSingleplayer}"
-                    Click="GenerateGameButton_OnClick"
-            >_Generate</Button>
-            <Button x:Name="GenerateMenuButton"
-                    MinWidth="0"
-                    Width="23"
-                    Content="▼"
-                    FontSize="8"
-                    IsVisible="{Binding IsSingleplayer}"
-                    Click="GenerateMenuButton_OnClick"
-                    BorderThickness="0,1,1,1"
-                    Margin="0,0,0,0">
-              <Button.ContextMenu>
-                <ContextMenu>
-                  <MenuItem Header="Generate _Stats" Name="GenerateStatsMenuItem" Click="GenerateStatsMenuItem_OnClick"></MenuItem>
-                  <MenuItem Header="Save _Preset" Click="SavePresetMenuItem_OnClick"></MenuItem>
-                </ContextMenu>
-              </Button.ContextMenu>
-            </Button>
-          </StackPanel>
+          <Button x:Name="SubmitConfigsButton"
+                  IsVisible="{Binding IsMultiplayer}"
+                  Click="GenerateGameButton_OnClick">_Submit Settings
+          </Button>
+
+          <SplitButton Content="_Generate"
+                       Click="GenerateGameButton_OnClick"
+                       IsVisible="{Binding ShowGenerateSplitButton}">
+            <SplitButton.Flyout>
+              <MenuFlyout Placement="Bottom">
+                <MenuItem Header="Generate _Stats" Name="GenerateStatsMenuItem" Click="GenerateStatsMenuItem_OnClick"></MenuItem>
+                <MenuItem Header="Save _Preset" Click="SavePresetMenuItem_OnClick"></MenuItem>
+              </MenuFlyout>
+            </SplitButton.Flyout>
+          </SplitButton>
 
           <Button x:Name="CancelButton" Click="CancelButton_OnClick" Margin="5 0 0 0">_Cancel</Button>
         </StackPanel>

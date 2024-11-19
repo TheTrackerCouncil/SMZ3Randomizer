@@ -1,29 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
-using TrackerCouncil.Smz3.Data.Options;
+using TrackerCouncil.Smz3.Data.ParsedRom;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
-using TrackerCouncil.Smz3.Data.WorldData.Regions.SuperMetroid.Crateria;
 using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
 
-public class ArchipelagoLocation
-{
-    public required LocationId Location { get; set; }
-    public required bool IsLocalPlayerItem { get; set; }
-    public required string PlayerName{ get; set; }
-    public required ItemType? ItemType { get; set; }
-    public required bool IsProgression { get; set; }
-    public required string ItemName { get; set; }
-}
-
+[SkipForParsedRoms]
 public class LocationsPatch : RomPatch
 {
-    private static Dictionary<int, string> s_smCharMap = new Dictionary<int, string>()
+    private static Dictionary<int, string> s_smCharMap = new()
     {
         { 0x3CE0, "A" },
         { 0x3CE1, "B" },
@@ -104,6 +95,31 @@ public class LocationsPatch : RomPatch
         { 0x000E, "_" }
     };
 
+    private static Dictionary<int, ItemType> s_plmItemTypes = new()
+    {
+        { 0xEED7, ItemType.ETank },
+        { 0xEEDB, ItemType.Missile },
+        { 0xEEDF, ItemType.Super },
+        { 0xEEE3, ItemType.PowerBomb },
+        { 0xEEE7, ItemType.Bombs },
+        { 0xEEEB, ItemType.Charge },
+        { 0xEEEF, ItemType.Ice },
+        { 0xEEF3, ItemType.HiJump },
+        { 0xEEF7, ItemType.SpeedBooster },
+        { 0xEEFB, ItemType.Wave },
+        { 0xEEFF, ItemType.Spazer },
+        { 0xEF03, ItemType.SpringBall },
+        { 0xEF07, ItemType.Varia },
+        { 0xEF0B, ItemType.Gravity },
+        { 0xEF0F, ItemType.XRay },
+        { 0xEF13, ItemType.Plasma },
+        { 0xEF17, ItemType.Grapple },
+        { 0xEF1B, ItemType.SpaceJump },
+        { 0xEF1F, ItemType.ScrewAttack },
+        { 0xEF23, ItemType.Morph },
+        { 0xEF27, ItemType.ReserveTank }
+    };
+
     public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
     {
         var patches = new List<GeneratedPatch>();
@@ -112,55 +128,112 @@ public class LocationsPatch : RomPatch
         return patches;
     }
 
-    public static List<ArchipelagoLocation> GetLocationsFromRom(byte[] rom, List<string> playerNames)
+    public static List<ParsedRomLocationDetails> GetLocationsFromRom(byte[] rom, List<string> playerNames, World exampleWorld, bool isMultiworldEnabled, List<int> smz3ItemTypes)
     {
-        var toReturn = new List<ArchipelagoLocation>();
-        var testWorld = new World(new Config(), "", 1, "");
+        var toReturn = new List<ParsedRomLocationDetails>();
 
-        foreach (var location in testWorld.Regions.OfType<SMRegion>().SelectMany(x => x.Locations))
+        foreach (var location in exampleWorld.Regions.OfType<SMRegion>().SelectMany(x => x.Locations))
         {
-            toReturn.Add(GetArchipelagoLocation(rom, location.Id, true, playerNames));
+            toReturn.Add(GetParsedLocationDetails(rom, location, true, playerNames, isMultiworldEnabled, smz3ItemTypes));
         }
 
-        foreach (var location in testWorld.Regions.OfType<Z3Region>().SelectMany(x => x.Locations))
+        foreach (var location in exampleWorld.Regions.OfType<Z3Region>().SelectMany(x => x.Locations))
         {
-            toReturn.Add(GetArchipelagoLocation(rom, location.Id, false, playerNames));
+            toReturn.Add(GetParsedLocationDetails(rom, location, false, playerNames, isMultiworldEnabled, smz3ItemTypes));
         }
 
         return toReturn;
     }
 
-    private static ArchipelagoLocation GetArchipelagoLocation(byte[] rom, LocationId locationId, bool isSuperMetroidLocation, List<string> playerNames)
+    private static ParsedRomLocationDetails GetParsedLocationDetails(byte[] rom, Location location, bool isSuperMetroidLocation, List<string> playerNames, bool isMultiworldEnabled, List<int> smz3ItemTypes)
     {
-        var address = 0x386000 + (int)locationId * 8;
-        var bytes = rom.Skip(address).Take(8).ToArray();
-        var isLocal = BitConverter.ToInt16(bytes, 0) == 0;
-        var itemNumber = BitConverter.ToInt16(bytes, 2);
-        var ownerPlayerId = BitConverter.ToInt16(bytes, 4);
-        var archipelagoFlags = BitConverter.ToInt16(bytes, 6);
-        var isProgression = archipelagoFlags > 0;
+        var isLocal = false;
+        ItemType itemType;
+        var playerName = "";
+        var isProgression = false;
         var itemName = "";
 
-        if (!isLocal)
+        if (isMultiworldEnabled)
         {
-            itemName = isSuperMetroidLocation
-                ? GetSuperMetroidItemName(rom, archipelagoFlags, isProgression)
-                : GetZeldaItemName(rom, archipelagoFlags, isProgression);
+            var address = 0x386000 + (int)location.Id * 8;
+            var bytes = rom.Skip(address).Take(8).ToArray();
+            isLocal = BitConverter.ToInt16(bytes, 0) == 0;
+            var itemNumber = BitConverter.ToInt16(bytes, 2);
+            var ownerPlayerId = BitConverter.ToInt16(bytes, 4);
+            var archipelagoFlags = BitConverter.ToInt16(bytes, 6);
+            playerName = playerNames[ownerPlayerId];
+            isProgression = archipelagoFlags > 0;
+
+            if (!isLocal)
+            {
+                if (!smz3ItemTypes.Contains(itemNumber))
+                {
+                    itemType = isProgression ? ItemType.OtherGameProgressionItem : ItemType.OtherGameItem;
+                    itemName = isSuperMetroidLocation
+                        ? GetSuperMetroidItemName(rom, archipelagoFlags, isProgression)
+                        : GetZeldaItemName(rom, archipelagoFlags, isProgression);
+                }
+                else
+                {
+                    itemType = (ItemType)itemNumber;
+                    itemName = itemType.GetDescription();
+                }
+            }
+            else
+            {
+                itemType = (ItemType)itemNumber;
+                itemName = itemType.GetDescription();
+            }
         }
         else
         {
-            itemName = ((ItemType)itemNumber).GetDescription();
+            itemType = isSuperMetroidLocation
+                ? GetSuperMetroidLocationItemType(rom, location)
+                : GetZeldaLocationItemType(rom, location);
+            itemName = itemType.GetDescription();
         }
 
-        return new ArchipelagoLocation()
+
+        return new ParsedRomLocationDetails()
         {
-            Location = locationId,
+            Location = location.Id,
             IsLocalPlayerItem = isLocal,
-            ItemType = isLocal ? (ItemType)itemNumber : ItemType.OtherGameItem,
-            PlayerName = playerNames[ownerPlayerId],
+            ItemType = itemType,
+            PlayerName = playerName,
             IsProgression = isProgression,
             ItemName = itemName
         };
+    }
+
+    private static ItemType GetSuperMetroidLocationItemType(byte[] rom, Location location)
+    {
+        var romValue = BitConverter.ToUInt16(rom.Skip(Snes(location.RomAddress)).Take(2).ToArray(), 0);
+
+        // Regular Super Metroid item
+        if (s_plmItemTypes.TryGetValue(romValue, out var itemType))
+        {
+            return itemType;
+        }
+        // Super Metroid item in a Chozo ball
+        else if (s_plmItemTypes.TryGetValue(romValue - 0x54, out itemType))
+        {
+            return itemType;
+        }
+        // Super Metroid Item hidden in a block
+        else if (s_plmItemTypes.TryGetValue(romValue - 0xA8, out itemType))
+        {
+            return itemType;
+        }
+        // Zelda item
+        else
+        {
+            return (ItemType)rom[Snes(location.RomAddress+5)];
+        }
+    }
+
+    private static ItemType GetZeldaLocationItemType(byte[] rom, Location location)
+    {
+        return (ItemType)rom[Snes(location.RomAddress)];
     }
 
     private static string GetSuperMetroidItemName(byte[] rom, short archipelagoFlags, bool isProgression)
