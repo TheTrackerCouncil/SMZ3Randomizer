@@ -1,4 +1,5 @@
-﻿using TrackerCouncil.Smz3.Data.Options;
+﻿using AvaloniaControls.Models;
+using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.ParsedRom;
 
 namespace TrackerCouncil.Smz3.Data.ViewModels;
@@ -24,6 +25,7 @@ public class GenerationWindowViewModel : ViewModelBase
             SetField(ref _plandoConfig, value);
             OnPropertyChanged(nameof(IsPlando));
             OnPropertyChanged(nameof(IsRandomizedGame));
+            OnPropertyChanged(nameof(CanChangeGameSettings));
             OnPropertyChanged(nameof(CanSetSeed));
             Logic.CanChangeGameSettings = false;
         }
