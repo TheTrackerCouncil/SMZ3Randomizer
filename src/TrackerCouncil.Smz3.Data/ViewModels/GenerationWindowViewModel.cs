@@ -1,5 +1,4 @@
-﻿using AvaloniaControls.Models;
-using TrackerCouncil.Smz3.Data.Options;
+﻿using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.ParsedRom;
 
 namespace TrackerCouncil.Smz3.Data.ViewModels;
