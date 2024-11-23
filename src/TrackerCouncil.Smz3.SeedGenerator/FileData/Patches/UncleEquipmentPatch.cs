@@ -4,6 +4,7 @@ using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
 
+[SkipForParsedRoms]
 public class UncleEquipmentPatch : RomPatch
 {
     public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)

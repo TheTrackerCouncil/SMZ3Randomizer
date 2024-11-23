@@ -105,5 +105,10 @@ public enum ItemCategory
 
     NeverProgression,
 
-    ProgressionOnlyOnFirst
+    ProgressionOnlyOnFirst,
+
+    /// <summary>
+    /// If this is a Metroid map in an archipelago game
+    /// </summary>
+    MetroidMap
 }

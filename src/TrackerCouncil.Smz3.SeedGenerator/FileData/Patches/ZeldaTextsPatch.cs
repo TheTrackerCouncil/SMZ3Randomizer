@@ -15,7 +15,7 @@ using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
 
-[Order(-5)]
+[Order(-5), SkipForParsedRoms]
 public class ZeldaTextsPatch : RomPatch
 {
     private StringTable _stringTable = null!;

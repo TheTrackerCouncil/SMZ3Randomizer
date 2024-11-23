@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using MSURandomizerLibrary;
 using MSURandomizerLibrary.Services;
 using TrackerCouncil.Smz3.Data.Options;
+using TrackerCouncil.Smz3.Data.ParsedRom;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.SeedGenerator.Generation;
 using TrackerCouncil.Smz3.SeedGenerator.Infrastructure;
@@ -282,7 +283,7 @@ public class SharedCrossplatformService(
         return true;
     }
 
-    public async Task<RandomizerOptions?> OpenGenerationWindow(string? plandoConfig = null, bool isMultiplayer = false)
+    public async Task<RandomizerOptions?> OpenGenerationWindow(string? plandoConfig = null, bool isMultiplayer = false, ParsedRomDetails? importDetails = null)
     {
         LookupMsus();
 
@@ -296,6 +297,10 @@ public class SharedCrossplatformService(
         else if (isMultiplayer)
         {
             window.EnableMultiplayerMode();
+        }
+        else if (importDetails != null)
+        {
+            window.EnableImportMode(importDetails);
         }
 
         await window.ShowDialog(ParentWindow);

@@ -16,10 +16,11 @@ public sealed class RomPatchFactory
         _services = services;
     }
 
-    public IEnumerable<RomPatch> GetPatches()
+    public IEnumerable<RomPatch> GetPatches(bool isParsedRom)
     {
         return _services.GetServices<RomPatch>()
             .Select(x => (patch: x, order: x.GetType().GetCustomAttribute<OrderAttribute>()?.Order ?? 0))
+            .Where(x => !isParsedRom || x.patch.GetType().GetCustomAttribute<SkipForParsedRomsAttribute>() == null)
             .OrderBy(x => x.order)
             .Select(x => x.patch);
     }

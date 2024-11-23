@@ -13,6 +13,7 @@ using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Data.GeneratedData;
 using TrackerCouncil.Smz3.Data.Interfaces;
 using TrackerCouncil.Smz3.Data.Options;
+using TrackerCouncil.Smz3.Data.ParsedRom;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.SeedGenerator.FileData;
 using TrackerCouncil.Smz3.SeedGenerator.FileData.IpsPatches;
@@ -21,41 +22,21 @@ using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.Generation;
 
-public class RomGenerationService : IRomGenerationService
+public class RomGenerationService(
+    Smz3Randomizer randomizer,
+    Smz3Plandomizer plandomizer,
+    Smz3RomParser romParser,
+    RandomizerContext dbContext,
+    ILogger<RomGenerationService> logger,
+    ITrackerStateService stateService,
+    SpritePatcherService spritePatcherService,
+    IMsuLookupService? msuLookupService,
+    IMsuSelectorService? msuSelectorService,
+    IMsuTypeService? msuTypeService,
+    RomTextService romTextService)
+    : IRomGenerationService
 {
-    private readonly RandomizerContext _dbContext;
-    private readonly Smz3Randomizer _randomizer;
-    private readonly Smz3Plandomizer _plandomizer;
-    private readonly ILogger<RomGenerationService> _logger;
-    private readonly ITrackerStateService _stateService;
-    private readonly SpritePatcherService _spritePatcherService;
-    private readonly IMsuLookupService? _msuLookupService;
-    private readonly IMsuSelectorService? _msuSelectorService;
-    private readonly IMsuTypeService? _msuTypeService;
-    private readonly RomTextService _romTextService;
-
-    public RomGenerationService(Smz3Randomizer randomizer,
-        Smz3Plandomizer plandomizer,
-        RandomizerContext dbContext,
-        ILogger<RomGenerationService> logger,
-        ITrackerStateService stateService,
-        SpritePatcherService spritePatcherService,
-        IMsuLookupService? msuLookupService,
-        IMsuSelectorService? msuSelectorService,
-        IMsuTypeService? msuTypeService,
-        RomTextService romTextService)
-    {
-        _randomizer = randomizer;
-        _plandomizer = plandomizer;
-        _dbContext = dbContext;
-        _logger = logger;
-        _stateService = stateService;
-        _spritePatcherService = spritePatcherService;
-        _msuLookupService = msuLookupService;
-        _msuSelectorService = msuSelectorService;
-        _msuTypeService = msuTypeService;
-        _romTextService = romTextService;
-    }
+    private readonly ILogger<RomGenerationService> _logger = logger;
 
     public SeedData GeneratePlandoSeed(RandomizerOptions options, PlandoConfig plandoConfig)
     {
@@ -71,7 +52,7 @@ public class RomGenerationService : IRomGenerationService
         config.OpenPyramid = plandoConfig.OpenPyramid;
         config.TourianBossCount = plandoConfig.TourianBossCount;
         config.LogicConfig = plandoConfig.Logic.Clone();
-        return _plandomizer.GenerateSeed(config, CancellationToken.None);
+        return plandomizer.GenerateSeed(config, CancellationToken.None);
     }
 
     /// <summary>
@@ -90,7 +71,7 @@ public class RomGenerationService : IRomGenerationService
             try
             {
                 seed = GenerateSeed(options);
-                if (!_randomizer.ValidateSeedSettings(seed))
+                if (!randomizer.ValidateSeedSettings(seed))
                 {
                     error = "The seed generated is playable and a rom has been generated, but it does not contain all requested settings.\n" +
                             "Retrying to generate the seed may work, but the selected settings may be impossible to generate successfully and will need to be updated.";
@@ -113,7 +94,7 @@ public class RomGenerationService : IRomGenerationService
 
         if (seed != null)
         {
-            var rom = await GenerateRomInternalAsync(seed, options, null);
+            var rom = await GenerateRomInternalAsync(seed, options, null, false);
 
             return new GeneratedRomResult()
             {
@@ -155,7 +136,7 @@ public class RomGenerationService : IRomGenerationService
             Rom.ApplyIps(rom, ips);
         }
 
-        _spritePatcherService.ApplySpriteOptions(rom, out var linkSpriteName, out var samusSpriteName);
+        spritePatcherService.ApplySpriteOptions(rom, out var linkSpriteName, out var samusSpriteName);
 
         if (seed != null)
         {
@@ -277,7 +258,7 @@ public class RomGenerationService : IRomGenerationService
         try
         {
             var seed = GeneratePlandoSeed(options, plandoConfig);
-            var rom = await GenerateRomInternalAsync(seed, options, null);
+            var rom = await GenerateRomInternalAsync(seed, options, null, false);
             return new GeneratedRomResult()
             {
                 Rom = rom
@@ -292,16 +273,26 @@ public class RomGenerationService : IRomGenerationService
         }
     }
 
+    public async Task<GeneratedRomResult> GenerateParsedRomAsync(RandomizerOptions options, ParsedRomDetails parsedRomDetails)
+    {
+        var seed = romParser.GenerateSeedData(options, parsedRomDetails);
+        var rom = await GenerateRomInternalAsync(seed, options, null, true);
+        return new GeneratedRomResult()
+        {
+            Rom = rom
+        };
+    }
+
     public async Task<GeneratedRomResult> GeneratePreSeededRomAsync(RandomizerOptions options, SeedData seed, MultiplayerGameDetails multiplayerGameDetails)
     {
-        var results = await GenerateRomInternalAsync(seed, options, multiplayerGameDetails);
+        var results = await GenerateRomInternalAsync(seed, options, multiplayerGameDetails, false);
         return new GeneratedRomResult()
         {
             Rom = results
         };
     }
 
-    private async Task<GeneratedRom?> GenerateRomInternalAsync(SeedData seed, RandomizerOptions options, MultiplayerGameDetails? multiplayerGameDetails)
+    private async Task<GeneratedRom?> GenerateRomInternalAsync(SeedData seed, RandomizerOptions options, MultiplayerGameDetails? multiplayerGameDetails, bool isParsedRom)
     {
         var bytes = GenerateRomBytes(options, seed);
         var config = seed.Playthrough.Config;
@@ -318,9 +309,14 @@ public class RomGenerationService : IRomGenerationService
         ApplyMsuOptions(options, romPath);
         await File.WriteAllBytesAsync(romPath, bytes);
 
-        var spoilerPath = await _romTextService.WriteSpoilerLog(options, seed, config, folderPath, fileSuffix);
-        await _romTextService.WritePlandoConfig(seed, folderPath, fileSuffix);
-        _romTextService.PrepareAutoTrackerFiles(options);
+        var spoilerPath = await romTextService.WriteSpoilerLog(options, seed, config, folderPath, fileSuffix, isParsedRom);;
+
+        if (!isParsedRom)
+        {
+            await romTextService.WritePlandoConfig(seed, folderPath, fileSuffix);
+        }
+
+        romTextService.PrepareAutoTrackerFiles(options);
 
         var rom = await SaveSeedToDatabaseAsync(options, seed, romPath, spoilerPath, multiplayerGameDetails);
 
@@ -355,7 +351,7 @@ public class RomGenerationService : IRomGenerationService
         {
             Seed = seed.Seed,
             RomPath = Path.GetRelativePath(options.RomOutputPath, romPath),
-            SpoilerPath = Path.GetRelativePath(options.RomOutputPath, spoilerPath),
+            SpoilerPath = !string.IsNullOrEmpty(spoilerPath) ? Path.GetRelativePath(options.RomOutputPath, spoilerPath) : "",
             Date = DateTimeOffset.Now,
             Settings = settingsString,
             GeneratorVersion = RandomizerVersion.MajorVersion,
@@ -364,14 +360,14 @@ public class RomGenerationService : IRomGenerationService
             MsuShuffleStyle = options.PatchOptions.MsuShuffleStyle,
             MsuPaths = string.Join("|", options.PatchOptions.MsuPaths)
         };
-        _dbContext.GeneratedRoms.Add(rom);
+        dbContext.GeneratedRoms.Add(rom);
 
         if (multiplayerGameDetails != null)
         {
             multiplayerGameDetails.GeneratedRom = rom;
         }
 
-        await _stateService.CreateStateAsync(seed.WorldGenerationData.Worlds, rom);
+        await stateService.CreateStateAsync(seed.WorldGenerationData.Worlds, rom);
         return rom;
     }
 
@@ -382,15 +378,15 @@ public class RomGenerationService : IRomGenerationService
             return false;
         }
 
-        if (_msuLookupService == null || _msuSelectorService == null || _msuTypeService == null)
+        if (msuLookupService == null || msuSelectorService == null || msuTypeService == null)
         {
             return false;
         }
 
-        if (!_msuLookupService.Msus.Any() && !string.IsNullOrEmpty(options.GeneralOptions.MsuPath))
+        if (!msuLookupService.Msus.Any() && !string.IsNullOrEmpty(options.GeneralOptions.MsuPath))
         {
-            var smz3MsuType = _msuTypeService.GetSMZ3MsuType() ?? throw new InvalidOperationException();
-            _msuLookupService.LookupMsus(options.GeneralOptions.MsuPath, new Dictionary<string, string>()
+            var smz3MsuType = msuTypeService.GetSMZ3MsuType() ?? throw new InvalidOperationException();
+            msuLookupService.LookupMsus(options.GeneralOptions.MsuPath, new Dictionary<string, string>()
             {
                 { options.GeneralOptions.MsuPath, smz3MsuType.DisplayName }
             });
@@ -401,28 +397,28 @@ public class RomGenerationService : IRomGenerationService
 
         if (options.PatchOptions.MsuRandomizationStyle == null)
         {
-            _msuSelectorService.AssignMsu(new MsuSelectorRequest()
+            msuSelectorService.AssignMsu(new MsuSelectorRequest()
             {
                 MsuPath = options.PatchOptions.MsuPaths.First(),
-                OutputMsuType = _msuTypeService.GetSMZ3MsuType(),
+                OutputMsuType = msuTypeService.GetSMZ3MsuType(),
                 OutputPath = outputPath,
             });
         }
         else if (options.PatchOptions.MsuRandomizationStyle == MsuRandomizationStyle.Single)
         {
-            _msuSelectorService.PickRandomMsu(new MsuSelectorRequest()
+            msuSelectorService.PickRandomMsu(new MsuSelectorRequest()
             {
                 MsuPaths = options.PatchOptions.MsuPaths,
-                OutputMsuType = _msuTypeService.GetSMZ3MsuType(),
+                OutputMsuType = msuTypeService.GetSMZ3MsuType(),
                 OutputPath = outputPath,
             });
         }
         else
         {
-            _msuSelectorService.CreateShuffledMsu(new MsuSelectorRequest()
+            msuSelectorService.CreateShuffledMsu(new MsuSelectorRequest()
             {
                 MsuPaths = options.PatchOptions.MsuPaths,
-                OutputMsuType = _msuTypeService.GetSMZ3MsuType(),
+                OutputMsuType = msuTypeService.GetSMZ3MsuType(),
                 OutputPath = outputPath,
                 ShuffleStyle = options.PatchOptions.MsuShuffleStyle
             });
@@ -441,6 +437,6 @@ public class RomGenerationService : IRomGenerationService
     private SeedData GenerateSeed(RandomizerOptions options, string? seed = null)
     {
         var config = options.ToConfig();
-        return _randomizer.GenerateSeed(config, seed ?? config.Seed, CancellationToken.None);
+        return randomizer.GenerateSeed(config, seed ?? config.Seed, CancellationToken.None);
     }
 }

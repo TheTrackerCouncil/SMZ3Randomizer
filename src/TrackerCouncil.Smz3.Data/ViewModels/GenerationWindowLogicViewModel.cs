@@ -5,15 +5,25 @@ using TrackerCouncil.Smz3.Data.Options;
 
 namespace TrackerCouncil.Smz3.Data.ViewModels;
 
-[DynamicFormGroupBasic(DynamicFormLayout.Vertical, "Non Plando", visibleWhenTrue: nameof(IsNotPlando))]
+[DynamicFormGroupBasic(DynamicFormLayout.Vertical, "Can Change Settings", visibleWhenTrue: nameof(CanChangeGameSettings))]
 [DynamicFormGroupBasic(DynamicFormLayout.Vertical, "All")]
 public class GenerationWindowLogicViewModel : ViewModelBase
 {
-    [DynamicFormObject(groupName: "Non Plando")]
+    private bool _canChangeGameSettings = true;
+
+    [DynamicFormObject(groupName: "Can Change Settings")]
     public LogicConfig LogicConfig { get; set; } = new();
 
     [DynamicFormObject(groupName: "All")]
     public CasPatches CasPatches { get; set; } = new();
 
-    public bool IsNotPlando { get; set; } = true;
+    public bool CanChangeGameSettings
+    {
+        get => _canChangeGameSettings;
+        set
+        {
+            _canChangeGameSettings = value;
+            CasPatches.CanChangeGameSettings = value;
+        }
+    }
 }

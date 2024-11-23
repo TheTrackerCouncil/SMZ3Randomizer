@@ -66,7 +66,8 @@ public class TrackerStateService : ITrackerStateService
             {
                 ItemName = item.Name,
                 Type = item.Type,
-                WorldId = item.World.Id
+                WorldId = item.World.Id,
+                PlayerName = item.PlayerName
             });
             addedItems.Add((item.World, item.Type));
         }
@@ -153,6 +154,7 @@ public class TrackerStateService : ITrackerStateService
                         ItemName = itemType.GetDescription(),
                         Type = itemType,
                         WorldId = world.Id,
+                        PlayerName = world.Player,
                         TrackingState = startingInventory.Count(x => x == itemType)
                     });
                 }
@@ -170,6 +172,7 @@ public class TrackerStateService : ITrackerStateService
                     ItemName = itemMetadata.InternalItemType == ItemType.Nothing ? itemMetadata.Item : itemMetadata.InternalItemType.GetDescription(),
                     Type = itemMetadata.InternalItemType,
                     WorldId = world.Id,
+                    PlayerName = world.Player,
                     TrackingState = 0
                 });
             }

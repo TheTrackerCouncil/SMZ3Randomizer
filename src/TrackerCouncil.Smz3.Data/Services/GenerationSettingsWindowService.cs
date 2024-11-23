@@ -361,9 +361,15 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
 
     public async Task<GeneratedRomResult> GenerateRom()
     {
-        return _model.IsPlando
-            ? await romGenerator.GeneratePlandoRomAsync(_options, _model.PlandoConfig!)
-            : await romGenerator.GenerateRandomRomAsync(_options);
+        if (_model.IsPlando)
+        {
+            return await romGenerator.GeneratePlandoRomAsync(_options, _model.PlandoConfig!);
+        }
+        else if (_model.IsImportMode)
+        {
+            return await romGenerator.GenerateParsedRomAsync(_options, _model.ImportDetails!);
+        }
+        return await romGenerator.GenerateRandomRomAsync(_options);
     }
 
     public List<RandomizerPreset> GetPresets()

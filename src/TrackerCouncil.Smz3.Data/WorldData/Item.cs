@@ -32,6 +32,8 @@ public class Item
         Metadata = metadata?.Item(itemType) ?? new ItemData(itemType);
         State = trackerState?.ItemStates.First(x => x.ItemName == Name && x.WorldId == world.Id) ?? new TrackerItemState();
         Progression = isProgression;
+        PlayerName = world.Player;
+        IsLocalPlayerItem = world.IsLocalWorld;
     }
 
     /// <summary>
@@ -44,7 +46,8 @@ public class Item
     /// <param name="metadata">The metadata object with additional info about the item</param>
     /// <param name="state">The tracking state of the item</param>
     /// <param name="isProgression">If this is a progression item or not</param>
-    public Item(ItemType itemType, World world, string name, ItemData metadata, TrackerItemState state, bool isProgression = false)
+    /// <param name="playerName">The player that owns this item</param>
+    public Item(ItemType itemType, World world, string name, ItemData metadata, TrackerItemState state, bool isProgression = false, string? playerName = null)
     {
         Type = itemType;
         World = world;
@@ -52,6 +55,8 @@ public class Item
         Metadata = metadata;
         State = state;
         Progression = isProgression;
+        PlayerName = playerName ?? state.PlayerName ?? world.Player;
+        IsLocalPlayerItem = world.Player == PlayerName;
     }
 
     /// <summary>
@@ -83,6 +88,16 @@ public class Item
     /// Current state of the item
     /// </summary>
     public TrackerItemState State { get; set; }
+
+    /// <summary>
+    /// The player this item is for
+    /// </summary>
+    public string PlayerName { get; init; }
+
+    /// <summary>
+    /// If the item belongs to the local player
+    /// </summary>
+    public bool IsLocalPlayerItem { get; init; }
 
     public int TrackingState
     {

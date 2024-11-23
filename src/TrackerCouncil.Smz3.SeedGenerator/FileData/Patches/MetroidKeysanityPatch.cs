@@ -3,6 +3,7 @@ using System.Linq;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
 
+[SkipForParsedRoms]
 public class MetroidKeysanityPatch : RomPatch
 {
 
@@ -105,5 +106,53 @@ public class MetroidKeysanityPatch : RomPatch
         }
 
         yield return new GeneratedPatch(Snes(0x8f0000 + plmTablePos), new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+    }
+
+    public static bool GetIsMetroidKeysanity(byte[] rom)
+    {
+        ushort plaquePLm = 0xd410;
+        ushort doorId = 0x0000;
+        var plmTablePos = 0xf800;
+
+        foreach (var door in s_doorList)
+        {
+            var doorArgs = door[4] != KeycardPlaque.None ? doorId | door[3] : door[3];
+            if (door[6] == 0)
+            {
+                // Write dynamic door
+                var doorData = door[0..3].SelectMany(x => UshortBytes(x)).Concat(UshortBytes(doorArgs)).ToArray();
+                var romData = rom.Skip(Snes(0x8f0000 + plmTablePos)).Take(doorData.Length);
+                if (!romData.SequenceEqual(doorData)) return false;
+                plmTablePos += 0x08;
+            }
+            else
+            {
+                // Overwrite existing door
+                var doorData = door[1..3].SelectMany(x => UshortBytes(x)).Concat(UshortBytes(doorArgs)).ToArray();
+                var romData = rom.Skip(Snes(0x8f0000 + door[6])).Take(doorData.Length);
+                if (!romData.SequenceEqual(doorData)) return false;
+                if ((door[3] == KeycardEvents.BrinstarBoss && door[0] != 0x9D9C)
+                    || door[3] == KeycardEvents.LowerNorfairBoss
+                    || door[3] == KeycardEvents.MaridiaBoss
+                    || door[3] == KeycardEvents.WreckedShipBoss)
+                {
+                    doorData = new byte[] { 0x2F, 0xB6, 0x00, 0x00, 0x00, 0x00, 0x2F, 0xB6, 0x00, 0x00, 0x00, 0x00 };
+                    romData = rom.Skip(Snes(0x8f0000 + door[6] + 0x06)).Take(doorData.Length);
+                    if (!romData.SequenceEqual(doorData)) return false;
+                }
+            }
+
+            // Plaque data
+            if (door[4] != KeycardPlaque.None)
+            {
+                var plaqueData = UshortBytes(door[0]).Concat(UshortBytes(plaquePLm)).Concat(UshortBytes(door[5])).Concat(UshortBytes(door[4])).ToArray();
+                var romData = rom.Skip(Snes(0x8f0000 + plmTablePos)).Take(plaqueData.Length);
+                if (!romData.SequenceEqual(plaqueData)) return false;
+                plmTablePos += 0x08;
+            }
+            doorId += 1;
+        }
+
+        return true;
     }
 }

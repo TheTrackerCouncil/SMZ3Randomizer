@@ -15,4 +15,6 @@ public class TrackerItemState
     public string ItemName { get; init; } = string.Empty;
     public int TrackingState { get; set; }
     public int WorldId { get; init; }
+    [MaxLength(50)]
+    public string? PlayerName { get; init; }
 }

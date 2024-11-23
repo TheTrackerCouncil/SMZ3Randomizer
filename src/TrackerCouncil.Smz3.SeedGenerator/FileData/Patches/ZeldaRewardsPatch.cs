@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TrackerCouncil.Smz3.Data.Options;
+using TrackerCouncil.Smz3.Data.ParsedRom;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
@@ -13,7 +15,7 @@ using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
 
-[Order(-10)]
+[Order(-10), SkipForParsedRoms]
 public class ZeldaRewardsPatch : RomPatch
 {
     public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
@@ -39,9 +41,9 @@ public class ZeldaRewardsPatch : RomPatch
         }
     }
 
-    public static void ApplyRewardsFromRom(byte[] rom, World world)
+    public static List<ParsedRomRewardDetails> GetRewardsFromRom(byte[] rom, IEnumerable<IHasReward> exampleRewardRegions)
     {
-        var regions = world.Regions.Where(x => x is (IHasBoss or IHasReward) and not CastleTower);
+        var regions = exampleRewardRegions.Where(x => x.IsShuffledReward || x is SMRegion);
         var rewardValues = new Dictionary<string, RewardType>()
         {
             { string.Join(",", PendantValues(1)), RewardType.PendantGreen },
@@ -60,25 +62,21 @@ public class ZeldaRewardsPatch : RomPatch
             { string.Join(",", BossTokenValues(4)), RewardType.RidleyToken },
         };
 
-        var regionRewards = new Dictionary<Region, RewardType>();
+        List<ParsedRomRewardDetails> toReturn = [];
 
         foreach (var region in regions)
         {
-            try
+            var addresses = string.Join(",", RewardAddresses(region.Region).Select(x => rom[Snes(x)]));
+            var reward = rewardValues[addresses];
+            toReturn.Add(new ParsedRomRewardDetails()
             {
-                var addresses = string.Join(",", RewardAddresses(region).Select(x => rom[Snes(x)]));
-                var reward = rewardValues[addresses];
-                regionRewards[region] = reward;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-
+                RegionName = region.Name,
+                RegionType = region.GetType(),
+                RewardType = reward,
+            });
         }
 
-        // var a = "1";
+        return toReturn;
     }
 
     private IEnumerable<GeneratedPatch> RewardPatches(IEnumerable<IHasReward> regions, IEnumerable<int> rewards, Func<int, byte[]> rewardValues)

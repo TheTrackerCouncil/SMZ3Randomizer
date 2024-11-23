@@ -10,6 +10,7 @@ using System.Text.Json;
 using Newtonsoft.Json;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Logic;
+using TrackerCouncil.Smz3.Data.ParsedRom;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Multiplayer;
@@ -221,6 +222,8 @@ public class Config
     public string? RandomizerVersion { get; set; }
     [System.Text.Json.Serialization.JsonIgnore, JsonIgnore]
     public bool IsLocalConfig { get; set; } = true;
+    [System.Text.Json.Serialization.JsonIgnore, JsonIgnore]
+    public ParsedRomDetails? ParsedRomDetails { get; set; }
 
     public Config SeedOnly()
     {
