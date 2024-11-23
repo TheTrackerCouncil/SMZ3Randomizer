@@ -35,12 +35,6 @@
     <ProjectReference Include="..\TrackerCouncil.Smz3.Shared\TrackerCouncil.Smz3.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="ReactiveUI.Fody.Helpers">
-      <HintPath>..\..\..\..\.nuget\packages\reactiveui.fody\19.5.41\lib\net8.0\ReactiveUI.Fody.Helpers.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
   <!--<ItemGroup>
     <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
   </ItemGroup>-->
