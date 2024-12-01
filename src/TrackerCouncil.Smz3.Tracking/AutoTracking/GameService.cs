@@ -200,6 +200,11 @@ public class GameService : TrackerModule, IGameService
             Data = Int16ToBytes(itemCounter)
         });
 
+        if (TrackerBase.World.State != null)
+        {
+            TrackerBase.World.State.GiftedItemCount = itemCounter;
+        }
+
         return true;
     }
 

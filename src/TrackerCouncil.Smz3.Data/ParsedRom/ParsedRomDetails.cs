@@ -5,6 +5,7 @@ namespace TrackerCouncil.Smz3.Data.ParsedRom;
 
 public class ParsedRomDetails
 {
+    public required string OriginalPath { get; set; }
     public required string RomTitle { get; set; }
     public required int Seed { get; set; }
     public required bool IsMultiworld { get; set; }
@@ -20,4 +21,6 @@ public class ParsedRomDetails
     public required List<ParsedRomBossDetails> Bosses { get; set; }
     public required List<ParsedRomRewardDetails> Rewards { get; set; }
     public required List<ParsedRomPrerequisiteDetails> Prerequisites { get; set; }
+    public required Dictionary<ItemType, int> StartingItems { get; set; }
+    public required List<byte[]> ParsedText { get; set; }
 }

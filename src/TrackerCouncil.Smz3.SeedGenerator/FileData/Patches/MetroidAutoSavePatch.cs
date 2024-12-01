@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TrackerCouncil.Smz3.Data.Options;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
 
@@ -17,10 +18,19 @@ public class MetroidAutoSavePatch : RomPatch
     /// </returns>
     public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
     {
-        // Updates the value set in config.asm
-        if (data.Config.CasPatches.MetroidAutoSave)
-            yield return new GeneratedPatch(Snes(0xF4700C), UshortBytes(0x0001));
-        else
-            yield return new GeneratedPatch(Snes(0xF4700C), UshortBytes(0x0000));
+        if (data.Config.GameMode != GameMode.ParsedRom)
+        {
+            // Updates the value set in config.asm
+            if (data.Config.CasPatches.MetroidAutoSave)
+                yield return new GeneratedPatch(Snes(0xF4700C), UshortBytes(0x0001));
+            else
+                yield return new GeneratedPatch(Snes(0xF4700C), UshortBytes(0x0000));
+        }
+        else if (data.Config.CasPatches.MetroidAutoSave)
+        {
+            // For prased AP/Mainline roms, patch in the command JSL $F830BA at location $C2DD7E
+            byte[] updates = [ 0x22, 0xBA, 0x30, 0xF8];
+            yield return new GeneratedPatch(Snes(0xC2DD7E), updates);
+        }
     }
 }

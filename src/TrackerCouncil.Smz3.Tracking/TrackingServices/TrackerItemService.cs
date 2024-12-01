@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Abstractions;
+using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Tracking;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
@@ -47,7 +48,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
         }
 
         // Actually track the item if it's for the local player's world
-        if (item.World == World)
+        if (item.World == World && item.IsLocalPlayerItem)
         {
             if (item.Metadata.HasStages)
             {
@@ -155,6 +156,26 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
         else if (location != null)
         {
             Tracker.LocationTracker.Clear(location, confidence, autoTracked, stateResponse: false, allowLocationComments: true, updateTreasureCount: true);
+
+            // If this is a parsed AP/Mainline rom and this is an item for another player, let's comment on it
+            if (item is { IsLocalPlayerItem: false, World.Config.GameMode: GameMode.ParsedRom })
+            {
+                if (item.Type == ItemType.OtherGameProgressionItem)
+                {
+                    Tracker.Say(response: Responses.TrackedParsedOtherGameUnknownProgressionItem,
+                        args: [item.PlayerName]);
+                }
+                else if (item.Type == ItemType.OtherGameItem)
+                {
+                    Tracker.Say(response: Responses.TrackedParsedOtherGameUnknownRegularItem,
+                        args: [item.PlayerName]);
+                }
+                else
+                {
+                    Tracker.Say(response: Responses.TrackedParsedOtherGameKnownItem, args: [item.Metadata.Name,
+                        item.Metadata.NameWithArticle, item.PlayerName]);
+                }
+            }
         }
 
         if (!didTrack)

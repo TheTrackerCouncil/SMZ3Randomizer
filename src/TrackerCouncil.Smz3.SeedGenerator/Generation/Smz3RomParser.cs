@@ -30,6 +30,8 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
             throw new InvalidOperationException();
         }
 
+        logger.LogInformation("Parsing rom file: {Path}", filePath);
+
         var exampleWorld = new World(new Config(), "", 1, "");
         var rom = File.ReadAllBytes(filePath);
 
@@ -48,7 +50,6 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
             .Select(x => (int)x.InternalItemType).ToList();
         var locations = LocationsPatch.GetLocationsFromRom(rom, playerNames, exampleWorld, isMultiworldEnabled, itemTypes);
         var prerequisites = MedallionPatch.GetPrerequisitesFromRom(rom, exampleWorld.PrerequisiteRegions);
-        var rewards = ZeldaRewardsPatch.GetRewardsFromRom(rom, exampleWorld.RewardRegions);
         var bosses = exampleWorld.BossRegions.Select(x => new ParsedRomBossDetails()
         {
             RegionType = x.GetType(), RegionName = x.Name, BossType = x.BossType
@@ -100,14 +101,18 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
             isCasRom = true;
         }
 
+        var rewards = ZeldaRewardsPatch.GetRewardsFromRom(rom, exampleWorld.RewardRegions, isCasRom);
+        var startingItems = StartingEquipmentPatch.GetStartingItemList(rom, isCasRom);
         var gtCrystalCount = GoalsPatch.GetGanonsTowerCrystalCountFromRom(rom);
         var ganonCrystalCount = GoalsPatch.GetGanonCrystalCountFromRom(rom);
         var tourianBossCount = GoalsPatch.GetTourianBossCountFromRom(rom, isCasRom);
+        var text = ZeldaTextsPatch.ParseRomText(rom);
 
         logger.LogInformation("Imported {Title} (Seed {SeedNumber})", romTitle, seedNumber);
 
         return new ParsedRomDetails()
         {
+            OriginalPath = filePath,
             RomTitle = romTitle,
             Seed = seedNumber,
             IsMultiworld = isMultiworldEnabled,
@@ -123,6 +128,8 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
             Rewards = rewards,
             Bosses = bosses,
             Prerequisites = prerequisites,
+            StartingItems = startingItems,
+            ParsedText = text
         };
     }
 
@@ -131,11 +138,14 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
         var config = options.ToConfig();
         config.PlayerName = parsedRomDetails.Players.First(x => x.IsLocalPlayer).PlayerName;
         config.ParsedRomDetails = parsedRomDetails;
+        config.GameMode = parsedRomDetails.IsCasRom ? GameMode.Normal : GameMode.ParsedRom;
         config.KeysanityMode = parsedRomDetails.KeysanityMode;
         config.Seed = parsedRomDetails.Seed.ToString();
         config.GanonsTowerCrystalCount = parsedRomDetails.GanonsTowerCrystalCount;
         config.GanonCrystalCount = parsedRomDetails.GanonCrystalCount;
         config.TourianBossCount = parsedRomDetails.TourianBossCount;
+        config.LocationItems.Clear();
+        config.ItemOptions = parsedRomDetails.StartingItems.ToDictionary(x => $"ItemType:{x.Key}", x => x.Value);
 
         var worlds = new List<World>
         {
@@ -149,7 +159,7 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
             guid: Guid.NewGuid().ToString("N"),
             seed: config.Seed,
             game: parsedRomDetails.IsArchipelago ? $"AP SMZ3 Rom {config.Seed}" : $"SMZ3 Mainline Rom {config.Seed}",
-            mode: GameMode.Normal.ToString(),
+            mode: GameMode.ParsedRom.ToString(),
             worldGenerationData: [],
             playthrough: new Playthrough(config, []),
             configs: new List<Config> { config },
@@ -163,7 +173,8 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
             SeedGuid = seedData.Guid,
             Seed = parsedRomDetails.Seed,
             Random = new Random(parsedRomDetails.Seed).Sanitize(),
-            IsParsedRom = true
+            IsParsedRom = true,
+            PreviousParsedText = parsedRomDetails.ParsedText
         });
 
         var worldGenerationData = new WorldGenerationData(worlds[0], patches);

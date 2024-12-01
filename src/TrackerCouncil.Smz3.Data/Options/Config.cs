@@ -26,6 +26,9 @@ public enum GameMode
 
     [Description("Multiworld")]
     Multiworld,
+
+    [Description("Parsed Rom")]
+    ParsedRom,
 }
 
 [DefaultValue(Normal)]

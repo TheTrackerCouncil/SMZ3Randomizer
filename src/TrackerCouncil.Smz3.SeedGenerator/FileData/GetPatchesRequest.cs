@@ -56,4 +56,9 @@ public class GetPatchesRequest
     /// </summary>
     public bool IsParsedRom { get; init; }
 
+    /// <summary>
+    /// Parsed text from a prior rom file
+    /// </summary>
+    public List<byte[]> PreviousParsedText { get; init; }
+
 }
