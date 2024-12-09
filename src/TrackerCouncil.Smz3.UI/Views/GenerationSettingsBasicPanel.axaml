@@ -12,8 +12,8 @@
     <controls:CardControl HeaderText="Common" Padding="5">
       <StackPanel Orientation="Vertical">
 
-        <TextBlock IsVisible="{Binding !IsPlando}">Presets</TextBlock>
-        <Grid IsVisible="{Binding !IsPlando}">
+        <TextBlock IsVisible="{Binding CanSetPresets}">Presets</TextBlock>
+        <Grid IsVisible="{Binding CanSetPresets}" Margin="0 0 0 5">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -38,8 +38,8 @@
           >Delete Preset</Button>
         </Grid>
 
-        <TextBlock Margin="0 5 0 0" IsVisible="{Binding !IsPlando}">Import Settings</TextBlock>
-        <Grid IsVisible="{Binding !IsPlando}">
+        <TextBlock Margin="0 5 0 0" IsVisible="{Binding CanSetPresets}">Import Settings</TextBlock>
+        <Grid IsVisible="{Binding CanSetPresets}">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -61,8 +61,8 @@
           >Import Settings Only</Button>
         </Grid>
 
-        <TextBlock Margin="0 5 0 0" IsVisible="{Binding CanSetSeed}">Seed</TextBlock>
-        <Grid IsVisible="{Binding CanSetSeed}">
+        <TextBlock IsVisible="{Binding CanSetSeed}">Seed</TextBlock>
+        <Grid IsVisible="{Binding CanSetSeed}" Margin="0 0 0 5">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -76,7 +76,7 @@
           >Clear Seed</Button>
         </Grid>
 
-        <TextBlock Margin="0 5 0 0">Summary</TextBlock>
+        <TextBlock>Summary</TextBlock>
         <Grid>
           <TextBox Height="150" IsReadOnly="True" Text="{Binding Basic.Summary}"></TextBox>
         </Grid>
@@ -112,30 +112,32 @@
 
         </Grid>
 
-        <TextBlock Margin="0 5 0 0">Custom Music Pack</TextBlock>
-        <Grid ColumnDefinitions="*,Auto">
-          <TextBox Grid.Column="0" Name="SelectedMsuTextBox" IsReadOnly="True" Text="{Binding Basic.MsuText}"></TextBox>
-          <StackPanel Grid.Column="1" Orientation="Horizontal"
-                      HorizontalAlignment="Right"
-                      Margin="5 0 0 0">
-            <SplitButton Content="Select _MSU" Click="SelectMsuButton_OnClick">
-              <SplitButton.Flyout>
-                <MenuFlyout Placement="Bottom">
-                  <MenuItem Header="Pick _Random MSU from List" Name="RandomMsuMenuItem" Click="RandomMsuMenuItem_OnClick"></MenuItem>
-                  <MenuItem Header="Create _Shuffled MSU" Name="ShuffledMsuMenuItem" Click="ShuffledMsuMenuItem_OnClick"></MenuItem>
-                  <MenuItem Header="_Continuously Reshuffle MSU" Name="ContinuousShuffleMsuMenuItem" Click="ContinuousShuffleMsuMenuItem_OnClick"></MenuItem>
-                  <MenuItem Header="Select MSU _File" Name="SelectMsuFileMenuItem" Click="SelectMsuFileMenuItem_OnClick"></MenuItem>
-                  <MenuItem Header="Play _Vanilla Music" Name="VanillaMusicMenuItem" Click="VanillaMusicMenuItem_OnClick"></MenuItem>
-                </MenuFlyout>
-              </SplitButton.Flyout>
-            </SplitButton>
+        <StackPanel Orientation="Vertical" IsVisible="{Binding Basic.CanSetMsu}">
+          <TextBlock Margin="0 5 0 0">Custom Music Pack</TextBlock>
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBox Grid.Column="0" Name="SelectedMsuTextBox" IsReadOnly="True" Text="{Binding Basic.MsuText}"></TextBox>
+            <StackPanel Grid.Column="1" Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Margin="5 0 0 0">
+              <SplitButton Content="Select _MSU" Click="SelectMsuButton_OnClick">
+                <SplitButton.Flyout>
+                  <MenuFlyout Placement="Bottom">
+                    <MenuItem Header="Pick _Random MSU from List" Name="RandomMsuMenuItem" Click="RandomMsuMenuItem_OnClick"></MenuItem>
+                    <MenuItem Header="Create _Shuffled MSU" Name="ShuffledMsuMenuItem" Click="ShuffledMsuMenuItem_OnClick"></MenuItem>
+                    <MenuItem Header="_Continuously Reshuffle MSU" Name="ContinuousShuffleMsuMenuItem" Click="ContinuousShuffleMsuMenuItem_OnClick"></MenuItem>
+                    <MenuItem Header="Select MSU _File" Name="SelectMsuFileMenuItem" Click="SelectMsuFileMenuItem_OnClick"></MenuItem>
+                    <MenuItem Header="Play _Vanilla Music" Name="VanillaMusicMenuItem" Click="VanillaMusicMenuItem_OnClick"></MenuItem>
+                  </MenuFlyout>
+                </SplitButton.Flyout>
+              </SplitButton>
+            </StackPanel>
+          </Grid>
+          <TextBlock Margin="0 3 0 3" IsVisible="{Binding Basic.IsShuffleStyleVisible}">Shuffle style:</TextBlock>
+          <controls:EnumComboBox
+            Value="{Binding Basic.MsuShuffleStyle, Mode=TwoWay}"
+            EnumType="{Binding Basic.MsuShuffleStyle, Converter={StaticResource TypeConverter}}"
+            IsVisible="{Binding Basic.IsShuffleStyleVisible}" />
           </StackPanel>
-        </Grid>
-        <TextBlock Margin="0 3 0 3" IsVisible="{Binding Basic.IsShuffleStyleVisible}">Shuffle style:</TextBlock>
-        <controls:EnumComboBox
-          Value="{Binding Basic.MsuShuffleStyle, Mode=TwoWay}"
-          EnumType="{Binding Basic.MsuShuffleStyle, Converter={StaticResource TypeConverter}}"
-          IsVisible="{Binding Basic.IsShuffleStyleVisible}" />
       </StackPanel>
 
     </controls:CardControl>

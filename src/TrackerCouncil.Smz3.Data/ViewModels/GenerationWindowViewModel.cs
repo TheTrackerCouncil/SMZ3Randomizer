@@ -26,7 +26,11 @@ public class GenerationWindowViewModel : ViewModelBase
             OnPropertyChanged(nameof(IsRandomizedGame));
             OnPropertyChanged(nameof(CanChangeGameSettings));
             OnPropertyChanged(nameof(CanSetSeed));
-            Logic.CanChangeGameSettings = false;
+            if (PlandoConfig != null)
+            {
+                Logic.CanChangeGameSettings = false;
+                Logic.IsPlando = true;
+            }
         }
     }
 
@@ -59,7 +63,8 @@ public class GenerationWindowViewModel : ViewModelBase
         }
     }
 
-    public bool CanSetSeed => !IsPlando && !IsMultiplayer;
+    public bool CanSetSeed => !IsPlando && !IsMultiplayer && !IsImportMode;
+    public bool CanSetPresets => !IsPlando && !IsImportMode;
     public bool IsPlando => PlandoConfig != null;
     public bool IsRandomizedGame => !IsPlando;
     public bool IsSingleplayer => !IsMultiplayer;

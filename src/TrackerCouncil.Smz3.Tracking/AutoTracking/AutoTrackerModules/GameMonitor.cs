@@ -105,7 +105,7 @@ public class GameMonitor(TrackerBase tracker, ISnesConnectorService snesConnecto
             var zeldaState = new AutoTrackerZeldaState(response.Data);
             if (zeldaState.IsValid)
             {
-                MarkAsStated();
+                MarkAsStarted();
             }
             bIsCheckingGameStart = false;
         }
@@ -130,19 +130,23 @@ public class GameMonitor(TrackerBase tracker, ISnesConnectorService snesConnecto
             var metroidState = new AutoTrackerMetroidState(response.Data);
             if (metroidState.IsValid)
             {
-                MarkAsStated();
+                MarkAsStarted();
             }
             bIsCheckingGameStart = false;
         }
     }
 
-    private void MarkAsStated()
+    private void MarkAsStarted()
     {
         Logger.LogInformation("Game started");
 
         AutoTracker.HasStarted = true;
 
-        if (Tracker.World.Config.MultiWorld && worldQueryService.Worlds.Count > 1)
+        if (Tracker.World.Config.RomGenerator != RomGenerator.Cas)
+        {
+            Tracker.Say(x => x.AutoTracker.GameStartedNonCas);
+        }
+        else if (Tracker.World.Config.MultiWorld && worldQueryService.Worlds.Count > 1)
         {
             var worldCount = worldQueryService.Worlds.Count;
             var otherPlayerName = worldQueryService.Worlds.Where(x => x != worldQueryService.World).Random(new Random())!.Config.PhoneticName;

@@ -44,7 +44,7 @@ public class Boss
         Type = type;
         World = world;
         Name = type.GetDescription();
-        Metadata = metadata?.Boss(type) ?? new BossInfo(Name);
+        Metadata = metadata?.Boss(type) ?? new BossInfo(Name) { Name = new SchrodingersString(Name) };
         State = bossState ?? new TrackerBossState();
     }
 

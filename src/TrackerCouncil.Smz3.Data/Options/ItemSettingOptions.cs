@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
@@ -41,14 +41,28 @@ public class ItemSettingOptions
     /// <returns>The item types that the user will start with</returns>
     public static IEnumerable<ItemType> GetStartingItemTypes(Config config)
     {
-        var itemOptions = config.ItemOptions;
-        var itemTypes = GetOptions()
-            .Where(x => itemOptions.ContainsKey(x.Item)
-                        && x.Options[itemOptions[x.Item]].MemoryValues != null
-                        && x.Options[itemOptions[x.Item]].MatchingItemTypes != null)
-            .SelectMany(x => x.Options[itemOptions[x.Item]].MatchingItemTypes!)
-            .ToList();
-        return itemTypes;
+        var selectedOptions = config.ItemOptions;
+        var options = GetOptions().ToList();
+
+        var toReturn = new List<ItemType>();
+
+        foreach (var option in selectedOptions)
+        {
+            if (option.Key.StartsWith("ItemType:") && Enum.TryParse(option.Key[9..], out ItemType itemType))
+            {
+                toReturn.AddRange(Enumerable.Repeat(itemType, option.Value));
+            }
+            else
+            {
+                var settings =  options.FirstOrDefault(x => x.Item == option.Key && x.Options[option.Value].MemoryValues != null && x.Options[option.Value].MatchingItemTypes?.Count > 0);
+                if (settings != null)
+                {
+                    toReturn.AddRange(settings.Options[option.Value].MatchingItemTypes!);
+                }
+            }
+        }
+
+        return toReturn;
     }
 
     /// <summary>

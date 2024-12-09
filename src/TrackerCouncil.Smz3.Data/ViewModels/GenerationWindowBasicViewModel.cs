@@ -140,6 +140,8 @@ public class GenerationWindowBasicViewModel : ViewModelBase
 
     public bool CanClearSeed => !string.IsNullOrEmpty(_seed);
 
+    public bool CanSetMsu { get; set; } = true;
+
     public void UpdateMsuDetails(List<string> msuPaths, MsuRandomizationStyle msuRandomizationStyle,
         MsuShuffleStyle msuShuffleStyle)
     {

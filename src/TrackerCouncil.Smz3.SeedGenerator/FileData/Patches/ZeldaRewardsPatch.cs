@@ -41,9 +41,9 @@ public class ZeldaRewardsPatch : RomPatch
         }
     }
 
-    public static List<ParsedRomRewardDetails> GetRewardsFromRom(byte[] rom, IEnumerable<IHasReward> exampleRewardRegions)
+    public static List<ParsedRomRewardDetails> GetRewardsFromRom(byte[] rom, IEnumerable<IHasReward> exampleRewardRegions, bool isCasRom)
     {
-        var regions = exampleRewardRegions.Where(x => x.IsShuffledReward || x is SMRegion);
+        var regions = exampleRewardRegions.Where(x => x.IsShuffledReward || (!isCasRom && x is SMRegion));
         var rewardValues = new Dictionary<string, RewardType>()
         {
             { string.Join(",", PendantValues(1)), RewardType.PendantGreen },

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Configuration;
+using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
+using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
@@ -53,23 +55,48 @@ public class TrackerStateService : ITrackerStateService
                 Cleared = false,
                 Autotracked = false,
                 WorldId = x.World.Id,
-                ItemWorldId = x.Item.World.Id
+                ItemWorldId = x.Item.World.Id,
+                ItemName = x.Item.OriginalName,
+                ItemOwnerName = x.Item.PlayerName
             })
             .ToList();
 
-        var addedItems = new List<(World, ItemType)>();
         var itemStates = new List<TrackerItemState>();
-        foreach (var item in worlds.SelectMany(x => x.AllItems))
+
+        var configItems = _configs.Items;
+        var enumItems = Enum.GetValues(typeof(ItemType)).Cast<ItemType>().Where(it => it != ItemType.Nothing && configItems.All(ci => ci.InternalItemType != it))
+            .Select(x => new ItemData(x));
+        var itemData = configItems.Concat(enumItems).ToList();
+
+        foreach (var world in worlds)
         {
-            if (addedItems.Contains((item.World, item.Type))) continue;
-            itemStates.Add(new TrackerItemState
+            var worldItemStateMap = new Dictionary<ItemType, TrackerItemState>();
+
+            foreach (var itemMetadata in itemData)
             {
-                ItemName = item.Name,
-                Type = item.Type,
-                WorldId = item.World.Id,
-                PlayerName = item.PlayerName
-            });
-            addedItems.Add((item.World, item.Type));
+                var itemState = new TrackerItemState
+                {
+                    ItemName = itemMetadata.InternalItemType == ItemType.Nothing
+                        ? itemMetadata.Item
+                        : itemMetadata.InternalItemType.GetDescription(),
+                    Type = itemMetadata.InternalItemType,
+                    WorldId = world.Id,
+                };
+                itemStates.Add(itemState);
+
+                if (itemMetadata.InternalItemType != ItemType.Nothing)
+                {
+                    worldItemStateMap[itemMetadata.InternalItemType] = itemState;
+                }
+            }
+
+            var startingInventory = ItemSettingOptions.GetStartingItemTypes(world.Config).ToList();
+            foreach (var itemType in startingInventory.Distinct())
+            {
+                _logger.LogInformation("Adding Starting Inventory Item {ItemName} to Tracker State", itemType.GetDescription());
+                var addedItem = worldItemStateMap[itemType];
+                addedItem.TrackingState = startingInventory.Count(x => x == itemType);
+            }
         }
 
         var rewardStates = worlds
@@ -115,7 +142,6 @@ public class TrackerStateService : ITrackerStateService
             })
             .ToList();
 
-
         var hintStates = new List<TrackerHintState>();
         foreach (var hint in worlds.SelectMany(x => x.HintTiles))
         {
@@ -135,49 +161,6 @@ public class TrackerStateService : ITrackerStateService
             hintStates.Add(hintState);
         }
 
-        // Add starting equipment, including items that may not be in the world anymore
-        foreach (var world in worlds)
-        {
-            var startingInventory = ItemSettingOptions.GetStartingItemTypes(world.Config).ToList();
-            foreach (var itemType in startingInventory.Distinct())
-            {
-                _logger.LogInformation("Adding Starting Inventory Item {ItemName} to Tracker State", itemType.GetDescription());
-                var addedItem = itemStates.FirstOrDefault(x => x.WorldId == world.Id && x.Type == itemType);
-                if (addedItem != null)
-                {
-                    addedItem.TrackingState = startingInventory.Count(x => x == itemType);
-                }
-                else
-                {
-                    itemStates.Add(new TrackerItemState
-                    {
-                        ItemName = itemType.GetDescription(),
-                        Type = itemType,
-                        WorldId = world.Id,
-                        PlayerName = world.Player,
-                        TrackingState = startingInventory.Count(x => x == itemType)
-                    });
-                }
-            }
-        }
-
-        // Add items from metadata that may be missing
-        foreach (var world in worlds)
-        {
-            foreach (var itemMetadata in _configs.Items.Where(m => !itemStates.Any(s => m.Is(s) && s.WorldId == world.Id)))
-            {
-                _logger.LogInformation("Adding Metadata Item {ItemName} to Tracker State", itemMetadata.Item);
-                itemStates.Add(new TrackerItemState
-                {
-                    ItemName = itemMetadata.InternalItemType == ItemType.Nothing ? itemMetadata.Item : itemMetadata.InternalItemType.GetDescription(),
-                    Type = itemMetadata.InternalItemType,
-                    WorldId = world.Id,
-                    PlayerName = world.Player,
-                    TrackingState = 0
-                });
-            }
-        }
-
         return new TrackerState()
         {
             LocationStates = locationStates,
@@ -189,7 +172,7 @@ public class TrackerStateService : ITrackerStateService
             LocalWorldId = worlds.First(x => x.IsLocalWorld).Id,
             Hints = hintStates,
             StartDateTime = DateTimeOffset.Now,
-            UpdatedDateTime = DateTimeOffset.Now
+            UpdatedDateTime = DateTimeOffset.Now,
         };
     }
 

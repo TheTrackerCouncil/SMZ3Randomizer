@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Abstractions;
+using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
@@ -48,6 +49,12 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlaye
     public void GiveAreaReward(IHasReward rewardRegion, bool isAutoTracked, bool stateResponse)
     {
         if (rewardRegion.HasReceivedReward)
+        {
+            return;
+        }
+
+        // Skip Metroid region rewards unless it's a parsed AP/Mainline rom
+        if (rewardRegion is SMRegion && rewardRegion.World.Config.RomGenerator == RomGenerator.Cas)
         {
             return;
         }

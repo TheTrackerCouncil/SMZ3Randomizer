@@ -8,6 +8,7 @@ using TrackerCouncil.Smz3.Data.Interfaces;
 using TrackerCouncil.Smz3.Data.ParsedRom;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.ViewModels;
+using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.UI.Views;
@@ -55,6 +56,11 @@ public partial class GenerationSettingsWindow : ScalableWindow
             return;
         }
 
+        if (importDetails.RomGenerator == RomGenerator.Archipelago)
+        {
+            _model.Basic.CanSetMsu = false;
+        }
+        
         _model.IsImportMode = true;
         _model.ImportDetails = importDetails;
     }

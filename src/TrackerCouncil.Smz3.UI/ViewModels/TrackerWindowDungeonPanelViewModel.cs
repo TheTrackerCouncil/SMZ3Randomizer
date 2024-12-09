@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
 using ReactiveUI.Fody.Helpers;
+using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
@@ -80,6 +81,15 @@ public class TrackerWindowDungeonPanelViewModel : TrackerWindowPanelViewModel
             AddRewardMenuItem(menuItems, RewardType.PendantBlue);
             AddRewardMenuItem(menuItems, RewardType.CrystalBlue);
             AddRewardMenuItem(menuItems, RewardType.CrystalRed);
+        }
+
+        // For parsed AP/Mainline roms, show the Metroid boss rewards
+        if (Region?.World.Config.RomGenerator != RomGenerator.Cas)
+        {
+            AddRewardMenuItem(menuItems, RewardType.KraidToken);
+            AddRewardMenuItem(menuItems, RewardType.PhantoonToken);
+            AddRewardMenuItem(menuItems, RewardType.DraygonToken);
+            AddRewardMenuItem(menuItems, RewardType.RidleyToken);
         }
 
         return menuItems;

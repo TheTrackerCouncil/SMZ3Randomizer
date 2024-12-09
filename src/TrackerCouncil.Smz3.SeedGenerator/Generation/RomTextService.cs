@@ -182,27 +182,27 @@ public class RomTextService(ILogger<RomTextService> logger, IGameHintService gam
             return log.ToString();
         }
 
-        if (!isParsedRom)
+        log.AppendLine(SectionTitle("Hints"));
+
+        foreach (var worldGenerationData in seed.WorldGenerationData)
         {
-            log.AppendLine(SectionTitle("Hints"));
-
-            foreach (var worldGenerationData in seed.WorldGenerationData)
+            if (worldGenerationData.Config.MultiWorld)
             {
-                if (worldGenerationData.Config.MultiWorld)
-                {
-                    log.AppendLine(Underline("Player: " + worldGenerationData.World.Player));
-                    log.AppendLine();
-                }
-
-                foreach (var hint in worldGenerationData.World.HintTiles)
-                {
-                    var hintText = gameHintService.GetHintTileText(hint, worldGenerationData.World,
-                        seed.WorldGenerationData.Worlds.ToList());
-                    log.AppendLine($"{hint.HintTileCode} - {hintText}");
-                }
+                log.AppendLine(Underline("Player: " + worldGenerationData.World.Player));
                 log.AppendLine();
             }
 
+            foreach (var hint in worldGenerationData.World.HintTiles)
+            {
+                var hintText = gameHintService.GetHintTileText(hint, worldGenerationData.World,
+                    seed.WorldGenerationData.Worlds.ToList());
+                log.AppendLine($"{hint.HintTileCode} - {hintText}");
+            }
+            log.AppendLine();
+        }
+
+        if (!isParsedRom)
+        {
             log.AppendLine(SectionTitle("Spheres"));
 
             var spheres = seed.Playthrough.GetPlaythroughText();
@@ -218,7 +218,6 @@ public class RomTextService(ILogger<RomTextService> logger, IGameHintService gam
                 log.AppendLine();
             }
         }
-
 
         log.AppendLine(SectionTitle("Dungeons"));
 
@@ -237,7 +236,7 @@ public class RomTextService(ILogger<RomTextService> logger, IGameHintService gam
             }
             log.AppendLine();
 
-            log.AppendLine(!isParsedRom && world.Config.MultiWorld
+            log.AppendLine(world.Config.MultiWorld
                 ? Underline("Player " + world.Player + " Medallions")
                 : Underline("Medallions"));
             log.AppendLine();
@@ -254,7 +253,7 @@ public class RomTextService(ILogger<RomTextService> logger, IGameHintService gam
 
         foreach (var world in seed.WorldGenerationData.Worlds)
         {
-            if (!isParsedRom && world.Config.MultiWorld)
+            if (world.Config.MultiWorld)
             {
                 log.AppendLine(Underline("Player: " + world.Player));
                 log.AppendLine();
@@ -262,8 +261,8 @@ public class RomTextService(ILogger<RomTextService> logger, IGameHintService gam
 
             foreach (var location in world.Locations)
             {
-                log.AppendLine(world.Config.MultiWorld
-                    ? $"{location}: {location.Item} ({location.Item.World.Player})"
+                log.AppendLine(world.Config.GameMode == GameMode.Multiworld
+                    ? $"{location}: {location.Item} ({location.Item.PlayerName})"
                     : $"{location}: {location.Item}");
             }
             log.AppendLine();

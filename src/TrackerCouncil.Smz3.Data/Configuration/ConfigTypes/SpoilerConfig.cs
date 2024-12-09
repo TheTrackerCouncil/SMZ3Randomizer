@@ -128,10 +128,18 @@ public class SpoilerConfig : IMergeable<SpoilerConfig>
     /// <summary>
     /// Gets the phrases that spoil the item that is at the requested
     /// location, when the item does not exist in the item data.
-    /// <c>{0}</c> is a placeholder for the name of the location. <c>{1}</c>
-    /// is a placeholder for the name of the item, with "a", "an" or "the".
+    /// <c>{0}</c> is a placeholder for the name of the location.
     /// </summary>
     public SchrodingersString? LocationHasUnknownItem { get; init; }
+
+    /// <summary>
+    /// Gets the phrases that spoil the item that is at the requested
+    /// location, but the item is for another game.
+    /// <c>{0}</c> is a placeholder for the name of the location.
+    /// <c>{1}</c> is a placeholder for the name of the item. Note for this
+    /// we don't have knowledge of if it's singular or plural
+    /// </summary>
+    public SchrodingersString? LocationHasOtherGameItem { get; init; }
 
     /// <summary>
     /// Gets the phrases that spoil the location that has the requested

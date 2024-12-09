@@ -144,6 +144,29 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     public SchrodingersString? ClearedMultipleItems { get; init; }
 
     /// <summary>
+    /// Get the phrases to respond with when playing a parsed AP/Mainline multiworld game and the player picked up an
+    /// item for another player that is known by SMZ3 (another SMZ3, Z3, or SM item).
+    /// <c>{0}</c> is a placeholder for the name of the item.
+    /// <c>{1}</c> is a placeholder for the name of the item prefixed with the article.
+    /// <c>{2}</c> is a placeholder for the parsed name of the player this item is for.
+    /// </summary>
+    public SchrodingersString? TrackedParsedOtherGameKnownItem { get; init; }
+
+    /// <summary>
+    /// Gets the phrases to respond with when playing a parsed AP/Mainline multiworld game and the player picked up an
+    /// item for another player that is unknown by SMZ3 but was labeled as progression.
+    /// <c>{0}</c> is a placeholder for the parsed name of the player this item is for.
+    /// </summary>
+    public SchrodingersString? TrackedParsedOtherGameUnknownProgressionItem { get; init; }
+
+    /// <summary>
+    /// Gets the phrases to respond with when playing a parsed AP/Mainline multiworld game and the player picked up an
+    /// item for another player that is unknown by SMZ3 but was labeled as not progression.
+    /// <c>{0}</c> is a placeholder for the parsed name of the player this item is for.
+    /// </summary>
+    public SchrodingersString? TrackedParsedOtherGameUnknownRegularItem { get; init; }
+
+    /// <summary>
     /// Gets the phrases to respond with when tracking or clearing multiple
     /// items in an area at once, but there no items left.
     /// <c>{0}</c> is a placeholder for the name of the area.

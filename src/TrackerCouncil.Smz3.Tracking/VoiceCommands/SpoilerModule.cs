@@ -122,6 +122,27 @@ public class SpoilerModule : TrackerModule, IOptionalModule
         }
         else if (TrackerBase.HintsEnabled)
         {
+            if (area.Region!.Config.RomGenerator != RomGenerator.Cas)
+            {
+                var config = area.Region.Config;
+                var anyPossibleProgression = area.Locations.Any(x =>
+                    x.ItemType.IsPossibleProgression(config.ZeldaKeysanity, config.MetroidKeysanity));
+                if (anyPossibleProgression)
+                {
+                    TrackerBase.Say(x => x.Hints.AreaHasNonCasPossibleProgression, args: [area.GetName()]);
+                }
+                else if (area is IHasReward region && region.RewardType.IsInAnyCategory(RewardCategory.Crystal, RewardCategory.Metroid))
+                {
+                    TrackerBase.Say(x => x.Hints.AreaHasNonCasJunkAndReward, args: [area.GetName()]);
+                }
+                else
+                {
+                    TrackerBase.Say(x => x.Hints.AreaHasJunk, args: [area.GetName()]);
+                }
+
+                return;
+            }
+
             var areaReward = GetRewardForHint(area);
             var usefulness = _gameHintService.GetUsefulness(locations.ToList(), WorldQueryService.Worlds, areaReward);
 
@@ -411,6 +432,24 @@ public class SpoilerModule : TrackerModule, IOptionalModule
 
     private bool GiveLocationHints(Location location)
     {
+        if (location.World.Config.RomGenerator != RomGenerator.Cas)
+        {
+            if (HintsGiven(location) == 0)
+            {
+                if (location.ItemType.IsPossibleProgression(location.World.Config.ZeldaKeysanity,
+                        location.World.Config.MetroidKeysanity))
+                {
+                    return GiveLocationHint(x => x.LocationHasNonCasProgressionItem, location, location.Item.PlayerName);
+                }
+                else
+                {
+                    return GiveLocationHint(x => x.LocationHasJunkItem, location, location.Item.PlayerName);
+                }
+            }
+
+            return false;
+        }
+
         switch (HintsGiven(location))
         {
             // Who's it for and is it any good?
@@ -454,6 +493,30 @@ public class SpoilerModule : TrackerModule, IOptionalModule
         if (location.Item.Type == ItemType.Nothing)
         {
             TrackerBase.Say(x => x.Spoilers.EmptyLocation, args: [locationName]);
+            return true;
+        }
+
+        if (location.World.Config.RomGenerator != RomGenerator.Cas)
+        {
+            if (location.Item.Type is ItemType.OtherGameItem or ItemType.OtherGameProgressionItem)
+            {
+                TrackerBase.Say(x => x.Spoilers.LocationHasOtherGameItem,
+                    args: [
+                        locationName,
+                        location.Item.OriginalName,
+                        location.Item.PlayerName
+                    ]);
+            }
+            else
+            {
+                TrackerBase.Say(x => location.Item.IsLocalPlayerItem ? x.Spoilers.LocationHasItemOwnWorld : x.Spoilers.LocationHasItemOtherWorld,
+                    args: [
+                        locationName,
+                        location.Item.Metadata.NameWithArticle,
+                        location.Item.PlayerName
+                    ]);
+            }
+
             return true;
         }
 

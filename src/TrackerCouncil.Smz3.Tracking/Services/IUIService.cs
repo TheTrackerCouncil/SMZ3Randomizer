@@ -66,6 +66,13 @@ public interface IUIService
     public string? GetSpritePath(RewardType reward);
 
     /// <summary>
+    /// Returns the path of the sprite for the reward for a boss panel
+    /// </summary>
+    /// <param name="reward">The reward requested</param>
+    /// <returns>The full path of the sprite or null if it's not found</returns>
+    public string? GetBossRewardPath(RewardType reward);
+
+    /// <summary>
     /// Returns the path of the sprite
     /// </summary>
     /// <param name="category">The category of sprite</param>

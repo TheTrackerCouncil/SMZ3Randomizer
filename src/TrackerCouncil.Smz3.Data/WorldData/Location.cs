@@ -376,7 +376,7 @@ public class Location
     public bool IsPotentiallyImportant(KeysanityMode? keysanity = null)
     {
         keysanity ??= Item.World.Config.KeysanityMode;
-        return Item.Progression
+        return Item.Progression || Item.Type == ItemType.OtherGameProgressionItem
                || (Item.IsDungeonItem && keysanity is KeysanityMode.Both or KeysanityMode.Zelda)
                || (Item.IsKeycard && keysanity is KeysanityMode.Both or KeysanityMode.SuperMetroid);
     }
