@@ -108,7 +108,7 @@ public class Smz3GeneratedRomLoader
         // Create custom bosses from the tracker states
         foreach (var bossState in trackerState.BossStates.Where(x => x.Type == BossType.None))
         {
-            var bossMetadata = _metadata.Boss(bossState.BossName) ?? new BossInfo(bossState.BossName) { Name = new SchrodingersString(bossState.BossName) };
+            var bossMetadata = _metadata.Boss(bossState.BossName) ?? new BossInfo(bossState.BossName);
             var world = worlds.First(w => w.Id == bossState.WorldId);
             world.CustomBosses.Add(new Boss(BossType.None, world, bossMetadata, bossState));
         }

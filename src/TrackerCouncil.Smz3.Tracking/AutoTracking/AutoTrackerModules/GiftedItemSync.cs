@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using SnesConnectorLibrary;
@@ -7,19 +6,15 @@ using SnesConnectorLibrary.Requests;
 using SnesConnectorLibrary.Responses;
 using SNI;
 using TrackerCouncil.Smz3.Abstractions;
-using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Shared.Enums;
-using TrackerCouncil.Smz3.Tracking.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.AutoTracking.AutoTrackerModules;
 
 public class GiftedItemSync(
     TrackerBase tracker,
     ISnesConnectorService snesConnector,
-    ILogger<GiftedItemSync> logger,
-    IGameService gameService,
-    IWorldQueryService worldQueryService) : AutoTrackerModule(tracker, snesConnector, logger)
+    ILogger<GiftedItemSync> logger) : AutoTrackerModule(tracker, snesConnector, logger)
 {
     private int _itemCountAddress = 0xA26D38;
     private int _itemDetailLength = 2;
@@ -37,7 +32,7 @@ public class GiftedItemSync(
             _itemDetailLength = 4;
         }
 
-        snesConnector.AddRecurringMemoryRequest(new SnesRecurringMemoryRequest()
+        SnesConnector.AddRecurringMemoryRequest(new SnesRecurringMemoryRequest()
         {
             MemoryRequestType = SnesMemoryRequestType.RetrieveMemory,
             SnesMemoryDomain = SnesMemoryDomain.CartridgeSave,
@@ -69,7 +64,7 @@ public class GiftedItemSync(
             return;
         }
 
-        var firstBlockResponse = await snesConnector.MakeMemoryRequestAsync(new SnesSingleMemoryRequest()
+        var firstBlockResponse = await SnesConnector.MakeMemoryRequestAsync(new SnesSingleMemoryRequest()
         {
             MemoryRequestType = SnesMemoryRequestType.RetrieveMemory,
             SnesMemoryDomain = SnesMemoryDomain.CartridgeSave,
@@ -90,13 +85,13 @@ public class GiftedItemSync(
         {
             if (_itemDetailLength == 4)
             {
-                var fromPlayerId = firstBlockResponse.Data.ReadUInt16(i * 4)!.Value;
+                // var fromPlayerId = firstBlockResponse.Data.ReadUInt16(i * 4)!.Value;
                 var itemId = (ItemType)firstBlockResponse.Data.ReadUInt16(i * 4 + 2)!.Value;
                 receivedItems.Add(Tracker.World.AllItems.First(x => x.Type == itemId && x.IsLocalPlayerItem));
             }
             else
             {
-                var fromPlayerId = firstBlockResponse.Data.ReadUInt8(i * 2)!.Value;
+                // var fromPlayerId = firstBlockResponse.Data.ReadUInt8(i * 2)!.Value;
                 var itemId = (ItemType)firstBlockResponse.Data.ReadUInt8(i * 2 + 1)!.Value;
                 receivedItems.Add(Tracker.World.AllItems.First(x => x.Type == itemId && x.IsLocalPlayerItem));
             }

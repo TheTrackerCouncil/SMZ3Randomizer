@@ -18,7 +18,7 @@ using TrackerCouncil.Smz3.Shared.Models;
 namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
 
 [Order(-5)]
-public class ZeldaTextsPatch(Configs configs, IGameHintService gameHintService, ILogger<ZeldaTextsPatch> logger) : RomPatch
+public class ZeldaTextsPatch(Configs configs, IGameHintService gameHintService) : RomPatch
 {
     private StringTable _stringTable = null!;
     private PlandoTextConfig _plandoText = null!;
@@ -37,7 +37,7 @@ public class ZeldaTextsPatch(Configs configs, IGameHintService gameHintService, 
             _stringTable = new StringTable();
             return GetFullTextPatchList(data);
         }
-        else if (data is { IsParsedRom: true, Config.CasPatches.PreventScams: true })
+        else if (data is { IsParsedRom: true, Config.CasPatches.PreventScams: true, PreviousParsedText: not null })
         {
             _stringTable = new StringTable(data.PreviousParsedText);
             return GetUpdatedParsedTextPatch(data);

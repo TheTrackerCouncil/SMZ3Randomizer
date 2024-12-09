@@ -34,6 +34,7 @@ public class BossInfo : IMergeable<BossInfo>
     public BossInfo(string name)
     {
         Boss = name;
+        Name = [name];
     }
 
     /// <summary>
@@ -45,7 +46,7 @@ public class BossInfo : IMergeable<BossInfo>
     /// <summary>
     /// Gets the name of the boss.
     /// </summary>
-    public SchrodingersString? Name { get; set; }
+    public SchrodingersString Name { get; set; }
 
     /// <summary>
     /// Gets the phrases to respond with when the boss has been tracked (but
