@@ -469,8 +469,9 @@ public class TrackerWindowService(
             items[item] = fileName;
         }
 
-        var replacementImages =
-            gridLocation.ReplacementImages.ToDictionary(x => x.Key,
+        var replacementImages = gridLocation.ReplacementImages == null
+            ? []
+            : gridLocation.ReplacementImages.ToDictionary(x => x.Key,
                 x => uiService.GetSpritePath("Items", x.Value, out _));
 
         var model = new TrackerWindowItemPanelViewModel()
