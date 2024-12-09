@@ -24,7 +24,8 @@ In addition to making IBJ completely optional, there is also:
  - Multiworld support with individual player logic and game settings;
  - Sprites made by members of [Diabetus’](https://twitch.tv/the_betus) community and others;
 
- **Note**: Voice recognition and text-to-speech functionality is currently only available on Windows.
+> [!NOTE]
+> Voice recognition and text-to-speech functionality is currently only available on Windows.
 
 ## Installation
 
