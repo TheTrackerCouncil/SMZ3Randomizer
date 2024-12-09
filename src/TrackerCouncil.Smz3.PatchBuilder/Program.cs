@@ -40,7 +40,8 @@ do
 {
     yamlPath = Path.Combine(directory.FullName, "patch-config.yml");
     directory = directory.Parent!;
-} while (!File.Exists(yamlPath) && !Directory.Exists(Path.Combine(directory.FullName, "Randomizer.PatchBuilder")));
+    logger.LogInformation($"Reading config from {yamlPath}");
+} while (!File.Exists(yamlPath) && !Directory.Exists(Path.Combine(directory.FullName, "TrackerCouncil.Smz3.PatchBuilder")));
 
 if (!File.Exists(yamlPath))
 {
@@ -52,6 +53,11 @@ if (!File.Exists(yamlPath))
     {
         location.Item =
             new Item(location.VanillaItem == ItemType.Nothing ? ItemType.TwentyRupees : location.VanillaItem, world);
+    }
+
+    foreach (var reward in world.Rewards)
+    {
+        reward.Region = null;
     }
 
     foreach (var rewardRegion in world.RewardRegions)

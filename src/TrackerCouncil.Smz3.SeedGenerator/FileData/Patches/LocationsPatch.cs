@@ -191,6 +191,8 @@ public class LocationsPatch : RomPatch
                 ? GetSuperMetroidLocationItemType(rom, location)
                 : GetZeldaLocationItemType(rom, location);
             itemName = itemType.GetDescription();
+            playerName = playerNames.First();
+            isProgression = true;
         }
 
 

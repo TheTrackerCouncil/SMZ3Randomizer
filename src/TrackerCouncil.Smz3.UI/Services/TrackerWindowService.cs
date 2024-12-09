@@ -316,7 +316,7 @@ public class TrackerWindowService(
     {
         if (tracker.IsDirty)
         {
-            if (tracker.World.Config.MultiWorld)
+            if (tracker.World.Config.GameMode == GameMode.Multiworld)
             {
                 await SaveStateAsync();
             }
@@ -469,8 +469,9 @@ public class TrackerWindowService(
             items[item] = fileName;
         }
 
-        var replacementImages =
-            gridLocation.ReplacementImages.ToDictionary(x => x.Key,
+        var replacementImages = gridLocation.ReplacementImages == null
+            ? []
+            : gridLocation.ReplacementImages.ToDictionary(x => x.Key,
                 x => uiService.GetSpritePath("Items", x.Value, out _));
 
         var model = new TrackerWindowItemPanelViewModel()
@@ -588,7 +589,7 @@ public class TrackerWindowService(
         {
             rewardRegion.Reward.UpdatedRewardState += (_, _) =>
             {
-                var newImage = rewardRegion?.MarkedReward.GetCategories().Length > 0
+                var newImage = rewardRegion.MarkedReward.GetCategories().Length > 0
                     ? uiService.GetSpritePath(rewardRegion.MarkedReward)
                     : null;
                 model.RewardImage = newImage;
@@ -616,11 +617,25 @@ public class TrackerWindowService(
             return null;
         }
 
+        IHasReward? rewardRegion = null;
+        string? rewardImage = null;
+
+        // If this is a parsed AP/Mainline rom, also show the reward for the boss
+        if (world.World.Config.RomGenerator != RomGenerator.Cas)
+        {
+            rewardRegion = boss.Region as IHasReward;
+            rewardImage = rewardRegion?.RewardType.GetCategories().Length > 0
+                ? uiService.GetBossRewardPath(rewardRegion.MarkedReward)
+                : null;
+        }
+
         var model = new TrackerWindowBossPanelViewModel
         {
             Boss = boss,
             BossImage = fileName,
             BossDefeated = boss.Defeated,
+            RewardRegion = rewardRegion,
+            RewardImage = rewardImage,
             Row = gridLocation.Row,
             Column = gridLocation.Column,
             AddShadows = _model.AddShadows
@@ -633,6 +648,18 @@ public class TrackerWindowService(
 
         model.Clicked += (_, _) => tracker.BossTracker.MarkBossAsDefeated(boss);
         model.BossRevived += (_, _) => tracker.BossTracker.MarkBossAsNotDefeated(boss);
+
+        if (rewardRegion != null)
+        {
+            rewardRegion.Reward.UpdatedRewardState += (_, _) =>
+            {
+                model.RewardImage = rewardRegion?.RewardType.GetCategories().Length > 0
+                    ? uiService.GetBossRewardPath(rewardRegion.MarkedReward)
+                    : null;
+            };
+
+            model.RewardSet += (_, args) => tracker.RewardTracker.SetAreaReward(rewardRegion, args.RewardType);
+        }
 
         return model;
     }

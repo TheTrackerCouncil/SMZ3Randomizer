@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrackerCouncil.Smz3.Shared.Models;
 
@@ -10,9 +11,11 @@ using TrackerCouncil.Smz3.Shared.Models;
 namespace TrackerCouncil.Smz3.Shared.Migrations
 {
     [DbContext(typeof(RandomizerContext))]
-    partial class RandomizerContextModelSnapshot : ModelSnapshot
+    [Migration("20241129210036_AddGiftedItemCount")]
+    partial class AddGiftedItemCount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
@@ -304,6 +307,10 @@ namespace TrackerCouncil.Smz3.Shared.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("PlayerName")
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
                     b.Property<long?>("TrackerStateId")
                         .HasColumnType("INTEGER");
 
@@ -337,14 +344,6 @@ namespace TrackerCouncil.Smz3.Shared.Migrations
 
                     b.Property<byte>("Item")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("ItemName")
-                        .HasMaxLength(50)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ItemOwnerName")
-                        .HasMaxLength(50)
-                        .HasColumnType("TEXT");
 
                     b.Property<int>("ItemWorldId")
                         .HasColumnType("INTEGER");

@@ -96,6 +96,9 @@ public class AutoTrackerMetroidState
     /// </summary>
     public int? MaxPowerBombs => _data.ReadUInt8(0x7E09D0 - 0x7E0750);
 
+    public bool IsLookingAtMap =>
+        _data.ReadUInt16(0x7E0998 - 0x7E0750) == 0xF && _data.ReadUInt16(0x7E0753 - 0x7E0750) == 0x0;
+
     public bool IsSamusInArea(int minX, int maxX, int minY, int maxY)
     {
         return SamusX >= minX && SamusX <= maxX && SamusY >= minY && SamusY <= maxY;

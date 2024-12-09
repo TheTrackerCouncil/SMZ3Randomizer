@@ -34,6 +34,7 @@ public class Item
         Progression = isProgression;
         PlayerName = world.Player;
         IsLocalPlayerItem = world.IsLocalWorld;
+        OriginalName = Name;
     }
 
     /// <summary>
@@ -47,7 +48,8 @@ public class Item
     /// <param name="state">The tracking state of the item</param>
     /// <param name="isProgression">If this is a progression item or not</param>
     /// <param name="playerName">The player that owns this item</param>
-    public Item(ItemType itemType, World world, string name, ItemData metadata, TrackerItemState state, bool isProgression = false, string? playerName = null)
+    /// <param name="originalItemName">The original name of the item (for parsed roms)</param>
+    public Item(ItemType itemType, World world, string name, ItemData metadata, TrackerItemState state, bool isProgression = false, string? playerName = null, string? originalItemName = null)
     {
         Type = itemType;
         World = world;
@@ -55,14 +57,20 @@ public class Item
         Metadata = metadata;
         State = state;
         Progression = isProgression;
-        PlayerName = playerName ?? state.PlayerName ?? world.Player;
+        PlayerName = playerName ?? world.Player;
         IsLocalPlayerItem = world.Player == PlayerName;
+        OriginalName = originalItemName ?? name;
     }
 
     /// <summary>
     /// Gets the name of the item.
     /// </summary>
     public string Name { get; private set; }
+
+    /// <summary>
+    /// Gets the name of the item that was parsed from a rom
+    /// </summary>
+    public string OriginalName { get; private set; }
 
     /// <summary>
     /// Gets the type of item.

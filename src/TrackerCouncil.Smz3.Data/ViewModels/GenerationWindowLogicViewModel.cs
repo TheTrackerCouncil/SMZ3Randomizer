@@ -9,7 +9,7 @@ namespace TrackerCouncil.Smz3.Data.ViewModels;
 [DynamicFormGroupBasic(DynamicFormLayout.Vertical, "All")]
 public class GenerationWindowLogicViewModel : ViewModelBase
 {
-    private bool _canChangeGameSettings = true;
+    private bool _isPlando = true;
 
     [DynamicFormObject(groupName: "Can Change Settings")]
     public LogicConfig LogicConfig { get; set; } = new();
@@ -17,13 +17,15 @@ public class GenerationWindowLogicViewModel : ViewModelBase
     [DynamicFormObject(groupName: "All")]
     public CasPatches CasPatches { get; set; } = new();
 
-    public bool CanChangeGameSettings
+    public bool CanChangeGameSettings { get; set; }
+
+    public bool IsPlando
     {
-        get => _canChangeGameSettings;
+        get => _isPlando;
         set
         {
-            _canChangeGameSettings = value;
-            CasPatches.CanChangeGameSettings = value;
+            _isPlando = value;
+            CasPatches.CanSetHintTiles = !value;
         }
     }
 }

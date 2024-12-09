@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.Shared.Models;
 
@@ -15,6 +16,7 @@ public class TrackerState
     public double SecondsElapsed { get; set; }
     public int PercentageCleared { get; set; }
     public int LocalWorldId { get; set; }
+    public int GiftedItemCount { get; set; }
     public ICollection<TrackerItemState> ItemStates { get; set; } = new List<TrackerItemState>();
     public ICollection<TrackerLocationState> LocationStates { get; set; } = new List<TrackerLocationState>();
     public ICollection<TrackerRewardState> RewardStates { get; set; } = new List<TrackerRewardState>();

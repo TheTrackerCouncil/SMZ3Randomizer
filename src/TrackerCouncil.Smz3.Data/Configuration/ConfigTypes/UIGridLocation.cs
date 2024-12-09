@@ -43,5 +43,5 @@ public class UIGridLocation
     /// <summary>
     /// Map of identifier to images to use
     /// </summary>
-    public Dictionary<string, string> ReplacementImages { get; set; } = new();
+    public Dictionary<string, string>? ReplacementImages { get; set; } = new();
 }

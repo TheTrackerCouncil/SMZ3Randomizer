@@ -5,7 +5,7 @@ using TrackerCouncil.Smz3.Data.Options;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
 
-[Order(-7), SkipForParsedRoms]
+[Order(-7)]
 public class ZeldaPrizesPatch : RomPatch
 {
     public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)

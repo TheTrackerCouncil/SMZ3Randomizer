@@ -41,7 +41,11 @@ internal class TrackerBossService(IPlayerProgressionService playerProgressionSer
                 foreach (var location in ((Region)region).Locations.Where(x => !x.Cleared))
                 {
                     Tracker.LocationTracker.Clear(location, confidence, autoTracked, false);
-                    undoActions.Add(PopUndo().Action);
+
+                    if (!autoTracked)
+                    {
+                        undoActions.Add(PopUndo().Action);
+                    }
                 }
             }
 

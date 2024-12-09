@@ -65,6 +65,25 @@ public class StringTable
         }
     }
 
+    public StringTable(List<byte[]> previousBytes) {
+        entries = new List<(string, byte[])>(template);
+        for (var i = 0; i < previousBytes.Count; i++)
+        {
+            if (i < entries.Count)
+            {
+                entries[i] = (entries[i].name, previousBytes[i]);
+            }
+            else
+            {
+                entries.Add((i.ToString(), previousBytes[i]));
+            }
+        }
+        foreach (var toRemove in s_unwantedText)
+        {
+            SetText(toRemove, "{NOTEXT}");
+        }
+    }
+
     static StringTable() {
         template = ParseEntries("Text.Scripts.StringTable.yaml");
     }
@@ -82,6 +101,16 @@ public class StringTable
 
     public byte[] GetPaddedBytes() {
         return GetBytes(true);
+    }
+
+    public string[] GetLines()
+    {
+        return entries.Select(x => $"{x.name}: {GetBytePrintString(x.bytes)}").ToArray();
+    }
+
+    public string GetBytePrintString(byte[] bytes)
+    {
+        return string.Join(" ", bytes.Select(x => x.ToString("X2")));
     }
 
     public byte[] GetBytes(bool pad = false) {

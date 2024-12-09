@@ -69,10 +69,10 @@ public class CasPatches : ViewModelBase
     [DynamicFormFieldComboBox(label: "Zelda item drops:", groupName: "Bottom")]
     public ZeldaDrops ZeldaDrops { get; set; }
 
-    [DynamicFormFieldSlider(0, 15, label: "Hint tiles:", groupName: "Bottom", visibleWhenTrue: nameof(CanChangeGameSettings))]
+    [DynamicFormFieldSlider(0, 15, label: "Hint tiles:", groupName: "Bottom", visibleWhenTrue: nameof(CanSetHintTiles))]
     public int HintTiles { get; set; } = 15;
 
-    [YamlIgnore] public bool CanChangeGameSettings { get; set; } = true;
+    [YamlIgnore] public bool CanSetHintTiles { get; set; } = true;
 
     public CasPatches Clone()
     {

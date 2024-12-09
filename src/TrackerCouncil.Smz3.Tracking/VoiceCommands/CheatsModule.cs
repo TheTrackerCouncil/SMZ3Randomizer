@@ -5,6 +5,7 @@ using System.Speech.Recognition;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Abstractions;
+using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Tracking.Services;
@@ -255,11 +256,14 @@ public class CheatsModule : TrackerModule
             Fill(fillType);
         });
 
-        AddCommand("Give item", GiveItemRule(), (result) =>
+        if (TrackerBase.World.Config.RomGenerator == RomGenerator.Cas)
         {
-            var item = GetItemFromResult(TrackerBase, result, out var itemName);
-            _ = GiveItemAsync(item);
-        });
+            AddCommand("Give item", GiveItemRule(), (result) =>
+            {
+                var item = GetItemFromResult(TrackerBase, result, out var itemName);
+                _ = GiveItemAsync(item);
+            });
+        }
 
         AddCommand("Kill player", KillPlayerRule(), (result) =>
         {

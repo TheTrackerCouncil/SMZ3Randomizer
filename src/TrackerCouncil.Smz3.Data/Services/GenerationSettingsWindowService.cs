@@ -13,6 +13,8 @@ using TrackerCouncil.Smz3.Data.GeneratedData;
 using TrackerCouncil.Smz3.Data.Interfaces;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.ViewModels;
+using TrackerCouncil.Smz3.Shared;
+using TrackerCouncil.Smz3.Shared.Enums;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
@@ -478,10 +480,46 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
     public void UpdateSummaryText()
     {
         var sb = new StringBuilder();
-        sb.AppendLine("Game Settings");
-        sb.AppendLine(GetObjectSummary(_model.GameSettings, "  - ", Environment.NewLine));
-        sb.AppendLine("Logic");
-        sb.AppendLine(GetObjectSummary(_model.Logic.LogicConfig, "  - ", Environment.NewLine));
+
+        if (_model.ImportDetails != null)
+        {
+            var details = _model.ImportDetails;
+            var ynResponses = new Dictionary<bool, string> { { true, "Yes" }, { false, "No" } };
+            var playerCount = details.RomGenerator == RomGenerator.Mainline
+                ? details.Players.Count
+                : details.Players.Count - 1;
+
+            sb.AppendLine("Rom Import Details");
+            sb.AppendLine($"  - File: {details.OriginalPath}");
+            sb.AppendLine($"  - Seed: {details.Seed}");
+            sb.AppendLine($"  - Original Generator: {details.RomGenerator.GetDescription()}");
+            sb.AppendLine($"  - Player Name: {details.Players.First(x => x.IsLocalPlayer).PlayerName}");
+            sb.AppendLine($"  - Player Count: {playerCount}");
+
+            sb.AppendLine($"  - GT Crystal Count: {details.GanonsTowerCrystalCount}");
+            sb.AppendLine($"  - Ganon Crystal Count: {details.GanonCrystalCount}");
+            sb.AppendLine($"  - Tourian Boss Count: {details.TourianBossCount}");
+
+            sb.AppendLine($"  - IsMultiworld: {ynResponses[details.IsMultiworld]}");
+            sb.AppendLine($"  - IsHardLogic: {ynResponses[details.IsHardLogic]}");
+            sb.AppendLine($"  - Keysanity: {details.KeysanityMode.GetDescription()}");
+
+            if (details.RomGenerator != RomGenerator.Archipelago)
+            {
+                var startingItems = string.Join(", ",
+                    details.StartingItems.Select(x => $"{x.Key.GetDescription()}: {x.Value}"));
+                sb.AppendLine($"  - Starting Items: {startingItems}");
+            }
+        }
+        else
+        {
+            sb.AppendLine("Game Settings");
+            sb.AppendLine(GetObjectSummary(_model.GameSettings, "  - ", Environment.NewLine));
+
+            sb.AppendLine("Logic");
+            sb.AppendLine(GetObjectSummary(_model.Logic.LogicConfig, "  - ", Environment.NewLine));
+        }
+
         sb.AppendLine("Cas' Patches");
         sb.AppendLine(GetObjectSummary(_model.Logic.CasPatches, "  - ", Environment.NewLine));
 

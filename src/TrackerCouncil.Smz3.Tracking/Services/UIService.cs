@@ -132,6 +132,14 @@ public class UIService: IUIService
         $"{reward.GetDescription().ToLowerInvariant()}.png", out _);
 
     /// <summary>
+    /// Returns the path of the sprite for the reward for a boss panel
+    /// </summary>
+    /// <param name="reward">The reward requested</param>
+    /// <returns>The full path of the sprite or null if it's not found</returns>
+    public string? GetBossRewardPath(RewardType reward) => GetSpritePath("BossRewards",
+        $"{reward.GetDescription().ToLowerInvariant()}.png", out _);
+
+    /// <summary>
     /// Returns the path of the sprite
     /// </summary>
     /// <param name="category">The category of sprite</param>

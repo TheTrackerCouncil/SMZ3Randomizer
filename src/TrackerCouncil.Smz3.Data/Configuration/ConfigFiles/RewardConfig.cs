@@ -68,6 +68,30 @@ public class RewardConfig : List<RewardInfo>, IMergeable<RewardInfo>, IConfigFil
                 Article = null,
                 RewardType = RewardType.Agahnim,
             },
+            new()
+            {
+                Reward = "Kraid Boss Token",
+                Article = "the",
+                RewardType = RewardType.KraidToken,
+            },
+            new()
+            {
+                Reward = "Phantoon Boss Token",
+                Article = "the",
+                RewardType = RewardType.PhantoonToken,
+            },
+            new()
+            {
+                Reward = "Draygon Boss Token",
+                Article = "the",
+                RewardType = RewardType.DraygonToken,
+            },
+            new()
+            {
+                Reward = "Ridley Boss Token",
+                Article = "the",
+                RewardType = RewardType.RidleyToken,
+            },
         };
     }
 

@@ -30,6 +30,11 @@ public class AutoTrackerConfig : IMergeable<AutoTrackerConfig>
     public SchrodingersString? GameStartedMultiplayer { get; init; }
 
     /// <summary>
+    /// Gets the phrases to respond with when a parsed non-Cas rando seed has been started
+    /// </summary>
+    public SchrodingersString? GameStartedNonCas { get; init; }
+
+    /// <summary>
     /// Gets the phrases to respond with when nearing KAD
     /// </summary>
     public SchrodingersString? NearKraidsAwfulSon { get; init; }

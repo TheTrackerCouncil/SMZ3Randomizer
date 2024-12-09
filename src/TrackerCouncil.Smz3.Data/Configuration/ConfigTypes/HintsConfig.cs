@@ -202,6 +202,13 @@ public class HintsConfig : IMergeable<HintsConfig>
     public SchrodingersString? LocationHasUsefulItem { get; init; }
 
     /// <summary>
+    /// Gets hints for a non Cas' seed where it could be mandatory, but we don't know
+    /// <c>{0}</c> is placeholder for the name of the location.
+    /// <c>{1}</c> is placeholder for the name of the character who the item is for.
+    /// </summary>
+    public SchrodingersString? LocationHasNonCasProgressionItem { get; init; }
+
+    /// <summary>
     /// Gets the hints for locations that have an item from Super Metroid.
     /// <c>{0}</c> is placeholder for the name of the location. <c>{1}</c>
     /// is a placeholder for the name of the sprite that replaces Samus, or
@@ -268,6 +275,19 @@ public class HintsConfig : IMergeable<HintsConfig>
     /// <c>{0}</c> is a placeholder for the name of the area.
     /// </summary>
     public SchrodingersString? AreaHasJunkAndCrystal { get; init; }
+
+    /// <summary>
+    /// Gets the hint to give for an area in a non-Cas parsed rom that could
+    /// possibly be progression, but we're not positive
+    /// </summary>
+    public SchrodingersString? AreaHasNonCasPossibleProgression { get; init; }
+
+    /// <summary>
+    /// Gets the hint to give for an area in a non-Cas parsed rom that only has
+    /// junk items left, but also has a crystal or metroid boss as the reward
+    /// for beating the boss. <c>{0}</c> is a placeholder for the name of the area.
+    /// </summary>
+    public SchrodingersString? AreaHasNonCasJunkAndReward { get; init; }
 
     /// <summary>
     /// Gets the hint to give for an area whose worth is complicated, e.g.

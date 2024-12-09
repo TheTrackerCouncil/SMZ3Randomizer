@@ -110,6 +110,8 @@ public class PatchBuilderService
 
         var info = new FileInfo(config.EnvironmentSettings.PatchBuildScriptPath);
 
+        _logger.LogInformation("Running build script {Path}", info.FullName);
+
         // Run the patch build.bat file
         var process = Process.Start(new ProcessStartInfo()
         {
@@ -141,7 +143,7 @@ public class PatchBuilderService
         var patchBuildFolder = new DirectoryInfo(Path.Combine(_randomizerRomPath, "build"));
         foreach (var file in patchBuildFolder.EnumerateFiles().Where(x => x.Extension.Contains("ips")))
         {
-            var destinationFile = new FileInfo(Path.Combine(_solutionPath, "src", "Randomizer.SMZ3", "FileData", "IpsPatches", file.Name));
+            var destinationFile = new FileInfo(Path.Combine(_solutionPath, "src", "TrackerCouncil.Smz3.SeedGenerator", "FileData", "IpsPatches", file.Name));
             file.CopyTo(destinationFile.FullName, true);
             _logger.LogInformation("Copying {Source} to {Destination}", file, destinationFile.FullName);
         }
@@ -173,7 +175,7 @@ public class PatchBuilderService
         };
 
         var seedData = _romGenerationService.GeneratePlandoSeed(randomizerOptions, config.PlandoConfig);
-        var bytes = _romGenerationService.GenerateRomBytes(randomizerOptions, seedData);
+        var bytes = _romGenerationService.GenerateRomBytes(randomizerOptions, seedData, null);
 
         var romPath = Path.Combine(config.EnvironmentSettings.OutputPath, $"{config.EnvironmentSettings.TestRomFileName}.sfc");
 

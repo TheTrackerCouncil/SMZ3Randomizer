@@ -8,6 +8,7 @@ using TrackerCouncil.Smz3.Data.ParsedRom;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
+using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Models;
 
@@ -47,7 +48,7 @@ public class ParsedRomFiller : IFiller
             }
             else
             {
-                location.Item = new Item(itemType, world, locationDetails.ItemName, new ItemData(itemType), new TrackerItemState(), locationDetails.IsProgression, locationDetails.PlayerName);
+                location.Item = new Item(itemType, world, itemType.GetDescription(), new ItemData(itemType), new TrackerItemState(), locationDetails.IsProgression, locationDetails.PlayerName, locationDetails.ItemName);
             }
         }
     }

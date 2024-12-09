@@ -62,7 +62,7 @@
           <SplitButton.Flyout>
             <MenuFlyout Placement="Bottom">
               <MenuItem Header="_Start plando..." Click="StartPlandoButton_OnClick" />
-              <!--<MenuItem Header="_Import archipelago rom..." Click="ArchipelagoButton_OnClick" />-->
+              <MenuItem Header="_Import archipelago rom..." Click="ArchipelagoButton_OnClick" />
             </MenuFlyout>
           </SplitButton.Flyout>
         </SplitButton>
