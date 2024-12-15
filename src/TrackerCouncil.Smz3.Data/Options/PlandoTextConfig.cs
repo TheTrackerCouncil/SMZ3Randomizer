@@ -85,7 +85,7 @@ public class PlandoTextConfig
 
     public string? HintTileSouthEastDarkworldCave { get; init; }
 
-    [YamlIgnore]
+    [YamlIgnore, Newtonsoft.Json.JsonIgnore]
     public bool HasHintTileText => !string.IsNullOrEmpty(HintTileEasternPalace) ||
                                    !string.IsNullOrEmpty(HintTileTowerOfHeraFloor4) ||
                                    !string.IsNullOrEmpty(HintTileSpectacleRock) ||

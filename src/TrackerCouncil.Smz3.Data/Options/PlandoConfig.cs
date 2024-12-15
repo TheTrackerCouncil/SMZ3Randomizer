@@ -6,6 +6,7 @@ using TrackerCouncil.Smz3.Data.Logic;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Shared.Enums;
+using YamlDotNet.Core;
 using YamlDotNet.Serialization;
 
 namespace TrackerCouncil.Smz3.Data.Options;
@@ -15,6 +16,12 @@ namespace TrackerCouncil.Smz3.Data.Options;
 /// </summary>
 public class PlandoConfig // TODO: Consider using this instead of SeedData?
 {
+    /// <summary>
+    /// Number that represents the hash code the serialized string this class. Used to prevent unnecessary generation
+    /// of the schema file to prevent going over usage limits.
+    /// </summary>
+    public static int SHashCode = 0;
+
     /// <summary>
     /// Initializes a new empty instance of the <see cref="PlandoConfig"/>
     /// class.
@@ -38,7 +45,7 @@ public class PlandoConfig // TODO: Consider using this instead of SeedData?
         TourianBossCount = world.Config.TourianBossCount;
         Items = world.Locations
             .ToDictionary(x => x.ToString(), x => x.Item.Type);
-        Rewards = world.Regions.Where(x => x is IHasReward)
+        Rewards = world.Regions.Where(x => x is IHasReward r && !r.RewardType.IsInCategory(RewardCategory.NonRandomized) && r.RewardType.IsInCategory(RewardCategory.Zelda))
             .ToDictionary(x => x.ToString(), x => ((IHasReward)x).RewardType);
         Medallions = world.Regions.Where(x => x is IHasPrerequisite)
             .ToDictionary(x => x.ToString(), x => ((IHasPrerequisite)x).RequiredItem);
@@ -63,9 +70,10 @@ public class PlandoConfig // TODO: Consider using this instead of SeedData?
     /// Gets or sets the name of the file from which the plando config was
     /// deserialized.
     /// </summary>
-    [YamlIgnore]
+    [YamlIgnore, Newtonsoft.Json.JsonIgnore]
     public string FileName { get; set; } = "";
 
+    [YamlMember(ScalarStyle = ScalarStyle.DoubleQuoted)]
     public string Seed { get; set; } = "";
 
     /// <summary>
