@@ -11,6 +11,45 @@ namespace TrackerCouncil.Smz3.Tracking;
 internal static class NaturalLanguage
 {
     /// <summary>
+    /// Returns a string representing a collection of locations as a
+    /// comma-separated list, but where the last location is separated with
+    /// "and" instead.
+    /// </summary>
+    /// <param name="locations">The locations.</param>
+    /// <param name="cap">The cap of locations to fully name.</param>
+    /// <returns>
+    /// A string containing each item in <paramref name="locations"/> separated
+    /// with a comma, except for the two items, which are separated with
+    /// "and".
+    /// </returns>
+    /// <example>
+    /// <c>NaturalLanguage.Join(new[]{"one", "two", "three"})</c> returns
+    /// <c>"one, two and three"</c>.
+    /// </example>
+    public static string Join(ICollection<Location> locations, int cap = 4)
+    {
+        if (locations.Count == 0)
+        {
+            return string.Empty;
+        }
+        else if (locations.Count == 1)
+        {
+            return locations.First().RandomName;
+        }
+        else if (locations.Count <= cap)
+        {
+            var last = locations.Last().RandomName;
+            var remainder = locations.SkipLast(1).Select(x => x.RandomName);
+            return $"{string.Join(", ", remainder)} and {last}";
+        }
+        else
+        {
+            var namedLocations = locations.Take(cap).Select(x => x.RandomName);
+            return $"{string.Join(", ", namedLocations)} and {locations.Count - cap} other locations";
+        }
+    }
+
+    /// <summary>
     /// Returns a string representing a collection of items as a
     /// comma-separated list, but where the last item is separated with
     /// "and" instead.
@@ -57,21 +96,28 @@ internal static class NaturalLanguage
             var item = innerItems.First(); // Just pick the first. It's possible (though unlikely) there's multiple items for a single item type
             var count = innerItems.Count();
             return (item, count);
-        });
+        }).ToList();
 
-        var interestingItems = groupedItems.Where(x => x.item.Metadata.IsJunk(config) == false).ToList();
-        var junkItems = groupedItems.Where(x => x.item.Metadata.IsJunk(config)).ToList();
+        var interestingItems = groupedItems.Where(x => x.item.Metadata.IsProgression(config)).ToList();
+        var junkItems = groupedItems.Where(x => !x.item.Metadata.IsProgression(config)).OrderBy(x => x.item.IsDungeonItem).ToList();
 
         if (junkItems.Count == 0)
+        {
             return Join(interestingItems.Select(GetPhrase));
+        }
+        else if (interestingItems.Count + junkItems.Count < 5)
+        {
+            return Join(interestingItems.Concat(junkItems).Select(GetPhrase));
+        }
 
-        if (interestingItems.Count == 0)
-            return Join(junkItems.Select(GetPhrase));
+        if (interestingItems.Count <= 3)
+        {
+            var numToTake = 3 - interestingItems.Count;
+            interestingItems.AddRange(junkItems.Take(numToTake));
+            junkItems = junkItems.Skip(numToTake).ToList();
+        }
 
-        if (junkItems.Count > 1)
-            return Join(interestingItems.Select(GetPhrase).Concat(new[] { $"{junkItems.Count} other items" }));
-
-        return Join(groupedItems.Select(GetPhrase));
+        return Join(interestingItems.Select(GetPhrase).Concat([$"{junkItems.Count} other items"]));
 
         static string GetPhrase((Item item, int count) x)
             => x.count > 1 ? $"{x.count} {x.item.Metadata.Plural ?? $"{x.item.Name}s"}": $"{x.item.Name}";
