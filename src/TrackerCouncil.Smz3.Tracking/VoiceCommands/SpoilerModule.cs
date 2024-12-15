@@ -218,10 +218,23 @@ public class SpoilerModule : TrackerModule, IOptionalModule
                 TrackerBase.Say(x => x.Spoilers.ItemNotFound, args: [item.Metadata.NameWithArticle]);
             return;
         }
+
+        // The item exists, but all locations are cleared
         else if (locations.Count > 0 && locations.All(x => x.Cleared))
         {
-            // The item exists, but all locations are cleared
-            TrackerBase.Say(x => x.Spoilers.LocationsCleared, args: [item.Metadata.NameWithArticle]);
+            // Prioritize locations that haven't been auto tracked
+            var nonAutoTrackedLocations = locations.Where(x => !x.Autotracked);
+            var locationsToAnnounce = (nonAutoTrackedLocations.Any() ? nonAutoTrackedLocations : locations).ToList();
+
+            if (locationsToAnnounce.Count == 1)
+            {
+                TrackerBase.Say(x => x.Spoilers.LocationCleared, args: [item.Metadata.NameWithArticle, locationsToAnnounce.First().RandomName]);
+            }
+            else
+            {
+                TrackerBase.Say(x => x.Spoilers.LocationsCleared, args: [item.Metadata.NameWithArticle, NaturalLanguage.Join(locationsToAnnounce)]);
+            }
+
             return;
         }
 
