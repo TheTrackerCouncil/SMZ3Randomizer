@@ -154,6 +154,11 @@ public abstract class Region : IHasLocations
     public override string ToString() => Name;
 
     /// <summary>
+    /// Returns a random string from the region's metadata
+    /// </summary>
+    public string RandomName => Metadata.Name?.ToString() ?? Name;
+
+    /// <summary>
     /// Determines whether the region can be entered with the specified
     /// items.
     /// </summary>

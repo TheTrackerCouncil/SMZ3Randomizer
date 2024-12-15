@@ -125,4 +125,9 @@ public class Boss
     /// langword="false"/>.
     public bool Is(BossType type, string name)
         => (Type != BossType.None && Type == type) || (Type == BossType.None && Name == name);
+
+    /// <summary>
+    /// Returns a random name from the boss's metadata
+    /// </summary>
+    public string RandomName => Metadata.Name?.ToString() ?? Name;
 }

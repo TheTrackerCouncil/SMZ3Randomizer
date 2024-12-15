@@ -17,7 +17,7 @@ internal class TrackerBossService(IPlayerProgressionService playerProgressionSer
     {
         if (region.BossDefeated && !autoTracked)
         {
-            Tracker.Say(response: Responses.DungeonBossAlreadyCleared, args: [region.Metadata.Name, region.BossMetadata.Name]);
+            Tracker.Say(response: Responses.DungeonBossAlreadyCleared, args: [region.RandomRegionName, region.RandomBossName]);
             return;
         }
 
@@ -26,7 +26,7 @@ internal class TrackerBossService(IPlayerProgressionService playerProgressionSer
         var addedEvent = History.AddEvent(
             HistoryEventType.BeatBoss,
             true,
-            region.BossMetadata.Name.ToString() ?? $"boss of {region.Metadata.Name}"
+            region.RandomBossName
         );
 
         region.Boss.Defeated = true;
@@ -49,14 +49,14 @@ internal class TrackerBossService(IPlayerProgressionService playerProgressionSer
                 }
             }
 
-            Tracker.Say(response: Responses.DungeonBossCleared, args: [region.Metadata.Name, region.BossMetadata.Name]);
+            Tracker.Say(response: Responses.DungeonBossCleared, args: [region.RandomRegionName, region.RandomBossName]);
         }
         else
         {
             if (!admittedGuilt && region.BossMetadata.WhenTracked != null)
-                Tracker.Say(response: region.BossMetadata.WhenTracked, args: [region.BossMetadata.Name]);
+                Tracker.Say(response: region.BossMetadata.WhenTracked, args: [region.RandomBossName]);
             else
-                Tracker.Say(response: region.BossMetadata.WhenDefeated ?? Responses.BossDefeated, args: [region.BossMetadata.Name]);
+                Tracker.Say(response: region.BossMetadata.WhenDefeated ?? Responses.BossDefeated, args: [region.RandomBossName]);
         }
 
         // Auto track the region's reward
@@ -166,13 +166,13 @@ internal class TrackerBossService(IPlayerProgressionService playerProgressionSer
     {
         if (!region.BossDefeated)
         {
-            Tracker.Say(response: Responses.DungeonBossNotYetCleared, args: [region.Metadata.Name, region.BossMetadata.Name]);
+            Tracker.Say(response: Responses.DungeonBossNotYetCleared, args: [region.RandomRegionName, region.RandomBossName]);
             return;
         }
 
         region.BossDefeated = false;
         BossUpdated?.Invoke(this, new BossTrackedEventArgs(region.Boss, confidence, false));
-        Tracker.Say(response: Responses.DungeonBossUncleared, args: [region.Metadata.Name, region.BossMetadata.Name]);
+        Tracker.Say(response: Responses.DungeonBossUncleared, args: [region.RandomRegionName, region.RandomBossName]);
 
         // Try to untrack the associated boss reward item
         List<Action> undoActions = [];
