@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Logic;
@@ -43,13 +44,19 @@ public class PlandoConfig // TODO: Consider using this instead of SeedData?
             .ToDictionary(x => x.ToString(), x => ((IHasPrerequisite)x).RequiredItem);
         Logic = world.Config.LogicConfig.Clone();
         StartingInventory = world.Config.ItemOptions;
-        var prizes = DropPrizes.GetPool(world.Config.CasPatches.ZeldaDrops);
+        var prizes = DropPrizes.GetPool(world.Config.CasPatches.ZeldaDrops).ToList();
         ZeldaPrizes.EnemyDrops = prizes.Take(56).ToList();
         ZeldaPrizes.TreePulls = prizes.Skip(56).Take(3).ToList();
         ZeldaPrizes.CrabBaseDrop = prizes.Skip(59).First();
         ZeldaPrizes.CrabEightDrop = prizes.Skip(60).First();
         ZeldaPrizes.StunPrize = prizes.Skip(61).First();
         ZeldaPrizes.FishPrize = prizes.Skip(62).First();
+
+        var bottleItems = Enum.GetValues<ItemType>().Where(x => x.IsInCategory(ItemCategory.Bottle))
+            .Shuffle(new Random().Sanitize()).Take(2)
+            .ToList();
+        WaterfallFairyTrade = bottleItems.First();
+        PyramidFairyTrade = bottleItems.Last();
     }
 
     /// <summary>
@@ -118,6 +125,16 @@ public class PlandoConfig // TODO: Consider using this instead of SeedData?
     /// Various Zelda enemy drops and other prizes
     /// </summary>
     public PlandoZeldaPrizeConfig ZeldaPrizes { get; set; } = new();
+
+    /// <summary>
+    /// Bottle trade offer with the waterfall fairy
+    /// </summary>
+    public ItemType? WaterfallFairyTrade { get; set; }
+
+    /// <summary>
+    /// Bottle trade offer with the pyramid fairy
+    /// </summary>
+    public ItemType? PyramidFairyTrade { get; set; }
 
     /// <summary>
     /// Item Options for the starting inventory
