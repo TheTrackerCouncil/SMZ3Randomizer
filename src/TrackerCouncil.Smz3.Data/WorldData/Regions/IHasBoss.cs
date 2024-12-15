@@ -86,4 +86,14 @@ public interface IHasBoss
     /// <see langword="false"/>.
     /// </returns>
     bool CanBeatBoss(Progression items);
+
+    /// <summary>
+    /// Returns a randomized name from the metadata for the region
+    /// </summary>
+    public string RandomRegionName => Region.RandomName;
+
+    /// <summary>
+    /// Returns a randomized name from the metadata for the boss
+    /// </summary>
+    public string RandomBossName => Boss.RandomName;
 }

@@ -191,19 +191,19 @@ public class MultiplayerModule : TrackerModule
                 TrackerBase.Say(x => x.Multiplayer.OtherPlayerClearedDungeonWithReward,
                     args: [
                         args.PhoneticName,
-                        rewardRegion.Metadata.Name, boss.Region.BossMetadata.Name, rewardRegion.RewardMetadata.Name,
+                        rewardRegion.Metadata.Name, boss.Region.RandomBossName, rewardRegion.RewardMetadata.Name,
                         rewardRegion.RewardMetadata.NameWithArticle
                     ]);
             }
             else
             {
                 TrackerBase.Say(x => x.Multiplayer.OtherPlayerClearedDungeonWithoutReward,
-                    args: [args.PhoneticName, treasureRegion.Metadata.Name, boss.Region.BossMetadata.Name]);
+                    args: [args.PhoneticName, treasureRegion.Metadata.Name, boss.Region.RandomBossName]);
             }
         }
         else
         {
-            TrackerBase.Say(x => x.Multiplayer.OtherPlayerDefeatedBoss, args: [args.PhoneticName, boss.Metadata.Name]);
+            TrackerBase.Say(x => x.Multiplayer.OtherPlayerDefeatedBoss, args: [args.PhoneticName, boss.RandomName]);
         }
 
     }

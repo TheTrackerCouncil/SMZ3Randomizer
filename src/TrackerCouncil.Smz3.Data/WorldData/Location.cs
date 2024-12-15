@@ -392,6 +392,21 @@ public class Location
             : $"{Region} - {Name}";
     }
 
+    /// <summary>
+    /// Returns a random name from the location's metadata
+    /// </summary>
+    public string RandomName
+    {
+        get
+        {
+            var randomLocationName = Metadata.Name?.ToString() ?? Name;
+            return Room != null
+                ? $"{Room.RandomName} - {randomLocationName}"
+                : $"{Region.RandomName} - {randomLocationName}";
+        }
+    }
+
+
     public IHasTreasure? GetTreasureRegion() => Region as IHasTreasure;
 
     public event EventHandler? ClearedUpdated;

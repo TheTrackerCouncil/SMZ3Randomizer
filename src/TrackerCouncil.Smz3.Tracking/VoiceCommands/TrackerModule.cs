@@ -487,8 +487,15 @@ public abstract class TrackerModule
         var bossNames = new Choices();
         foreach (var boss in TrackerBase.World.AllBosses)
         {
-            foreach (var name in boss.Metadata.Name)
-                bossNames.Add(new SemanticResultValue(name.Text, boss.Name));
+            if (boss.Metadata.Name != null)
+            {
+                foreach (var name in boss.Metadata.Name)
+                    bossNames.Add(new SemanticResultValue(name.Text, boss.Name));
+            }
+            else
+            {
+                bossNames.Add(new SemanticResultValue(boss.Name, boss.Name));
+            }
         }
         return bossNames;
     }
