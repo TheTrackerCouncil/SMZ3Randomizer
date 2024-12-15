@@ -228,11 +228,11 @@ public class SpoilerModule : TrackerModule, IOptionalModule
 
             if (locationsToAnnounce.Count == 1)
             {
-                TrackerBase.Say(x => x.Spoilers.LocationCleared, args: [item.Metadata.NameWithArticle, locationsToAnnounce.First().RandomName]);
+                TrackerBase.Say(x => x.Spoilers.ItemLocationCleared, args: [item.Metadata.NameWithArticle, locationsToAnnounce.First().RandomName]);
             }
             else
             {
-                TrackerBase.Say(x => x.Spoilers.LocationsCleared, args: [item.Metadata.NameWithArticle, NaturalLanguage.Join(locationsToAnnounce)]);
+                TrackerBase.Say(x => x.Spoilers.ItemLocationsCleared, args: [item.Metadata.NameWithArticle, NaturalLanguage.Join(locationsToAnnounce)]);
             }
 
             return;

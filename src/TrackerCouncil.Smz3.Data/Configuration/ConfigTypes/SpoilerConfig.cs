@@ -92,11 +92,18 @@ public class SpoilerConfig : IMergeable<SpoilerConfig>
     public SchrodingersString? ItemsNotFound { get; init; }
 
     /// <summary>
+    /// Gets the phrases to respond with when all locations that have the item are cleared.
+    /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
+    /// or "the".
+    /// </summary>
+    public SchrodingersString? LocationsCleared { get; init; }
+
+    /// <summary>
     /// Gets the phrases to respond with when an item's location has been cleared.
     /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
     /// or "the" and <c>1</c> is a placeholder for the name of the location where the item was.
     /// </summary>
-    public SchrodingersString? LocationCleared { get; init; }
+    public SchrodingersString? ItemLocationCleared { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when all locations that have the item are cleared.
@@ -104,7 +111,7 @@ public class SpoilerConfig : IMergeable<SpoilerConfig>
     /// or "the". <c>{1}</c> is a placeholder for a list of locations where the item was (up
     /// to 4).
     /// </summary>
-    public SchrodingersString? LocationsCleared { get; init; }
+    public SchrodingersString? ItemLocationsCleared { get; init; }
 
     /// <summary>
     /// Gets the phrases that spoil the item that is at the requested
