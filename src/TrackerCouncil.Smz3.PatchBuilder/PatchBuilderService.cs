@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using MSURandomizerLibrary.Models;
 using MSURandomizerLibrary.Services;
+using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Data.Interfaces;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.SeedGenerator.Infrastructure;
@@ -24,7 +25,7 @@ public class PatchBuilderService
     {
         _logger = logger;
         _romGenerationService = romGenerationService;
-        _solutionPath = SolutionPath;
+        _solutionPath = RandomizerDirectories.SolutionPath;
         _randomizerRomPath = Path.Combine(_solutionPath, "alttp_sm_combo_randomizer_rom");
         _optionsFactory = optionsFactory;
         _msuLookupService = msuLookupService;
@@ -226,20 +227,4 @@ public class PatchBuilderService
         _romLauncherService.LaunchRom(romPath, config.EnvironmentSettings.LaunchApplication,
             config.EnvironmentSettings.LaunchArguments);
     }
-
-    private static string SolutionPath
-    {
-        get
-        {
-            var directory = new DirectoryInfo(Directory.GetCurrentDirectory());
-
-            while (directory != null && !directory.GetFiles("*.sln").Any())
-            {
-                directory = directory.Parent;
-            }
-
-            return Path.Combine(directory!.FullName);
-        }
-    }
-
 }

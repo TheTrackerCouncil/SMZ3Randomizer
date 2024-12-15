@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using TrackerCouncil.Smz3.Data;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.FileData.IpsPatches;
 
@@ -8,27 +9,12 @@ public static class IpsPatch
     public static Stream GetStream(string name)
     {
 #if DEBUG
-        var path = Path.Combine(SolutionPath, "src", "TrackerCouncil.Smz3.SeedGenerator", "FileData", "IpsPatches", name);
+        var path = Path.Combine(RandomizerDirectories.SolutionPath, "src", "TrackerCouncil.Smz3.SeedGenerator", "FileData", "IpsPatches", name);
         return File.OpenRead(path);
 #else
         var type = typeof(IpsPatch);
         return type.Assembly.GetManifestResourceStream(type, name) ?? throw new FileNotFoundException($"Not able to load IPS patch {name}");
 #endif
-    }
-
-    private static string SolutionPath
-    {
-        get
-        {
-            var directory = new DirectoryInfo(Directory.GetCurrentDirectory());
-
-            while (directory != null && !directory.GetFiles("*.sln").Any())
-            {
-                directory = directory.Parent;
-            }
-
-            return Path.Combine(directory!.FullName);
-        }
     }
 
     /// <summary>
