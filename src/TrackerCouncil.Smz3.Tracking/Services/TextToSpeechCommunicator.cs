@@ -197,6 +197,7 @@ public class TextToSpeechCommunicator : ICommunicator, IDisposable
     /// </summary>
     public void Enable()
     {
+        Abort();
         _canSpeak = true;
     }
 
