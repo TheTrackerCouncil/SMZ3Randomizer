@@ -56,7 +56,7 @@ public class Smz3GeneratedRomLoader
         UpdateGeneratedRom(rom);
 
         var configs = Config.FromConfigString(rom.Settings);
-        var worlds = configs.Select(config => new World(config, config.PlayerName, config.Id, config.PlayerGuid,
+        var worlds = configs.Select(config => new World(config, string.IsNullOrEmpty(config.PlayerName) ? "Player" : config.PlayerName, config.Id, config.PlayerGuid,
             config.Id == trackerState.LocalWorldId, _metadata, trackerState)).ToList();
 
         // Load world items from state
@@ -71,11 +71,13 @@ public class Smz3GeneratedRomLoader
             location.Item = new Item(locationState.Item, itemWorld,
                 itemState.ItemName, itemMetadata, itemState,
                 locationState.Item.IsPossibleProgression(itemWorld.Config.ZeldaKeysanity,
-                    itemWorld.Config.MetroidKeysanity));
+                    itemWorld.Config.MetroidKeysanity),
+                locationState.ItemOwnerName, locationState.ItemName
+            );
         }
 
         // Create items for saved state items not in the world
-        foreach (var itemState in trackerState.ItemStates.Where(s => worlds.SelectMany(w => w.LocationItems).All(i => i.World.Id != s.WorldId || i.Type != s.Type)))
+        foreach (var itemState in trackerState.ItemStates.Where(s => worlds.SelectMany(w => w.LocationItems).All(i => !(i.Type == s.Type && s.WorldId == i.World.Id && i.IsLocalPlayerItem))))
         {
             var itemMetadata = (itemState.Type != null && itemState.Type != ItemType.Nothing ? _metadata.Item(itemState.Type ?? ItemType.Nothing) : _metadata.Item(itemState.ItemName)) ??
                                new ItemData(new SchrodingersString(itemState.ItemName),

@@ -8,6 +8,7 @@ using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Data.GeneratedData;
+using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
@@ -101,12 +102,18 @@ public class GameHintService : IGameHintService
 
         var allHints = new List<Hint>();
 
-        var importantLocations = GetImportantLocations(allWorlds).ToList();
-
-        allHints.AddRange(GetProgressionItemHints(hintPlayerWorld, playthrough.Spheres, 5));
-        allHints.AddRange(GetDungeonHints(hintPlayerWorld, allWorlds, importantLocations));
-        allHints.AddRange(GetLocationHints(hintPlayerWorld, allWorlds, importantLocations));
-        allHints.AddRange(GetMedallionHints(hintPlayerWorld));
+        if (hintPlayerWorld.Config.RomGenerator != RomGenerator.Cas)
+        {
+            allHints.AddRange(GetBasicLocationHints(hintPlayerWorld));
+        }
+        else
+        {
+            var importantLocations = GetImportantLocations(allWorlds).ToList();
+            allHints.AddRange(GetProgressionItemHints(hintPlayerWorld, playthrough.Spheres, 5));
+            allHints.AddRange(GetDungeonHints(hintPlayerWorld, allWorlds, importantLocations));
+            allHints.AddRange(GetLocationHints(hintPlayerWorld, allWorlds, importantLocations));
+            allHints.AddRange(GetMedallionHints(hintPlayerWorld));
+        }
 
         allHints = allHints.Shuffle(_random);
 
@@ -252,6 +259,24 @@ public class GameHintService : IGameHintService
         }
     }
 
+    private IEnumerable<Hint> GetBasicLocationHints(World hintPlayerWorld)
+    {
+        List<LocationId> locationIds =
+        [
+            LocationId.PinkBrinstarWaterwayEnergyTank, LocationId.WreckedShipEnergyTank,
+            LocationId.InnerMaridiaSpringBall, LocationId.InnerMaridiaPlasma, LocationId.Sahasrahla,
+            LocationId.MasterSwordPedestal, LocationId.KingZora, LocationId.Catfish,
+            LocationId.TowerOfHeraBigKeyChest, LocationId.RedBrinstarXRayScope, LocationId.PinkBrinstarHoptank,
+            LocationId.EtherTablet, LocationId.BombosTablet, LocationId.CrateriaSuper, LocationId.SpikeCave,
+            LocationId.PurpleChest, LocationId.FluteSpot, LocationId.MagicBat, LocationId.PotionShop,
+            LocationId.MasterSwordPedestal
+        ];
+
+        return locationIds
+            .Select(locationId => (Hint)(() => GetBasicLocationHint(hintPlayerWorld.FindLocation(locationId))))
+            .ToList();
+    }
+
     /// <summary>
     /// Retrieves hints for out of the way locations and rooms to the pool of hints
     /// </summary>
@@ -377,6 +402,26 @@ public class GameHintService : IGameHintService
             LocationWorldId = locations.First().World.Id,
             Locations = locations.Select(x => x.Id),
             Usefulness = locations.Count > 1 ? CheckIfLocationsAreImportant(allWorlds, importantLocations, locations) : null
+        };
+    }
+
+    /// <summary>
+    /// Adds a hint for a given set of location(s) to the list of hints
+    /// </summary>
+    private PlayerHintTile GetBasicLocationHint(Location location)
+    {
+        return new PlayerHintTile()
+        {
+            Type = HintTileType.Location,
+            WorldId = location.World.Id,
+            LocationKey = location.Name,
+            LocationWorldId = location.World.Id,
+            Locations = [location.Id],
+            Usefulness =
+                location.ItemType.IsPossibleProgression(location.World.Config.ZeldaKeysanity,
+                    location.World.Config.MetroidKeysanity)
+                    ? LocationUsefulness.NiceToHave
+                    : LocationUsefulness.Useless
         };
     }
 
@@ -554,6 +599,15 @@ public class GameHintService : IGameHintService
 
     private string GetItemName(World hintPlayerWorld, Item item)
     {
+        if (item.Type == ItemType.OtherGameProgressionItem)
+        {
+            return $"something potentially required for {item.PlayerName}";
+        }
+        else if (item.Type == ItemType.OtherGameItem)
+        {
+            return $"some junk for {item.PlayerName}";
+        }
+
         var itemName = _metadataService.Item(item.Type)?.NameWithArticle;
         if (itemName == null || itemName.Contains('<'))
             itemName = item.Name;
@@ -572,7 +626,7 @@ public class GameHintService : IGameHintService
     {
         if (!hintPlayerWorld.Config.MultiWorld)
         {
-            return "";
+            return item.IsLocalPlayerItem ? "" : $" belonging to {item.PlayerName}";
         }
         else
         {

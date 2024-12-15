@@ -187,6 +187,7 @@ public class Config
     public MenuSpeed MenuSpeed { get; set; } = MenuSpeed.Default;
     public bool CasualSMPatches { get; set; } = false;
     public ZeldaDrops? ZeldaDrops { get; set; }
+    public RomGenerator RomGenerator { get; set; } = RomGenerator.Cas;
     public bool GenerateSeedOnly { get; private set; } = false;
 
     public string LinkName { get; set; } = "Link";
@@ -194,7 +195,7 @@ public class Config
     public string SamusName { get; set; } = "Samus";
 
     public bool SingleWorld => GameMode == GameMode.Normal;
-    public bool MultiWorld => GameMode == GameMode.Multiworld;
+    public bool MultiWorld => GameMode == GameMode.Multiworld && RomGenerator == RomGenerator.Cas;
     public bool Keysanity => KeysanityMode != KeysanityMode.None;
     public int Id { get; set; }
     public string PlayerName { get; set; } = "";

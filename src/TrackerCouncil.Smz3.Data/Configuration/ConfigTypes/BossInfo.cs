@@ -34,7 +34,7 @@ public class BossInfo : IMergeable<BossInfo>
     public BossInfo(string name)
     {
         Boss = name;
-        Name = new SchrodingersString(name);
+        Name = [name];
     }
 
     /// <summary>

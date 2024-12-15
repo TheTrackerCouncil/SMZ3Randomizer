@@ -94,7 +94,7 @@ public class RomGenerationService(
 
         if (seed != null)
         {
-            var rom = await GenerateRomInternalAsync(seed, options, null, false);
+            var rom = await GenerateRomInternalAsync(seed, options, null, null);
 
             return new GeneratedRomResult()
             {
@@ -117,23 +117,32 @@ public class RomGenerationService(
     /// </summary>
     /// <param name="options">The randomizer generation options</param>
     /// <param name="seed">The seed data to write to the ROM.</param>
+    /// <param name="parsedRomDetails"></param>
     /// <returns>The bytes of the rom file</returns>
-    public byte[] GenerateRomBytes(RandomizerOptions options, SeedData? seed)
+    public byte[] GenerateRomBytes(RandomizerOptions options, SeedData? seed, ParsedRomDetails? parsedRomDetails)
     {
         if (string.IsNullOrEmpty(options.GeneralOptions.SMRomPath) ||
             string.IsNullOrEmpty(options.GeneralOptions.Z3RomPath))
             throw new InvalidOperationException("Super Metroid or Zelda rom path is not specified");
 
         byte[] rom;
-        using (var smRom = File.OpenRead(options.GeneralOptions.SMRomPath))
-        using (var z3Rom = File.OpenRead(options.GeneralOptions.Z3RomPath))
-        {
-            rom = Rom.CombineSMZ3Rom(smRom, z3Rom);
-        }
 
-        using (var ips = IpsPatch.Smz3())
+        if (parsedRomDetails != null)
         {
-            Rom.ApplyIps(rom, ips);
+            rom = File.ReadAllBytes(parsedRomDetails.OriginalPath);
+        }
+        else
+        {
+            using (var smRom = File.OpenRead(options.GeneralOptions.SMRomPath))
+            using (var z3Rom = File.OpenRead(options.GeneralOptions.Z3RomPath))
+            {
+                rom = Rom.CombineSMZ3Rom(smRom, z3Rom);
+            }
+
+            using (var ips = IpsPatch.Smz3())
+            {
+                Rom.ApplyIps(rom, ips);
+            }
         }
 
         spritePatcherService.ApplySpriteOptions(rom, out var linkSpriteName, out var samusSpriteName);
@@ -258,7 +267,7 @@ public class RomGenerationService(
         try
         {
             var seed = GeneratePlandoSeed(options, plandoConfig);
-            var rom = await GenerateRomInternalAsync(seed, options, null, false);
+            var rom = await GenerateRomInternalAsync(seed, options, null, null);
             return new GeneratedRomResult()
             {
                 Rom = rom
@@ -276,7 +285,7 @@ public class RomGenerationService(
     public async Task<GeneratedRomResult> GenerateParsedRomAsync(RandomizerOptions options, ParsedRomDetails parsedRomDetails)
     {
         var seed = romParser.GenerateSeedData(options, parsedRomDetails);
-        var rom = await GenerateRomInternalAsync(seed, options, null, true);
+        var rom = await GenerateRomInternalAsync(seed, options, null, parsedRomDetails);
         return new GeneratedRomResult()
         {
             Rom = rom
@@ -285,16 +294,16 @@ public class RomGenerationService(
 
     public async Task<GeneratedRomResult> GeneratePreSeededRomAsync(RandomizerOptions options, SeedData seed, MultiplayerGameDetails multiplayerGameDetails)
     {
-        var results = await GenerateRomInternalAsync(seed, options, multiplayerGameDetails, false);
+        var results = await GenerateRomInternalAsync(seed, options, multiplayerGameDetails, null);
         return new GeneratedRomResult()
         {
             Rom = results
         };
     }
 
-    private async Task<GeneratedRom?> GenerateRomInternalAsync(SeedData seed, RandomizerOptions options, MultiplayerGameDetails? multiplayerGameDetails, bool isParsedRom)
+    private async Task<GeneratedRom?> GenerateRomInternalAsync(SeedData seed, RandomizerOptions options, MultiplayerGameDetails? multiplayerGameDetails, ParsedRomDetails? parsedRomDetails)
     {
-        var bytes = GenerateRomBytes(options, seed);
+        var bytes = GenerateRomBytes(options, seed, parsedRomDetails);
         var config = seed.Playthrough.Config;
         var safeSeed = seed.Seed.ReplaceAny(Path.GetInvalidFileNameChars(), '_').Trim();
 
@@ -309,9 +318,9 @@ public class RomGenerationService(
         ApplyMsuOptions(options, romPath);
         await File.WriteAllBytesAsync(romPath, bytes);
 
-        var spoilerPath = await romTextService.WriteSpoilerLog(options, seed, config, folderPath, fileSuffix, isParsedRom);;
+        var spoilerPath = await romTextService.WriteSpoilerLog(options, seed, config, folderPath, fileSuffix, parsedRomDetails != null);
 
-        if (!isParsedRom)
+        if (parsedRomDetails == null)
         {
             await romTextService.WritePlandoConfig(seed, folderPath, fileSuffix);
         }
