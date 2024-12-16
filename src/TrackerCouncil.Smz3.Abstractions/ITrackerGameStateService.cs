@@ -1,4 +1,5 @@
 using MSURandomizerLibrary.Configs;
+using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Tracking;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
@@ -67,9 +68,9 @@ public interface ITrackerGameStateService
     /// Updates the region that the player is in
     /// </summary>
     /// <param name="region">The region the player is in</param>
-    /// <param name="updateMap">Set to true to update the map for the player to match the region</param>
+    /// <param name="updateMap">Behavior for updating the map for the player to match the region</param>
     /// <param name="resetTime">If the time should be reset if this is the first region update</param>
-    public void UpdateRegion(Region region, bool updateMap = false, bool resetTime = false);
+    public void UpdateRegion(Region region, AutoMapUpdateBehavior updateMap = AutoMapUpdateBehavior.Disabled, bool resetTime = false);
 
     /// <summary>
     /// Updates the map to display for the user

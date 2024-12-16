@@ -77,6 +77,8 @@ public class GeneralOptions : INotifyPropertyChanged
     public SnesConnectorSettings SnesConnectorSettings { get; set; } = new();
 
     public bool AutoTrackerChangeMap { get; set; }
+    public AutoMapUpdateBehavior? AutoMapUpdateBehavior { get; set; } = Options.AutoMapUpdateBehavior.Disabled;
+
     public int UndoExpirationTime { get; set; } = 3;
     public double UIScaleFactor { get; set; } = 1;
 
@@ -256,7 +258,7 @@ public class GeneralOptions : INotifyPropertyChanged
         ChatGreetingEnabled = EnableChatGreeting,
         ChatGreetingTimeLimit = ChatGreetingTimeLimit,
         PollCreationEnabled = EnablePollCreation,
-        AutoTrackerChangeMap = AutoTrackerChangeMap,
+        AutoMapUpdateBehavior = AutoMapUpdateBehavior ?? Options.AutoMapUpdateBehavior.Disabled,
         VoiceFrequency = TrackerVoiceFrequency,
         TrackerProfiles = SelectedProfiles,
         UndoExpirationTime = UndoExpirationTime,

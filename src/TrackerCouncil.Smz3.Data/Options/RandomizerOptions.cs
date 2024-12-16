@@ -122,6 +122,14 @@ public class RandomizerOptions : INotifyPropertyChanged
                 options.GeneralOptions.MsuTrackDisplayStyle = null;
             }
 
+            // Update AutoTrackerChangeMap to AutoMapUpdateBehavior
+            if (options.GeneralOptions.AutoMapUpdateBehavior == null)
+            {
+                options.GeneralOptions.AutoMapUpdateBehavior = options.GeneralOptions.AutoTrackerChangeMap
+                    ? AutoMapUpdateBehavior.UpdateOnRegionChange
+                    : AutoMapUpdateBehavior.Disabled;
+            }
+
             return options;
         }
         else

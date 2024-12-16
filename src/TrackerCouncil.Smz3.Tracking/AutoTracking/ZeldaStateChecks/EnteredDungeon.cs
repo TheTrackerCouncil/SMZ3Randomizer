@@ -71,7 +71,7 @@ public class EnteredDungeon : IZeldaStateCheck
             }
         }
 
-        trackerBase.GameStateTracker.UpdateRegion(region, trackerBase.Options.AutoTrackerChangeMap);
+        trackerBase.GameStateTracker.UpdateRegion(region, trackerBase.Options.AutoMapUpdateBehavior);
         _enteredDungeons.Add(region);
         return true;
 

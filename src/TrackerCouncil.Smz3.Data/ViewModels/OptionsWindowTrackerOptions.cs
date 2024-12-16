@@ -66,8 +66,8 @@ public class OptionsWindowTrackerOptions
     [DynamicFormFieldFilePicker(FilePickerType.OpenFile, label: "Current song output path:", dialogText: "Select song output file")]
     public string? MsuTrackOutputPath { get; set; } = "";
 
-    [DynamicFormFieldCheckBox(checkBoxText: "Auto tracker updates map automatically", groupName: "Bottom")]
-    public bool AutoTrackerChangeMap { get; set; }
+    [DynamicFormFieldComboBox(label: "Auto tracker map update behavior")]
+    public AutoMapUpdateBehavior AutoMapUpdateBehavior { get; set; }
 
     [DynamicFormFieldCheckBox(checkBoxText: "Auto track viewed events", groupName: "Bottom")]
     public bool AutoSaveLookAtEvents { get; set; } = true;
