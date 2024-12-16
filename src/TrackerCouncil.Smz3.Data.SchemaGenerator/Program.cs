@@ -1,7 +1,10 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Schema;
+using Newtonsoft.Json.Schema.Generation;
 using NJsonSchema.Generation;
 using NJsonSchema.NewtonsoftJson.Generation;
 using Serilog;
@@ -9,7 +12,9 @@ using Serilog.Events;
 using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
+using TrackerCouncil.Smz3.Data.Options;
 using YamlDotNet.Serialization;
+using JsonSchemaGenerator = NJsonSchema.Generation.JsonSchemaGenerator;
 
 namespace TrackerCouncil.Smz3.Data.SchemaGenerator;
 
@@ -60,6 +65,34 @@ public static class Program
 
         CreateSchemas(outputPath);
         CreateTemplates(outputPath);
+        CreatePlandoSchema(outputPath);
+    }
+
+    private static void CreatePlandoSchema(string outputPath)
+    {
+        var plandoConfig = new PlandoConfig();
+        var serializer = new SerializerBuilder()
+            .DisableAliases()
+            .Build();
+        var newHashCode = serializer.Serialize(plandoConfig).GetHashCode();
+        if (newHashCode == PlandoConfig.SHashCode)
+        {
+            Log.Information("PlandoConfig default object matches SHashCode value of {Code}", newHashCode);
+            return;
+        }
+
+        Log.Information(
+            "New PlandoConfig HashCode {NewHashCode} does not match prior PlandoConfig.SHashCode value of {OldHashCode}",
+            newHashCode, PlandoConfig.SHashCode);
+
+        var schemaPath = Path.Combine(outputPath, "Schemas");
+        var generator = new JSchemaGenerator();
+        generator.GenerationProviders.Add(new StringEnumGenerationProvider());
+        var schema = generator.Generate(typeof(PlandoConfig), false);
+        var path = Path.Combine(schemaPath, "plando.json");
+        File.WriteAllText(path, schema.ToString());
+
+        Log.Information("Wrote {Type} schema to {Path}. Update PlandoConfig SHashCode value to {Hash}", typeof(PlandoConfig).FullName, path, newHashCode);
     }
 
     private static void CreateSchemas(string outputPath)
@@ -81,6 +114,7 @@ public static class Program
         {
             var path = Path.Combine(schemaPath, type.Item2);
             var schema = generator.Generate(type.Item1);
+
             var text = schrodingersStringReplacement.Replace(schema.ToJson(), "").Replace("\\n", " ");
 
             for (var i = 0; i < 5; i++)
@@ -255,7 +289,7 @@ public static class Program
 
     private static string GetOutputPath()
     {
-        var slnDirectory = new DirectoryInfo(SolutionPath);
+        var slnDirectory = new DirectoryInfo(RandomizerDirectories.SolutionPath);
         if (slnDirectory.Parent?.GetDirectories().Any(x => x.Name == "SMZ3CasConfigs") == true)
         {
             return slnDirectory.Parent.GetDirectories().First(x => x.Name == "SMZ3CasConfigs").FullName;
@@ -263,21 +297,6 @@ public static class Program
         else
         {
             return Path.Combine(slnDirectory.FullName, "src", "SchemaGenerator", "Output");
-        }
-    }
-
-    private static string SolutionPath
-    {
-        get
-        {
-            var directory = new DirectoryInfo(Directory.GetCurrentDirectory());
-
-            while (directory != null && !directory.GetFiles("*.sln").Any())
-            {
-                directory = directory.Parent;
-            }
-
-            return Path.Combine(directory!.FullName);
         }
     }
 }

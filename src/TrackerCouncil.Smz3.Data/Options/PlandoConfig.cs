@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Logic;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Shared.Enums;
+using YamlDotNet.Core;
 using YamlDotNet.Serialization;
 
 namespace TrackerCouncil.Smz3.Data.Options;
@@ -14,6 +16,12 @@ namespace TrackerCouncil.Smz3.Data.Options;
 /// </summary>
 public class PlandoConfig // TODO: Consider using this instead of SeedData?
 {
+    /// <summary>
+    /// Number that represents the hash code the serialized string this class. Used to prevent unnecessary generation
+    /// of the schema file to prevent going over usage limits.
+    /// </summary>
+    public static int SHashCode = 0;
+
     /// <summary>
     /// Initializes a new empty instance of the <see cref="PlandoConfig"/>
     /// class.
@@ -37,28 +45,35 @@ public class PlandoConfig // TODO: Consider using this instead of SeedData?
         TourianBossCount = world.Config.TourianBossCount;
         Items = world.Locations
             .ToDictionary(x => x.ToString(), x => x.Item.Type);
-        Rewards = world.Regions.Where(x => x is IHasReward)
+        Rewards = world.Regions.Where(x => x is IHasReward r && !r.RewardType.IsInCategory(RewardCategory.NonRandomized) && r.RewardType.IsInCategory(RewardCategory.Zelda))
             .ToDictionary(x => x.ToString(), x => ((IHasReward)x).RewardType);
         Medallions = world.Regions.Where(x => x is IHasPrerequisite)
             .ToDictionary(x => x.ToString(), x => ((IHasPrerequisite)x).RequiredItem);
         Logic = world.Config.LogicConfig.Clone();
         StartingInventory = world.Config.ItemOptions;
-        var prizes = DropPrizes.GetPool(world.Config.CasPatches.ZeldaDrops);
+        var prizes = DropPrizes.GetPool(world.Config.CasPatches.ZeldaDrops).ToList();
         ZeldaPrizes.EnemyDrops = prizes.Take(56).ToList();
         ZeldaPrizes.TreePulls = prizes.Skip(56).Take(3).ToList();
         ZeldaPrizes.CrabBaseDrop = prizes.Skip(59).First();
         ZeldaPrizes.CrabEightDrop = prizes.Skip(60).First();
         ZeldaPrizes.StunPrize = prizes.Skip(61).First();
         ZeldaPrizes.FishPrize = prizes.Skip(62).First();
+
+        var bottleItems = Enum.GetValues<ItemType>().Where(x => x.IsInCategory(ItemCategory.Bottle))
+            .Shuffle(new Random().Sanitize()).Take(2)
+            .ToList();
+        WaterfallFairyTrade = bottleItems.First();
+        PyramidFairyTrade = bottleItems.Last();
     }
 
     /// <summary>
     /// Gets or sets the name of the file from which the plando config was
     /// deserialized.
     /// </summary>
-    [YamlIgnore]
+    [YamlIgnore, Newtonsoft.Json.JsonIgnore]
     public string FileName { get; set; } = "";
 
+    [YamlMember(ScalarStyle = ScalarStyle.DoubleQuoted)]
     public string Seed { get; set; } = "";
 
     /// <summary>
@@ -118,6 +133,16 @@ public class PlandoConfig // TODO: Consider using this instead of SeedData?
     /// Various Zelda enemy drops and other prizes
     /// </summary>
     public PlandoZeldaPrizeConfig ZeldaPrizes { get; set; } = new();
+
+    /// <summary>
+    /// Bottle trade offer with the waterfall fairy
+    /// </summary>
+    public ItemType? WaterfallFairyTrade { get; set; }
+
+    /// <summary>
+    /// Bottle trade offer with the pyramid fairy
+    /// </summary>
+    public ItemType? PyramidFairyTrade { get; set; }
 
     /// <summary>
     /// Item Options for the starting inventory

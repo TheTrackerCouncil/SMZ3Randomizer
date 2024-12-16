@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SnesConnectorLibrary;
+using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Data.GeneratedData;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
@@ -16,6 +17,8 @@ namespace TrackerCouncil.Smz3.SeedGenerator.Generation;
 
 public class RomTextService(ILogger<RomTextService> logger, IGameHintService gameHintService, ISnesConnectorService snesConnectorService)
 {
+    private static readonly string s_plandoSchemaPath = @"https://raw.githubusercontent.com/TheTrackerCouncil/SMZ3CasConfigs/refs/heads/main/Schemas/plando.json";
+
     public async Task<string> WriteSpoilerLog(RandomizerOptions options, SeedData seed, Config config, string folderPath, string fileSuffix, bool isParsedRom = false)
     {
         var spoilerLog = GetSpoilerLog(options, seed, config.Race || config.DisableSpoilerLog, isParsedRom);
@@ -78,13 +81,38 @@ public class RomTextService(ILogger<RomTextService> logger, IGameHintService gam
             var plandoConfig = new PlandoConfig(world);
 
             var serializer = new YamlDotNet.Serialization.Serializer();
-            return serializer.Serialize(plandoConfig);
+
+            StringBuilder output = new();
+            output.AppendLine($"# yaml-language-server: $schema={GetPlandoSchemaPath()}");
+            output.AppendLine();
+            output.AppendLine("# Visual Studio Code with the redhat YAML extension is recommended for schema validation.");
+            output.AppendLine();
+            output.AppendLine(serializer.Serialize(plandoConfig));
+            return output.ToString();
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "An unexpected error occurred while exporting the plando configuration for seed {Seed}. No plando config will be generated.", seed.Seed);
             return null;
         }
+    }
+
+    private static string GetPlandoSchemaPath()
+    {
+#if DEBUG
+        var parentDir = new DirectoryInfo(RandomizerDirectories.SolutionPath).Parent;
+        var localPlandoSchemaPath = Path.Combine(parentDir?.FullName ?? RandomizerDirectories.SolutionPath, "SMZ3CasConfigs", "Schemas", "plando.json");
+        if (File.Exists(localPlandoSchemaPath))
+        {
+            return localPlandoSchemaPath;
+        }
+        else
+        {
+            return s_plandoSchemaPath;
+        }
+#else
+        return s_plandoSchemaPath;
+#endif
     }
 
     /// <summary>

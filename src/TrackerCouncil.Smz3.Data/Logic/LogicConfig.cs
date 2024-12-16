@@ -42,7 +42,7 @@ public class LogicConfig : ViewModelBase
         WallJumpDifficulty = wallJumpDifficulty;
     }
 
-    [YamlIgnore]
+    [YamlIgnore, Newtonsoft.Json.JsonIgnore]
     [DynamicFormFieldText(groupName: "CasTop")]
     public string CasLogicDescription => "Logic settings that will make the experience more relaxed and easier to play.";
 
@@ -76,7 +76,7 @@ public class LogicConfig : ViewModelBase
     [DynamicFormFieldCheckBox(checkBoxText: "Include Quarter Magic", toolTipText: "Adds an additional progressive half magic to the item pool.", groupName: "CasMiddle")]
     public bool QuarterMagic { get; set; }
 
-    [YamlIgnore]
+    [YamlIgnore, Newtonsoft.Json.JsonIgnore]
     [DynamicFormFieldText(groupName: "TricksTop")]
     public string TricksDescription => "Logic settings that will make the game more difficult by requiring you to do techniques or maneuvers not typically required in the vanilla games.";
 

@@ -38,18 +38,7 @@ public partial class ConfigProvider
     /// </summary>
     public ConfigProvider(ILogger<ConfigProvider>? logger)
     {
-#if DEBUG
-        var parentDir = new DirectoryInfo(SolutionPath).Parent;
-        var configRepo = parentDir?.GetDirectories().FirstOrDefault(x => x.Name == "SMZ3CasConfigs");
-        _basePath = Path.Combine(configRepo?.FullName ?? "", "Profiles");
-
-        if (!Directory.Exists(_basePath))
-        {
-            _basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "Configs");
-        }
-#else
-            _basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "Configs");
-#endif
+        _basePath = RandomizerDirectories.ConfigPath;
         _logger = logger;
     }
 
@@ -430,21 +419,6 @@ public partial class ConfigProvider
         using var reader = new StreamReader(stream, detectEncodingFromByteOrderMarks: true);
         return JsonSerializer.Deserialize<T>(reader.ReadToEnd(), s_options)
                ?? throw new InvalidOperationException("The embedded tracker configuration could not be loaded.");
-    }
-
-    private static string SolutionPath
-    {
-        get
-        {
-            var directory = new DirectoryInfo(Directory.GetCurrentDirectory());
-
-            while (directory != null && !directory.GetFiles("*.sln").Any())
-            {
-                directory = directory.Parent;
-            }
-
-            return Path.Combine(directory!.FullName);
-        }
     }
 
     [GeneratedRegex("[^\\.]+\\.(?<mood>.+)\\.yml")]

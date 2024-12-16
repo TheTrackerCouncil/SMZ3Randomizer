@@ -117,40 +117,5 @@ public class Sprite : IEquatable<Sprite>
         return string.IsNullOrEmpty(Author) ? Name : $"{Name} by {Author}";
     }
 
-    public static string SpritePath
-    {
-        get
-        {
-#if DEBUG
-            var parentDir = new DirectoryInfo(SolutionPath).Parent;
-            var spriteRepo = parentDir?.GetDirectories().FirstOrDefault(x => x.Name == "SMZ3CasSprites");
-            var path = Path.Combine(spriteRepo?.FullName ?? "", "Sprites");
-
-            if (!Directory.Exists(path) || path == "Sprites")
-            {
-                return Path.Combine(AppContext.BaseDirectory, "Sprites");
-            }
-
-            return path;
-#else
-            return Path.Combine(AppContext.BaseDirectory, "Sprites");
-#endif
-        }
-
-    }
-
-    private static string SolutionPath
-    {
-        get
-        {
-            var directory = new DirectoryInfo(Directory.GetCurrentDirectory());
-
-            while (directory != null && !directory.GetFiles("*.sln").Any())
-            {
-                directory = directory.Parent;
-            }
-
-            return Path.Combine(directory!.FullName);
-        }
-    }
+    public static string SpritePath => RandomizerDirectories.SpritePath;
 }
