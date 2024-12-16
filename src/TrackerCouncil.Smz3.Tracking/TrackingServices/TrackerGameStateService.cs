@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MSURandomizerLibrary.Configs;
 using TrackerCouncil.Smz3.Abstractions;
+using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Tracking;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
@@ -32,7 +33,7 @@ internal class TrackerGameStateService : TrackerService, ITrackerGameStateServic
     /// <param name="region">The region the player is in</param>
     /// <param name="updateMap">Set to true to update the map for the player to match the region</param>
     /// <param name="resetTime">If the time should be reset if this is the first region update</param>
-    public void UpdateRegion(Region region, bool updateMap = false, bool resetTime = false)
+    public void UpdateRegion(Region region, AutoMapUpdateBehavior updateMap = AutoMapUpdateBehavior.Disabled, bool resetTime = false)
     {
         if (region != CurrentRegion)
         {
@@ -46,13 +47,50 @@ internal class TrackerGameStateService : TrackerService, ITrackerGameStateServic
                 true,
                 region.Name
             );
+
+            if (updateMap != AutoMapUpdateBehavior.Disabled && !string.IsNullOrEmpty(region?.MapName))
+            {
+                if (updateMap == AutoMapUpdateBehavior.UpdateOnGameChange)
+                {
+                    if (region is SMRegion && CurrentRegion is not SMRegion)
+                    {
+                        UpdateMap("Metroid Combined");
+                    }
+                    else if (region is Z3Region && CurrentRegion is not Z3Region)
+                    {
+                        UpdateMap("Zelda Combined");
+                    }
+                }
+                else if (updateMap == AutoMapUpdateBehavior.UpdateOnRegionChange)
+                {
+                    UpdateMap(region.MapName);
+                }
+                else if (updateMap == AutoMapUpdateBehavior.UpdateOnMetroidRegionChange)
+                {
+                    if (region is Z3Region && CurrentRegion is not Z3Region)
+                    {
+                        UpdateMap("Zelda Combined");
+                    }
+                    else if (region is SMRegion)
+                    {
+                        UpdateMap(region.MapName);
+                    }
+                }
+                else if (updateMap == AutoMapUpdateBehavior.UpdateOnZeldaRegionChange)
+                {
+                    if (region is SMRegion && CurrentRegion is not SMRegion)
+                    {
+                        UpdateMap("Metroid Combined");
+                    }
+                    else if (region is Z3Region)
+                    {
+                        UpdateMap(region.MapName);
+                    }
+                }
+            }
         }
 
         CurrentRegion = region;
-        if (updateMap && !string.IsNullOrEmpty(region?.MapName))
-        {
-            UpdateMap(region.MapName);
-        }
     }
 
     /// <summary>

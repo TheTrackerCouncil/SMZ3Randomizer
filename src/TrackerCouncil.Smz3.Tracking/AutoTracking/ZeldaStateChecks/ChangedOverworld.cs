@@ -32,7 +32,7 @@ public class ChangedOverworld : IZeldaStateCheck
             .FirstOrDefault(x => x.StartingRooms.Count != 0 && x.StartingRooms.Contains(currentState.OverworldScreen.Value) && x.IsOverworld);
         if (region == null) return false;
 
-        trackerBase.GameStateTracker.UpdateRegion(region, trackerBase.Options.AutoTrackerChangeMap);
+        trackerBase.GameStateTracker.UpdateRegion(region, trackerBase.Options.AutoMapUpdateBehavior);
         return true;
     }
 }

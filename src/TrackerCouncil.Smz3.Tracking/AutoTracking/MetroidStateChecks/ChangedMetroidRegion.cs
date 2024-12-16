@@ -32,7 +32,7 @@ public class ChangedMetroidRegion : IMetroidStateCheck
         var newRegion = tracker.World.Regions.OfType<SMRegion>().FirstOrDefault(x => x.MemoryRegionId == currentState.CurrentRegion);
         if (newRegion != null)
         {
-            tracker.GameStateTracker.UpdateRegion(newRegion, tracker.Options.AutoTrackerChangeMap, startedAtShip);
+            tracker.GameStateTracker.UpdateRegion(newRegion, tracker.Options.AutoMapUpdateBehavior, startedAtShip);
         }
         _previousMetroidRegionValue = currentState.CurrentRegion.Value;
         return true;

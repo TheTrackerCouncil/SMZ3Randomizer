@@ -83,7 +83,7 @@ public record TrackerOptions
     /// <summary>
     /// If auto tracker should change maps when changing locations
     /// </summary>
-    public bool AutoTrackerChangeMap { get; set; }
+    public AutoMapUpdateBehavior AutoMapUpdateBehavior { get; set; }
 
     /// <summary>
     /// The frequency in which tracker will say things

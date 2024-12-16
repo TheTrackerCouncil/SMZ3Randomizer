@@ -50,7 +50,7 @@ public class OptionsWindowViewModel
         TrackerOptions.SniAddress = options.SnesConnectorSettings.SniAddress;
         TrackerOptions.TrackDisplayFormat = options.TrackDisplayFormat;
         TrackerOptions.MsuTrackOutputPath = options.MsuTrackOutputPath;
-        TrackerOptions.AutoTrackerChangeMap = options.AutoTrackerChangeMap;
+        TrackerOptions.AutoMapUpdateBehavior = options.AutoMapUpdateBehavior ?? AutoMapUpdateBehavior.Disabled;
         TrackerOptions.AutoSaveLookAtEvents = options.AutoSaveLookAtEvents;
         TrackerOptions.TrackerHintsEnabled = options.TrackerHintsEnabled;
         TrackerOptions.TrackerSpoilersEnabled = options.TrackerSpoilersEnabled;
@@ -103,7 +103,7 @@ public class OptionsWindowViewModel
         options.SnesConnectorSettings.SniAddress = TrackerOptions.SniAddress;
         options.TrackDisplayFormat = TrackerOptions.TrackDisplayFormat;
         options.MsuTrackOutputPath = TrackerOptions.MsuTrackOutputPath;
-        options.AutoTrackerChangeMap = TrackerOptions.AutoTrackerChangeMap;
+        options.AutoMapUpdateBehavior = TrackerOptions.AutoMapUpdateBehavior;
         options.AutoSaveLookAtEvents = TrackerOptions.AutoSaveLookAtEvents;
         options.TrackerHintsEnabled = TrackerOptions.TrackerHintsEnabled;
         options.TrackerSpoilersEnabled = TrackerOptions.TrackerSpoilersEnabled;
