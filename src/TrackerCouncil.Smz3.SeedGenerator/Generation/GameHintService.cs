@@ -468,10 +468,15 @@ public class GameHintService : IGameHintService
                 {
                     numCrystalsNeeded = world.Config.GanonsTowerCrystalCount;
                 }
-                var currentCrystalCount = world.RewardRegions.Count(d =>
+
+                var possibleCrystalRewards = world.RewardRegions.Where(d =>
                     d.RewardType is RewardType.CrystalBlue or RewardType.CrystalRed && sphereLocations.Any(l =>
-                        l.World.Id == world.Id && l.Id == s_dungeonBossLocations[d.GetType()])) + (ignoredReward == null ? 0 : 1);
-                if (currentCrystalCount < numCrystalsNeeded)
+                        l.World.Id == world.Id && l.Id == s_dungeonBossLocations[d.GetType()])).Select(x => x.Reward).ToList();
+                if (ignoredReward != null && !possibleCrystalRewards.Contains(ignoredReward))
+                {
+                    possibleCrystalRewards.Add(ignoredReward);
+                }
+                if (possibleCrystalRewards.Count < numCrystalsNeeded)
                 {
                     return LocationUsefulness.Mandatory;
                 }
