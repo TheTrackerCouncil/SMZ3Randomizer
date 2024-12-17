@@ -8,6 +8,8 @@ namespace TrackerCouncil.Smz3.Data.Options;
 
 public class Sprite : IEquatable<Sprite>
 {
+    public static HashSet<string> ValidDownloadExtensions = [".png", ".rdc", ".ips", ".gif"];
+
     private static readonly Dictionary<SpriteType, string> s_folderNames = new()
     {
         { SpriteType.Samus, "Samus" },

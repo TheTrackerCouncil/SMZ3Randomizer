@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace TrackerCouncil.Smz3.Data;
 
-public class RandomizerDirectories
+public static class RandomizerDirectories
 {
     public static string SolutionPath
     {
@@ -66,4 +66,40 @@ public class RandomizerDirectories
 #endif
         }
     }
+
+#if DEBUG
+    public static string SpriteHashYamlFilePath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "sprite-hashes-debug.yml");
+#else
+    public static string SpriteHashYamlFilePath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "sprite-hashes.yml");
+#endif
+
+    public static  string SpriteInitialJsonFilePath => Path.Combine(SpritePath, "sprites.json");
+
+    public static string TrackerSpritePath
+    {
+        get
+        {
+#if DEBUG
+            var parentDir = new DirectoryInfo(SolutionPath).Parent;
+            var spriteRepo = parentDir?.GetDirectories().FirstOrDefault(x => x.Name == "TrackerSprites");
+
+            if (spriteRepo?.Exists != true)
+            {
+                return Path.Combine(AppContext.BaseDirectory, "TrackerSprites");
+            }
+
+            return spriteRepo.FullName;
+#else
+            return Path.Combine(AppContext.BaseDirectory, "TrackerSprites");
+#endif
+        }
+    }
+
+#if DEBUG
+    public static string TrackerSpriteHashYamlFilePath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "tracker-sprite-hashes-debug.yml");
+#else
+    public static string TrackerSpriteHashYamlFilePath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "tracker-sprite-hashes.yml");
+#endif
+
+    public static  string TrackerSpriteInitialJsonFilePath => Path.Combine(SpritePath, "tracker-sprites.json");
 }

@@ -51,6 +51,8 @@ public class GeneralOptions : INotifyPropertyChanged
 
     public bool TrackerShadows { get; set; } = true;
 
+    public string TrackerSpeechImagePack { get; set; } = "Default";
+
     public byte[] TrackerSpeechBGColor { get; set; } = [0xFF, 0x48, 0x3D, 0x8B];
 
     public bool TrackerSpeechEnableBounce { get; set; } = true;

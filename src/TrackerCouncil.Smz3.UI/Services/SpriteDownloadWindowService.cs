@@ -4,13 +4,13 @@ using TrackerCouncil.Smz3.UI.ViewModels;
 
 namespace TrackerCouncil.Smz3.UI.Services;
 
-public class SpriteDownloadWindowService(IGitHubSpriteDownloaderService gitHubSpriteDownloaderService) : ControlService
+public class SpriteDownloadWindowService(IGitHubFileSynchronizerService gitHubFileSynchronizerService) : ControlService
 {
     private SpriteDownloadWindowViewModel _model = new();
 
     public SpriteDownloadWindowViewModel InitializeModel()
     {
-        gitHubSpriteDownloaderService.SpriteDownloadUpdate += (sender, args) =>
+        gitHubFileSynchronizerService.SynchronizeUpdate += (sender, args) =>
         {
             _model.NumTotal = args.Total;
             _model.NumCompleted = args.Completed;
@@ -21,6 +21,6 @@ public class SpriteDownloadWindowService(IGitHubSpriteDownloaderService gitHubSp
 
     public void CancelDownload()
     {
-        gitHubSpriteDownloaderService.CancelDownload();
+        gitHubFileSynchronizerService.CancelDownload();
     }
 }

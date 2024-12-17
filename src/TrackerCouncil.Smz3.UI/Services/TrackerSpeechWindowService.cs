@@ -6,13 +6,14 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using AvaloniaControls.ControlServices;
 using TrackerCouncil.Smz3.Data.Options;
+using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Tracking;
 using TrackerCouncil.Smz3.Tracking.Services;
 using TrackerCouncil.Smz3.UI.ViewModels;
 
 namespace TrackerCouncil.Smz3.UI.Services;
 
-public class TrackerSpeechWindowService(ICommunicator communicator, IUIService uiService, OptionsFactory optionsFactory) : ControlService
+public class TrackerSpeechWindowService(ICommunicator communicator, IUIService uiService, OptionsFactory optionsFactory, TrackerSpriteService trackerSpriteService) : ControlService
 {
     TrackerSpeechWindowViewModel _model = new();
 
@@ -21,18 +22,17 @@ public class TrackerSpeechWindowService(ICommunicator communicator, IUIService u
         Interval = TimeSpan.FromSeconds(1.0 / 60),
     };
 
-    private TrackerSpeechImages? _currentSpeechImages;
-    private Dictionary<string, TrackerSpeechImages> _availableSpeechImages = [];
+    private TrackerSpeechImagePack? _trackerSpeechImagePack;
+    private TrackerSpeechReactionImages? _currentSpeechImages;
     private int _tickCount;
     private readonly int _maxTicks = 12;
     private readonly double _bounceHeight = 6;
     private int _prevViseme;
     private bool _enableBounce;
-    private string? _currentReactionType;
 
     public TrackerSpeechWindowViewModel GetViewModel()
     {
-        _availableSpeechImages = uiService.GetTrackerSpeechSprites(out _);
+        _trackerSpeechImagePack = trackerSpriteService.GetPack();
         SetReactionType();
 
         var options = optionsFactory.Create();
@@ -127,29 +127,12 @@ public class TrackerSpeechWindowService(ICommunicator communicator, IUIService u
 
     private void SetReactionType(string reaction = "default")
     {
-        var newReactionType = reaction.ToLower();
-
-        if (_currentReactionType == newReactionType)
+        if (_trackerSpeechImagePack == null)
         {
             return;
         }
 
-        if (_availableSpeechImages.TryGetValue(newReactionType, out var requestedSpeechImage))
-        {
-            _currentReactionType = newReactionType;
-            _currentSpeechImages = requestedSpeechImage;
-        }
-        else if (_availableSpeechImages.TryGetValue("default", out var defaultSpeechImage))
-        {
-            _currentReactionType = "default";
-            _currentSpeechImages = defaultSpeechImage;
-        }
-        else
-        {
-            var newPair = _availableSpeechImages.FirstOrDefault();
-            _currentReactionType = newPair.Key.ToLower();
-            _currentSpeechImages = newPair.Value;
-        }
+        _currentSpeechImages = _trackerSpeechImagePack.GetReactionImages(reaction);
     }
 
     public string GetBackgroundHex()

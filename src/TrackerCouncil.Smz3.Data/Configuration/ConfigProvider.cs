@@ -22,6 +22,8 @@ namespace TrackerCouncil.Smz3.Data.Configuration;
 /// </summary>
 public partial class ConfigProvider
 {
+    public static HashSet<string> DeprecatedConfigProfiles = ["Halloween Tracker Sprites", "Plain Tracker Sprites"];
+
     private static readonly JsonSerializerOptions s_options = new()
     {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
@@ -40,6 +42,13 @@ public partial class ConfigProvider
     {
         _basePath = RandomizerDirectories.ConfigPath;
         _logger = logger;
+
+        var toDelete = Directory.EnumerateDirectories(_basePath)
+            .Where(directory => DeprecatedConfigProfiles.Contains(Path.GetFileName(directory))).ToList();
+        foreach (var directory in toDelete)
+        {
+            Directory.Delete(directory, true);
+        }
     }
 
     /// <summary>

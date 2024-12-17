@@ -12,6 +12,7 @@ using AvaloniaControls.Services;
 using GitHubReleaseChecker;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Chat.Integration;
+using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.UI.ViewModels;
@@ -25,8 +26,9 @@ public class MainWindowService(
     ILogger<MainWindowService> logger,
     IChatAuthenticationService chatAuthenticationService,
     IGitHubConfigDownloaderService gitHubConfigDownloaderService,
-    IGitHubSpriteDownloaderService gitHubSpriteDownloaderService,
-    SpriteService spriteService) : ControlService
+    IGitHubFileSynchronizerService gitHubFileSynchronizerService,
+    SpriteService spriteService,
+    TrackerSpriteService trackerSpriteService) : ControlService
 {
     private MainWindowViewModel _model = new();
     private MainWindow _window = null!;
@@ -110,30 +112,60 @@ public class MainWindowService(
         if (string.IsNullOrEmpty(_options.GeneralOptions.Z3RomPath) ||
             !_options.GeneralOptions.DownloadSpritesOnStartup)
         {
+            await spriteService.LoadSpritesAsync();
+            trackerSpriteService.LoadSprites();
             return;
         }
 
-        var toDownload = await gitHubSpriteDownloaderService.GetSpritesToDownloadAsync("TheTrackerCouncil", "SMZ3CasSprites");
+        var spriteDownloadRequest = new GitHubFileDownloaderRequest
+        {
+            RepoOwner = "TheTrackerCouncil",
+            RepoName = "SMZ3CasSprites",
+            DestinationFolder = RandomizerDirectories.SpritePath,
+            HashPath = RandomizerDirectories.SpriteHashYamlFilePath,
+            InitialJsonPath = RandomizerDirectories.SpriteInitialJsonFilePath,
+            ValidPathCheck = p => Sprite.ValidDownloadExtensions.Contains(Path.GetExtension(p).ToLowerInvariant()),
+            ConvertGitHubPathToLocalPath = p => p.Replace("Sprites/", ""),
+        };
+
+        var toDownload = await gitHubFileSynchronizerService.GetGitHubFileDetailsAsync(spriteDownloadRequest);
+
+        spriteDownloadRequest = new GitHubFileDownloaderRequest
+        {
+            RepoOwner = "TheTrackerCouncil",
+            RepoName = "TrackerSprites",
+            DestinationFolder = RandomizerDirectories.TrackerSpritePath,
+            HashPath = RandomizerDirectories.TrackerSpriteHashYamlFilePath,
+            InitialJsonPath = RandomizerDirectories.TrackerSpriteInitialJsonFilePath,
+            ValidPathCheck = p => p.EndsWith(".png", StringComparison.OrdinalIgnoreCase) || p.EndsWith(".gif", StringComparison.OrdinalIgnoreCase),
+        };
+
+        toDownload.AddRange(await gitHubFileSynchronizerService.GetGitHubFileDetailsAsync(spriteDownloadRequest));
 
         if (toDownload is not { Count: > 4 })
         {
-            await gitHubSpriteDownloaderService.DownloadSpritesAsync("TheTrackerCouncil", "SMZ3CasSprites", toDownload);
-            return;
+            await gitHubFileSynchronizerService.SyncGitHubFilesAsync(toDownload);
         }
         else
         {
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
                 SpriteDownloadStart?.Invoke(this, EventArgs.Empty);
-                await gitHubSpriteDownloaderService.DownloadSpritesAsync("TheTrackerCouncil", "SMZ3CasSprites", toDownload);
+                await gitHubFileSynchronizerService.SyncGitHubFilesAsync(toDownload);
                 SpriteDownloadEnd?.Invoke(this, EventArgs.Empty);
             });
         }
+
+        await spriteService.LoadSpritesAsync();
+        trackerSpriteService.LoadSprites();
     }
 
     private async Task CheckForUpdates()
     {
-        if (!_options.GeneralOptions.CheckForUpdatesOnStartup) return;
+        if (!_options.GeneralOptions.CheckForUpdatesOnStartup)
+        {
+            return;
+        }
 
         var version = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
 
@@ -152,8 +184,6 @@ public class MainWindowService(
         {
             logger.LogError(ex, "Error getting GitHub release");
         }
-
-        await spriteService.LoadSpritesAsync();
     }
 }
 
