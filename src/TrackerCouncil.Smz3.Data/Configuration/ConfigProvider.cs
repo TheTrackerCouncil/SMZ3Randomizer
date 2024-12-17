@@ -43,11 +43,14 @@ public partial class ConfigProvider
         _basePath = RandomizerDirectories.ConfigPath;
         _logger = logger;
 
-        var toDelete = Directory.EnumerateDirectories(_basePath)
-            .Where(directory => DeprecatedConfigProfiles.Contains(Path.GetFileName(directory))).ToList();
-        foreach (var directory in toDelete)
+        if (Directory.Exists(_basePath))
         {
-            Directory.Delete(directory, true);
+            var toDelete = Directory.EnumerateDirectories(_basePath)
+                .Where(directory => DeprecatedConfigProfiles.Contains(Path.GetFileName(directory))).ToList();
+            foreach (var directory in toDelete)
+            {
+                Directory.Delete(directory, true);
+            }
         }
     }
 
