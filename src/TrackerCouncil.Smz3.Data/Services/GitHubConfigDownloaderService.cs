@@ -99,17 +99,18 @@ public class GitHubConfigDownloaderService : IGitHubConfigDownloaderService
         return true;
     }
 
-    public void InstallDefaultConfigFolder()
+    public bool InstallDefaultConfigFolder()
     {
         var source = Path.Combine(AppContext.BaseDirectory, "Configs");
         if (!Directory.Exists(source))
         {
-            return;
+            return false;
         }
 
         CopyFolder(source, _targetDirectory);
         Directory.Delete(source, true);
         _logger.LogInformation("Copied default config folder");
+        return true;
     }
 
     private async Task<string?> DownloadFileAsync(GitHubReleaseAsset asset)

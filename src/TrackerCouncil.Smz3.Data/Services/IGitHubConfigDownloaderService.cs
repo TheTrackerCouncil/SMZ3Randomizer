@@ -7,5 +7,5 @@ public interface IGitHubConfigDownloaderService
 {
     public Task<bool> DownloadFromSourceAsync(ConfigSource configSource);
 
-    public void InstallDefaultConfigFolder();
+    public bool InstallDefaultConfigFolder();
 }

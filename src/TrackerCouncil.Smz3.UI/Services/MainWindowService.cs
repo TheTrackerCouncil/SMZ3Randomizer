@@ -13,6 +13,7 @@ using GitHubReleaseChecker;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Chat.Integration;
 using TrackerCouncil.Smz3.Data;
+using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.UI.ViewModels;
@@ -28,7 +29,8 @@ public class MainWindowService(
     IGitHubConfigDownloaderService gitHubConfigDownloaderService,
     IGitHubFileSynchronizerService gitHubFileSynchronizerService,
     SpriteService spriteService,
-    TrackerSpriteService trackerSpriteService) : ControlService
+    TrackerSpriteService trackerSpriteService,
+    Configs configs) : ControlService
 {
     private MainWindowViewModel _model = new();
     private MainWindow _window = null!;
@@ -89,11 +91,15 @@ public class MainWindowService(
 
     public async Task DownloadConfigsAsync()
     {
-        gitHubConfigDownloaderService.InstallDefaultConfigFolder();
+        var configsUpdated = gitHubConfigDownloaderService.InstallDefaultConfigFolder();
 
         if (string.IsNullOrEmpty(_options.GeneralOptions.Z3RomPath) ||
             !_options.GeneralOptions.DownloadConfigsOnStartup)
         {
+            if (configsUpdated)
+            {
+                configs.LoadConfigs();
+            }
             return;
         }
 
@@ -103,8 +109,17 @@ public class MainWindowService(
             configSource = new ConfigSource() { Owner = "TheTrackerCouncil", Repo = "SMZ3CasConfigs" };
             _options.GeneralOptions.ConfigSources.Add(configSource);
         }
-        await gitHubConfigDownloaderService.DownloadFromSourceAsync(configSource);
-        _options.Save();
+
+        if (await gitHubConfigDownloaderService.DownloadFromSourceAsync(configSource))
+        {
+            configsUpdated = true;
+        }
+
+        if (configsUpdated)
+        {
+            _options.Save();
+            configs.LoadConfigs();
+        }
     }
 
     public async Task DownloadSpritesAsync()
