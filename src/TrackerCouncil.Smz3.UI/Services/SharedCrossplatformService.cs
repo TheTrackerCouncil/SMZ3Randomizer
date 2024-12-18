@@ -130,7 +130,17 @@ public class SharedCrossplatformService(
             return;
         }
 
-        romLauncherService.LaunchRom(rom);
+        try
+        {
+            romLauncherService.LaunchRom(rom);
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Could not launch rom");
+            DisplayError(
+                "There was an issue launching the rom. Make sure the rom file still exists and that you have a valid application set to launch roms in either the randomizer options or your operating system.");
+        }
+
     }
 
     public void OpenFolder(GeneratedRom? rom)
