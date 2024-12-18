@@ -81,12 +81,4 @@ public interface IUIService
     /// <param name="basePath">The base path of the desired sprite</param>
     /// <returns>The full path of the sprite or null if it's not found</returns>
     public string? GetSpritePath(string category, string imageFileName, out string? profilePath, string? basePath = null);
-
-    /// <summary>
-    /// Gets the images for tracker talking
-    /// </summary>
-    /// <param name="profilePath">The selected profile</param>
-    /// <param name="basePath">The base path of the folder used</param>
-    /// <returns>A dictionary of all of the available tracker speech images</returns>
-    public Dictionary<string, TrackerSpeechImages> GetTrackerSpeechSprites(out string? profilePath, string? basePath = null);
 }

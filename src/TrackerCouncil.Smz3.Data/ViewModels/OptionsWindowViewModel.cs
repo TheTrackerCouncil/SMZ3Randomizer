@@ -17,7 +17,7 @@ public class OptionsWindowViewModel
 
     }
 
-    public OptionsWindowViewModel(GeneralOptions options, Dictionary<string, string> audioInputDevices,
+    public OptionsWindowViewModel(GeneralOptions options, Dictionary<string, string> trackerImagePacks, Dictionary<string, string> audioInputDevices,
         List<string> availableProfiles)
     {
         RandomizerOptions.Z3RomPath = options.Z3RomPath;
@@ -34,6 +34,7 @@ public class OptionsWindowViewModel
 
         TrackerOptions.TrackerBGColor = options.TrackerBGColor;
         TrackerOptions.TrackerShadows = options.TrackerShadows;
+        TrackerOptions.TrackerSpeechImagePack = options.TrackerSpeechImagePack;
         TrackerOptions.TrackerSpeechBGColor = options.TrackerSpeechBGColor;
         TrackerOptions.TrackerSpeechEnableBounce = options.TrackerSpeechEnableBounce;
         TrackerOptions.TrackerRecognitionThreshold = options.TrackerRecognitionThreshold * 100;
@@ -54,9 +55,10 @@ public class OptionsWindowViewModel
         TrackerOptions.AutoSaveLookAtEvents = options.AutoSaveLookAtEvents;
         TrackerOptions.TrackerHintsEnabled = options.TrackerHintsEnabled;
         TrackerOptions.TrackerSpoilersEnabled = options.TrackerSpoilersEnabled;
-        TrackerOptions.AudioDevices = audioInputDevices;
         TrackerOptions.TrackerTimerEnabled = options.TrackerTimerEnabled;
         TrackerOptions.MsuMessageReceiverEnabled = options.MsuMessageReceiverEnabled;
+        TrackerOptions.TrackerSpeechImagePacks = trackerImagePacks;
+        TrackerOptions.AudioDevices = audioInputDevices;
 
         TwitchIntegration.TwitchUserName = options.TwitchUserName;
         TwitchIntegration.TwitchChannel = options.TwitchChannel;
@@ -87,6 +89,7 @@ public class OptionsWindowViewModel
 
         options.TrackerBGColor = TrackerOptions.TrackerBGColor;
         options.TrackerShadows = TrackerOptions.TrackerShadows;
+        options.TrackerSpeechImagePack = TrackerOptions.TrackerSpeechImagePack;
         options.TrackerSpeechBGColor = TrackerOptions.TrackerSpeechBGColor;
         options.TrackerSpeechEnableBounce = TrackerOptions.TrackerSpeechEnableBounce;
         options.TrackerRecognitionThreshold = TrackerOptions.TrackerRecognitionThreshold / 100;

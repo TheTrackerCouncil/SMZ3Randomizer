@@ -17,7 +17,15 @@ public class TwitchErrorEventHandler(string error) : EventArgs
     public string Error => error;
 }
 
-public class OptionsWindowService(ConfigProvider configProvider, IMicrophoneService microphoneService, OptionsFactory optionsFactory, IChatAuthenticationService chatAuthenticationService, ILogger<OptionsWindowService> logger, IGitHubConfigDownloaderService gitHubConfigDownloaderService, IGitHubSpriteDownloaderService gitHubSpriteDownloaderService)
+public class OptionsWindowService(
+    ConfigProvider configProvider,
+    IMicrophoneService microphoneService,
+    OptionsFactory optionsFactory,
+    IChatAuthenticationService chatAuthenticationService,
+    ILogger<OptionsWindowService> logger,
+    IGitHubConfigDownloaderService gitHubConfigDownloaderService,
+    IGitHubFileSynchronizerService gitHubFileSynchronizerService,
+    TrackerSpriteService trackerSpriteService)
 {
     private Dictionary<string, string> _availableInputDevices = new() { { "Default", "Default" } };
     private OptionsWindowViewModel _model = new();
@@ -35,7 +43,8 @@ public class OptionsWindowService(ConfigProvider configProvider, IMicrophoneServ
             _availableInputDevices[device.Key] = device.Value;
         }
 
-        _model = new OptionsWindowViewModel(optionsFactory.Create().GeneralOptions, _availableInputDevices,
+        _model = new OptionsWindowViewModel(optionsFactory.Create().GeneralOptions,
+            trackerSpriteService.GetPackOptions(), _availableInputDevices,
             configProvider.GetAvailableProfiles().ToList());
 
         _model.RandomizerOptions.UpdateConfigButtonPressed += (sender, args) =>
@@ -192,12 +201,35 @@ public class OptionsWindowService(ConfigProvider configProvider, IMicrophoneServ
 
     private async Task UpdateSpritesAsync()
     {
-        var sprites = await gitHubSpriteDownloaderService.GetSpritesToDownloadAsync("TheTrackerCouncil", "SMZ3CasSprites", null, true);
+        var spriteDownloadRequest = new GitHubFileDownloaderRequest
+        {
+            RepoOwner = "TheTrackerCouncil",
+            RepoName = "SMZ3CasSprites",
+            DestinationFolder = RandomizerDirectories.SpritePath,
+            HashPath = RandomizerDirectories.SpriteHashYamlFilePath,
+            InitialJsonPath = RandomizerDirectories.SpriteInitialJsonFilePath,
+            ValidPathCheck = p => p.StartsWith("Sprites/") && p.Contains('.'),
+            ConvertGitHubPathToLocalPath = p => p.Replace("Sprites/", ""),
+        };
 
-        if (sprites?.Any() == true)
+        var sprites = await gitHubFileSynchronizerService.GetGitHubFileDetailsAsync(spriteDownloadRequest);
+
+        spriteDownloadRequest = new GitHubFileDownloaderRequest
+        {
+            RepoOwner = "TheTrackerCouncil",
+            RepoName = "TrackerSprites",
+            DestinationFolder = RandomizerDirectories.TrackerSpritePath,
+            HashPath = RandomizerDirectories.TrackerSpritePath,
+            InitialJsonPath = RandomizerDirectories.TrackerSpritePath,
+            ValidPathCheck = p => p.EndsWith(".png", StringComparison.OrdinalIgnoreCase) || p.EndsWith(".gif", StringComparison.OrdinalIgnoreCase),
+        };
+
+        sprites.AddRange(await gitHubFileSynchronizerService.GetGitHubFileDetailsAsync(spriteDownloadRequest));
+
+        if (sprites.Count > 0)
         {
             SpriteDownloadStarted?.Invoke(this, EventArgs.Empty);
-            await gitHubSpriteDownloaderService.DownloadSpritesAsync("TheTrackerCouncil", "SMZ3CasSprites", sprites);
+            await gitHubFileSynchronizerService.SyncGitHubFilesAsync(sprites);
             SpriteDownloadEnded?.Invoke(this, EventArgs.Empty);
         }
     }

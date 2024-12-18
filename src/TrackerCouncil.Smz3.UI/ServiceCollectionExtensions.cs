@@ -38,6 +38,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ITrackerStateService, TrackerStateService>();
         services.AddMultiplayerServices();
         services.AddSingleton<SpriteService>();
+        services.AddSingleton<TrackerSpriteService>();
         services.AddTransient<SharedCrossplatformService>();
 
         // Chat
@@ -53,7 +54,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IGameDbService, GameDbService>();
         services.AddTransient<SourceRomValidationService>();
         services.AddTransient<IGitHubConfigDownloaderService, GitHubConfigDownloaderService>();
-        services.AddSingleton<IGitHubSpriteDownloaderService, GitHubSpriteDownloaderService>();
+        services.AddSingleton<IGitHubFileSynchronizerService, GitHubFileSynchronizerService>();
         services.AddSingleton<OptionsFactory>();
 
         services.AddAvaloniaControlServices<Program>();

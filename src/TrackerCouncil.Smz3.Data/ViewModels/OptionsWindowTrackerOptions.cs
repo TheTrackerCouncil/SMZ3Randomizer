@@ -18,6 +18,10 @@ public class OptionsWindowTrackerOptions
     [DynamicFormFieldCheckBox(checkBoxText: "Render shadows", alignment: DynamicFormAlignment.Right)]
     public bool TrackerShadows { get; set; } = true;
 
+    [DynamicFormFieldComboBox(label: "Tracker speech window image pack:",
+        comboBoxOptionsProperty: nameof(TrackerSpeechImagePacks))]
+    public string TrackerSpeechImagePack { get; set; } = "Default";
+
     [DynamicFormFieldColorPicker(label: "Tracker speech window color:")]
     public byte[] TrackerSpeechBGColor { get; set; } = [0xFF, 0x48, 0x3D, 0x8B];
 
@@ -85,4 +89,5 @@ public class OptionsWindowTrackerOptions
     public bool MsuMessageReceiverEnabled { get; set; } = true;
 
     public Dictionary<string, string> AudioDevices { get; set; } = new();
+    public Dictionary<string, string> TrackerSpeechImagePacks { get; set; } = [];
 }

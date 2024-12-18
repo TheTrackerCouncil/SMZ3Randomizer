@@ -1,11 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using MSURandomizerLibrary;
 using SnesConnectorLibrary;
+using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Logic;
 using TrackerCouncil.Smz3.Shared.Enums;
 using YamlDotNet.Serialization;
@@ -128,6 +130,13 @@ public class RandomizerOptions : INotifyPropertyChanged
                 options.GeneralOptions.AutoMapUpdateBehavior = options.GeneralOptions.AutoTrackerChangeMap
                     ? AutoMapUpdateBehavior.UpdateOnRegionChange
                     : AutoMapUpdateBehavior.Disabled;
+            }
+
+            // Remove deprecated config profiles
+            if (options.GeneralOptions.SelectedProfiles.Any(p => p != null && ConfigProvider.DeprecatedConfigProfiles.Contains(p)))
+            {
+                options.GeneralOptions.SelectedProfiles = options.GeneralOptions.SelectedProfiles
+                    .Where(p => p != null && !ConfigProvider.DeprecatedConfigProfiles.Contains(p)).ToList();
             }
 
             return options;
