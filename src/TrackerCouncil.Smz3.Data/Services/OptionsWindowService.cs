@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Chat.Integration;
+using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.ViewModels;
 using ConfigProvider = TrackerCouncil.Smz3.Data.Configuration.ConfigProvider;
@@ -25,7 +26,8 @@ public class OptionsWindowService(
     ILogger<OptionsWindowService> logger,
     IGitHubConfigDownloaderService gitHubConfigDownloaderService,
     IGitHubFileSynchronizerService gitHubFileSynchronizerService,
-    TrackerSpriteService trackerSpriteService)
+    TrackerSpriteService trackerSpriteService,
+    Configs configs)
 {
     private Dictionary<string, string> _availableInputDevices = new() { { "Default", "Default" } };
     private OptionsWindowViewModel _model = new();
@@ -196,7 +198,11 @@ public class OptionsWindowService(
             configSource = new ConfigSource() { Owner = "TheTrackerCouncil", Repo = "SMZ3CasConfigs" };
             options.GeneralOptions.ConfigSources.Add(configSource);
         }
-        await gitHubConfigDownloaderService.DownloadFromSourceAsync(configSource);
+
+        if (await gitHubConfigDownloaderService.DownloadFromSourceAsync(configSource))
+        {
+            configs.LoadConfigs();
+        }
     }
 
     private async Task UpdateSpritesAsync()

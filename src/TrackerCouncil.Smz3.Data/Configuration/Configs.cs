@@ -13,44 +13,55 @@ namespace TrackerCouncil.Smz3.Data.Configuration;
 /// </summary>
 public class Configs
 {
+    private ConfigProvider _configProvider;
+    private RandomizerOptions _randomizerOptions;
+    private ILogger<Configs> _logger;
+
     /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="optionsFactory">The tracker options for determining the selected tracker profiles</param>
     /// <param name="provider">The config provider for loading configs</param>
     /// <param name="logger"></param>
-    public Configs(OptionsFactory optionsFactory, Smz3.Data.Configuration.ConfigProvider provider, ILogger<Configs> logger)
+    public Configs(OptionsFactory optionsFactory, ConfigProvider provider, ILogger<Configs> logger)
     {
-        var options = optionsFactory.Create();
-        var profiles = options.GeneralOptions.SelectedProfiles.NonNull().Where(x => x != "Default").ToArray();
-        var moods = provider.GetAvailableMoods(profiles);
-        CurrentMood = moods.Random(Random.Shared);
-        logger.LogInformation("Tracker is feeling {Mood} today", CurrentMood);
+        _configProvider = provider;
+        _randomizerOptions = optionsFactory.Create();
+        _logger = logger;
+        LoadConfigs();
+    }
 
-        Bosses = provider.GetBossConfig(profiles, CurrentMood);
-        Dungeons = provider.GetDungeonConfig(profiles, CurrentMood);
-        Items = provider.GetItemConfig(profiles, CurrentMood);
-        Locations = provider.GetLocationConfig(profiles, CurrentMood);
-        Regions = provider.GetRegionConfig(profiles, CurrentMood);
-        Requests = provider.GetRequestConfig(profiles, CurrentMood);
-        Responses = provider.GetResponseConfig(profiles, CurrentMood);
-        Rooms = provider.GetRoomConfig(profiles, CurrentMood);
-        Rewards = provider.GetRewardConfig(profiles, CurrentMood);
-        UILayouts = provider.GetUIConfig(profiles, CurrentMood);
-        GameLines = provider.GetGameConfig(profiles, CurrentMood);
-        MsuConfig = provider.GetMsuConfig(profiles, CurrentMood);
-        HintTileConfig = provider.GetHintTileConfig(profiles, CurrentMood);
+    public void LoadConfigs()
+    {
+        var profiles = _randomizerOptions.GeneralOptions.SelectedProfiles.NonNull().Where(x => x != "Default").ToArray();
+        var moods = _configProvider.GetAvailableMoods(profiles);
+        CurrentMood = moods.Random(Random.Shared);
+        _logger.LogInformation("Tracker is feeling {Mood} today", CurrentMood);
+
+        Bosses = _configProvider.GetBossConfig(profiles, CurrentMood);
+        Dungeons = _configProvider.GetDungeonConfig(profiles, CurrentMood);
+        Items = _configProvider.GetItemConfig(profiles, CurrentMood);
+        Locations = _configProvider.GetLocationConfig(profiles, CurrentMood);
+        Regions = _configProvider.GetRegionConfig(profiles, CurrentMood);
+        Requests = _configProvider.GetRequestConfig(profiles, CurrentMood);
+        Responses = _configProvider.GetResponseConfig(profiles, CurrentMood);
+        Rooms = _configProvider.GetRoomConfig(profiles, CurrentMood);
+        Rewards = _configProvider.GetRewardConfig(profiles, CurrentMood);
+        UILayouts = _configProvider.GetUIConfig(profiles, CurrentMood);
+        GameLines = _configProvider.GetGameConfig(profiles, CurrentMood);
+        MsuConfig = _configProvider.GetMsuConfig(profiles, CurrentMood);
+        HintTileConfig = _configProvider.GetHintTileConfig(profiles, CurrentMood);
     }
 
     /// <summary>
     /// Gets the current mood.
     /// </summary>
-    public string? CurrentMood { get; }
+    public string? CurrentMood { get; private set; }
 
     /// <summary>
     /// Gets a collection of trackable items.
     /// </summary>
-    public ItemConfig Items { get; }
+    public ItemConfig Items { get; private set; } = null!;
 
     /// <summary>
     /// Gets the peg world peg configuration. This will be moved to UI
@@ -85,60 +96,60 @@ public class Configs
     /// <summary>
     /// Gets a collection of configured responses.
     /// </summary>
-    public ResponseConfig Responses { get; }
+    public ResponseConfig Responses { get; private set; } = null!;
 
     /// <summary>
     /// Gets a collection of basic requests and responses.
     /// </summary>
-    public RequestConfig Requests { get; }
+    public RequestConfig Requests { get; private set; } = null!;
 
     /// <summary>
     /// Gets a collection of extra information about regions.
     /// </summary>
-    public RegionConfig Regions { get; }
+    public RegionConfig Regions { get; private set; } = null!;
 
     /// <summary>
     /// Gets a collection of extra information about dungeons.
     /// </summary>
-    public DungeonConfig Dungeons { get; }
+    public DungeonConfig Dungeons { get; private set; } = null!;
 
     /// <summary>
     /// Gets a collection of bosses.
     /// </summary>
-    public BossConfig Bosses { get; }
+    public BossConfig Bosses { get; private set; } = null!;
 
     /// <summary>
     /// Gets a collection of extra information about rooms.
     /// </summary>
-    public RoomConfig Rooms { get; }
+    public RoomConfig Rooms { get; private set; } = null!;
 
     /// <summary>
     /// Gets a collection of extra information about locations.
     /// </summary>
-    public LocationConfig Locations { get; }
+    public LocationConfig Locations { get; private set; } = null!;
 
     /// <summary>
     /// Gets a collection of extra information about rewards
     /// </summary>
-    public RewardConfig Rewards { get; }
+    public RewardConfig Rewards { get; private set; } = null!;
 
     /// <summary>
     /// Gets a collection of available UI layouts
     /// </summary>
-    public UIConfig UILayouts { get; }
+    public UIConfig UILayouts { get; private set; } = null!;
 
     /// <summary>
     /// Gets the in game lines
     /// </summary>
-    public GameLinesConfig GameLines { get; }
+    public GameLinesConfig GameLines { get; private set; } = null!;
 
     /// <summary>
     /// Gets the msu config
     /// </summary>
-    public MsuConfig MsuConfig { get; }
+    public MsuConfig MsuConfig { get; private set; } = null!;
 
     /// <summary>
     /// Gets the hint tile config
     /// </summary>
-    public HintTileConfig HintTileConfig { get; }
+    public HintTileConfig HintTileConfig { get; private set; } = null!;
 }
