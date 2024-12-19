@@ -42,4 +42,6 @@ public interface IHasLocations
             return Region is SMRegion && Region.Config.MetroidKeysanity;
         }
     }
+
+    public string RandomAreaName => this is Room room ? room.RandomAreaName : Region?.Name ?? Name;
 }

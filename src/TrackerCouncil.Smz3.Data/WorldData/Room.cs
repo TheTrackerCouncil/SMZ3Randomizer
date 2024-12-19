@@ -76,5 +76,5 @@ public abstract class Room : IHasLocations
     /// <returns>A new string that represents this room.</returns>
     public override string ToString() => $"{Region} - {Name}";
 
-    public string RandomName => $"{Region.RandomName} - {Metadata.Name?.ToString() ?? Name}";
+    public string RandomAreaName => $"{Region.RandomAreaName} - {Metadata.Name?.ToString() ?? Name}";
 }

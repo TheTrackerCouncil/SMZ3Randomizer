@@ -13,11 +13,17 @@ internal class TrackerBossService(IPlayerProgressionService playerProgressionSer
 {
     public event EventHandler<BossTrackedEventArgs>? BossUpdated;
 
-    public void MarkBossAsDefeated(IHasBoss region, float? confidence = null, bool autoTracked = false, bool admittedGuilt = false)
+    public void MarkBossAsDefeated(IHasBoss region, float? confidence = null, bool autoTracked = false, bool admittedGuilt = false, bool force = false)
     {
         if (region.BossDefeated && !autoTracked)
         {
             Tracker.Say(response: Responses.DungeonBossAlreadyCleared, args: [region.RandomRegionName, region.RandomBossName]);
+            return;
+        }
+
+        if (!autoTracked && Tracker.AutoTracker?.IsConnected == true && !force && region.BossType != BossType.None)
+        {
+            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, force track {region.RandomBossName}"]);
             return;
         }
 
@@ -83,12 +89,18 @@ internal class TrackerBossService(IPlayerProgressionService playerProgressionSer
         });
     }
 
-    public void MarkBossAsDefeated(Boss boss, bool admittedGuilt = true, float? confidence = null, bool autoTracked = false)
+    public void MarkBossAsDefeated(Boss boss, bool admittedGuilt = true, float? confidence = null, bool autoTracked = false, bool force = false)
     {
         if (boss.Defeated)
         {
             if (!autoTracked)
                 Tracker.Say(x => x.BossAlreadyDefeated, args: [boss.Name]);
+            return;
+        }
+
+        if (!autoTracked && Tracker.AutoTracker?.IsConnected == true && !force && boss.Type != BossType.None)
+        {
+            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, force track {boss.RandomName}"]);
             return;
         }
 
@@ -127,11 +139,17 @@ internal class TrackerBossService(IPlayerProgressionService playerProgressionSer
         });
     }
 
-    public void MarkBossAsNotDefeated(Boss boss, float? confidence = null)
+    public void MarkBossAsNotDefeated(Boss boss, float? confidence = null, bool force = false)
     {
         if (boss.Defeated != true)
         {
             Tracker.Say(x => x.BossNotYetDefeated, args: [boss.Name]);
+            return;
+        }
+
+        if (Tracker.AutoTracker?.IsConnected == true && !force && boss.Type != BossType.None)
+        {
+            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, force untrack {boss.RandomName}"]);
             return;
         }
 
@@ -162,11 +180,17 @@ internal class TrackerBossService(IPlayerProgressionService playerProgressionSer
     /// </summary>
     /// <param name="region">The dungeon that should be un-cleared.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void MarkBossAsNotDefeated(IHasBoss region, float? confidence = null)
+    public void MarkBossAsNotDefeated(IHasBoss region, float? confidence = null, bool force = false)
     {
         if (!region.BossDefeated)
         {
             Tracker.Say(response: Responses.DungeonBossNotYetCleared, args: [region.RandomRegionName, region.RandomBossName]);
+            return;
+        }
+
+        if (Tracker.AutoTracker?.IsConnected == true && !force && region.BossType != BossType.None)
+        {
+            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, force untrack {region.RandomBossName}"]);
             return;
         }
 

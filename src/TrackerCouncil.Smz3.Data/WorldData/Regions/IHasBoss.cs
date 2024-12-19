@@ -90,7 +90,7 @@ public interface IHasBoss
     /// <summary>
     /// Returns a randomized name from the metadata for the region
     /// </summary>
-    public string RandomRegionName => Region.RandomName;
+    public string RandomRegionName => Region.RandomAreaName;
 
     /// <summary>
     /// Returns a randomized name from the metadata for the boss

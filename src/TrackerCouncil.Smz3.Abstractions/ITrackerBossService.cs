@@ -17,8 +17,9 @@ public interface ITrackerBossService
     /// <param name="admittedGuilt">
     /// <see langword="true"/> if the command implies the boss was killed;
     /// <see langword="false"/> if the boss was simply "tracked".
+    /// <param name="force">If the boss should be forced to be tracked while auto tracking</param>
     /// </param>
-    public void MarkBossAsDefeated(IHasBoss region, float? confidence = null, bool autoTracked = false, bool admittedGuilt = false);
+    public void MarkBossAsDefeated(IHasBoss region, float? confidence = null, bool autoTracked = false, bool admittedGuilt = false, bool force = false);
 
     /// <summary>
     /// Marks a boss as defeated.
@@ -30,15 +31,17 @@ public interface ITrackerBossService
     /// </param>
     /// <param name="confidence">The speech recognition confidence.</param>
     /// <param name="autoTracked">If this was tracked by the auto tracker</param>
+    /// <param name="force">If the boss should be forced to be tracked while auto tracking</param>
     public void MarkBossAsDefeated(Boss boss, bool admittedGuilt = true, float? confidence = null,
-        bool autoTracked = false);
+        bool autoTracked = false, bool force = false);
 
     /// <summary>
     /// Un-marks a boss as defeated.
     /// </summary>
     /// <param name="boss">The boss that should be 'revived'.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void MarkBossAsNotDefeated(Boss boss, float? confidence = null);
+    /// <param name="force">If the boss should be forced to be untracked while auto tracking</param>
+    public void MarkBossAsNotDefeated(Boss boss, float? confidence = null, bool force = false);
 
     /// <summary>
     /// Un-marks a dungeon as cleared and, if possible, untracks the boss
@@ -46,7 +49,8 @@ public interface ITrackerBossService
     /// </summary>
     /// <param name="region">The dungeon that should be un-cleared.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    public void MarkBossAsNotDefeated(IHasBoss region, float? confidence = null);
+    /// <param name="force">If the boss should be forced to be untracked while auto tracking</param>
+    public void MarkBossAsNotDefeated(IHasBoss region, float? confidence = null, bool force = false);
 
     public void UpdateAccessibility(Progression? actualProgression = null, Progression? withKeysProgression = null);
 

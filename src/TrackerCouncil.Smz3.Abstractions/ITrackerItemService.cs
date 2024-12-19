@@ -24,13 +24,14 @@ public interface ITrackerItemService
     /// <param name="location">The location an item was tracked from</param>
     /// <param name="giftedItem">If the item was gifted to the player by tracker or another player</param>
     /// <param name="silent">If tracker should not say anything</param>
+    /// <param name="force">If the item should be forced to be tracked while auto tracking</param>
     /// <returns>
     /// <see langword="true"/> if the item was actually tracked; <see
     /// langword="false"/> if the item could not be tracked, e.g. when
     /// tracking Bow twice.
     /// </returns>
     bool TrackItem(Item item, string? trackedAs = null, float? confidence = null, bool tryClear = true,
-        bool autoTracked = false, Location? location = null, bool giftedItem = false, bool silent = false);
+        bool autoTracked = false, Location? location = null, bool giftedItem = false, bool silent = false, bool force = false);
 
     /// <summary>
     /// Tracks the specifies item and clears it from the specified dungeon.
@@ -41,7 +42,8 @@ public interface ITrackerItemService
     /// </param>
     /// <param name="hasTreasure">The dungeon the item was tracked in.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    void TrackItemFrom(Item item, IHasTreasure hasTreasure, string? trackedAs = null, float? confidence = null);
+    /// <param name="force">If the item should be forced to be tracked while auto tracking</param>
+    void TrackItemFrom(Item item, IHasTreasure hasTreasure, string? trackedAs = null, float? confidence = null, bool force = false);
 
     /// <summary>
     /// Tracks the specified item and clears it from the specified room.
@@ -52,7 +54,8 @@ public interface ITrackerItemService
     /// </param>
     /// <param name="area">The area the item was found in.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    void TrackItemFrom(Item item, IHasLocations area, string? trackedAs = null, float? confidence = null);
+    /// <param name="force">If the item should be forced to be tracked while auto tracking</param>
+    void TrackItemFrom(Item item, IHasLocations area, string? trackedAs = null, float? confidence = null, bool force = false);
 
     /// <summary>
     /// Sets the item count for the specified item.
@@ -62,7 +65,8 @@ public interface ITrackerItemService
     /// The amount of the item that is in the player's inventory now.
     /// </param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    void TrackItemAmount(Item item, int count, float confidence);
+    /// <param name="force">If the item should be forced to be tracked while auto tracking</param>
+    void TrackItemAmount(Item item, int count, float confidence, bool force = false);
 
     /// <summary>
     /// Tracks multiple items at the same time
@@ -77,5 +81,6 @@ public interface ITrackerItemService
     /// </summary>
     /// <param name="item">The item to untrack.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
-    void UntrackItem(Item item, float? confidence = null);
+    /// <param name="force">If the item should be forced to be untracked while auto tracking</param>
+    void UntrackItem(Item item, float? confidence = null, bool force = false);
 }

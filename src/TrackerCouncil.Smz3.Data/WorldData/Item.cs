@@ -327,6 +327,11 @@ public class Item
     /// <returns>A string representing this item.</returns>
     public override string ToString() => $"{Name}";
 
+    /// <summary>
+    /// Returns a random name from the items's metadata
+    /// </summary>
+    public string RandomName => Metadata.Name?.ToString() ?? Name;
+
     private static List<Item> Copies(int nr, Func<Item> template)
     {
         return Enumerable.Range(1, nr).Select(i => template()).ToList();

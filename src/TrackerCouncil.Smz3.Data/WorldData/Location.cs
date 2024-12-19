@@ -401,8 +401,8 @@ public class Location
         {
             var randomLocationName = Metadata.Name?.ToString() ?? Name;
             return Room != null
-                ? $"{Room.RandomName} - {randomLocationName}"
-                : $"{Region.RandomName} - {randomLocationName}";
+                ? $"{Room.RandomAreaName} - {randomLocationName}"
+                : $"{Region.RandomAreaName} - {randomLocationName}";
         }
     }
 
