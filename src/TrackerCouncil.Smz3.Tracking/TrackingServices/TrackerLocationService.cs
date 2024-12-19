@@ -247,6 +247,12 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, IP
 
         metadata ??= metadataService.Item(item);
 
+        if (location.Cleared)
+        {
+            Tracker.Say(response: Responses.LocationMarkedButAlreadyCleared, args: [locationName, metadata?.Name ?? item.GetDescription() ]);
+            return;
+        }
+
         GiveLocationComment(location.Item.Type, location, isTracking: false, confidence, metadata);
 
         if (item == ItemType.Nothing)

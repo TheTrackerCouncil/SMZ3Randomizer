@@ -33,11 +33,13 @@ public class BossTrackingModule : TrackerModule
         var bossNames = GetBossNames();
         var beatBoss = new GrammarBuilder()
             .Append("Hey tracker,")
+            .Optional("force", "sudo")
             .OneOf("track", "I beat", "I defeated", "I beat off", "I killed")
             .Append(BossKey, bossNames);
 
         var markBoss = new GrammarBuilder()
             .Append("Hey tracker,")
+            .Optional("force", "sudo")
             .Append("mark")
             .Append(BossKey, bossNames)
             .Append("as")
@@ -47,6 +49,8 @@ public class BossTrackingModule : TrackerModule
             .Append("Hey tracker,")
             .Append(BossKey, bossNames)
             .OneOf("is dead", "is fucking dead");
+
+
 
         return GrammarBuilder.Combine(beatBoss, markBoss, bossIsDead);
     }
@@ -58,17 +62,24 @@ public class BossTrackingModule : TrackerModule
 
         var markBoss = new GrammarBuilder()
             .Append("Hey tracker,")
+            .Optional("force", "sudo")
             .Append("mark")
             .Append(BossKey, bossNames)
             .Append("as")
             .OneOf("alive", "not defeated", "undefeated");
+
+        var untrack = new GrammarBuilder()
+            .Append("Hey tracker,")
+            .Optional("force", "sudo")
+            .Append("untrack")
+            .Append(BossKey, bossNames);
 
         var bossIsAlive = new GrammarBuilder()
             .Append("Hey tracker,")
             .Append(BossKey, bossNames)
             .OneOf("is alive", "is still alive");
 
-        return GrammarBuilder.Combine(markBoss, bossIsAlive);
+        return GrammarBuilder.Combine(markBoss, untrack, bossIsAlive);
     }
 
     [SupportedOSPlatform("windows")]
@@ -100,29 +111,34 @@ public class BossTrackingModule : TrackerModule
             var admittedGuilt = result.Text.ContainsAny("killed", "beat", "defeated", "dead")
                                 && !result.Text.ContainsAny("beat off", "beaten off");
 
+            var force = result.Text.ContainsAny("Hey tracker, force", "Hey tracker, sudo");
+
             if (boss.Region != null)
             {
                 // Track boss with associated dungeon or region
-                TrackerBase.BossTracker.MarkBossAsDefeated(boss.Region, result.Confidence, false, admittedGuilt);
+                TrackerBase.BossTracker.MarkBossAsDefeated(boss.Region, result.Confidence, false, admittedGuilt, force);
                 return;
             }
 
             // Track standalone boss
-            TrackerBase.BossTracker.MarkBossAsDefeated(boss, admittedGuilt, result.Confidence);
+            TrackerBase.BossTracker.MarkBossAsDefeated(boss, admittedGuilt, result.Confidence, force);
         });
 
         AddCommand("Mark boss as alive", GetMarkBossAsNotDefeatedRule(), (result) =>
         {
             var boss = GetBossFromResult(TrackerBase, result) ?? throw new Exception($"Could not find boss or dungeon in command: '{result.Text}'");
+
+            var force = result.Text.ContainsAny("Hey tracker, force", "Hey tracker, sudo");
+
             if (boss.Region != null)
             {
                 // Untrack boss with associated dungeon or region
-                TrackerBase.BossTracker.MarkBossAsNotDefeated(boss.Region, result.Confidence);
+                TrackerBase.BossTracker.MarkBossAsNotDefeated(boss.Region, result.Confidence, force);
                 return;
             }
 
             // Untrack standalone boss
-            TrackerBase.BossTracker.MarkBossAsNotDefeated(boss, result.Confidence);
+            TrackerBase.BossTracker.MarkBossAsNotDefeated(boss, result.Confidence, force);
         });
 
         AddCommand("Mark boss as defeated with content", GetBossDefeatedWithContentRule(), (result) =>
