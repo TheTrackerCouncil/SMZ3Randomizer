@@ -50,8 +50,8 @@ public class SpriteViewModel : INotifyPropertyChanged
     public int ImageHeight { get; }
     public float IconOpacity { get; }
 
-    private string _previewPath;
-    public string PreviewPath
+    private string? _previewPath;
+    public string? PreviewPath
     {
         get => _previewPath;
         set => SetField(ref _previewPath, value);

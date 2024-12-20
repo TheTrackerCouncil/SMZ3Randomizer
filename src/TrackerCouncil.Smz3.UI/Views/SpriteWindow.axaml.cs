@@ -286,7 +286,7 @@ public partial class SpriteWindow : ScalableWindow
                 Model.Sprites.Add(model);
             }
         }
-        catch (Exception exception)
+        catch
         {
             await MessageWindow.ShowErrorDialog("Error attempting to select the sprite");
         }

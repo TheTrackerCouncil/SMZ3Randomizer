@@ -13,7 +13,7 @@ using TrackerCouncil.Smz3.UI.ViewModels;
 
 namespace TrackerCouncil.Smz3.UI.Services;
 
-public class TrackerSpeechWindowService(ICommunicator communicator, IUIService uiService, OptionsFactory optionsFactory, TrackerSpriteService trackerSpriteService) : ControlService
+public class TrackerSpeechWindowService(ICommunicator communicator, OptionsFactory optionsFactory, TrackerSpriteService trackerSpriteService) : ControlService
 {
     TrackerSpeechWindowViewModel _model = new();
 

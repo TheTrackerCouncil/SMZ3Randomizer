@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.0.11" />
     <PackageReference Include="MattEqualsCoder.DynamicForms.Core" Version="1.0.1" />
     <PackageReference Include="MattEqualsCoder.GitHubReleaseChecker" Version="1.1.2" />
     <PackageReference Include="MattEqualsCoder.MSURandomizer.Library" Version="3.0.0-rc.5" />
@@ -33,12 +34,6 @@
   <ItemGroup>
     <ProjectReference Include="..\TrackerCouncil.Smz3.Chat.Integration\TrackerCouncil.Smz3.Chat.Integration.csproj" />
     <ProjectReference Include="..\TrackerCouncil.Smz3.Shared\TrackerCouncil.Smz3.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Avalonia.Base">
-      <HintPath>..\..\..\..\..\.nuget\packages\avalonia\11.0.11\ref\net6.0\Avalonia.Base.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <!--<ItemGroup>
