@@ -35,6 +35,12 @@
     <ProjectReference Include="..\TrackerCouncil.Smz3.Shared\TrackerCouncil.Smz3.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Avalonia.Base">
+      <HintPath>..\..\..\..\..\.nuget\packages\avalonia\11.0.11\ref\net6.0\Avalonia.Base.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
   <!--<ItemGroup>
     <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
   </ItemGroup>-->
