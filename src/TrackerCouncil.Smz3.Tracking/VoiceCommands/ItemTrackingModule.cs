@@ -1,8 +1,10 @@
-﻿using System.Runtime.Versioning;
+﻿using System.Linq;
+using System.Runtime.Versioning;
 using System.Speech.Recognition;
 
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Abstractions;
+using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Tracking.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.VoiceCommands;
@@ -46,7 +48,7 @@ public class ItemTrackingModule : TrackerModule
 
         var trackItemNormal = new GrammarBuilder()
             .Append("Hey tracker,")
-            .Optional("please", "would you kindly")
+            .Optional(GrammarBuilder.ForceCommandIdentifiers.Concat(["please", "would you kindly"]).ToArray())
             .OneOf("track", "add")
             .Append(ItemNameKey, itemNames);
 
@@ -54,7 +56,7 @@ public class ItemTrackingModule : TrackerModule
         {
             var trackItemDungeon = new GrammarBuilder()
                 .Append("Hey tracker,")
-                .Optional("please", "would you kindly")
+                .Optional(GrammarBuilder.ForceCommandIdentifiers.Concat(["please", "would you kindly"]).ToArray())
                 .OneOf("track", "add")
                 .Append(ItemNameKey, itemNames)
                 .OneOf("in", "from")
@@ -62,7 +64,7 @@ public class ItemTrackingModule : TrackerModule
 
             var trackItemLocation = new GrammarBuilder()
                 .Append("Hey tracker,")
-                .Optional("please", "would you kindly")
+                .Optional(GrammarBuilder.ForceCommandIdentifiers.Concat(["please", "would you kindly"]).ToArray())
                 .OneOf("track", "add")
                 .Append(ItemNameKey, itemNames)
                 .OneOf("in", "from", "in the", "from the")
@@ -70,7 +72,7 @@ public class ItemTrackingModule : TrackerModule
 
             var trackItemRoom = new GrammarBuilder()
                 .Append("Hey tracker,")
-                .Optional("please", "would you kindly")
+                .Optional(GrammarBuilder.ForceCommandIdentifiers.Concat(["please", "would you kindly"]).ToArray())
                 .OneOf("track", "add")
                 .Append(ItemNameKey, itemNames)
                 .OneOf("in", "from", "in the", "from the")
@@ -155,14 +157,14 @@ public class ItemTrackingModule : TrackerModule
 
         var untrackItem = new GrammarBuilder()
             .Append("Hey tracker,")
-            .Optional("please", "would you kindly")
+            .Optional(GrammarBuilder.ForceCommandIdentifiers.Concat(["please", "would you kindly"]).ToArray())
             .OneOf("untrack", "remove")
             .Optional("a", "an", "the")
             .Append(ItemNameKey, itemNames);
 
         var toggleItemOff = new GrammarBuilder()
             .Append("Hey tracker,")
-            .Optional("please", "would you kindly")
+            .Optional(GrammarBuilder.ForceCommandIdentifiers.Concat(["please", "would you kindly"]).ToArray())
             .Append("toggle")
             .Append(ItemNameKey, itemNames)
             .Append("off");
@@ -180,7 +182,8 @@ public class ItemTrackingModule : TrackerModule
 
         return new GrammarBuilder()
             .Append("Hey tracker,")
-            .OneOf("I have", "I've got", "I possess", "I am in the possession of")
+            .Optional(GrammarBuilder.ForceCommandIdentifiers)
+            .OneOf("I have", "I've got", "I possess", "I am in the possession of", "track")
             .Append(ItemCountKey, numbers)
             .Append(ItemNameKey, itemNames);
     }
@@ -194,19 +197,23 @@ public class ItemTrackingModule : TrackerModule
         {
             var item = GetItemFromResult(TrackerBase, result, out var itemName);
 
+            var force = result.Text.ContainsAny(GrammarBuilder.ForceCommandIdentifiers);
+
             if (result.Semantics.ContainsKey(DungeonKey))
             {
                 var dungeon = GetDungeonFromResult(TrackerBase, result);
                 TrackerBase.ItemTracker.TrackItemFrom(item, dungeon,
                     trackedAs: itemName,
-                    confidence: result.Confidence);
+                    confidence: result.Confidence,
+                    force: force);
             }
             else if (result.Semantics.ContainsKey(RoomKey))
             {
                 var room = GetRoomFromResult(TrackerBase, result);
                 TrackerBase.ItemTracker.TrackItemFrom(item, room,
                     trackedAs: itemName,
-                    confidence: result.Confidence);
+                    confidence: result.Confidence,
+                    force: force);
             }
             else if (result.Semantics.ContainsKey(LocationKey))
             {
@@ -216,13 +223,15 @@ public class ItemTrackingModule : TrackerModule
                     confidence: result.Confidence,
                     tryClear: true,
                     autoTracked: false,
-                    location: location);
+                    location: location,
+                    force: force);
             }
             else
             {
                 TrackerBase.ItemTracker.TrackItem(item,
                     trackedAs: itemName,
-                    confidence: result.Confidence);
+                    confidence: result.Confidence,
+                    force: force);
             }
         });
 
@@ -285,14 +294,16 @@ public class ItemTrackingModule : TrackerModule
         AddCommand("Untrack an item", GetUntrackItemRule(), (result) =>
         {
             var item = GetItemFromResult(TrackerBase, result, out _);
-            TrackerBase.ItemTracker.UntrackItem(item, result.Confidence);
+            var force = result.Text.ContainsAny(GrammarBuilder.ForceCommandIdentifiers);
+            TrackerBase.ItemTracker.UntrackItem(item, result.Confidence, force: force);
         });
 
         AddCommand("Set item count", GetSetItemCountRule(), (result) =>
         {
             var item = GetItemFromResult(TrackerBase, result, out _);
             var count = (int)result.Semantics[ItemCountKey].Value;
-            TrackerBase.ItemTracker.TrackItemAmount(item, count, result.Confidence);
+            var force = result.Text.ContainsAny(GrammarBuilder.ForceCommandIdentifiers);
+            TrackerBase.ItemTracker.TrackItemAmount(item, count, result.Confidence, force: force);
         });
     }
 }

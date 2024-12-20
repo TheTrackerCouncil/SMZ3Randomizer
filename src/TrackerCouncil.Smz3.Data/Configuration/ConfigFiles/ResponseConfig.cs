@@ -12,45 +12,45 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
 {
     /// <summary>
     /// Gets the phrases to respond with when tracker starts.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? StartedTracking { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when tracker starts in "alternate"
     /// mode.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? StartingTrackingAlternate { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when tracker stops.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? StoppedTracking { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when tracker stops after go mode
     /// has been turned on.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? StoppedTrackingPostGoMode { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when speech recognition confidence
     /// does not meet the configured threshold for execution, but is high
     /// enough to be recognized.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? Misheard { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when tracking a simple single-stage
     /// item.
     /// <c>{0}</c> is a placeholder for the name of the item.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? TrackedItem { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when tracking two items at once.
     /// <c>{0}</c> is a placeholder for the name of the first item.
     /// <c>{1}</c> is a placeholder for the name of the second item.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? TrackedTwoItems { get; init; }
 
     /// <summary>
@@ -58,7 +58,7 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// <c>{0}</c> is a placeholder for the name of the first item.
     /// <c>{1}</c> is a placeholder for the name of the second item.
     /// <c>{2}</c> is a placeholder for the name of the third item.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? TrackedThreeItems { get; init; }
 
     /// <summary>
@@ -66,7 +66,7 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// <c>{0}</c> is a placeholder for the name of the first item.
     /// <c>{1}</c> is a placeholder for the name of the second item.
     /// <c>{2}</c> is the number of remaining items tracked.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? TrackedManyItems { get; init; }
 
     /// <summary>
@@ -75,7 +75,7 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// <c>{0}</c> is a placeholder for the base item name (e.g. Sword),
     /// <c>{1}</c> is a placeholder for the current stage of the progressive
     /// item (e.g. Master Sword).
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? TrackedItemByStage { get; init; }
 
     /// <summary>
@@ -83,7 +83,7 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// tracked multiple times.
     /// <c>{0}</c> is a placeholder for the plural item name. <c>{1}</c> is
     /// a placeholder for the number of copies.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? TrackedItemMultiple { get; init; }
 
     /// <summary>
@@ -91,7 +91,7 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// <c>{0}</c> is a placeholder for the base item name (e.g. Sword),
     /// <c>{1}</c> is a placeholder for the current stage of the progressive
     /// item (e.g. Master Sword).
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? TrackedProgressiveItem { get; init; }
 
     /// <summary>
@@ -101,26 +101,26 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// <c>{0}</c> is a placeholder for the base item name (e.g. Sword),
     /// <c>{1}</c> is a placeholder for the current stage of the progressive
     /// item (e.g. Master Sword).
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? TrackedOlderProgressiveItem { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when tracking an item that is
     /// already at the max tier.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? TrackedTooManyOfAnItem { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when tracking a single-stage item
     /// that is already tracked.
     /// <c>{0}</c> is a placeholder for the name of the item.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? TrackedAlreadyTrackedItem { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when tracking an item that is at
     /// its correct location according to the original game.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? TrackedVanillaItem { get; init; }
 
     /// <summary>
@@ -128,19 +128,19 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// item, but that exact amount is already tracked.
     /// <c>{0}</c> is the plural name of the item. <c>{1}</c> is the number
     /// of items.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? TrackedExactAmountDuplicate { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when tracking multiple items in an
     /// area at once.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? TrackedMultipleItems { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when clearing multiple items in an
     /// area at once.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? ClearedMultipleItems { get; init; }
 
     /// <summary>
@@ -170,7 +170,7 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// Gets the phrases to respond with when tracking or clearing multiple
     /// items in an area at once, but there no items left.
     /// <c>{0}</c> is a placeholder for the name of the area.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? TrackedNothing { get; init; }
 
     /// <summary>
@@ -186,7 +186,7 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// Gets the phrases to respond with when untracking an item.
     /// <c>{0}</c> is a placeholder for the name of the item. <c>{1}</c> is
     /// a placeholder for the name of the item with "a"/"the".
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? UntrackedItem { get; init; }
 
     /// <summary>
@@ -196,7 +196,7 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// <c>{1}</c> is a placeholder for the name of the location that
     /// contains the item that is out of logic. <c>{2}</c> is a placeholder
     /// for one or more names of required items that are missing.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? TrackedOutOfLogicItem { get; init; }
 
     /// <summary>
@@ -205,7 +205,7 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// <c>{0}</c> is a placeholder for the name of the item was tracked.
     /// <c>{1}</c> is a placeholder for the name of the location that
     /// contains the item that is out of logic.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? TrackedOutOfLogicItemTooManyMissing { get; init; }
 
     /// <summary>
@@ -213,7 +213,7 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// been tracked yet.
     /// <c>{0}</c> is a placeholder for the name of the item. <c>{1}</c> is
     /// a placeholder for the name of the item with "a"/"the".
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? UntrackedNothing { get; init; }
 
     /// <summary>
@@ -221,7 +221,7 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// multiple stages.
     /// <c>{0}</c> is a placeholder for the name of the item. <c>{1}</c> is
     /// a placeholder for the name of the item with "a"/"the".
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? UntrackedProgressiveItem { get; init; }
 
     /// <summary>
@@ -229,7 +229,7 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// tracked multiple times.
     /// <c>{0}</c> is a placeholder for the name of the item. <c>{1}</c> is
     /// a placeholder for the name of the item with "a"/"the".
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? UntrackedItemMultiple { get; init; }
 
     /// <summary>
@@ -237,38 +237,38 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// item that can be tracked multiple times.
     /// <c>{0}</c> is a placeholder for the name of the item. <c>{1}</c> is
     /// a placeholder for the name of the item with "a"/"the".
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? UntrackedItemMultipleLast { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when Shaktool becomes available.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? ShaktoolAvailable { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when Peg World becomes available.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? PegWorldAvailable { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when Peg World mode is toggled on.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? PegWorldModeOn { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when pegging a single Peg World peg.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? PegWorldModePegged { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when pegging multiple Peg World pegs.
-    /// </summary> = new()
+    /// </summary>
     public Dictionary<int, SchrodingersString>? PegWorldModePeggedMultiple { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when all Peg World pegs have been
     /// pegged or Peg World mode is toggled off manually.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? PegWorldModeDone { get; init; }
 
     /// <summary>
@@ -276,7 +276,7 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// dungeon.
     /// <c>{0}</c> is a placeholder for the name of the dungeon. <c>{1}</c>
     /// is a placeholder for the name of the reward that was marked.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? DungeonRewardMarked { get; init; }
 
     /// <summary>
@@ -284,27 +284,27 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// other unmarked dungeons.
     /// <c>{0}</c> is a placeholder for the name of the reward that was
     /// marked.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? RemainingDungeonsMarked { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when there are no unmarked
     /// dungeons.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? NoRemainingDungeons { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when clearing all locations in a
     /// dungeon.
     /// <c>{0}</c> is a placeholder for the name of the dungeon.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? DungeonCleared { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when clearing all location in a
     /// dungeon, but all locations are already cleared.
     /// <c>{0}</c> is a placeholder for the name of the dungeon.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? DungeonAlreadyCleared { get; init; }
 
     /// <summary>
@@ -314,7 +314,7 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// is a placeholder for the name of a location that was missed.
     /// <c>{2}</c> is a placeholder for the items that are required for a
     /// missed location.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? DungeonClearedWithInaccessibleItems { get; init; }
 
     /// <summary>
@@ -322,14 +322,14 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// dungeon, but some of the cleared locations were out of logic with too many missing items.
     /// <c>{0}</c> is a placeholder for the name of the dungeon. <c>{1}</c>
     /// is a placeholder for the name of a location that was missed.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? DungeonClearedWithTooManyInaccessibleItems { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when clearing a dungeon.
     /// <c>{0}</c> is a placeholder for the name of the dungeon that was
     /// cleared. <c>{1}</c> is a placeholder for the boss of the dungeon.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? DungeonBossCleared { get; init; }
 
     /// <summary>
@@ -337,7 +337,7 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// already cleared.
     /// <c>{0}</c> is a placeholder for the name of the dungeon that was
     /// cleared. <c>{1}</c> is a placeholder for the boss of the dungeon.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? DungeonBossAlreadyCleared { get; init; }
 
     /// <summary>
@@ -345,7 +345,7 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// of a dungeon.
     /// <c>{0}</c> is a placeholder for the name of the dungeon. <c>{1}</c>
     /// is a placeholder for the boss of the dungeon.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? DungeonBossUncleared { get; init; }
 
     /// <summary>
@@ -353,13 +353,13 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// of a dungeon that wasn't cleared yet.
     /// <c>{0}</c> is a placeholder for the name of the dungeon. <c>{1}</c>
     /// is a placeholder for the boss of the dungeon.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? DungeonBossNotYetCleared { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when the player defeated a boss
     /// with remarkable skill and add content!
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? DungeonBossClearedAddContent { get; init; }
 
     /// <summary>
@@ -367,14 +367,14 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// requirement of a dungeon.
     /// <c>{0}</c> is a placeholder for the name of the medallion.
     /// <c>{1}</c> is a placeholder for the name of the dungeon.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? DungeonRequirementMarked { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when marking the wrong dungeon with
     /// a required medallion.
     /// <c>{0}</c> is a placeholder for the name of the dungeon.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? DungeonRequirementInvalid { get; init; }
 
     /// <summary>
@@ -384,7 +384,7 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// seed. <c>{1}</c> is a placeholder for the name of the dungeon.
     /// <c>{2}</c> is a placeholder for the name of the medallion that was
     /// tracked.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? DungeonRequirementMismatch { get; init; }
 
     /// <summary>
@@ -402,7 +402,7 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// <c>{0}</c> is a placeholder for the name of the dungeon. <c>{1}</c>
     /// is the actual amount of items left. <c>{2}</c> is the amount of
     /// items requested to clear.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? DungeonTooManyTreasuresTracked { get; init; }
 
     /// <summary>
@@ -411,14 +411,14 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// <c>{0}</c> is a placeholder for the name of the dungeon. <c>{1}</c>
     /// is a placeholder for the name of the item, including "a" or "the",
     /// as appropriate.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? ItemTrackedInIncorrectDungeon { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when marking an item at a location.
     /// <c>{0}</c> is a placeholder for the name of the location. <c>{1}</c>
     /// is a placeholder for the name of the item.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? LocationMarked { get; init; }
 
     /// <summary>
@@ -428,26 +428,34 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// is a placeholder for the name of the item. <c>{2}</c> is a
     /// placeholder for the name of the item that was previously marked
     /// here.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? LocationMarkedAgain { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when marking an item as
     /// nothing/bullshit.
     /// <c>{0}</c> is a placeholder for the name of the location.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? LocationMarkedAsBullshit { get; init; }
+
+    /// <summary>
+    /// Gets the phrases to respond with when attempting to make an item at a location, but that location has already
+    /// been cleared.
+    /// <c>{0}</c> is a placeholder for the name of the location. <c>{1}</c>
+    /// is a placeholder for the name of the item.
+    /// </summary>
+    public SchrodingersString? LocationMarkedButAlreadyCleared { get; set; }
 
     /// <summary>
     /// Gets the phrases to respond with when marking an item at a location that was preconfigured.
     /// <c>{0}</c> is a placeholder for the name of the location.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? LocationMarkedPreConfigured { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when tracking an item at a location that was preconfigured.
     /// <c>{0}</c> is a placeholder for the name of the location.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? TrackedPreConfigured { get; init; }
 
     /// <summary>
@@ -457,24 +465,24 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// <c>{0}</c> is a placeholder for the item that was tracked or marked.
     /// <c>{1}</c> is a placeholder for the item that was in the same
     /// location in the seed.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? LocationHasDifferentItem { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when clearing a location.
     /// <c>{0}</c> is a placeholder for the name of the location.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? LocationCleared { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when clearing multiple locations.
     /// <c>{0}</c> is a placeholder for the number of locations.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? LocationsCleared { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when trying to clear the last marked locations when there aren't any
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? NoMarkedLocations { get; init; }
 
     /// <summary>
@@ -482,7 +490,7 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// from the same region.
     /// <c>{0}</c> is a placeholder for the number of locations.
     /// <c>{1}</c> is a placeholder for the name of the region
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? LocationsClearedSameRegion { get; init; }
 
     /// <summary>
@@ -492,7 +500,7 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
 
     /// <summary>
     /// Gets the phrases to respond with when undoing Go Mode.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? GoModeToggledOff { get; init; }
 
     /// <summary>
@@ -501,7 +509,7 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// <c>{0}</c> is a placeholder for the name of the item. <c>{1}</c> is
     /// a placeholder for the name of the location. <c>{2}</c> is a
     /// placeholder for the name of the item, including "a"/"the".
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? AreaDoesNotHaveItem { get; init; }
 
     /// <summary>
@@ -510,102 +518,108 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     /// <c>{0}</c> is a placeholder for the name of the item. <c>{1}</c> is
     /// a placeholder for the name of the location. <c>{2}</c> is a
     /// placeholder for the name of the item, including "a"/"the".
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? AreaHasMoreThanOneItem { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with after tracking an item that doesn't
     /// open up new areas.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? TrackedUselessItem { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when counting Hyper Beam shots.
-    /// </summary> = new()
+    /// </summary>
     public Dictionary<int, SchrodingersString>? CountHyperBeamShots { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when an internal error occurs.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? Error { get; init; }
 
     /// <summary>
+    /// Response to say when attempting to manually track something when autotracking is enabled
+    /// <c>{0}</c> is a placeholder for the command that the user can say to force tracker to do the action.
+    /// </summary>
+    public SchrodingersString? AutoTrackingEnabledSass { get; init; }
+
+    /// <summary>
     /// Gets the phrases to respond with before undoing the last action.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? ActionUndone { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when there is nothing to undo.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? NothingToUndo { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when the latest undo action
     /// has expired
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? UndoExpired { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when changing a Tracker setting.
     /// <c>{0}</c> is a placeholder for the name of the setting that was
     /// changed. <c>{1}</c> is a placeholder for the new value.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? TrackerSettingChanged { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when marking a boss as defeated.
     /// <c>{0}</c> is a placeholder for the name of the boss.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? BossDefeated { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when marking a boss as defeated who
     /// was already marked.
     /// <c>{0}</c> is a placeholder for the name of the boss.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? BossAlreadyDefeated { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when un-marking a boss as defeated.
     /// <c>{0}</c> is a placeholder for the name of the boss.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? BossUndefeated { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when un-marking a boss as defeated
     /// who hasn't been defeated yet.
     /// <c>{0}</c> is a placeholder for the name of the boss.
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? BossNotYetDefeated { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when the timer is resumed
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? TimerResumed { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when the timer is reset
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? TimerReset { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when the timer is paused
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? TimerPaused { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when tracker is muted
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? Muted { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when tracker is unmuted
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? Unmuted { get; init; }
 
     /// <summary>
     /// Gets the phrases to respond with when the game is beaten
-    /// </summary> = new()
+    /// </summary>
     public SchrodingersString? BeatGame { get; init; }
 
     /// <summary>

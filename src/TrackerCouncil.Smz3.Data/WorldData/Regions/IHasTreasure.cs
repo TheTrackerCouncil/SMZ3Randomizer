@@ -76,6 +76,11 @@ public interface IHasTreasure
         }
     }
 
+    /// <summary>
+    /// Returns a random name from the region's metadata
+    /// </summary>
+    public string RandomRegionName => Metadata.Name?.ToString() ?? Name;
+
     event EventHandler? UpdatedTreasure;
 
     void OnUpdatedTreasure();

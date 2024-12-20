@@ -26,8 +26,14 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
 
     public event EventHandler<ItemTrackedEventArgs>? ItemTracked;
 
-    public bool TrackItem(Item item, string? trackedAs = null, float? confidence = null, bool tryClear = true, bool autoTracked = false, Location? location = null, bool giftedItem = false, bool silent = false)
+    public bool TrackItem(Item item, string? trackedAs = null, float? confidence = null, bool tryClear = true, bool autoTracked = false, Location? location = null, bool giftedItem = false, bool silent = false, bool force = false)
     {
+        if (!autoTracked && Tracker.AutoTracker?.IsConnected == true && !force && item.Type != ItemType.Nothing)
+        {
+            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, would you please track {item.RandomName}"]);
+            return false;
+        }
+
         var didTrack = false;
         var accessibleBefore = worldQueryService.AccessibleLocations(false);
         var itemName = item.Name;
@@ -239,9 +245,15 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
         return true;
     }
 
-    public void TrackItemFrom(Item item, IHasTreasure hasTreasure, string? trackedAs = null, float? confidence = null)
+    public void TrackItemFrom(Item item, IHasTreasure hasTreasure, string? trackedAs = null, float? confidence = null, bool force = false)
     {
-        if (!TrackItem(item, trackedAs, confidence, tryClear: false))
+        if (Tracker.AutoTracker?.IsConnected == true && !force && item.Type != ItemType.Nothing)
+        {
+            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, would you please track {item.RandomName} from {hasTreasure.RandomRegionName}"]);
+            return;
+        }
+
+        if (!TrackItem(item, trackedAs, confidence, tryClear: false, force: force))
         {
             return;
         }
@@ -273,8 +285,14 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
         });
     }
 
-    public void TrackItemFrom(Item item, IHasLocations area, string? trackedAs = null, float? confidence = null)
+    public void TrackItemFrom(Item item, IHasLocations area, string? trackedAs = null, float? confidence = null, bool force = false)
     {
+        if (Tracker.AutoTracker?.IsConnected == true && !force && item.Type != ItemType.Nothing)
+        {
+            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, would you please track {item.RandomName} from {area.RandomAreaName}"]);
+            return;
+        }
+
         var locations = area.Locations
             .Where(x => x.Item.Type == item.Type)
             .ToImmutableList();
@@ -320,8 +338,14 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
         });
     }
 
-    public void TrackItemAmount(Item item, int count, float confidence)
+    public void TrackItemAmount(Item item, int count, float confidence, bool force = false)
     {
+        if (Tracker.AutoTracker?.IsConnected == true && !force && item.Type != ItemType.Nothing)
+        {
+            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, would you please track {count} {item.Metadata.Plural}"]);
+            return;
+        }
+
         var newItemCount = count;
         if (item.Metadata.CounterMultiplier > 1
             && count % item.Metadata.CounterMultiplier == 0)
@@ -384,8 +408,14 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
         RestartIdleTimers();
     }
 
-    public void UntrackItem(Item item, float? confidence = null)
+    public void UntrackItem(Item item, float? confidence = null, bool force = false)
     {
+        if (Tracker.AutoTracker?.IsConnected == true && !force && item.Type != ItemType.Nothing)
+        {
+            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, would you please untrack {item.RandomName}"]);
+            return;
+        }
+
         var originalTrackingState = item.TrackingState;
         playerProgressionService.ResetProgression();
 
