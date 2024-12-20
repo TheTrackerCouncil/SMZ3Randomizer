@@ -23,7 +23,7 @@ public class SpriteService
         _options = optionsFactory.Create();
     }
 
-    public IEnumerable<Sprite> Sprites { get; set; } = new List<Sprite>();
+    public List<Sprite> Sprites { get; set; } = [];
     public IEnumerable<Sprite> LinkSprites => Sprites.Where(x => x.SpriteType == SpriteType.Link);
     public IEnumerable<Sprite> SamusSprites => Sprites.Where(x => x.SpriteType == SpriteType.Samus);
     public IEnumerable<Sprite> ShipSprites => Sprites.Where(x => x.SpriteType == SpriteType.Ship);
@@ -33,23 +33,21 @@ public class SpriteService
     /// </summary>
     public Task LoadSpritesAsync()
     {
-        if (Sprites.Any() || !Directory.Exists(Sprite.SpritePath)) return Task.CompletedTask;
+        if (Sprites.Any() || !Directory.Exists(RandomizerDirectories.SpritePath)) return Task.CompletedTask;
 
         return Task.Run(() =>
         {
             var defaults = new List<Sprite>() { Sprite.DefaultSamus, Sprite.DefaultLink, Sprite.DefaultShip, Sprite.RandomSamus, Sprite.RandomLink, Sprite.RandomShip };
 
-            var playerSprites = Directory.EnumerateFiles(Sprite.SpritePath, "*.rdc", SearchOption.AllDirectories)
+            var playerSprites = Directory.EnumerateFiles(RandomizerDirectories.SpritePath, "*.rdc", SearchOption.AllDirectories)
                 .Select(LoadRdcSprite);
 
-            var shipSprites = Directory.EnumerateFiles(Path.Combine(Sprite.SpritePath, "Ships"), "*.ips", SearchOption.AllDirectories)
+            var shipSprites = Directory.EnumerateFiles(Path.Combine(RandomizerDirectories.SpritePath, "Ships"), "*.ips", SearchOption.AllDirectories)
                 .Select(LoadIpsSprite);
 
             var sprites = playerSprites.Concat(shipSprites).Concat(defaults).OrderBy(x => x.Name).ToList();
 
-            var extraSpriteDirectory =
-                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                    "SMZ3CasRandomizer", "Sprites");
+            var extraSpriteDirectory = RandomizerDirectories.UserSpritePath;
 
             if (Directory.Exists(extraSpriteDirectory))
             {
@@ -65,6 +63,50 @@ public class SpriteService
         });
     }
 
+    public Sprite? AddCustomSprite(string spritePath, string? previewImagePath)
+    {
+        var userSpritePath = RandomizerDirectories.UserSpritePath;
+
+        if (spritePath.StartsWith(RandomizerDirectories.SpritePath) ||
+            spritePath.StartsWith(userSpritePath) ||
+            !File.Exists(spritePath))
+        {
+            return null;
+        }
+
+        var destinationSpritePath = Path.Combine(userSpritePath, Path.GetFileName(spritePath));
+        File.Copy(spritePath, destinationSpritePath, true);
+        if (File.Exists(previewImagePath))
+        {
+            var baseFileName = Path.GetFileNameWithoutExtension(spritePath);
+            File.Copy(previewImagePath, Path.Combine(userSpritePath, $"{baseFileName}.png"), true);
+        }
+
+        var sprite = new Sprite();
+        try
+        {
+            sprite = ".rdc".Equals(Path.GetExtension(destinationSpritePath), StringComparison.OrdinalIgnoreCase)
+                ? LoadRdcSprite(destinationSpritePath)
+                : LoadIpsSprite(destinationSpritePath);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to load Sprite {SpritePath}", destinationSpritePath);
+        }
+
+        if (Sprites.Any(x => x.FilePath == destinationSpritePath))
+        {
+            var oldSprite = Sprites.First(x => x.FilePath == destinationSpritePath);
+            oldSprite.Name = sprite.Name;
+            oldSprite.Author = sprite.Author;
+            oldSprite.PreviewPath = sprite.PreviewPath;
+            return oldSprite;
+        }
+
+        Sprites.Add(sprite);
+        return sprite;
+    }
+
     /// <summary>
     /// Retrieves the random sprite image for the given sprite type
     /// </summary>
@@ -73,7 +115,7 @@ public class SpriteService
     public string GetRandomPreviewImage(SpriteType type)
     {
         var spriteFolder = type == SpriteType.Ship ? "Ships" : type.ToString();
-        return Path.Combine(Sprite.SpritePath, spriteFolder, "random.png");
+        return Path.Combine(RandomizerDirectories.SpritePath, spriteFolder, "random.png");
     }
 
     /// <summary>
@@ -230,6 +272,42 @@ public class SpriteService
         }
 
         return sprite;
+    }
+
+    /// <summary>
+    /// Deletes a user added sprite
+    /// </summary>
+    /// <param name="sprite">The sprite to delete</param>
+    public bool DeleteSprite(Sprite sprite)
+    {
+        if (!sprite.IsUserSprite)
+        {
+            return false;
+        }
+
+        try
+        {
+            if (!string.IsNullOrEmpty(sprite.PreviewPath) && File.Exists(sprite.PreviewPath))
+            {
+                File.Delete(sprite.PreviewPath);
+            }
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Failed to delete sprite preview file");
+        }
+
+        try
+        {
+            File.Delete(sprite.FilePath);
+            Sprites.Remove(sprite);
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Failed to delete sprite preview file");
+            return false;
+        }
     }
 
 }

@@ -5,6 +5,7 @@ using System.Web;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Platform.Storage;
 using AvaloniaControls;
 using AvaloniaControls.Controls;
 using AvaloniaControls.Models;
@@ -128,7 +129,7 @@ public partial class GenerationSettingsBasicPanel : UserControl
         var path = options?.PatchOptions.MsuPaths.FirstOrDefault() ?? options?.GeneralOptions.MsuPath;
         var storagePath = await CrossPlatformTools.OpenFileDialogAsync(ParentWindow, FileInputControlType.OpenFile, "MSU files (*.msu)|*.msu|All files (*.*)|*.*", path);
 
-        var pathString = HttpUtility.UrlDecode(storagePath?.Path.AbsolutePath);
+        var pathString = storagePath?.TryGetLocalPath();
         if (string.IsNullOrEmpty(pathString) || !File.Exists(pathString))
         {
             return;
@@ -177,7 +178,7 @@ public partial class GenerationSettingsBasicPanel : UserControl
                     var storagePath = await CrossPlatformTools.OpenFileDialogAsync(ParentWindow, FileInputControlType.Folder, "", _options?.GeneralOptions.RomOutputPath,
                         title: "Select parent MSU folder");
 
-                    var path =  Uri.UnescapeDataString(storagePath?.Path.AbsolutePath ?? "");
+                    var path =  storagePath?.TryGetLocalPath();
 
                     if (!string.IsNullOrEmpty(path) && Directory.Exists(path))
                     {

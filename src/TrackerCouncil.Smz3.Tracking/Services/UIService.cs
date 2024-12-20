@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
@@ -37,7 +38,7 @@ public class UIService: IUIService
             .Where(x => !string.IsNullOrEmpty(x))
             .NonNull()
             .Select(x => Path.Combine(configProvider.ConfigDirectory, x, "Sprites")).Reverse().ToList() ?? new();
-        iconPaths.Add(Sprite.SpritePath);
+        iconPaths.Add(RandomizerDirectories.SpritePath);
         _iconPaths = iconPaths;
     }
 

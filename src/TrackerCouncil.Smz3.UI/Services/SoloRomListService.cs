@@ -87,7 +87,7 @@ public class SoloRomListService(IRomGenerationService romGenerationService,
         var storageItem = await CrossPlatformTools.OpenFileDialogAsync(ParentWindow, FileInputControlType.OpenFile,
             "Yaml files (*.yaml, *.yml)|*.yaml;*.yml|All files (*.*)|*.*", _options.RomOutputPath);
 
-        var pathString = HttpUtility.UrlDecode(storageItem?.Path.AbsolutePath);
+        var pathString = storageItem?.TryGetLocalPath();
         if (string.IsNullOrEmpty(pathString) || !File.Exists(pathString))
         {
             return;

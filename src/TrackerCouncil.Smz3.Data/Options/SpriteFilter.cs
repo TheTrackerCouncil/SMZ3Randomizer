@@ -5,5 +5,6 @@ public enum SpriteFilter
     Default,
     Favorited,
     Hidden,
+    User,
     All,
 }

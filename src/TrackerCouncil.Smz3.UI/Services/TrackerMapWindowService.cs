@@ -7,6 +7,7 @@ using AvaloniaControls;
 using AvaloniaControls.ControlServices;
 using AvaloniaControls.Services;
 using TrackerCouncil.Smz3.Abstractions;
+using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.Options;
@@ -42,8 +43,8 @@ public class TrackerMapWindowService(
 
     private void InitViewModelData()
     {
-        _markedImageGoodPath = Path.Combine(Sprite.SpritePath, "Maps", "marked_good.png");
-        _markedImageUselessPath = Path.Combine(Sprite.SpritePath, "Maps", "marked_useless.png");
+        _markedImageGoodPath = Path.Combine(RandomizerDirectories.SpritePath, "Maps", "marked_good.png");
+        _markedImageUselessPath = Path.Combine(RandomizerDirectories.SpritePath, "Maps", "marked_useless.png");
 
         var allLocations = worldAccessor.World.Locations.ToList();
 
@@ -273,7 +274,7 @@ public class TrackerMapWindowService(
     {
         if (!string.IsNullOrEmpty(image))
         {
-            location.ImagePath = Path.Combine(Sprite.SpritePath, "Maps", image);
+            location.ImagePath = Path.Combine(RandomizerDirectories.SpritePath, "Maps", image);
             location.HasImage = true;
         }
         else
@@ -284,7 +285,7 @@ public class TrackerMapWindowService(
         if (displayNumber > 1)
         {
             location.NumberImagePath = Path.Combine(
-                Sprite.SpritePath, "Marks", $"{Math.Min(9, displayNumber)}.png");
+                RandomizerDirectories.SpritePath, "Marks", $"{Math.Min(9, displayNumber)}.png");
             location.NumberVisibility = true;
         }
         else

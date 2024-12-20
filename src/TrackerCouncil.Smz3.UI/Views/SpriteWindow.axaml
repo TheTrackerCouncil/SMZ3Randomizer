@@ -28,6 +28,7 @@
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
           </Grid.ColumnDefinitions>
           <StackPanel Grid.Column="0" Orientation="Vertical">
             <TextBlock>Search</TextBlock>
@@ -44,63 +45,109 @@
               x:Name="FilterComboBox"
             />
           </StackPanel>
+
+          <StackPanel Grid.Column="2" Orientation="Vertical" VerticalAlignment="Bottom" Margin="10 0 0 0">
+            <Button Click="AddSpriteButton_OnClick">Add New Sprite...</Button>
+          </StackPanel>
         </Grid>
       </controls:HeaderFooter>
 
       <ScrollViewer Grid.Row="1">
-        <ItemsControl x:Name="SpritesItemControl" ItemsSource="{Binding Sprites}">
+        <ItemsControl x:Name="SpritesItemControl" ItemsSource="{Binding Sprites}" Margin="10 0 0 0">
             <ItemsControl.ItemsPanel>
               <ItemsPanelTemplate>
-                <WrapPanel Orientation="Horizontal"/>
+                <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 10 0 0"/>
               </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
               <DataTemplate>
-                <Border IsVisible="{Binding Display}">
-                  <Grid Margin="25" Width="{Binding PanelWidth}">
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="{Binding ImageWidth}"></ColumnDefinition>
-                      <ColumnDefinition Width="*"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <controls:ImageButton Grid.Column="0"
-                            x:Name="PreviewImageButton"
-                            Click="SelectButton_OnClick"
-                            Tag="{Binding}"
-                    >
-                      <Image Source="{Binding PreviewPath, Converter={StaticResource StringToImageConverter}}" Width="{Binding ImageWidth}" Height="{Binding ImageHeight}" />
-                    </controls:ImageButton>
+                <Border IsVisible="{Binding Display}" Margin="0 0 10 10">
+                  <Button x:Name="PreviewImageButton" Click="SelectButton_OnClick" Tag="{Binding}">
+                    <Grid Margin="5" Width="{Binding PanelWidth}">
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="{Binding ImageWidth}"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                      </Grid.ColumnDefinitions>
+                      <Image Grid.Column="0" Source="{Binding PreviewPath, Converter={StaticResource StringToImageConverter}}" Width="{Binding ImageWidth}" Height="{Binding ImageHeight}" />
 
-                    <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10 0 0 0" VerticalAlignment="Center">
-                      <Grid>
-                        <Grid.ColumnDefinitions>
-                          <ColumnDefinition Width="Auto"></ColumnDefinition>
-                          <ColumnDefinition Width="*"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
+                      <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Top">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Height="30">
 
-                        <controls:ImageButton Grid.Column="0"
-                                Margin="0 4 5 0"
-                                x:Name="ToggleFavoriteButton"
-                                Click="ToggleFavoriteButton_OnClick"
-                                Tag="{Binding}"
-                                IsVisible="{Binding CanFavoriteAndHide}"
-                        >
-                          <StackPanel Orientation="Horizontal">
-                            <avalonia:MaterialIcon Kind="Star" VerticalAlignment="Top" Tag="False" HorizontalAlignment="Left" Width="15" Foreground="Gray" Opacity="0.5" IsVisible="{Binding IsNotFavorite}" />
-                            <avalonia:MaterialIcon Kind="Star" VerticalAlignment="Top" Tag="True" HorizontalAlignment="Left" Width="15" Foreground="Goldenrod" IsVisible="{Binding IsFavorite}" />
-                          </StackPanel>
-                        </controls:ImageButton>
-                        <TextBlock Grid.Column="1" Text="{Binding Name}" FontWeight="Bold" FontSize="16" TextWrapping="Wrap"></TextBlock>
-                      </Grid>
-                      <TextBlock TextWrapping="Wrap" Margin="20 0 0 10" Text="{Binding AuthorText}"></TextBlock>
-                      <StackPanel Orientation="Horizontal">
-                        <Button Name="SelectButton" Margin="0 0 10 0" Tag="{Binding }" Click="SelectButton_OnClick">Select</Button>
-                        <Button Name="HideButton" Tag="{Binding}" Click="HideButton_OnClick" IsVisible="{Binding CanFavoriteAndHide}">Hide</Button>
+                          <controls:ImageButton
+                                                x:Name="ToggleFavoriteButton"
+                                                Click="ToggleFavoriteButton_OnClick"
+                                                Tag="{Binding}"
+                                                IsEnabled="{Binding CanFavorite}"
+                                                Background="Transparent"
+                          >
+                            <StackPanel Orientation="Horizontal">
+                              <avalonia:MaterialIcon Kind="Star"
+                                                     VerticalAlignment="Top"
+                                                     Tag="False"
+                                                     HorizontalAlignment="Left"
+                                                     Width="25"
+                                                     Height="25"
+                                                     Foreground="{Binding StarBrush}"
+                                                     Background="Transparent"
+                                                     Opacity="{Binding IconOpacity}"
+                              />
+                            </StackPanel>
+                          </controls:ImageButton>
+
+                          <controls:ImageButton
+                                                x:Name="HideButton"
+                                                Click="HideButton_OnClick"
+                                                Tag="{Binding}"
+                                                IsVisible="{Binding CanHide}"
+                                                IsEnabled="{Binding CanFavorite}"
+                                                Background="Transparent"
+                          >
+                            <StackPanel Orientation="Horizontal">
+                              <avalonia:MaterialIcon Kind="Eye"
+                                                     VerticalAlignment="Top"
+                                                     Tag="False"
+                                                     HorizontalAlignment="Left"
+                                                     Width="25"
+                                                     Height="25"
+                                                     Foreground="{Binding HideBrush}"
+                                                     Background="Transparent"
+                                                     Opacity="{Binding IconOpacity}"
+                              />
+                            </StackPanel>
+                          </controls:ImageButton>
+
+                          <controls:ImageButton
+                                                x:Name="DeleteButton"
+                                                Click="DeleteButton_OnClick"
+                                                Tag="{Binding}"
+                                                IsVisible="{Binding CanDelete}"
+                                                IsEnabled="{Binding CanFavorite}"
+                                                Background="Transparent"
+                          >
+                            <StackPanel Orientation="Horizontal">
+                              <avalonia:MaterialIcon Kind="TrashCan"
+                                                     VerticalAlignment="Top"
+                                                     Tag="True"
+                                                     HorizontalAlignment="Left"
+                                                     Width="25"
+                                                     Height="25"
+                                                     Foreground="{Binding DeleteBrush}"
+                                                     Background="Transparent"
+                                                     Opacity="{Binding IconOpacity}"
+                              />
+                            </StackPanel>
+                          </controls:ImageButton>
+
+                        </StackPanel>
+
+                        <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16" TextWrapping="Wrap"></TextBlock>
+                        <TextBlock TextWrapping="Wrap" Margin="0 0 0 10" Text="{Binding AuthorText}"></TextBlock>
+
                       </StackPanel>
-                    </StackPanel>
 
-                  </Grid>
+                    </Grid>
+                  </Button>
                 </Border>
-
               </DataTemplate>
             </ItemsControl.ItemTemplate>
           </ItemsControl>

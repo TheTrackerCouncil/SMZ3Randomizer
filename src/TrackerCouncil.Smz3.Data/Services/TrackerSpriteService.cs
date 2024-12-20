@@ -9,9 +9,8 @@ namespace TrackerCouncil.Smz3.Data.Services;
 /// <summary>
 /// Service for loading tracker speech sprites
 /// </summary>
-/// <param name="logger"></param>
 /// <param name="optionsFactory"></param>
-public class TrackerSpriteService(ILogger<TrackerSpriteService> logger, OptionsFactory optionsFactory)
+public class TrackerSpriteService(OptionsFactory optionsFactory)
 {
     private List<TrackerSpeechImagePack> _packs = [];
 

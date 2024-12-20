@@ -39,6 +39,8 @@ public class Sprite : IEquatable<Sprite>
         SpriteType = spriteType;
         PreviewPath = previewPath;
         SpriteOption = spriteOption;
+        IsUserSprite = filePath.StartsWith(RandomizerDirectories.UserSpritePath);
+
         if (string.IsNullOrEmpty(filePath))
             IsDefault = true;
     }
@@ -50,7 +52,7 @@ public class Sprite : IEquatable<Sprite>
         SpriteType = spriteType;
         IsDefault = isDefault;
         IsRandomSprite = isRandomSprite;
-        PreviewPath = Path.Combine(SpritePath, s_folderNames[spriteType], sprite);
+        PreviewPath = Path.Combine(RandomizerDirectories.SpritePath, s_folderNames[spriteType], sprite);
     }
 
     [YamlIgnore]
@@ -59,9 +61,9 @@ public class Sprite : IEquatable<Sprite>
     [YamlIgnore]
     public string Author { get; set; }
 
-    public string FilePath { get; set; } = "";
+    public string FilePath { get; } = "";
 
-    public SpriteType SpriteType { get; set; }
+    public SpriteType SpriteType { get; }
 
     [YamlIgnore]
     public string PreviewPath { get; set; }
@@ -73,12 +75,15 @@ public class Sprite : IEquatable<Sprite>
     [YamlIgnore]
     public SpriteOptions SpriteOption { get; set; }
 
+    public bool IsUserSprite { get; set; }
+
     public bool MatchesFilter(string searchTerm, SpriteFilter spriteFilter) => (string.IsNullOrEmpty(searchTerm) ||
                                                                                    Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
                                                                                    Author.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) &&
                                                                                ((spriteFilter == SpriteFilter.Default && SpriteOption != SpriteOptions.Hide) ||
                                                                                    (spriteFilter == SpriteFilter.Favorited && SpriteOption == SpriteOptions.Favorite) ||
                                                                                    (spriteFilter == SpriteFilter.Hidden && SpriteOption == SpriteOptions.Hide) ||
+                                                                                   (spriteFilter == SpriteFilter.User && IsUserSprite) ||
                                                                                    spriteFilter == SpriteFilter.All);
 
     public static bool operator ==(Sprite? a, Sprite? b)
@@ -119,5 +124,4 @@ public class Sprite : IEquatable<Sprite>
         return string.IsNullOrEmpty(Author) ? Name : $"{Name} by {Author}";
     }
 
-    public static string SpritePath => RandomizerDirectories.SpritePath;
 }
