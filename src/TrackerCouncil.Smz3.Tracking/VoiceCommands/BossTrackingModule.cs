@@ -33,13 +33,13 @@ public class BossTrackingModule : TrackerModule
         var bossNames = GetBossNames();
         var beatBoss = new GrammarBuilder()
             .Append("Hey tracker,")
-            .Optional("force", "sudo")
+            .Optional(GrammarBuilder.ForceCommandIdentifiers)
             .OneOf("track", "I beat", "I defeated", "I beat off", "I killed")
             .Append(BossKey, bossNames);
 
         var markBoss = new GrammarBuilder()
             .Append("Hey tracker,")
-            .Optional("force", "sudo")
+            .Optional(GrammarBuilder.ForceCommandIdentifiers)
             .Append("mark")
             .Append(BossKey, bossNames)
             .Append("as")
@@ -49,8 +49,6 @@ public class BossTrackingModule : TrackerModule
             .Append("Hey tracker,")
             .Append(BossKey, bossNames)
             .OneOf("is dead", "is fucking dead");
-
-
 
         return GrammarBuilder.Combine(beatBoss, markBoss, bossIsDead);
     }
@@ -62,7 +60,7 @@ public class BossTrackingModule : TrackerModule
 
         var markBoss = new GrammarBuilder()
             .Append("Hey tracker,")
-            .Optional("force", "sudo")
+            .Optional(GrammarBuilder.ForceCommandIdentifiers)
             .Append("mark")
             .Append(BossKey, bossNames)
             .Append("as")
@@ -70,7 +68,7 @@ public class BossTrackingModule : TrackerModule
 
         var untrack = new GrammarBuilder()
             .Append("Hey tracker,")
-            .Optional("force", "sudo")
+            .Optional(GrammarBuilder.ForceCommandIdentifiers)
             .Append("untrack")
             .Append(BossKey, bossNames);
 
@@ -111,7 +109,7 @@ public class BossTrackingModule : TrackerModule
             var admittedGuilt = result.Text.ContainsAny("killed", "beat", "defeated", "dead")
                                 && !result.Text.ContainsAny("beat off", "beaten off");
 
-            var force = result.Text.ContainsAny("Hey tracker, force", "Hey tracker, sudo");
+            var force = result.Text.ContainsAny(GrammarBuilder.ForceCommandIdentifiers);
 
             if (boss.Region != null)
             {
@@ -128,7 +126,7 @@ public class BossTrackingModule : TrackerModule
         {
             var boss = GetBossFromResult(TrackerBase, result) ?? throw new Exception($"Could not find boss or dungeon in command: '{result.Text}'");
 
-            var force = result.Text.ContainsAny("Hey tracker, force", "Hey tracker, sudo");
+            var force = result.Text.ContainsAny(GrammarBuilder.ForceCommandIdentifiers);
 
             if (boss.Region != null)
             {

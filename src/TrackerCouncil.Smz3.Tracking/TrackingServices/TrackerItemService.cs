@@ -30,7 +30,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
     {
         if (!autoTracked && Tracker.AutoTracker?.IsConnected == true && !force && item.Type != ItemType.Nothing)
         {
-            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, force track {item.RandomName}"]);
+            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, would you please track {item.RandomName}"]);
             return false;
         }
 
@@ -249,7 +249,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
     {
         if (Tracker.AutoTracker?.IsConnected == true && !force && item.Type != ItemType.Nothing)
         {
-            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, force track {item.RandomName} from {hasTreasure.RandomRegionName}"]);
+            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, would you please track {item.RandomName} from {hasTreasure.RandomRegionName}"]);
             return;
         }
 
@@ -289,7 +289,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
     {
         if (Tracker.AutoTracker?.IsConnected == true && !force && item.Type != ItemType.Nothing)
         {
-            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, force track {item.RandomName} from {area.RandomAreaName}"]);
+            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, would you please track {item.RandomName} from {area.RandomAreaName}"]);
             return;
         }
 
@@ -342,7 +342,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
     {
         if (Tracker.AutoTracker?.IsConnected == true && !force && item.Type != ItemType.Nothing)
         {
-            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, force track {count} {item.Metadata.Plural}"]);
+            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, would you please track {count} {item.Metadata.Plural}"]);
             return;
         }
 
@@ -412,7 +412,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
     {
         if (Tracker.AutoTracker?.IsConnected == true && !force && item.Type != ItemType.Nothing)
         {
-            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, force untrack {item.RandomName}"]);
+            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, would you please untrack {item.RandomName}"]);
             return;
         }
 

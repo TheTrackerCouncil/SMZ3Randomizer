@@ -11,6 +11,8 @@ namespace TrackerCouncil.Smz3.Tracking.VoiceCommands;
 /// </summary>
 public class GrammarBuilder
 {
+    public static string[] ForceCommandIdentifiers = ["would you please", "please, I'm begging you"];
+
     private readonly System.Speech.Recognition.GrammarBuilder _grammar = null!;
     private readonly List<string> _elements;
 

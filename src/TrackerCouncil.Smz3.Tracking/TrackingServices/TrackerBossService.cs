@@ -23,7 +23,7 @@ internal class TrackerBossService(IPlayerProgressionService playerProgressionSer
 
         if (!autoTracked && Tracker.AutoTracker?.IsConnected == true && !force && region.BossType != BossType.None)
         {
-            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, force track {region.RandomBossName}"]);
+            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, would you please track {region.RandomBossName}"]);
             return;
         }
 
@@ -100,7 +100,7 @@ internal class TrackerBossService(IPlayerProgressionService playerProgressionSer
 
         if (!autoTracked && Tracker.AutoTracker?.IsConnected == true && !force && boss.Type != BossType.None)
         {
-            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, force track {boss.RandomName}"]);
+            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, would you please track {boss.RandomName}"]);
             return;
         }
 
@@ -149,7 +149,7 @@ internal class TrackerBossService(IPlayerProgressionService playerProgressionSer
 
         if (Tracker.AutoTracker?.IsConnected == true && !force && boss.Type != BossType.None)
         {
-            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, force untrack {boss.RandomName}"]);
+            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, would you please untrack {boss.RandomName}"]);
             return;
         }
 
@@ -190,7 +190,7 @@ internal class TrackerBossService(IPlayerProgressionService playerProgressionSer
 
         if (Tracker.AutoTracker?.IsConnected == true && !force && region.BossType != BossType.None)
         {
-            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, force untrack {region.RandomBossName}"]);
+            Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, would you please untrack {region.RandomBossName}"]);
             return;
         }
 
