@@ -17,7 +17,7 @@ public class GenerationWindowLogicViewModel : ViewModelBase
     [DynamicFormObject(groupName: "All")]
     public CasPatches CasPatches { get; set; } = new();
 
-    public bool CanChangeGameSettings { get; set; }
+    public bool CanChangeGameSettings { get; set; } = true;
 
     public bool IsPlando
     {
