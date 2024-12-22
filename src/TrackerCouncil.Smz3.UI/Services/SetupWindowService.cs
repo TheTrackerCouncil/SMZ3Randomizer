@@ -75,9 +75,26 @@ public class SetupWindowService(OptionsFactory optionsFactory, ISnesConnectorSer
         _model.AutoTrackerOpacity = 0.2f;
         _model.AutoTrackerIconKind = MaterialIconKind.CircleOutline;
         _model.AutoTrackerBrush = Brushes.White;
-        _model.AutoTrackerMessage = "Connecting...";
 
-        snesConnectorService.Connect(GetSnesConnectorSettings());
+        var connectorSettings = GetSnesConnectorSettings();
+
+        if (connectorSettings.ConnectorType is SnesConnectorType.Lua or SnesConnectorType.LuaEmoTracker)
+        {
+            _model.AutoTrackerMessage =
+                "Connecting. Make sure you have a game running in your emulator with the Lua script executing.";
+        }
+        else if (connectorSettings.ConnectorType == SnesConnectorType.Usb2Snes)
+        {
+            _model.AutoTrackerMessage =
+                "Connecting. Make sure you have a game running in your emulator with QUSB2SNES running and connected to it.";
+        }
+        else if (connectorSettings.ConnectorType == SnesConnectorType.Sni)
+        {
+            _model.AutoTrackerMessage =
+                "Connecting. Make sure you have a game running in your emulator with SNI running and conected to it.";
+        }
+
+        snesConnectorService.Connect(connectorSettings);
 
         try
         {

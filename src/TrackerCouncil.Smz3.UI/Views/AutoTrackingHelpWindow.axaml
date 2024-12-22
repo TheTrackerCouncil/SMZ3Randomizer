@@ -58,7 +58,7 @@
 
       <TextBlock TextWrapping="Wrap" Margin="30,5,0,0">
         • <controls:LinkControl Click="RetroArchButton_OnClick">RetroArch</controls:LinkControl> (SNES9X or BSNES Cores)<LineBreak />
-        • <controls:LinkControl Click="Snes9xEmuNwaButton_OnClick">Snes9x-emunwa</controls:LinkControl>
+        • <controls:LinkControl Click="Snes9xEmuNwaButton_OnClick">Snes9x-emunwa</controls:LinkControl><LineBreak />
         • <controls:LinkControl Click="Snes9xButton_OnClick">Snes9x-rr</controls:LinkControl> (by loading the QUsb2Snes Lua Script)<LineBreak />
         • <controls:LinkControl Click="BizHawkButton_OnClick">BizHawk</controls:LinkControl> (by loading the QUsb2Snes Lua Script)<LineBreak />
         • Hardware such as the FxPakPro
@@ -78,7 +78,7 @@
 
       <TextBlock TextWrapping="Wrap" Margin="30,5,0,0">
         • <controls:LinkControl Click="RetroArchButton_OnClick">RetroArch</controls:LinkControl> (SNES9X or BSNES Cores)<LineBreak />
-        • <controls:LinkControl Click="Snes9xEmuNwaButton_OnClick">Snes9x-emunwa</controls:LinkControl>
+        • <controls:LinkControl Click="Snes9xEmuNwaButton_OnClick">Snes9x-emunwa</controls:LinkControl><LineBreak />
         • <controls:LinkControl Click="Snes9xButton_OnClick">Snes9x-rr</controls:LinkControl> (by loading the SNI Lua Script)<LineBreak />
         • <controls:LinkControl Click="BizHawkButton_OnClick">BizHawk</controls:LinkControl> (by loading the SNI Lua Script)<LineBreak />
         • Hardware such as the FxPakPro
