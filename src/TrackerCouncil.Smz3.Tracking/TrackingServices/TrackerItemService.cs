@@ -215,7 +215,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
             // Clear the location if it's for the local player's world
             if (location != null && location.World == World && !location.Cleared)
             {
-                Tracker.LocationTracker.Clear(location, confidence, autoTracked, !stateResponse, true);
+                Tracker.LocationTracker.Clear(location, confidence, autoTracked, stateResponse, true);
                 undoActions.Add(autoTracked ? null : PopUndo().Action);
             }
         }

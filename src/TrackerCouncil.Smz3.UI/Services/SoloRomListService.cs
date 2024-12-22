@@ -131,7 +131,7 @@ public class SoloRomListService(IRomGenerationService romGenerationService,
             return;
         }
 
-        sharedCrossplatformService.LaunchRom(result.Rom);
+        _ = sharedCrossplatformService.LaunchRom(result.Rom);
     }
 
     public void CopyRomSeed(GeneratedRomViewModel rom)

@@ -51,7 +51,7 @@ internal class TrackerTreasureService(ILogger<TrackerTreasureService> logger, IP
             // Always add a response if there's treasure left, even when
             // clearing a dungeon (because that means it was out of logic
             // and could be relevant)
-            if (stateResponse && (confidence != null || region.RemainingTreasure >= 1 || autoTracked))
+            if (stateResponse && (confidence != null || region.RemainingTreasure >= 0 || autoTracked))
             {
                 // Try to get the response based on the amount of items left
                 if (Responses.DungeonTreasureTracked?.TryGetValue(region.RemainingTreasure, out var response) == true)
@@ -112,7 +112,7 @@ internal class TrackerTreasureService(ILogger<TrackerTreasureService> logger, IP
 
     public Action? TryTrackDungeonTreasure(Location location, float? confidence, bool autoTracked = false, bool stateResponse = true)
     {
-        if (!autoTracked && confidence < Options.MinimumSassConfidence)
+        if (!autoTracked && confidence < Options.MinimumSassConfidence || location.Type == LocationType.NotInDungeon)
         {
             // Tracker response could give away the location of an item if
             // it is in a dungeon but tracker misheard.

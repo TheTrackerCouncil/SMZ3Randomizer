@@ -407,7 +407,7 @@ public class Location
     }
 
 
-    public IHasTreasure? GetTreasureRegion() => Region as IHasTreasure;
+    public IHasTreasure? GetTreasureRegion() => Type == LocationType.NotInDungeon ? null : Region as IHasTreasure;
 
     public event EventHandler? ClearedUpdated;
     public event EventHandler? MarkedItemUpdated;
