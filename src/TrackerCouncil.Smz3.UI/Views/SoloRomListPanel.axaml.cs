@@ -76,7 +76,7 @@ public partial class SoloRomListPanel : UserControl
             return;
         }
 
-        _service?.LaunchRom(rom!);
+        _ = _service?.LaunchRom(rom!);
     }
 
     private void PlayRomMenuItem_OnClick(object? sender, RoutedEventArgs e)
@@ -106,7 +106,7 @@ public partial class SoloRomListPanel : UserControl
             return;
         }
 
-        _service?.LaunchTracker(rom!);
+        _ = _service?.LaunchTracker(rom!);
     }
 
     private void OpenSpoilerMenuItem_OnClick(object? sender, RoutedEventArgs e)

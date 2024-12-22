@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MSURandomizerLibrary;
 using MSURandomizerLibrary.Services;
+using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.ParsedRom;
 using TrackerCouncil.Smz3.Data.Services;
@@ -158,12 +159,23 @@ public class SharedCrossplatformService(
         }
     }
 
-    public TrackerWindow? LaunchTracker(GeneratedRom? rom)
+    public async Task<TrackerWindow?> LaunchTrackerAsync(GeneratedRom? rom, bool force = false)
     {
         if (rom == null)
         {
             DisplayError("Invalid rom");
             return null;
+        }
+
+        if (!force && rom.GeneratorVersion != RandomizerVersion.MajorVersion)
+        {
+            var result = await MessageWindow.ShowYesNoDialog(
+                "This seed was generated with a different version of the randomizer and may not work as expected. Do you want to continue?",
+                "SMZ3 Cas' Randomizer", ParentWindow);
+            if (!result)
+            {
+                return null;
+            }
         }
 
         if (s_trackerWindow != null)
@@ -204,7 +216,7 @@ public class SharedCrossplatformService(
         }
     }
 
-    public TrackerWindow? LaunchRom(GeneratedRom? rom)
+    public async Task<TrackerWindow?> LaunchRom(GeneratedRom? rom)
     {
         if (rom == null)
         {
@@ -217,7 +229,7 @@ public class SharedCrossplatformService(
 
         if (launchButtonOptions is LaunchButtonOptions.PlayAndTrack or LaunchButtonOptions.OpenFolderAndTrack or LaunchButtonOptions.TrackOnly)
         {
-            trackerWindow = LaunchTracker(rom);
+            trackerWindow = await LaunchTrackerAsync(rom);
         }
 
         if (launchButtonOptions is LaunchButtonOptions.OpenFolderAndTrack or LaunchButtonOptions.OpenFolderOnly)

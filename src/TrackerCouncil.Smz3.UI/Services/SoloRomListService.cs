@@ -154,14 +154,14 @@ public class SoloRomListService(IRomGenerationService romGenerationService,
         sharedCrossplatformService.OpenProgressionHistory(rom.Rom);
     }
 
-    public void LaunchRom(GeneratedRomViewModel rom)
+    public async Task LaunchRom(GeneratedRomViewModel rom)
     {
-        sharedCrossplatformService.LaunchRom(rom.Rom);
+        await sharedCrossplatformService.LaunchRom(rom.Rom);
     }
 
-    public void LaunchTracker(GeneratedRomViewModel rom)
+    public async Task LaunchTracker(GeneratedRomViewModel rom)
     {
-        sharedCrossplatformService.LaunchTracker(rom.Rom);
+        await sharedCrossplatformService.LaunchTrackerAsync(rom.Rom);
     }
 
     public async Task OpenArchipelagoModeAsync()

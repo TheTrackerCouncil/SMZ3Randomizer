@@ -128,15 +128,15 @@ public class MultiplayerStatusWindowService(MultiplayerClientService multiplayer
         sharedCrossplatformService.OpenSpoilerLog(_model.GeneratedRom);
     }
 
-    public void LaunchTracker()
+    public async Task LaunchTracker()
     {
-        _trackerWindow = sharedCrossplatformService.LaunchTracker(_model.GeneratedRom);
+        _trackerWindow = await sharedCrossplatformService.LaunchTrackerAsync(_model.GeneratedRom);
         FinalizeLaunch();
     }
 
-    public void LaunchRom()
+    public async Task LaunchRom()
     {
-        _trackerWindow = sharedCrossplatformService.LaunchRom(_model.GeneratedRom);
+        _trackerWindow = await sharedCrossplatformService.LaunchRom(_model.GeneratedRom);
         FinalizeLaunch();
     }
 
