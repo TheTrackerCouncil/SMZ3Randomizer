@@ -445,7 +445,10 @@ public class TrackerWindowService(
         {
             var currentItems = worldQueryService.LocalPlayersItems().Where(x => x.Is(itemName)).ToList();
             allItems.AddRange(currentItems);
-            var item = currentItems.FirstOrDefault();
+
+            // If there are multiple items with the same name, prefer the one found in the player's world
+            var item = currentItems.FirstOrDefault(i => worldQueryService.World.Locations.Any(l => l.Item == i)) ??
+                       currentItems.FirstOrDefault();
             if (item == null)
             {
                 logger.LogError("Item {ItemName} could not be found", itemName);
