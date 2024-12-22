@@ -20,5 +20,25 @@ public partial class AutoTrackingHelpWindow : ScalableWindow
     {
         CrossPlatformTools.OpenUrl("https://tasvideos.org/Bizhawk");
     }
+
+    private void RetroArchButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        CrossPlatformTools.OpenUrl("https://www.retroarch.com/");
+    }
+
+    private void Snes9xEmuNwaButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        CrossPlatformTools.OpenUrl("https://github.com/Skarsnik/snes9x-emunwa");
+    }
+
+    private void QUsb2SnesButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        CrossPlatformTools.OpenUrl("https://skarsnik.github.io/QUsb2snes/");
+    }
+
+    private void SniButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        CrossPlatformTools.OpenUrl("https://github.com/alttpo/sni");
+    }
 }
 

@@ -37,6 +37,15 @@ public partial class SoloRomListPanel : UserControl
         _service?.UpdateList();
     }
 
+    public async Task OpenGenerationWindow()
+    {
+        if (_service == null)
+        {
+            return;
+        }
+        await _service.GenerateRom();
+    }
+
     private async void QuickPlayButton_OnClick(object? sender, RoutedEventArgs e)
     {
         if (_service == null)
@@ -55,13 +64,9 @@ public partial class SoloRomListPanel : UserControl
         await _service.GeneratePlando();
     }
 
-    private async void GenerateRomButton_OnClick(object? sender, RoutedEventArgs e)
+    private void GenerateRomButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (_service == null)
-        {
-            return;
-        }
-        await _service.GenerateRom();
+        _ = OpenGenerationWindow();
     }
 
     private void LaunchButton_OnClick(object? sender, RoutedEventArgs e)

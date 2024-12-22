@@ -22,6 +22,8 @@ public class GeneralOptions : INotifyPropertyChanged
     private string? _twitchChannel;
     private string? _twitchId;
 
+    public bool HasOpenedSetupWindow { get; set; }
+    
     public string? Z3RomPath { get; set; }
 
     public string? SMRomPath { get; set; }

@@ -1,9 +1,9 @@
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using Avalonia.Interactivity;
 using AvaloniaControls;
 using AvaloniaControls.Controls;
-using AvaloniaControls.Models;
 using AvaloniaControls.Services;
 using Microsoft.Extensions.DependencyInjection;
 using TrackerCouncil.Smz3.Data.Options;
@@ -14,9 +14,9 @@ namespace TrackerCouncil.Smz3.UI.Views;
 
 public partial class MainWindow : RestorableWindow
 {
-    private MainWindowService? _service;
-    private MainWindowViewModel _model;
-    private IServiceProvider? _serviceProvider;
+    private readonly MainWindowService? _service;
+    private readonly MainWindowViewModel _model;
+    private readonly IServiceProvider? _serviceProvider;
     private SpriteDownloadWindow? _spriteDownloadWindow;
 
     public MainWindow()
@@ -78,14 +78,6 @@ public partial class MainWindow : RestorableWindow
 
     private async void Control_OnLoaded(object? sender, RoutedEventArgs e)
     {
-        if (_model.HasInvalidOptions && _serviceProvider != null)
-        {
-            await MessageWindow.ShowInfoDialog(
-                "If this is your first time using the randomizer, there are some required options you need to configure before you can start playing randomized SMZ3 games. Please do so now.",
-                "SMZ3 Cas’ Randomizer", this);
-            await _serviceProvider.GetRequiredService<OptionsWindow>().ShowDialog(this);
-        }
-
         if (_service == null)
         {
             return;
@@ -94,6 +86,20 @@ public partial class MainWindow : RestorableWindow
         _ = ITaskService.Run(_service.ValidateTwitchToken);
         _ = ITaskService.Run(_service.DownloadConfigsAsync);
         _ = ITaskService.Run(_service.DownloadSpritesAsync);
+
+        if (_model.OpenSetupWindow && _serviceProvider != null)
+        {
+            var result = await _serviceProvider.GetRequiredService<SetupWindow>()
+                .ShowDialog<SetupWindowCloseBehavior>(this, SetupWindowStep.Roms);
+            if (result == SetupWindowCloseBehavior.OpenSettingsWindow)
+            {
+                _serviceProvider?.GetRequiredService<OptionsWindow>().ShowDialog(this);
+            }
+            else if (result == SetupWindowCloseBehavior.OpenGenerationWindow)
+            {
+                _ = SoloRomListPanel.OpenGenerationWindow();
+            }
+        }
     }
 
     private void OptionsMenuItem_OnClick(object? sender, RoutedEventArgs e)

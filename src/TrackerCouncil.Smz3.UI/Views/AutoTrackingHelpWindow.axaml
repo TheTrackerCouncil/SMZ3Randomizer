@@ -44,8 +44,48 @@
         • <controls:LinkControl Click="BizHawkButton_OnClick">BizHawk</controls:LinkControl> (BSNES Core Only)
       </TextBlock>
 
+      <TextBlock TextWrapping="Wrap" Margin="15,5,0,0">
+        An alternate Lua Script mode for compatibility with the EmoTracker Lua script is also available if you use that for other randomizers.
+      </TextBlock>
+
       <TextBlock FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,5,0,0">
-        • QUSB2SNES
+        • <controls:LinkControl Click="QUsb2SnesButton_OnClick">(Q)Usb2Snes</controls:LinkControl>
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="15,5,0,0">
+        Supported Emulators:
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="30,5,0,0">
+        • <controls:LinkControl Click="RetroArchButton_OnClick">RetroArch</controls:LinkControl> (SNES9X or BSNES Cores)<LineBreak />
+        • <controls:LinkControl Click="Snes9xEmuNwaButton_OnClick">Snes9x-emunwa</controls:LinkControl>
+        • <controls:LinkControl Click="Snes9xButton_OnClick">Snes9x-rr</controls:LinkControl> (by loading the QUsb2Snes Lua Script)<LineBreak />
+        • <controls:LinkControl Click="BizHawkButton_OnClick">BizHawk</controls:LinkControl> (by loading the QUsb2Snes Lua Script)<LineBreak />
+        • Hardware such as the FxPakPro
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="15,5,0,0">
+        QUsb2Snes must be installed and running to connect to the emulator.
+      </TextBlock>
+
+      <TextBlock FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,5,0,0">
+        • <controls:LinkControl Click="SniButton_OnClick">Super Nintendo Interface (SNI)</controls:LinkControl>
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="15,5,0,0">
+        Supported Emulators:
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="30,5,0,0">
+        • <controls:LinkControl Click="RetroArchButton_OnClick">RetroArch</controls:LinkControl> (SNES9X or BSNES Cores)<LineBreak />
+        • <controls:LinkControl Click="Snes9xEmuNwaButton_OnClick">Snes9x-emunwa</controls:LinkControl>
+        • <controls:LinkControl Click="Snes9xButton_OnClick">Snes9x-rr</controls:LinkControl> (by loading the SNI Lua Script)<LineBreak />
+        • <controls:LinkControl Click="BizHawkButton_OnClick">BizHawk</controls:LinkControl> (by loading the SNI Lua Script)<LineBreak />
+        • Hardware such as the FxPakPro
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="15,5,0,0">
+        SNI must be installed and running to connect to the emulator.
       </TextBlock>
 
       <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
@@ -86,6 +126,30 @@
 
       <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
         3. Open the connector.lua script file.
+      </TextBlock>
+
+      <TextBlock
+        FontWeight="Bold"
+        Margin="0,10,0,0"
+        FontSize="14"
+      >
+        Enabling Connectivity in RetroArch
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+        1. Open RetroArch
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+        2. Go to Settings
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+        3. Go to Network
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+        4. Set Network Commands to "On"
       </TextBlock>
 
       <TextBlock
