@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Media;
+using AvaloniaControls;
 using AvaloniaControls.ControlServices;
 using Material.Icons;
 using SnesConnectorLibrary;
@@ -33,6 +34,7 @@ public class SetupWindowService(OptionsFactory optionsFactory, ISnesConnectorSer
         SetMetroidRomPath(_randomizerOptions.GeneralOptions.SMRomPath);
         _randomizerOptions.GeneralOptions.HasOpenedSetupWindow = true;
         _randomizerOptions.Save();
+        snesConnectorService.CreateLuaScriptsFolder(_randomizerOptions.AutoTrackerScriptsOutputPath);
         return _model;
     }
 
@@ -125,6 +127,11 @@ public class SetupWindowService(OptionsFactory optionsFactory, ISnesConnectorSer
     {
         snesConnectorService.GameDetected -= SnesConnectorServiceOnConnected;
         snesConnectorService.Disconnect();
+    }
+
+    public void OpenLuaFolder()
+    {
+        CrossPlatformTools.OpenDirectory(_randomizerOptions.AutoTrackerScriptsOutputPath);
     }
 
     private SnesConnectorSettings GetSnesConnectorSettings()

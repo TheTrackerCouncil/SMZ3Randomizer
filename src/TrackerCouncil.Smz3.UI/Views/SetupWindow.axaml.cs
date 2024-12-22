@@ -101,6 +101,7 @@ public partial class SetupWindow : Window
     private void OpenLuaFolderButton_OnClick(object? sender, RoutedEventArgs e)
     {
         e.Handled = true;
+        _service?.OpenLuaFolder();
     }
 
     private void OpenAutoTrackingWindowButton_OnClick(object? sender, RoutedEventArgs e)
