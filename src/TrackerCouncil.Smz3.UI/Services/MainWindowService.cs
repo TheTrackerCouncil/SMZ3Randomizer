@@ -40,7 +40,7 @@ public class MainWindowService(
     {
         _window = window;
         _options = optionsFactory.Create();
-        _model.HasInvalidOptions = !_options.GeneralOptions.Validate();
+        _model.OpenSetupWindow = !_options.GeneralOptions.HasOpenedSetupWindow;
         ITaskService.Run(CheckForUpdates);
         return _model;
     }

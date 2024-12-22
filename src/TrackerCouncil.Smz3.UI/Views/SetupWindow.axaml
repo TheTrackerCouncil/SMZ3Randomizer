@@ -1,0 +1,257 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:AvaloniaControls.Controls;assembly=AvaloniaControls"
+        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:viewModels="clr-namespace:TrackerCouncil.Smz3.UI.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Width="800"
+        Height="450"
+        CanResize="False"
+        Closing="Window_OnClosing"
+        WindowStartupLocation="CenterOwner"
+        x:Class="TrackerCouncil.Smz3.UI.Views.SetupWindow"
+        Title="SMZ3 Cas' Randomizer Setup"
+        Icon="/Assets/smz3.ico"
+        x:DataType="viewModels:SetupWindowViewModel">
+  <Grid RowDefinitions="Auto, Auto, *, Auto" ColumnDefinitions="*, *, *, *">
+
+    <Button Grid.Row="0" Grid.Column="0" Background="Transparent" BorderThickness="0" Opacity="{Binding Step1ButtonOpacity}" Click="ChangePageButton_OnClick" Tag="1">
+      <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0 10">
+        <avalonia:MaterialIcon Kind="Numeric1Circle" Width="20" Height="20"/>
+        <TextBlock FontSize="16" VerticalAlignment="Center" Margin="5 0 0 0">ROM Paths</TextBlock>
+      </StackPanel>
+    </Button>
+
+    <Button Grid.Row="0" Grid.Column="1" Background="Transparent" BorderThickness="0" Opacity="{Binding Step2ButtonOpacity}" Click="ChangePageButton_OnClick" Tag="2">
+      <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0 10">
+        <avalonia:MaterialIcon Kind="Numeric2Circle" Width="20" Height="20"/>
+        <TextBlock FontSize="16" VerticalAlignment="Center" Margin="5 0 0 0">Auto Tracking</TextBlock>
+      </StackPanel>
+    </Button>
+
+    <Button Grid.Row="0" Grid.Column="2" Background="Transparent" BorderThickness="0" Opacity="{Binding Step3ButtonOpacity}" Click="ChangePageButton_OnClick" Tag="3">
+      <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0 10">
+        <avalonia:MaterialIcon Kind="Numeric3Circle" Width="20" Height="20"/>
+        <TextBlock FontSize="16" VerticalAlignment="Center" Margin="5 0 0 0">Tracker</TextBlock>
+      </StackPanel>
+    </Button>
+
+    <Button Grid.Row="0" Grid.Column="3" Background="Transparent" BorderThickness="0" Opacity="{Binding Step4ButtonOpacity}" Click="ChangePageButton_OnClick" Tag="4">
+      <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0 10">
+        <avalonia:MaterialIcon Kind="Numeric4Circle" Width="20" Height="20"/>
+        <TextBlock FontSize="16" VerticalAlignment="Center" Margin="5 0 0 0">Finish</TextBlock>
+      </StackPanel>
+    </Button>
+
+    <Border Grid.Row="1" Grid.Column="0" Background="Gray" Height="2" Opacity="{Binding Step1BorderOpacity}" />
+
+    <Border Grid.Row="1" Grid.Column="1" Background="Gray" Height="2" Opacity="{Binding Step2BorderOpacity}" />
+
+    <Border Grid.Row="1" Grid.Column="2" Background="Gray" Height="2" Opacity="{Binding Step3BorderOpacity}" />
+
+    <Border Grid.Row="1" Grid.Column="3" Background="Gray" Height="2" Opacity="{Binding Step4BorderOpacity}" />
+
+    <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" ColumnDefinitions="*, Auto" Margin="10">
+
+      <StackPanel Grid.Column="0" Orientation="Vertical">
+
+        <TextBlock FontSize="25" Margin="0 0 0 10">
+          Tracker Presents: SMZ3 Cas' Randomizer
+        </TextBlock>
+
+        <!-- Step 1: Rom Paths -->
+        <StackPanel Orientation="Vertical" IsVisible="{Binding DisplayPage1}">
+
+          <TextBlock FontSize="16" TextWrapping="Wrap">
+            Let's get you setup. First, we need the ROMs for A Link to the Past and Super Metroid.
+          </TextBlock>
+
+          <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto" Margin="-4 20 0 20">
+            <avalonia:MaterialIcon
+              Grid.Row="0"
+              Grid.Column="0"
+              Grid.RowSpan="2"
+              Kind="{Binding ZeldaRomIconKind}"
+              Width="30"
+              Height="30"
+              Margin="0 0 5 0"
+              Foreground="{Binding ZeldaRomBrush}"
+              Opacity="{Binding ZeldaRomIconOpacity}"
+            />
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="A Link to the Past Japanese v1.0 ROM" />
+            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+              <TextBlock Margin="0 0 3 0">File:</TextBlock>
+              <TextBlock Text="{Binding ZeldaRomPath}" />
+            </StackPanel>
+          </Grid>
+
+          <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto" Margin="-4 0 0 20">
+            <avalonia:MaterialIcon
+              Grid.Row="0"
+              Grid.Column="0"
+              Grid.RowSpan="2"
+              Kind="{Binding MetroidRomIconKind}"
+              Width="30"
+              Height="30"
+              Margin="0 0 5 0"
+              Foreground="{Binding MetroidRomBrush}"
+              Opacity="{Binding MetroidRomIconOpacity}"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="Super Metroid US/Japanese ROM" />
+            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+              <TextBlock Margin="0 0 3 0">File:</TextBlock>
+              <TextBlock Text="{Binding MetroidRomPath}" />
+            </StackPanel>
+          </Grid>
+
+          <Button HorizontalAlignment="Left" Click="SelectRomsButton_OnClick">Select Rom Files...</Button>
+
+        </StackPanel>
+
+        <!-- Step 2: Auto Tracking -->
+        <StackPanel Orientation="Vertical" IsVisible="{Binding DisplayPage2}">
+
+          <TextBlock FontSize="16" TextWrapping="Wrap" Margin="0 0 0 0">
+            Want to make your life easier? Tracker can track items, bosses, rewards, and more automatically by connecting to your emulator.
+          </TextBlock>
+
+          <Button Margin="0 10 0 0" HorizontalAlignment="Left" Click="OpenAutoTrackingWindowButton_OnClick">Learn More About Auto Tracking</Button>
+
+          <StackPanel Orientation="Vertical" Margin="0 15">
+            <RadioButton IsChecked="{Binding AutoTrackingDisable}">Disable Auto Tracking</RadioButton>
+            <RadioButton IsChecked="{Binding AutoTrackingLua}" Margin="0 10 0 0">
+              <StackPanel Orientation="Horizontal">
+                <TextBlock>Enable Lua Auto Tracking (snes9x-rr, BizHawk)</TextBlock>
+                <controls:LinkControl Margin="5 0 0 0" Click="OpenLuaFolderButton_OnClick">Open Lua Script Folder</controls:LinkControl>
+              </StackPanel>
+            </RadioButton>
+            <RadioButton IsChecked="{Binding AutoTrackingEmoTracker}" Margin="0 10 0 0">Enable EmoTracker Lua Auto Tracking (snes9x-rr, BizHawk)</RadioButton>
+            <RadioButton IsChecked="{Binding AutoTrackingUsb2Snes}" Margin="0 10 0 0">Enable QUsb2Snes Auto Tracking (RetroArch, snes9x-emunwa, snes9x-rr, FxPakPro)</RadioButton>
+            <RadioButton IsChecked="{Binding AutoTrackingSni}" Margin="0 10 0 0">Enable SNI Auto Tracking (RetroArch, snes9x-emunwa, snes9x-rr, FxPakPro)</RadioButton>
+            <TextBox IsEnabled="{Binding ConnectorIpAddressTextBoxEnabled}" Text="{Binding ConnectorIpAddress}" Watermark="QUsb2Snes/SNI IP Address (Optional)" Margin="22 4 0 0"></TextBox>
+          </StackPanel>
+
+          <Grid ColumnDefinitions="Auto, Auto, *" Margin="-4 0 0 20">
+            <avalonia:MaterialIcon
+              Grid.Row="0"
+              Grid.Column="0"
+              Kind="{Binding AutoTrackerIconKind}"
+              Width="30"
+              Height="30"
+              Margin="0 0 5 0"
+              Foreground="{Binding AutoTrackerBrush}"
+              Opacity="{Binding AutoTrackerOpacity}"/>
+            <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"
+                    Click="TestAutoTrackerButton_OnClick"
+                    IsEnabled="{Binding TestAutoTrackerEnabled}">
+              Validate Auto Tracking
+            </Button>
+            <TextBlock Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding AutoTrackerMessage}" Margin="5 0 0 0"/>
+          </Grid>
+
+        </StackPanel>
+
+        <!-- Step 3: Tracker -->
+        <StackPanel Orientation="Vertical" IsVisible="{Binding DisplayPage3}">
+
+          <TextBlock FontSize="16" TextWrapping="Wrap">
+            Tracker can be your randomizer assistant. Let's customize your interactions with tracker.
+          </TextBlock>
+
+          <StackPanel Orientation="Vertical" Margin="0 10">
+
+            <TextBlock>Would you like to talk with Tracker?</TextBlock>
+
+            <Grid ColumnDefinitions="*, *" Margin="0 5 0 10">
+              <RadioButton IsChecked="{Binding TrackerVoiceEnabled}" Grid.Column="0">Yes, let her speak!</RadioButton>
+              <RadioButton IsChecked="{Binding TrackerVoiceDisabled}" Grid.Column="1">No, I want peace and quiet.</RadioButton>
+            </Grid>
+
+            <TextBlock>Would you like Tracker to have a personality?</TextBlock>
+
+            <Grid ColumnDefinitions="*, *" Margin="0 5 0 10">
+              <RadioButton IsChecked="{Binding TrackerSassEnabled}" Grid.Column="0">Yes, bring on the sass!</RadioButton>
+              <RadioButton IsChecked="{Binding TrackerSassDisabled}" Grid.Column="1">No, keep it to strictly business.</RadioButton>
+            </Grid>
+
+            <TextBlock>Are you okay with Tracker cursing?</TextBlock>
+
+            <Grid ColumnDefinitions="*, *" Margin="0 5 0 10">
+              <RadioButton IsChecked="{Binding TrackerCursingEnabled}" Grid.Column="0">Hell yeah!</RadioButton>
+              <RadioButton IsChecked="{Binding TrackerCursingDisabled}" Grid.Column="1">Heck no.</RadioButton>
+            </Grid>
+
+            <TextBlock>Do you know who betus is?</TextBlock>
+
+            <Grid ColumnDefinitions="*, *" Margin="0 5 0 10">
+              <RadioButton IsChecked="{Binding TrackerBcuEnabled}" Grid.Column="0">Yeah, give me the in-jokes!</RadioButton>
+              <RadioButton IsChecked="{Binding TrackerBcuDisabled}" Grid.Column="1">Who is that?</RadioButton>
+            </Grid>
+
+          </StackPanel>
+
+        </StackPanel>
+
+        <!-- Step 4: Finish -->
+        <StackPanel Orientation="Vertical" IsVisible="{Binding DisplayPage4}">
+
+          <TextBlock FontSize="16" TextWrapping="Wrap">
+            The basic setup is now complete! What would you like to do next?
+          </TextBlock>
+
+          <StackPanel Orientation="Vertical" Margin="0 10">
+
+            <TextBlock TextWrapping="Wrap">
+              You can open the full settings window to change other settings such as enabling Twitch integration,
+              modifying the tracker UI background, and modifying other tracking behavior.
+            </TextBlock>
+
+            <Button Margin="0 10" HorizontalAlignment="Left" Click="CloseAndOpenOptionsWindowButton_OnClick">Close Window and Open Randomizer Options</Button>
+
+            <TextBlock TextWrapping="Wrap" Margin="0 10 0 0">
+              Or, if you're ready to get started, you can open the window to start generating your first randomizer seed!
+            </TextBlock>
+
+            <Button Margin="0 10" HorizontalAlignment="Left" Click="CloseAndOpenGenerateWindowButton_OnClick">Close Windows and Generation Window</Button>
+
+          </StackPanel>
+
+        </StackPanel>
+
+      </StackPanel>
+
+      <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10 0 0 0">
+        <Image Source="/Assets/Tracker.png" Width="200"></Image>
+        <controls:LinkControl HorizontalAlignment="Center" Click="DubzLinkButton_OnClick">Art by Dr. Dubz</controls:LinkControl>
+      </StackPanel>
+    </Grid>
+
+    <controls:HeaderFooter Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4" Padding="10">
+      <Grid ColumnDefinitions="*,*">
+        <Button Grid.Column="0"
+                HorizontalAlignment="Left"
+                IsDefault="True"
+                Width="100"
+                x:Name="PrevButton"
+                Content="Previous"
+                Click="PrevButton_OnClick"
+                IsEnabled="{Binding PreviousButtonEnabled}"
+        />
+        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+          <controls:LinkControl VerticalAlignment="Top" Margin="0 3 20 0" IsVisible="{Binding SkipStepVisible}" Click="SkipButton_OnClick">
+            Skip this Step
+          </controls:LinkControl>
+          <Button IsDefault="True"
+                  Width="100"
+                  x:Name="NextButton"
+                  Click="NextButton_OnClick"
+                  IsEnabled="{Binding NextButtonEnabled}"
+                  Content="{Binding NextButtonText}"
+          />
+        </StackPanel>
+      </Grid>
+    </controls:HeaderFooter>
+  </Grid>
+</Window>
+

@@ -98,6 +98,8 @@ public class RandomizerOptions : INotifyPropertyChanged
             var options = serializer.Deserialize<RandomizerOptions>(fileText);
             options.FilePath = savePath;
 
+            var settingsUpdated = false;
+
             // Update from AutoTracker connector settings to SnesConnector settings
             if (options.GeneralOptions.AutoTrackerDefaultConnectionType != EmulatorConnectorType.None)
             {
@@ -108,6 +110,7 @@ public class RandomizerOptions : INotifyPropertyChanged
                 options.GeneralOptions.SnesConnectorSettings.Usb2SnesAddress =
                     options.GeneralOptions.AutoTrackerQUsb2SnesIp ?? "";
                 options.GeneralOptions.AutoTrackerDefaultConnectionType = EmulatorConnectorType.None;
+                settingsUpdated = true;
             }
 
             if (options.GeneralOptions.MsuTrackDisplayStyle != null)
@@ -122,6 +125,7 @@ public class RandomizerOptions : INotifyPropertyChanged
                         _ => TrackDisplayFormat.Vertical
                     };
                 options.GeneralOptions.MsuTrackDisplayStyle = null;
+                settingsUpdated = true;
             }
 
             // Update AutoTrackerChangeMap to AutoMapUpdateBehavior
@@ -130,6 +134,7 @@ public class RandomizerOptions : INotifyPropertyChanged
                 options.GeneralOptions.AutoMapUpdateBehavior = options.GeneralOptions.AutoTrackerChangeMap
                     ? AutoMapUpdateBehavior.UpdateOnRegionChange
                     : AutoMapUpdateBehavior.Disabled;
+                settingsUpdated = true;
             }
 
             // Remove deprecated config profiles
@@ -137,6 +142,19 @@ public class RandomizerOptions : INotifyPropertyChanged
             {
                 options.GeneralOptions.SelectedProfiles = options.GeneralOptions.SelectedProfiles
                     .Where(p => p != null && !ConfigProvider.DeprecatedConfigProfiles.Contains(p)).ToList();
+                settingsUpdated = true;
+            }
+
+            // Update HasOpenedSetupWindow if the Z3 rom path is populated
+            if (!options.GeneralOptions.HasOpenedSetupWindow && !string.IsNullOrEmpty(options.GeneralOptions.Z3RomPath))
+            {
+                options.GeneralOptions.HasOpenedSetupWindow = true;
+                settingsUpdated = true;
+            }
+
+            if (settingsUpdated)
+            {
+                options.Save();
             }
 
             return options;

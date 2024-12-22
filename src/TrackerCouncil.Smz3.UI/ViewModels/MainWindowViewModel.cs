@@ -13,5 +13,5 @@ public class MainWindowViewModel : ViewModelBase
 
     public string NewVersionGitHubUrl { get; set; } = "";
 
-    public bool HasInvalidOptions { get; set; }
+    public bool OpenSetupWindow { get; set; }
 }
