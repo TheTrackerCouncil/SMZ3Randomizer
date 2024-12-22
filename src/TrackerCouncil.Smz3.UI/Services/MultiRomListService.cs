@@ -1,14 +1,16 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using AvaloniaControls.Controls;
 using AvaloniaControls.ControlServices;
+using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.UI.ViewModels;
 using TrackerCouncil.Smz3.UI.Views;
 
 namespace TrackerCouncil.Smz3.UI.Services;
 
-public class MultiRomListService(IGameDbService gameDbService, SharedCrossplatformService sharedCrossplatformService) : ControlService
+public class MultiRomListService(IGameDbService gameDbService, SharedCrossplatformService sharedCrossplatformService, OptionsFactory options) : ControlService
 {
     private MultiRomListViewModel _model = new();
     private MultiRomListPanel _panel = null!;
@@ -36,6 +38,12 @@ public class MultiRomListService(IGameDbService gameDbService, SharedCrossplatfo
 
     public async Task OpenConnectWindow(bool isCreate)
     {
+        if (!options.Create().GeneralOptions.Validate())
+        {
+            await MessageWindow.ShowErrorDialog("You must select the A Link to the Past and Super Metroid roms in the Options window before creating or joining multiplayer games.");
+            return;
+        }
+
         var window = new MultiplayerConnectWindow(isCreate);
         await window.ShowDialog(ParentWindow);
         if (!window.DialogResult)
