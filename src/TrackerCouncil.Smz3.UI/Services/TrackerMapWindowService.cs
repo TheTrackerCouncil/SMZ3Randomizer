@@ -102,6 +102,7 @@ public class TrackerMapWindowService(
             foreach (var location in roomLocations)
             {
                 location.AccessibilityUpdated += (_, _) => UpdateItemLocationModel(roomModel, roomLocations);
+                location.MarkedItemUpdated += (_, _) => UpdateItemLocationModel(roomModel, roomLocations);
             }
 
             UpdateItemLocationModel(roomModel, roomLocations);

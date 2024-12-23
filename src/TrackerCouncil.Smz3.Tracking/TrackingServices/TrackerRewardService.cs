@@ -52,7 +52,7 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlaye
         {
             return;
         }
-        
+
         var previousMarkedReward = rewardRegion.MarkedReward;
         rewardRegion.HasReceivedReward = true;
 
