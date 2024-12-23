@@ -202,7 +202,7 @@ internal class TrackerBossService(IPlayerProgressionService playerProgressionSer
         // Try to untrack the associated boss reward item
         List<Action> undoActions = [];
 
-        if (region.BossLocationId != null)
+        if (region is { BossLocationId: not null, UnifiedBossAndItemLocation: true })
         {
             var bossLocation = World.LocationMap[region.BossLocationId.Value];
             if (bossLocation.Cleared)

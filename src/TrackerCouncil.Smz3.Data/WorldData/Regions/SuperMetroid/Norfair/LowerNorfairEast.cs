@@ -36,6 +36,8 @@ public class LowerNorfairEast : SMRegion, IHasBoss, IHasReward
 
     public LocationId? BossLocationId => LocationId.LowerNorfairRidleyTank;
 
+    public bool UnifiedBossAndItemLocation => false;
+
     public Reward Reward { get; set; } = null!;
 
     public RewardType DefaultRewardType => RewardType.RidleyToken;

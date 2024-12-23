@@ -123,6 +123,8 @@ public class GanonsTower : Z3Region, IHasTreasure, IHasBoss
 
     public LocationId? BossLocationId => null;
 
+    public bool UnifiedBossAndItemLocation => true;
+
     public BossType DefaultBossType => BossType.Ganon;
 
     public TrackerTreasureState TreasureState { get; set; } = null!;

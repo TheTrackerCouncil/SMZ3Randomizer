@@ -121,6 +121,8 @@ public class MiseryMire : Z3Region, IHasReward, IHasPrerequisite, IHasTreasure, 
 
     public LocationId? BossLocationId => LocationId.MiseryMireVitreous;
 
+    public bool UnifiedBossAndItemLocation => true;
+
     public Reward Reward { get; set; } = null!;
 
     public TrackerRewardState RewardState { get; set; } = null!;

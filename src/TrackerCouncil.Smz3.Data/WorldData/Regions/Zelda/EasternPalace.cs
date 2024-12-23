@@ -86,6 +86,8 @@ public class EasternPalace : Z3Region, IHasReward, IHasTreasure, IHasBoss
 
     public bool IsShuffledReward => true;
 
+    public bool UnifiedBossAndItemLocation => true;
+
     public Reward Reward { get; set; } = null!;
 
     public TrackerTreasureState TreasureState { get; set; } = null!;

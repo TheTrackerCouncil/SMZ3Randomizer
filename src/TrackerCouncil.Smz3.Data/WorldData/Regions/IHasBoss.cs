@@ -30,6 +30,12 @@ public interface IHasBoss
 
     LocationId? BossLocationId { get; }
 
+    /// <summary>
+    /// If the boss and location are tied where one can't be received without the other
+    /// (e.g. Zelda dungeons)
+    /// </summary>
+    public bool UnifiedBossAndItemLocation { get; }
+
     Region Region => (Region)this;
 
     public bool BossDefeated

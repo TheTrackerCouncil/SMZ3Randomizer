@@ -90,6 +90,8 @@ public class TowerOfHera : Z3Region, IHasReward, IHasTreasure, IHasBoss
 
     public LocationId? BossLocationId => LocationId.TowerOfHeraMoldorm;
 
+    public bool UnifiedBossAndItemLocation => true;
+
     public Reward Reward { get; set; } = null!;
 
     public TrackerTreasureState TreasureState { get; set; } = null!;

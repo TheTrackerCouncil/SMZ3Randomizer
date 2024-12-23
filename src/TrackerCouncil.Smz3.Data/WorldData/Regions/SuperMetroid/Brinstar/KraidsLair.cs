@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
@@ -34,6 +33,8 @@ public class KraidsLair : SMRegion, IHasBoss, IHasReward
     public BossType DefaultBossType => BossType.Kraid;
 
     public LocationId? BossLocationId => LocationId.KraidsLairVariaSuit;
+
+    public bool UnifiedBossAndItemLocation => false;
 
     public Reward Reward { get; set; } = null!;
 

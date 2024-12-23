@@ -91,6 +91,8 @@ public class DesertPalace : Z3Region, IHasReward, IHasTreasure, IHasBoss
 
     public bool IsShuffledReward => true;
 
+    public bool UnifiedBossAndItemLocation => true;
+
     public override List<string> AlsoKnownAs { get; } = ["Dessert Palace"];
 
     public LocationId? BossLocationId => LocationId.DesertPalaceLanmolas;

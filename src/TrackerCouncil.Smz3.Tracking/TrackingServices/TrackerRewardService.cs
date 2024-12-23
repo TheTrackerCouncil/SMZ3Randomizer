@@ -52,21 +52,20 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlaye
         {
             return;
         }
-
-        // Skip Metroid region rewards unless it's a parsed AP/Mainline rom
-        if (rewardRegion is SMRegion && rewardRegion.World.Config.RomGenerator == RomGenerator.Cas)
-        {
-            return;
-        }
-
+        
         var previousMarkedReward = rewardRegion.MarkedReward;
         rewardRegion.HasReceivedReward = true;
 
         if (isAutoTracked && !rewardRegion.HasCorrectlyMarkedReward)
         {
             rewardRegion.MarkedReward = rewardRegion.RewardType;
-            var rewardObj = rewardRegion.Reward;
-            Tracker.Say(response: Responses.DungeonRewardMarked, args: [rewardRegion.Metadata.Name, rewardObj.Metadata.Name ?? rewardObj.Type.GetDescription()]);
+
+            if (rewardRegion is not SMRegion || rewardRegion.World.Config.RomGenerator != RomGenerator.Cas)
+            {
+                var rewardObj = rewardRegion.Reward;
+                Tracker.Say(response: Responses.DungeonRewardMarked, args: [rewardRegion.Metadata.Name, rewardObj.Metadata.Name ?? rewardObj.Type.GetDescription()]);
+            }
+
         }
 
         UpdateAllAccessibility(false);
