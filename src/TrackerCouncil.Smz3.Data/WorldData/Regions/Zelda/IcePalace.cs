@@ -114,6 +114,8 @@ public class IcePalace : Z3Region, IHasReward, IHasTreasure, IHasBoss
 
     public LocationId? BossLocationId => LocationId.IcePalaceKholdstare;
 
+    public bool UnifiedBossAndItemLocation => true;
+
     public Reward Reward { get; set; } = null!;
 
     public TrackerTreasureState TreasureState { get; set; } = null!;

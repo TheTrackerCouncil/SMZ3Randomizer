@@ -93,6 +93,8 @@ public class HyruleCastle : Z3Region, IHasTreasure, IHasBoss
 
     public LocationId? BossLocationId => null;
 
+    public bool UnifiedBossAndItemLocation => true;
+
     public TrackerTreasureState TreasureState { get; set; } = null!;
 
     public event EventHandler? UpdatedTreasure;

@@ -136,6 +136,8 @@ public class PalaceOfDarkness : Z3Region, IHasReward, IHasTreasure, IHasBoss
 
     public LocationId? BossLocationId => LocationId.PalaceOfDarknessHelmasaurKing;
 
+    public bool UnifiedBossAndItemLocation => true;
+
     public Reward Reward { get; set; } = null!;
 
     public TrackerTreasureState TreasureState { get; set; } = null!;

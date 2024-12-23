@@ -40,6 +40,8 @@ public class CastleTower : Z3Region, IHasReward, IHasTreasure, IHasBoss
 
     public LocationId? BossLocationId => null;
 
+    public bool UnifiedBossAndItemLocation => false;
+
     public Reward Reward { get; set; } = null!;
 
     public FoyerRoom Foyer { get; }

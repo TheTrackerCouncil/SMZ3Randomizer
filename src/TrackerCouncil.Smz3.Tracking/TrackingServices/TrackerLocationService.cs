@@ -206,7 +206,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, IP
             if (locations.First().Region is IHasTreasure dungeon)
             {
                 var treasureCount = locations.Count(x => x.Item.IsTreasure || World.Config.ZeldaKeysanity);
-                if (Tracker.TreasureTracker.TrackDungeonTreasure(dungeon, confidence, treasureCount))
+                if (treasureCount > 0 && Tracker.TreasureTracker.TrackDungeonTreasure(dungeon, confidence, treasureCount))
                     undoDungeonTreasure = PopUndo().Action;
             }
         }

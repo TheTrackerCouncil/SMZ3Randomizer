@@ -180,6 +180,7 @@ internal class TrackerBossService(IPlayerProgressionService playerProgressionSer
     /// </summary>
     /// <param name="region">The dungeon that should be un-cleared.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
+    /// <param name="force">If the user requested to force the boss to be marked as not defeated</param>
     public void MarkBossAsNotDefeated(IHasBoss region, float? confidence = null, bool force = false)
     {
         if (!region.BossDefeated)
@@ -201,7 +202,7 @@ internal class TrackerBossService(IPlayerProgressionService playerProgressionSer
         // Try to untrack the associated boss reward item
         List<Action> undoActions = [];
 
-        if (region.BossLocationId != null)
+        if (region is { BossLocationId: not null, UnifiedBossAndItemLocation: true })
         {
             var bossLocation = World.LocationMap[region.BossLocationId.Value];
             if (bossLocation.Cleared)

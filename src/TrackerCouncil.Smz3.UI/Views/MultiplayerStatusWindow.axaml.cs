@@ -77,7 +77,7 @@ public partial class MultiplayerStatusWindow : RestorableWindow
 
     private void LaunchButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        _service?.LaunchRom();
+        _ = _service?.LaunchRom();
     }
 
     private void LaunchOptions_OnClick(object? sender, RoutedEventArgs e)
@@ -97,7 +97,7 @@ public partial class MultiplayerStatusWindow : RestorableWindow
 
     private void OpenTrackerMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
-        _service?.LaunchTracker();
+        _ = _service?.LaunchTracker();
     }
 
     private void ViewSpoilerLogMenuItem_OnClick(object? sender, RoutedEventArgs e)

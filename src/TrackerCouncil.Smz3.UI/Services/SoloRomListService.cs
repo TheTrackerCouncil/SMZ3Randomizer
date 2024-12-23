@@ -76,6 +76,12 @@ public class SoloRomListService(IRomGenerationService romGenerationService,
 
     public async Task GenerateRom()
     {
+        if (!_options.GeneralOptions.Validate())
+        {
+            await MessageWindow.ShowErrorDialog("You must select the A Link to the Past and Super Metroid roms in the Options window before generating a seed.");
+            return;
+        }
+
         if (await sharedCrossplatformService.OpenGenerationWindow() != null)
         {
             UpdateList();
@@ -84,6 +90,12 @@ public class SoloRomListService(IRomGenerationService romGenerationService,
 
     public async Task GeneratePlando()
     {
+        if (!_options.GeneralOptions.Validate())
+        {
+            await MessageWindow.ShowErrorDialog("You must select the A Link to the Past and Super Metroid roms in the Options window before generating a seed.");
+            return;
+        }
+
         var storageItem = await CrossPlatformTools.OpenFileDialogAsync(ParentWindow, FileInputControlType.OpenFile,
             "Yaml files (*.yaml, *.yml)|*.yaml;*.yml|All files (*.*)|*.*", _options.RomOutputPath);
 
@@ -101,6 +113,12 @@ public class SoloRomListService(IRomGenerationService romGenerationService,
 
     public async Task QuickPlay()
     {
+        if (!_options.GeneralOptions.Validate())
+        {
+            await MessageWindow.ShowErrorDialog("You must select the A Link to the Past and Super Metroid roms in the Options window before generating a seed.");
+            return;
+        }
+
         var result = await romGenerationService.GenerateRandomRomAsync(optionsFactory.Create());
         if (!string.IsNullOrEmpty(result.GenerationError))
         {
@@ -113,7 +131,7 @@ public class SoloRomListService(IRomGenerationService romGenerationService,
             return;
         }
 
-        sharedCrossplatformService.LaunchRom(result.Rom);
+        _ = sharedCrossplatformService.LaunchRom(result.Rom);
     }
 
     public void CopyRomSeed(GeneratedRomViewModel rom)
@@ -136,14 +154,14 @@ public class SoloRomListService(IRomGenerationService romGenerationService,
         sharedCrossplatformService.OpenProgressionHistory(rom.Rom);
     }
 
-    public void LaunchRom(GeneratedRomViewModel rom)
+    public async Task LaunchRom(GeneratedRomViewModel rom)
     {
-        sharedCrossplatformService.LaunchRom(rom.Rom);
+        await sharedCrossplatformService.LaunchRom(rom.Rom);
     }
 
-    public void LaunchTracker(GeneratedRomViewModel rom)
+    public async Task LaunchTracker(GeneratedRomViewModel rom)
     {
-        sharedCrossplatformService.LaunchTracker(rom.Rom);
+        await sharedCrossplatformService.LaunchTrackerAsync(rom.Rom);
     }
 
     public async Task OpenArchipelagoModeAsync()
