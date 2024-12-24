@@ -153,23 +153,27 @@ public class GitHubFileSynchronizerService : IGitHubFileSynchronizerService
                 });
             });
 
-        var foundLocalFiles = fileList.Select(x => x.LocalPath).ToHashSet();
-
-        foreach (var file in Directory.EnumerateFiles(request.DestinationFolder, "*", SearchOption.AllDirectories).Where(x => !foundLocalFiles.Contains(x) && IsValidPath(request, x)))
+        if (Directory.Exists(request.DestinationFolder))
         {
-            fileList.Add(new GitHubFileDetails()
+            var foundLocalFiles = fileList.Select(x => x.LocalPath).ToHashSet();
+
+            foreach (var file in Directory.EnumerateFiles(request.DestinationFolder, "*", SearchOption.AllDirectories).Where(x => !foundLocalFiles.Contains(x) && IsValidPath(request, x)))
             {
-                Path = file,
-                LocalPath = file,
-                DownloadUrl = "",
-                RemoteHash = "",
-                FileExistsLocally = true,
-                FileMatchesLocally = false,
-                HashPath = request.HashPath
-            });
+                fileList.Add(new GitHubFileDetails()
+                {
+                    Path = file,
+                    LocalPath = file,
+                    DownloadUrl = "",
+                    RemoteHash = "",
+                    FileExistsLocally = true,
+                    FileMatchesLocally = false,
+                    HashPath = request.HashPath
+                });
+            }
         }
 
-        return fileList.ToList();
+
+        return fileList.Where(x => !x.FileMatchesLocally).ToList();
     }
 
     public async Task SyncGitHubFilesAsync(GitHubFileDownloaderRequest request)
@@ -190,7 +194,7 @@ public class GitHubFileSynchronizerService : IGitHubFileSynchronizerService
         var total = filesToProcess.Count;
         var completed = 0;
 
-        if (filesToProcess.Any())
+        if (total > 0)
         {
             await Parallel.ForEachAsync(filesToProcess, parallelOptions: new ParallelOptions() { MaxDegreeOfParallelism = 4, CancellationToken = _cts.Token},
                 async (fileData, _) =>
@@ -326,7 +330,7 @@ public class GitHubFileSynchronizerService : IGitHubFileSynchronizerService
             return null;
         }
 
-        _logger.LogInformation("Retrieved {Count} file data from GitHub", tree.tree.Count);
+        _logger.LogInformation("Retrieved data for {Count} files from GitHub", tree.tree.Count);
 
         return tree.tree
             .Where(x => IsValidPath(request, x.path))
@@ -340,8 +344,9 @@ public class GitHubFileSynchronizerService : IGitHubFileSynchronizerService
 
     private string ConvertToLocalPath(GitHubFileDownloaderRequest request, string path)
     {
-        return Path.Combine(request.DestinationFolder,
+        path = Path.Combine(request.DestinationFolder,
             request.ConvertGitHubPathToLocalPath == null ? path : request.ConvertGitHubPathToLocalPath(path));
+        return path.Replace("/", Path.DirectorySeparatorChar.ToString());
     }
 
     private class GitHubTree
