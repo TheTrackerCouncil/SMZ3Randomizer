@@ -30,7 +30,6 @@ public class AutoTracker : AutoTrackerBase
     private ISnesConnectorService _snesConnectorService;
     private bool _isEnabled;
     private int _numDisconnects;
-    private bool _connectionValidated;
     private CancellationTokenSource? _validationCts;
 
     /// <summary>
