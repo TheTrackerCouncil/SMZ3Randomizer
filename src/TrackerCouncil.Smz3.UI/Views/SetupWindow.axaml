@@ -213,7 +213,7 @@
               Or, if you're ready to get started, you can open the window to start generating your first randomizer seed!
             </TextBlock>
 
-            <Button Margin="0 10" HorizontalAlignment="Left" Click="CloseAndOpenGenerateWindowButton_OnClick">Close Setup and Generation Window</Button>
+            <Button Margin="0 10" HorizontalAlignment="Left" Click="CloseAndOpenGenerateWindowButton_OnClick">Close Setup and Open Generate Custom Game Window</Button>
 
           </StackPanel>
 

@@ -25,6 +25,12 @@ if (Test-Path -LiteralPath "$folder\Sprites") {
 }
 Copy-Item "$parentFolder\sprites\Sprites\" -Destination "$folder\Sprites" -Recurse
 
+# Copy tracker sprites to be bundled together
+if (Test-Path -LiteralPath "$folder\TrackerSprites") {
+    Remove-Item -LiteralPath "$folder\TrackerSprites" -Recurse
+}
+Copy-Item "$parentFolder\trackersprites\" -Destination "$folder\TrackerSprites" -Recurse
+
 # Copy configs to be bundled together
 if (Test-Path -LiteralPath "$folder\Configs") {
     Remove-Item -LiteralPath "$folder\Configs" -Recurse

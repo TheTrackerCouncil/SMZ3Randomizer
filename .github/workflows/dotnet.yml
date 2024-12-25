@@ -25,11 +25,24 @@ jobs:
         repository: TheTrackerCouncil/SMZ3CasSprites
         path: sprites
         ref: main
-    - name: Download git tree
+    - name: Download tracker sprite repo
+      uses: actions/checkout@v4
+      with:
+        repository: TheTrackerCouncil/TrackerSprites
+        path: trackersprites
+        ref: main
+    - name: Download git trees
       if: ${{ github.event_name != 'pull_request' }}
       shell: pwsh
+      env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        Invoke-RestMethod -Uri https://api.github.com/repos/TheTrackerCouncil/SMZ3CasSprites/git/trees/main?recursive=1 -OutFile sprites/Sprites/sprites.json
+        $headers = @{
+          Authorization="Bearer $Env:GH_TOKEN"
+        }
+        Invoke-RestMethod -Uri https://api.github.com/repos/TheTrackerCouncil/SMZ3CasSprites/git/trees/main?recursive=1 -OutFile sprites/Sprites/sprites.json -Headers $headers
+        Invoke-RestMethod -Uri https://api.github.com/repos/TheTrackerCouncil/TrackerSprites/git/trees/main?recursive=1 -OutFile trackersprites/tracker-sprites.json -Headers $headers
+        Remove-Item -LiteralPath "trackersprites/.git" -Force -Recurse  
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
@@ -97,6 +110,24 @@ jobs:
         repository: TheTrackerCouncil/SMZ3CasSprites
         path: sprites
         ref: main
+    - name: Download tracker sprite repo
+      uses: actions/checkout@v4
+      with:
+        repository: TheTrackerCouncil/TrackerSprites
+        path: trackersprites
+        ref: main
+    - name: Download git trees
+      if: ${{ github.event_name != 'pull_request' }}
+      shell: pwsh
+      env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        $headers = @{
+          Authorization="Bearer $Env:GH_TOKEN"
+        }
+        Invoke-RestMethod -Uri https://api.github.com/repos/TheTrackerCouncil/SMZ3CasSprites/git/trees/main?recursive=1 -OutFile sprites/Sprites/sprites.json -Headers $headers
+        Invoke-RestMethod -Uri https://api.github.com/repos/TheTrackerCouncil/TrackerSprites/git/trees/main?recursive=1 -OutFile trackersprites/tracker-sprites.json -Headers $headers
+        Remove-Item -LiteralPath "trackersprites/.git" -Force -Recurse
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:

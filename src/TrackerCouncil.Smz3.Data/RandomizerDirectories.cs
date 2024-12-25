@@ -104,5 +104,5 @@ public static class RandomizerDirectories
     public static string TrackerSpriteHashYamlFilePath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "tracker-sprite-hashes.yml");
 #endif
 
-    public static string TrackerSpriteInitialJsonFilePath => Path.Combine(SpritePath, "tracker-sprites.json");
+    public static string TrackerSpriteInitialJsonFilePath => Path.Combine(TrackerSpritePath, "tracker-sprites.json");
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -17,6 +18,8 @@ namespace TrackerCouncil.Smz3.Tracking.AutoTracking.AutoTrackerModules;
 public class GameMonitor(TrackerBase tracker, ISnesConnectorService snesConnector, ILogger<GameMonitor> logger, IWorldQueryService worldQueryService) : AutoTrackerModule(tracker, snesConnector, logger)
 {
     private bool bIsCheckingGameStart;
+
+    private bool bIsFirstStart = true;
 
     public override void Initialize()
     {
@@ -142,19 +145,24 @@ public class GameMonitor(TrackerBase tracker, ISnesConnectorService snesConnecto
 
         AutoTracker.HasStarted = true;
 
-        if (Tracker.World.Config.RomGenerator != RomGenerator.Cas)
+        if (bIsFirstStart)
         {
-            Tracker.Say(x => x.AutoTracker.GameStartedNonCas);
-        }
-        else if (Tracker.World.Config.MultiWorld && worldQueryService.Worlds.Count > 1)
-        {
-            var worldCount = worldQueryService.Worlds.Count;
-            var otherPlayerName = worldQueryService.Worlds.Where(x => x != worldQueryService.World).Random(new Random())!.Config.PhoneticName;
-            Tracker.Say(x => x.AutoTracker.GameStartedMultiplayer, args: [worldCount, otherPlayerName]);
-        }
-        else
-        {
-            Tracker.Say(x => x.AutoTracker.GameStarted, args: [Tracker.Rom?.Seed]);
+            if (Tracker.World.Config.RomGenerator != RomGenerator.Cas)
+            {
+                Tracker.Say(x => x.AutoTracker.GameStartedNonCas);
+            }
+            else if (Tracker.World.Config.MultiWorld && worldQueryService.Worlds.Count > 1)
+            {
+                var worldCount = worldQueryService.Worlds.Count;
+                var otherPlayerName = worldQueryService.Worlds.Where(x => x != worldQueryService.World).Random(new Random())!.Config.PhoneticName;
+                Tracker.Say(x => x.AutoTracker.GameStartedMultiplayer, args: [worldCount, otherPlayerName]);
+            }
+            else
+            {
+                Tracker.Say(x => x.AutoTracker.GameStarted, args: [Tracker.Rom?.Seed]);
+            }
+
+            bIsFirstStart = false;
         }
     }
 

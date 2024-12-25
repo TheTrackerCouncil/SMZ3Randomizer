@@ -18,6 +18,12 @@ public class AutoTrackerConfig : IMergeable<AutoTrackerConfig>
     public SchrodingersString? WhenDisconnected { get; init; }
 
     /// <summary>
+    /// Gets the phrases to respond when the Auto Tracker has been stuck in a connect/disconnect loop and has
+    /// given up on trying to connect.
+    /// </summary>
+    public SchrodingersString? WhenDisconnectLimitReached { get; init; }
+
+    /// <summary>
     /// Gets the phrases to respond with when the game is started.
     /// </summary>
     public SchrodingersString? GameStarted { get; init; }
