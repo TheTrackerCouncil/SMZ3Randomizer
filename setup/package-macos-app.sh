@@ -25,6 +25,7 @@ cp -a "$PUBLISH_OUTPUT_DIRECTORY/." "$APP_NAME/Contents/MacOS"
 
 # Bundle sprites and configs
 cp -r "sprites/Sprites" "$APP_NAME/Contents/MacOS/Sprites"
+cp -r "trackersprites" "$APP_NAME/Contents/MacOS/TrackerSprites"
 cp -r "configs/Profiles" "$APP_NAME/Contents/MacOS/Configs"
 
 echo "Packaged $APP_NAME successfully."
