@@ -1,3 +1,147 @@
+## Changes in 9.8.0
+
+- **Recreated UI**
+
+  The UI has been completely rewritten from the ground up using a new framework. This new UI framework now sports a dark skin, some efficiency updates which prevents slowdown when resizing the map window, and the ability to have a unified cross platform UI. To work with this new framework, there are some slight changes to behavior as well. For example, when you open tracker, the rom list window will now be hidden until tracker is closed. The Shaktool mode has also now been changed to sport a larger single gif instead of a series of them.
+
+  ![image](https://github.com/TheTrackerCouncil/SMZ3Randomizer/assets/63823784/59f52f2d-4a02-469d-bdcc-c4bdb9ac53fe)
+
+- **Generation Window Updates**
+
+  The generation window has been redesigned into a multi-tab layout. The goal with this change is to have the UI be a little less daunting for newcomers as well as have the primary settings you change each run such as the sprite and MSU to be more easily accessible. Copying config strings from other people has been updated to alter the settings in the window, and you can now see a list of all of the settings at a glance on the main window.
+
+  To go along with this, a new feature has been added: presets for quickly applying logic and patch settings. There are multiple built-in presets which you can select from, and you can even create your own preset by clicking on the down triangle menu button next to the Generate button.
+
+  ![image](https://github.com/TheTrackerCouncil/SMZ3Randomizer/assets/63823784/fe1f00d9-cc05-42bc-9fea-c34a68152b76)
+
+- **MSU Randomizer Updates**
+
+  SMZ3 has been updated to utilize the latest functionality of the MSU Randomizer. You can now adjust the weighting of particular MSUs, and there are different shuffle styles, including options for shuffling jingle tracks or all tracks together.
+
+- **Expanded Linux Version and Mac OS Port**
+
+  As stated before, the new UI framework allows for the Linux version to have a fully functional tracker UI, including the item, location, and map windows. Additionally, for Mac OS X users with the M1 or newer arm processors, there is now a Mac port you can use. However, there is no voice tracking or text to speech for the Linux and Mac ports, so keep that in mind. For instructions on how to setup the Linux and Mac versions, view the [installation section of the main GitHub page](https://github.com/TheTrackerCouncil/SMZ3Randomizer).
+
+- **Miscellaneous Updates and Fixes**
+
+  - The application has been updated to .net 8. For Windows users, it should be automatically installed when updating.
+  - The Specky clip comment will now only be said once per run.
+  - The options window has been slightly re-organized so that the settings are in more appropriate sections.
+  - Fixed an issue where locations being set to "progression" weren't having random items associated with them.
+  - There are now additional Lua connectors which should be compatible with the EmoTracker and Crowd Control. On top that, the Lua scripts have been updated to be more robust. SNI has also been added as a supported connector.
+  - Fixed an issue where the disabled voice detection was broken on Windows.
+  - Fixed an issue where default sprites weren't being announced correctly by tracker.
+  - Fixed an issue where keycard types would be spoiled when viewing them in world.
+  - Fixed an issue where the pre-Crocomire line would be stated in keysanity without the boss keycard.
+  - Bumper cave should now auto track.
+  - The hi jump lobby missile location now requires bombs to access to avoid people accidentally soft locking.
+  - Added a warning when trying to copy a seed number from a randomizer settings string from an old randomizer version that may produce different results.
+  - Fixed an issue where tracker failed to reconnect to chat when she lost the connection to Twitch.
+  - Tracker will now automatically track pegs you hammer on the way to Peg World.
+  - Tracker will also count how many Hyper Beam shots it takes to bring down Mother Brain.
+
+### Changes in 9.8.1
+
+- The previous MSU track should no longer resume after "Samus Fanfare" plays (e.g., after resetting out of Wrecked Pool).
+- MSU tracks should more reliably start over, without fading in, after the packs have been shuffled.
+- The timer in the Tracker window can now be disabled, for when you're using your own timer.
+- Tracker will now combine "Pop"s more often when auto-tracking Peg World.
+- Tracker will now try to combine messages when a lot of items are picked up at once, though she might not be thrilled about it.
+
+### Changes in 9.8.2
+
+- Fixed an issue that caused a crash when opening the MSU Randomizer window.
+
+### Changes in 9.8.3
+
+- Added a button to the top right of the tracker window to resize the window to best fit the current selected layout.
+- Added a progress bar to the sprite download window and made it so the sprite download could be cancelled.
+- Fixed an issue that would cause songs with the name "null" to not work properly with the MSU randomization.
+- Fixed an issue where new sprites wouldn't be downloaded upon first setup of SMZ3.
+- Added a small surprise feature that I'm not sure everyone will be *content* with.
+
+### Changes in 9.8.4
+
+- **Tracker Speech Window**
+
+  Ever want tracker to stare into your soul as she mocks you while playing SMZ3? Well wait no longer! With the new Tracker Speech Window, a tracker image drawn by the talented [DrDubz](https://linktr.ee/mightydubz) will be displayed and be slightly animated when she starts talking. On the tracker window, you can go to View -> Tracker Speech Window to open a window that looks like this:
+
+  ![image](https://github.com/user-attachments/assets/f9d916db-71cf-4f57-afa6-3316bd7189f6)
+
+  For streamers, you should be able capture this window and chroma key it to remove the background and add to your scene:
+
+  https://github.com/user-attachments/assets/f16dbf17-12cd-4720-9652-7d6c790ccf63
+
+  By default, the color you'll need to chroma key is #483D8B, but you can change the color and disable tracker's bounce animation in the settings. You can also right click on the tracker speech window to copy the chroma key hex for using in OBS.
+
+  This feature is pretty new, and will probably be added to in the future, so be on the look out for future updates!
+
+- **Miscellaneous Updates and Fixes**
+
+  - Fixed an issue where new sprites wouldn't download properly and where sometimes all sprites might be redownloaded from GitHub.
+
+### Changes in 9.8.5
+
+- **New Shinespark Cheat**
+
+  Annoyed at missing when getting the Maridia entrance shine spark item? There is now a cheat to enable a shine spark at any time. Just say "Hey tracker, charge a shine spark!" while cheats are enabled. 
+
+- **Tracker Reaction Types**
+
+  Currently no voice lines utilize this, but there is now a functionality to specify the reaction image that tracker will use for voice lines. If anyone wants to add their own voice lines that use this, simply update your voice lines in the config files like this:
+
+  ```
+  - Text: <break time='3s'/> Oh I'm sorry. Was I supposed to care about Reserve Tanks?
+    Weight: 0.5
+    TrackerImage: Bored
+  ```  
+
+  At the moment, the only tracker image types are default, bored, and wtf. Once a voice line is finished, she will automatically switch back to the default images.
+
+- **Miscellaneous Updates and Fixes**
+
+  - When requesting a hint for a single specific location, tracker will now distinguish between mandatory, nice to have, and junk items.
+  - Hint tiles and viewed items now share the same command for triggering them to avoid mix-ups. Basically, saying "Hey tracker, clear that hint tile" or "Hey tracker, clear that marked location" will both work for both hint tiles and marked locations.
+  - Fixed an issue with the tracker responses to specific MSUs and tracks not always working.
+  - Updated the tracker location list to properly scroll again.
+
+### Changes in 9.8.6
+
+- **Keysanity Minimal UI**
+
+  A new UI has been created for the keysanity that is meant to be the same width as the advanced layout so that streamers don't need to change their stream layouts for both.
+   
+  ![image](https://github.com/user-attachments/assets/fa4ee127-883f-4624-aefa-3d53f8e3b7e1)
+
+- **Miscellaneous Updates and Fixes**
+
+  - Fixed an issue where tracker stopped talking after peg world.
+  - Updated hint tiles for keysanity to no longer give hints for crystal dungeons being mandatory to be more in line with regular mode.
+
+### Changes in 9.8.7
+
+- **Hey Tracker, track Halloween**
+
+  There's a bit of a spooky surprise for folks who have tracker's sprite displayed! If anyone doesn't want to use it though, there's an option in the tracker profiles where you can change back.
+
+- **Aga Ledge/Lumberjack Tree is Actually in Logic Now**
+
+  Due to an issue going back _years_ now at this point, Aga ledge was never actually possible to have progression generated on them. This has now been resolved. Note that with this change, there's a possibility that using seeds from other people from before this version may not generate the same.
+
+- **Miscellaneous Updates and Fixes**
+
+  - Fixed an issue where push-to-talk mode wasn't working.
+  - Fixed an issue with plando files not loading properly.
+  - Fixed an issue where the banner to disable update notifications wasn't taking while the settings menu option was.
+  - Added additional commands for the shine spark cheat.
+
+### Changes in 9.8.8
+
+- **Miscellaneous Updates and Fixes**
+
+  - Removed weighting for Aga ledge, making it very slightly less likely to have progression (around 7% instead of 7.5%)
+  - Changed the default tracker back to the original one. For anyone who would like to continue using the Halloween tracker sprites, you can select them in your tracker profiles in the settings.
+
 ## Changes in 9.7.0
 
 - **Push-to-talk**
