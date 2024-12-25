@@ -29,6 +29,9 @@ public class AutoTracker : AutoTrackerBase
     private bool _foundGTKey;
     private ISnesConnectorService _snesConnectorService;
     private bool _isEnabled;
+    private int _numDisconnects;
+    private bool _connectionValidated;
+    private CancellationTokenSource? _validationCts;
 
     /// <summary>
     /// Constructor for Auto Tracker
@@ -62,20 +65,55 @@ public class AutoTracker : AutoTrackerBase
         snesConnectorService.Disconnected += SnesConnectorServiceOnDisconnected;
     }
 
-    private void SnesConnectorServiceOnConnected(object? sender, EventArgs e)
+    private async void SnesConnectorServiceOnConnected(object? sender, EventArgs e)
     {
-        _logger.LogInformation("Connector Connected");
-        TrackerBase.Say(x => x.AutoTracker.WhenConnected);
-        OnAutoTrackerConnected();
+        try
+        {
+            _logger.LogInformation("Connector connected");
+            _validationCts = new CancellationTokenSource();
+            await Task.Delay(TimeSpan.FromSeconds(2), _validationCts.Token);
+
+            if (!_validationCts.IsCancellationRequested)
+            {
+                _logger.LogInformation("Connection validated");
+                TrackerBase.Say(x => x.AutoTracker.WhenConnected);
+                OnAutoTrackerConnected();
+                _numDisconnects = 0;
+                _validationCts = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Connector connection failure");
+        }
     }
 
     private void SnesConnectorServiceOnDisconnected(object? sender, EventArgs e)
     {
         _logger.LogInformation("Connector Disconnected");
-        TrackerBase.Say(x => x.AutoTracker.WhenDisconnected);
-        OnAutoTrackerDisconnected();
+
+        if (_validationCts == null)
+        {
+            TrackerBase.Say(x => x.AutoTracker.WhenDisconnected);
+            OnAutoTrackerDisconnected();
+        }
+        else
+        {
+            _numDisconnects++;
+            _validationCts.Cancel();
+        }
+
+        HasStarted = false;
         CurrentGame = Game.Neither;
         _hasValidState = false;
+
+        if (_numDisconnects > 10)
+        {
+            _logger.LogInformation("Disconnect limit of 10 reached");
+            SetConnector(new SnesConnectorSettings(), SnesConnectorType.None);
+            _numDisconnects = 0;
+            TrackerBase.Say(x => x.AutoTracker.WhenDisconnectLimitReached);
+        }
     }
 
     public override void SetConnector(SnesConnectorSettings snesConnectorSettings,
