@@ -236,6 +236,48 @@ public class RomGenerationService(
             Rom.ApplySuperMetroidIps(rom, patch);
         }
 
+        if (options.CasPatches.MaridiaTopEntrance)
+        {
+            using var patch = IpsPatch.MaridiaTopEntrance();
+            Rom.ApplySuperMetroidIps(rom, patch);
+        }
+
+        if (options.CasPatches.SoftLockPatches)
+        {
+            using var moatPatch = IpsPatch.CrateriaMoatNoBombBlock();
+            Rom.ApplySuperMetroidIps(rom, moatPatch);
+
+            using var launchpadPatch = IpsPatch.CrateriaLaunchpadExitNoSuperBlock();
+            Rom.ApplySuperMetroidIps(rom, launchpadPatch);
+
+            using var mockballHallPatch = IpsPatch.GreenBrinMockballHallNoBombBlock();
+            Rom.ApplySuperMetroidIps(rom, mockballHallPatch);
+
+            using var dachoraPatch = IpsPatch.PinkBrinDachoraSpeedboosterBlockNoRespawn();
+            Rom.ApplySuperMetroidIps(rom, dachoraPatch);
+
+            using var pinkBrinSavePatch = IpsPatch.PinkBrinSaveEntranceNoBombBlock();
+            Rom.ApplySuperMetroidIps(rom, pinkBrinSavePatch);
+
+            using var sidehopperPatch = IpsPatch.PinkBrinSidehopperPitRoomNoBombBlock();
+            Rom.ApplySuperMetroidIps(rom, sidehopperPatch);
+
+            using var redTowerPatch = IpsPatch.RedBrinRedTowerPlatforms();
+            Rom.ApplySuperMetroidIps(rom, redTowerPatch);
+
+            using var spazerPatch = IpsPatch.RedBrinSpazerNoBombBlock();
+            Rom.ApplySuperMetroidIps(rom, spazerPatch);
+
+            using var kraidSavePatch = IpsPatch.KraidSaveNoBombBlock();
+            Rom.ApplySuperMetroidIps(rom, kraidSavePatch);
+
+            using var norfairPlatformPatch = IpsPatch.NorfairCathedralEntranceNovaBoostPlatformBlock();
+            Rom.ApplySuperMetroidIps(rom, norfairPlatformPatch);
+
+            using var hiJumpExitPatch = IpsPatch.NorfairHiJumpExitNoBombBlock();
+            Rom.ApplySuperMetroidIps(rom, hiJumpExitPatch);
+        }
+
         if (options.MetroidControls.RunButtonBehavior == RunButtonBehavior.AutoRun)
         {
             using var patch = IpsPatch.AutoRun();
