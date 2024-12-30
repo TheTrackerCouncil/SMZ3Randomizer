@@ -66,6 +66,12 @@ public class CasPatches : ViewModelBase
     [DynamicFormFieldCheckBox(checkBoxText: "Sand Pit Platforms", toolTipText: "Add platforms to make getting out of sand pits in Maridia easier.", groupName: "Middle")]
     public bool SandPitPlatforms { get; set; } = true;
 
+    [DynamicFormFieldCheckBox(checkBoxText: "Maridia Top Entrance", toolTipText: "Adds power bomb blocks around the super missile gate in the hidden room at the top of Red Brinstar to allow you to access the top left of Maridia faster.", groupName: "Middle")]
+    public bool MaridiaTopEntrance { get; set; } = true;
+
+    [DynamicFormFieldCheckBox(checkBoxText: "Metroid Soft Lock Patches", toolTipText: "Updates multiple rooms in Super Metroid to prevent soft locks.", groupName: "Middle")]
+    public bool SoftLockPatches { get; set; } = true;
+
     [DynamicFormFieldComboBox(label: "Zelda item drops:", groupName: "Bottom")]
     public ZeldaDrops ZeldaDrops { get; set; }
 

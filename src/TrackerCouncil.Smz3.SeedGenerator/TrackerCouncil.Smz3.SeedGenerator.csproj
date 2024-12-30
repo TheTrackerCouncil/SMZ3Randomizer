@@ -34,6 +34,18 @@
     <EmbeddedResource Include="FileData\IpsPatches\zsm.ips" />
     <EmbeddedResource Include="Text\Scripts\StringTable.yaml" />
     <EmbeddedResource Include="FileData\IpsPatches\SandPitPlatforms.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\dachora.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\climb_supers.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\early_super_bridge.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\high_jump.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\mission_impossible.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\kraid_save.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\moat.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\nova_boost_platform.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\red_tower.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\spazer.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\spospo_save.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\maridia_entrance.ips" />
   </ItemGroup>
 
   <ItemGroup>

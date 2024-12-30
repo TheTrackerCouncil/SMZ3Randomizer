@@ -131,4 +131,79 @@ public static class IpsPatch
     /// </summary>
     /// <returns>A new stream that contains the IPS patch.</returns>
     public static Stream SandPitPlatforms() => GetStream("SandPitPlatforms.ips");
+
+    /// <summary>
+    /// Gets a stream for the IPS patch to remove the super missile block from the old Tourian launchpad
+    /// </summary>
+    /// <returns>A new stream that contains the IPS patch.</returns>
+    public static Stream CrateriaLaunchpadExitNoSuperBlock() => GetStream("climb_supers.ips");
+
+    /// <summary>
+    /// Gets a stream for the IPS patch to change the bomb block in the Crateria moat to shoot blocks
+    /// </summary>
+    /// <returns>A new stream that contains the IPS patch.</returns>
+    public static Stream CrateriaMoatNoBombBlock() => GetStream("moat.ips");
+
+    /// <summary>
+    /// Gets a stream for the IPS patch to change the bomb block in Green Brin mockball hall to a shoot block
+    /// </summary>
+    /// <returns>A new stream that contains the IPS patch.</returns>
+    public static Stream GreenBrinMockballHallNoBombBlock() => GetStream("early_super_bridge.ips");
+
+    /// <summary>
+    /// Gets a stream for the IPS patch to make the speed booster blocks in pink brinstar Dachora room not respawn
+    /// </summary>
+    /// <returns>A new stream that contains the IPS patch.</returns>
+    public static Stream PinkBrinDachoraSpeedboosterBlockNoRespawn() => GetStream("dachora.ips");
+
+    /// <summary>
+    /// Gets a stream for the IPS patch to remove the bomb blocks to the Pink Brin save rooms
+    /// </summary>
+    /// <returns>A new stream that contains the IPS patch.</returns>
+    public static Stream PinkBrinSaveEntranceNoBombBlock() => GetStream("spospo_save.ips");
+
+    /// <summary>
+    /// Gets a stream for the IPS patch to change the bomb block in the Pink Brinstar room under the Sidehopper room
+    /// to a shoot block
+    /// </summary>
+    /// <returns>A new stream that contains the IPS patch.</returns>
+    public static Stream PinkBrinSidehopperPitRoomNoBombBlock() => GetStream("mission_impossible.ips");
+
+    /// <summary>
+    /// Gets a stream for the IPS patch to add platforms to the Red Brinstar Red Tower to allow you to get up easier
+    /// </summary>
+    /// <returns>A new stream that contains the IPS patch.</returns>
+    public static Stream RedBrinRedTowerPlatforms() => GetStream("red_tower.ips");
+
+    /// <summary>
+    /// Gets a stream for the IPS patch to change the bomb block in front of the Spazer room to a shoot block
+    /// </summary>
+    /// <returns>A new stream that contains the IPS patch.</returns>
+    public static Stream RedBrinSpazerNoBombBlock() => GetStream("spazer.ips");
+
+    /// <summary>
+    /// Gets a stream for the IPS patch to change the bomb block to the Kraid save room to a shoot block
+    /// </summary>
+    /// <returns>A new stream that contains the IPS patch.</returns>
+    public static Stream KraidSaveNoBombBlock() => GetStream("kraid_save.ips");
+
+    /// <summary>
+    /// Gets a stream for the IPS patch to change the bomb block in when leaving the Hi Jump item room to a shoot block
+    /// </summary>
+    /// <returns>A new stream that contains the IPS patch.</returns>
+    public static Stream NorfairHiJumpExitNoBombBlock() => GetStream("high_jump.ips");
+
+    /// <summary>
+    /// Gets a stream for the IPS patch to make it easier to get into Upper Norfair east without the hi jump
+    /// </summary>
+    /// <returns>A new stream that contains the IPS patch.</returns>
+    public static Stream NorfairCathedralEntranceNovaBoostPlatformBlock() => GetStream("nova_boost_platform.ips");
+
+    /// <summary>
+    /// Gets a stream for the IPS patch to allow you to get to upper Maridia from the top of Red Brin
+    /// </summary>
+    /// <returns>A new stream that contains the IPS patch.</returns>
+    public static Stream MaridiaTopEntrance() => GetStream("maridia_entrance.ips");
+
+
 }
