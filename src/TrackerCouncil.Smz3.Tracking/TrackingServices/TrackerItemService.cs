@@ -222,7 +222,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
 
         var addedEvent = History.AddEvent(
             HistoryEventType.TrackedItem,
-            item.Metadata.IsProgression(World.Config),
+            item.Metadata.IsProgression(World.Config, item.IsLocalPlayerItem),
             item.Metadata.NameWithArticle,
             location
         );
@@ -528,11 +528,11 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
         }
         else
         {
-            var itemsToSay = items.Where(x => x.Type.IsPossibleProgression(World.Config.ZeldaKeysanity, World.Config.MetroidKeysanity)).Take(2).ToList();
+            var itemsToSay = items.Where(x => x.Type.IsPossibleProgression(World.Config.ZeldaKeysanity, World.Config.MetroidKeysanity, x.IsLocalPlayerItem)).Take(2).ToList();
             if (itemsToSay.Count() < 2)
             {
                 var numToTake = 2 - itemsToSay.Count();
-                itemsToSay.AddRange(items.Where(x => !x.Type.IsPossibleProgression(World.Config.ZeldaKeysanity, World.Config.MetroidKeysanity)).Take(numToTake));
+                itemsToSay.AddRange(items.Where(x => !x.Type.IsPossibleProgression(World.Config.ZeldaKeysanity, World.Config.MetroidKeysanity, x.IsLocalPlayerItem)).Take(numToTake));
             }
 
             Tracker.Say(x => x.TrackedManyItems, args: [itemsToSay[0].Metadata.NameWithArticle, itemsToSay[1].Metadata.NameWithArticle, items.Count - 2]);

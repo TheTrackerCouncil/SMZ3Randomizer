@@ -136,7 +136,7 @@ public class Location
             if (value != null)
             {
                 State.MarkedUsefulness =
-                    Item.Type.IsPossibleProgression(World.Config.ZeldaKeysanity, World.Config.MetroidKeysanity)
+                    Item.Type.IsPossibleProgression(World.Config.ZeldaKeysanity, World.Config.MetroidKeysanity, Item.IsLocalPlayerItem)
                         ? LocationUsefulness.NiceToHave
                         : LocationUsefulness.Useless;
             }

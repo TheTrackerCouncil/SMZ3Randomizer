@@ -126,7 +126,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
             {
                 var config = area.Region.Config;
                 var anyPossibleProgression = area.Locations.Any(x =>
-                    x.ItemType.IsPossibleProgression(config.ZeldaKeysanity, config.MetroidKeysanity));
+                    x.ItemType.IsPossibleProgression(config.ZeldaKeysanity, config.MetroidKeysanity, x.Item.IsLocalPlayerItem));
                 if (anyPossibleProgression)
                 {
                     TrackerBase.Say(x => x.Hints.AreaHasNonCasPossibleProgression, args: [area.GetName()]);
@@ -450,7 +450,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
             if (HintsGiven(location) == 0)
             {
                 if (location.ItemType.IsPossibleProgression(location.World.Config.ZeldaKeysanity,
-                        location.World.Config.MetroidKeysanity))
+                        location.World.Config.MetroidKeysanity, location.Item.IsLocalPlayerItem))
                 {
                     return GiveLocationHint(x => x.LocationHasNonCasProgressionItem, location, location.Item.PlayerName);
                 }
