@@ -146,7 +146,7 @@ public class WorldQueryService : IWorldQueryService
     /// </summary>
     /// <returns>A collection of items.</returns>
     public IEnumerable<Item> LocalPlayersItems()
-        => AllItems().Where(x => x.World.Id == World.Id);
+        => AllItems().Where(x => x.World.Id == World.Id && x.IsLocalPlayerItem);
 
     /// <summary>
     /// Enumerates all rewards that can be tracked for all players.
