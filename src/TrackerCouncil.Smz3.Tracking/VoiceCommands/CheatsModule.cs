@@ -15,7 +15,15 @@ namespace TrackerCouncil.Smz3.Tracking.VoiceCommands;
 /// <summary>
 /// Module for cheats via the auto tracker
 /// </summary>
-public class CheatsModule : TrackerModule
+public class CheatsModule(
+    TrackerBase tracker,
+    IPlayerProgressionService playerProgressionService,
+    IWorldQueryService worldQueryService,
+    ITrackerModeService trackerModeService,
+    ILogger<CheatsModule> logger) : TrackerModule(tracker,
+    playerProgressionService,
+    worldQueryService,
+    logger)
 {
     private static readonly string s_fillCheatKey = "FillType";
     private static readonly List<string> s_fillHealthChoices = new() { "health", "hp", "energy", "hearts" };
@@ -27,25 +35,9 @@ public class CheatsModule : TrackerModule
     private static readonly List<string> s_fillSuperMissileChoices = new() { "super missiles", "soup" };
     private static readonly List<string> s_fillPowerBombsChoices = new() { "power bombs", "hamburgers" };
 
-    private bool _cheatsEnabled;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AutoTrackerVoiceModule"/>
-    /// class.
-    /// </summary>
-    /// <param name="tracker">The tracker instance.</param>
-    /// <param name="playerProgressionService">Service to get item information</param>
-    /// <param name="worldQueryService">Service to get world information</param>
-    /// <param name="logger">Used to write logging information.</param>
-    public CheatsModule(TrackerBase tracker, IPlayerProgressionService playerProgressionService, IWorldQueryService worldQueryService, ILogger<CheatsModule> logger)
-        : base(tracker, playerProgressionService, worldQueryService, logger)
-    {
-
-    }
-
     private bool PlayerCanCheat()
     {
-        if (!_cheatsEnabled)
+        if (!trackerModeService.CheatsEnabled)
         {
             TrackerBase.Say(x => x.Cheats.PromptEnableCheats);
             return false;
@@ -226,28 +218,12 @@ public class CheatsModule : TrackerModule
 
         AddCommand("Enable cheats", GetEnableCheatsRule(), (result) =>
         {
-            if (!_cheatsEnabled)
-            {
-                _cheatsEnabled = true;
-                TrackerBase.Say(x => x.Cheats.EnabledCheats);
-            }
-            else
-            {
-                TrackerBase.Say(x => x.Cheats.AlreadyEnabledCheats);
-            }
+            trackerModeService.EnableCheats();
         });
 
         AddCommand("Disable cheats", GetDisableHintsRule(), (result) =>
         {
-            if (_cheatsEnabled)
-            {
-                _cheatsEnabled = false;
-                TrackerBase.Say(x => x.Cheats.DisabledCheats);
-            }
-            else
-            {
-                TrackerBase.Say(x => x.Cheats.AlreadyDisabledCheats);
-            }
+            trackerModeService.DisableCheats();
         });
 
         AddCommand("Fill rule", FillRule(), (result) =>

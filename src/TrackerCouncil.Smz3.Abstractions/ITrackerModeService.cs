@@ -24,6 +24,11 @@ public interface ITrackerModeService
     /// </summary>
     public int PegsPegged { get; protected set; }
 
+    /// <summary>
+    /// If cheats are currently enabled
+    /// </summary>
+    public bool CheatsEnabled { get; protected set; }
+
     // <summary>
     /// Occurs when Peg World mode has been toggled on.
     /// </summary>
@@ -48,6 +53,11 @@ public interface ITrackerModeService
     /// Occurs when Go mode has been turned off.
     /// </summary>
     public event EventHandler<TrackerEventArgs>? GoModeToggledOff;
+
+    /// <summary>
+    /// Occurs when cheats are enabled or disabled
+    /// </summary>
+    public event EventHandler<TrackerEventArgs>? CheatsToggled;
 
     /// <summary>
     /// Toggles Go Mode on.
@@ -86,4 +96,16 @@ public interface ITrackerModeService
     /// </summary>
     /// <param name="confidence">The speech recognition confidence.</param>
     public void StopShaktoolMode(float? confidence = null);
+
+    /// <summary>
+    /// Enables cheats
+    /// </summary>
+    /// <param name="confidence">The speech recognition confidence.</param>
+    public void EnableCheats(float? confidence = null);
+
+    /// <summary>
+    /// Disables cheats
+    /// </summary>
+    /// <param name="confidence">The speech recognition confidence.</param>
+    public void DisableCheats(float? confidence = null);
 }

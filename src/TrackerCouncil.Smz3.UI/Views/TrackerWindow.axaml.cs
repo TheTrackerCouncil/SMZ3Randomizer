@@ -1,17 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
-using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 using Avalonia.Threading;
 using AvaloniaControls.Controls;
 using AvaloniaControls.Services;
+using Material.Icons;
+using Material.Icons.Avalonia;
 using SnesConnectorLibrary;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Shared.Models;
@@ -27,7 +26,7 @@ public partial class TrackerWindow : RestorableWindow
     private readonly TrackerWindowViewModel _model;
     private CurrentTrackWindow? _currentTrackWindow;
     private TrackerSpeechWindow? _currentTrackerSpeechWindow;
-    private Dictionary<string, Image> _layoutImages = new();
+    private Dictionary<string, MaterialIcon> _layoutImages = new();
     private MainWindow? _parentWindow;
 
     public TrackerWindow()
@@ -50,11 +49,11 @@ public partial class TrackerWindow : RestorableWindow
 
         foreach (var layout in _model.Layouts)
         {
-            var image = new Image()
+            var image = new MaterialIcon()
             {
-                Source = new Bitmap(AssetLoader.Open(new Uri("avares://SMZ3CasRandomizer/Assets/check.png"))),
-                IsVisible = false
+                Kind = MaterialIconKind.Check, Height = 16, Width = 16, IsVisible = false
             };
+
             _layoutImages[layout.Name] = image;
 
             var layoutMenuItem = new MenuItem
@@ -328,6 +327,11 @@ public partial class TrackerWindow : RestorableWindow
         {
             _model.ShowResizeButton = false;
         }
+    }
+
+    private void TrackerEnableCheatsMenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        _service?.ToggleCheats();
     }
 }
 

@@ -17,6 +17,7 @@ public class TrackerWindowPanelViewModel : ViewModelBase
     public int Column { get; set; }
     public int Row { get; set; }
     public bool AddShadows { get; set; }
+    [Reactive] public bool CheatsEnabled { get; set; }
 
     [Reactive] public List<TrackerWindowPanelImage?> Images { get; set; } = [];
     [Reactive] public List<TrackerWindowPanelImage?> OverlayImages { get; set; } = [];

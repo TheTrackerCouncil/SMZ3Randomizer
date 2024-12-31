@@ -49,6 +49,15 @@
             <MenuItem Header="_Layouts"
                       Name="LayoutMenu">
             </MenuItem>
+            <MenuItem Header="_Commands">
+              <MenuItem Header="Enable _Cheats"
+                        x:Name="TrackerEnableCheatsMenuItem"
+                        Click="TrackerEnableCheatsMenuItem_OnClick">
+                <MenuItem.Icon>
+                  <avalonia:MaterialIcon Width="16" Height="16" Kind="Check" IsVisible="{Binding AreCheatsEnabled}" />
+                </MenuItem.Icon>
+              </MenuItem>
+            </MenuItem>
           </Menu>
           <StackPanel Grid.Column="1" Orientation="Horizontal">
             <controls:ImageButton Cursor="Hand" Background="Transparent" Click="ResizeWindowButton_OnClick" IsVisible="{Binding ShowResizeButton}">
@@ -89,32 +98,32 @@
                 <ContextMenu>
                   <MenuItem Header="Disable Auto Tracker" Name="DisableAutoTrackerMenuItem" Click="DisableAutoTrackerMenuItem_OnClick">
                     <MenuItem.Icon>
-                      <Image Width="16" Height="16" Source="avares://SMZ3CasRandomizer/Assets/check.png" IsVisible="{Binding IsDisabledConnector}" />
+                      <avalonia:MaterialIcon Width="16" Height="16" Kind="Check" IsVisible="{Binding IsDisabledConnector}" />
                     </MenuItem.Icon>
                   </MenuItem>
                   <MenuItem Header="SNI Auto Tracker" Name="SniMenuItem" Click="SniMenuItem_OnClick">
                     <MenuItem.Icon>
-                      <Image Width="16" Height="16" Source="avares://SMZ3CasRandomizer/Assets/check.png" IsVisible="{Binding IsSniConnector}" />
+                      <avalonia:MaterialIcon Width="16" Height="16" Kind="Check" IsVisible="{Binding IsSniConnector}" />
                     </MenuItem.Icon>
                   </MenuItem>
                   <MenuItem Header="USB2SNES Auto Tracker" Name="Usb2SnesMenuItem" Click="Usb2SnesMenuItem_OnClick">
                     <MenuItem.Icon>
-                      <Image Width="16" Height="16" Source="avares://SMZ3CasRandomizer/Assets/check.png" IsVisible="{Binding IsUsb2SnesConnector}" />
+                      <avalonia:MaterialIcon Width="16" Height="16" Kind="Check" IsVisible="{Binding IsUsb2SnesConnector}" />
                     </MenuItem.Icon>
                   </MenuItem>
                   <MenuItem Header="Lua Auto Tracker" Name="LuaMenuItem" Click="LuaMenuItem_OnClick">
                     <MenuItem.Icon>
-                      <Image Width="16" Height="16" Source="avares://SMZ3CasRandomizer/Assets/check.png" IsVisible="{Binding IsLuaConnector}" />
+                      <avalonia:MaterialIcon Width="16" Height="16" Kind="Check" IsVisible="{Binding IsLuaConnector}" />
                     </MenuItem.Icon>
                   </MenuItem>
                   <MenuItem Header="Lua Auto Tracker (Crowd Control Script)" Name="CrowdControlMenuItem" Click="CrowdControlMenuItem_OnClick">
                     <MenuItem.Icon>
-                      <Image Width="16" Height="16" Source="avares://SMZ3CasRandomizer/Assets/check.png" IsVisible="{Binding IsLuaCrowdControlConnector}" />
+                      <avalonia:MaterialIcon Width="16" Height="16" Kind="Check" IsVisible="{Binding IsLuaCrowdControlConnector}" />
                     </MenuItem.Icon>
                   </MenuItem>
                   <MenuItem Header="Lua Auto Tracker (EmoTracker Script)" Name="EmoTrackerMenuItem" Click="EmoTrackerMenuItem_OnClick">
                     <MenuItem.Icon>
-                      <Image Width="16" Height="16" Source="avares://SMZ3CasRandomizer/Assets/check.png" IsVisible="{Binding IsLuaEmoTrackerConnector}" />
+                      <avalonia:MaterialIcon Width="16" Height="16" Kind="Check" IsVisible="{Binding IsLuaEmoTrackerConnector}" />
                     </MenuItem.Icon>
                   </MenuItem>
                   <MenuItem Header="Show Auto Tracker Scripts Folder" Name="OpenFolderMenuItem" Click="OpenFolderMenuItem_OnClick"></MenuItem>

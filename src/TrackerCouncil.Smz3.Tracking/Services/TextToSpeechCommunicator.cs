@@ -17,6 +17,7 @@ public class TextToSpeechCommunicator : ICommunicator, IDisposable
     private DateTime _startSpeakingTime;
     private ConcurrentQueue<SpeechRequest> _pendingRequests = [];
     private SpeechRequest? _currentSpeechRequest;
+    private ILogger<ICommunicator> _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see
@@ -24,6 +25,8 @@ public class TextToSpeechCommunicator : ICommunicator, IDisposable
     /// </summary>
     public TextToSpeechCommunicator(TrackerOptionsAccessor trackerOptionsAccessor, ILogger<ICommunicator> logger)
     {
+        _logger = logger;
+
         if (!OperatingSystem.IsWindows())
         {
             return;
@@ -101,6 +104,8 @@ public class TextToSpeechCommunicator : ICommunicator, IDisposable
     /// </param>
     public void Say(SpeechRequest request)
     {
+        _logger.LogDebug($"Speech: {request.Text}");
+
         if (!OperatingSystem.IsWindows() || !_canSpeak)
         {
             return;
