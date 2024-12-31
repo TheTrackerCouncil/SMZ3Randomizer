@@ -61,9 +61,9 @@ public class Sprite : IEquatable<Sprite>
     [YamlIgnore]
     public string Author { get; set; }
 
-    public string FilePath { get; } = "";
+    public string FilePath { get; set; } = "";
 
-    public SpriteType SpriteType { get; }
+    public SpriteType SpriteType { get; set; }
 
     [YamlIgnore]
     public string PreviewPath { get; set; }
