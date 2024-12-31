@@ -615,9 +615,11 @@ public enum ItemType : byte
     [ItemCategory(ItemCategory.Metroid, ItemCategory.MetroidMap)]
     SmMapLowerNorfair = 0xCD,
 
+    [Description("Other Game Item")]
     [ItemCategory(ItemCategory.NonRandomized)]
     OtherGameItem = 0xFE,
 
+    [Description("Important Other Game Item")]
     [ItemCategory(ItemCategory.NonRandomized)]
     OtherGameProgressionItem = 0xFF
 }
