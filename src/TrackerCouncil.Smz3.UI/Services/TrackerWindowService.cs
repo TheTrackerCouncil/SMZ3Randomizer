@@ -36,7 +36,6 @@ public class TrackerWindowService(
     ITrackerTimerService trackerTimerService,
     IServiceProvider serviceProvider,
     IWorldQueryService worldQueryService,
-    IGameService gameService,
     ILogger<TrackerWindowService> logger) : ControlService
 {
     private RandomizerOptions? _options;
