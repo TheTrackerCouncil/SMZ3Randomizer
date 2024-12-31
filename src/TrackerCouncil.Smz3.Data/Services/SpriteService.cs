@@ -210,7 +210,7 @@ public class SpriteService
 
         if (sprite.IsRandomSprite)
         {
-            var spriteType = sprite.SpriteType;
+            var spriteType = type;
 
             var searchText = spriteType switch
             {
