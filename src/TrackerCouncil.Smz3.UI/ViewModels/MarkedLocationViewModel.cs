@@ -1,4 +1,5 @@
 using System;
+using AvaloniaControls.Models;
 using ReactiveUI.Fody.Helpers;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Shared.Enums;
@@ -9,7 +10,10 @@ public class MarkedLocationViewModel(Location location, Item? itemData, string? 
 {
     public Location Location => location;
     public string? ItemSprite { get; init; } = itemSprite;
-    [Reactive] public bool IsAvailable { get; set; } = location.Accessibility is Accessibility.Available or Accessibility.AvailableWithKeys;
+
+    [Reactive, ReactiveLinkedProperties(nameof(Opacity))]
+    public bool IsAvailable { get; set; } = location.Accessibility is Accessibility.Available or Accessibility.AvailableWithKeys;
+
     public bool ShowOutOfLogic { get; set; }
     public double Opacity => ShowOutOfLogic || IsAvailable ? 1.0 : 0.33;
     public string Item { get; init; }= itemData?.Name ?? "";
