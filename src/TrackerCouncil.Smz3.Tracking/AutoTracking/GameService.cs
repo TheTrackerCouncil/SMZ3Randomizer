@@ -100,7 +100,7 @@ public class GameService : TrackerModule, IGameService
     /// <returns>False if it is currently unable to give an item to the player</returns>
     public async Task<bool> TryGiveItemsAsync(List<Item> items, int fromPlayerId)
     {
-        if (!IsInGame())
+        if (!IsInGame() || TrackerBase.World.Config.RomGenerator != RomGenerator.Cas)
         {
             return false;
         }

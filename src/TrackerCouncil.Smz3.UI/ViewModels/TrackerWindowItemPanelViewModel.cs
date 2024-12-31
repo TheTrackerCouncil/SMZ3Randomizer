@@ -56,6 +56,8 @@ public class TrackerWindowItemPanelViewModel : TrackerWindowPanelViewModel
 
     public event EventHandler<ItemDungeonRequirementEventArgs>? ItemSetAsDungeonRequirement;
 
+    public event EventHandler<ItemChangedEventArgs>? CheatItemRequested;
+
     public void UpdateItem(Item? item, string? path)
     {
         if (Items != null && item != null && !string.IsNullOrEmpty(path))
@@ -146,7 +148,12 @@ public class TrackerWindowItemPanelViewModel : TrackerWindowPanelViewModel
     {
         var menuItems = new List<MenuItem>();
 
-        if (Items?.Count > 1)
+        if (Items == null || Items.Count == 0)
+        {
+            return menuItems;
+        }
+
+        if (Items.Count > 1)
         {
             foreach (var item in Items.Keys)
             {
@@ -164,7 +171,7 @@ public class TrackerWindowItemPanelViewModel : TrackerWindowPanelViewModel
                 }
             }
         }
-        else if (Items?.Count == 1)
+        else if (Items.Count == 1)
         {
             var item = Items.Keys.First();
             if (item.TrackingState > 0)
@@ -175,7 +182,7 @@ public class TrackerWindowItemPanelViewModel : TrackerWindowPanelViewModel
             }
         }
 
-        if (Items?.Keys.FirstOrDefault()?.Type is ItemType.Bombos or ItemType.Ether or ItemType.Quake)
+        if (Items.Keys.FirstOrDefault()?.Type is ItemType.Bombos or ItemType.Ether or ItemType.Quake)
         {
             var item = Items.Keys.First();
 
@@ -198,6 +205,16 @@ public class TrackerWindowItemPanelViewModel : TrackerWindowPanelViewModel
             menuItem.Click += (_, _) => ItemSetAsDungeonRequirement?.Invoke(this,
                 new ItemDungeonRequirementEventArgs { IsMMRequirement = true, IsTRRequirement = true });
             menuItems.Add(menuItem);
+        }
+
+        if (CheatsEnabled)
+        {
+            foreach (var item in Items.Keys)
+            {
+                var menuItem = new MenuItem { Header = $"Cheat: Give {item.Name}" };
+                menuItem.Click += (_, _) => CheatItemRequested?.Invoke(this, new ItemChangedEventArgs { Item = item });
+                menuItems.Add(menuItem);
+            }
         }
 
         return menuItems;

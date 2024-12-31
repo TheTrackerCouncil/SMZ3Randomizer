@@ -11,12 +11,14 @@ internal class TrackerModeService : TrackerService, ITrackerModeService
     public bool PegWorldMode { get; set; }
     public bool ShaktoolMode { get; set; }
     public int PegsPegged { get; set; }
-    
+    public bool CheatsEnabled { get; set; }
+
     public event EventHandler<TrackerEventArgs>? ToggledPegWorldModeOn;
     public event EventHandler<TrackerEventArgs>? ToggledShaktoolMode;
     public event EventHandler<TrackerEventArgs>? PegPegged;
     public event EventHandler<TrackerEventArgs>? GoModeToggledOn;
     public event EventHandler<TrackerEventArgs>? GoModeToggledOff;
+    public event EventHandler<TrackerEventArgs>? CheatsToggled;
 
     public void ToggleGoMode(float? confidence = null)
     {
@@ -136,5 +138,43 @@ internal class TrackerModeService : TrackerService, ITrackerModeService
             ShaktoolMode = true;
             ToggledShaktoolMode?.Invoke(this, new TrackerEventArgs(confidence));
         });
+    }
+
+    public void EnableCheats(float? confidence = null)
+    {
+        if (!CheatsEnabled)
+        {
+            CheatsEnabled = true;
+            Tracker.Say(x => x.Cheats.EnabledCheats);
+            CheatsToggled?.Invoke(this, new TrackerEventArgs(confidence));
+            AddUndo(() =>
+            {
+                CheatsEnabled = false;
+                ToggledShaktoolMode?.Invoke(this, new TrackerEventArgs(confidence));
+            });
+        }
+        else
+        {
+            Tracker.Say(x => x.Cheats.AlreadyEnabledCheats);
+        }
+    }
+
+    public void DisableCheats(float? confidence = null)
+    {
+        if (CheatsEnabled)
+        {
+            CheatsEnabled = false;
+            Tracker.Say(x => x.Cheats.DisabledCheats);
+            CheatsToggled?.Invoke(this, new TrackerEventArgs(confidence));
+            AddUndo(() =>
+            {
+                CheatsEnabled = true;
+                ToggledShaktoolMode?.Invoke(this, new TrackerEventArgs(confidence));
+            });
+        }
+        else
+        {
+            Tracker.Say(x => x.Cheats.AlreadyDisabledCheats);
+        }
     }
 }
