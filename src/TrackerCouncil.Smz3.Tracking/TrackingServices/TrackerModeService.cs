@@ -150,7 +150,7 @@ internal class TrackerModeService : TrackerService, ITrackerModeService
             AddUndo(() =>
             {
                 CheatsEnabled = false;
-                ToggledShaktoolMode?.Invoke(this, new TrackerEventArgs(confidence));
+                CheatsToggled?.Invoke(this, new TrackerEventArgs(confidence));
             });
         }
         else
@@ -169,7 +169,7 @@ internal class TrackerModeService : TrackerService, ITrackerModeService
             AddUndo(() =>
             {
                 CheatsEnabled = true;
-                ToggledShaktoolMode?.Invoke(this, new TrackerEventArgs(confidence));
+                CheatsToggled?.Invoke(this, new TrackerEventArgs(confidence));
             });
         }
         else
