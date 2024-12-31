@@ -62,6 +62,11 @@ public class GitHubFileDownloaderRequest
     /// Timeout value for each individual request
     /// </summary>
     public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(5);
+
+    /// <summary>
+    /// If any files that exist on the local computer but not on GitHub should be deleted
+    /// </summary>
+    public bool DeleteExtraFiles { get; set; }
 }
 
 /// <summary>
@@ -153,7 +158,7 @@ public class GitHubFileSynchronizerService : IGitHubFileSynchronizerService
                 });
             });
 
-        if (Directory.Exists(request.DestinationFolder))
+        if (Directory.Exists(request.DestinationFolder) && request.DeleteExtraFiles)
         {
             var foundLocalFiles = fileList.Select(x => x.LocalPath).ToHashSet();
 

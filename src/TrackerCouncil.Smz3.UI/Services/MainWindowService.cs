@@ -141,6 +141,7 @@ public class MainWindowService(
             InitialJsonPath = RandomizerDirectories.SpriteInitialJsonFilePath,
             ValidPathCheck = p => Sprite.ValidDownloadExtensions.Contains(Path.GetExtension(p).ToLowerInvariant()),
             ConvertGitHubPathToLocalPath = p => p.Replace("Sprites/", ""),
+            DeleteExtraFiles = RandomizerDirectories.DeleteSprites
         };
 
         var toDownload = await gitHubFileSynchronizerService.GetGitHubFileDetailsAsync(spriteDownloadRequest);
@@ -153,6 +154,7 @@ public class MainWindowService(
             HashPath = RandomizerDirectories.TrackerSpriteHashYamlFilePath,
             InitialJsonPath = RandomizerDirectories.TrackerSpriteInitialJsonFilePath,
             ValidPathCheck = p => p.EndsWith(".png", StringComparison.OrdinalIgnoreCase) || p.EndsWith(".gif", StringComparison.OrdinalIgnoreCase),
+            DeleteExtraFiles = RandomizerDirectories.DeleteSprites
         };
 
         toDownload.AddRange(await gitHubFileSynchronizerService.GetGitHubFileDetailsAsync(spriteDownloadRequest));
