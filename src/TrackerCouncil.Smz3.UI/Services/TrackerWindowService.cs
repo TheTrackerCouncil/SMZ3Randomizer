@@ -114,6 +114,11 @@ public class TrackerWindowService(
             ToggleShaktoolMode(tracker.ModeTracker.ShaktoolMode);
         };
 
+        tracker.ModeTracker.CheatsToggled += (sender, args) =>
+        {
+            UpdateCheatOptions(tracker.ModeTracker.CheatsEnabled);
+        };
+
         tracker.DisableVoiceRecognition();
 
         if (TrackerWindowPanelViewModel.NumberImagePaths.Count == 0)
@@ -548,6 +553,17 @@ public class TrackerWindowService(
             }
         };
 
+        model.CheatItemRequested += async (_, args) =>
+        {
+            if (tracker.GameService == null)
+            {
+                return;
+            }
+
+            var item = args.Item;
+            await tracker.GameService.TryGiveItemAsync(item, null);
+        };
+
         return model;
     }
 
@@ -766,6 +782,16 @@ public class TrackerWindowService(
         }
     }
 
+    private void UpdateCheatOptions(bool cheatsEnabled)
+    {
+        _model.AreCheatsEnabled = cheatsEnabled;
+
+        foreach (var panel in _model.Panels)
+        {
+            panel.CheatsEnabled = cheatsEnabled;
+        }
+    }
+
     public void ToggleSpeechRecognition()
     {
         if (tracker.VoiceRecognitionEnabled)
@@ -775,6 +801,18 @@ public class TrackerWindowService(
         else
         {
             tracker.EnableVoiceRecognition();
+        }
+    }
+
+    public void ToggleCheats()
+    {
+        if (tracker.ModeTracker.CheatsEnabled)
+        {
+            tracker.ModeTracker.DisableCheats();
+        }
+        else
+        {
+            tracker.ModeTracker.EnableCheats();
         }
     }
 }

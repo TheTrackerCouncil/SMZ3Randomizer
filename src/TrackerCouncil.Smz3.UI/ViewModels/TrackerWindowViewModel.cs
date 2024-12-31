@@ -71,6 +71,8 @@ public class TrackerWindowViewModel : ViewModelBase
     [ReactiveLinkedProperties(nameof(IsDisabledConnector), nameof(IsSniConnector), nameof(IsUsb2SnesConnector), nameof(IsLuaConnector), nameof(IsLuaCrowdControlConnector), nameof(IsLuaEmoTrackerConnector))]
     public SnesConnectorType SnesConnectorType { get; set; } = SnesConnectorType.None;
 
+    [Reactive] public bool AreCheatsEnabled { get; set; }
+
     public bool IsDisabledConnector => SnesConnectorType == SnesConnectorType.None;
     public bool IsSniConnector => SnesConnectorType == SnesConnectorType.Sni;
     public bool IsUsb2SnesConnector => SnesConnectorType == SnesConnectorType.Usb2Snes;
