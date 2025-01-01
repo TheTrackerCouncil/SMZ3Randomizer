@@ -220,7 +220,11 @@ public partial class SoloRomListPanel : UserControl
         try
         {
             if (_service == null) return;
-            await _service.OpenArchipelagoModeAsync();
+            if (await _service.OpenArchipelagoModeAsync())
+            {
+                await MessageWindow.ShowInfoDialog(
+                    "ROM successfully parsed and updated into a new file. The original ROM has been been left alone with no modifications. You will need to launch the ROM from SZM3 Cas' or right click on the entry in the list to open the folder and find the updated ROM file.");
+            }
         }
         catch
         {

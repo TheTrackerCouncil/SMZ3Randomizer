@@ -163,7 +163,7 @@ public class SoloRomListService(IRomGenerationService romGenerationService,
         await sharedCrossplatformService.LaunchTrackerAsync(rom.Rom);
     }
 
-    public async Task OpenArchipelagoModeAsync()
+    public async Task<bool> OpenArchipelagoModeAsync()
     {
         var storageItem = await CrossPlatformTools.OpenFileDialogAsync(ParentWindow, FileInputControlType.OpenFile,
                     "Rom file (*.sfc)|*.sfc|All files (*.*)|*.*", "/home/matt/Games/Randomizers/Archipelago");
@@ -172,7 +172,7 @@ public class SoloRomListService(IRomGenerationService romGenerationService,
 
         if (pathString == null)
         {
-            return;
+            return false;
         }
 
         var parsedRomDetails = smz3RomParser.ParseRomFile(pathString);
@@ -180,7 +180,10 @@ public class SoloRomListService(IRomGenerationService romGenerationService,
         if (await sharedCrossplatformService.OpenGenerationWindow(importDetails: parsedRomDetails) != null)
         {
             UpdateList();
+            return true;
         }
+
+        return false;
     }
 
     private void OpenMessageWindow(string message, MessageWindowIcon icon = MessageWindowIcon.Error, MessageWindowButtons buttons = MessageWindowButtons.OK)
