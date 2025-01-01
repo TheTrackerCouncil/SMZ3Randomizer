@@ -4,7 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
-using AvaloniaControls;
+using AvaloniaControls.Controls;
 using AvaloniaControls.Services;
 using TrackerCouncil.Smz3.UI.Services;
 using TrackerCouncil.Smz3.UI.ViewModels;
@@ -217,8 +217,15 @@ public partial class SoloRomListPanel : UserControl
 
     private async void ArchipelagoButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (_service == null) return;
-        await _service.OpenArchipelagoModeAsync();
+        try
+        {
+            if (_service == null) return;
+            await _service.OpenArchipelagoModeAsync();
+        }
+        catch
+        {
+            await MessageWindow.ShowErrorDialog("Invalid ROM file. Please select a valid generated SMZ3 rom.");
+        }
     }
 }
 
