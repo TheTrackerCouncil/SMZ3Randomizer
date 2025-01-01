@@ -234,7 +234,7 @@ public class OptionsWindowService(
 
         sprites.AddRange(await gitHubFileSynchronizerService.GetGitHubFileDetailsAsync(spriteDownloadRequest));
 
-        if (sprites.Count > 0)
+        if (sprites.Any(x => x.Action != GitHubFileAction.Nothing))
         {
             SpriteDownloadStarted?.Invoke(this, EventArgs.Empty);
             await gitHubFileSynchronizerService.SyncGitHubFilesAsync(sprites);
