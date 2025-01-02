@@ -108,10 +108,10 @@ public class LightWorldSouth : Z3Region
         LakeHyliaIsland = new Location(this, LocationId.LakeHyliaIsland, 0x308144, LocationType.Regular,
             name: "Lake Hylia Island",
             vanillaItem: ItemType.HeartPiece,
-            access: items => items.Flippers && items.MoonPearl && items.Mirror && (
+            access: items => items.Flippers && World.Logic.CanNavigateDarkWorld(items) && items.Mirror && (
                 World.DarkWorldSouth.CanEnter(items, true) ||
                 World.DarkWorldNorthEast.CanEnter(items, true)),
-            relevanceRequirement: items => items.Flippers && items.MoonPearl && items.Mirror && (
+            relevanceRequirement: items => items.Flippers && World.Logic.CanNavigateDarkWorld(items) && items.Mirror && (
                 World.DarkWorldSouth.CanEnter(items, false) ||
                 World.DarkWorldNorthEast.CanEnter(items, false)),
             memoryAddress: 0x35,

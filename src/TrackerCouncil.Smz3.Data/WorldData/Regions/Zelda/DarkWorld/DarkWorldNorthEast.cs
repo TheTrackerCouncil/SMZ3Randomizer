@@ -15,7 +15,7 @@ public class DarkWorldNorthEast : Z3Region
         Catfish = new Location(this, LocationId.Catfish, 0x1DE185, LocationType.Regular,
             name: "Catfish",
             vanillaItem: ItemType.Quake,
-            access: items => items.MoonPearl && Logic.CanLiftLight(items),
+            access: items => World.Logic.CanNavigateDarkWorld(items) && Logic.CanLiftLight(items),
             memoryAddress: 0x190,
             memoryFlag: 0x20,
             memoryType: LocationMemoryType.ZeldaMisc,
@@ -52,7 +52,7 @@ public class DarkWorldNorthEast : Z3Region
     public override bool CanEnter(Progression items, bool requireRewards)
     {
         return Logic.CheckAgahnim(items, World, requireRewards) ||
-               (items.MoonPearl && (
+               (World.Logic.CanNavigateDarkWorld(items) && (
                        (items.Hammer && Logic.CanLiftLight(items)) ||
                        (Logic.CanLiftHeavy(items) && items.Flippers) ||
                        (Logic.CanAccessDarkWorldPortal(items) && items.Flippers)
@@ -94,7 +94,7 @@ public class DarkWorldNorthEast : Z3Region
 
         private bool CanAccessPyramidFairy(Progression items, bool requireRewards) =>
             (items.BothRedCrystals || (!requireRewards && World.CanAquireAll(items, RewardType.CrystalRed))) &&
-            items.MoonPearl && World.DarkWorldSouth.CanEnter(items, requireRewards) &&
+            World.Logic.CanNavigateDarkWorld(items) && World.DarkWorldSouth.CanEnter(items, requireRewards) &&
             (items.Hammer || (items.Mirror && Logic.CheckAgahnim(items, World, requireRewards)));
     }
 }

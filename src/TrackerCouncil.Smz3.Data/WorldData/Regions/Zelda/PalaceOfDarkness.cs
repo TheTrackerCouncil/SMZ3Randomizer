@@ -176,7 +176,7 @@ public class PalaceOfDarkness : Z3Region, IHasReward, IHasTreasure, IHasBoss
 
     public override bool CanEnter(Progression items, bool requireRewards)
     {
-        return items.MoonPearl && World.DarkWorldNorthEast.CanEnter(items, requireRewards);
+        return World.Logic.CanNavigateDarkWorld(items) && World.DarkWorldNorthEast.CanEnter(items, requireRewards);
     }
 
     public bool CanBeatBoss(Progression items) => HelmasaurKingReward.IsAvailable(items);

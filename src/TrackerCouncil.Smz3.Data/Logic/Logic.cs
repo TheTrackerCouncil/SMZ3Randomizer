@@ -16,6 +16,8 @@ public class Logic : ILogic
     public bool CanLiftLight(Progression items) => items.Glove;
     public bool CanLiftHeavy(Progression items) => items.Mitt;
 
+    public bool HasHeartCount(Progression items, int numberOfHearts) => items.HeartCount >= numberOfHearts;
+
     public bool CanLightTorches(Progression items)
     {
         return items.FireRod || items.Lamp;
@@ -107,9 +109,16 @@ public class Logic : ILogic
         return items.Flute && CanLiftHeavy(items);
     }
 
+    public bool CanNavigateDarkWorld(Progression items)
+    {
+        return items.MoonPearl && (!World.Config.LogicConfig.PreventLowResourceDarkWorld ||
+                                   (HasHeartCount(items, 6) &&
+                                    (items.Sword || items.Hammer || items.Bow || items.FireRod)));
+    }
+
     public bool CanAccessMaridiaPortal(Progression items, bool requireRewards)
     {
-        return items.MoonPearl && items.Flippers &&
+        return CanNavigateDarkWorld(items) && items.Flippers &&
                items.Gravity && items.Morph &&
                (CheckAgahnim(items, World, requireRewards) || items.Hammer && CanLiftLight(items) || CanLiftHeavy(items));
     }

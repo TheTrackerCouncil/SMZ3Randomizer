@@ -160,7 +160,7 @@ public class MiseryMire : Z3Region, IHasReward, IHasPrerequisite, IHasTreasure, 
     // Need "CanKillManyEnemies" if implementing swordless
     public override bool CanEnter(Progression items, bool requireRewards)
     {
-        return items.Contains(PrerequisiteState.RequiredItem) && items is { Sword: true, MoonPearl: true } &&
+        return items.Contains(PrerequisiteState.RequiredItem) && items.Sword && World.Logic.CanNavigateDarkWorld(items) &&
                (items.Boots || items.Hookshot) && World.DarkWorldMire.CanEnter(items, requireRewards);
     }
 

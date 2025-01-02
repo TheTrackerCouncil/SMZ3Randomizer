@@ -144,7 +144,7 @@ public class TurtleRock : Z3Region, IHasReward, IHasPrerequisite, IHasTreasure, 
 
     public override bool CanEnter(Progression items, bool requireRewards)
     {
-        return items.Contains(PrerequisiteState.RequiredItem) && items.Sword && items.MoonPearl &&
+        return items.Contains(PrerequisiteState.RequiredItem) && items.Sword && World.Logic.CanNavigateDarkWorld(items) &&
                Logic.CanLiftHeavy(items) && items.Hammer && items.Somaria &&
                World.LightWorldDeathMountainEast.CanEnter(items, requireRewards);
     }

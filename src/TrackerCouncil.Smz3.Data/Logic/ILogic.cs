@@ -67,4 +67,6 @@ public interface ILogic
     public bool CanWallJump(WallJumpDifficulty difficulty);
 
     public bool CheckAgahnim(Progression items, World world, bool requireRewards);
+
+    public bool CanNavigateDarkWorld(Progression items);
 }

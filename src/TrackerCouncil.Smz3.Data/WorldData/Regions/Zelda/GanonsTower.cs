@@ -170,7 +170,7 @@ public class GanonsTower : Z3Region, IHasTreasure, IHasBoss
         var haveEnoughCrystals = items.CrystalCount >= Config.GanonsTowerCrystalCount;
         var gtOpenBeforeGanon = Config.GanonsTowerCrystalCount < Config.GanonCrystalCount;
         var canBeatMetroid = World.CanDefeatBossCount(items, smBosses) >= Config.TourianBossCount;
-        return items.MoonPearl && canEnterDDMEast && haveEnoughCrystals && (gtOpenBeforeGanon || canBeatMetroid);
+        return World.Logic.CanNavigateDarkWorld(items) && canEnterDDMEast && haveEnoughCrystals && (gtOpenBeforeGanon || canBeatMetroid);
     }
 
     public override bool CanFill(Item item, Progression items)

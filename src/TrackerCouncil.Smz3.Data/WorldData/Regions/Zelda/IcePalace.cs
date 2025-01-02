@@ -146,7 +146,7 @@ public class IcePalace : Z3Region, IHasReward, IHasTreasure, IHasBoss
 
     public override bool CanEnter(Progression items, bool requireRewards)
     {
-        return items.MoonPearl && items.Flippers && Logic.CanLiftHeavy(items) && Logic.CanMeltFreezors(items);
+        return World.Logic.CanNavigateDarkWorld(items) && items.Flippers && Logic.CanLiftHeavy(items) && Logic.CanMeltFreezors(items);
     }
 
     public bool CanBeatBoss(Progression items) => KholdstareReward.IsAvailable(items);

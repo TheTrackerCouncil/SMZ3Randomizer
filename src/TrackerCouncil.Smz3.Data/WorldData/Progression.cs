@@ -132,6 +132,7 @@ public class Progression
     public int CrystalCount => Rewards.Count(r => r is RewardType.CrystalBlue or RewardType.CrystalRed);
     public int Count => Items.Count;
     public bool IsReadOnly => false;
+    public int HeartCount => 3 + GetCount(ItemType.HeartContainer) + GetCount(ItemType.HeartContainerRefill) + GetCount(ItemType.HeartPiece) / 4;
 
     protected List<ItemType> Items { get; }
     protected List<RewardType> Rewards { get; }
