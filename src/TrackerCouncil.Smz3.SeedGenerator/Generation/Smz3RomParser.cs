@@ -51,8 +51,7 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
 
             var itemTypes = configs.Items.Where(x => x.InternalItemType != ItemType.Nothing)
                 .Select(x => (int)x.InternalItemType).ToList();
-            var locations =
-                LocationsPatch.GetLocationsFromRom(rom, playerNames, exampleWorld, isMultiworldEnabled, itemTypes);
+
             var prerequisites = MedallionPatch.GetPrerequisitesFromRom(rom, exampleWorld.PrerequisiteRegions);
             var bosses = exampleWorld.BossRegions.Select(x => new ParsedRomBossDetails()
             {
@@ -111,6 +110,8 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
                 throw new InvalidOperationException("Could not determine rom generator from the rom details");
             }
 
+            var locations =
+                LocationsPatch.GetLocationsFromRom(rom, playerNames, exampleWorld, isMultiworldEnabled, itemTypes, romGenerator == RomGenerator.Cas);
             var rewards =
                 ZeldaRewardsPatch.GetRewardsFromRom(rom, exampleWorld.RewardRegions, romGenerator == RomGenerator.Cas);
             var startingItems = StartingEquipmentPatch.GetStartingItemList(rom, romGenerator == RomGenerator.Cas);

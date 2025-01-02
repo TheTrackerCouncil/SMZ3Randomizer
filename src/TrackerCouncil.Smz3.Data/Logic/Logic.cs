@@ -175,7 +175,7 @@ public class Logic : ILogic
 
     public static IEnumerable<ItemType[]> GetMissingRequiredItems(Location location, Progression items, out IEnumerable<ItemType> allPossibleMissingItems)
     {
-        if (location.IsAvailable(items))
+        if (location.Accessibility is Accessibility.Available or Accessibility.AvailableWithKeys)
         {
             allPossibleMissingItems = Enumerable.Empty<ItemType>();
             return Enumerable.Empty<ItemType[]>();

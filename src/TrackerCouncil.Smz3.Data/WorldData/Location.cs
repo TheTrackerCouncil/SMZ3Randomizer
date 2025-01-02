@@ -328,12 +328,42 @@ public class Location
     /// <summary>
     /// Returns the status of a location based on the given items
     /// </summary>
+    /// <param name="actualProgression"></param>
+    /// <param name="withKeysProgression"></param>
+    /// <param name="isAccessible"></param>
+    /// <param name="isAccessibleWithKeys"></param>
+    /// <returns></returns>
+    public Accessibility GetLegacyAccessibility(bool isAccessible, bool isAccessibleWithKeys)
+    {
+        if (State.Cleared) return Accessibility.Cleared;
+        else if (isAccessible) return Accessibility.Available;
+        else if (isAccessibleWithKeys) return Accessibility.AvailableWithKeys;
+        else return Accessibility.OutOfLogic;
+    }
+
+    /// <summary>
+    /// Updates the status of a location based on the given items
+    /// </summary>
     /// <param name="actualProgression">The available items</param>
     /// <param name="withKeysProgression">The available items plus additional keys</param>
     /// <returns>The LocationStatus enum of the location</returns>
     public void UpdateAccessibility(Progression actualProgression, Progression withKeysProgression)
     {
         var newValue = GetAccessibility(actualProgression, withKeysProgression);
+        if (newValue == Accessibility) return;
+        Accessibility = newValue;
+        AccessibilityUpdated?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>
+    /// Updates the status of a location based on the given items
+    /// </summary>
+    /// <param name="isAccessible"></param>
+    /// <param name="isAccessibleWithKeys"></param>
+    /// <returns>The LocationStatus enum of the location</returns>
+    public void UpdateLegacyAccessibility(bool isAccessible, bool isAccessibleWithKeys)
+    {
+        var newValue = GetLegacyAccessibility(isAccessible, isAccessibleWithKeys);
         if (newValue == Accessibility) return;
         Accessibility = newValue;
         AccessibilityUpdated?.Invoke(this, EventArgs.Empty);

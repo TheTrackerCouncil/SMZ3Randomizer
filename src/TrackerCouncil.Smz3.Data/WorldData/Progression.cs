@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Randomizer.SMZ3;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
 
@@ -193,6 +194,14 @@ public class Progression
 
     public IEnumerator<ItemType> GetEnumerator()
         => Items.GetEnumerator();
+
+    public void InitLegacyProgression()
+    {
+        var itemIds = Items.Select(x => (int)x).ToList();
+        LegacyProgression = new LegacyProgression(itemIds);
+    }
+
+    public LegacyProgression? LegacyProgression { get; private set; }
 
     public bool HasMarkedMedallion(ItemType? medallion)
         =>  (medallion != null && medallion != ItemType.Nothing && Contains(medallion.Value)) || (Bombos && Ether && Quake);

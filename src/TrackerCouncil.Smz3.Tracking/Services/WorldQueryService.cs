@@ -72,7 +72,9 @@ public class WorldQueryService : IWorldQueryService
     /// <param name="assumeKeys">If keys and keycards should be assumed for the player</param>
     /// <returns></returns>
     public IEnumerable<Location> AccessibleLocations(bool assumeKeys)
-        => AccessibleLocations(Progression(assumeKeys)).ToImmutableList();
+        => UnclearedLocations().Where(x =>
+            x.Accessibility == Accessibility.Available ||
+            (assumeKeys && x.Accessibility == Accessibility.AvailableWithKeys)).ToImmutableList();
 
     /// <summary>
     /// Retrieves all uncleared locations for the current player's world, regardless of if
