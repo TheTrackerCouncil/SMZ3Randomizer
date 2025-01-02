@@ -60,6 +60,8 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
         // Actually track the item if it's for the local player's world
         if (item.World == World && item.IsLocalPlayerItem)
         {
+            logger.LogInformation("Tracking local player item {ItemType}", item.Type.GetDescription());
+
             if (item.Metadata.HasStages)
             {
                 if (trackedAs != null && item.Metadata.GetStage(trackedAs) != null)
@@ -71,6 +73,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
                     var stageName = item.Metadata.Stages[stage.Value].ToString();
 
                     didTrack = item.Track(stage.Value);
+
                     if (stateResponse)
                     {
                         if (didTrack)
@@ -165,6 +168,8 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
         }
         else if (location != null)
         {
+            logger.LogInformation("Clearing location for item {ItemType}", item.Type.GetDescription());
+
             Tracker.LocationTracker.Clear(location, confidence, autoTracked, stateResponse: false, allowLocationComments: true, updateTreasureCount: true);
 
             // If this is a parsed AP/Mainline rom and this is an item for another player, let's comment on it
