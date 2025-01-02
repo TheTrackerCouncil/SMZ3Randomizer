@@ -60,10 +60,10 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
         // Actually track the item if it's for the local player's world
         if (item.World == World && item.IsLocalPlayerItem)
         {
-            logger.LogInformation("Tracking local player item {ItemType}", item.Type.GetDescription());
-
             if (item.Metadata.HasStages)
             {
+                logger.LogInformation("Tracking local player staged item {ItemType}", item.Type.GetDescription());
+
                 if (trackedAs != null && item.Metadata.GetStage(trackedAs) != null)
                 {
                     var stage = item.Metadata.GetStage(trackedAs)!;
@@ -120,6 +120,8 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
             }
             else if (item.Metadata.Multiple)
             {
+                logger.LogInformation("Tracking local player multiple item {ItemType}", item.Type.GetDescription());
+
                 didTrack = item.Track();
                 if (item.TryGetTrackingResponse(out var response))
                 {
@@ -145,6 +147,8 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
             }
             else
             {
+                logger.LogInformation("Tracking local player basic item {ItemType}", item.Type.GetDescription());
+
                 didTrack = item.Track();
                 if (stateResponse)
                 {
