@@ -157,6 +157,7 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
         config.PlayerName = parsedRomDetails.Players.First(x => x.IsLocalPlayer).PlayerName;
         config.ParsedRomDetails = parsedRomDetails;
         config.GameMode = parsedRomDetails.IsMultiworld ? GameMode.Multiworld : GameMode.Normal;
+        config.LegacyMetroidLogic = parsedRomDetails.IsHardLogic ? SMLogic.Hard : SMLogic.Normal;
         config.RomGenerator = parsedRomDetails.RomGenerator;
         config.KeysanityMode = parsedRomDetails.KeysanityMode;
         config.Seed = parsedRomDetails.Seed.ToString();
