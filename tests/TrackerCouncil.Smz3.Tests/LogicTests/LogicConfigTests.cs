@@ -50,6 +50,7 @@ public class LogicConfigTests
         config.LogicConfig.PreventScrewAttackSoftLock = false;
         World tempWorld = new World(config, "", 0, "");
         var progression = new Progression(new[] { ItemType.ScrewAttack }, new List<RewardType>(), new List<BossType>());
+        tempWorld.FindLocation(LocationId.CrateriaTerminator).UpdateAccessibility(progression, progression);
         var missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.CrateriaTerminator), progression, out _);
         missingItems.Should().BeEmpty();
         tempWorld.FindLocation(LocationId.CrateriaTerminator).IsAvailable(progression).Should().BeTrue();
@@ -57,6 +58,7 @@ public class LogicConfigTests
         config.LogicConfig.PreventScrewAttackSoftLock = true;
         tempWorld = new World(config, "", 0, "");
         progression = new Progression(new[] { ItemType.ScrewAttack }, new List<RewardType>(), new List<BossType>());
+        tempWorld.FindLocation(LocationId.CrateriaTerminator).UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.CrateriaTerminator), progression, out _);
         missingItems.Should().HaveCount(1)
             .And.ContainEquivalentOf(new[] { ItemType.Morph });
@@ -71,6 +73,7 @@ public class LogicConfigTests
         config.LogicConfig.PreventFivePowerBombSeed = false;
         World tempWorld = new World(config, "", 0, "");
         var progression = new Progression(new[] { ItemType.Morph, ItemType.PowerBomb }, new List<RewardType>(), new List<BossType>());
+        tempWorld.FindLocation(LocationId.CrateriaTerminator).UpdateAccessibility(progression, progression);
         var missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.CrateriaTerminator), progression, out _);
         missingItems.Should().BeEmpty();
         tempWorld.FindLocation(LocationId.CrateriaTerminator).IsAvailable(progression).Should().BeTrue();
@@ -78,6 +81,7 @@ public class LogicConfigTests
         config.LogicConfig.PreventFivePowerBombSeed = true;
         tempWorld = new World(config, "", 0, "");
         progression = new Progression(new[] { ItemType.Morph, ItemType.PowerBomb }, new List<RewardType>(), new List<BossType>());
+        tempWorld.FindLocation(LocationId.CrateriaTerminator).UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.CrateriaTerminator), progression, out _);
         missingItems.Should().HaveCount(3)
             .And.ContainEquivalentOf(new[] { ItemType.Bombs })
@@ -86,6 +90,7 @@ public class LogicConfigTests
         tempWorld.FindLocation(LocationId.CrateriaTerminator).IsAvailable(progression).Should().BeFalse();
 
         progression = new Progression(new[] { ItemType.Morph, ItemType.PowerBomb, ItemType.PowerBomb }, new List<RewardType>(), new List<BossType>());
+        tempWorld.FindLocation(LocationId.CrateriaTerminator).UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.CrateriaTerminator), progression, out _);
         missingItems.Should().BeEmpty();
         tempWorld.FindLocation(LocationId.CrateriaTerminator).IsAvailable(progression).Should().BeTrue();
@@ -99,6 +104,7 @@ public class LogicConfigTests
         config.LogicConfig.FireRodDarkRooms = false;
         World tempWorld = new World(config, "", 0, "");
         var progression = new Progression();
+        tempWorld.FindLocation(LocationId.SewersDarkCross).UpdateAccessibility(progression, progression);
         var missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.SewersDarkCross), progression, out _);
         missingItems.Should().HaveCount(1)
             .And.ContainEquivalentOf(new[] { ItemType.Lamp });
@@ -107,6 +113,7 @@ public class LogicConfigTests
         config.LogicConfig.FireRodDarkRooms = true;
         tempWorld = new World(config, "", 0, "");
         progression = new Progression();
+        tempWorld.FindLocation(LocationId.SewersDarkCross).UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.SewersDarkCross), progression, out _);
         missingItems.Should().HaveCount(2)
             .And.ContainEquivalentOf(new[] { ItemType.Lamp })
@@ -114,6 +121,7 @@ public class LogicConfigTests
         tempWorld.FindLocation(LocationId.SewersDarkCross).IsAvailable(progression).Should().BeFalse();
 
         progression = new Progression(new[] { ItemType.Firerod }, new List<RewardType>(), new List<BossType>());
+        tempWorld.FindLocation(LocationId.SewersDarkCross).UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.SewersDarkCross), progression, out _);
         missingItems.Should().BeEmpty();
         tempWorld.FindLocation(LocationId.SewersDarkCross).IsAvailable(progression).Should().BeTrue();
@@ -127,6 +135,7 @@ public class LogicConfigTests
         config.LogicConfig.InfiniteBombJump = false;
         World tempWorld = new World(config, "", 0, "");
         var progression = new Progression(new[] { ItemType.Morph, ItemType.PowerBomb, ItemType.Bombs }, new List<RewardType>(), new List<BossType>());
+        tempWorld.FindLocation(LocationId.CrateriaPowerBomb).UpdateAccessibility(progression, progression);
         var missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.CrateriaPowerBomb), progression, out _);
         missingItems.Should().HaveCount(2)
             .And.ContainEquivalentOf(new[] { ItemType.SpaceJump })
@@ -136,6 +145,7 @@ public class LogicConfigTests
         config.LogicConfig.InfiniteBombJump = true;
         tempWorld = new World(config, "", 0, "");
         progression = new Progression(new[] { ItemType.Morph, ItemType.PowerBomb, ItemType.Bombs }, new List<RewardType>(), new List<BossType>());
+        tempWorld.FindLocation(LocationId.CrateriaPowerBomb).UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.CrateriaPowerBomb), progression, out _);
         missingItems.Should().BeEmpty();
         tempWorld.FindLocation(LocationId.CrateriaPowerBomb).IsAvailable(progression).Should().BeTrue();
@@ -149,6 +159,7 @@ public class LogicConfigTests
         config.LogicConfig.ParlorSpeedBooster = false;
         World tempWorld = new World(config, "", 0, "");
         var progression = new Progression();
+        tempWorld.FindLocation(LocationId.CrateriaTerminator).UpdateAccessibility(progression, progression);
         var missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.CrateriaTerminator), progression, out _);
         missingItems.Should().HaveCount(7)
             .And.NotContainEquivalentOf(new[] { ItemType.SpeedBooster });
@@ -157,12 +168,14 @@ public class LogicConfigTests
         config.LogicConfig.ParlorSpeedBooster = true;
         tempWorld = new World(config, "", 0, "");
         progression = new Progression();
+        tempWorld.FindLocation(LocationId.CrateriaTerminator).UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.CrateriaTerminator), progression, out _);
         missingItems.Should().HaveCount(8)
             .And.ContainEquivalentOf(new[] { ItemType.SpeedBooster });
         tempWorld.FindLocation(LocationId.CrateriaTerminator).IsAvailable(progression).Should().BeFalse();
 
         progression = new Progression(new[] { ItemType.SpeedBooster }, new List<RewardType>(), new List<BossType>());
+        tempWorld.FindLocation(LocationId.CrateriaTerminator).UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.CrateriaTerminator), progression, out _);
         missingItems.Should().BeEmpty();
         tempWorld.FindLocation(LocationId.CrateriaTerminator).IsAvailable(progression).Should().BeTrue();
@@ -176,6 +189,7 @@ public class LogicConfigTests
         config.LogicConfig.MockBall = false;
         World tempWorld = new World(config, "", 0, "");
         var progression = new Progression(new[] { ItemType.Morph, ItemType.Bombs , ItemType.Missile , ItemType.PowerBomb, ItemType.ScrewAttack }, new List<RewardType>(), new List<BossType>());
+        tempWorld.FindLocation(LocationId.GreenBrinstarEarlySupersTop).UpdateAccessibility(progression, progression);
         var missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.GreenBrinstarEarlySupersTop), progression, out _);
         missingItems.Should().HaveCount(1)
             .And.ContainEquivalentOf(new[] { ItemType.SpeedBooster });
@@ -183,11 +197,13 @@ public class LogicConfigTests
 
         config.LogicConfig.MockBall = true;
         tempWorld = new World(config, "", 0, "");
+        tempWorld.FindLocation(LocationId.GreenBrinstarEarlySupersTop).UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.GreenBrinstarEarlySupersTop), progression, out _);
         missingItems.Should().BeEmpty();
         tempWorld.FindLocation(LocationId.GreenBrinstarEarlySupersTop).IsAvailable(progression).Should().BeTrue();
 
         progression = new Progression(new[] { ItemType.Bombs, ItemType.Missile, ItemType.PowerBomb, ItemType.ScrewAttack }, new List<RewardType>(), new List<BossType>());
+        tempWorld.FindLocation(LocationId.GreenBrinstarEarlySupersTop).UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.GreenBrinstarEarlySupersTop), progression, out _);
         missingItems.Should().HaveCount(2)
             .And.ContainEquivalentOf(new[] { ItemType.SpeedBooster })
@@ -203,6 +219,7 @@ public class LogicConfigTests
         config.LogicConfig.SwordOnlyDarkRooms = false;
         World tempWorld = new World(config, "", 0, "");
         var progression = new Progression(new[] { ItemType.ProgressiveSword }, new List<RewardType>(), new List<BossType>());
+        tempWorld.EasternPalace.BigKeyChest.UpdateAccessibility(progression, progression);
         var missingItems = Logic.GetMissingRequiredItems(tempWorld.EasternPalace.BigKeyChest, progression, out _);
         missingItems.Should().HaveCount(1)
             .And.ContainEquivalentOf(new[] { ItemType.Lamp });
@@ -210,11 +227,13 @@ public class LogicConfigTests
 
         config.LogicConfig.SwordOnlyDarkRooms = true;
         tempWorld = new World(config, "", 0, "");
+        tempWorld.EasternPalace.BigKeyChest.UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.EasternPalace.BigKeyChest, progression, out _);
         missingItems.Should().BeEmpty();
         tempWorld.EasternPalace.BigKeyChest.IsAvailable(progression).Should().BeTrue();
 
         progression = new Progression();
+        tempWorld.EasternPalace.BigKeyChest.UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.EasternPalace.BigKeyChest, progression, out _);
         missingItems.Should().HaveCount(3)
             .And.ContainEquivalentOf(new[] { ItemType.ProgressiveSword })
@@ -230,9 +249,12 @@ public class LogicConfigTests
         config.LogicConfig.LightWorldSouthFakeFlippers = false;
         var tempWorld = new World(config, "", 0, "");
         var progression = new Progression();
+        tempWorld.LightWorldSouth.UnderTheBridge.UpdateAccessibility(progression, progression);
         var missingItems = Logic.GetMissingRequiredItems(tempWorld.LightWorldSouth.UnderTheBridge, progression, out _);
         missingItems.Should().HaveCount(1)
             .And.ContainEquivalentOf(new[] { ItemType.Flippers });
+
+        tempWorld.LightWorldNorthEast.WaterfallFairy.Locations.First().UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.LightWorldNorthEast.WaterfallFairy.Locations.First(), progression, out _);
         missingItems.Should().HaveCount(1)
             .And.ContainEquivalentOf(new[] { ItemType.Flippers });
@@ -240,8 +262,10 @@ public class LogicConfigTests
 
         config.LogicConfig.LightWorldSouthFakeFlippers = true;
         tempWorld = new World(config, "", 0, "");
+        tempWorld.LightWorldSouth.UnderTheBridge.UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.LightWorldSouth.UnderTheBridge, progression, out _);
         missingItems.Should().BeEmpty();
+        tempWorld.LightWorldNorthEast.WaterfallFairy.Locations.First().UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.LightWorldNorthEast.WaterfallFairy.Locations.First(), progression, out _);
         missingItems.Should().HaveCount(2)
             .And.ContainEquivalentOf(new[] { ItemType.Flippers })
@@ -249,6 +273,7 @@ public class LogicConfigTests
         tempWorld.LightWorldNorthEast.WaterfallFairy.Locations.First().IsAvailable(progression).Should().BeFalse();
 
         progression = new Progression(new[] { ItemType.MoonPearl }, new List<RewardType>(), new List<BossType>());
+        tempWorld.LightWorldNorthEast.WaterfallFairy.Locations.First().UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.LightWorldNorthEast.WaterfallFairy.Locations.First(), progression, out _);
         missingItems.Should().BeEmpty();
         tempWorld.LightWorldNorthEast.WaterfallFairy.Locations.First().IsAvailable(progression).Should().BeTrue();
@@ -281,6 +306,7 @@ public class LogicConfigTests
 
         var tempWorld = new World(config, "", 0, "");
         var progression = new Progression(new[] { ItemType.CardMaridiaL1, ItemType.Morph, ItemType.Super, ItemType.PowerBomb, ItemType.Gravity, ItemType.SpaceJump }, new List<RewardType>(), new List<BossType>());
+        tempWorld.FindLocation(LocationId.InnerMaridiaWestSandHoleLeft).UpdateAccessibility(progression, progression);
         var missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.InnerMaridiaWestSandHoleLeft), progression, out _);
         missingItems.Should().HaveCount(1)
             .And.ContainEquivalentOf(new[] { ItemType.SpringBall });
@@ -288,6 +314,7 @@ public class LogicConfigTests
         tempWorld.FindLocation(LocationId.InnerMaridiaWestSandHoleRight).IsAvailable(progression).Should().BeFalse();
 
         progression = new Progression(new[] { ItemType.CardMaridiaL1, ItemType.Morph, ItemType.Super, ItemType.PowerBomb, ItemType.Gravity, ItemType.SpaceJump, ItemType.SpringBall, ItemType.HiJump }, new List<RewardType>(), new List<BossType>());
+        tempWorld.FindLocation(LocationId.InnerMaridiaWestSandHoleLeft).UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.InnerMaridiaWestSandHoleLeft), progression, out _);
         missingItems.Should().BeEmpty();
         tempWorld.FindLocation(LocationId.InnerMaridiaWestSandHoleLeft).IsAvailable(progression).Should().BeTrue();
@@ -302,18 +329,21 @@ public class LogicConfigTests
         config.LogicConfig.LaunchPadRequiresIceBeam = false;
         var tempWorld = new World(config, "", 0, "");
         var progression = new Progression(new[] { ItemType.ETank, ItemType.ETank, ItemType.Morph, ItemType.SpeedBooster, ItemType.PowerBomb, ItemType.PowerBomb}, new List<RewardType>(), new List<BossType>());
+        tempWorld.FindLocation(LocationId.CrateriaSuper).UpdateAccessibility(progression, progression);
         var missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.CrateriaSuper), progression, out _);
         missingItems.Should().BeEmpty();
         tempWorld.FindLocation(LocationId.CrateriaSuper).IsAvailable(progression).Should().BeTrue();
 
         config.LogicConfig.LaunchPadRequiresIceBeam = true;
         tempWorld = new World(config, "", 0, "");
+        tempWorld.FindLocation(LocationId.CrateriaSuper).UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.CrateriaSuper), progression, out _);
         missingItems.Should().HaveCount(1)
             .And.ContainEquivalentOf(new[] { ItemType.Ice });
         tempWorld.FindLocation(LocationId.CrateriaSuper).IsAvailable(progression).Should().BeFalse();
 
         progression = new Progression(new[] { ItemType.ETank, ItemType.ETank, ItemType.Morph, ItemType.SpeedBooster, ItemType.PowerBomb, ItemType.PowerBomb, ItemType.Ice }, new List<RewardType>(), new List<BossType>());
+        tempWorld.FindLocation(LocationId.CrateriaSuper).UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.CrateriaSuper), progression, out _);
         missingItems.Should().BeEmpty();
         tempWorld.FindLocation(LocationId.CrateriaSuper).IsAvailable(progression).Should().BeTrue();
@@ -327,18 +357,21 @@ public class LogicConfigTests
         config.LogicConfig.WaterwayNeedsGravitySuit = false;
         var tempWorld = new World(config, "", 0, "");
         var progression = new Progression(new[] { ItemType.ETank, ItemType.ETank, ItemType.Morph, ItemType.SpeedBooster, ItemType.PowerBomb, ItemType.PowerBomb, ItemType.Missile }, new List<RewardType>(), new List<BossType>());
+        tempWorld.FindLocation(LocationId.PinkBrinstarWaterwayEnergyTank).UpdateAccessibility(progression, progression);
         var missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.PinkBrinstarWaterwayEnergyTank), progression, out _);
         missingItems.Should().BeEmpty();
         tempWorld.FindLocation(LocationId.PinkBrinstarWaterwayEnergyTank).IsAvailable(progression).Should().BeTrue();
 
         config.LogicConfig.WaterwayNeedsGravitySuit = true;
         tempWorld = new World(config, "", 0, "");
+        tempWorld.FindLocation(LocationId.PinkBrinstarWaterwayEnergyTank).UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.PinkBrinstarWaterwayEnergyTank), progression, out _);
         missingItems.Should().HaveCount(1)
             .And.ContainEquivalentOf(new[] { ItemType.Gravity });
         tempWorld.FindLocation(LocationId.PinkBrinstarWaterwayEnergyTank).IsAvailable(progression).Should().BeFalse();
 
         progression = new Progression(new[] { ItemType.ETank, ItemType.ETank, ItemType.Morph, ItemType.SpeedBooster, ItemType.PowerBomb, ItemType.PowerBomb, ItemType.Missile, ItemType.Gravity }, new List<RewardType>(), new List<BossType>());
+        tempWorld.FindLocation(LocationId.CrateriaSuper).UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.CrateriaSuper), progression, out _);
         missingItems.Should().BeEmpty();
         tempWorld.FindLocation(LocationId.PinkBrinstarWaterwayEnergyTank).IsAvailable(progression).Should().BeTrue();
@@ -352,12 +385,14 @@ public class LogicConfigTests
         config.LogicConfig.EasyEastCrateriaSkyItem = false;
         var tempWorld = new World(config, "", 0, "");
         var progression = new Progression(new[] { ItemType.ETank, ItemType.ETank, ItemType.Morph, ItemType.PowerBomb, ItemType.PowerBomb, ItemType.Super, ItemType.Gravity, ItemType.Grapple }, new List<RewardType>(), new List<BossType>() { BossType.Phantoon });
+        tempWorld.FindLocation(LocationId.CrateriaWestOceanSky).UpdateAccessibility(progression, progression);
         var missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.CrateriaWestOceanSky), progression, out _);
         missingItems.Should().BeEmpty();
         tempWorld.FindLocation(LocationId.CrateriaWestOceanSky).IsAvailable(progression).Should().BeTrue();
 
         config.LogicConfig.EasyEastCrateriaSkyItem = true;
         tempWorld = new World(config, "", 0, "");
+        tempWorld.FindLocation(LocationId.CrateriaWestOceanSky).UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.CrateriaWestOceanSky), progression, out _);
         missingItems.Should().HaveCount(2)
             .And.ContainEquivalentOf(new[] { ItemType.SpaceJump })
@@ -366,6 +401,7 @@ public class LogicConfigTests
         tempWorld.FindLocation(LocationId.CrateriaWestOceanSky).IsAvailable(progression).Should().BeFalse();
 
         progression = new Progression(new[] { ItemType.ETank, ItemType.ETank, ItemType.Morph, ItemType.PowerBomb, ItemType.PowerBomb, ItemType.Super, ItemType.Gravity, ItemType.Grapple, ItemType.SpaceJump }, new List<RewardType>(), new List<BossType>() { BossType.Phantoon });
+        tempWorld.FindLocation(LocationId.CrateriaWestOceanSky).UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.CrateriaWestOceanSky), progression, out _);
         missingItems.Should().BeEmpty();
         tempWorld.FindLocation(LocationId.CrateriaWestOceanSky).IsAvailable(progression).Should().BeTrue();
@@ -393,28 +429,33 @@ public class LogicConfigTests
         config.LogicConfig.KholdstareNeedsCaneOfSomaria = false;
         var tempWorld = new World(config, "", 0, "");
         var progression = new Progression(items, Array.Empty<RewardType>(), Array.Empty<BossType>());
+        tempWorld.IcePalace.KholdstareReward.UpdateAccessibility(progression, progression);
         var missingItems = Logic.GetMissingRequiredItems(tempWorld.IcePalace.KholdstareReward, progression, out _);
         missingItems.Should().HaveCount(2)
             .And.ContainEquivalentOf(new[] { ItemType.KeyIP })
             .And.ContainEquivalentOf(new[] { ItemType.Somaria });
 
         progression = new Progression(items.Append(ItemType.KeyIP), Array.Empty<RewardType>(), Array.Empty<BossType>());
+        tempWorld.IcePalace.KholdstareReward.UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.IcePalace.KholdstareReward, progression, out _);
         missingItems.Should().BeEmpty();
 
         config.LogicConfig.KholdstareNeedsCaneOfSomaria = true;
         tempWorld = new World(config, "", 0, "");
         progression = new Progression(items, Array.Empty<RewardType>(), Array.Empty<BossType>());
+        tempWorld.IcePalace.KholdstareReward.UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.IcePalace.KholdstareReward, progression, out _);
         missingItems.Should().HaveCount(1)
             .And.ContainEquivalentOf(new[] { ItemType.Somaria });
 
         progression = new Progression(items.Append(ItemType.KeyIP), Array.Empty<RewardType>(), Array.Empty<BossType>());
+        tempWorld.IcePalace.KholdstareReward.UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.IcePalace.KholdstareReward, progression, out _);
         missingItems.Should().HaveCount(1)
             .And.ContainEquivalentOf(new[] { ItemType.Somaria });
 
         progression = new Progression(items.Append(ItemType.Somaria), Array.Empty<RewardType>(), Array.Empty<BossType>());
+        tempWorld.IcePalace.KholdstareReward.UpdateAccessibility(progression, progression);
         missingItems = Logic.GetMissingRequiredItems(tempWorld.IcePalace.KholdstareReward, progression, out _);
         missingItems.Should().BeEmpty();
     }
@@ -426,6 +467,8 @@ public class LogicConfigTests
 
         var tempWorld = new World(config, "", 0, "");
         var progression = new Progression(new[] { ItemType.Morph, ItemType.PowerBomb, ItemType.CardBrinstarL1 }, new List<RewardType>(), new List<BossType>());
+        tempWorld.FindLocation(LocationId.BlueBrinstarDoubleMissileVisible).UpdateAccessibility(progression, progression);
+        tempWorld.FindLocation(LocationId.BlueBrinstarDoubleMissileHidden).UpdateAccessibility(progression, progression);
         Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.BlueBrinstarDoubleMissileVisible), progression, out _).Should().BeEmpty();
         Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.BlueBrinstarDoubleMissileHidden), progression, out _).Should().BeEmpty();
         tempWorld.FindLocation(LocationId.BlueBrinstarDoubleMissileVisible).IsAvailable(progression).Should().BeTrue();
@@ -433,6 +476,8 @@ public class LogicConfigTests
 
         config.LogicConfig.EasyBlueBrinstarTop = true;
         tempWorld = new World(config, "", 0, "");
+        tempWorld.FindLocation(LocationId.BlueBrinstarDoubleMissileVisible).UpdateAccessibility(progression, progression);
+        tempWorld.FindLocation(LocationId.BlueBrinstarDoubleMissileHidden).UpdateAccessibility(progression, progression);
         Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.BlueBrinstarDoubleMissileVisible), progression, out _).Should().HaveCount(2)
             .And.ContainEquivalentOf(new[] { ItemType.SpaceJump })
             .And.ContainEquivalentOf(new[] { ItemType.Gravity });
@@ -443,12 +488,16 @@ public class LogicConfigTests
         tempWorld.FindLocation(LocationId.BlueBrinstarDoubleMissileHidden).IsAvailable(progression).Should().BeFalse();
 
         progression = new Progression(new[] { ItemType.Morph, ItemType.PowerBomb, ItemType.Gravity, ItemType.CardBrinstarL1 }, new List<RewardType>(), new List<BossType>());
+        tempWorld.FindLocation(LocationId.BlueBrinstarDoubleMissileVisible).UpdateAccessibility(progression, progression);
+        tempWorld.FindLocation(LocationId.BlueBrinstarDoubleMissileHidden).UpdateAccessibility(progression, progression);
         Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.BlueBrinstarDoubleMissileVisible), progression, out _).Should().BeEmpty();
         Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.BlueBrinstarDoubleMissileHidden), progression, out _).Should().BeEmpty();
         tempWorld.FindLocation(LocationId.BlueBrinstarDoubleMissileVisible).IsAvailable(progression).Should().BeTrue();
         tempWorld.FindLocation(LocationId.BlueBrinstarDoubleMissileHidden).IsAvailable(progression).Should().BeTrue();
 
         progression = new Progression(new[] { ItemType.Morph, ItemType.PowerBomb, ItemType.SpaceJump, ItemType.CardBrinstarL1 }, new List<RewardType>(), new List<BossType>());
+        tempWorld.FindLocation(LocationId.BlueBrinstarDoubleMissileVisible).UpdateAccessibility(progression, progression);
+        tempWorld.FindLocation(LocationId.BlueBrinstarDoubleMissileHidden).UpdateAccessibility(progression, progression);
         Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.BlueBrinstarDoubleMissileVisible), progression, out _).Should().BeEmpty();
         Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.BlueBrinstarDoubleMissileHidden), progression, out _).Should().BeEmpty();
         tempWorld.FindLocation(LocationId.BlueBrinstarDoubleMissileVisible).IsAvailable(progression).Should().BeTrue();
@@ -462,11 +511,13 @@ public class LogicConfigTests
 
         var tempWorld = new World(config, "", 0, "");
         var progression = new Progression(new[] { ItemType.Flippers, ItemType.ThreeHundredRupees}, new List<RewardType>(), new List<BossType>());
+        tempWorld.FindLocation(LocationId.KingZora).UpdateAccessibility(progression, progression);
         Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.KingZora), progression, out _).Should().BeEmpty();
         tempWorld.FindLocation(LocationId.KingZora).IsAvailable(progression).Should().BeTrue();
 
         config.LogicConfig.ZoraNeedsRupeeItems = true;
         tempWorld = new World(config, "", 0, "");
+        tempWorld.FindLocation(LocationId.KingZora).UpdateAccessibility(progression, progression);
         var items = Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.KingZora), progression,
             out _);
         Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.KingZora), progression, out _).Should()
@@ -475,6 +526,7 @@ public class LogicConfigTests
         tempWorld.FindLocation(LocationId.KingZora).IsAvailable(progression).Should().BeFalse();
 
         progression = new Progression(new[] { ItemType.Flippers, ItemType.ThreeHundredRupees, ItemType.ThreeHundredRupees }, new List<RewardType>(), new List<BossType>());
+        tempWorld.FindLocation(LocationId.KingZora).UpdateAccessibility(progression, progression);
         Logic.GetMissingRequiredItems(tempWorld.FindLocation(LocationId.KingZora), progression, out _).Should().BeEmpty();
         tempWorld.FindLocation(LocationId.KingZora).IsAvailable(progression).Should().BeTrue();
     }
