@@ -419,7 +419,7 @@ public class GameHintService : IGameHintService
             Locations = [location.Id],
             Usefulness =
                 location.ItemType.IsPossibleProgression(location.World.Config.ZeldaKeysanity,
-                    location.World.Config.MetroidKeysanity)
+                    location.World.Config.MetroidKeysanity, location.Item.IsLocalPlayerItem)
                     ? LocationUsefulness.NiceToHave
                     : LocationUsefulness.Useless
         };

@@ -33,12 +33,10 @@ public class MainWindowService(
     Configs configs) : ControlService
 {
     private MainWindowViewModel _model = new();
-    private MainWindow _window = null!;
     private RandomizerOptions _options = null!;
 
     public MainWindowViewModel InitializeModel(MainWindow window)
     {
-        _window = window;
         _options = optionsFactory.Create();
         _model.OpenSetupWindow = !_options.GeneralOptions.HasOpenedSetupWindow;
         ITaskService.Run(CheckForUpdates);
@@ -141,6 +139,7 @@ public class MainWindowService(
             InitialJsonPath = RandomizerDirectories.SpriteInitialJsonFilePath,
             ValidPathCheck = p => Sprite.ValidDownloadExtensions.Contains(Path.GetExtension(p).ToLowerInvariant()),
             ConvertGitHubPathToLocalPath = p => p.Replace("Sprites/", ""),
+            DeleteExtraFiles = RandomizerDirectories.DeleteSprites
         };
 
         var toDownload = await gitHubFileSynchronizerService.GetGitHubFileDetailsAsync(spriteDownloadRequest);
@@ -153,15 +152,14 @@ public class MainWindowService(
             HashPath = RandomizerDirectories.TrackerSpriteHashYamlFilePath,
             InitialJsonPath = RandomizerDirectories.TrackerSpriteInitialJsonFilePath,
             ValidPathCheck = p => p.EndsWith(".png", StringComparison.OrdinalIgnoreCase) || p.EndsWith(".gif", StringComparison.OrdinalIgnoreCase),
+            DeleteExtraFiles = RandomizerDirectories.DeleteSprites
         };
 
         toDownload.AddRange(await gitHubFileSynchronizerService.GetGitHubFileDetailsAsync(spriteDownloadRequest));
 
-        if (toDownload is not { Count: > 4 })
-        {
-            await gitHubFileSynchronizerService.SyncGitHubFilesAsync(toDownload);
-        }
-        else
+        var numToDownload = toDownload.Count(x => x.Action != GitHubFileAction.Nothing);
+
+        if (numToDownload > 4)
         {
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
@@ -169,6 +167,10 @@ public class MainWindowService(
                 await gitHubFileSynchronizerService.SyncGitHubFilesAsync(toDownload);
                 SpriteDownloadEnd?.Invoke(this, EventArgs.Empty);
             });
+        }
+        else if (numToDownload > 0)
+        {
+            await gitHubFileSynchronizerService.SyncGitHubFilesAsync(toDownload);
         }
 
         await spriteService.LoadSpritesAsync();

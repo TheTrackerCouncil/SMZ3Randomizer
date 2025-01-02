@@ -62,6 +62,18 @@ public class GitHubFileDownloaderRequest
     /// Timeout value for each individual request
     /// </summary>
     public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(5);
+
+    /// <summary>
+    /// If any files that exist on the local computer but not on GitHub should be deleted
+    /// </summary>
+    public bool DeleteExtraFiles { get; set; }
+}
+
+public enum GitHubFileAction
+{
+    Nothing,
+    Download,
+    Delete
 }
 
 /// <summary>
@@ -87,17 +99,12 @@ public class GitHubFileDetails
     /// <summary>
     /// The hash of the file on GitHub to track if the file was previously downloaded
     /// </summary>
-    public required string RemoteHash { get; set; }
+    public required string Hash { get; set; }
 
     /// <summary>
-    /// If the file is found on the local computer
+    /// What needs to happen for the file
     /// </summary>
-    public required bool FileExistsLocally { get; set; }
-
-    /// <summary>
-    /// If there is a difference in the file between the local computer and Github
-    /// </summary>
-    public required bool FileMatchesLocally { get; set; }
+    public required GitHubFileAction Action { get; set; }
 
     /// <summary>
     /// The path to the file to save the GitHub hash to
@@ -132,6 +139,8 @@ public class GitHubFileSynchronizerService : IGitHubFileSynchronizerService
 
         var previousHashes = GetPreviousHashes(request);
 
+        _logger.LogInformation("{Count} previous file hashes found", previousHashes.Count);
+
         var fileList = new ConcurrentBag<GitHubFileDetails>();
 
         Parallel.ForEach(files, parallelOptions: new ParallelOptions { MaxDegreeOfParallelism = 4 },
@@ -140,15 +149,15 @@ public class GitHubFileSynchronizerService : IGitHubFileSynchronizerService
                 var localPath = ConvertToLocalPath(request, fileData.Key);
                 var currentHash = fileData.Value;
                 previousHashes.TryGetValue(localPath, out var prevHash);
+                var needToDownload = !File.Exists(localPath) || prevHash != currentHash;
 
                 fileList.Add(new GitHubFileDetails()
                 {
                     Path = fileData.Key,
                     LocalPath = localPath,
                     DownloadUrl = $"https://raw.githubusercontent.com/{request.RepoOwner}/{request.RepoName}/main/{fileData.Key}",
-                    RemoteHash = fileData.Value,
-                    FileExistsLocally = File.Exists(localPath),
-                    FileMatchesLocally = File.Exists(localPath) && prevHash == currentHash,
+                    Hash = fileData.Value,
+                    Action = needToDownload ? GitHubFileAction.Download : GitHubFileAction.Nothing,
                     HashPath = request.HashPath
                 });
             });
@@ -159,21 +168,21 @@ public class GitHubFileSynchronizerService : IGitHubFileSynchronizerService
 
             foreach (var file in Directory.EnumerateFiles(request.DestinationFolder, "*", SearchOption.AllDirectories).Where(x => !foundLocalFiles.Contains(x) && IsValidPath(request, x)))
             {
+                previousHashes.TryGetValue(file, out var previousHash);
+
                 fileList.Add(new GitHubFileDetails()
                 {
                     Path = file,
                     LocalPath = file,
                     DownloadUrl = "",
-                    RemoteHash = "",
-                    FileExistsLocally = true,
-                    FileMatchesLocally = false,
+                    Hash = previousHash ?? "",
+                    Action = request.DeleteExtraFiles ? GitHubFileAction.Delete : GitHubFileAction.Nothing,
                     HashPath = request.HashPath
                 });
             }
         }
 
-
-        return fileList.Where(x => !x.FileMatchesLocally).ToList();
+        return fileList.ToList();
     }
 
     public async Task SyncGitHubFilesAsync(GitHubFileDownloaderRequest request)
@@ -190,7 +199,7 @@ public class GitHubFileSynchronizerService : IGitHubFileSynchronizerService
             return;
         }
 
-        var filesToProcess = fileDetails.Where(x => !x.FileMatchesLocally).ToList();
+        var filesToProcess = fileDetails.Where(x => x.Action != GitHubFileAction.Nothing).ToList();
         var total = filesToProcess.Count;
         var completed = 0;
 
@@ -216,9 +225,9 @@ public class GitHubFileSynchronizerService : IGitHubFileSynchronizerService
 
         foreach (var hashPath in fileDetails.Select(x => x.HashPath).Distinct())
         {
-            SaveFileHashYaml(hashPath,
-                fileDetails.Where(x => x.HashPath == hashPath && !string.IsNullOrEmpty(x.DownloadUrl))
-                    .ToDictionary(x => x.LocalPath, x => x.RemoteHash));
+            var hashDetails = fileDetails.Where(x => x.HashPath == hashPath && !string.IsNullOrEmpty(x.Hash))
+                .ToDictionary(x => x.LocalPath, x => x.Hash);
+            SaveFileHashYaml(hashPath, hashDetails);
         }
     }
 

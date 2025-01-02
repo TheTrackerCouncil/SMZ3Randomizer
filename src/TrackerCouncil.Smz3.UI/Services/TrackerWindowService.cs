@@ -525,11 +525,11 @@ public class TrackerWindowService(
 
         if (items.Count == 1)
         {
-            model.Clicked += (_, _) => tracker.ItemTracker.TrackItem(items.Keys.First());
+            model.Clicked += (_, _) => tracker.ItemTracker.TrackItem(items.Keys.First(), force: true);
         }
 
-        model.ItemGiven += (_, args) => tracker.ItemTracker.TrackItem(args.Item);
-        model.ItemRemoved += (_, args) => tracker.ItemTracker.UntrackItem(args.Item);
+        model.ItemGiven += (_, args) => tracker.ItemTracker.TrackItem(args.Item, force: true);
+        model.ItemRemoved += (_, args) => tracker.ItemTracker.UntrackItem(args.Item, force: true);
         model.ItemSetAsDungeonRequirement += (_, args) =>
         {
             var item = items.Keys.First();

@@ -152,7 +152,7 @@ public class MultiplayerModule : TrackerModule
         if (item == null)
             throw new InvalidOperationException($"Player retrieved invalid item {args.ItemToGive}");
         _ = TrackerBase.GameService!.TryGiveItemAsync(item, args.PlayerId);
-        if (item.Type.IsPossibleProgression(item.World.Config.ZeldaKeysanity, item.World.Config.MetroidKeysanity))
+        if (item.Type.IsPossibleProgression(item.World.Config.ZeldaKeysanity, item.World.Config.MetroidKeysanity, item.IsLocalPlayerItem))
         {
             TrackerBase.Say(x => x.Multiplayer.ReceivedUsefulItemFromOtherPlayer,
                 args: [args.PhoneticName, item.Metadata.Name, item.Metadata.NameWithArticle]);

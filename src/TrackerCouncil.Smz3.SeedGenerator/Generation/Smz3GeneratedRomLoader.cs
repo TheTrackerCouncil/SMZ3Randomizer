@@ -71,7 +71,7 @@ public class Smz3GeneratedRomLoader
             location.Item = new Item(locationState.Item, itemWorld,
                 itemState.ItemName, itemMetadata, itemState,
                 locationState.Item.IsPossibleProgression(itemWorld.Config.ZeldaKeysanity,
-                    itemWorld.Config.MetroidKeysanity),
+                    itemWorld.Config.MetroidKeysanity, itemWorld == location.World),
                 locationState.ItemOwnerName, locationState.ItemName
             );
         }

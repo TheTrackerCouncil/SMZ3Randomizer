@@ -62,22 +62,23 @@ public static class ItemTypeExtensions
     /// <param name="itemType">The type of item.</param>
     /// <param name="isZeldaKeysanity">If playing with Zelda Key Sanity enabled.</param>
     /// <param name="isMetroidKeysanity">If playing with Metroid Key Sanity enabled.</param>
+    /// <param name="isLocalPlayerItem"></param>
     /// <returns>
     /// <see langword="true"/> if <paramref name="itemType"/> matches any of
     /// could possibly be progression; otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool IsPossibleProgression(this ItemType itemType, bool isZeldaKeysanity, bool isMetroidKeysanity)
+    public static bool IsPossibleProgression(this ItemType itemType, bool isZeldaKeysanity, bool isMetroidKeysanity, bool isLocalPlayerItem)
     {
-        if (itemType.IsInAnyCategory(new[] { ItemCategory.SmallKey, ItemCategory.BigKey }))
-            return isZeldaKeysanity;
+        if (itemType.IsInAnyCategory(ItemCategory.SmallKey, ItemCategory.BigKey))
+            return isZeldaKeysanity || !isLocalPlayerItem;
 
         if (itemType.IsInCategory(ItemCategory.Keycard))
-            return isMetroidKeysanity;
+            return isMetroidKeysanity || !isLocalPlayerItem;
 
         if (itemType == ItemType.OtherGameProgressionItem)
             return true;
 
-        if (itemType == ItemType.Nothing || itemType.IsInAnyCategory(new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.NonRandomized, ItemCategory.Map, ItemCategory.Compass, ItemCategory.Nice }))
+        if (itemType == ItemType.Nothing || itemType.IsInAnyCategory(ItemCategory.Junk, ItemCategory.Scam, ItemCategory.NonRandomized, ItemCategory.Map, ItemCategory.Compass, ItemCategory.Nice))
             return false;
 
         return true;

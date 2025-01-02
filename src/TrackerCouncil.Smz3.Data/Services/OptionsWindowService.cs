@@ -216,6 +216,7 @@ public class OptionsWindowService(
             InitialJsonPath = RandomizerDirectories.SpriteInitialJsonFilePath,
             ValidPathCheck = p => p.StartsWith("Sprites/") && p.Contains('.'),
             ConvertGitHubPathToLocalPath = p => p.Replace("Sprites/", ""),
+            DeleteExtraFiles = RandomizerDirectories.DeleteSprites
         };
 
         var sprites = await gitHubFileSynchronizerService.GetGitHubFileDetailsAsync(spriteDownloadRequest);
@@ -228,11 +229,12 @@ public class OptionsWindowService(
             HashPath = RandomizerDirectories.TrackerSpritePath,
             InitialJsonPath = RandomizerDirectories.TrackerSpritePath,
             ValidPathCheck = p => p.EndsWith(".png", StringComparison.OrdinalIgnoreCase) || p.EndsWith(".gif", StringComparison.OrdinalIgnoreCase),
+            DeleteExtraFiles = RandomizerDirectories.DeleteTrackerSprites
         };
 
         sprites.AddRange(await gitHubFileSynchronizerService.GetGitHubFileDetailsAsync(spriteDownloadRequest));
 
-        if (sprites.Count > 0)
+        if (sprites.Any(x => x.Action != GitHubFileAction.Nothing))
         {
             SpriteDownloadStarted?.Invoke(this, EventArgs.Empty);
             await gitHubFileSynchronizerService.SyncGitHubFilesAsync(sprites);

@@ -67,6 +67,8 @@ public static class RandomizerDirectories
         }
     }
 
+    public static bool DeleteSprites => SpritePath == Path.Combine(AppContext.BaseDirectory, "Sprites");
+
     public static string UserSpritePath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "SMZ3CasRandomizer", "Sprites");
 
@@ -105,4 +107,6 @@ public static class RandomizerDirectories
 #endif
 
     public static string TrackerSpriteInitialJsonFilePath => Path.Combine(TrackerSpritePath, "tracker-sprites.json");
+
+    public static bool DeleteTrackerSprites => SpritePath == Path.Combine(AppContext.BaseDirectory, "Sprites");
 }

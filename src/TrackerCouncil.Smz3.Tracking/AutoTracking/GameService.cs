@@ -27,6 +27,9 @@ public class GameService : TrackerModule, IGameService
     private readonly ILogger<GameService> _logger;
     private readonly int _trackerPlayerId;
     private readonly Dictionary<int, EmulatorAction> _emulatorActions = new();
+    private int _giveItemCountAddress = 0xA26602;
+    private int _giveItemDetailLength = 4;
+    private int _giveItemDetailStartingIndex = 2;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GameService"/>
@@ -117,9 +120,16 @@ public class GameService : TrackerModule, IGameService
     /// <returns>False if it is currently unable to give the items to the player</returns>
     public async Task<bool> TryGiveItemTypesAsync(List<(ItemType type, int fromPlayerId)> items)
     {
-        if (!IsInGame())
+        if (!IsInGame() || TrackerBase.World.Config.RomGenerator != RomGenerator.Cas)
         {
             return false;
+        }
+
+        if (TrackerBase.World.Config.RomGenerator == RomGenerator.Archipelago)
+        {
+            _giveItemCountAddress = 0xA26D38;
+            _giveItemDetailLength = 2;
+            _giveItemDetailStartingIndex = 0;
         }
 
         // Get the first block of memory
@@ -156,9 +166,11 @@ public class GameService : TrackerModule, IGameService
         // Each item takes up two words and we're interested in the second word in each pair.
         var data = firstDataSet.Raw.Concat(secondDataSet.Raw).ToArray();
         var itemCounter = 0;
-        for (var i = 2; i < 0x600; i += 4)
+        for (var i = _giveItemDetailStartingIndex; i < 0x600; i += _giveItemDetailLength)
         {
-            var item = (ItemType)BitConverter.ToUInt16(data.AsSpan(i, 2));
+            var item = _giveItemDetailLength == 4
+                ? (ItemType)BitConverter.ToUInt16(data.AsSpan(i, 2))
+                : (ItemType)data[i + 1];
             if (item != ItemType.Nothing)
             {
                 itemCounter++;
@@ -172,8 +184,16 @@ public class GameService : TrackerModule, IGameService
             var bytes = new List<byte>();
             foreach (var item in batch)
             {
-                bytes.AddRange(Int16ToBytes(item.fromPlayerId));
-                bytes.AddRange(Int16ToBytes((int)item.type));
+                if (_giveItemDetailLength == 4)
+                {
+                    bytes.AddRange(Int16ToBytes(item.fromPlayerId));
+                    bytes.AddRange(Int16ToBytes((int)item.type));
+                }
+                else
+                {
+                    bytes.Add((byte)item.fromPlayerId);
+                    bytes.Add((byte)item.type);
+                }
             }
 
             _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
@@ -182,7 +202,7 @@ public class GameService : TrackerModule, IGameService
                 SnesMemoryDomain = SnesMemoryDomain.CartridgeSave,
                 AddressFormat = AddressFormat.Snes9x,
                 SniMemoryMapping = MemoryMapping.ExHiRom,
-                Address = 0xA26000 + (itemCounter * 4),
+                Address = 0xA26000 + (itemCounter * _giveItemDetailLength),
                 Data = bytes
             });
 
@@ -196,7 +216,7 @@ public class GameService : TrackerModule, IGameService
             SnesMemoryDomain = SnesMemoryDomain.CartridgeSave,
             AddressFormat = AddressFormat.Snes9x,
             SniMemoryMapping = MemoryMapping.ExHiRom,
-            Address = 0xA26602,
+            Address = _giveItemCountAddress,
             Data = Int16ToBytes(itemCounter)
         });
 

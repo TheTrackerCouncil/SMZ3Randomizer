@@ -81,7 +81,8 @@ public class LowerNorfairEast : SMRegion, IHasBoss, IHasReward
     private bool CanExit(Progression items)
     {
         return items.CardNorfairL2 /*Bubble Mountain*/ ||
-               (items.Gravity && items.Wave /* Volcano Room and Blue Gate */ && (items.Grapple || items.SpaceJump /*Spikey Acid Snakes and Croc Escape*/));
+               items is { Gravity: true, SpaceJump: true } /* Path back to Mire*/ ||
+               (items is { Gravity: true, Wave: true } /* Volcano Room and Blue Gate */ && (items.Grapple || items.SpaceJump /*Spikey Acid Snakes and Croc Escape*/));
     }
 
     public class SpringBallMazeRoom : Room

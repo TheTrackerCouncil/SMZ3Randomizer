@@ -209,7 +209,7 @@ public class StatGenerator(Smz3Randomizer randomizer): IStatGenerator
             return itemCounts.Where(x =>
                     x.Key.locationId == locationId &&
                     !items[x.Key.itemId].IsInAnyCategory(ItemCategory.BigKey, ItemCategory.SmallKey, ItemCategory.Compass, ItemCategory.Map) &&
-                    items[x.Key.itemId].IsPossibleProgression(false, false))
+                    items[x.Key.itemId].IsPossibleProgression(false, false, true))
                 .Sum(x => x.Value);
         }
     }
