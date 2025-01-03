@@ -55,6 +55,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, IP
         // the "guess dungeon from location" algorithm excludes
         // cleared items
         location.Cleared = true;
+        var previousAccessibility = location.Accessibility;
         location.SetAccessibility(Accessibility.Cleared);
         World.LastClearedLocation = location;
 
@@ -76,7 +77,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, IP
             var isKeysanityForLocation = (location.Region is Z3Region && World.Config.ZeldaKeysanity) || (location.Region is SMRegion && World.Config.MetroidKeysanity);
             var items = playerProgressionService.GetProgression(!isKeysanityForLocation);
 
-            if (location.Accessibility is not (Accessibility.Available or Accessibility.AvailableWithKeys) && (confidence >= Options.MinimumSassConfidence || autoTracked))
+            if (previousAccessibility is not (Accessibility.Available or Accessibility.AvailableWithKeys) && (confidence >= Options.MinimumSassConfidence || autoTracked))
             {
                 var locationInfo = location.Metadata;
                 var roomInfo = location.Room?.Metadata;
@@ -553,14 +554,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, IP
             }
             catch (Exception e)
             {
-                var legacyActuallyAccessible =
-                    location.World.LegacyWorld!.IsLocationAccessible((int)location.Id,
-                        actualProgression.LegacyProgression);
-                var legacyAccessibleWithKeys = actualProgression == withKeysProgression
-                    ? legacyActuallyAccessible
-                    : location.World.LegacyWorld!.IsLocationAccessible((int)location.Id,
-                        withKeysProgression.LegacyProgression);
-                location.UpdateLegacyAccessibility(legacyActuallyAccessible, legacyAccessibleWithKeys);
+                logger.LogError(e, "Unable to update legacy accessibility");
             }
         }
     }

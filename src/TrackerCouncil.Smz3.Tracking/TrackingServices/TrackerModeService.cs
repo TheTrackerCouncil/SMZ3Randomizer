@@ -5,7 +5,7 @@ using TrackerCouncil.Smz3.Tracking.VoiceCommands;
 using BunLabs;
 namespace TrackerCouncil.Smz3.Tracking.TrackingServices;
 
-internal class TrackerModeService : TrackerService, ITrackerModeService
+internal class TrackerModeService() : TrackerService, ITrackerModeService
 {
     public bool GoMode { get; set; }
     public bool PegWorldMode { get; set; }
