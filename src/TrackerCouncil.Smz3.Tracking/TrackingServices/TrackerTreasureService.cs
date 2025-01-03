@@ -8,6 +8,7 @@ using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Shared;
+using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Tracking.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.TrackingServices;
@@ -174,7 +175,7 @@ internal class TrackerTreasureService(ILogger<TrackerTreasureService> logger, IP
 
         Tracker.Say(x => x.DungeonCleared, args: [treasureRegion.Metadata.Name]);
 
-        var inaccessibleLocations = locations.Where(x => !x.IsAvailable(progress)).ToList();
+        var inaccessibleLocations = locations.Where(x => x.Accessibility is not (Accessibility.Available or Accessibility.AvailableWithKeys)).ToList();
         if (inaccessibleLocations.Count > 0 && confidence >= Options.MinimumSassConfidence)
         {
             var anyMissedLocation = inaccessibleLocations.Random(Random) ?? inaccessibleLocations.First();

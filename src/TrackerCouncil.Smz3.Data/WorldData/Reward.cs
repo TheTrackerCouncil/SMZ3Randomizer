@@ -89,6 +89,30 @@ public class Reward
         }
     }
 
+    public void UpdateLegacyAccessibility(bool isActuallyAccessible, bool isAccessibleWithKeys)
+    {
+        if (HasReceivedReward)
+        {
+            Accessibility = Accessibility.Cleared;
+        }
+        else if (Region == null)
+        {
+            Accessibility = Accessibility.Unknown;
+        }
+        else if (isActuallyAccessible)
+        {
+            Accessibility = Accessibility.Available;
+        }
+        else if (isAccessibleWithKeys)
+        {
+            Accessibility = Accessibility.AvailableWithKeys;
+        }
+        else
+        {
+            Accessibility = Accessibility.OutOfLogic;
+        }
+    }
+
     public bool HasCorrectlyMarkedReward => MarkedReward == Type;
 
     public event EventHandler? UpdatedRewardState;

@@ -148,6 +148,18 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlaye
 
         actualProgression ??= playerProgressionService.GetProgression(false);
         withKeysProgression ??= playerProgressionService.GetProgression(true);
-        region.Reward.UpdateAccessibility(actualProgression, withKeysProgression);
+
+        if (region.World.Config.RomGenerator == RomGenerator.Cas)
+        {
+            region.Reward.UpdateAccessibility(actualProgression, withKeysProgression);
+        }
+        else
+        {
+            var regionLLocationId = region.Region.Locations.First().Id;
+            var actuallyAccessible = region.World.LegacyWorld!.CanCompleteRegion(region.Name, (int?)regionLLocationId, actualProgression.LegacyProgression);
+            var withKeysAccessible = region.World.LegacyWorld!.CanCompleteRegion(region.Name, (int?)regionLLocationId, withKeysProgression.LegacyProgression);
+            region.Reward.UpdateLegacyAccessibility(actuallyAccessible, withKeysAccessible);
+        }
+
     }
 }

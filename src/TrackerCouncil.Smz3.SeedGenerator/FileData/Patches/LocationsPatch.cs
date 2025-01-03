@@ -128,24 +128,35 @@ public class LocationsPatch : RomPatch
         return patches;
     }
 
-    public static List<ParsedRomLocationDetails> GetLocationsFromRom(byte[] rom, List<string> playerNames, World exampleWorld, bool isMultiworldEnabled, List<int> smz3ItemTypes)
+    public static List<ParsedRomLocationDetails> GetLocationsFromRom(byte[] rom, List<string> playerNames, World exampleWorld, bool isMultiworldEnabled, List<int> smz3ItemTypes, bool isCasRom)
     {
         var toReturn = new List<ParsedRomLocationDetails>();
 
         foreach (var location in exampleWorld.Regions.OfType<SMRegion>().SelectMany(x => x.Locations))
         {
-            toReturn.Add(GetParsedLocationDetails(rom, location, true, playerNames, isMultiworldEnabled, smz3ItemTypes));
+            toReturn.Add(GetParsedLocationDetails(rom, location, true, playerNames, isMultiworldEnabled, smz3ItemTypes, isCasRom));
         }
 
         foreach (var location in exampleWorld.Regions.OfType<Z3Region>().SelectMany(x => x.Locations))
         {
-            toReturn.Add(GetParsedLocationDetails(rom, location, false, playerNames, isMultiworldEnabled, smz3ItemTypes));
+            toReturn.Add(GetParsedLocationDetails(rom, location, false, playerNames, isMultiworldEnabled, smz3ItemTypes, isCasRom));
         }
 
         return toReturn;
     }
 
-    private static ParsedRomLocationDetails GetParsedLocationDetails(byte[] rom, Location location, bool isSuperMetroidLocation, List<string> playerNames, bool isMultiworldEnabled, List<int> smz3ItemTypes)
+    private static Dictionary<int, int> s_locationIdMappings = new()
+    {
+        { 256 + 230, 256 + 196 }, // GanonsTowerRandomizerRoomTopLeft
+        { 256 + 231, 256 + 197 }, // GanonsTowerRandomizerRoomTopRight
+        { 256 + 232, 256 + 198 }, // GanonsTowerRandomizerRoomBottomLeft
+        { 256 + 233, 256 + 199 }, // GanonsTowerRandomizerRoomBottomRight
+        { 256 + 234, 256 + 200 }, // GanonsTowerHopeRoomLeft
+        { 256 + 235, 256 + 201 }, // GanonsTowerHopeRoomRight
+        { 256 + 236, 256 + 202 }, // GanonsTowerTileRoom
+    };
+
+    private static ParsedRomLocationDetails GetParsedLocationDetails(byte[] rom, Location location, bool isSuperMetroidLocation, List<string> playerNames, bool isMultiworldEnabled, List<int> smz3ItemTypes, bool isCasRom)
     {
         var isLocal = false;
         ItemType itemType;
@@ -153,9 +164,15 @@ public class LocationsPatch : RomPatch
         var isProgression = false;
         var itemName = "";
 
+        var id = (int)location.Id;
+        if (!isCasRom && s_locationIdMappings.TryGetValue(id, out var newId))
+        {
+            id = newId;
+        }
+
         if (isMultiworldEnabled)
         {
-            var address = 0x386000 + (int)location.Id * 8;
+            var address = 0x386000 + id * 8;
             var bytes = rom.Skip(address).Take(8).ToArray();
             isLocal = BitConverter.ToInt16(bytes, 0) == 0;
             var itemNumber = BitConverter.ToInt16(bytes, 2);

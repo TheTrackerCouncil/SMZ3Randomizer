@@ -24,6 +24,7 @@ public class LocationLogicTests
     public void LocationWithoutLogicNeverHasMissingItems()
     {
         var emptyProgression = new Progression();
+        World.HyruleCastle.LinksUncle.UpdateAccessibility(emptyProgression, emptyProgression);
         var missingItems = Logic.GetMissingRequiredItems(World.HyruleCastle.LinksUncle, emptyProgression, out _);
         missingItems.Should().BeEmpty();
     }
@@ -32,6 +33,7 @@ public class LocationLogicTests
     public void LocationWithSatisfiedLogicHasNoMissingItems()
     {
         var progression = new Progression(new[] { new Item(ItemType.Boots, World) }, new List<Reward>(), new List<Boss>());
+        World.LightWorldSouth.Library.UpdateAccessibility(progression, progression);
         var missingItems = Logic.GetMissingRequiredItems(World.LightWorldSouth.Library, progression, out _);
         missingItems.Should().BeEmpty();
     }

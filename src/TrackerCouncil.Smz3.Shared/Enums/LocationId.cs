@@ -307,7 +307,7 @@ public enum LocationId
     GanonsTowerRandomizerRoomBottomRight = 256 + 199, // 233 in main
     GanonsTowerHopeRoomLeft = 256 + 200, // 234 in main
     GanonsTowerHopeRoomRight = 256 + 201, // 235 in main
-    GanonsTowerTileRoom = 256 + 202,
+    GanonsTowerTileRoom = 256 + 202, // 236 in main
     GanonsTowerCompassRoomTopLeft = 256 + 203,
     GanonsTowerCompassRoomTopRight = 256 + 204,
     GanonsTowerCompassRoomBottomLeft = 256 + 205,

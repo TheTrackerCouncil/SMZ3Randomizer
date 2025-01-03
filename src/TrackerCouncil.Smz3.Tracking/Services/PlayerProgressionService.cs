@@ -74,6 +74,12 @@ internal class PlayerProgressionService (IWorldAccessor world) : IPlayerProgress
             progression.Add(boss);
         }
 
+        if (_world.World.Config.RomGenerator != RomGenerator.Cas)
+        {
+            progression.InitLegacyProgression();
+            _world.World.UpdateLegacyWorld();
+        }
+
         _progression[key] = progression;
         return progression;
     }

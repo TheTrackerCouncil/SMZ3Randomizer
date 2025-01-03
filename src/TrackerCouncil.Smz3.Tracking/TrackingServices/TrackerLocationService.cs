@@ -76,7 +76,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, IP
             var isKeysanityForLocation = (location.Region is Z3Region && World.Config.ZeldaKeysanity) || (location.Region is SMRegion && World.Config.MetroidKeysanity);
             var items = playerProgressionService.GetProgression(!isKeysanityForLocation);
 
-            if (!location.IsAvailable(items) && (confidence >= Options.MinimumSassConfidence || autoTracked))
+            if (location.Accessibility is not (Accessibility.Available or Accessibility.AvailableWithKeys) && (confidence >= Options.MinimumSassConfidence || autoTracked))
             {
                 var locationInfo = location.Metadata;
                 var roomInfo = location.Room?.Metadata;
@@ -293,7 +293,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, IP
     {
         var locations = area.Locations
             .Where(x => x.Cleared == false)
-            .WhereUnless(includeUnavailable, x => x.IsAvailable(playerProgressionService.GetProgression(area)))
+            .WhereUnless(includeUnavailable, x => x.Accessibility is Accessibility.Available or Accessibility.AvailableWithKeys)
             .ToImmutableList();
 
         playerProgressionService.ResetProgression();
@@ -380,7 +380,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, IP
                     else
                     {
                         var progression = playerProgressionService.GetProgression(area);
-                        var someOutOfLogicLocation = locations.Where(x => !x.IsAvailable(progression)).Random(Random);
+                        var someOutOfLogicLocation = locations.Where(x => x.Accessibility is not (Accessibility.Available or Accessibility.AvailableWithKeys)).Random(Random);
                         if (someOutOfLogicLocation != null && confidence >= Options.MinimumSassConfidence)
                         {
                             var someOutOfLogicItem = someOutOfLogicLocation.Item;
@@ -528,10 +528,40 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, IP
     {
         actualProgression ??= playerProgressionService.GetProgression(false);
         withKeysProgression ??= playerProgressionService.GetProgression(true);
+
         if (location.Region is HyruleCastle)
         {
             withKeysProgression = actualProgression;
         }
-        location.UpdateAccessibility(actualProgression, withKeysProgression);
+
+        if (location.World.Config.RomGenerator == RomGenerator.Cas)
+        {
+            location.UpdateAccessibility(actualProgression, withKeysProgression);
+        }
+        else
+        {
+            try
+            {
+                var legacyActuallyAccessible =
+                    location.World.LegacyWorld!.IsLocationAccessible((int)location.Id,
+                        actualProgression.LegacyProgression);
+                var legacyAccessibleWithKeys = actualProgression == withKeysProgression
+                    ? legacyActuallyAccessible
+                    : location.World.LegacyWorld!.IsLocationAccessible((int)location.Id,
+                        withKeysProgression.LegacyProgression);
+                location.UpdateLegacyAccessibility(legacyActuallyAccessible, legacyAccessibleWithKeys);
+            }
+            catch (Exception e)
+            {
+                var legacyActuallyAccessible =
+                    location.World.LegacyWorld!.IsLocationAccessible((int)location.Id,
+                        actualProgression.LegacyProgression);
+                var legacyAccessibleWithKeys = actualProgression == withKeysProgression
+                    ? legacyActuallyAccessible
+                    : location.World.LegacyWorld!.IsLocationAccessible((int)location.Id,
+                        withKeysProgression.LegacyProgression);
+                location.UpdateLegacyAccessibility(legacyActuallyAccessible, legacyAccessibleWithKeys);
+            }
+        }
     }
 }

@@ -173,6 +173,7 @@ public class Config
 
     public GameMode GameMode { get; set; } = GameMode.Normal;
     public KeysanityMode KeysanityMode { get; set; } = KeysanityMode.None;
+    public SMLogic LegacyMetroidLogic { get; set; } = SMLogic.Normal;
     public bool Race { get; set; } = false;
     public bool DisableSpoilerLog { get; set; } = false;
     public bool DisableTrackerSpoilers { get; set; } = false;

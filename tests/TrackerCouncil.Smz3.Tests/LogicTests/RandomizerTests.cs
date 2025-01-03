@@ -110,6 +110,9 @@ public class RandomizerTests
             var seedData = randomizer.GenerateSeed(config, null, default);
             var world = seedData.WorldGenerationData.LocalWorld.World;
             var progression = new Progression();
+            world.Locations.First(x => x.Item.Type == ItemType.Firerod).UpdateAccessibility(progression, progression);
+            world.Locations.First(x => x.Item.Type == ItemType.Icerod).UpdateAccessibility(progression, progression);
+            world.Locations.First(x => x.Item.Type == ItemType.HiJump).UpdateAccessibility(progression, progression);
             Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.Firerod), progression, out _).Should().BeEmpty();
             Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.Icerod), progression, out _).Should().BeEmpty();
             Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.HiJump), progression, out _).Should().BeEmpty();

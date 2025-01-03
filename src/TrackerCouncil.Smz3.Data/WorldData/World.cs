@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Randomizer.SMZ3;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Logic;
 using TrackerCouncil.Smz3.Data.Options;
@@ -101,6 +102,22 @@ public class World
         RewardRegions = Regions.OfType<IHasReward>().ToImmutableList();
         BossRegions = Regions.OfType<IHasBoss>().ToImmutableList();
         PrerequisiteRegions = Regions.OfType<IHasPrerequisite>().ToImmutableList();
+
+        if (Config.RomGenerator != RomGenerator.Cas)
+        {
+            var legacyConfig = new LegacyConfig()
+            {
+                LegacyGameMode = (LegacyGameMode)Config.GameMode,
+                LegacySmLogic = (LegacySMLogic)Config.LegacyMetroidLogic,
+                LegacyKeyShuffle = Config.MetroidKeysanity || Config.ZeldaKeysanity
+                    ? LegacyKeyShuffle.Keysanity
+                    : LegacyKeyShuffle.None,
+            };
+
+            LegacyWorld = new LegacyWorld(legacyConfig, Player, Id, Guid);
+
+            UpdateLegacyWorld();
+        }
     }
 
     public Config Config { get; }
@@ -170,6 +187,7 @@ public class World
     public WreckedShip WreckedShip { get; }
     public WorldItemPools ItemPools { get; }
     public IEnumerable<PlayerHintTile> HintTiles { get; set; } = [];
+    public LegacyWorld? LegacyWorld { get; private set; }
 
     public IEnumerable<LocationId> ActiveHintTileLocations => HintTiles
         .Where(x => x.State?.HintState == HintState.Viewed && x.Locations?.Any() == true && x.WorldId == Id)
@@ -303,6 +321,79 @@ public class World
             var newType = bottleTypes.Random(rnd);
             bottleItem.UpdateItemType(newType);
         }
+    }
+
+    public void UpdateLegacyWorld()
+    {
+        if (LegacyWorld == null)
+        {
+            return;
+        }
+
+        var worldState = new LegacyWorldState()
+        {
+            Medallions =
+            [
+                GetLegacyMedallion(MiseryMire),
+                GetLegacyMedallion(TurtleRock)
+            ],
+            Rewards =
+            [
+                GetLegacyRewardType(EasternPalace),
+                GetLegacyRewardType(DesertPalace),
+                GetLegacyRewardType(TowerOfHera),
+                GetLegacyRewardType(PalaceOfDarkness),
+                GetLegacyRewardType(SwampPalace),
+                GetLegacyRewardType(SkullWoods),
+                GetLegacyRewardType(ThievesTown),
+                GetLegacyRewardType(IcePalace),
+                GetLegacyRewardType(MiseryMire),
+                GetLegacyRewardType(TurtleRock),
+                GetLegacyRewardType(KraidsLair),
+                GetLegacyRewardType(WreckedShip),
+                GetLegacyRewardType(InnerMaridia),
+                GetLegacyRewardType(LowerNorfairEast),
+            ],
+            TowerCrystals = Config.GanonsTowerCrystalCount,
+            GanonCrystals = Config.GanonCrystalCount,
+            TourianBossTokens = Config.TourianBossCount
+        };
+
+        LegacyWorld.Setup(worldState);
+    }
+
+    private LegacyRewardType GetLegacyRewardType(IHasReward region)
+    {
+        return region.MarkedReward switch
+        {
+            RewardType.Agahnim => LegacyRewardType.Agahnim,
+            RewardType.PendantGreen => LegacyRewardType.PendantGreen,
+            RewardType.PendantBlue => LegacyRewardType.PendantNonGreen,
+            RewardType.PendantRed => LegacyRewardType.PendantNonGreen,
+            RewardType.CrystalBlue => LegacyRewardType.CrystalBlue,
+            RewardType.CrystalRed => LegacyRewardType.CrystalRed,
+            RewardType.KraidToken => LegacyRewardType.BossTokenKraid,
+            RewardType.PhantoonToken => LegacyRewardType.BossTokenPhantoon,
+            RewardType.DraygonToken => LegacyRewardType.BossTokenDraygon,
+            RewardType.RidleyToken => LegacyRewardType.BossTokenRidley,
+            _ => LegacyRewardType.None
+        };
+    }
+
+    private LegacyWorldState.LegacyMedallion GetLegacyMedallion(IHasPrerequisite region)
+    {
+        var unobtainedMedallion = AllItems.FirstOrDefault(x =>
+            x.IsLocalPlayerItem && x.Type.IsInCategory(ItemCategory.Medallion) && x.TrackingState == 0)?.Type;
+
+        var requiredItemType =
+            region.MarkedItem ?? unobtainedMedallion ?? region.RequiredItem;
+
+        return requiredItemType switch
+        {
+            ItemType.Bombos => LegacyWorldState.LegacyMedallion.Bombos,
+            ItemType.Ether => LegacyWorldState.LegacyMedallion.Ether,
+            _ => LegacyWorldState.LegacyMedallion.Bombos
+        };
     }
 
     public int CountReceivedReward(Progression items, RewardType reward)

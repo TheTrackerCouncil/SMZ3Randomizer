@@ -269,6 +269,15 @@ internal class TrackerBossService(IPlayerProgressionService playerProgressionSer
         actualProgression ??= playerProgressionService.GetProgression(false);
         withKeysProgression ??= playerProgressionService.GetProgression(true);
 
-        region.Boss.UpdateAccessibility(actualProgression, withKeysProgression);
+        if (region.World.Config.RomGenerator == RomGenerator.Cas)
+        {
+            region.Boss.UpdateAccessibility(actualProgression, withKeysProgression);
+        }
+        else
+        {
+            var actuallyAccessible = region.World.LegacyWorld!.CanCompleteRegion(region.Name, (int?)region.BossLocationId, actualProgression.LegacyProgression);
+            var withKeysAccessible = region.World.LegacyWorld!.CanCompleteRegion(region.Name, (int?)region.BossLocationId, withKeysProgression.LegacyProgression);
+            region.Boss.UpdateLegacyAccessibility(actuallyAccessible, withKeysAccessible);
+        }
     }
 }
