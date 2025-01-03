@@ -35,7 +35,7 @@ public class DarkWorldDeathMountainWest : Z3Region
             {
                 new Location(this, LocationId.SpikeCave, 0x1EA8B, LocationType.Regular,
                     name: "Spike Cave",
-                    access: items => items.MoonPearl && items.Hammer && Logic.CanLiftLight(items) &&
+                    access: items => World.Logic.CanNavigateDarkWorld(items) && items.Hammer && Logic.CanLiftLight(items) &&
                                      ((Logic.CanExtendMagic(items, 2) && items.Cape) || items.Byrna) &&
                                      World.LightWorldDeathMountainWest.CanEnter(items, true),
                     memoryAddress: 0x117,

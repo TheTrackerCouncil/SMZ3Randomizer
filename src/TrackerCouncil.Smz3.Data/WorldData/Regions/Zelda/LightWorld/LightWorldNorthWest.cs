@@ -66,8 +66,8 @@ public class LightWorldNorthWest : Z3Region
         GraveyardLedge = new Location(this, LocationId.GraveyardLedge, 0x308004, LocationType.Regular,
             name: "Graveyard Ledge",
             vanillaItem: ItemType.HeartPiece,
-            access: items => items.Mirror && items.MoonPearl && World.DarkWorldNorthWest.CanEnter(items, true),
-            relevanceRequirement: items => items.Mirror && items.MoonPearl && World.DarkWorldNorthWest.CanEnter(items, false),
+            access: items => items.Mirror && World.Logic.CanNavigateDarkWorld(items) && World.DarkWorldNorthWest.CanEnter(items, true),
+            relevanceRequirement: items => items.Mirror && World.Logic.CanNavigateDarkWorld(items) && World.DarkWorldNorthWest.CanEnter(items, false),
             memoryAddress: 0x11B,
             memoryFlag: 0x9,
             metadata: metadata,
@@ -78,10 +78,10 @@ public class LightWorldNorthWest : Z3Region
             vanillaItem: ItemType.Cape,
             access: items => items.Boots && (
                 Logic.CanLiftHeavy(items) ||
-                (items.Mirror && items.MoonPearl && World.DarkWorldNorthWest.CanEnter(items, true))),
+                (items.Mirror && World.Logic.CanNavigateDarkWorld(items) && World.DarkWorldNorthWest.CanEnter(items, true))),
             relevanceRequirement: items => items.Boots && (
                 Logic.CanLiftHeavy(items) ||
-                (items.Mirror && items.MoonPearl && World.DarkWorldNorthWest.CanEnter(items, false))),
+                (items.Mirror && World.Logic.CanNavigateDarkWorld(items) && World.DarkWorldNorthWest.CanEnter(items, false))),
             memoryAddress: 0x113,
             memoryFlag: 0x4,
             metadata: metadata,
@@ -141,7 +141,7 @@ public class LightWorldNorthWest : Z3Region
             vanillaItem: ItemType.HalfMagic,
             access: items => items.Powder
                              && (items.Hammer
-                                 || (items.MoonPearl && items.Mirror && Logic.CanLiftHeavy(items))),
+                                 || (World.Logic.CanNavigateDarkWorld(items) && items.Mirror && Logic.CanLiftHeavy(items))),
             memoryAddress: 0x191,
             memoryFlag: 0x80,
             memoryType: LocationMemoryType.ZeldaMisc,

@@ -49,12 +49,12 @@ public class DarkWorldSouth : Z3Region
 
     public override bool CanEnter(Progression items, bool requireRewards)
     {
-        return items.MoonPearl && (((
-                                       Logic.CheckAgahnim(items, World, requireRewards) ||
-                                       (Logic.CanAccessDarkWorldPortal(items) && items.Flippers)
-                                   ) && (items.Hammer || (items.Hookshot && (items.Flippers || Logic.CanLiftLight(items))))) ||
-                                   (items.Hammer && Logic.CanLiftLight(items)) ||
-                                   Logic.CanLiftHeavy(items)
+        return World.Logic.CanNavigateDarkWorld(items) && (((
+                                                               Logic.CheckAgahnim(items, World, requireRewards) ||
+                                                               (Logic.CanAccessDarkWorldPortal(items) && items.Flippers)
+                                                           ) && (items.Hammer || (items.Hookshot && (items.Flippers || Logic.CanLiftLight(items))))) ||
+                                                           (items.Hammer && Logic.CanLiftLight(items)) ||
+                                                           Logic.CanLiftHeavy(items)
             );
     }
 

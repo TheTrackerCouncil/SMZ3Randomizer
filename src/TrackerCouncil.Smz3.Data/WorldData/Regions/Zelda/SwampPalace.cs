@@ -146,7 +146,7 @@ public class SwampPalace : Z3Region, IHasReward, IHasTreasure, IHasBoss
 
     public override bool CanEnter(Progression items, bool requireRewards)
     {
-        return items.MoonPearl && items.Mirror && items.Flippers && World.DarkWorldSouth.CanEnter(items, requireRewards);
+        return World.Logic.CanNavigateDarkWorld(items) && items.Mirror && items.Flippers && World.DarkWorldSouth.CanEnter(items, requireRewards);
     }
 
     public bool CanBeatBoss(Progression items) => ArrghusReward.IsAvailable(items);

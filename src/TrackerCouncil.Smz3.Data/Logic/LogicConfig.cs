@@ -76,6 +76,9 @@ public class LogicConfig : ViewModelBase
     [DynamicFormFieldCheckBox(checkBoxText: "Include Quarter Magic", toolTipText: "Adds an additional progressive half magic to the item pool.", groupName: "CasMiddle")]
     public bool QuarterMagic { get; set; }
 
+    [DynamicFormFieldCheckBox(checkBoxText: "Prevent Low Resource Dark World", toolTipText: "You're expected to at least 6 hearts total and some weapon that can deal damage before going to the Dark World.", groupName: "CasMiddle")]
+    public bool PreventLowResourceDarkWorld { get; set; }
+
     [YamlIgnore, Newtonsoft.Json.JsonIgnore]
     [DynamicFormFieldText(groupName: "TricksTop")]
     public string TricksDescription => "Logic settings that will make the game more difficult by requiring you to do techniques or maneuvers not typically required in the vanilla games.";

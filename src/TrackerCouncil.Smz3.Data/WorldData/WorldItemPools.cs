@@ -91,7 +91,7 @@ public class WorldItemPools
             itemPool.Add(new Item(ItemType.HalfMagic, world));
         }
 
-        itemPool.AddRange(Copies(10, () => new Item(ItemType.HeartContainer, world)));
+        itemPool.AddRange(Copies(7, () => new Item(ItemType.HeartContainer, world)));
 
         return itemPool;
     }
@@ -264,6 +264,10 @@ public class WorldItemPools
             new Item(ItemType.ReserveTank, world, isProgression: true),
             new Item(ItemType.ReserveTank, world, isProgression: true),
             new Item(ItemType.ReserveTank, world, isProgression: true),
+
+            new Item(ItemType.HeartContainer, world, isProgression: true),
+            new Item(ItemType.HeartContainer, world, isProgression: true),
+            new Item(ItemType.HeartContainer, world, isProgression: true),
 
             new Item(ItemType.ThreeHundredRupees, world, isProgression: true),
             new Item(ItemType.ThreeHundredRupees, world, isProgression: true),

@@ -62,6 +62,8 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
         {
             if (item.Metadata.HasStages)
             {
+                logger.LogInformation("Tracking local player staged item {ItemType}", item.Type.GetDescription());
+
                 if (trackedAs != null && item.Metadata.GetStage(trackedAs) != null)
                 {
                     var stage = item.Metadata.GetStage(trackedAs)!;
@@ -71,6 +73,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
                     var stageName = item.Metadata.Stages[stage.Value].ToString();
 
                     didTrack = item.Track(stage.Value);
+
                     if (stateResponse)
                     {
                         if (didTrack)
@@ -117,6 +120,8 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
             }
             else if (item.Metadata.Multiple)
             {
+                logger.LogInformation("Tracking local player multiple item {ItemType}", item.Type.GetDescription());
+
                 didTrack = item.Track();
                 if (item.TryGetTrackingResponse(out var response))
                 {
@@ -142,6 +147,8 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
             }
             else
             {
+                logger.LogInformation("Tracking local player basic item {ItemType}", item.Type.GetDescription());
+
                 didTrack = item.Track();
                 if (stateResponse)
                 {
@@ -165,6 +172,8 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
         }
         else if (location != null)
         {
+            logger.LogInformation("Clearing location for item {ItemType}", item.Type.GetDescription());
+
             Tracker.LocationTracker.Clear(location, confidence, autoTracked, stateResponse: false, allowLocationComments: true, updateTreasureCount: true);
 
             // If this is a parsed AP/Mainline rom and this is an item for another player, let's comment on it

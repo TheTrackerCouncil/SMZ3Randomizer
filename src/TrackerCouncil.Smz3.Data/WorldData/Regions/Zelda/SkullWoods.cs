@@ -140,7 +140,7 @@ public class SkullWoods : Z3Region, IHasReward, IHasTreasure, IHasBoss
 
     public override bool CanEnter(Progression items, bool requireRewards)
     {
-        return items.MoonPearl && World.DarkWorldNorthWest.CanEnter(items, requireRewards);
+        return World.Logic.CanNavigateDarkWorld(items) && World.DarkWorldNorthWest.CanEnter(items, requireRewards);
     }
 
     public bool CanBeatBoss(Progression items) => MothulaReward.IsAvailable(items);

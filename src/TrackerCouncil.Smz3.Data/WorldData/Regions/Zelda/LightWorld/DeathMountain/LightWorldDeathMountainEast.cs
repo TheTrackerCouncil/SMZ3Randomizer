@@ -15,7 +15,7 @@ public class LightWorldDeathMountainEast : Z3Region
         FloatingIsland = new Location(this, LocationId.FloatingIsland, 0x308141, LocationType.Regular,
             name: "Floating Island",
             vanillaItem: ItemType.HeartPiece,
-            access: items => items.Mirror && items.MoonPearl && Logic.CanLiftHeavy(items),
+            access: items => items.Mirror && World.Logic.CanNavigateDarkWorld(items) && Logic.CanLiftHeavy(items),
             memoryAddress: 0x5,
             memoryFlag: 0x40,
             memoryType: LocationMemoryType.ZeldaMisc,
