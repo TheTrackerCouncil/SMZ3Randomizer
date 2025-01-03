@@ -19,7 +19,6 @@ public class CheatsModule(
     TrackerBase tracker,
     IPlayerProgressionService playerProgressionService,
     IWorldQueryService worldQueryService,
-    ITrackerModeService trackerModeService,
     ILogger<CheatsModule> logger) : TrackerModule(tracker,
     playerProgressionService,
     worldQueryService,
@@ -37,7 +36,7 @@ public class CheatsModule(
 
     private bool PlayerCanCheat()
     {
-        if (!trackerModeService.CheatsEnabled)
+        if (!TrackerBase.ModeTracker.CheatsEnabled)
         {
             TrackerBase.Say(x => x.Cheats.PromptEnableCheats);
             return false;
@@ -218,12 +217,12 @@ public class CheatsModule(
 
         AddCommand("Enable cheats", GetEnableCheatsRule(), (result) =>
         {
-            trackerModeService.EnableCheats();
+            TrackerBase.ModeTracker.EnableCheats();
         });
 
         AddCommand("Disable cheats", GetDisableHintsRule(), (result) =>
         {
-            trackerModeService.DisableCheats();
+            TrackerBase.ModeTracker.DisableCheats();
         });
 
         AddCommand("Fill rule", FillRule(), (result) =>

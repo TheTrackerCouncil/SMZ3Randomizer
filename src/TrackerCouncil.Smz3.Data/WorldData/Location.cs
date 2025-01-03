@@ -328,8 +328,6 @@ public class Location
     /// <summary>
     /// Returns the status of a location based on the given items
     /// </summary>
-    /// <param name="actualProgression"></param>
-    /// <param name="withKeysProgression"></param>
     /// <param name="isAccessible"></param>
     /// <param name="isAccessibleWithKeys"></param>
     /// <returns></returns>
