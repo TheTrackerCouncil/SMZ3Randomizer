@@ -14,7 +14,13 @@ public class ThievesTown : Z3Region, IHasReward, IHasTreasure, IHasBoss
 {
     public ThievesTown(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
-        RegionItems = [ItemType.KeyTT, ItemType.BigKeyTT, ItemType.MapTT, ItemType.CompassTT];
+        RegionItems = new Dictionary<ItemType, ItemType>
+        {
+            { ItemType.Key, ItemType.KeyTT },
+            { ItemType.BigKey, ItemType.BigKeyTT },
+            { ItemType.Map, ItemType.MapTT },
+            { ItemType.Compass, ItemType.CompassTT },
+        };
 
         MapChest = new Location(this, LocationId.ThievesTownMapChest, 0x1EA01, LocationType.Regular,
             name: "Map Chest",

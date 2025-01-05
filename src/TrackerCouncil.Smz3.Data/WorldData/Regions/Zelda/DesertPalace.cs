@@ -14,7 +14,13 @@ public class DesertPalace : Z3Region, IHasReward, IHasTreasure, IHasBoss
 {
     public DesertPalace(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
-        RegionItems = [ItemType.KeyDP, ItemType.BigKeyDP, ItemType.MapDP, ItemType.CompassDP];
+        RegionItems = new Dictionary<ItemType, ItemType>
+        {
+            { ItemType.Key, ItemType.KeyDP },
+            { ItemType.BigKey, ItemType.BigKeyDP },
+            { ItemType.Map, ItemType.MapDP },
+            { ItemType.Compass, ItemType.CompassDP },
+        };
 
         BigChest = new Location(this, LocationId.DesertPalaceBigChest, 0x1E98F, LocationType.Regular,
             name: "Big Chest",

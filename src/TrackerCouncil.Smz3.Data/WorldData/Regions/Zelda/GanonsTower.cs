@@ -14,7 +14,13 @@ public class GanonsTower : Z3Region, IHasTreasure, IHasBoss
 {
     public GanonsTower(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
-        RegionItems = [ItemType.KeyGT, ItemType.BigKeyGT, ItemType.MapGT, ItemType.CompassGT];
+        RegionItems = new Dictionary<ItemType, ItemType>
+        {
+            { ItemType.Key, ItemType.KeyGT },
+            { ItemType.BigKey, ItemType.BigKeyGT },
+            { ItemType.Map, ItemType.MapGT },
+            { ItemType.Compass, ItemType.CompassGT },
+        };
 
         BobsTorch = new Location(this, LocationId.GanonsTowerBobsTorch, 0x308161, LocationType.Regular,
             name: "Bob's Torch",

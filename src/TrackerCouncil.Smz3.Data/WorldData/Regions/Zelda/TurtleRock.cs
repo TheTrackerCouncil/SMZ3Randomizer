@@ -14,7 +14,13 @@ public class TurtleRock : Z3Region, IHasReward, IHasPrerequisite, IHasTreasure, 
 {
     public TurtleRock(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
-        RegionItems = [ItemType.KeyTR, ItemType.BigKeyTR, ItemType.MapTR, ItemType.CompassTR];
+        RegionItems = new Dictionary<ItemType, ItemType>
+        {
+            { ItemType.Key, ItemType.KeyTR },
+            { ItemType.BigKey, ItemType.BigKeyTR },
+            { ItemType.Map, ItemType.MapTR },
+            { ItemType.Compass, ItemType.CompassTR },
+        };
 
         CompassChest = new Location(this, LocationId.TurtleRockCompassChest, 0x1EA22, LocationType.Regular,
             name: "Compass Chest",

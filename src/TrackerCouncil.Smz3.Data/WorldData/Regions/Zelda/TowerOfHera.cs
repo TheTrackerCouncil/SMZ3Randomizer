@@ -14,7 +14,13 @@ public class TowerOfHera : Z3Region, IHasReward, IHasTreasure, IHasBoss
 {
     public TowerOfHera(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
-        RegionItems = [ItemType.KeyTH, ItemType.BigKeyTH, ItemType.MapTH, ItemType.CompassTH];
+        RegionItems = new Dictionary<ItemType, ItemType>
+        {
+            { ItemType.Key, ItemType.KeyTH },
+            { ItemType.BigKey, ItemType.BigKeyTH },
+            { ItemType.Map, ItemType.MapTH },
+            { ItemType.Compass, ItemType.CompassTH },
+        };
 
         BasementCage = new Location(this, LocationId.TowerOfHeraBasementCage, 0x308162, LocationType.HeraStandingKey,
             name: "Basement Cage",

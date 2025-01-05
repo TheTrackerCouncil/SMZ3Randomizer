@@ -14,7 +14,13 @@ public class MiseryMire : Z3Region, IHasReward, IHasPrerequisite, IHasTreasure, 
 {
     public MiseryMire(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
-        RegionItems = [ItemType.KeyMM, ItemType.BigKeyMM, ItemType.MapMM, ItemType.CompassMM];
+        RegionItems = new Dictionary<ItemType, ItemType>
+        {
+            { ItemType.Key, ItemType.KeyMM },
+            { ItemType.BigKey, ItemType.BigKeyMM },
+            { ItemType.Map, ItemType.MapMM },
+            { ItemType.Compass, ItemType.CompassMM },
+        };
 
         MainLobby = new Location(this, LocationId.MiseryMireMainLobby, 0x1EA5E, LocationType.Regular,
             name: "Main Lobby",

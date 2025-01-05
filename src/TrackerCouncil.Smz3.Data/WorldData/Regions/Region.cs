@@ -83,9 +83,9 @@ public abstract class Region : IHasLocations
     public ILogic Logic => World.Logic;
 
     /// <summary>
-    /// Gets the list of region-specific items, e.g. keys, maps, compasses.
+    /// Gets the map of generic items to region-specific items, e.g. keys, maps, compasses
     /// </summary>
-    protected IList<ItemType> RegionItems { get; init; } = new List<ItemType>();
+    protected IDictionary<ItemType, ItemType> RegionItems { get; init; } = new Dictionary<ItemType, ItemType>();
 
     /// <summary>
     /// Name of the map to display when in this region
@@ -102,7 +102,17 @@ public abstract class Region : IHasLocations
     /// </returns>
     public bool IsRegionItem(Item item)
     {
-        return RegionItems.Contains(item.Type);
+        return RegionItems.Values.Contains(item.Type);
+    }
+
+    /// <summary>
+    /// Takes a generic item (e.g. key, compass, etc.) and returns the regional specific version of it if found
+    /// </summary>
+    /// <param name="originalType">The generic item that is desired to be replaced</param>
+    /// <returns>The regional version of the item, if found. Returns the originalType passed in if not found.</returns>
+    public ItemType ConvertToRegionItemType(ItemType originalType)
+    {
+        return RegionItems.TryGetValue(originalType, out var itemType) ? itemType : originalType;
     }
 
     /// <summary>
