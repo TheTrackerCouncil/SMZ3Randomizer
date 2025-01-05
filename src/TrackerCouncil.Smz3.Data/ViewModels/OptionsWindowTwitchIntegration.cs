@@ -62,7 +62,7 @@ public class OptionsWindowTwitchIntegration : INotifyPropertyChanged
     [DynamicFormFieldCheckBox("Enable poll creation", order: 60)]
     public bool EnablePollCreation { get; set; }
 
-    [DynamicFormFieldNumericUpDown(minValue: 0, label: "Chat response time limit (in minutes):", groupName: "Bottom", order: 70)]
+    [DynamicFormFieldNumericUpDown(minValue: 0, label: "Chat greeting time period (in minutes):", groupName: "Bottom", order: 70, toolTipText: "How long before tracker will stop responding to messages from chat greeting her.")]
     public int ChatGreetingTimeLimit { get; set; }
 
     [DynamicFormFieldComboBox(label: "GT guessing game style:", order: 80)]
