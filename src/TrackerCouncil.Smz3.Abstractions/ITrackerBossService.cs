@@ -17,8 +17,8 @@ public interface ITrackerBossService
     /// <param name="admittedGuilt">
     /// <see langword="true"/> if the command implies the boss was killed;
     /// <see langword="false"/> if the boss was simply "tracked".
-    /// <param name="force">If the boss should be forced to be tracked while auto tracking</param>
     /// </param>
+    /// <param name="force">If the boss should be forced to be tracked while auto tracking</param>
     public void MarkBossAsDefeated(IHasBoss region, float? confidence = null, bool autoTracked = false, bool admittedGuilt = false, bool force = false);
 
     /// <summary>
