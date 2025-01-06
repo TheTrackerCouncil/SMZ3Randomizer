@@ -77,7 +77,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, IP
             var isKeysanityForLocation = (location.Region is Z3Region && World.Config.ZeldaKeysanity) || (location.Region is SMRegion && World.Config.MetroidKeysanity);
             var items = playerProgressionService.GetProgression(!isKeysanityForLocation);
 
-            if (previousAccessibility is not (Accessibility.Available or Accessibility.AvailableWithKeys) && (confidence >= Options.MinimumSassConfidence || autoTracked))
+            if (previousAccessibility is Accessibility.OutOfLogic && (confidence >= Options.MinimumSassConfidence || autoTracked))
             {
                 var locationInfo = location.Metadata;
                 var roomInfo = location.Room?.Metadata;

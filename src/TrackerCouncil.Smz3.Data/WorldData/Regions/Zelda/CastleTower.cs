@@ -14,7 +14,10 @@ public class CastleTower : Z3Region, IHasReward, IHasTreasure, IHasBoss
     public CastleTower(World world, Config config, IMetadataService? metadata, TrackerState? trackerState)
         : base(world, config, metadata, trackerState)
     {
-        RegionItems = [ItemType.KeyCT];
+        RegionItems = new Dictionary<ItemType, ItemType>()
+        {
+            { ItemType.Key, ItemType.KeyCT }
+        };
 
         Foyer = new FoyerRoom(this, metadata, trackerState);
         DarkMaze = new DarkMazeRoom(this, metadata, trackerState);

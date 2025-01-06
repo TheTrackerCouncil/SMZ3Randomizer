@@ -14,7 +14,13 @@ public class SkullWoods : Z3Region, IHasReward, IHasTreasure, IHasBoss
 {
     public SkullWoods(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
-        RegionItems = [ItemType.KeySW, ItemType.BigKeySW, ItemType.MapSW, ItemType.CompassSW];
+        RegionItems = new Dictionary<ItemType, ItemType>
+        {
+            { ItemType.Key, ItemType.KeySW },
+            { ItemType.BigKey, ItemType.BigKeySW },
+            { ItemType.Map, ItemType.MapSW },
+            { ItemType.Compass, ItemType.CompassSW },
+        };
 
         PotPrison = new Location(this, LocationId.SkullWoodsPotPrison, 0x1E9A1, LocationType.Regular,
             name: "Pot Prison",

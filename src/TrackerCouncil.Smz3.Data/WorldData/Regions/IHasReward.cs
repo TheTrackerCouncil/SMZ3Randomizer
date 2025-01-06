@@ -49,6 +49,10 @@ public interface IHasReward
         Reward = region.World.Rewards.First(x => x.Type == rewardType && x.Region == null);
         Reward.Region = this;
         RewardState.RewardType = rewardType;
+        if (rewardType.IsInCategory(RewardCategory.NonRandomized))
+        {
+            RewardState.MarkedReward = RewardType;
+        }
     }
 
     public RewardType MarkedReward

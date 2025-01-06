@@ -14,7 +14,12 @@ public class EasternPalace : Z3Region, IHasReward, IHasTreasure, IHasBoss
 {
     public EasternPalace(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
-        RegionItems = [ItemType.BigKeyEP, ItemType.MapEP, ItemType.CompassEP];
+        RegionItems = new Dictionary<ItemType, ItemType>
+        {
+            { ItemType.BigKey, ItemType.BigKeyEP },
+            { ItemType.Map, ItemType.MapEP },
+            { ItemType.Compass, ItemType.CompassEP },
+        };
 
         CannonballChest = new Location(this, LocationId.EasternPalaceCannonballChest, 0x1E9B3, LocationType.Regular,
             name: "Cannonball Chest",

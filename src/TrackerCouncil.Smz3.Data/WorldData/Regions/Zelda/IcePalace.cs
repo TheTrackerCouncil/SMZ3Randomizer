@@ -14,7 +14,13 @@ public class IcePalace : Z3Region, IHasReward, IHasTreasure, IHasBoss
 {
     public IcePalace(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
-        RegionItems = [ItemType.KeyIP, ItemType.BigKeyIP, ItemType.MapIP, ItemType.CompassIP];
+        RegionItems = new Dictionary<ItemType, ItemType>
+        {
+            { ItemType.Key, ItemType.KeyIP },
+            { ItemType.BigKey, ItemType.BigKeyIP },
+            { ItemType.Map, ItemType.MapIP },
+            { ItemType.Compass, ItemType.CompassIP },
+        };
 
         CompassChest = new Location(this, LocationId.IcePalaceCompassChest, 0x1E9D4, LocationType.Regular,
             name: "Compass Chest",

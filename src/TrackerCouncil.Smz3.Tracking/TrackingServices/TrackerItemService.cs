@@ -87,7 +87,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
                                 Tracker.Say(response: Responses.TrackedItemByStage, args: [itemName, stageName]);
                             }
                         }
-                        else
+                        else if (!autoTracked)
                         {
                             Tracker.Say(response: Responses.TrackedOlderProgressiveItem, args: [itemName, item.Metadata.Stages[item.TrackingState].ToString()]);
                         }
@@ -111,7 +111,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
                                 Tracker.Say(response: Responses.TrackedProgressiveItem, args: [itemName, stageName]);
                             }
                         }
-                        else
+                        else if (!autoTracked)
                         {
                             Tracker.Say(response: Responses.TrackedTooManyOfAnItem, args: [itemName]);
                         }
@@ -123,27 +123,28 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
                 logger.LogInformation("Tracking local player multiple item {ItemType}", item.Type.GetDescription());
 
                 didTrack = item.Track();
-                if (item.TryGetTrackingResponse(out var response))
+
+                if (stateResponse)
                 {
-                    if (stateResponse)
+                    if (item.TryGetTrackingResponse(out var response))
+                    {
                         Tracker.Say(response: response, args: [item.Counter]);
-                }
-                else if (item.Counter == 1)
-                {
-                    if (stateResponse)
+                    }
+                    else if (item.Counter == 1)
+                    {
                         Tracker.Say(response: Responses.TrackedItem, args: [itemName, item.Metadata.NameWithArticle]);
-                }
-                else if (item.Counter > 1)
-                {
-                    if (stateResponse)
+                    }
+                    else if (item.Counter > 1)
+                    {
                         Tracker.Say(response: Responses.TrackedItemMultiple, args: [item.Metadata.Plural ?? $"{itemName}s", item.Counter, item.Name]);
-                }
-                else
-                {
-                    logger.LogWarning("Encountered multiple item with counter 0: {Item} has counter {Counter}", item, item.Counter);
-                    if (stateResponse)
+                    }
+                    else if (!autoTracked)
+                    {
+                        logger.LogWarning("Encountered multiple item with counter 0: {Item} has counter {Counter}", item, item.Counter);
                         Tracker.Say(response: Responses.TrackedAlreadyTrackedItem, args: [itemName]);
+                    }
                 }
+
             }
             else
             {
@@ -163,7 +164,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
                             Tracker.Say(response: Responses.TrackedItem, args: [itemName, item.Metadata.NameWithArticle]);
                         }
                     }
-                    else
+                    else if (!autoTracked)
                     {
                         Tracker.Say(response: Responses.TrackedAlreadyTrackedItem, args: [itemName]);
                     }
@@ -199,6 +200,13 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
 
         if (!didTrack)
         {
+            // If we couldn't track the item for some reason (e.g. an AP seed where you had starting items), but this
+            // is an uncleared auto tracked location, we should still clear it
+            if (location != null && autoTracked && !location.Cleared)
+            {
+                Tracker.LocationTracker.Clear(location, confidence, autoTracked, stateResponse: false, allowLocationComments: true, updateTreasureCount: true);
+            }
+
             return false;
         }
 

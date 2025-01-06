@@ -126,7 +126,7 @@ namespace Randomizer.SMZ3 {
         }
 
         void SetRewards(IEnumerable<LegacyRewardType> rewards) {
-            var regions = Regions.OfType<ILegacyReward>().Where(x => x.LegacyReward == None);
+            var regions = Regions.OfType<ILegacyReward>().Where(x => x.LegacyReward != Agahnim);
             foreach (var (region, reward) in regions.Zip(rewards)) {
                 region.LegacyReward = reward;
             }

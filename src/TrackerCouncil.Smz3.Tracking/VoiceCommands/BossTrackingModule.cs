@@ -149,11 +149,11 @@ public class BossTrackingModule : TrackerModule
                 if (contentItemData != null)
                 {
                     TrackerBase.Say(x => x.DungeonBossClearedAddContent);
-                    TrackerBase.ItemTracker.TrackItem(contentItemData);
+                    TrackerBase.ItemTracker.TrackItem(contentItemData, force: true);
                 }
 
                 // Track boss with associated dungeon
-                TrackerBase.BossTracker.MarkBossAsDefeated(dungeon, result.Confidence);
+                TrackerBase.BossTracker.MarkBossAsDefeated(dungeon, result.Confidence, force: true);
                 return;
             }
 
@@ -163,13 +163,13 @@ public class BossTrackingModule : TrackerModule
                 if (contentItemData != null)
                 {
                     TrackerBase.Say(x => x.DungeonBossClearedAddContent);
-                    TrackerBase.ItemTracker.TrackItem(contentItemData);
+                    TrackerBase.ItemTracker.TrackItem(contentItemData, force: true);
                 }
 
                 // Track standalone boss
                 var admittedGuilt = result.Text.ContainsAny("killed", "beat", "defeated", "dead")
                                     && !result.Text.ContainsAny("beat off", "beaten off");
-                TrackerBase.BossTracker.MarkBossAsDefeated(boss, admittedGuilt, result.Confidence);
+                TrackerBase.BossTracker.MarkBossAsDefeated(boss, admittedGuilt, result.Confidence, force: true);
                 return;
             }
 

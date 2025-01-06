@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using TrackerCouncil.Smz3.Data.ParsedRom;
@@ -212,6 +211,11 @@ public class LocationsPatch : RomPatch
             isProgression = true;
         }
 
+        if (itemType is ItemType.Key or ItemType.BigKey or ItemType.Compass or ItemType.Map)
+        {
+            var originalItemType = itemType;
+            itemType = location.Region.ConvertToRegionItemType(originalItemType);
+        }
 
         return new ParsedRomLocationDetails()
         {

@@ -103,7 +103,7 @@ public class ViewedText : IZeldaStateCheck
     private void MarkRedCrystalDungeons()
     {
         var dungeons = World.RewardRegions.Where(x =>
-            x is { RewardType: RewardType.PendantGreen, HasCorrectlyMarkedReward: false }).ToList();
+            x is { RewardType: RewardType.CrystalRed, HasCorrectlyMarkedReward: false }).ToList();
 
         if (dungeons.Count == 0)
         {

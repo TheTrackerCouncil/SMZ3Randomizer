@@ -16,7 +16,11 @@ public class HyruleCastle : Z3Region, IHasTreasure, IHasBoss
 
     public HyruleCastle(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
-        RegionItems = [ItemType.KeyHC, ItemType.MapHC];
+        RegionItems = new Dictionary<ItemType, ItemType>
+        {
+            { ItemType.Key, ItemType.KeyHC },
+            { ItemType.Map, ItemType.MapHC },
+        };
 
         Sanctuary = new Location(this, LocationId.Sanctuary, 0x1EA79, LocationType.Regular,
                 name: "Sanctuary",

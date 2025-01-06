@@ -14,7 +14,13 @@ public class PalaceOfDarkness : Z3Region, IHasReward, IHasTreasure, IHasBoss
 {
     public PalaceOfDarkness(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
-        RegionItems = [ItemType.KeyPD, ItemType.BigKeyPD, ItemType.MapPD, ItemType.CompassPD];
+        RegionItems = new Dictionary<ItemType, ItemType>
+        {
+            { ItemType.Key, ItemType.KeyPD },
+            { ItemType.BigKey, ItemType.BigKeyPD },
+            { ItemType.Map, ItemType.MapPD },
+            { ItemType.Compass, ItemType.CompassPD },
+        };
 
         ShooterRoom = new Location(this, LocationId.PalaceOfDarknessShooterRoom, 0x1EA5B, LocationType.Regular,
             name: "Shooter Room",

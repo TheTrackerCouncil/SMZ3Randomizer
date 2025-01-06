@@ -74,7 +74,7 @@ public class TrackerWindowDungeonPanelViewModel : TrackerWindowPanelViewModel
             menuItems.Add(menuItem);
         }
 
-        if (RewardRegion != null)
+        if (RewardRegion != null && RewardRegion?.RewardType.IsInCategory(RewardCategory.NonRandomized) != true)
         {
             AddRewardMenuItem(menuItems, RewardType.PendantGreen);
             AddRewardMenuItem(menuItems, RewardType.PendantRed);
@@ -84,7 +84,7 @@ public class TrackerWindowDungeonPanelViewModel : TrackerWindowPanelViewModel
         }
 
         // For parsed AP/Mainline roms, show the Metroid boss rewards
-        if (Region?.World.Config.RomGenerator != RomGenerator.Cas)
+        if (Region?.World.Config.RomGenerator != RomGenerator.Cas && RewardRegion?.RewardType.IsInCategory(RewardCategory.NonRandomized) != true)
         {
             AddRewardMenuItem(menuItems, RewardType.KraidToken);
             AddRewardMenuItem(menuItems, RewardType.PhantoonToken);

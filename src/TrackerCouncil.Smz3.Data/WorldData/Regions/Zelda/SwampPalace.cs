@@ -14,7 +14,13 @@ public class SwampPalace : Z3Region, IHasReward, IHasTreasure, IHasBoss
 {
     public SwampPalace(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
     {
-        RegionItems = [ItemType.KeySP, ItemType.BigKeySP, ItemType.MapSP, ItemType.CompassSP];
+        RegionItems = new Dictionary<ItemType, ItemType>
+        {
+            { ItemType.Key, ItemType.KeySP },
+            { ItemType.BigKey, ItemType.BigKeySP },
+            { ItemType.Map, ItemType.MapSP },
+            { ItemType.Compass, ItemType.CompassSP },
+        };
 
         Entrance = new Location(this, LocationId.SwampPalaceEntrance, 0x1EA9D, LocationType.Regular,
                 name: "Entrance",

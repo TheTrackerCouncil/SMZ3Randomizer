@@ -6,7 +6,7 @@
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-        <Version>9.9.0-rc.3</Version>
+        <Version>9.9.0</Version>
         <AssemblyName>SMZ3CasRandomizer</AssemblyName>
         <ApplicationIcon>Assets\smz3.ico</ApplicationIcon>
         <RootNamespace>$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
@@ -20,7 +20,7 @@
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Include="Avalonia_Gif" Version="1.0.0" />
         <PackageReference Include="MattEqualsCoder.AvaloniaControls" Version="1.4.3" />
-        <PackageReference Include="MattEqualsCoder.DynamicForms.Avalonia" Version="1.0.1" />
+        <PackageReference Include="MattEqualsCoder.DynamicForms.Avalonia" Version="1.0.2" />
         <PackageReference Include="MattEqualsCoder.MSURandomizer.Avalonia" Version="3.0.1" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
         <PackageReference Include="ReactiveUI.Fody" Version="19.5.41" />

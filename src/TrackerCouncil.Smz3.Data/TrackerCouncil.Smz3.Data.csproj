@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.0.11" />
-    <PackageReference Include="MattEqualsCoder.DynamicForms.Core" Version="1.0.1" />
+    <PackageReference Include="MattEqualsCoder.DynamicForms.Core" Version="1.0.2" />
     <PackageReference Include="MattEqualsCoder.GitHubReleaseChecker" Version="1.1.2" />
     <PackageReference Include="MattEqualsCoder.MSURandomizer.Library" Version="3.0.1" />
     <PackageReference Include="NAudio.Wasapi" Version="2.2.1" />
