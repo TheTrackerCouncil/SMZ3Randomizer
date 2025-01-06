@@ -2,5 +2,5 @@
 
 public static class MultiplayerVersion
 {
-    public const int Id = 5;
+    public const int Id = 6;
 }
