@@ -75,13 +75,7 @@ public static class ItemTypeExtensions
         if (itemType.IsInCategory(ItemCategory.Keycard))
             return isMetroidKeysanity || !isLocalPlayerItem;
 
-        if (itemType == ItemType.OtherGameProgressionItem)
-            return true;
-
-        if (itemType == ItemType.Nothing || itemType.IsInAnyCategory(ItemCategory.Junk, ItemCategory.Scam, ItemCategory.NonRandomized, ItemCategory.Map, ItemCategory.Compass, ItemCategory.Nice))
-            return false;
-
-        return true;
+        return itemType.IsInAnyCategory(ItemCategory.PossibleProgression);
     }
 
     /// <summary>

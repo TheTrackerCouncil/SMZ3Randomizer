@@ -8,7 +8,6 @@ using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Data.GeneratedData;
-using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
@@ -158,8 +157,10 @@ public class GameHintService : IGameHintService
         var importantLocations = GetImportantLocations(allWorlds);
 
         locationsToCheck = locationsToCheck.Where(l => s_importantLocations.Contains(l.Id) || l.Item.Progression ||
-                                                       l.Item.Type.IsInAnyCategory(ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard) ||
-                                                       l.Item.Type is ItemType.Super or ItemType.PowerBomb or ItemType.ProgressiveSword or ItemType.SilverArrows).ToList();
+                                                       l.Item.Type.IsInAnyCategory(ItemCategory.SmallKey,
+                                                           ItemCategory.BigKey, ItemCategory.Keycard,
+                                                           ItemCategory.PossibleProgression,
+                                                           ItemCategory.ProgressionOnLimitedAmount)).ToList();
 
         if (!locationsToCheck.Any())
         {
@@ -183,8 +184,9 @@ public class GameHintService : IGameHintService
         var importantLocations = GetImportantLocations(allWorlds);
 
         locations = locations.Where(l => s_importantLocations.Contains(l.Id) || l.Item.Progression ||
-                                         l.Item.Type.IsInAnyCategory(ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard) ||
-                                         l.Item.Type is ItemType.Super or ItemType.PowerBomb or ItemType.ProgressiveSword or ItemType.SilverArrows).ToList();
+                                         l.Item.Type.IsInAnyCategory(ItemCategory.SmallKey, ItemCategory.BigKey,
+                                             ItemCategory.Keycard, ItemCategory.PossibleProgression,
+                                             ItemCategory.ProgressionOnLimitedAmount)).ToList();
 
         if (!locations.Any())
         {
@@ -200,13 +202,13 @@ public class GameHintService : IGameHintService
     /// </summary>
     private IEnumerable<Hint> GetProgressionItemHints(World hintPlayerWorld, IEnumerable<Playthrough.Sphere> spheres, int count)
     {
-        // Grab items for the player marked as progression that are not junk or scam items
+        // Grab items for the player marked as progression that are not junk
         var progressionLocations = spheres
             .SelectMany(x => x.Locations)
-            .Where(x => x.Item.World == hintPlayerWorld && x.Item.Progression &&
-                        !x.Item.Type.IsInAnyCategory(ItemCategory.Junk, ItemCategory.Scam)).ToList();
+            .Where(x => x.Item.World == hintPlayerWorld && x.Item.Type.IsInCategory(ItemCategory.PossibleProgression) &&
+                        !x.Item.Type.IsInCategory(ItemCategory.Scam)).ToList();
         progressionLocations =
-            progressionLocations.TakeLast(progressionLocations.Count() / 2).Shuffle(_random).Take(count).ToList();
+            progressionLocations.TakeLast(progressionLocations.Count() / 3).Shuffle(_random).Take(count).ToList();
 
         return progressionLocations.Select(x => new Hint(() => GetProgressionItemHint(x)));
 
@@ -660,21 +662,22 @@ public class GameHintService : IGameHintService
         // Get the first accessible ammo locations to make sure early ammo isn't considered mandatory when there
         // are others available
         var spheres = _playthroughService.GenerateSpheres(allWorlds.SelectMany(x => x.Locations));
-        var ammoItemTypes = new List<ItemType>()
+        var ammoItemTypes = new Dictionary<ItemType, int>()
         {
-            ItemType.Missile,
-            ItemType.Super,
-            ItemType.PowerBomb,
-            ItemType.ETank,
-            ItemType.ReserveTank,
+            { ItemType.Missile, 1 },
+            { ItemType.Super, 1 },
+            { ItemType.PowerBomb, 2 },
+            { ItemType.ETank, 3 },
+            { ItemType.ReserveTank, 3},
+            { ItemType.HeartContainer, 3 }
         };
         var ammoLocations = new List<Location>();
         foreach (var sphere in spheres)
         {
-            foreach (var location in sphere.Locations.Where(x => ammoItemTypes.Contains(x.Item.Type)))
+            foreach (var location in sphere.Locations.Where(x => ammoItemTypes.ContainsKey(x.Item.Type)))
             {
                 if (ammoLocations.Count(x =>
-                        x.Item.World.Id == location.Item.World.Id && x.Item.Type == location.Item.Type) < 3)
+                        x.Item.World.Id == location.Item.World.Id && x.Item.Type == location.Item.Type) < ammoItemTypes[location.Item.Type])
                 {
                     ammoLocations.Add(location);
                 }
@@ -684,7 +687,7 @@ public class GameHintService : IGameHintService
         return allWorlds.SelectMany(w => w.Locations)
             .Where(l => s_importantLocations.Contains(l.Id) || l.Item.Progression ||
                         l.Item.Type.IsInAnyCategory(ItemCategory.SmallKey, ItemCategory.BigKey,
-                            ItemCategory.Keycard) || l.Item.Type is ItemType.Super or ItemType.PowerBomb or ItemType.ProgressiveSword or ItemType.SilverArrows)
+                            ItemCategory.Keycard, ItemCategory.PossibleProgression))
             .Concat(ammoLocations)
             .Distinct();
     }

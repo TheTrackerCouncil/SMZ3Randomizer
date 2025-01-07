@@ -212,19 +212,19 @@ public enum ItemType : byte
     ProgressiveTunic = 0x60,
 
     [Description("Progressive Shield")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.PossibleProgression)]
     ProgressiveShield = 0x5F,
 
     [Description("Progressive Sword")]
-    [ItemCategory(ItemCategory.Zelda)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.PossibleProgression)]
     ProgressiveSword = 0x5E,
 
     [Description("Bow")]
-    [ItemCategory(ItemCategory.Zelda)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.PossibleProgression)]
     Bow = 0x0B,
 
     [Description("Silver Arrows")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Nice)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Nice, ItemCategory.PossibleProgression)]
     SilverArrows = 0x58,
 
     [Description("Blue Boomerang")]
@@ -236,51 +236,51 @@ public enum ItemType : byte
     RedBoomerang = 0x2A,
 
     [Description("Hookshot")]
-    [ItemCategory(ItemCategory.Zelda)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.PossibleProgression)]
     Hookshot = 0x0A,
 
     [Description("Mushroom")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.PossibleProgression)]
     Mushroom = 0x29,
 
     [Description("Magic Powder")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.PossibleProgression)]
     Powder = 0x0D,
 
     [Description("Fire Rod")]
-    [ItemCategory(ItemCategory.Zelda)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.PossibleProgression)]
     Firerod = 0x07,
 
     [Description("Ice Rod")]
-    [ItemCategory(ItemCategory.Zelda)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.PossibleProgression)]
     Icerod = 0x08,
 
     [Description("Bombos")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Medallion)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Medallion, ItemCategory.PossibleProgression)]
     Bombos = 0x0f,
 
     [Description("Ether")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Medallion)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Medallion, ItemCategory.PossibleProgression)]
     Ether = 0x10,
 
     [Description("Quake")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Medallion)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Medallion, ItemCategory.PossibleProgression)]
     Quake = 0x11,
 
     [Description("Lamp")]
-    [ItemCategory(ItemCategory.Zelda)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.PossibleProgression)]
     Lamp = 0x12,
 
     [Description("Hammer")]
-    [ItemCategory(ItemCategory.Zelda)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.PossibleProgression)]
     Hammer = 0x09,
 
     [Description("Shovel")]
-    [ItemCategory(ItemCategory.Zelda)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.PossibleProgression)]
     Shovel = 0x13,
 
     [Description("Flute")]
-    [ItemCategory(ItemCategory.Zelda)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.PossibleProgression)]
     Flute = 0x14,
 
     [Description("Bug Catching Net")]
@@ -288,47 +288,47 @@ public enum ItemType : byte
     Bugnet = 0x21,
 
     [Description("Book of Mudora")]
-    [ItemCategory(ItemCategory.Zelda)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.PossibleProgression)]
     Book = 0x1D,
 
     [Description("Bottle")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Bottle)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Bottle, ItemCategory.PossibleProgression)]
     Bottle = 0x16,
 
     [Description("Cane of Somaria")]
-    [ItemCategory(ItemCategory.Zelda)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.PossibleProgression)]
     Somaria = 0x15,
 
     [Description("Cane of Byrna")]
-    [ItemCategory(ItemCategory.Zelda)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.PossibleProgression)]
     Byrna = 0x18,
 
     [Description("Magic Cape")]
-    [ItemCategory(ItemCategory.Zelda)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.PossibleProgression)]
     Cape = 0x19,
 
     [Description("Magic Mirror")]
-    [ItemCategory(ItemCategory.Zelda)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.PossibleProgression)]
     Mirror = 0x1A,
 
     [Description("Pegasus Boots")]
-    [ItemCategory(ItemCategory.Zelda)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.PossibleProgression)]
     Boots = 0x4B,
 
     [Description("Progressive Glove")]
-    [ItemCategory(ItemCategory.Zelda)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.PossibleProgression)]
     ProgressiveGlove = 0x61,
 
     [Description("Zora's Flippers")]
-    [ItemCategory(ItemCategory.Zelda)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.PossibleProgression)]
     Flippers = 0x1E,
 
     [Description("Moon Pearl")]
-    [ItemCategory(ItemCategory.Zelda)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.PossibleProgression)]
     MoonPearl = 0x1F,
 
     [Description("Half Magic")]
-    [ItemCategory(ItemCategory.Zelda)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.PossibleProgression)]
     HalfMagic = 0x4E,
 
     [Description("Piece of Heart")]
@@ -336,11 +336,11 @@ public enum ItemType : byte
     HeartPiece = 0x17,
 
     [Description("Heart Container")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.ProgressionOnLimitedAmount)]
     HeartContainer = 0x3E,
 
     [Description("Sanctuary Heart Container")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.NeverProgression)]
     HeartContainerRefill = 0x3F,
 
     [Description("Three Bombs")]
@@ -372,15 +372,15 @@ public enum ItemType : byte
     TwentyRupees2 = 0x47,
 
     [Description("Fifty Rupees")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.IgnoreOnMultiplayerCompletion)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.IgnoreOnMultiplayerCompletion, ItemCategory.NeverProgression)]
     FiftyRupees = 0x41,
 
     [Description("One Hundred Rupees")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.NeverProgression)]
     OneHundredRupees = 0x40,
 
     [Description("Three Hundred Rupees")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.PossibleProgression)]
     ThreeHundredRupees = 0x46,
 
     [Description("+5 Bomb Capacity")]
@@ -464,19 +464,19 @@ public enum ItemType : byte
     CardLowerNorfairBoss = 0xDF,
 
     [Description("Missile")]
-    [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.Plentiful, ItemCategory.ProgressionOnlyOnFirst)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.Plentiful, ItemCategory.ProgressionOnLimitedAmount)]
     Missile = 0xC2,
 
     [Description("Super Missile")]
-    [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.Plentiful, ItemCategory.ProgressionOnlyOnFirst)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.Plentiful, ItemCategory.ProgressionOnLimitedAmount)]
     Super = 0xC3,
 
     [Description("Power Bomb")]
-    [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam, ItemCategory.Junk)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.ProgressionOnLimitedAmount)]
     PowerBomb = 0xC4,
 
     [Description("Grappling Beam")]
-    [ItemCategory(ItemCategory.Metroid)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.PossibleProgression)]
     Grapple = 0xB0,
 
     [Description("X-Ray Scope")]
@@ -484,23 +484,23 @@ public enum ItemType : byte
     XRay = 0xB1,
 
     [Description("Energy Tank")]
-    [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam, ItemCategory.Junk)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.ProgressionOnLimitedAmount)]
     ETank = 0xC0,
 
     [Description("Reserve Tank")]
-    [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam, ItemCategory.Junk)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.ProgressionOnLimitedAmount)]
     ReserveTank = 0xC1,
 
     [Description("Charge Beam")]
-    [ItemCategory(ItemCategory.Metroid)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.PossibleProgression)]
     Charge = 0xBB,
 
     [Description("Ice Beam")]
-    [ItemCategory(ItemCategory.Metroid)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.PossibleProgression)]
     Ice = 0xBC,
 
     [Description("Wave Beam")]
-    [ItemCategory(ItemCategory.Metroid)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.PossibleProgression)]
     Wave = 0xBD,
 
     [Description("Spazer")]
@@ -508,67 +508,67 @@ public enum ItemType : byte
     Spazer = 0xBE,
 
     [Description("Plasma Beam")]
-    [ItemCategory(ItemCategory.Metroid)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.PossibleProgression)]
     Plasma = 0xBF,
 
     [Description("Varia Suit")]
-    [ItemCategory(ItemCategory.Metroid)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.PossibleProgression)]
     Varia = 0xB2,
 
     [Description("Gravity Suit")]
-    [ItemCategory(ItemCategory.Metroid)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.PossibleProgression)]
     Gravity = 0xB6,
 
     [Description("Morphing Ball")]
-    [ItemCategory(ItemCategory.Metroid)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.PossibleProgression)]
     Morph = 0xB4,
 
     [Description("Morph Bombs")]
-    [ItemCategory(ItemCategory.Metroid)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.PossibleProgression)]
     Bombs = 0xB9,
 
     [Description("Spring Ball")]
-    [ItemCategory(ItemCategory.Metroid)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.PossibleProgression)]
     SpringBall = 0xB3,
 
     [Description("Screw Attack")]
-    [ItemCategory(ItemCategory.Metroid)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.PossibleProgression)]
     ScrewAttack = 0xB5,
 
     [Description("Hi-Jump Boots")]
-    [ItemCategory(ItemCategory.Metroid)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.PossibleProgression)]
     HiJump = 0xB7,
 
     [Description("Space Jump")]
-    [ItemCategory(ItemCategory.Metroid)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.PossibleProgression)]
     SpaceJump = 0xB8,
 
     [Description("Speed Booster")]
-    [ItemCategory(ItemCategory.Metroid)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.PossibleProgression)]
     SpeedBooster = 0xBA,
 
     [Description("Bottle with Red Potion")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Bottle)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Bottle, ItemCategory.PossibleProgression)]
     BottleWithRedPotion = 0x2B,
 
     [Description("Bottle with Green Potion")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Bottle)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Bottle, ItemCategory.PossibleProgression)]
     BottleWithGreenPotion = 0x2C,
 
     [Description("Bottle with Blue Potion")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Bottle)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Bottle, ItemCategory.PossibleProgression)]
     BottleWithBluePotion = 0x2D,
 
     [Description("Bottle with Fairy")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Bottle)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Bottle, ItemCategory.PossibleProgression)]
     BottleWithFairy = 0x3D,
 
     [Description("Bottle with Bee")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Bottle)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Bottle, ItemCategory.PossibleProgression)]
     BottleWithBee = 0x3C,
 
     [Description("Bottle with Gold Bee")]
-    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Bottle)]
+    [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Bottle, ItemCategory.PossibleProgression)]
     BottleWithGoldBee = 0x48,
 
     [Description("Red Potion Refill")]
@@ -600,26 +600,26 @@ public enum ItemType : byte
     CardBoss = 0xF2,
 
     [Description("Brinstar Map")]
-    [ItemCategory(ItemCategory.Metroid, ItemCategory.MetroidMap)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.MetroidMap, ItemCategory.NeverProgression)]
     SmMapBrinstar = 0xCA,
 
     [Description("Wrecked Ship Map")]
-    [ItemCategory(ItemCategory.Metroid, ItemCategory.MetroidMap)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.MetroidMap, ItemCategory.NeverProgression)]
     SmMapWreckedShip = 0xCB,
 
     [Description("Maridia Map")]
-    [ItemCategory(ItemCategory.Metroid, ItemCategory.MetroidMap)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.MetroidMap, ItemCategory.NeverProgression)]
     SmMapMaridia = 0xCC,
 
     [Description("Lower Norfair Map")]
-    [ItemCategory(ItemCategory.Metroid, ItemCategory.MetroidMap)]
+    [ItemCategory(ItemCategory.Metroid, ItemCategory.MetroidMap, ItemCategory.NeverProgression)]
     SmMapLowerNorfair = 0xCD,
 
     [Description("Other Game Item")]
-    [ItemCategory(ItemCategory.NonRandomized)]
+    [ItemCategory(ItemCategory.NonRandomized, ItemCategory.NeverProgression)]
     OtherGameItem = 0xFE,
 
     [Description("Important Other Game Item")]
-    [ItemCategory(ItemCategory.NonRandomized)]
+    [ItemCategory(ItemCategory.NonRandomized, ItemCategory.PossibleProgression)]
     OtherGameProgressionItem = 0xFF
 }

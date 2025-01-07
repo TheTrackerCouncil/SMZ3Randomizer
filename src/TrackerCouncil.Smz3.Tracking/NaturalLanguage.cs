@@ -98,8 +98,8 @@ internal static class NaturalLanguage
             return (item, count);
         }).ToList();
 
-        var interestingItems = groupedItems.Where(x => x.item.Metadata.IsProgression(config, x.item.IsLocalPlayerItem)).ToList();
-        var junkItems = groupedItems.Where(x => !x.item.Metadata.IsProgression(config, x.item.IsLocalPlayerItem)).OrderBy(x => x.item.IsDungeonItem).ToList();
+        var interestingItems = groupedItems.Where(x => x.item.Metadata.IsPossibleProgression(config, x.item.IsLocalPlayerItem)).ToList();
+        var junkItems = groupedItems.Where(x => !x.item.Metadata.IsPossibleProgression(config, x.item.IsLocalPlayerItem)).OrderBy(x => x.item.IsDungeonItem).ToList();
 
         if (junkItems.Count == 0)
         {

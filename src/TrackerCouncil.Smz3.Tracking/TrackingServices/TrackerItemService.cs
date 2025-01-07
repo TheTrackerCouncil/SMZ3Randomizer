@@ -239,7 +239,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
 
         var addedEvent = History.AddEvent(
             HistoryEventType.TrackedItem,
-            item.Metadata.IsProgression(World.Config, item.IsLocalPlayerItem),
+            item.Metadata.IsPossibleProgression(World.Config, item.IsLocalPlayerItem),
             item.Metadata.NameWithArticle,
             location
         );
