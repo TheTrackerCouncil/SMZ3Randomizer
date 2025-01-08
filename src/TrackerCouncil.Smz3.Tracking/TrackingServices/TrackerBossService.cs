@@ -106,7 +106,7 @@ internal class TrackerBossService(IPlayerProgressionService playerProgressionSer
 
         if (boss.Region != null)
         {
-            MarkBossAsDefeated(boss.Region, confidence, autoTracked, admittedGuilt);
+            MarkBossAsDefeated(boss.Region, confidence, autoTracked, admittedGuilt, force: force);
             return;
         }
 

@@ -309,10 +309,10 @@ public class ItemData : IMergeable<ItemData>
     /// This method only considers the item's value on its own. Call TrackerBase.IsWorth(ItemData) to include
     /// items that this item might logically lead to.
     /// </remarks>
-    public bool IsProgression(Config? config, bool isLocalPlayerItem)
+    public bool IsPossibleProgression(Config? config, bool isLocalPlayerItem)
     {
-        // Todo: We can add special logic like checking if it's one of the first two swords
-        return InternalItemType.IsPossibleProgression(config?.ZeldaKeysanity == true, config?.MetroidKeysanity == true, isLocalPlayerItem);
+        return InternalItemType.IsPossibleProgression(config?.ZeldaKeysanity == true, config?.MetroidKeysanity == true,
+            isLocalPlayerItem);
     }
 
     /// <summary>

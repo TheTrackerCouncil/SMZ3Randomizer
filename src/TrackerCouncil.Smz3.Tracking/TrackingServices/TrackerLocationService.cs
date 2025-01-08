@@ -453,7 +453,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, IP
         }
         // Give some sass if the user tracks or marks the wrong item at a
         // location unless the user is clearing a useless item like missiles
-        else if (location.Item.Type != ItemType.Nothing && !item.IsEquivalentTo(location.Item.Type) && (item != ItemType.Nothing || location.Item.Metadata.IsProgression(World.Config, location.Item.IsLocalPlayerItem)))
+        else if (location.Item.Type != ItemType.Nothing && !item.IsEquivalentTo(location.Item.Type) && (item != ItemType.Nothing || location.Item.Metadata.IsPossibleProgression(World.Config, location.Item.IsLocalPlayerItem)))
         {
             if (confidence == null || confidence < Options.MinimumSassConfidence)
                 return;

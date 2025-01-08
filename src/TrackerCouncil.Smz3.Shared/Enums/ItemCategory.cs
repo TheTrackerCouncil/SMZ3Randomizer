@@ -103,9 +103,20 @@ public enum ItemCategory
     /// </summary>
     IgnoreOnMultiplayerCompletion,
 
+    /// <summary>
+    /// An item that is never considered progression, such as maps, compasses, or arrows
+    /// </summary>
     NeverProgression,
 
-    ProgressionOnlyOnFirst,
+    /// <summary>
+    /// An item that can be the progression if it's one of the first ones picked up
+    /// </summary>
+    ProgressionOnLimitedAmount,
+
+    /// <summary>
+    /// An item that is at least sometimes required to complete the game
+    /// </summary>
+    PossibleProgression,
 
     /// <summary>
     /// If this is a Metroid map in an archipelago game
