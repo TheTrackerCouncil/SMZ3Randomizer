@@ -69,12 +69,12 @@ public class LowerNorfairEast : SMRegion, IHasBoss, IHasReward
         ))
     );
 
-    public bool CanBeatBoss(Progression items)
+    public bool CanBeatBoss(Progression items, bool isTracking)
     {
         return CanEnter(items, true) && CanExit(items) && items.CardLowerNorfairBoss && Logic.CanUsePowerBombs(items) && items.Super;
     }
 
-    public bool CanRetrieveReward(Progression items) => CanBeatBoss(items);
+    public bool CanRetrieveReward(Progression items, bool isTracking) => CanBeatBoss(items, isTracking);
 
     public bool CanSeeReward(Progression items) => true;
 
@@ -172,7 +172,7 @@ public class LowerNorfairEast : SMRegion, IHasBoss, IHasReward
                     name: "Energy Tank, Ridley",
                     vanillaItem: ItemType.ETank,
                     access: items => items.Ridley,
-                    relevanceRequirement: region.CanBeatBoss,
+                    relevanceRequirement: items => region.CanBeatBoss(items, true),
                     memoryAddress: 0x9,
                     memoryFlag: 0x40,
                     metadata: metadata,

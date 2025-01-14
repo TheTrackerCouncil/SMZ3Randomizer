@@ -134,9 +134,9 @@ public class DesertPalace : Z3Region, IHasReward, IHasTreasure, IHasBoss
                Logic.CanAccessMiseryMirePortal(items) && items.Mirror;
     }
 
-    public bool CanBeatBoss(Progression items) => LanmolasReward.IsAvailable(items);
+    public bool CanBeatBoss(Progression items, bool isTracking) => LanmolasReward.IsAvailable(items, isTracking);
 
-    public bool CanRetrieveReward(Progression items) => LanmolasReward.IsAvailable(items);
+    public bool CanRetrieveReward(Progression items, bool isTracking) => LanmolasReward.IsAvailable(items, isTracking);
 
     public bool CanSeeReward(Progression items) => !World.Config.ZeldaKeysanity || items.Contains(ItemType.MapDP);
 

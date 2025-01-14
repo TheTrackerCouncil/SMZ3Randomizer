@@ -100,14 +100,14 @@ public class WreckedShip : SMRegion, IHasBoss, IHasReward
         );
     }
 
-    public bool CanBeatBoss(Progression items) => CanEnter(items, true) && CanUnlockShip(items);
+    public bool CanBeatBoss(Progression items, bool isTracking) => CanEnter(items, true) && CanUnlockShip(items);
 
     public bool CanUnlockShip(Progression items)
     {
         return items.CardWreckedShipBoss && Logic.CanPassBombPassages(items);
     }
 
-    public bool CanRetrieveReward(Progression items) => CanEnter(items, true) && CanUnlockShip(items);
+    public bool CanRetrieveReward(Progression items, bool isTracking) => CanEnter(items, true) && CanUnlockShip(items);
 
     public bool CanSeeReward(Progression items) => true;
 

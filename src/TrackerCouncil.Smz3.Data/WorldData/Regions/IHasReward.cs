@@ -83,7 +83,7 @@ public interface IHasReward
     /// <see langword="true"/> if the region can be completed; otherwise,
     /// <see langword="false"/>.
     /// </returns>
-    bool CanRetrieveReward(Progression items);
+    bool CanRetrieveReward(Progression items, bool isTracking);
 
     /// <summary>
     /// Determines if the user can see what the reward is

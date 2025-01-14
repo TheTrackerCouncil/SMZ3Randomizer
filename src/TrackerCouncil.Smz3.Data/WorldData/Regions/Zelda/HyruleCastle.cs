@@ -107,7 +107,7 @@ public class HyruleCastle : Z3Region, IHasTreasure, IHasBoss
 
     public Boss Boss { get; set; } = null!;
 
-    public bool CanBeatBoss(Progression items) => ZeldasCell.IsAvailable(items);
+    public bool CanBeatBoss(Progression items, bool isTracking) => ZeldasCell.IsAvailable(items);
 
     public Location Sanctuary { get; }
 

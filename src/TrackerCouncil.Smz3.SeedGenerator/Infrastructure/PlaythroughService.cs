@@ -110,10 +110,10 @@ public class PlaythroughService
             var sphere = new Playthrough.Sphere();
 
             var tempProgression = new Progression(items, new List<Reward>(), new List<Boss>());
-            rewards = rewardRegions.Where(x => x.CanRetrieveReward(tempProgression))
+            rewards = rewardRegions.Where(x => x.CanRetrieveReward(tempProgression, false))
                 .Select(x => x.Reward)
                 .Concat(defaultRewards).ToList();
-            bosses = bossRegions.Where(x => x.CanBeatBoss(tempProgression))
+            bosses = bossRegions.Where(x => x.CanBeatBoss(tempProgression, false))
                 .Select(x => x.Boss).ToList();
 
             var accessibleLocations = allLocationsList.Where(l =>

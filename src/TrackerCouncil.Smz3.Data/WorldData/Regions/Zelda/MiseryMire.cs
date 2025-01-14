@@ -170,9 +170,9 @@ public class MiseryMire : Z3Region, IHasReward, IHasPrerequisite, IHasTreasure, 
                (items.Boots || items.Hookshot) && World.DarkWorldMire.CanEnter(items, requireRewards);
     }
 
-    public bool CanBeatBoss(Progression items) => VitreousReward.IsAvailable(items);
+    public bool CanBeatBoss(Progression items, bool isTracking) => VitreousReward.IsAvailable(items, isTracking);
 
-    public bool CanRetrieveReward(Progression items) => VitreousReward.IsAvailable(items);
+    public bool CanRetrieveReward(Progression items, bool isTracking) => VitreousReward.IsAvailable(items, isTracking);
 
     public bool CanSeeReward(Progression items) => !World.Config.ZeldaKeysanity || items.Contains(ItemType.MapMM);
 }

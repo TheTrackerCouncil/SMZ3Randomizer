@@ -119,11 +119,11 @@ public class EasternPalace : Z3Region, IHasReward, IHasTreasure, IHasBoss
 
     public Location ArmosKnightsRewards { get; }
 
-    public bool CanRetrieveReward(Progression items)
-        => ArmosKnightsRewards.IsAvailable(items);
+    public bool CanRetrieveReward(Progression items, bool isTracking)
+        => ArmosKnightsRewards.IsAvailable(items, isTracking);
 
     public bool CanSeeReward(Progression items) => !World.Config.ZeldaKeysanity || items.Contains(ItemType.MapEP);
 
-    public bool CanBeatBoss(Progression items)
-        => ArmosKnightsRewards.IsAvailable(items);
+    public bool CanBeatBoss(Progression items, bool isTracking)
+        => ArmosKnightsRewards.IsAvailable(items, isTracking);
 }

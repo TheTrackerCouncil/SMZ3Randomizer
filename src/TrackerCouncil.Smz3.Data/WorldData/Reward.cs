@@ -75,11 +75,11 @@ public class Reward
         {
             Accessibility = Accessibility.Unknown;
         }
-        else if (Region.CanRetrieveReward(actualProgression))
+        else if (Region.CanRetrieveReward(actualProgression, true))
         {
             Accessibility = Accessibility.Available;
         }
-        else if (Region.CanRetrieveReward(withKeysProgression))
+        else if (Region.CanRetrieveReward(withKeysProgression, true))
         {
             Accessibility = Accessibility.AvailableWithKeys;
         }

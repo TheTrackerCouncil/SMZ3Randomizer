@@ -185,9 +185,9 @@ public class PalaceOfDarkness : Z3Region, IHasReward, IHasTreasure, IHasBoss
         return World.Logic.CanNavigateDarkWorld(items) && World.DarkWorldNorthEast.CanEnter(items, requireRewards);
     }
 
-    public bool CanBeatBoss(Progression items) => HelmasaurKingReward.IsAvailable(items);
+    public bool CanBeatBoss(Progression items, bool isTracking) => HelmasaurKingReward.IsAvailable(items, isTracking);
 
-    public bool CanRetrieveReward(Progression items) => HelmasaurKingReward.IsAvailable(items);
+    public bool CanRetrieveReward(Progression items, bool isTracking) => HelmasaurKingReward.IsAvailable(items, isTracking);
 
     public bool CanSeeReward(Progression items) => !World.Config.ZeldaKeysanity || items.Contains(ItemType.MapPD);
 

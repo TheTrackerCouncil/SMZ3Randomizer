@@ -91,7 +91,7 @@ public interface IHasBoss
     /// <see langword="true"/> if the boss can be beaten; otherwise,
     /// <see langword="false"/>.
     /// </returns>
-    bool CanBeatBoss(Progression items);
+    bool CanBeatBoss(Progression items, bool isTracking);
 
     /// <summary>
     /// Returns a randomized name from the metadata for the region
