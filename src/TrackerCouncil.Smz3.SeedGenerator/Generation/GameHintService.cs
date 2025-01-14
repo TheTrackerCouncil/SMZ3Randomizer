@@ -494,7 +494,10 @@ public class GameHintService : IGameHintService
                 return LocationUsefulness.Sword;
             }
 
-            var usefulItems = locations.Where(x => (x.Item.Progression && !x.Item.Type.IsInCategory(ItemCategory.Junk)) || x.Item.Type.IsInCategory(ItemCategory.Nice) || x.Item.Type == ItemType.ProgressiveSword).Select(x => x.Item);
+            var usefulItems = locations.Where(x =>
+                    (x.Item.Type.IsInCategory(ItemCategory.PossibleProgression) && !x.Item.Type.IsInCategory(ItemCategory.Junk)) ||
+                    x.Item.Type.IsInCategory(ItemCategory.Nice) || x.Item.Type == ItemType.ProgressiveSword)
+                .Select(x => x.Item);
             return usefulItems.Any() ? LocationUsefulness.NiceToHave : LocationUsefulness.Useless;
         }
         catch
