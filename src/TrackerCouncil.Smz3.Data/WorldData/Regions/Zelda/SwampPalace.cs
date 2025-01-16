@@ -155,9 +155,9 @@ public class SwampPalace : Z3Region, IHasReward, IHasTreasure, IHasBoss
         return World.Logic.CanNavigateDarkWorld(items) && items.Mirror && items.Flippers && World.DarkWorldSouth.CanEnter(items, requireRewards);
     }
 
-    public bool CanBeatBoss(Progression items) => ArrghusReward.IsAvailable(items);
+    public bool CanBeatBoss(Progression items, bool isTracking) => ArrghusReward.IsAvailable(items, isTracking);
 
-    public bool CanRetrieveReward(Progression items) => ArrghusReward.IsAvailable(items);
+    public bool CanRetrieveReward(Progression items, bool isTracking) => ArrghusReward.IsAvailable(items, isTracking);
 
     public bool CanSeeReward(Progression items) => !World.Config.ZeldaKeysanity || items.Contains(ItemType.MapSP);
 

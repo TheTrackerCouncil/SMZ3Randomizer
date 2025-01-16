@@ -74,7 +74,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, IP
         if (allowLocationComments && stateResponse)
         {
             var item = location.Item;
-            var isKeysanityForLocation = (location.Region is Z3Region && World.Config.ZeldaKeysanity) || (location.Region is SMRegion && World.Config.MetroidKeysanity);
+            var isKeysanityForLocation = (location.Region is Z3Region && World.Config.ZeldaKeysanity) || (location.Region is SMRegion && World.Config.MetroidKeysanity) || location.Region is HyruleCastle;
             var items = playerProgressionService.GetProgression(!isKeysanityForLocation);
 
             if (previousAccessibility is Accessibility.OutOfLogic && (confidence >= Options.MinimumSassConfidence || autoTracked))

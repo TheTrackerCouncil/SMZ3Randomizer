@@ -80,7 +80,7 @@ public class LightWorldNorthEast : Z3Region
                     name: "Sahasrahla",
                     vanillaItem: ItemType.Boots,
                     access: items => items.GreenPendant,
-                    relevanceRequirement: items => World.CanAquire(items, RewardType.PendantGreen),
+                    relevanceRequirement: items => World.CanAquire(items, true, RewardType.PendantGreen),
                     memoryAddress: 0x190,
                     memoryFlag: 0x10,
                     memoryType: LocationMemoryType.ZeldaMisc,

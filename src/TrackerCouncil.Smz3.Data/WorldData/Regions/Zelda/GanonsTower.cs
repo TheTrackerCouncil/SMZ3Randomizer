@@ -175,7 +175,7 @@ public class GanonsTower : Z3Region, IHasTreasure, IHasBoss
         var canEnterDDMEast = World.DarkWorldDeathMountainEast.CanEnter(items, requireRewards);
         var haveEnoughCrystals = items.CrystalCount >= Config.GanonsTowerCrystalCount;
         var gtOpenBeforeGanon = Config.GanonsTowerCrystalCount < Config.GanonCrystalCount;
-        var canBeatMetroid = World.CanDefeatBossCount(items, smBosses) >= Config.TourianBossCount;
+        var canBeatMetroid = World.CanDefeatBossCount(items, requireRewards, smBosses) >= Config.TourianBossCount;
         return World.Logic.CanNavigateDarkWorld(items) && canEnterDDMEast && haveEnoughCrystals && (gtOpenBeforeGanon || canBeatMetroid);
     }
 
@@ -199,8 +199,8 @@ public class GanonsTower : Z3Region, IHasTreasure, IHasBoss
         return base.CanFill(item, items);
     }
 
-    public bool CanBeatBoss(Progression items) => MoldormChest.IsAvailable(items) && items.MasterSword &&
-                                                  items.Contains(ItemType.SilverArrows);
+    public bool CanBeatBoss(Progression items, bool isTracking) => MoldormChest.IsAvailable(items) && items.MasterSword &&
+                                                                   items.Contains(ItemType.SilverArrows);
 
     private bool TowerAscend(Progression items)
     {

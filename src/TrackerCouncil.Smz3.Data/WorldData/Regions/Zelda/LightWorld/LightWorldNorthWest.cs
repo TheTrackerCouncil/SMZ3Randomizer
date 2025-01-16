@@ -18,7 +18,7 @@ public class LightWorldNorthWest : Z3Region
                 name: "Master Sword Pedestal",
                 vanillaItem: ItemType.ProgressiveSword,
                 access: items => items.AllPendants,
-                relevanceRequirement: items => World.CanAquireAll(items, RewardType.PendantGreen, RewardType.PendantBlue, RewardType.PendantRed),
+                relevanceRequirement: items => World.CanAquireAll(items, true, RewardType.PendantGreen, RewardType.PendantBlue, RewardType.PendantRed),
                 memoryAddress: 0x80,
                 memoryFlag: 0x40,
                 memoryType: LocationMemoryType.ZeldaMisc,

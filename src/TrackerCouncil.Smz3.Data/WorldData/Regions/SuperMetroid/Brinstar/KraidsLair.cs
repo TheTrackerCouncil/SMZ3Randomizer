@@ -57,12 +57,12 @@ public class KraidsLair : SMRegion, IHasBoss, IHasReward
                && (items.HiJump || Logic.CanWallJump(WallJumpDifficulty.Medium) || Logic.CanFly(items));
     }
 
-    public bool CanBeatBoss(Progression items)
+    public bool CanBeatBoss(Progression items, bool isTracking)
     {
         return CanEnter(items, true) && items.CardBrinstarBoss;
     }
 
-    public bool CanRetrieveReward(Progression items) => CanBeatBoss(items);
+    public bool CanRetrieveReward(Progression items, bool isTracking) => CanBeatBoss(items, isTracking);
 
     public bool CanSeeReward(Progression items) => true;
 
@@ -77,7 +77,7 @@ public class KraidsLair : SMRegion, IHasBoss, IHasReward
                     name: "Energy Tank, Kraid",
                     vanillaItem: ItemType.ETank,
                     access: items => items.Kraid,
-                    relevanceRequirement: items => region.CanBeatBoss(items),
+                    relevanceRequirement: items => region.CanBeatBoss(items, true),
                     memoryAddress: 0x5,
                     memoryFlag: 0x8,
                     metadata: metadata,
@@ -116,7 +116,7 @@ public class KraidsLair : SMRegion, IHasBoss, IHasReward
                     name: "Varia Suit",
                     vanillaItem: ItemType.Varia,
                     access: items => items.Kraid,
-                    relevanceRequirement: items => region.CanBeatBoss(items),
+                    relevanceRequirement: items => region.CanBeatBoss(items, true),
                     memoryAddress: 0x6,
                     memoryFlag: 0x1,
                     metadata: metadata,

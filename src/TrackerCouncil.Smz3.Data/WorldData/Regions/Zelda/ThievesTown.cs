@@ -147,9 +147,9 @@ public class ThievesTown : Z3Region, IHasReward, IHasTreasure, IHasBoss
         return World.Logic.CanNavigateDarkWorld(items) && World.DarkWorldNorthWest.CanEnter(items, requireRewards);
     }
 
-    public bool CanBeatBoss(Progression items) =>BlindReward.IsAvailable(items);
+    public bool CanBeatBoss(Progression items, bool isTracking) => BlindReward.IsAvailable(items, isTracking);
 
-    public bool CanRetrieveReward(Progression items) =>BlindReward.IsAvailable(items);
+    public bool CanRetrieveReward(Progression items, bool isTracking) => BlindReward.IsAvailable(items, isTracking);
 
     public bool CanSeeReward(Progression items) => !World.Config.ZeldaKeysanity || items.Contains(ItemType.MapTT);
 

@@ -76,10 +76,10 @@ public class InnerMaridia : SMRegion, IHasBoss, IHasReward
             (World.UpperNorfairWest.CanEnter(items, true) && items.Super && Logic.CanUsePowerBombs(items) && CanPassMountDeath(items, Logic)) ||
             Logic.CanAccessMaridiaPortal(items, requireRewards));
 
-    public bool CanBeatBoss(Progression items)
+    public bool CanBeatBoss(Progression items, bool isTracking)
         => CanEnter(items, true) && CanDefeatDraygon(items, true);
 
-    public bool CanRetrieveReward(Progression items) => CanBeatBoss(items);
+    public bool CanRetrieveReward(Progression items, bool isTracking) => CanBeatBoss(items, isTracking);
 
     public bool CanSeeReward(Progression items) => true;
 

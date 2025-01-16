@@ -155,9 +155,9 @@ public class TurtleRock : Z3Region, IHasReward, IHasPrerequisite, IHasTreasure, 
                World.LightWorldDeathMountainEast.CanEnter(items, requireRewards);
     }
 
-    public bool CanBeatBoss(Progression items) => TrinexxReward.IsAvailable(items);
+    public bool CanBeatBoss(Progression items, bool isTracking) => TrinexxReward.IsAvailable(items, isTracking);
 
-    public bool CanRetrieveReward(Progression items) => TrinexxReward.IsAvailable(items);
+    public bool CanRetrieveReward(Progression items, bool isTracking) => TrinexxReward.IsAvailable(items, isTracking);
 
     public bool CanSeeReward(Progression items) => !World.Config.ZeldaKeysanity || items.Contains(ItemType.MapTR);
 

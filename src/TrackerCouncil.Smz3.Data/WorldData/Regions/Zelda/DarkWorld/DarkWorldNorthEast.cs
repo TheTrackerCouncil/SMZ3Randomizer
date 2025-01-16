@@ -93,7 +93,7 @@ public class DarkWorldNorthEast : Z3Region
         }
 
         private bool CanAccessPyramidFairy(Progression items, bool requireRewards) =>
-            (items.BothRedCrystals || (!requireRewards && World.CanAquireAll(items, RewardType.CrystalRed))) &&
+            (items.BothRedCrystals || (!requireRewards && World.CanAquireAll(items, requireRewards, RewardType.CrystalRed))) &&
             World.Logic.CanNavigateDarkWorld(items) && World.DarkWorldSouth.CanEnter(items, requireRewards) &&
             (items.Hammer || (items.Mirror && Logic.CheckAgahnim(items, World, requireRewards)));
     }

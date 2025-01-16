@@ -6,7 +6,7 @@ using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.Tracking.TrackingServices;
 
-internal class TrackerPrerequisiteService() : TrackerService, ITrackerPrerequisiteService
+internal class TrackerPrerequisiteService(IPlayerProgressionService playerProgressionService, ITrackerLocationService trackerLocationService, ITrackerBossService trackerBossService, ITrackerRewardService trackerRewardService) : TrackerService, ITrackerPrerequisiteService
 {
     public void SetDungeonRequirement(IHasPrerequisite region, ItemType? medallion = null, float? confidence = null, bool autoTracked = false)
     {
@@ -38,9 +38,33 @@ internal class TrackerPrerequisiteService() : TrackerService, ITrackerPrerequisi
             Tracker.Say(response: Responses.DungeonRequirementMarked, args: [medallion.ToString(), region.Metadata.Name]);
         }
 
+        UpdateAccessibility(region);
+
         AddUndo(autoTracked, () =>
         {
             region.MarkedItem = originalRequirement;
+            UpdateAccessibility(region);
         });
+    }
+
+    private void UpdateAccessibility(IHasPrerequisite region)
+    {
+        var actualProgression = playerProgressionService.GetProgression(false);
+        var withKeysProgression = playerProgressionService.GetProgression(true);
+
+        foreach (var location in ((Region)region).Locations)
+        {
+            trackerLocationService.UpdateAccessibility(location, actualProgression, withKeysProgression);
+        }
+
+        if (region is IHasBoss bossRegion)
+        {
+            trackerBossService.UpdateAccessibility(bossRegion,  actualProgression, withKeysProgression);
+        }
+
+        if (region is IHasReward rewardRegion)
+        {
+            trackerRewardService.UpdateAccessibility(rewardRegion, actualProgression, withKeysProgression);
+        }
     }
 }

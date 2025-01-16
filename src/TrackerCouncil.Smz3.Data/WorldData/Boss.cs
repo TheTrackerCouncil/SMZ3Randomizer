@@ -97,11 +97,11 @@ public class Boss
         {
             Accessibility = Accessibility.Unknown;
         }
-        else if (Region.CanBeatBoss(actualProgression))
+        else if (Region.CanBeatBoss(actualProgression, true))
         {
             Accessibility = Accessibility.Available;
         }
-        else if (Region.CanBeatBoss(withKeysProgression))
+        else if (Region.CanBeatBoss(withKeysProgression, true))
         {
             Accessibility = Accessibility.AvailableWithKeys;
         }

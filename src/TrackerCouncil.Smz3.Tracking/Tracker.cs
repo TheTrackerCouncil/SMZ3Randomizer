@@ -633,7 +633,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         // Skip if the items don't affect anything
         if (items.Length > 0 && !forceRefreshAll && items.All(x =>
                 x.Type.IsInCategory(ItemCategory.NeverProgression) ||
-                (x.TrackingState > 1 && x.Type.IsInCategory(ItemCategory.ProgressionOnLimitedAmount))))
+                (x.TrackingState > 3 && x.Type.IsInCategory(ItemCategory.ProgressionOnLimitedAmount))))
         {
             return;
         }

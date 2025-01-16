@@ -155,9 +155,9 @@ public class IcePalace : Z3Region, IHasReward, IHasTreasure, IHasBoss
         return World.Logic.CanNavigateDarkWorld(items) && items.Flippers && Logic.CanLiftHeavy(items) && Logic.CanMeltFreezors(items);
     }
 
-    public bool CanBeatBoss(Progression items) => KholdstareReward.IsAvailable(items);
+    public bool CanBeatBoss(Progression items, bool isTracking) => KholdstareReward.IsAvailable(items, isTracking);
 
-    public bool CanRetrieveReward(Progression items) => KholdstareReward.IsAvailable(items);
+    public bool CanRetrieveReward(Progression items, bool isTracking) => KholdstareReward.IsAvailable(items, isTracking);
 
     public bool CanSeeReward(Progression items) => !World.Config.ZeldaKeysanity || items.Contains(ItemType.MapIP);
 

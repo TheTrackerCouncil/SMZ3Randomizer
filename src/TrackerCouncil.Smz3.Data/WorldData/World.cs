@@ -240,25 +240,25 @@ public class World
         return Locations.First(x => x.Id == id);
     }
 
-    public bool CanAquire(Progression items, RewardType reward)
+    public bool CanAquire(Progression items, bool isTracking, RewardType reward)
     {
         var dungeonWithReward = Regions.OfType<IHasReward>().FirstOrDefault(x => reward == x.RewardType);
-        return dungeonWithReward != null && dungeonWithReward.CanRetrieveReward(items);
+        return dungeonWithReward != null && dungeonWithReward.CanRetrieveReward(items, isTracking);
     }
 
-    public bool CanAquireAll(Progression items, params RewardType[] rewards)
+    public bool CanAquireAll(Progression items, bool isTracking, params RewardType[] rewards)
     {
-        return Regions.OfType<IHasReward>().Where(x => rewards.Contains(x.RewardType)).All(x => x.CanRetrieveReward(items));
+        return Regions.OfType<IHasReward>().Where(x => rewards.Contains(x.RewardType)).All(x => x.CanRetrieveReward(items, isTracking));
     }
 
-    public bool CanDefeatAll(Progression items, params BossType[] bosses)
+    public bool CanDefeatAll(Progression items, bool isTracking, params BossType[] bosses)
     {
-        return BossRegions.Where(x => bosses.Contains(x.BossType)).All(x => x.CanBeatBoss(items));
+        return BossRegions.Where(x => bosses.Contains(x.BossType)).All(x => x.CanBeatBoss(items, isTracking));
     }
 
-    public int CanDefeatBossCount(Progression items, params BossType[] bosses)
+    public int CanDefeatBossCount(Progression items, bool isTracking, params BossType[] bosses)
     {
-        return BossRegions.Where(x => bosses.Contains(x.BossType)).Count(x => x.CanBeatBoss(items));
+        return BossRegions.Where(x => bosses.Contains(x.BossType)).Count(x => x.CanBeatBoss(items, isTracking));
     }
 
     public bool HasDefeated(params BossType[] bosses)

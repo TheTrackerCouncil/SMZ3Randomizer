@@ -64,9 +64,9 @@ public class CastleTower : Z3Region, IHasReward, IHasTreasure, IHasBoss
         return Logic.CanKillManyEnemies(items) && (items.Cape || items.MasterSword);
     }
 
-    public bool CanBeatBoss(Progression items) => CanRetrieveReward(items);
+    public bool CanBeatBoss(Progression items, bool isTracking) => CanRetrieveReward(items, isTracking);
 
-    public bool CanRetrieveReward(Progression items)
+    public bool CanRetrieveReward(Progression items, bool isTracking)
     {
         return CanEnter(items, true) && items.Lamp && items.KeyCT >= 2 && items.Sword;
     }

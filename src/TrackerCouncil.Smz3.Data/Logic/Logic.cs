@@ -177,7 +177,7 @@ public class Logic : ILogic
 
     public bool CheckAgahnim(Progression items, World world, bool requireRewards)
     {
-        return items.Agahnim || (!requireRewards && world.CanAquire(items, RewardType.Agahnim));
+        return items.Agahnim || (!requireRewards && world.CanAquire(items, requireRewards, RewardType.Agahnim));
     }
 
     public World World { get; }

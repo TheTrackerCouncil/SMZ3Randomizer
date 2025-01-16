@@ -128,9 +128,9 @@ public class TowerOfHera : Z3Region, IHasReward, IHasTreasure, IHasBoss
                && World.LightWorldDeathMountainWest.CanEnter(items, requireRewards);
     }
 
-    public bool CanBeatBoss(Progression items) => MoldormReward.IsAvailable(items);
+    public bool CanBeatBoss(Progression items, bool isTracking) => MoldormReward.IsAvailable(items, isTracking);
 
-    public bool CanRetrieveReward(Progression items) => MoldormReward.IsAvailable(items);
+    public bool CanRetrieveReward(Progression items, bool isTracking) => MoldormReward.IsAvailable(items, isTracking);
 
     public bool CanSeeReward(Progression items) => !World.Config.ZeldaKeysanity || items.Contains(ItemType.MapTH);
 

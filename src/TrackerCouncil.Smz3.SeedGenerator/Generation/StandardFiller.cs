@@ -354,7 +354,7 @@ public class StandardFiller : IFiller
 
         return worldsList
             .SelectMany(w => w.Regions)
-            .Where(r => r is IHasReward reward && reward.CanRetrieveReward(progressions[r.World]))
+            .Where(r => r is IHasReward reward && reward.CanRetrieveReward(progressions[r.World], false))
             .SelectMany(r => rewardPool.Where(p => p.Type == ((IHasReward)r).RewardType && p.Region == r));
     }
 
@@ -365,7 +365,7 @@ public class StandardFiller : IFiller
 
         return worldsList
             .SelectMany(w => w.Regions)
-            .Where(r => r is IHasBoss boss && boss.CanBeatBoss(progressions[r.World]))
+            .Where(r => r is IHasBoss boss && boss.CanBeatBoss(progressions[r.World], false))
             .SelectMany(r => bossPool.Where(p => p.Type == ((IHasBoss)r).BossType && p.Region == r));
     }
 
