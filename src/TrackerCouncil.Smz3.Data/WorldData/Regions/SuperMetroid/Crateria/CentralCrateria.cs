@@ -126,7 +126,7 @@ public class CentralCrateria : SMRegion
                     name: "Bombs",
                     vanillaItem: ItemType.Bombs,
                     access: items => (Config.MetroidKeysanity ? items.CardCrateriaBoss : Logic.CanOpenRedDoors(items))
-                                     && (Logic.CanPassBombPassages(items) || Logic.CanWallJump(WallJumpDifficulty.Hard)),
+                                     && (Logic.CanPassBombPassages(items) || (items.Morph && Logic.CanWallJump(WallJumpDifficulty.Hard))),
                     memoryAddress: 0x0,
                     memoryFlag: 0x80,
                     metadata: metadata,
