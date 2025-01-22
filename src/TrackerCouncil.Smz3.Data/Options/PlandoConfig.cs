@@ -102,6 +102,11 @@ public class PlandoConfig // TODO: Consider using this instead of SeedData?
     public int TourianBossCount { get; set; } = 4;
 
     /// <summary>
+    /// If in Metroid keysanity Tourian requires the Crateria Boss Keycard item
+    /// </summary>
+    public bool SkipTourianBossDoor { get; set; }
+
+    /// <summary>
     /// Gets or sets the logic options that apply to the plando.
     /// </summary>
     public LogicConfig Logic { get; set; } = new();

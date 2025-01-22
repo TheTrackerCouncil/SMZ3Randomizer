@@ -2269,7 +2269,8 @@
         {
           "Item": "Crateria Boss Keycard",
           "X": 279,
-          "Y": 339
+          "Y": 339,
+          "SkippableOnFastTourian": true
         }
       ]
     },

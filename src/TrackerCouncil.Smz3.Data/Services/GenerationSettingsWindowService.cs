@@ -37,6 +37,7 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         _model.Basic.MsuRandomizationStyle = _options.PatchOptions.MsuRandomizationStyle;
 
         _model.GameSettings.KeysanityMode = _options.SeedOptions.KeysanityMode;
+        _model.GameSettings.RequireBossKeycardForTourian = !_options.SeedOptions.SkipTourianBossDoor;
         _model.GameSettings.CrystalsNeededForGT = _options.SeedOptions.GanonsTowerCrystalCount;
         _model.GameSettings.CrystalsNeededForGanon = _options.SeedOptions.GanonCrystalCount;
         _model.GameSettings.BossesNeededForTourian = _options.SeedOptions.TourianBossCount;
@@ -112,6 +113,7 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         }
 
         _model.GameSettings.KeysanityMode = config.KeysanityMode;
+        _model.GameSettings.RequireBossKeycardForTourian = !config.SkipTourianBossDoor;
         _model.GameSettings.CrystalsNeededForGT = config.GanonsTowerCrystalCount;
         _model.GameSettings.CrystalsNeededForGanon = config.GanonCrystalCount;
         _model.GameSettings.BossesNeededForTourian = config.TourianBossCount;
@@ -176,7 +178,9 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
     {
         _options.SeedOptions.Seed = _model.Basic.Seed;
         _options.SeedOptions.KeysanityMode = _model.GameSettings.KeysanityMode;
+        _options.SeedOptions.SkipTourianBossDoor = !_model.GameSettings.RequireBossKeycardForTourian;
         _options.SeedOptions.GanonsTowerCrystalCount = _model.GameSettings.CrystalsNeededForGT;
+        _options.SeedOptions.SkipTourianBossDoor = !_model.GameSettings.RequireBossKeycardForTourian;
         _options.SeedOptions.GanonCrystalCount = _model.GameSettings.CrystalsNeededForGanon;
         _options.SeedOptions.TourianBossCount = _model.GameSettings.BossesNeededForTourian;
         _options.SeedOptions.OpenPyramid = _model.GameSettings.OpenPyramid;
@@ -239,6 +243,7 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         _model.PlandoConfig = config;
 
         _model.GameSettings.KeysanityMode = _model.PlandoConfig.KeysanityMode;
+        _model.GameSettings.RequireBossKeycardForTourian = !_model.PlandoConfig.SkipTourianBossDoor;
         _model.GameSettings.CrystalsNeededForGT = _model.PlandoConfig.GanonsTowerCrystalCount;
         _model.GameSettings.CrystalsNeededForGanon = _model.PlandoConfig.GanonCrystalCount;
         _model.GameSettings.OpenPyramid = _model.PlandoConfig.OpenPyramid;

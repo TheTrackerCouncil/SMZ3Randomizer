@@ -11,9 +11,21 @@ namespace TrackerCouncil.Smz3.Data.ViewModels;
 public class GenerationWindowGameSettingsViewModel : ViewModelBase
 {
     private bool _isMultiplayer;
+    private KeysanityMode _keysanityMode;
 
     [DynamicFormFieldComboBox(label: "Keysanity:", groupName: "Game Settings Top")]
-    public KeysanityMode KeysanityMode { get; set; }
+    public KeysanityMode KeysanityMode
+    {
+        get => _keysanityMode;
+        set
+        {
+            SetField(ref _keysanityMode, value);
+            OnPropertyChanged(nameof(IsMetroidKeysanity));
+        }
+    }
+
+    [DynamicFormFieldCheckBox("Require Crateria Boss Keycard for Tourian", groupName: "Game Settings Top", visibleWhenTrue: nameof(IsMetroidKeysanity))]
+    public bool RequireBossKeycardForTourian { get; set; }
 
     [DynamicFormFieldSlider(0, 7, 0, 1, label: "Crystals needed for GT:", groupName: "Game Settings Top")]
     public int CrystalsNeededForGT { get; set; }
@@ -41,6 +53,8 @@ public class GenerationWindowGameSettingsViewModel : ViewModelBase
 
     [DynamicFormFieldCheckBox("Disable cheats", groupName: "Race Settings")]
     public bool DisableCheats { get; set; }
+
+    public bool IsMetroidKeysanity => KeysanityMode is KeysanityMode.Both or KeysanityMode.SuperMetroid;
 
     public bool IsMultiplayer
     {

@@ -51,6 +51,7 @@ public class RomGenerationService(
         config.GanonCrystalCount = plandoConfig.GanonCrystalCount;
         config.OpenPyramid = plandoConfig.OpenPyramid;
         config.TourianBossCount = plandoConfig.TourianBossCount;
+        config.SkipTourianBossDoor = plandoConfig.SkipTourianBossDoor;
         config.LogicConfig = plandoConfig.Logic.Clone();
         return plandomizer.GenerateSeed(config, CancellationToken.None);
     }

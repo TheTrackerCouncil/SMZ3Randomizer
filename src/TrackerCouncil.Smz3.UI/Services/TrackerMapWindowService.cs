@@ -237,6 +237,11 @@ public class TrackerMapWindowService(
 
         foreach (var door in doors)
         {
+            if (door.SkippableOnFastTourian && worldRegion.Config.SkipTourianBossDoor)
+            {
+                continue;
+            }
+
             var model = new TrackerMapLocationViewModel(mapRegion, mapLocation, worldRegion, door);
             var item = worldQueryService.FirstOrDefault(door.Item) ?? throw new InvalidOperationException();
             item.UpdatedItemState += (_, _) => UpdateDoorLocationModel(model, item);
