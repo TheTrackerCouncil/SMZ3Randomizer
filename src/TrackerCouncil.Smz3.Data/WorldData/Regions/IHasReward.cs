@@ -79,6 +79,7 @@ public interface IHasReward
     /// Determines whether the reward for the region can be obtained.
     /// </summary>
     /// <param name="items">The items currently available.</param>
+    /// <param name="isTracking">If this is checking for tracking rather than seed generation</param>
     /// <returns>
     /// <see langword="true"/> if the region can be completed; otherwise,
     /// <see langword="false"/>.
