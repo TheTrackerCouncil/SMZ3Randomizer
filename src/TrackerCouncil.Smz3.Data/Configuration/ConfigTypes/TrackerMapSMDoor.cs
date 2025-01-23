@@ -11,11 +11,13 @@ public class TrackerMapSMDoor
     /// <param name="item">Item identifier for the key to unlock the door</param>
     /// <param name="x">X position on the map</param>
     /// <param name="y">Y position on the map</param>
-    public TrackerMapSMDoor(string item, int x, int y)
+    /// <param name="skippableOnFastTourian">If the Crateria boss keycard is needed to get to Tourian</param>
+    public TrackerMapSMDoor(string item, int x, int y, bool skippableOnFastTourian)
     {
         Item = item;
         X = x;
         Y = y;
+        SkippableOnFastTourian = skippableOnFastTourian;
     }
 
     /// <summary>
@@ -32,4 +34,9 @@ public class TrackerMapSMDoor
     /// Y position on the map
     /// </summary>
     public int Y { get; set; }
+
+    /// <summary>
+    /// If the Crateria boss keycard is needed to get to Tourian
+    /// </summary>
+    public bool SkippableOnFastTourian { get; set; }
 }

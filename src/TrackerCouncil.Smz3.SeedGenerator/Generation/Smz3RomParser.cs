@@ -59,9 +59,10 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
             }).ToList();
 
             var keysanityMode = KeysanityMode.None;
+            var skippedTourianBossDoor = false;
             if (isKeysanityEnabled)
             {
-                var isMetroidKeysanity = MetroidKeysanityPatch.GetIsMetroidKeysanity(rom);
+                var isMetroidKeysanity = MetroidKeysanityPatch.GetIsMetroidKeysanity(rom, out skippedTourianBossDoor);
                 var isZeldaKeysanity = ZeldaKeysanityPatch.GetIsZeldaKeysanity(rom);
 
                 if (isMetroidKeysanity && isZeldaKeysanity)
@@ -134,6 +135,7 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
                 GanonsTowerCrystalCount = gtCrystalCount,
                 GanonCrystalCount = ganonCrystalCount,
                 TourianBossCount = tourianBossCount,
+                SkipTourianBossDoor = skippedTourianBossDoor,
                 RomGenerator = romGenerator.Value,
                 Players = players,
                 Locations = locations,
@@ -164,6 +166,7 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
         config.GanonsTowerCrystalCount = parsedRomDetails.GanonsTowerCrystalCount;
         config.GanonCrystalCount = parsedRomDetails.GanonCrystalCount;
         config.TourianBossCount = parsedRomDetails.TourianBossCount;
+        config.SkipTourianBossDoor = parsedRomDetails.SkipTourianBossDoor;
         config.LocationItems.Clear();
         config.ItemOptions = parsedRomDetails.StartingItems.ToDictionary(x => $"ItemType:{x.Key}", x => x.Value);
         config.LogicConfig = new LogicConfig()

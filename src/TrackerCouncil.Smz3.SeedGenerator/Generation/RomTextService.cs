@@ -193,7 +193,7 @@ public class RomTextService(ILogger<RomTextService> logger, IGameHintService gam
 
             if (world.Config.Keysanity)
             {
-                log.AppendLine("Keysanity: " + world.Config.KeysanityMode.ToString());
+                log.AppendLine("Keysanity: " + world.Config.KeysanityMode);
             }
 
             var gtCrystals = world.Config.GanonsTowerCrystalCount;

@@ -73,6 +73,11 @@ public class MetroidKeysanityPatch : RomPatch
         var plmTablePos = 0xf800;
         foreach (var door in s_doorList)
         {
+            if (door[0] == 0x99BD && data.World.Config.SkipTourianBossDoor)
+            {
+                continue;
+            }
+
             var doorArgs = door[4] != KeycardPlaque.None ? doorId | door[3] : door[3];
             if (door[6] == 0)
             {
@@ -108,11 +113,13 @@ public class MetroidKeysanityPatch : RomPatch
         yield return new GeneratedPatch(Snes(0x8f0000 + plmTablePos), new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
     }
 
-    public static bool GetIsMetroidKeysanity(byte[] rom)
+    public static bool GetIsMetroidKeysanity(byte[] rom, out bool skippedTourianBossDoor)
     {
         ushort plaquePLm = 0xd410;
         ushort doorId = 0x0000;
         var plmTablePos = 0xf800;
+
+        skippedTourianBossDoor = false;
 
         foreach (var door in s_doorList)
         {
@@ -121,24 +128,54 @@ public class MetroidKeysanityPatch : RomPatch
             {
                 // Write dynamic door
                 var doorData = door[0..3].SelectMany(x => UshortBytes(x)).Concat(UshortBytes(doorArgs)).ToArray();
-                var romData = rom.Skip(Snes(0x8f0000 + plmTablePos)).Take(doorData.Length);
-                if (!romData.SequenceEqual(doorData)) return false;
+                var romData = rom.Skip(Snes(0x8f0000 + plmTablePos)).Take(doorData.Length).ToArray();
+                if (!romData.SequenceEqual(doorData))
+                {
+                    if (door[0] == 0x99BD)
+                    {
+                        skippedTourianBossDoor = true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
                 plmTablePos += 0x08;
             }
             else
             {
                 // Overwrite existing door
                 var doorData = door[1..3].SelectMany(x => UshortBytes(x)).Concat(UshortBytes(doorArgs)).ToArray();
-                var romData = rom.Skip(Snes(0x8f0000 + door[6])).Take(doorData.Length);
-                if (!romData.SequenceEqual(doorData)) return false;
+                var romData = rom.Skip(Snes(0x8f0000 + door[6])).Take(doorData.Length).ToArray();
+                if (!romData.SequenceEqual(doorData))
+                {
+                    if (door[0] == 0x99BD)
+                    {
+                        skippedTourianBossDoor = true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
                 if ((door[3] == KeycardEvents.BrinstarBoss && door[0] != 0x9D9C)
                     || door[3] == KeycardEvents.LowerNorfairBoss
                     || door[3] == KeycardEvents.MaridiaBoss
                     || door[3] == KeycardEvents.WreckedShipBoss)
                 {
                     doorData = new byte[] { 0x2F, 0xB6, 0x00, 0x00, 0x00, 0x00, 0x2F, 0xB6, 0x00, 0x00, 0x00, 0x00 };
-                    romData = rom.Skip(Snes(0x8f0000 + door[6] + 0x06)).Take(doorData.Length);
-                    if (!romData.SequenceEqual(doorData)) return false;
+                    romData = rom.Skip(Snes(0x8f0000 + door[6] + 0x06)).Take(doorData.Length).ToArray();
+                    if (!romData.SequenceEqual(doorData))
+                    {
+                        if (door[0] == 0x99BD)
+                        {
+                            skippedTourianBossDoor = true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    };
                 }
             }
 
@@ -147,7 +184,7 @@ public class MetroidKeysanityPatch : RomPatch
             {
                 var plaqueData = UshortBytes(door[0]).Concat(UshortBytes(plaquePLm)).Concat(UshortBytes(door[5])).Concat(UshortBytes(door[4])).ToArray();
                 var romData = rom.Skip(Snes(0x8f0000 + plmTablePos)).Take(plaqueData.Length);
-                if (!romData.SequenceEqual(plaqueData)) return false;
+                if (!romData.SequenceEqual(plaqueData)) continue;
                 plmTablePos += 0x08;
             }
             doorId += 1;
