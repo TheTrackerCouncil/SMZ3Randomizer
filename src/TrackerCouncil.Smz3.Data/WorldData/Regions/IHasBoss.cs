@@ -87,6 +87,7 @@ public interface IHasBoss
     /// Determines whether the boss for the region can be defeated.
     /// </summary>
     /// <param name="items">The items currently available.</param>
+    /// <param name="isTracking">If this is checking for tracking rather than seed generation</param>
     /// <returns>
     /// <see langword="true"/> if the boss can be beaten; otherwise,
     /// <see langword="false"/>.
