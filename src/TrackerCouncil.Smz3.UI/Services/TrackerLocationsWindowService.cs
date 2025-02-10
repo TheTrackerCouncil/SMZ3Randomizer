@@ -157,8 +157,12 @@ public class TrackerLocationsWindowService(TrackerBase trackerBase, IWorldQueryS
 
         _allRegions = regionModels;
         ShowSortedRegions();
-        _lastRegion = _model.Regions.First();
-        _lastRegion.SortOrder = 1;
+
+        if (_model.Regions.Any())
+        {
+            _lastRegion = _model.Regions.First();
+            _lastRegion.SortOrder = 1;
+        }
     }
 
     private void ShowSortedRegions()
