@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Speech.Recognition;
+using PySpeechServiceClient.Grammar;
 
 namespace TrackerCouncil.Smz3.Tracking.Services.Speech;
 
@@ -37,4 +39,6 @@ public interface ISpeechRecognitionService
     /// Stops speech recognition in the background.
     /// </summary>
     void StopRecognition();
+
+    public void AddGrammar(List<SpeechRecognitionGrammar> grammars);
 }

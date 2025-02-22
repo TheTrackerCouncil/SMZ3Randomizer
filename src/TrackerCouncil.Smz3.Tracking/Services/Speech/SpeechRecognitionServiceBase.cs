@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Speech.Recognition;
+using PySpeechServiceClient.Grammar;
 
 namespace TrackerCouncil.Smz3.Tracking.Services.Speech;
 
@@ -40,6 +42,8 @@ public abstract class SpeechRecognitionServiceBase : ISpeechRecognitionService, 
     /// </summary>
     /// <returns>True if successful, false otherwise</returns>
     public abstract bool Initialize(out bool foundRequestedDevice);
+
+    public abstract void AddGrammar(List<SpeechRecognitionGrammar> grammars);
 
     /// <summary>
     /// Releases all resources used by the service.

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Speech.Recognition;
+using PySpeechServiceClient.Grammar;
 
 namespace TrackerCouncil.Smz3.Tracking.Services.Speech;
 
@@ -18,6 +20,10 @@ public sealed class NullSpeechRecognitionService : ISpeechRecognitionService
     }
 
     public void StopRecognition()
+    {
+    }
+
+    public void AddGrammar(List<SpeechRecognitionGrammar> grammars)
     {
     }
 

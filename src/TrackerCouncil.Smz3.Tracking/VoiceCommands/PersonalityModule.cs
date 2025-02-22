@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Versioning;
 using Microsoft.Extensions.Logging;
+using PySpeechServiceClient.Grammar;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Tracking.Services;
 
@@ -27,7 +28,6 @@ public class PersonalityModule : TrackerModule
 
     }
 
-    [SupportedOSPlatform("windows")]
     public override void AddCommands()
     {
         AddCommand("Hey, ya missed pal", GetYaMissedRule(), (_) =>
@@ -54,21 +54,19 @@ public class PersonalityModule : TrackerModule
     /// </summary>
     public override bool IsSecret => true;
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetYaMissedRule()
+    private SpeechRecognitionGrammarBuilder GetYaMissedRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Append("what do you know about")
             .OneOf("your missing steak knives?", "my shoes getting bloody?");
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetRequestRule(IEnumerable<string> requests)
+    private SpeechRecognitionGrammarBuilder GetRequestRule(IEnumerable<string> requests)
     {
-        return new GrammarBuilder(requests.Select(x =>
+        return new SpeechRecognitionGrammarBuilder(requests.Select(x =>
         {
-            return new GrammarBuilder()
+            return new SpeechRecognitionGrammarBuilder()
                 .Append("Hey tracker, ")
                 .Append(x);
         }));

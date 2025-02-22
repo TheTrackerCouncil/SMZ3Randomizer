@@ -81,6 +81,8 @@ public class ItemData : IMergeable<ItemData>
     /// </summary>
     public SchrodingersString? Plural { get; set; }
 
+    public List<string>? SpeechRecognitionNames { get; set; }
+
     /// <summary>
     /// Gets the name of the article, prefixed with "a", "the" or none,
     /// depending on the item.

@@ -45,6 +45,8 @@ public class RoomInfo : IMergeable<RoomInfo>
     [MergeKey]
     public string Room { get; init; } = "";
 
+    public List<string>? SpeechRecognitionNames { get; set; }
+
     /// <summary>
     /// The name of the type matching this room
     /// </summary>

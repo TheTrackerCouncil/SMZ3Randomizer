@@ -9,6 +9,7 @@ using MSURandomizerLibrary.Configs;
 using MSURandomizerLibrary.Messenger;
 using MSURandomizerLibrary.Models;
 using MSURandomizerLibrary.Services;
+using PySpeechServiceClient.Grammar;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
@@ -185,14 +186,14 @@ public class MsuModule : TrackerModule, IDisposable
     }
 
     [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
-    private GrammarBuilder GetLocationSongRules()
+    private SpeechRecognitionGrammarBuilder GetLocationSongRules()
     {
         if (_msuConfig.TrackLocations == null)
         {
-            return new GrammarBuilder();
+            return new SpeechRecognitionGrammarBuilder();
         }
 
-        var msuLocations = new Choices();
+        var msuLocations = new List<GrammarKeyValueChoice>();
 
         foreach (var track in _msuConfig.TrackLocations)
         {
@@ -202,35 +203,35 @@ public class MsuModule : TrackerModule, IDisposable
             }
             foreach (var name in track.Value)
             {
-                msuLocations.Add(new SemanticResultValue(name, track.Key));
+                msuLocations.Add(new GrammarKeyValueChoice(name, track.Key));
             }
         }
 
-        var option1 = new GrammarBuilder()
+        var option1 = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("what's the current song for", "what's the song for", "what's the current theme for", "what's the theme for")
             .Optional("the")
             .Append(_msuKey, msuLocations);
 
-        var option2 = new GrammarBuilder()
+        var option2 = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("what's the current", "what's the")
             .Append(_msuKey, msuLocations)
             .OneOf("song", "theme");
 
-        return GrammarBuilder.Combine(option1, option2);
+        return SpeechRecognitionGrammarBuilder.Combine(option1, option2);
 
     }
 
     [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
-    private GrammarBuilder GetLocationMsuRules()
+    private SpeechRecognitionGrammarBuilder GetLocationMsuRules()
     {
         if (_msuConfig.TrackLocations == null)
         {
-            return new GrammarBuilder();
+            return new SpeechRecognitionGrammarBuilder();
         }
 
-        var msuLocations = new Choices();
+        var msuLocations = new List<GrammarKeyValueChoice>();
 
         foreach (var track in _msuConfig.TrackLocations)
         {
@@ -241,11 +242,11 @@ public class MsuModule : TrackerModule, IDisposable
 
             foreach (var name in track.Value)
             {
-                msuLocations.Add(new SemanticResultValue(name, track.Key));
+                msuLocations.Add(new GrammarKeyValueChoice(name, track.Key));
             }
         }
 
-        var option1 = new GrammarBuilder()
+        var option1 = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Append("what MSU pack is")
             .OneOf("the current song for", "the song for", "the current theme for", "the theme for")
@@ -253,7 +254,7 @@ public class MsuModule : TrackerModule, IDisposable
             .Append(_msuKey, msuLocations)
             .Append("from");
 
-        var option2 = new GrammarBuilder()
+        var option2 = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Append("what MSU pack is")
             .OneOf("the current", "the")
@@ -261,42 +262,27 @@ public class MsuModule : TrackerModule, IDisposable
             .OneOf("song", "theme")
             .Append("from");
 
-        return GrammarBuilder.Combine(option1, option2);
+        return SpeechRecognitionGrammarBuilder.Combine(option1, option2);
 
     }
 
     [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
-    private GrammarBuilder GetCurrentSongRules()
+    private SpeechRecognitionGrammarBuilder GetCurrentSongRules()
     {
         if (_msuConfig.TrackLocations == null)
         {
-            return new GrammarBuilder();
+            return new SpeechRecognitionGrammarBuilder();
         }
 
-        var msuLocations = new Choices();
-
-        foreach (var track in _msuConfig.TrackLocations)
-        {
-            if (track.Value == null)
-            {
-                continue;
-            }
-
-            foreach (var name in track.Value)
-            {
-                msuLocations.Add(new SemanticResultValue(name, track.Key));
-            }
-        }
-
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("what's the current song", "what's currently playing", "what's the current track");
 
     }
 
-    private GrammarBuilder GetCurrentMsuRules()
+    private SpeechRecognitionGrammarBuilder GetCurrentMsuRules()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Append("what MSU pack is")
             .OneOf("the current song from", "the current track from", "the current theme from");
@@ -328,7 +314,7 @@ public class MsuModule : TrackerModule, IDisposable
                     return;
                 }
 
-                var trackNumber = (int)result.Semantics[_msuKey].Value;
+                var trackNumber = int.Parse(result.Semantics[_msuKey].Value);
                 var track = _currentMsu.GetTrackFor(trackNumber);
                 if (track != null)
                 {
@@ -348,7 +334,7 @@ public class MsuModule : TrackerModule, IDisposable
                     return;
                 }
 
-                var trackNumber = (int)result.Semantics[_msuKey].Value;
+                var trackNumber = int.Parse(result.Semantics[_msuKey].Value);
                 var track = _currentMsu.GetTrackFor(trackNumber);
                 if (track?.GetMsuName() != null)
                 {

@@ -298,10 +298,8 @@ public sealed class Tracker : TrackerBase, IDisposable
         bool loadError;
         try
         {
-            var recognitionEngine = _recognizer is SpeechRecognitionServiceBase recognitionBase
-                ? recognitionBase.RecognitionEngine
-                : null;
-            Syntax = _moduleFactory.LoadAll(this, recognitionEngine, out loadError);
+            var grammars = _moduleFactory.RetrieveGrammar(this, out loadError);
+            _recognizer.AddGrammar(grammars);
         }
         catch (Exception e)
         {

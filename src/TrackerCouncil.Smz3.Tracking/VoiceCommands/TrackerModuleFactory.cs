@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Speech.Recognition;
-
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using PySpeechServiceClient.Grammar;
+using PySpeechServiceClient.Models;
 using TrackerCouncil.Smz3.Abstractions;
+using YamlDotNet.Serialization;
 
 namespace TrackerCouncil.Smz3.Tracking.VoiceCommands;
 
@@ -45,31 +50,40 @@ public class TrackerModuleFactory : IDisposable
     /// <returns>
     /// A dictionary that contains the loaded speech recognition syntax.
     /// </returns>
-    public IReadOnlyDictionary<string, IEnumerable<string>> LoadAll(TrackerBase tracker, SpeechRecognitionEngine? engine, out bool moduleLoadError)
+    public List<SpeechRecognitionGrammar> RetrieveGrammar(TrackerBase tracker, out bool moduleLoadError)
     {
         moduleLoadError = false;
         _trackerModules = _serviceProvider.GetServices<TrackerModule>().ToList();
+        TrackerModule.Rules = [];
 
-        if (engine != null && OperatingSystem.IsWindows())
+        List<SpeechRecognitionGrammar> grammar = new List<SpeechRecognitionGrammar>();
+
+        foreach (var module in _trackerModules)
         {
-            foreach (var module in _trackerModules)
+            try
             {
-                try
-                {
-                    module.AddCommands();
-                    module.LoadInto(engine);
-                }
-                catch (InvalidOperationException e)
-                {
-                    _logger.LogError(e, $"Error with loading module {module.GetType().Name}");
-                    moduleLoadError = true;
-                }
+                module.AddCommands();
+                module.LoadInto(grammar);
+            }
+            catch (InvalidOperationException e)
+            {
+                _logger.LogError(e, $"Error with loading module {module.GetType().Name}");
+                moduleLoadError = true;
             }
         }
 
-        return _trackerModules.Where(x => !x.IsSecret)
-            .SelectMany(x => x.Syntax)
-            .ToImmutableSortedDictionary();
+        return grammar;
+
+        // var serializer = new JsonSerializer { NullValueHandling = NullValueHandling.Ignore };
+        // using (var sw = new StreamWriter(@"C:\\Users\\Administrator\\Documents\\phrases.json"))
+        // using (JsonWriter writer = new JsonTextWriter(sw))
+        // {
+        //     serializer.Serialize(writer, TrackerModule.Rules);
+        // }
+        //
+        // return _trackerModules.Where(x => !x.IsSecret)
+        //     .SelectMany(x => x.Syntax)
+        //     .ToImmutableSortedDictionary();
     }
 
     /// <summary>
