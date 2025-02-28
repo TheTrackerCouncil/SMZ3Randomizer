@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Speech.Recognition;
+using PySpeechServiceClient.Grammar;
+using PySpeechServiceClient.Models;
 
 namespace TrackerCouncil.Smz3.Tracking.Services.Speech;
 
@@ -10,7 +13,7 @@ public sealed class NullSpeechRecognitionService : ISpeechRecognitionService
 {
 
 #pragma warning disable CS0067
-    public event EventHandler<SpeechRecognizedEventArgs>? SpeechRecognized;
+    public event EventHandler<SpeechRecognitionResultEventArgs>? SpeechRecognized;
 #pragma warning restore CS0067
 
     public void ResetInputDevice()
@@ -18,6 +21,10 @@ public sealed class NullSpeechRecognitionService : ISpeechRecognitionService
     }
 
     public void StopRecognition()
+    {
+    }
+
+    public void AddGrammar(List<SpeechRecognitionGrammar> grammars)
     {
     }
 

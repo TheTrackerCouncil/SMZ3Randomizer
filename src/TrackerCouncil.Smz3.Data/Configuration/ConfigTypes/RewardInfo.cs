@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
@@ -46,6 +47,11 @@ public class RewardInfo : IMergeable<RewardInfo>
     /// Gets the grammatical article for the item (e.g. "a" or "the").
     /// </summary>
     public string? Article { get; set; }
+
+    /// <summary>
+    /// Collection of names to use just for speech recognition
+    /// </summary>
+    public List<string>? SpeechRecognitionNames { get; set; }
 
     /// <summary>
     /// The SMZ3 reward type

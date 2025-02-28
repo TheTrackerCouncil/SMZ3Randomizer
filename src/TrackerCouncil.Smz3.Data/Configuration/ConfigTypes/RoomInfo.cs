@@ -46,6 +46,11 @@ public class RoomInfo : IMergeable<RoomInfo>
     public string Room { get; init; } = "";
 
     /// <summary>
+    /// Collection of names to use just for speech recognition
+    /// </summary>
+    public List<string>? SpeechRecognitionNames { get; set; }
+
+    /// <summary>
     /// The name of the type matching this room
     /// </summary>
     [JsonIgnore, YamlIgnore]

@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Threading;
 using AvaloniaControls.ControlServices;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
-using TrackerCouncil.Smz3.Tracking;
 using TrackerCouncil.Smz3.Tracking.Services;
 using TrackerCouncil.Smz3.UI.ViewModels;
 
@@ -27,7 +24,7 @@ public class TrackerSpeechWindowService(ICommunicator communicator, OptionsFacto
     private int _tickCount;
     private readonly int _maxTicks = 12;
     private readonly double _bounceHeight = 6;
-    private int _prevViseme;
+    private bool _prevSpeaking;
     private bool _enableBounce;
 
     public TrackerSpeechWindowViewModel GetViewModel()
@@ -95,19 +92,17 @@ public class TrackerSpeechWindowService(ICommunicator communicator, OptionsFacto
         options.Save();
     }
 
-    private void Communicator_VisemeReached(object? sender, SpeakVisemeReachedEventArgs e)
+    private void Communicator_VisemeReached(object? sender, SpeakingUpdatedEventArgs e)
     {
-        if (!OperatingSystem.IsWindows()) return;
-
         SetReactionType(e.Request?.TrackerImage ?? "default");
 
-        if (e.VisemeDetails.Viseme == 0)
+        if (!e.IsSpeaking)
         {
             _model.TrackerImage = _currentSpeechImages?.IdleImage;
         }
         else
         {
-            if (_enableBounce && _prevViseme == 0 && !_dispatcherTimer.IsEnabled)
+            if (_enableBounce && !_prevSpeaking&& !_dispatcherTimer.IsEnabled)
             {
                 _tickCount = 0;
                 _dispatcherTimer.Start();
@@ -115,14 +110,14 @@ public class TrackerSpeechWindowService(ICommunicator communicator, OptionsFacto
             _model.TrackerImage = _currentSpeechImages?.TalkingImage;
         }
 
-        _prevViseme = e.VisemeDetails.Viseme;
+        _prevSpeaking = e.IsSpeaking;
     }
 
     private void Communicator_SpeakCompleted(object? sender, SpeakCompletedEventArgs e)
     {
         SetReactionType();
         _model.TrackerImage = _currentSpeechImages?.IdleImage;
-        _prevViseme = 0;
+        _prevSpeaking = false;
     }
 
     private void SetReactionType(string reaction = "default")

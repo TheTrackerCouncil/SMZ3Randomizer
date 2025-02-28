@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace TrackerCouncil.Smz3.UI;
+namespace TrackerCouncil.Smz3.Shared;
 
 public static class Directories
 {

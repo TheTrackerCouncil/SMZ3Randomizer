@@ -37,8 +37,20 @@ public class BossConfig : List<BossInfo>, IMergeable<BossInfo>, IConfigFile<Boss
             new BossInfo("Ridley") { Type = BossType.Ridley, MemoryAddress = 2, MemoryFlag = 0x1, },
             new BossInfo("Mother Brain") { Type = BossType.MotherBrain },
             new BossInfo("Bomb Torizo") { MemoryAddress = 0, MemoryFlag = 0x4, },
-            new BossInfo("Golden Torizo") { MemoryAddress = 2, MemoryFlag = 0x4, }
-
+            new BossInfo("Golden Torizo") { MemoryAddress = 2, MemoryFlag = 0x4, },
+            new BossInfo("Castle Guard") { Type = BossType.CastleGuard },
+            new BossInfo("Armos Knights") { Type = BossType.ArmosKnights },
+            new BossInfo("Moldorm") { Type = BossType.Moldorm },
+            new BossInfo("Lanmolas") { Type = BossType.Lanmolas },
+            new BossInfo("Agahnim") { Type = BossType.Agahnim },
+            new BossInfo("Helmasaur King") { Type = BossType.HelmasaurKing },
+            new BossInfo("Arrghus") { Type = BossType.Arrghus },
+            new BossInfo("Blind") { Type = BossType.Blind },
+            new BossInfo("Mothula") { Type = BossType.Mothula },
+            new BossInfo("Kholdstare") { Type = BossType.Kholdstare },
+            new BossInfo("Vitreous") { Type = BossType.Vitreous },
+            new BossInfo("Trinexx") { Type = BossType.Trinexx },
+            new BossInfo("Ganon") { Type = BossType.Ganon },
         ];
     }
 

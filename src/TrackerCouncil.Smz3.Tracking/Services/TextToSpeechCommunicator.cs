@@ -63,7 +63,7 @@ public class TextToSpeechCommunicator : ICommunicator, IDisposable
         _tts.VisemeReached += (sender, args) =>
         {
             if (!OperatingSystem.IsWindows()) return;
-            VisemeReached?.Invoke(this, new SpeakVisemeReachedEventArgs(args, _currentSpeechRequest));
+            VisemeReached?.Invoke(this, new SpeakingUpdatedEventArgs(args.Viseme > 0, _currentSpeechRequest));
         };
 
         _canSpeak = trackerOptionsAccessor.Options?.VoiceFrequency != Shared.Enums.TrackerVoiceFrequency.Disabled;
@@ -153,7 +153,7 @@ public class TextToSpeechCommunicator : ICommunicator, IDisposable
 
     public event EventHandler<SpeakCompletedEventArgs>? SpeakCompleted;
 
-    public event EventHandler<SpeakVisemeReachedEventArgs>? VisemeReached;
+    public event EventHandler<SpeakingUpdatedEventArgs>? VisemeReached;
 
     /// <inheritdoc/>
     public void Dispose()

@@ -1,5 +1,6 @@
 ﻿using System.Runtime.Versioning;
 using Microsoft.Extensions.Logging;
+using PySpeechServiceClient.Grammar;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Tracking.Services;
 
@@ -24,54 +25,52 @@ public class LocationTrackingModule : TrackerModule
 
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetMarkItemAtLocationRule()
+    private SpeechRecognitionGrammarBuilder GetMarkItemAtLocationRule()
     {
         var itemNames = GetItemNames();
         var locationNames = GetLocationNames();
 
-        var itemIsAtLocation = new GrammarBuilder()
+        var itemIsAtLocation = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Append(ItemNameKey, itemNames)
             .OneOf("is at", "are at")
             .Append(LocationKey, locationNames);
 
-        var theItemIsAtLocation = new GrammarBuilder()
+        var theItemIsAtLocation = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("a", "an", "the")
             .Append(ItemNameKey, itemNames)
             .OneOf("is at", "are at")
             .Append(LocationKey, locationNames);
 
-        var thereIsItemAtLocation = new GrammarBuilder()
+        var thereIsItemAtLocation = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("there are", "there is a", "there is an")
             .Append(ItemNameKey, itemNames)
             .Append("at")
             .Append(LocationKey, locationNames);
 
-        var locationHasItem = new GrammarBuilder()
+        var locationHasItem = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Append(LocationKey, locationNames)
             .OneOf("has", "has a", "has an", "has the")
             .Append(ItemNameKey, itemNames);
 
-        var markAtLocation = new GrammarBuilder()
+        var markAtLocation = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Append("mark")
             .Append(ItemNameKey, itemNames)
             .Append("at")
             .Append(LocationKey, locationNames);
 
-        return GrammarBuilder.Combine(
+        return SpeechRecognitionGrammarBuilder.Combine(
             itemIsAtLocation, theItemIsAtLocation, thereIsItemAtLocation,
             locationHasItem, markAtLocation);
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetClearViewedObjectRule()
+    private SpeechRecognitionGrammarBuilder GetClearViewedObjectRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("clear", "I don't care about", "I don't give a shit about", "I don't give a fuck about")
             .OneOf("that", "those")
@@ -79,71 +78,67 @@ public class LocationTrackingModule : TrackerModule
             .OneOf("marked location", "marked locations", "hint tile", "telepathic tile");
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetClearLocationRule()
+    private SpeechRecognitionGrammarBuilder GetClearLocationRule()
     {
         var locationNames = GetLocationNames();
 
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("clear", "ignore")
             .Append(LocationKey, locationNames);
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetClearAreaRule()
+    private SpeechRecognitionGrammarBuilder GetClearAreaRule()
     {
         var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
         var roomNames = GetRoomNames();
         var regionNames = GetRegionNames(excludeDungeons: true);
 
-        var clearDungeon = new GrammarBuilder()
+        var clearDungeon = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("clear", "please clear")
             .Append(DungeonKey, dungeonNames);
 
-        var clearRoom = new GrammarBuilder()
+        var clearRoom = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("clear", "please clear")
             .Append(RoomKey, roomNames);
 
-        var clearRegion = new GrammarBuilder()
+        var clearRegion = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("clear", "please clear")
             .Append(RegionKey, regionNames);
 
-        return GrammarBuilder.Combine(clearDungeon, clearRoom, clearRegion);
+        return SpeechRecognitionGrammarBuilder.Combine(clearDungeon, clearRoom, clearRegion);
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetClearAreaIncludingOutOfLogicRule()
+    private SpeechRecognitionGrammarBuilder GetClearAreaIncludingOutOfLogicRule()
     {
         var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
         var roomNames = GetRoomNames();
         var regionNames = GetRegionNames(excludeDungeons: true);
 
-        var clearDungeon = new GrammarBuilder()
+        var clearDungeon = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("force", "sudo")
             .OneOf("clear", "please clear")
             .Append(DungeonKey, dungeonNames);
 
-        var clearRoom = new GrammarBuilder()
+        var clearRoom = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("force", "sudo")
             .OneOf("clear", "please clear")
             .Append(RoomKey, roomNames);
 
-        var clearRegion = new GrammarBuilder()
+        var clearRegion = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("force", "sudo")
             .OneOf("clear", "please clear")
             .Append(RegionKey, regionNames);
 
-        return GrammarBuilder.Combine(clearDungeon, clearRoom, clearRegion);
+        return SpeechRecognitionGrammarBuilder.Combine(clearDungeon, clearRoom, clearRegion);
     }
 
-    [SupportedOSPlatform("windows")]
     public override void AddCommands()
     {
         AddCommand("Mark item at specific location", GetMarkItemAtLocationRule(), (result) =>

@@ -37,11 +37,12 @@ public class OptionsWindowTrackerOptions
     [DynamicFormFieldSlider(minimumValue: 0, maximumValue:100, decimalPlaces:1, incrementAmount:.1, suffix:"%", label: "Tracker spoiler threshold:", platforms: DynamicFormPlatform.Windows)]
     public float TrackerConfidenceSassThreshold { get; set; }
 
-    [DynamicFormFieldComboBox(label: "Tracker voice frequency:", platforms: DynamicFormPlatform.Windows)]
+    [DynamicFormFieldComboBox(label: "Tracker voice frequency:")]
     public TrackerVoiceFrequency TrackerVoiceFrequency { get; set; }
 
-    [DynamicFormFieldComboBox(label: "Speech recognition mode:", platforms: DynamicFormPlatform.Windows)]
-    public SpeechRecognitionMode SpeechRecognitionMode { get; set; }
+    [DynamicFormFieldComboBox(label: "Speech recognition mode:",
+        comboBoxOptionsProperty: nameof(SpeechRecognitionTypes))]
+    public string SpeechRecognitionMode { get; set; } = "";
 
     [DynamicFormFieldComboBox(label: "Push-to-talk key:", platforms: DynamicFormPlatform.Windows)]
     public PushToTalkKey PushToTalkKey { get; set; }
@@ -88,6 +89,7 @@ public class OptionsWindowTrackerOptions
     [DynamicFormFieldCheckBox(checkBoxText: "Enable MSU Randomizer message server", groupName: "Bottom", toolTipText: "Enables the gRPC server that allows the separate MSU Randomizer application from informing Tracker of when the MSU was shuffled and when the playing track is changed.")]
     public bool MsuMessageReceiverEnabled { get; set; } = true;
 
+    public Dictionary<string, string> SpeechRecognitionTypes { get; set; } = new();
     public Dictionary<string, string> AudioDevices { get; set; } = new();
     public Dictionary<string, string> TrackerSpeechImagePacks { get; set; } = [];
 }

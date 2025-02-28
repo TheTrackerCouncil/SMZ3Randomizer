@@ -64,6 +64,11 @@ public class RegionInfo : IMergeable<RegionInfo>
     public SchrodingersString? Hints { get; set; }
 
     /// <summary>
+    /// Collection of names to use just for speech recognition
+    /// </summary>
+    public List<string>? SpeechRecognitionNames { get; set; }
+
+    /// <summary>
     /// The name of the map to display for this region
     /// </summary>
     [JsonIgnore, YamlIgnore]

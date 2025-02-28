@@ -11,6 +11,8 @@ using AvaloniaControls.Models;
 using AvaloniaControls.Services;
 using GitHubReleaseChecker;
 using Microsoft.Extensions.Logging;
+using PySpeechServiceClient;
+using PySpeechServiceClient.Models;
 using TrackerCouncil.Smz3.Chat.Integration;
 using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Data.Configuration;
@@ -30,6 +32,7 @@ public class MainWindowService(
     IGitHubFileSynchronizerService gitHubFileSynchronizerService,
     SpriteService spriteService,
     TrackerSpriteService trackerSpriteService,
+    IPySpeechService pySpeechService,
     Configs configs) : ControlService
 {
     private MainWindowViewModel _model = new();
@@ -40,6 +43,7 @@ public class MainWindowService(
         _options = optionsFactory.Create();
         _model.OpenSetupWindow = !_options.GeneralOptions.HasOpenedSetupWindow;
         ITaskService.Run(CheckForUpdates);
+        ITaskService.Run(StartPySpeechService);
         return _model;
     }
 
@@ -87,6 +91,17 @@ public class MainWindowService(
 
     public event EventHandler? SpriteDownloadEnd;
 
+    public async Task StartPySpeechService()
+    {
+        if (!OperatingSystem.IsLinux())
+        {
+            return;
+        }
+        
+        pySpeechService.AutoReconnect = true;
+        await pySpeechService.StartAsync();
+        await pySpeechService.SetSpeechSettingsAsync(new SpeechSettings());
+    }
     public async Task DownloadConfigsAsync()
     {
         var configsUpdated = gitHubConfigDownloaderService.InstallDefaultConfigFolder();

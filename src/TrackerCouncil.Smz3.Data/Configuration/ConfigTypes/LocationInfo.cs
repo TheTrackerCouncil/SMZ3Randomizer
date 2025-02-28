@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using TrackerCouncil.Smz3.Shared.Enums;
 
@@ -56,6 +57,11 @@ public class LocationInfo : IMergeable<LocationInfo>
     /// Gets the possible names for the location.
     /// </summary>
     public SchrodingersString? Name { get; set; }
+
+    /// <summary>
+    /// Collection of names to use just for speech recognition
+    /// </summary>
+    public List<string>? SpeechRecognitionNames { get; set; }
 
     /// <summary>
     /// Gets the possible hints for the location, if any are defined.
