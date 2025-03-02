@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.Versioning;
 using Microsoft.Extensions.Logging;
+using PySpeechServiceClient.Grammar;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.GeneratedData;
@@ -907,12 +908,11 @@ public class SpoilerModule : TrackerModule, IOptionalModule
         return randomLocation;
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetItemSpoilerRule()
+    private SpeechRecognitionGrammarBuilder GetItemSpoilerRule()
     {
         var items = GetItemNames();
 
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .OneOf("where is", "where's", "where are", "where can I find",
                 "where the fuck is", "where the hell is",
@@ -921,19 +921,18 @@ public class SpoilerModule : TrackerModule, IOptionalModule
             .Append(ItemNameKey, items);
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetLocationSpoilerRule()
+    private SpeechRecognitionGrammarBuilder GetLocationSpoilerRule()
     {
         var locations = GetLocationNames();
 
-        var whatsAtRule = new GrammarBuilder()
+        var whatsAtRule = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .OneOf("what's", "what is")
             .OneOf("at", "in")
             .Optional("the")
             .Append(LocationKey, locations);
 
-        var whatDoesLocationHaveRule = new GrammarBuilder()
+        var whatDoesLocationHaveRule = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .Append("what does")
             .Optional("the")
@@ -941,49 +940,44 @@ public class SpoilerModule : TrackerModule, IOptionalModule
             .Append("have")
             .Optional("for me");
 
-        return GrammarBuilder.Combine(whatsAtRule, whatDoesLocationHaveRule);
+        return SpeechRecognitionGrammarBuilder.Combine(whatsAtRule, whatDoesLocationHaveRule);
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetEnableSpoilersRule()
+    private SpeechRecognitionGrammarBuilder GetEnableSpoilersRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .OneOf("enable", "turn on")
             .Append("spoilers");
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetDisableSpoilersRule()
+    private SpeechRecognitionGrammarBuilder GetDisableSpoilersRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .OneOf("disable", "turn off")
             .Append("spoilers");
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetEnableHintsRule()
+    private SpeechRecognitionGrammarBuilder GetEnableHintsRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .OneOf("enable", "turn on")
             .Append("hints");
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetDisableHintsRule()
+    private SpeechRecognitionGrammarBuilder GetDisableHintsRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .OneOf("disable", "turn off")
             .Append("hints");
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetProgressionHintRule()
+    private SpeechRecognitionGrammarBuilder GetProgressionHintRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .OneOf("give me a hint",
                 "give me a suggestion",
@@ -993,11 +987,10 @@ public class SpoilerModule : TrackerModule, IOptionalModule
                 "what should I do?");
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetLocationUsefulnessHintRule()
+    private SpeechRecognitionGrammarBuilder GetLocationUsefulnessHintRule()
     {
         var regionNames = GetRegionNames();
-        var regionGrammar = new GrammarBuilder()
+        var regionGrammar = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .OneOf("is there anything useful",
                 "is there anything I need",
@@ -1009,7 +1002,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
             .Append(RegionKey, regionNames);
 
         var roomNames = GetRoomNames();
-        var roomGrammar = new GrammarBuilder()
+        var roomGrammar = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .OneOf("is there anything useful",
                 "is there anything I need",
@@ -1020,10 +1013,9 @@ public class SpoilerModule : TrackerModule, IOptionalModule
             .OneOf("in", "at")
             .Append(RoomKey, roomNames);
 
-        return GrammarBuilder.Combine(regionGrammar, roomGrammar);
+        return SpeechRecognitionGrammarBuilder.Combine(regionGrammar, roomGrammar);
     }
 
-    [SupportedOSPlatform("windows")]
     public override void AddCommands()
     {
         if (TrackerBase.World.Config.Race) return;

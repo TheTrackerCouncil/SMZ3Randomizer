@@ -74,7 +74,7 @@ public interface ICommunicator
     /// <summary>
     /// Event for when the communicator has reached a new viseme
     /// </summary>
-    public event EventHandler<SpeakVisemeReachedEventArgs> VisemeReached;
+    public event EventHandler<SpeakingUpdatedEventArgs> VisemeReached;
 
 
 }

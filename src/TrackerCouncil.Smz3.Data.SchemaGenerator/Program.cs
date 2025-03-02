@@ -35,6 +35,7 @@ public static class Program
         (typeof(RewardConfig), "rewards.json"),
         (typeof(RoomConfig), "rooms.json"),
         (typeof(UIConfig), "ui.json"),
+        (typeof(MetadataConfig), "metadata.json"),
     };
 
     private static IServiceProvider? _services;
@@ -219,6 +220,12 @@ public static class Program
         var templateUIConfig = new UIConfig() { new("Layout Name", new List<UIGridLocation> { new() { Identifiers = new List<string> { "" }, Column = 1, Row = 1 } }) };
         var exampleUIConfig = UIConfig.Example();
         WriteTemplate(templatePath, "ui", templateUIConfig, exampleUIConfig);
+
+        // Metadata Template
+        var templateMetadataConfig = new MetadataConfig() { };
+        PopulateExample(templateResponseConfig, true);
+        var exampleMetadataConfig = MetadataConfig.Example();
+        WriteTemplate(templatePath, "metadata", templateMetadataConfig, exampleMetadataConfig);
     }
 
     private static void WriteTemplate(string templatePath, string type, object data, object? example)

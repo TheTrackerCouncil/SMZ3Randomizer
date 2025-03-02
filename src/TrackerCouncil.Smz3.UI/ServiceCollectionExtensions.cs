@@ -5,6 +5,7 @@ using GitHubReleaseChecker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using MSURandomizer;
+using PySpeechServiceClient;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Chat.Integration;
 using TrackerCouncil.Smz3.Data.Configuration;
@@ -51,6 +52,7 @@ public static class ServiceCollectionExtensions
 
         // Misc
         services.AddGitHubReleaseCheckerServices();
+        services.AddPySpeechService();
         services.AddSingleton<IGameDbService, GameDbService>();
         services.AddTransient<SourceRomValidationService>();
         services.AddTransient<IGitHubConfigDownloaderService, GitHubConfigDownloaderService>();

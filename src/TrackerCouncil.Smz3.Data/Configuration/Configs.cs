@@ -51,6 +51,7 @@ public class Configs
         GameLines = _configProvider.GetGameConfig(profiles, CurrentMood);
         MsuConfig = _configProvider.GetMsuConfig(profiles, CurrentMood);
         HintTileConfig = _configProvider.GetHintTileConfig(profiles, CurrentMood);
+        MetadataConfig = _configProvider.GetMetadataConfig(profiles, CurrentMood);
     }
 
     /// <summary>
@@ -152,4 +153,9 @@ public class Configs
     /// Gets the hint tile config
     /// </summary>
     public HintTileConfig HintTileConfig { get; private set; } = null!;
+
+    /// <summary>
+    /// Gets the metadata config
+    /// </summary>
+    public MetadataConfig MetadataConfig { get; private set; } = null!;
 }

@@ -10,5 +10,8 @@ public enum SpeechRecognitionMode
     [Description("Push-to-talk")]
     PushToTalk,
 
+    [Description("PySpeechService application")]
+    PySpeechService,
+
     Disabled
 }

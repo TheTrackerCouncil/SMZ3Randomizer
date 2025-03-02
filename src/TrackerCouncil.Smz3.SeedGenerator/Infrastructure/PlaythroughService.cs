@@ -126,6 +126,8 @@ public class PlaythroughService
             items.AddRange(newItems);
 
             _logger.LogDebug("Sphere {Number}: {ItemCount} new items | {RewardCount} new rewards", spheres.Count + 1, newItems.Count, rewards.Count - prevRewardCount);
+            _logger.LogDebug("Sphere {Number} Items:{Items}", spheres.Count + 1, string.Join("", newLocations.Select(x => $"\r\n\t{x.RandomName} - {x.Item.Name}")));
+            _logger.LogDebug("Sphere {Number} Rewards:{Rewards}", spheres.Count + 1, string.Join("", rewards.Select(x => $"\r\n\t{x.Type}")));
 
             if (!newItems.Any() && prevRewardCount == rewards.Count)
             {

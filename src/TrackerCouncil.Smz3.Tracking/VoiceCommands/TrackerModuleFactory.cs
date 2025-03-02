@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using System.Speech.Recognition;
-
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using PySpeechServiceClient.Grammar;
 using TrackerCouncil.Smz3.Abstractions;
 
 namespace TrackerCouncil.Smz3.Tracking.VoiceCommands;
@@ -18,6 +16,7 @@ public class TrackerModuleFactory : IDisposable
     private readonly IServiceProvider _serviceProvider;
     private IEnumerable<TrackerModule>? _trackerModules;
     private ILogger<TrackerModuleFactory> _logger;
+    private Dictionary<string, IEnumerable<string>> _syntax = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TrackerModuleFactory"/>
@@ -38,39 +37,39 @@ public class TrackerModuleFactory : IDisposable
     /// recognition engine.
     /// </summary>
     /// <param name="tracker">The tracker instance.</param>
-    /// <param name="engine">
-    /// The speech recognition engine to initialize.
-    /// </param>
     /// <param name="moduleLoadError"></param>
     /// <returns>
     /// A dictionary that contains the loaded speech recognition syntax.
     /// </returns>
-    public IReadOnlyDictionary<string, IEnumerable<string>> LoadAll(TrackerBase tracker, SpeechRecognitionEngine? engine, out bool moduleLoadError)
+    public List<SpeechRecognitionGrammar> RetrieveGrammar(TrackerBase tracker, out bool moduleLoadError)
     {
         moduleLoadError = false;
         _trackerModules = _serviceProvider.GetServices<TrackerModule>().ToList();
 
-        if (engine != null && OperatingSystem.IsWindows())
+        var grammar = new List<SpeechRecognitionGrammar>();
+
+        foreach (var module in _trackerModules)
         {
-            foreach (var module in _trackerModules)
+            try
             {
-                try
+                module.AddCommands();
+                module.LoadInto(grammar);
+                foreach (var syntax in module.Syntax)
                 {
-                    module.AddCommands();
-                    module.LoadInto(engine);
+                    _syntax.Add(syntax.Key, syntax.Value);
                 }
-                catch (InvalidOperationException e)
-                {
-                    _logger.LogError(e, $"Error with loading module {module.GetType().Name}");
-                    moduleLoadError = true;
-                }
+            }
+            catch (InvalidOperationException e)
+            {
+                _logger.LogError(e, $"Error with loading module {module.GetType().Name}");
+                moduleLoadError = true;
             }
         }
 
-        return _trackerModules.Where(x => !x.IsSecret)
-            .SelectMany(x => x.Syntax)
-            .ToImmutableSortedDictionary();
+        return grammar;
     }
+
+    public Dictionary<string, IEnumerable<string>> Syntax => _syntax;
 
     /// <summary>
     /// Retrieves the created module of the particular type

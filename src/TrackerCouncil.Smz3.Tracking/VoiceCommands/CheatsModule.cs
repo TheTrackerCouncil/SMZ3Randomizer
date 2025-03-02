@@ -4,6 +4,7 @@ using System.Runtime.Versioning;
 using System.Speech.Recognition;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using PySpeechServiceClient.Grammar;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData;
@@ -124,56 +125,52 @@ public class CheatsModule(
         }
     }
 
-    [SupportedOSPlatform("windows")]
-    private static GrammarBuilder GetEnableCheatsRule()
+    private static SpeechRecognitionGrammarBuilder GetEnableCheatsRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .OneOf("enable", "turn on")
             .OneOf("cheats", "cheat codes", "sv_cheats");
     }
 
-    [SupportedOSPlatform("windows")]
-    private static GrammarBuilder GetDisableHintsRule()
+    private static SpeechRecognitionGrammarBuilder GetDisableHintsRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .OneOf("disable", "turn off")
             .OneOf("cheats", "cheat codes", "sv_cheats");
     }
 
-    [SupportedOSPlatform("windows")]
-    private static GrammarBuilder FillRule()
+    private static SpeechRecognitionGrammarBuilder FillRule()
     {
-        var fillChoices = new Choices();
-        fillChoices.Add(s_fillHealthChoices.ToArray());
-        fillChoices.Add(s_fillMagicChoices.ToArray());
-        fillChoices.Add(s_fillBombsChoices.ToArray());
-        fillChoices.Add(s_fillArrowsChoices.ToArray());
-        fillChoices.Add(s_fillRupeesChoices.ToArray());
-        fillChoices.Add(s_fillMissilesChoices.ToArray());
-        fillChoices.Add(s_fillSuperMissileChoices.ToArray());
-        fillChoices.Add(s_fillPowerBombsChoices.ToArray());
-        var restore = new GrammarBuilder()
+        var fillChoices = new List<GrammarKeyValueChoice>();
+        fillChoices.AddRange(s_fillHealthChoices.Select(x => new GrammarKeyValueChoice(x)));
+        fillChoices.AddRange(s_fillMagicChoices.Select(x => new GrammarKeyValueChoice(x)));
+        fillChoices.AddRange(s_fillBombsChoices.Select(x => new GrammarKeyValueChoice(x)));
+        fillChoices.AddRange(s_fillArrowsChoices.Select(x => new GrammarKeyValueChoice(x)));
+        fillChoices.AddRange(s_fillRupeesChoices.Select(x => new GrammarKeyValueChoice(x)));
+        fillChoices.AddRange(s_fillMissilesChoices.Select(x => new GrammarKeyValueChoice(x)));
+        fillChoices.AddRange(s_fillSuperMissileChoices.Select(x => new GrammarKeyValueChoice(x)));
+        fillChoices.AddRange(s_fillPowerBombsChoices.Select(x => new GrammarKeyValueChoice(x)));
+        var restore = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .Optional("please", "would you please")
             .OneOf("restore my", "fill my", "refill my")
             .Append(s_fillCheatKey, fillChoices);
 
-        var heal = new GrammarBuilder()
+        var heal = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .Optional("please", "would you please")
             .OneOf("heal me", "I need healing");
 
-        return GrammarBuilder.Combine(restore, heal);
+        return SpeechRecognitionGrammarBuilder.Combine(restore, heal);
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GiveItemRule()
+    private SpeechRecognitionGrammarBuilder GiveItemRule()
     {
         var itemNames = GetItemNames(x => x.Name != "Content");
 
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Optional("please", "would you kindly")
             .OneOf("give me", "lend me", "donate")
@@ -181,28 +178,25 @@ public class CheatsModule(
             .Append(ItemNameKey, itemNames);
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder KillPlayerRule()
+    private SpeechRecognitionGrammarBuilder KillPlayerRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Optional("please", "would you kindly")
             .OneOf("kill me", "give me a tactical reset");
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder SetupCrystalFlashRule()
+    private SpeechRecognitionGrammarBuilder SetupCrystalFlashRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Optional("please", "would you kindly")
             .OneOf("setup crystal flash requirements", "ready a crystal flash");
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder ChargeShinesparkRule()
+    private SpeechRecognitionGrammarBuilder ChargeShinesparkRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Optional("please", "would you kindly")
             .OneOf("charge", "ready", "give me", "enable", "activate", "turn on")
@@ -210,7 +204,6 @@ public class CheatsModule(
             .Append("shine spark");
     }
 
-    [SupportedOSPlatform("windows")]
     public override void AddCommands()
     {
         if (TrackerBase.World.Config.Race || TrackerBase.World.Config.DisableCheats) return;

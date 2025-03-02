@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Versioning;
 using System.Speech.Recognition;
 
 using Microsoft.Extensions.Logging;
+using PySpeechServiceClient.Grammar;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Tracking.Services;
@@ -30,55 +32,53 @@ public class ItemTrackingModule : TrackerModule
 
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetTrackDeathRule()
+    private SpeechRecognitionGrammarBuilder GetTrackDeathRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .Append("I just died");
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetTrackItemRule(bool isMultiworld)
+    private SpeechRecognitionGrammarBuilder GetTrackItemRule(bool isMultiworld)
     {
         var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
         var itemNames = GetItemNames(x => x.Name != "Content");
         var locationNames = GetLocationNames();
         var roomNames = GetRoomNames();
 
-        var trackItemNormal = new GrammarBuilder()
+        var trackItemNormal = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
-            .Optional(GrammarBuilder.ForceCommandIdentifiers.Concat(["please", "would you kindly"]).ToArray())
+            .Optional(ForceCommandIdentifiers.Concat(["please", "would you kindly"]).ToArray())
             .OneOf("track", "add")
             .Append(ItemNameKey, itemNames);
 
         if (!isMultiworld)
         {
-            var trackItemDungeon = new GrammarBuilder()
+            var trackItemDungeon = new SpeechRecognitionGrammarBuilder()
                 .Append("Hey tracker,")
-                .Optional(GrammarBuilder.ForceCommandIdentifiers.Concat(["please", "would you kindly"]).ToArray())
+                .Optional(ForceCommandIdentifiers.Concat(["please", "would you kindly"]).ToArray())
                 .OneOf("track", "add")
                 .Append(ItemNameKey, itemNames)
                 .OneOf("in", "from")
                 .Append(DungeonKey, dungeonNames);
 
-            var trackItemLocation = new GrammarBuilder()
+            var trackItemLocation = new SpeechRecognitionGrammarBuilder()
                 .Append("Hey tracker,")
-                .Optional(GrammarBuilder.ForceCommandIdentifiers.Concat(["please", "would you kindly"]).ToArray())
+                .Optional(ForceCommandIdentifiers.Concat(["please", "would you kindly"]).ToArray())
                 .OneOf("track", "add")
                 .Append(ItemNameKey, itemNames)
                 .OneOf("in", "from", "in the", "from the")
                 .Append(LocationKey, locationNames);
 
-            var trackItemRoom = new GrammarBuilder()
+            var trackItemRoom = new SpeechRecognitionGrammarBuilder()
                 .Append("Hey tracker,")
-                .Optional(GrammarBuilder.ForceCommandIdentifiers.Concat(["please", "would you kindly"]).ToArray())
+                .Optional(ForceCommandIdentifiers.Concat(["please", "would you kindly"]).ToArray())
                 .OneOf("track", "add")
                 .Append(ItemNameKey, itemNames)
                 .OneOf("in", "from", "in the", "from the")
                 .Append(RoomKey, roomNames);
 
-            return GrammarBuilder.Combine(
+            return SpeechRecognitionGrammarBuilder.Combine(
                 trackItemNormal, trackItemDungeon, trackItemLocation, trackItemRoom);
 
         }
@@ -89,13 +89,12 @@ public class ItemTrackingModule : TrackerModule
 
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetTrackEverythingRule()
+    private SpeechRecognitionGrammarBuilder GetTrackEverythingRule()
     {
         var roomNames = GetRoomNames();
         var regionNames = GetRegionNames();
 
-        var trackAllInRoom = new GrammarBuilder()
+        var trackAllInRoom = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Optional("please", "would you kindly")
             .OneOf("track", "add")
@@ -103,7 +102,7 @@ public class ItemTrackingModule : TrackerModule
             .OneOf("in", "from", "in the", "from the")
             .Append(RoomKey, roomNames);
 
-        var trackAllInRegion = new GrammarBuilder()
+        var trackAllInRegion = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Optional("please", "would you kindly")
             .OneOf("track", "add")
@@ -111,16 +110,15 @@ public class ItemTrackingModule : TrackerModule
             .OneOf("in", "from")
             .Append(RegionKey, regionNames);
 
-        return GrammarBuilder.Combine(trackAllInRoom, trackAllInRegion);
+        return SpeechRecognitionGrammarBuilder.Combine(trackAllInRoom, trackAllInRegion);
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetTrackEverythingIncludingOutOfLogicRule()
+    private SpeechRecognitionGrammarBuilder GetTrackEverythingIncludingOutOfLogicRule()
     {
         var roomNames = GetRoomNames();
         var regionNames = GetRegionNames();
 
-        var trackAllInRoom = new GrammarBuilder()
+        var trackAllInRoom = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("force", "sudo")
             .OneOf("track", "add")
@@ -128,7 +126,7 @@ public class ItemTrackingModule : TrackerModule
             .OneOf("in", "from", "in the", "from the")
             .Append(RoomKey, roomNames);
 
-        var trackAllInRegion = new GrammarBuilder()
+        var trackAllInRegion = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("force", "sudo")
             .OneOf("track", "add")
@@ -136,59 +134,56 @@ public class ItemTrackingModule : TrackerModule
             .OneOf("in", "from")
             .Append(RegionKey, regionNames);
 
-        var cheatedRoom = new GrammarBuilder()
+        var cheatedRoom = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("sequence break", "I sequence broke", "I cheated my way to")
             .Append(RoomKey, roomNames);
 
-        var cheatedRegion = new GrammarBuilder()
+        var cheatedRegion = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("sequence break", "I sequence broke", "I cheated my way to")
             .Append(RegionKey, regionNames);
 
-        return GrammarBuilder.Combine(trackAllInRoom, trackAllInRegion,
+        return SpeechRecognitionGrammarBuilder.Combine(trackAllInRoom, trackAllInRegion,
             cheatedRoom, cheatedRegion);
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetUntrackItemRule()
+    private SpeechRecognitionGrammarBuilder GetUntrackItemRule()
     {
         var itemNames = GetItemNames();
 
-        var untrackItem = new GrammarBuilder()
+        var untrackItem = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
-            .Optional(GrammarBuilder.ForceCommandIdentifiers.Concat(["please", "would you kindly"]).ToArray())
+            .Optional(ForceCommandIdentifiers.Concat(["please", "would you kindly"]).ToArray())
             .OneOf("untrack", "remove")
             .Optional("a", "an", "the")
             .Append(ItemNameKey, itemNames);
 
-        var toggleItemOff = new GrammarBuilder()
+        var toggleItemOff = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
-            .Optional(GrammarBuilder.ForceCommandIdentifiers.Concat(["please", "would you kindly"]).ToArray())
+            .Optional(ForceCommandIdentifiers.Concat(["please", "would you kindly"]).ToArray())
             .Append("toggle")
             .Append(ItemNameKey, itemNames)
             .Append("off");
 
-        return GrammarBuilder.Combine(untrackItem, toggleItemOff);
+        return SpeechRecognitionGrammarBuilder.Combine(untrackItem, toggleItemOff);
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetSetItemCountRule()
+    private SpeechRecognitionGrammarBuilder GetSetItemCountRule()
     {
         var itemNames = GetPluralItemNames();
-        var numbers = new Choices();
+        var numbers = new List<GrammarKeyValueChoice>();
         for (var i = 0; i <= 200; i++)
-            numbers.Add(new SemanticResultValue(i.ToString(), i));
+            numbers.Add(new GrammarKeyValueChoice(i.ToString(), i));
 
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
-            .Optional(GrammarBuilder.ForceCommandIdentifiers)
+            .Optional(ForceCommandIdentifiers)
             .OneOf("I have", "I've got", "I possess", "I am in the possession of", "track")
             .Append(ItemCountKey, numbers)
             .Append(ItemNameKey, itemNames);
     }
 
-    [SupportedOSPlatform("windows")]
     public override void AddCommands()
     {
         var isMultiworld = WorldQueryService.World.Config.MultiWorld;
@@ -197,7 +192,7 @@ public class ItemTrackingModule : TrackerModule
         {
             var item = GetItemFromResult(TrackerBase, result, out var itemName);
 
-            var force = result.Text.ContainsAny(GrammarBuilder.ForceCommandIdentifiers);
+            var force = result.Text.ContainsAny(ForceCommandIdentifiers);
 
             if (result.Semantics.ContainsKey(DungeonKey))
             {
@@ -294,15 +289,15 @@ public class ItemTrackingModule : TrackerModule
         AddCommand("Untrack an item", GetUntrackItemRule(), (result) =>
         {
             var item = GetItemFromResult(TrackerBase, result, out _);
-            var force = result.Text.ContainsAny(GrammarBuilder.ForceCommandIdentifiers);
+            var force = result.Text.ContainsAny(ForceCommandIdentifiers);
             TrackerBase.ItemTracker.UntrackItem(item, result.Confidence, force: force);
         });
 
         AddCommand("Set item count", GetSetItemCountRule(), (result) =>
         {
             var item = GetItemFromResult(TrackerBase, result, out _);
-            var count = (int)result.Semantics[ItemCountKey].Value;
-            var force = result.Text.ContainsAny(GrammarBuilder.ForceCommandIdentifiers);
+            var count = int.Parse(result.Semantics[ItemCountKey].Value);
+            var force = result.Text.ContainsAny(ForceCommandIdentifiers);
             TrackerBase.ItemTracker.TrackItemAmount(item, count, result.Confidence, force: force);
         });
     }

@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
+using PySpeechServiceClient.Grammar;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Chat.Integration;
 using TrackerCouncil.Smz3.Chat.Integration.Models;
@@ -523,10 +524,9 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
         TrackerBase.Error();
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetStartGuessingGameRule()
+    private SpeechRecognitionGrammarBuilder GetStartGuessingGameRule()
     {
-        var commandRule = new GrammarBuilder()
+        var commandRule = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .OneOf("initiate", "start", "execute")
             .OneOf("Ganon's Tower Big Key Guessing Game",
@@ -535,18 +535,17 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
                 "GT Guessing Game",
                 "order 66");
 
-        var fromSpeech = new GrammarBuilder()
+        var fromSpeech = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("It's time for the GT big key guessing game",
                 "The GT big key guessing game is now open for guesses");
 
-        return GrammarBuilder.Combine(commandRule, fromSpeech);
+        return SpeechRecognitionGrammarBuilder.Combine(commandRule, fromSpeech);
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetStopGuessingGameGuessesRule()
+    private SpeechRecognitionGrammarBuilder GetStopGuessingGameGuessesRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .OneOf("close the floor",
                 "close the floor for guesses",
@@ -554,14 +553,13 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
                 "the floor is now closed for guesses");
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetRevealGuessingGameWinnerRule()
+    private SpeechRecognitionGrammarBuilder GetRevealGuessingGameWinnerRule()
     {
-        var validGuesses = new Choices();
+        var validGuesses = new List<GrammarKeyValueChoice>();
         for (var i = 1; i <= 22; i++)
-            validGuesses.Add(new SemanticResultValue(i.ToString(), i));
+            validGuesses.Add(new GrammarKeyValueChoice(i.ToString(), i));
 
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .OneOf("who guessed",
                 "who guessed number",
@@ -573,17 +571,15 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
             .Append(WinningGuessKey, validGuesses);
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetTrackContent()
+    private SpeechRecognitionGrammarBuilder GetTrackContent()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Optional("please", "would you kindly")
             .OneOf("track", "add")
             .OneOf("content", "con-tent");
     }
 
-    [SupportedOSPlatform("windows")]
     public override void AddCommands()
     {
         AddCommand("Start Ganon's Tower Big Key Guessing Game", GetStartGuessingGameRule(), async (result) =>
@@ -598,7 +594,7 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
 
         AddCommand("Declare Ganon's Tower Big Key Guessing Game Winner", GetRevealGuessingGameWinnerRule(), async (result) =>
         {
-            var winningNumber = (int)result.Semantics[WinningGuessKey].Value;
+            var winningNumber = int.Parse(result.Semantics[WinningGuessKey].Value);
             await DeclareGanonsTowerGuessingGameWinner(winningNumber);
         });
 

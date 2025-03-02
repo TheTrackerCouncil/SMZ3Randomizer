@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
 using NAudio.Wave;
+using PySpeechServiceClient.Grammar;
 using SharpHook;
 using SharpHook.Native;
 using TrackerCouncil.Smz3.Data.Options;
@@ -103,7 +105,7 @@ public partial class PushToTalkSpeechRecognitionService : SpeechRecognitionServi
     }
 
     /// <inheritdoc/>
-    public override bool Initialize(out bool foundRequestedDevice)
+    public override bool Initialize(float minRequiredConfidence, out bool foundRequestedDevice)
     {
         if (!_hasInitialized)
         {
@@ -113,6 +115,14 @@ public partial class PushToTalkSpeechRecognitionService : SpeechRecognitionServi
             _hasInitialized = true;
         }
         return _microphoneService.CanRecord(out foundRequestedDevice) && SpeechSupportsWaveFormat(_waveFormat);
+    }
+
+    public override void AddGrammar(List<SpeechRecognitionGrammar> grammars)
+    {
+        foreach (var grammar in grammars)
+        {
+            RecognitionEngine.LoadGrammar(grammar.BuildSystemSpeechGrammar());
+        }
     }
 
     /// <inheritdoc/>

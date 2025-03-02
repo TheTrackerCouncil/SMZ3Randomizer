@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Versioning;
 using System.Speech.Recognition;
 
 using Microsoft.Extensions.Logging;
+using PySpeechServiceClient.Grammar;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
@@ -35,18 +37,17 @@ public class TreasureTrackingModule : TrackerModule
     }
 
     #region Voice Commands
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetMarkDungeonRewardRule()
+    private SpeechRecognitionGrammarBuilder GetMarkDungeonRewardRule()
     {
         var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: false);
-        var rewardNames = new Choices();
+        var rewardNames = new List<GrammarKeyValueChoice>();
         foreach (var reward in Enum.GetValues<RewardType>())
         {
             foreach (var name in WorldQueryService?.FirstOrDefault(reward)?.Metadata.Name ?? new SchrodingersString())
-                rewardNames.Add(new SemanticResultValue(name, (int)reward));
+                rewardNames.Add(new GrammarKeyValueChoice(name, (int)reward));
         }
 
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("mark", "set")
             .Append(DungeonKey, dungeonNames)
@@ -54,10 +55,9 @@ public class TreasureTrackingModule : TrackerModule
             .Append(RewardKey, rewardNames);
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetMarkRemainingDungeonRewardsRule()
+    private SpeechRecognitionGrammarBuilder GetMarkRemainingDungeonRewardsRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("mark", "set")
             .OneOf("remaining dungeons", "other dungeons", "unmarked dungeons")
@@ -65,75 +65,72 @@ public class TreasureTrackingModule : TrackerModule
             .OneOf("crystal", "blue crystal");
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetClearDungeonRule()
+    private SpeechRecognitionGrammarBuilder GetClearDungeonRule()
     {
         var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
 
-        var markDungeon = new GrammarBuilder()
+        var markDungeon = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Append("mark")
             .Append(DungeonKey, dungeonNames)
             .Append("as")
             .OneOf("cleared", "beaten");
 
-        return GrammarBuilder.Combine(markDungeon);
+        return SpeechRecognitionGrammarBuilder.Combine(markDungeon);
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetMarkDungeonRequirementRule()
+    private SpeechRecognitionGrammarBuilder GetMarkDungeonRequirementRule()
     {
         var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: false);
         var medallions = GetMedallionNames();
 
-        var dungeonFirst = new GrammarBuilder()
+        var dungeonFirst = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Append(DungeonKey, dungeonNames)
             .OneOf("requires", "needs")
             .Append(ItemNameKey, medallions);
 
-        var itemFirst = new GrammarBuilder()
+        var itemFirst = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Append(ItemNameKey, medallions)
             .OneOf("is required for", "is needed for")
             .Append(DungeonKey, dungeonNames);
 
-        var markDungeon = new GrammarBuilder()
+        var markDungeon = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Append("mark")
             .Append(DungeonKey, dungeonNames)
             .OneOf("as", "as requiring", "as needing")
             .Append(ItemNameKey, medallions);
 
-        var markItem = new GrammarBuilder()
+        var markItem = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Append("mark")
             .Append(ItemNameKey, medallions)
             .OneOf("as", "as required for", "as needed for")
             .Append(DungeonKey, dungeonNames);
 
-        return GrammarBuilder.Combine(
+        return SpeechRecognitionGrammarBuilder.Combine(
             dungeonFirst, itemFirst,
             markDungeon, markItem);
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetTreasureTrackingRule()
+    private SpeechRecognitionGrammarBuilder GetTreasureTrackingRule()
     {
         var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
 
-        var treasureCount = new Choices();
+        var treasureCount = new List<GrammarKeyValueChoice>();
         for (var i = 2; i <= 20; i++)
-            treasureCount.Add(new SemanticResultValue(i.ToString(), i));
+            treasureCount.Add(new GrammarKeyValueChoice(i.ToString(), i));
 
-        var clearOne = new GrammarBuilder()
+        var clearOne = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Append("clear")
             .OneOf("one item", "an item", "one treasure", "a treasure")
             .OneOf("in", "from")
             .Append(DungeonKey, dungeonNames);
 
-        var clearMultiple = new GrammarBuilder()
+        var clearMultiple = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Append("clear")
             .Append(TreasureCountKey, treasureCount)
@@ -141,16 +138,15 @@ public class TreasureTrackingModule : TrackerModule
             .OneOf("in", "from")
             .Append(DungeonKey, dungeonNames);
 
-        return GrammarBuilder.Combine(clearOne, clearMultiple);
+        return SpeechRecognitionGrammarBuilder.Combine(clearOne, clearMultiple);
     }
 
-    [SupportedOSPlatform("windows")]
     public override void AddCommands()
     {
         AddCommand("Mark dungeon pendant/crystal", GetMarkDungeonRewardRule(), (result) =>
         {
             var dungeon = (IHasReward)GetDungeonFromResult(TrackerBase, result);
-            var reward = (RewardType)result.Semantics[RewardKey].Value;
+            var reward = (RewardType)int.Parse(result.Semantics[RewardKey].Value);
             TrackerBase.RewardTracker.SetAreaReward(dungeon, reward, result.Confidence);
         });
 
@@ -179,7 +175,7 @@ public class TreasureTrackingModule : TrackerModule
         AddCommand("Clear dungeon treasure", GetTreasureTrackingRule(), (result) =>
         {
             var count = result.Semantics.ContainsKey(TreasureCountKey)
-                ? (int)result.Semantics[TreasureCountKey].Value
+                ? int.Parse(result.Semantics[TreasureCountKey].Value)
                 : 1;
             var dungeon = GetDungeonFromResult(TrackerBase, result);
             TrackerBase.TreasureTracker.TrackDungeonTreasure(dungeon, result.Confidence, amount: count);

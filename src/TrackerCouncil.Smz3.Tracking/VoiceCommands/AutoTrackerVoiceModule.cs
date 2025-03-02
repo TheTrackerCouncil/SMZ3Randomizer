@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Runtime.Versioning;
+using System.Speech.Recognition;
 using Microsoft.Extensions.Logging;
+using PySpeechServiceClient.Grammar;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Tracking.Services;
 
@@ -29,9 +31,9 @@ public class AutoTrackerVoiceModule : TrackerModule, IDisposable
         _autoTrackerBase = autoTrackerBase;
     }
 
-    private GrammarBuilder GetLookAtGameRule()
+    private SpeechRecognitionGrammarBuilder GetLookAtGameRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .Optional("please", "would you please")
             .OneOf("look at this", "look here", "record this", "log this", "take a look at this", "get a load of this")
@@ -54,7 +56,6 @@ public class AutoTrackerVoiceModule : TrackerModule, IDisposable
         _autoTrackerBase.Dispose();
     }
 
-    [SupportedOSPlatform("windows")]
     public override void AddCommands()
     {
         AddCommand("Look at this", GetLookAtGameRule(), (result) =>

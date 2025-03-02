@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using AvaloniaControls.Controls;
 using AvaloniaControls.Extensions;
+using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.UI.Services;
 using TrackerCouncil.Smz3.UI.ViewModels;
 

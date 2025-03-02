@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Speech.Recognition;
 
 using Microsoft.Extensions.Logging;
+using PySpeechServiceClient.Grammar;
 
 namespace TrackerCouncil.Smz3.Tracking.Services.Speech;
 
@@ -23,7 +25,7 @@ public class AlwaysOnSpeechRecognitionService : SpeechRecognitionServiceBase
         _recognizer.SpeechRecognized += RecognizerOnSpeechRecognized;
     }
 
-    public override SpeechRecognitionEngine? RecognitionEngine => _recognizer;
+    public override SpeechRecognitionEngine RecognitionEngine => _recognizer;
 
     public override void ResetInputDevice() => _recognizer.SetInputToDefaultAudioDevice();
 
@@ -31,7 +33,7 @@ public class AlwaysOnSpeechRecognitionService : SpeechRecognitionServiceBase
 
     public override void StartRecognition() => _recognizer.RecognizeAsync(RecognizeMode.Multiple);
 
-    public override bool Initialize(out bool foundRequestedDevice)
+    public override bool Initialize(float minRequiredConfidence, out bool foundRequestedDevice)
     {
         try
         {
@@ -50,6 +52,14 @@ public class AlwaysOnSpeechRecognitionService : SpeechRecognitionServiceBase
             _logger.LogError(e, "Error initializing microphone");
             foundRequestedDevice = true;
             return false;
+        }
+    }
+
+    public override void AddGrammar(List<SpeechRecognitionGrammar> grammars)
+    {
+        foreach (var grammar in grammars)
+        {
+            RecognitionEngine.LoadGrammar(grammar.BuildSystemSpeechGrammar());
         }
     }
 

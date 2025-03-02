@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
+using PySpeechServiceClient.Grammar;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Tracking.Services;
 
@@ -23,9 +24,9 @@ public class UndoModule : TrackerModule
 
     }
 
-    private GrammarBuilder GetUndoRule()
+    private SpeechRecognitionGrammarBuilder GetUndoRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("undo that", "control Z", "that's not what I said", "take backsies");
     }
