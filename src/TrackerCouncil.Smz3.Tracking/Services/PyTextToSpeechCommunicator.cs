@@ -98,7 +98,7 @@ internal class PyTextToSpeechCommunicator : ICommunicator
 
     public void Say(SpeechRequest request)
     {
-        if (!_isEnabled) return;
+        if (!_isEnabled || !_pySpeechService.IsSpeechEnabled) return;
 
         if (request.Wait)
         {
