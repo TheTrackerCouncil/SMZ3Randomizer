@@ -71,7 +71,7 @@ public class ZeldaMiscData(TrackerBase tracker, ISnesConnectorService snesConnec
         if (data.ReadUInt8(0x145) >= 3)
         {
             var castleTower = Tracker.World.CastleTower;
-            if (castleTower.Boss.State.Defeated)
+            if (!castleTower.Boss.State.Defeated)
             {
                 Tracker.BossTracker.MarkBossAsDefeated(castleTower, null, autoTracked: true);
                 Logger.LogInformation("Auto tracked {Name} as cleared", castleTower.Name);
