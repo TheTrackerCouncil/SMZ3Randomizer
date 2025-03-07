@@ -53,15 +53,16 @@ public class MetadataPatch : RomPatch
     public static List<string> GetPlayerNames(byte[] rom)
     {
         var toReturn = new List<string>();
-        for (var i = 0; i < 128; i++)
+        for (var i = 0; i < 256; i++)
         {
             var nameBytes = rom.Skip(s_addrPlayerNames + i * 16).Take(16).ToArray();
-            var name = Encoding.ASCII.GetString(nameBytes);
-            if (name == "123456789012\0\0\0\0")
+            var name = Encoding.ASCII.GetString(nameBytes).Replace("\0", string.Empty).Trim();
+            if (name == "123456789012" || string.IsNullOrEmpty(name))
             {
                 break;
             }
-            toReturn.Add(name.Replace("\0", string.Empty).Trim());
+
+            toReturn.Add(name);
         }
 
         return toReturn;
