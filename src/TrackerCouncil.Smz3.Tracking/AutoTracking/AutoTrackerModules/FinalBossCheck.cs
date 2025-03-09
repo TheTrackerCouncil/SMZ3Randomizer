@@ -60,7 +60,12 @@ public class FinalBossCheck(TrackerBase tracker, ISnesConnectorService snesConne
                 Logger.LogInformation("Auto tracked Mother Brain");
                 var boss = Tracker.World.Bosses.First(x => x.Type == BossType.MotherBrain);
                 Tracker.BossTracker.MarkBossAsDefeated(boss, admittedGuilt: true, confidence: null, autoTracked: true);
-                _ = CountHyperBeamShots();
+
+                if (Tracker.World.Config.RomGenerator == RomGenerator.Cas)
+                {
+                    _ = CountHyperBeamShots();
+                }
+
                 didUpdate = true;
             }
         }
