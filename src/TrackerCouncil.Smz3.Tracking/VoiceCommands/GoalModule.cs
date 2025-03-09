@@ -48,7 +48,7 @@ public class GoalModule : TrackerModule
     {
         return new GrammarBuilder()
             .Append("Hey tracker,")
-            .OneOf("Ganon's Tower", "G T")
+            .OneOf("Ganon", "Ganondorf")
             .OneOf("requires", "needs")
             .Append(ItemCountKey, GetNumberChoices(0, 7))
             .OneOf("crystals", "crystal")
@@ -60,7 +60,7 @@ public class GoalModule : TrackerModule
     {
         return new GrammarBuilder()
             .Append("Hey tracker,")
-            .OneOf("tourian", "statue room", "metroid statue room")
+            .OneOf("tourian", "the statue room", "the metroid statue room", "the golden statue room")
             .OneOf("requires", "needs")
             .Append(ItemCountKey, GetNumberChoices(0, 4))
             .OneOf("bosses", "boss tokens");
