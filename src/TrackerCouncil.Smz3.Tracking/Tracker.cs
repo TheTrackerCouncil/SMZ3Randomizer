@@ -643,6 +643,8 @@ public sealed class Tracker : TrackerBase, IDisposable
         var actualProgression = PlayerProgressionService.GetProgression(false);
         var assumedKeysProgression = PlayerProgressionService.GetProgression(true);
 
+        World.DarkWorldNorthEast.UpdateGanonAccessibility(actualProgression, assumedKeysProgression);
+        World.WestCrateria.UpdateMotherBrainAccessibility(actualProgression);
         LocationTracker.UpdateAccessibility(!forceRefreshAll, actualProgression, assumedKeysProgression);
         RewardTracker.UpdateAccessibility(actualProgression, assumedKeysProgression);
         BossTracker.UpdateAccessibility(actualProgression, assumedKeysProgression);

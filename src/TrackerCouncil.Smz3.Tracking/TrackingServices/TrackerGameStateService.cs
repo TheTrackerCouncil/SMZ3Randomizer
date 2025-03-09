@@ -280,4 +280,69 @@ internal class TrackerGameStateService : TrackerService, ITrackerGameStateServic
             Tracker.Say(x => x.NoMarkedLocations);
         }
     }
+
+    public void UpdateGanonsTowerRequirement(int crystalAmount, bool autoTracked)
+    {
+        if (World.State == null)
+        {
+            return;
+        }
+
+        var previousAmount = World.State.MarkedGanonsTowerCrystalCount;
+
+        World.State.MarkedGanonsTowerCrystalCount = crystalAmount;
+        World.UpdateLegacyWorld(World.State);
+        UpdateAllAccessibility(true);
+        Tracker.Say(x => x.UpdatedGanonsTowerCrystalRequirement, args: [crystalAmount]);
+
+
+        AddUndo(autoTracked, () =>
+        {
+            World.State.MarkedGanonCrystalCount = previousAmount;
+            World.UpdateLegacyWorld(World.State);
+            UpdateAllAccessibility(true);
+        });
+    }
+
+    public void UpdateGanonRequirement(int crystalAmount, bool autoTracked)
+    {
+        if (World.State == null)
+        {
+            return;
+        }
+
+        var previousAmount = World.State.MarkedGanonCrystalCount;
+
+        World.State.MarkedGanonCrystalCount = crystalAmount;
+        World.UpdateLegacyWorld(World.State);
+        UpdateAllAccessibility(true);
+        Tracker.Say(x => x.UpdatedGanonCrystalRequirement, args: [crystalAmount]);
+
+        AddUndo(autoTracked, () =>
+        {
+            World.State.MarkedGanonCrystalCount = previousAmount;
+            World.UpdateLegacyWorld(World.State);
+        });
+    }
+
+    public void UpdateTourianRequirement(int bossAmount, bool autoTracked)
+    {
+        if (World.State == null)
+        {
+            return;
+        }
+
+        var previousAmount = World.State.MarkedGanonCrystalCount;
+
+        World.State.MarkedTourianBossCount = bossAmount;
+        World.UpdateLegacyWorld(World.State);
+        UpdateAllAccessibility(true);
+        Tracker.Say(x => x.UpdatedTourianBossRequirement, args: [bossAmount]);
+
+        AddUndo(autoTracked, () =>
+        {
+            World.State.MarkedTourianBossCount = previousAmount;
+            World.UpdateLegacyWorld(World.State);
+        });
+    }
 }

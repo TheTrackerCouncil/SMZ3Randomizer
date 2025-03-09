@@ -1733,6 +1733,8 @@
     {
       "Name": "Dark World North East",
       "TypeName": "TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda.DarkWorld.DarkWorldNorthEast",
+      "BossX": 998,
+      "BossY": 815,
       "Rooms": [
         {
           "Name": "Catfish",
@@ -2277,6 +2279,8 @@
     {
       "Name": "West Crateria",
       "TypeName": "TrackerCouncil.Smz3.Data.WorldData.Regions.SuperMetroid.Crateria.WestCrateria",
+      "BossX": 453,
+      "BossY": 358,
       "Rooms": [
         {
           "Name": "Energy Tank, Gauntlet",
