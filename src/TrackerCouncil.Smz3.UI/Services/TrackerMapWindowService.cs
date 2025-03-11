@@ -13,6 +13,8 @@ using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
+using TrackerCouncil.Smz3.Data.WorldData.Regions.SuperMetroid.Crateria;
+using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda.DarkWorld;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Tracking.Services;
@@ -203,6 +205,16 @@ public class TrackerMapWindowService(
             rewardRegion.Reward.UpdatedRewardState += (_, _) => UpdateBossLocationModel(model);
         }
 
+        if (worldRegion is DarkWorldNorthEast darkWorldNorthEast)
+        {
+            darkWorldNorthEast.UpdatedGanonAccessibility += (_, _) => UpdateBossLocationModel(model);
+        }
+
+        if (worldRegion is WestCrateria westCrateria)
+        {
+            westCrateria.UpdatedMotherBrainAccessibility += (_, _) => UpdateBossLocationModel(model);
+        }
+
         UpdateBossLocationModel(model);
         return model;
     }
@@ -220,6 +232,16 @@ public class TrackerMapWindowService(
         {
             image = "boss.png";
             location.IsInLogic = true;
+        }
+        else if (location.Region is DarkWorldNorthEast darkWorldNorthEast)
+        {
+            image = "boss.png";
+            location.IsInLogic = darkWorldNorthEast.GanonAccessibility == Accessibility.Available;
+        }
+        else if (location.Region is WestCrateria westCrateria)
+        {
+            image = "boss.png";
+            location.IsInLogic = westCrateria.MotherBrainAccessibility == Accessibility.Available;
         }
         else
         {

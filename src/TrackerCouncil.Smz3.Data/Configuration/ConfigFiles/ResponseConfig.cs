@@ -628,6 +628,27 @@ public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseCo
     public SchrodingersString? LongSpeechResponse { get; init; }
 
     /// <summary>
+    /// Gets the phrases for when the player has updated the number of crystals required
+    /// to get into GT
+    /// <c>{0}</c> is a placeholder for the number of crystals required
+    /// </summary>
+    public SchrodingersString? UpdatedGanonsTowerCrystalRequirement { get; init; }
+
+    /// <summary>
+    /// Gets the phrases for when the player has updated the number of crystals required
+    /// to defeat Ganon
+    /// <c>{0}</c> is a placeholder for the number of crystals required
+    /// </summary>
+    public SchrodingersString? UpdatedGanonCrystalRequirement { get; init; }
+
+    /// <summary>
+    /// Gets the phrases for when the player has updated the number of bosses required
+    /// to enter Tourian
+    /// <c>{0}</c> is a placeholder for the number of bosses required
+    /// </summary>
+    public SchrodingersString? UpdatedTourianBossRequirement { get; init; }
+
+    /// <summary>
     /// Gets a dictionary that contains the phrases to respond with when no
     /// voice commands have been issued after a certain period of time, as
     /// expressed in the dictionary keys.

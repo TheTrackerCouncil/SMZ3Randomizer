@@ -171,9 +171,13 @@ public class GanonsTower : Z3Region, IHasTreasure, IHasBoss
 
     public override bool CanEnter(Progression items, bool requireRewards)
     {
+        var gtCrystalRequirement = World.State?.GanonsTowerCrystalCount == null
+            ? Config.GanonsTowerCrystalCount
+            : World.State?.MarkedGanonsTowerCrystalCount ?? 7;
+
         var smBosses = new[] { BossType.Kraid, BossType.Phantoon, BossType.Draygon, BossType.Ridley };
         var canEnterDDMEast = World.DarkWorldDeathMountainEast.CanEnter(items, requireRewards);
-        var haveEnoughCrystals = items.CrystalCount >= Config.GanonsTowerCrystalCount;
+        var haveEnoughCrystals = items.CrystalCount >= gtCrystalRequirement;
         var gtOpenBeforeGanon = Config.GanonsTowerCrystalCount < Config.GanonCrystalCount;
         var canBeatMetroid = World.CanDefeatBossCount(items, requireRewards, smBosses) >= Config.TourianBossCount;
         return World.Logic.CanNavigateDarkWorld(items) && canEnterDDMEast && haveEnoughCrystals && (gtOpenBeforeGanon || canBeatMetroid);

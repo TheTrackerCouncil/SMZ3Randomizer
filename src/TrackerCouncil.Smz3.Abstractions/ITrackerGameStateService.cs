@@ -109,4 +109,10 @@ public interface ITrackerGameStateService
     public void UpdateLastMarkedLocations(List<Location> locations);
 
     public void ClearLastViewedObject(float confidence);
+
+    public void UpdateGanonsTowerRequirement(int crystalAmount, bool autoTracked);
+
+    public void UpdateGanonRequirement(int crystalAmount, bool autoTracked);
+
+    public void UpdateTourianRequirement(int bossAmount, bool autoTracked);
 }

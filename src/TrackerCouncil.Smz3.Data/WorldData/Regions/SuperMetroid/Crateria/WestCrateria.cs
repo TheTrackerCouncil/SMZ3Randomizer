@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.Options;
@@ -29,6 +31,10 @@ public class WestCrateria : SMRegion
     public GauntletEnergyTankRoom GauntletEnergyTank { get; }
 
     public TerminatorRoom Terminator { get; }
+
+    public Accessibility MotherBrainAccessibility { get; private set; }
+
+    public event EventHandler? UpdatedMotherBrainAccessibility;
 
     public override bool CanEnter(Progression items, bool requireRewards)
     {
@@ -105,6 +111,50 @@ public class WestCrateria : SMRegion
                     metadata: metadata,
                     trackerState: trackerState)
             };
+        }
+    }
+
+    public void UpdateMotherBrainAccessibility(Progression progression)
+    {
+        Accessibility NewAccessibility;
+
+        var tourianBossRequirement = World.State?.TourianBossCount == null
+            ? Config.TourianBossCount
+            : World.State?.MarkedTourianBossCount ?? 4;
+
+        if (World.Bosses.First(x => x.Type == BossType.MotherBrain).Defeated)
+        {
+            NewAccessibility = Accessibility.Cleared;
+        }
+        else if (World.LegacyWorld == null)
+        {
+            var canAccessStatueRoom = Terminator.Locations.First().IsAvailable(progression) &&
+                                      (!World.Config.MetroidKeysanity || World.Config.SkipTourianBossDoor ||
+                                       progression.CardCrateriaBoss);
+
+            var canEnterTourian = World.GoldenBosses.Count(x => x.Defeated) >= tourianBossRequirement;
+
+            NewAccessibility = canAccessStatueRoom && canEnterTourian
+                ? Accessibility.Available
+                : Accessibility.OutOfLogic;
+        }
+        else
+        {
+            var canAccessStatueRoom = World.LegacyWorld.IsLocationAccessible((int)LocationId.CrateriaTerminator, progression.LegacyProgression) &&
+                                      (!World.Config.MetroidKeysanity || World.Config.SkipTourianBossDoor ||
+                                       progression.CardCrateriaBoss);
+
+            var canEnterTourian = World.GoldenBosses.Count(x => x.Defeated) >= tourianBossRequirement;
+
+            NewAccessibility = canAccessStatueRoom && canEnterTourian
+                ? Accessibility.Available
+                : Accessibility.OutOfLogic;
+        }
+
+        if (NewAccessibility != MotherBrainAccessibility)
+        {
+            MotherBrainAccessibility = NewAccessibility;
+            UpdatedMotherBrainAccessibility?.Invoke(this, EventArgs.Empty);
         }
     }
 }

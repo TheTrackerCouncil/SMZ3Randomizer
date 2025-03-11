@@ -62,6 +62,14 @@ public class ViewedText : IZeldaStateCheck
             _lastHintTile = hintTile;
             tracker.AutoTracker.SetLatestViewAction("MarkHintTileAsViewed", MarkHintTileAsViewed);
         }
+        else if (currentState.OverworldScreen == 67 && currentState.IsWithinRegion(2169, 168, 2184, 169) && World.State?.GanonsTowerCrystalCount != World.State?.MarkedGanonsTowerCrystalCount)
+        {
+            tracker.GameStateTracker.UpdateGanonsTowerRequirement(World.State?.GanonsTowerCrystalCount ?? World.Config.GanonsTowerCrystalCount, true);
+        }
+        else if (currentState.OverworldScreen == 91 && currentState.IsWithinRegion(1961, 1784, 1976, 1785) && World.State?.GanonCrystalCount != World.State?.MarkedGanonCrystalCount)
+        {
+            tracker.GameStateTracker.UpdateGanonRequirement(World.State?.GanonCrystalCount ?? World.Config.GanonCrystalCount, true);
+        }
 
         return false;
     }

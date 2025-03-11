@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.Options;
@@ -49,6 +51,10 @@ public class DarkWorldNorthEast : Z3Region
 
     public PyramidFairyChamber PyramidFairy { get; }
 
+    public Accessibility GanonAccessibility { get; private set; }
+
+    public event EventHandler? UpdatedGanonAccessibility;
+
     public override bool CanEnter(Progression items, bool requireRewards)
     {
         return Logic.CheckAgahnim(items, World, requireRewards) ||
@@ -58,6 +64,62 @@ public class DarkWorldNorthEast : Z3Region
                        (Logic.CanAccessDarkWorldPortal(items) && items.Flippers)
                    )
                );
+    }
+
+    public void UpdateGanonAccessibility(Progression progression, Progression assumedKeyProgression)
+    {
+        Accessibility NewAccessibility;
+
+        var ganonCrystalRequirement = World.State?.GanonCrystalCount == null
+            ? Config.GanonCrystalCount
+            : World.State?.MarkedGanonCrystalCount ?? 7;
+
+        if (World.Bosses.First(x => x.Type == BossType.Ganon).Defeated)
+        {
+            NewAccessibility = Accessibility.Cleared;
+        }
+        else if (World.LegacyWorld == null)
+        {
+            var canAccessPyramid = Pyramid.IsAvailable(progression);
+
+            var canClimbGt = World.GanonsTower.CanBeatBoss(progression, true) ||
+                             (!World.Config.ZeldaKeysanity &&
+                              World.GanonsTower.Locations.All(x => x.IsAvailable(assumedKeyProgression)) &&
+                              World.GanonsTower.CanBeatBoss(assumedKeyProgression, true));
+
+            var isPyramidOpen = World.Config.OpenPyramid || canClimbGt;
+            var canHurtGanon = progression.CrystalCount >= ganonCrystalRequirement && progression.MasterSword &&
+                               (progression.Lamp || progression.FireRod);
+
+            NewAccessibility = canAccessPyramid && isPyramidOpen && canHurtGanon
+                ? Accessibility.Available
+                : Accessibility.OutOfLogic;
+        }
+        else
+        {
+            var canAccessPyramid = World.LegacyWorld.IsLocationAccessible((int)LocationId.Pyramid, progression.LegacyProgression);
+
+            var canClimbGt =
+                World.LegacyWorld.IsLocationAccessible((int)LocationId.GanonsTowerMoldormChest,
+                    progression.LegacyProgression) || (!World.Config.ZeldaKeysanity &&
+                                                       World.GanonsTower.Locations.All(x =>
+                                                           World.LegacyWorld.IsLocationAccessible((int)x.Id,
+                                                               assumedKeyProgression.LegacyProgression)));
+
+            var isPyramidOpen = World.Config.OpenPyramid || canClimbGt;
+            var canHurtGanon = progression.CrystalCount >= ganonCrystalRequirement && progression.MasterSword &&
+                               (progression.Lamp || progression.FireRod);
+
+            NewAccessibility = canAccessPyramid && isPyramidOpen && canHurtGanon
+                ? Accessibility.Available
+                : Accessibility.OutOfLogic;
+        }
+
+        if (NewAccessibility != GanonAccessibility)
+        {
+            GanonAccessibility = NewAccessibility;
+            UpdatedGanonAccessibility?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     public class PyramidFairyChamber : Room
