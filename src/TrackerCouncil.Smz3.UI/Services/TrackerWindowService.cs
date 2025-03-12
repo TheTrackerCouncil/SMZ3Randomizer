@@ -340,6 +340,7 @@ public class TrackerWindowService(
         _trackerMapWindow?.Close();
         _trackerLocationsWindow?.Close();
         tracker.StopTracking();
+        tracker.Dispose();
         _dispatcherTimer.Stop();
         _window.Close();
     }
