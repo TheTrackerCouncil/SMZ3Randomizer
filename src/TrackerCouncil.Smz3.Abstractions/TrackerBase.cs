@@ -8,7 +8,7 @@ using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Abstractions;
 
-public abstract class TrackerBase
+public abstract class TrackerBase : IDisposable
 {
     /// <summary>
     /// Occurs when any speech was recognized, regardless of configured
@@ -369,4 +369,6 @@ public abstract class TrackerBase
     {
         VoiceRecognitionEnabledChanged?.Invoke(this, EventArgs.Empty);
     }
+
+    public abstract void Dispose();
 }

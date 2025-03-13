@@ -596,7 +596,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     /// <summary>
     /// Cleans up resources used by this class.
     /// </summary>
-    public void Dispose()
+    public override void Dispose()
     {
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
@@ -664,6 +664,7 @@ public sealed class Tracker : TrackerBase, IDisposable
             {
                 (_recognizer as IDisposable)?.Dispose();
                 (_communicator as IDisposable)?.Dispose();
+                _moduleFactory.Dispose();
 
                 foreach (var timer in _idleTimers.Values)
                     timer.Dispose();

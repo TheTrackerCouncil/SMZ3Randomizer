@@ -53,6 +53,7 @@ public class AutoTracker : AutoTrackerBase
         _config = randomizerConfigService;
         TrackerBase = trackerBase;
         _snesConnectorService = snesConnectorService;
+        _snesConnectorService.ClearRequests();
 
         foreach (var module in modules)
         {
