@@ -45,7 +45,7 @@ public abstract class SpeechRecognitionServiceBase : ISpeechRecognitionService, 
     /// <returns>True if successful, false otherwise</returns>
     public abstract bool Initialize(float minRequiredConfidence, out bool foundRequestedDevice);
 
-    ////// <summary>
+    /// <summary>
     /// Adds a series of grammar rules to the recognition service
     /// </summary>
     public abstract void AddGrammar(List<SpeechRecognitionGrammar> grammars);

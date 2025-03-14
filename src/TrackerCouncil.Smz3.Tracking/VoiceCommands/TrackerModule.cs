@@ -598,12 +598,11 @@ public abstract class TrackerModule
     /// <param name="min">Minimum number choice</param>
     /// <param name="max">Maximum number choice</param>
     /// <returns>The choices for the user to choose from in speech recognition</returns>
-    [SupportedOSPlatform("windows")]
-    protected virtual Choices GetNumberChoices(int min, int max)
+    protected virtual List<GrammarKeyValueChoice> GetNumberChoices(int min, int max)
     {
-        var numbers = new Choices();
+        var numbers = new List<GrammarKeyValueChoice>();
         for (var i = min; i <= max; i++)
-            numbers.Add(new SemanticResultValue(i.ToString(), i));
+            numbers.Add(new GrammarKeyValueChoice(i.ToString(), i));
         return numbers;
     }
 
@@ -612,8 +611,7 @@ public abstract class TrackerModule
     /// </summary>
     /// <param name="max">Maximum number choice</param>
     /// <returns>The choices for the user to choose from in speech recognition</returns>
-    [SupportedOSPlatform("windows")]
-    protected virtual Choices GetNumberChoices(int max)
+    protected virtual List<GrammarKeyValueChoice> GetNumberChoices(int max)
 
     {
         return GetNumberChoices(0, max);
