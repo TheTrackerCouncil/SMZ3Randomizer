@@ -11,4 +11,12 @@
       <ProjectReference Include="..\TrackerCouncil.Smz3.Shared\TrackerCouncil.Smz3.Shared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="PySpeechServiceClient" Version="0.0.35" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Speech\" />
+    </ItemGroup>
+
 </Project>

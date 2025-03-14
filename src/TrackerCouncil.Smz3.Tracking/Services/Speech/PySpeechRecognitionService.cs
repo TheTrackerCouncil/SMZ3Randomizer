@@ -80,7 +80,7 @@ public class PySpeechRecognitionService(IPySpeechService pySpeechService, Config
     {
         try
         {
-            await pySpeechService.StartSpeechRecognitionAsync(requiredConfidence: _minRequiredConfidence);
+            await pySpeechService.StartSpeechRecognitionAsync(requiredConfidence: _minRequiredConfidence * 100);
         }
         catch (Exception)
         {

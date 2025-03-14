@@ -35,6 +35,8 @@ public class TextToSpeechCommunicator : ICommunicator, IDisposable
         _tts = new SpeechSynthesizer();
         _tts.SelectVoiceByHints(VoiceGender.Female);
 
+        _tts.Volume = trackerOptionsAccessor.Options?.TextToSpeechVolume ?? 100;
+
         _tts.SpeakStarted += (sender, args) =>
         {
             if (IsSpeaking) return;
@@ -148,6 +150,16 @@ public class TextToSpeechCommunicator : ICommunicator, IDisposable
     }
 
     public bool IsSpeaking { get; private set; }
+
+    public void UpdateVolume(int volume)
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            return;
+        }
+
+        _tts.Volume = volume;
+    }
 
     public event EventHandler? SpeakStarted;
 

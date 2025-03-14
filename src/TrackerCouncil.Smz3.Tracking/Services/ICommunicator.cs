@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Speech.Synthesis;
 
 namespace TrackerCouncil.Smz3.Tracking.Services;
 
@@ -59,7 +58,13 @@ public interface ICommunicator
     /// <summary>
     /// If the TTS is currently speaking
     /// </summary>
-    public bool IsSpeaking { get;  }
+    public bool IsSpeaking { get; }
+
+    /// <summary>
+    /// Updates the volume of the text to speech engine.
+    /// </summary>
+    /// <param name="volume">New volume between 0-100 with 0 being silent and 100 being the default max value.</param>
+    public void UpdateVolume(int volume);
 
     /// <summary>
     /// Event for when the communicator has started speaking

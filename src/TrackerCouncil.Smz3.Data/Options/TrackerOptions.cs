@@ -35,6 +35,12 @@ public record TrackerOptions
     public float MinimumSassConfidence { get; set; } = 0.92f;
 
     /// <summary>
+    /// Gets or sets the volume of the text to speech engine, with 0
+    /// being silent and 100 being the default max valume.
+    /// </summary>
+    public int TextToSpeechVolume { get; set; } = 100;
+
+    /// <summary>
     /// Gets or sets a value indicating whether Tracker can give hints when
     /// asked about an item or location.
     /// </summary>

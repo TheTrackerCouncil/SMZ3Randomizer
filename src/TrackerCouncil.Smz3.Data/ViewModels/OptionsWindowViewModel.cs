@@ -48,6 +48,7 @@ public class OptionsWindowViewModel
         TrackerOptions.TrackerRecognitionThreshold = options.TrackerRecognitionThreshold * 100;
         TrackerOptions.TrackerConfidenceThreshold = options.TrackerConfidenceThreshold * 100;
         TrackerOptions.TrackerConfidenceSassThreshold = options.TrackerConfidenceSassThreshold * 100;
+        TrackerOptions.TextToSpeechVolume = options.TextToSpeechVolume;
         TrackerOptions.TrackerVoiceFrequency = options.TrackerVoiceFrequency;
         TrackerOptions.SpeechRecognitionMode = options.SpeechRecognitionMode.ToString();
         TrackerOptions.PushToTalkKey = options.PushToTalkKey;
@@ -110,6 +111,7 @@ public class OptionsWindowViewModel
         options.TrackerRecognitionThreshold = TrackerOptions.TrackerRecognitionThreshold / 100;
         options.TrackerConfidenceThreshold = TrackerOptions.TrackerConfidenceThreshold / 100;
         options.TrackerConfidenceSassThreshold = TrackerOptions.TrackerConfidenceSassThreshold / 100;
+        options.TextToSpeechVolume = TrackerOptions.TextToSpeechVolume;
         options.TrackerVoiceFrequency = TrackerOptions.TrackerVoiceFrequency;
         options.SpeechRecognitionMode = speechRecognitionMode;
         options.PushToTalkKey = TrackerOptions.PushToTalkKey;

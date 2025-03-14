@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using PySpeechServiceClient;
 using PySpeechServiceClient.Models;
 using TrackerCouncil.Smz3.Data.Options;
@@ -15,6 +16,7 @@ internal class PyTextToSpeechCommunicator : ICommunicator
     private double _rate = 1;
     private bool _isEnabled;
     private bool _isSpeaking;
+    private int volume;
 
     public PyTextToSpeechCommunicator(IPySpeechService pySpeechService, TrackerOptionsAccessor trackerOptionsAccessor)
     {
@@ -30,11 +32,12 @@ internal class PyTextToSpeechCommunicator : ICommunicator
             _altVoice = maleDetails ?? femaleDetails;
         }
 
-        _ = _pySpeechService.SetSpeechSettingsAsync(new SpeechSettings());
+        volume = trackerOptionsAccessor.Options?.TextToSpeechVolume ?? 100;
+        _ = Initialize();
 
         _pySpeechService.Initialized += (_, _) =>
         {
-            _pySpeechService.SetSpeechSettingsAsync(GetSpeechSettings());
+            _ = Initialize();
         };
 
         _pySpeechService.SpeakCommandResponded += (_, args) =>
@@ -70,6 +73,12 @@ internal class PyTextToSpeechCommunicator : ICommunicator
     public void UseAlternateVoice()
     {
         (_primaryVoice, _altVoice) = (_altVoice, _primaryVoice);
+    }
+
+    private async Task Initialize()
+    {
+        await _pySpeechService.SetSpeechSettingsAsync(GetSpeechSettings());
+        await _pySpeechService.SetVolumeAsync(volume / 100.0);
     }
 
     private SpeechSettings GetSpeechSettings()
@@ -143,6 +152,12 @@ internal class PyTextToSpeechCommunicator : ICommunicator
     }
 
     public bool IsSpeaking => _isSpeaking;
+
+    public void UpdateVolume(int newVolume)
+    {
+        volume = newVolume;
+        _ = _pySpeechService.SetVolumeAsync(newVolume / 100.0f);
+    }
 
     public event EventHandler? SpeakStarted;
     public event EventHandler<SpeakCompletedEventArgs>? SpeakCompleted;
