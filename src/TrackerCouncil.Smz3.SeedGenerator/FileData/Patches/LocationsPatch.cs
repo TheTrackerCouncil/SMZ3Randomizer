@@ -177,7 +177,14 @@ public class LocationsPatch : RomPatch
             var itemNumber = BitConverter.ToInt16(bytes, 2);
             var ownerPlayerId = BitConverter.ToInt16(bytes, 4);
             var archipelagoFlags = BitConverter.ToInt16(bytes, 6);
-            playerName = playerNames[ownerPlayerId];
+            if (ownerPlayerId < playerNames.Count)
+            {
+                playerName = playerNames[ownerPlayerId];
+            }
+            else
+            {
+                playerName = $"Player {ownerPlayerId}";
+            }
             isProgression = archipelagoFlags > 0;
 
             if (!isLocal)

@@ -17,6 +17,12 @@ public class TrackerState
     public int PercentageCleared { get; set; }
     public int LocalWorldId { get; set; }
     public int GiftedItemCount { get; set; }
+    public int? GanonsTowerCrystalCount { get; set; }
+    public int? MarkedGanonsTowerCrystalCount { get; set; }
+    public int? GanonCrystalCount { get; set; }
+    public int? MarkedGanonCrystalCount { get; set; }
+    public int? TourianBossCount { get; set; }
+    public int? MarkedTourianBossCount { get; set; }
     public ICollection<TrackerItemState> ItemStates { get; set; } = new List<TrackerItemState>();
     public ICollection<TrackerLocationState> LocationStates { get; set; } = new List<TrackerLocationState>();
     public ICollection<TrackerRewardState> RewardStates { get; set; } = new List<TrackerRewardState>();

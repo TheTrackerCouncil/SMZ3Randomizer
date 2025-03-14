@@ -591,4 +591,32 @@ public abstract class TrackerModule
 
         return medallions;
     }
+
+    /// <summary>
+    /// Gets speech recognition choices ranging from min to max
+    /// </summary>
+    /// <param name="min">Minimum number choice</param>
+    /// <param name="max">Maximum number choice</param>
+    /// <returns>The choices for the user to choose from in speech recognition</returns>
+    [SupportedOSPlatform("windows")]
+    protected virtual Choices GetNumberChoices(int min, int max)
+    {
+        var numbers = new Choices();
+        for (var i = min; i <= max; i++)
+            numbers.Add(new SemanticResultValue(i.ToString(), i));
+        return numbers;
+    }
+
+    /// <summary>
+    /// Gets speech recognition choices ranging from 0 to the provided number
+    /// </summary>
+    /// <param name="max">Maximum number choice</param>
+    /// <returns>The choices for the user to choose from in speech recognition</returns>
+    [SupportedOSPlatform("windows")]
+    protected virtual Choices GetNumberChoices(int max)
+
+    {
+        return GetNumberChoices(0, max);
+    }
+
 }

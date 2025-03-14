@@ -116,7 +116,7 @@ public class World
 
             LegacyWorld = new LegacyWorld(legacyConfig, Player, Id, Guid);
 
-            UpdateLegacyWorld();
+            UpdateLegacyWorld(trackerState);
         }
     }
 
@@ -323,7 +323,7 @@ public class World
         }
     }
 
-    public void UpdateLegacyWorld()
+    public void UpdateLegacyWorld(TrackerState? trackerState)
     {
         if (LegacyWorld == null)
         {
@@ -354,9 +354,9 @@ public class World
                 GetLegacyRewardType(InnerMaridia),
                 GetLegacyRewardType(LowerNorfairEast),
             ],
-            TowerCrystals = Config.GanonsTowerCrystalCount,
-            GanonCrystals = Config.GanonCrystalCount,
-            TourianBossTokens = Config.TourianBossCount
+            TowerCrystals = trackerState?.MarkedGanonsTowerCrystalCount ?? 7,
+            GanonCrystals = trackerState?.MarkedGanonCrystalCount ?? 7,
+            TourianBossTokens = trackerState?.MarkedGanonsTowerCrystalCount ?? 4
         };
 
         LegacyWorld.Setup(worldState);

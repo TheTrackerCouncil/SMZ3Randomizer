@@ -161,6 +161,8 @@ public class TrackerStateService : ITrackerStateService
             hintStates.Add(hintState);
         }
 
+        var localWorld = worlds.First(x => x.IsLocalWorld);
+
         return new TrackerState()
         {
             LocationStates = locationStates,
@@ -169,10 +171,16 @@ public class TrackerStateService : ITrackerStateService
             BossStates = bossStates,
             RewardStates = rewardStates,
             PrerequisiteStates = prereqStates,
-            LocalWorldId = worlds.First(x => x.IsLocalWorld).Id,
+            LocalWorldId = localWorld.Id,
             Hints = hintStates,
             StartDateTime = DateTimeOffset.Now,
             UpdatedDateTime = DateTimeOffset.Now,
+            GanonsTowerCrystalCount = localWorld.Config.GanonsTowerCrystalCount,
+            MarkedGanonsTowerCrystalCount = localWorld.LegacyWorld == null ? localWorld.Config.GanonsTowerCrystalCount : null,
+            GanonCrystalCount = localWorld.Config.GanonCrystalCount,
+            MarkedGanonCrystalCount = localWorld.LegacyWorld == null ? localWorld.Config.GanonCrystalCount : null,
+            TourianBossCount = localWorld.Config.TourianBossCount,
+            MarkedTourianBossCount = localWorld.LegacyWorld == null ? localWorld.Config.TourianBossCount : null,
         };
     }
 

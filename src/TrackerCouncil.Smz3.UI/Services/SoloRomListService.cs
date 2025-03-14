@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -165,8 +166,10 @@ public class SoloRomListService(IRomGenerationService romGenerationService,
 
     public async Task<bool> OpenArchipelagoModeAsync()
     {
+
+        var userFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         var storageItem = await CrossPlatformTools.OpenFileDialogAsync(ParentWindow, FileInputControlType.OpenFile,
-                    "Rom file (*.sfc)|*.sfc|All files (*.*)|*.*", "/home/matt/Games/Randomizers/Archipelago");
+                    "Rom file (*.sfc)|*.sfc|All files (*.*)|*.*", userFolder);
 
         var pathString = storageItem?.TryGetLocalPath();
 
