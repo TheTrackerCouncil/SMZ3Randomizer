@@ -151,6 +151,7 @@ internal class TrackerTreasureService(ILogger<TrackerTreasureService> logger, IP
         var remaining = treasureRegion.RemainingTreasure;
         if (remaining > 0)
         {
+            treasureRegion.HasManuallyClearedTreasure = true;
             treasureRegion.RemainingTreasure = 0;
         }
 
