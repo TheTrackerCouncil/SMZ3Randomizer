@@ -10,15 +10,18 @@
         x:Class="TrackerCouncil.Smz3.UI.Views.GenerationSettingsWindow"
         Title="SMZ3 Cas' Randomizer"
         Height="750" Width="700"
-        CanResize="False"
+        Opened="TopLevel_OnOpened"
+        CanResize="True"
         WindowStartupLocation="CenterOwner"
         Icon="/Assets/smz3.ico"
         x:DataType="viewModels:GenerationWindowViewModel">
   <LayoutTransformControl x:Name="MainLayout">
-    <Grid RowDefinitions="*, Auto">
+    <Grid RowDefinitions="*, Auto" x:Name="MainGrid">
       <TabControl Grid.Row="0" Margin="5">
         <TabItem Header="Basic">
-          <views:GenerationSettingsBasicPanel DataContext="{Binding}" x:Name="BasicPanel" Displayed="BasicPanel_OnDisplayed"></views:GenerationSettingsBasicPanel>
+          <ScrollViewer>
+            <views:GenerationSettingsBasicPanel DataContext="{Binding}" x:Name="BasicPanel" Displayed="BasicPanel_OnDisplayed" Margin="0 0 5 5"></views:GenerationSettingsBasicPanel>
+          </ScrollViewer>
         </TabItem>
         <TabItem Header="Game Settings" IsVisible="{Binding CanChangeGameSettings}">
           <ScrollViewer>
@@ -39,7 +42,7 @@
         </TabItem>
         <TabItem Header="Interface/Controls">
           <ScrollViewer>
-            <avalonia:DynamicFormControl Data="{Binding Customizations}" Grid.IsSharedSizeScope="True"></avalonia:DynamicFormControl>
+            <avalonia:DynamicFormControl Data="{Binding Customizations}" Grid.IsSharedSizeScope="True" Margin="0 0 5 5"></avalonia:DynamicFormControl>
           </ScrollViewer>
         </TabItem>
       </TabControl>

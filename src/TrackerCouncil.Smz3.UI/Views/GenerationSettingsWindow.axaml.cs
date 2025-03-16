@@ -1,5 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Interactivity;
 using AvaloniaControls.Controls;
 using AvaloniaControls.Models;
@@ -10,15 +12,15 @@ using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.ViewModels;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Models;
+using Dispatcher = Avalonia.Threading.Dispatcher;
 
 namespace TrackerCouncil.Smz3.UI.Views;
 
 public partial class GenerationSettingsWindow : ScalableWindow
 {
-    private GenerationSettingsWindowService? _generationSettingsWindowService;
-    private IServiceProvider? _serviceProvider;
-    private IStatGenerator? _statGenerator;
-    private GenerationWindowViewModel? _model;
+    private readonly GenerationSettingsWindowService? _generationSettingsWindowService;
+    private readonly IServiceProvider? _serviceProvider;
+    private readonly GenerationWindowViewModel? _model;
 
     public GenerationSettingsWindow()
     {
@@ -26,11 +28,10 @@ public partial class GenerationSettingsWindow : ScalableWindow
         DataContext = new GenerationWindowViewModel();
     }
 
-    public GenerationSettingsWindow(GenerationSettingsWindowService generationSettingsWindowService, IServiceProvider serviceProvider, IStatGenerator statGenerator)
+    public GenerationSettingsWindow(GenerationSettingsWindowService generationSettingsWindowService, IServiceProvider serviceProvider)
     {
         _generationSettingsWindowService = generationSettingsWindowService;
         _serviceProvider = serviceProvider;
-        _statGenerator = statGenerator;
         InitializeComponent();
         DataContext = BasicPanel.Data = _model = _generationSettingsWindowService.GetViewModel();
         BasicPanel.SetServices(serviceProvider, generationSettingsWindowService);
@@ -60,7 +61,7 @@ public partial class GenerationSettingsWindow : ScalableWindow
         {
             _model.Basic.CanSetMsu = false;
         }
-        
+
         _model.IsImportMode = true;
         _model.ImportDetails = importDetails;
     }
@@ -117,7 +118,7 @@ public partial class GenerationSettingsWindow : ScalableWindow
 
             window.ShowDialog();
 
-            window.Closed += (sender, args) =>
+            window.Closed += (_, _) =>
             {
                 if (generatedRom.Rom != null)
                 {
@@ -152,12 +153,12 @@ public partial class GenerationSettingsWindow : ScalableWindow
         var statGenerator = _serviceProvider.GetRequiredService<IStatGenerator>();
         var statWindow = new ProgressWindow(this, "Generating stats test");
 
-        statGenerator.StatProgressUpdated += (o, args) =>
+        statGenerator.StatProgressUpdated += (_, args) =>
         {
             statWindow.Report(args.Current / (double)args.Total);
         };
 
-        statGenerator.StatsCompleted += (o, args) =>
+        statGenerator.StatsCompleted += (_, args) =>
         {
             statWindow.Close();
             var messageWindow = new MessageWindow(new MessageWindowRequest()
@@ -190,7 +191,7 @@ public partial class GenerationSettingsWindow : ScalableWindow
             DisplayTextBox = true,
         });
 
-        window.Closed += (o, args) =>
+        window.Closed += (_, _) =>
         {
             if (window.DialogResult?.PressedAcceptButton != true)
             {
@@ -228,6 +229,36 @@ public partial class GenerationSettingsWindow : ScalableWindow
     private void BasicPanel_OnDisplayed(object? sender, EventArgs e)
     {
         _generationSettingsWindowService?.UpdateSummaryText();
+    }
+
+    private void TopLevel_OnOpened(object? sender, EventArgs e)
+    {
+        var val = Avalonia.VisualTree
+            .VisualExtensions
+            .GetTransformedBounds(this);
+
+        // Fix window on smaller displays
+        if (val is { Bounds.Height: < 750 })
+        {
+            Height = val.Value.Bounds.Height - 100;
+            var grid = this.Find<Grid>("MainGrid")!;
+            grid.IsVisible = false;
+            Task.Run(async () =>
+            {
+                await Task.Delay(TimeSpan.FromSeconds(0.25));
+                Dispatcher.UIThread.Invoke(() =>
+                {
+                    grid.IsVisible = true;
+                });
+
+            });
+        }
+
+        if (Position.Y is < 0 and > -200)
+        {
+            var newPos = new PixelPoint(Position.X, 0);
+            Position = newPos;
+        }
     }
 }
 
