@@ -100,6 +100,9 @@ public static class RandomizerDirectories
         }
     }
 
+    public static string UserTrackerSpritePath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "SMZ3CasRandomizer", "TrackerSprites");
+
 #if DEBUG
     public static string TrackerSpriteHashYamlFilePath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "tracker-sprite-hashes-debug.yml");
 #else
