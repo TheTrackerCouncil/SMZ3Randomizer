@@ -38,6 +38,8 @@ internal class TrackerPrerequisiteService(IPlayerProgressionService playerProgre
             Tracker.Say(response: Responses.DungeonRequirementMarked, args: [medallion.ToString(), region.Metadata.Name]);
         }
 
+        World.UpdateLegacyWorld(World.State);
+
         UpdateAccessibility(region);
 
         AddUndo(autoTracked, () =>

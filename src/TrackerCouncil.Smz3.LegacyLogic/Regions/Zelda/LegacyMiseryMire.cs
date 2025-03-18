@@ -37,6 +37,11 @@ namespace Randomizer.SMZ3.Regions.Zelda {
 
         // Need "CanKillManyEnemies" if implementing swordless
         public override bool CanEnter(LegacyProgression items) {
+            if (LegacyMedallion == LegacyMedallion.Unknown && (!items.Bombos || !items.Ether || !items.Quake))
+            {
+                return false;
+            }
+
             return LegacyMedallion switch {
                     LegacyMedallion.Bombos => items.Bombos,
                     LegacyMedallion.Ether => items.Ether,
