@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using PySpeechServiceClient;
@@ -17,6 +19,7 @@ internal class PyTextToSpeechCommunicator : ICommunicator
     private bool _isEnabled;
     private bool _isSpeaking;
     private int volume;
+    private ConcurrentDictionary<string, SpeechRequest> _pendingRequests = [];
 
     public PyTextToSpeechCommunicator(IPySpeechService pySpeechService, TrackerOptionsAccessor trackerOptionsAccessor)
     {
@@ -42,13 +45,15 @@ internal class PyTextToSpeechCommunicator : ICommunicator
 
         _pySpeechService.SpeakCommandResponded += (_, args) =>
         {
+            _pendingRequests.TryGetValue(args.Response.FullMessage, out var request);
+
             if (args.Response.IsStartOfChunk)
             {
-                VisemeReached?.Invoke(this, new SpeakingUpdatedEventArgs(true, null));
+                VisemeReached?.Invoke(this, new SpeakingUpdatedEventArgs(true, request));
             }
             else if (args.Response.IsEndOfChunk)
             {
-                VisemeReached?.Invoke(this, new SpeakingUpdatedEventArgs(false, null));
+                VisemeReached?.Invoke(this, new SpeakingUpdatedEventArgs(false, request));
             }
 
             if (args.Response.IsStartOfMessage)
@@ -59,6 +64,12 @@ internal class PyTextToSpeechCommunicator : ICommunicator
             else if (args.Response.IsEndOfMessage)
             {
                 SpeakCompleted?.Invoke(this, new SpeakCompletedEventArgs(TimeSpan.FromSeconds(3)));
+
+                if (request != null)
+                {
+                    _pendingRequests.TryRemove(
+                        new KeyValuePair<string, SpeechRequest>(args.Response.FullMessage, request));
+                }
 
                 if (!args.Response.HasAnotherRequest)
                 {
@@ -108,6 +119,8 @@ internal class PyTextToSpeechCommunicator : ICommunicator
     public void Say(SpeechRequest request)
     {
         if (!_isEnabled || !_pySpeechService.IsSpeechEnabled) return;
+
+        _pendingRequests.TryAdd(request.Text, request);
 
         if (request.Wait)
         {
