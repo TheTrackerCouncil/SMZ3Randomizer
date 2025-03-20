@@ -330,12 +330,15 @@ public class World
             return;
         }
 
+        var hasAllMedallions = trackerState?.ItemStates.Count(x =>
+            x.Type is ItemType.Quake or ItemType.Ether or ItemType.Bombos && x.TrackingState > 0) == 3;
+
         var worldState = new LegacyWorldState()
         {
             Medallions =
             [
-                GetLegacyMedallion(MiseryMire),
-                GetLegacyMedallion(TurtleRock)
+                GetLegacyMedallion(MiseryMire, hasAllMedallions),
+                GetLegacyMedallion(TurtleRock, hasAllMedallions)
             ],
             Rewards =
             [
@@ -380,19 +383,16 @@ public class World
         };
     }
 
-    private LegacyWorldState.LegacyMedallion GetLegacyMedallion(IHasPrerequisite region)
+    private LegacyWorldState.LegacyMedallion GetLegacyMedallion(IHasPrerequisite region, bool hasAllMedallions)
     {
-        var unobtainedMedallion = AllItems.FirstOrDefault(x =>
-            x.IsLocalPlayerItem && x.Type.IsInCategory(ItemCategory.Medallion) && x.TrackingState == 0)?.Type;
-
-        var requiredItemType =
-            region.MarkedItem ?? unobtainedMedallion ?? region.RequiredItem;
+        var requiredItemType = hasAllMedallions ? region.RequiredItem : region.MarkedItem ?? ItemType.Nothing;
 
         return requiredItemType switch
         {
             ItemType.Bombos => LegacyWorldState.LegacyMedallion.Bombos,
             ItemType.Ether => LegacyWorldState.LegacyMedallion.Ether,
-            _ => LegacyWorldState.LegacyMedallion.Bombos
+            ItemType.Quake => LegacyWorldState.LegacyMedallion.Quake,
+            _ => LegacyWorldState.LegacyMedallion.Unknown
         };
     }
 
