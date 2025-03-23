@@ -8,6 +8,7 @@ namespace Randomizer.SMZ3 {
     public class LegacyWorldState {
 
         public enum LegacyMedallion {
+            Unknown,
             Bombos,
             Ether,
             Quake,
