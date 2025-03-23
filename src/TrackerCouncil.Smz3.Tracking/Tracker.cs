@@ -47,10 +47,13 @@ public sealed class Tracker : TrackerBase, IDisposable
     private readonly ITrackerStateService _stateService;
     private readonly ITrackerTimerService _timerService;
     private readonly ISpeechRecognitionService _recognizer;
+    private readonly TrackerSpriteService _trackerSpriteService;
+    private readonly HashSet<SchrodingersString> _saidLines = new();
+
     private bool _disposed;
     private string? _lastSpokenText;
-    private readonly bool _alternateTracker;
-    private readonly HashSet<SchrodingersString> _saidLines = new();
+    private string? _previousImagePackName;
+    private ResponseConfig _defaultResponseConfig;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Tracker"/> class.
@@ -71,6 +74,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     /// <param name="stateService"></param>
     /// <param name="timerService"></param>
     /// <param name="serviceProvider"></param>
+    /// <param name="trackerSpriteService"></param>
     public Tracker(IWorldAccessor worldAccessor,
         TrackerModuleFactory moduleFactory,
         IChatClient chatClient,
@@ -82,7 +86,8 @@ public sealed class Tracker : TrackerBase, IDisposable
         Configs configs,
         ITrackerStateService stateService,
         ITrackerTimerService timerService,
-        IServiceProvider serviceProvider)
+        IServiceProvider serviceProvider,
+        TrackerSpriteService trackerSpriteService)
     {
         if (trackerOptions.Options == null)
             throw new InvalidOperationException("Tracker options have not yet been activated.");
@@ -98,10 +103,12 @@ public sealed class Tracker : TrackerBase, IDisposable
         _communicator = communicator;
         _stateService = stateService;
         _timerService = timerService;
+        _trackerSpriteService = trackerSpriteService;
 
         // Initialize the tracker configuration
         Configs = configs;
-        Responses = configs.Responses;
+        _defaultResponseConfig = Responses = configs.Responses;
+        SetImagePack(trackerOptions.Options.TrackerImagePackName);
         Requests = configs.Requests;
         PlayerProgressionService.ResetProgression();
 
@@ -117,14 +124,6 @@ public sealed class Tracker : TrackerBase, IDisposable
         else
         {
             _idleTimers = new();
-        }
-
-
-        // Initialize the text-to-speech
-        if (s_random.NextDouble() <= 0.01)
-        {
-            _alternateTracker = true;
-            _communicator.UseAlternateVoice();
         }
 
         // Initialize the speech recognition engine
@@ -215,6 +214,30 @@ public sealed class Tracker : TrackerBase, IDisposable
         }
 
         return false;
+    }
+
+    public override void SetImagePack(string? packName)
+    {
+        if (packName == _previousImagePackName)
+        {
+            return;
+        }
+
+        _previousImagePackName = packName;
+        var profileConfig = _trackerSpriteService.GetPack(packName).ProfileConfig;
+        _communicator.UseAlternateVoice(profileConfig?.UseAltVoice ?? false);
+
+        if (profileConfig?.ResponseConfig == null)
+        {
+            Responses = _defaultResponseConfig;
+            return;
+        }
+
+        var newResponseConfig = ResponseConfig.Default();
+        IMergeable<ResponseConfig> mergeableConfig = newResponseConfig;
+        mergeableConfig.MergeFrom(_defaultResponseConfig);
+        mergeableConfig.MergeFrom(profileConfig.ResponseConfig);
+        Responses = newResponseConfig;
     }
 
     private void LoadServices(IServiceProvider serviceProvider)
@@ -319,7 +342,7 @@ public sealed class Tracker : TrackerBase, IDisposable
             loadError = true;
         }
 
-        Say(response: _alternateTracker ? Responses.StartingTrackingAlternate : Responses.StartedTracking);
+        Say(response: Responses.StartedTracking);
         RestartIdleTimers();
         return !loadError;
     }
