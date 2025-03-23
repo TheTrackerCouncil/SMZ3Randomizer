@@ -598,8 +598,8 @@ public class TrackerWindowService(
         if (bossRegion != null)
         {
             bossRegion.Boss.UpdatedBossState += (_, _) => model.DungeonCleared = bossRegion.BossDefeated;
-            model.Clicked += (_, _) => tracker.BossTracker.MarkBossAsDefeated(bossRegion);
-            model.ResetCleared += (_, _) => tracker.BossTracker.MarkBossAsNotDefeated(bossRegion);
+            model.Clicked += (_, _) => tracker.BossTracker.MarkBossAsDefeated(bossRegion, force: true);
+            model.ResetCleared += (_, _) => tracker.BossTracker.MarkBossAsNotDefeated(bossRegion, force: true);
         }
 
         dungeon.UpdatedTreasure += (_, _) => model.DungeonTreasure = dungeon.RemainingTreasure;
@@ -666,8 +666,8 @@ public class TrackerWindowService(
             model.BossDefeated = boss.Defeated;
         };
 
-        model.Clicked += (_, _) => tracker.BossTracker.MarkBossAsDefeated(boss);
-        model.BossRevived += (_, _) => tracker.BossTracker.MarkBossAsNotDefeated(boss);
+        model.Clicked += (_, _) => tracker.BossTracker.MarkBossAsDefeated(boss, force: true);
+        model.BossRevived += (_, _) => tracker.BossTracker.MarkBossAsNotDefeated(boss, force: true);
 
         if (rewardRegion != null)
         {

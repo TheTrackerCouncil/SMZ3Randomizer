@@ -40,9 +40,12 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlaye
             Tracker.Say(response: Responses.DungeonRewardMarked, args: [rewardRegion.Metadata.Name, rewardObj.Metadata.Name ?? reward.GetDescription()]);
         }
 
+        UpdateAllAccessibility(false);
+
         AddUndo(autoTracked, () =>
         {
             rewardRegion.MarkedReward = originalReward;
+            UpdateAllAccessibility(false);
         });
     }
 
