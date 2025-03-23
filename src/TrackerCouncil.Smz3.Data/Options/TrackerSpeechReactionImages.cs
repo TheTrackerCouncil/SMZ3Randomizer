@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 
 namespace TrackerCouncil.Smz3.Data.Options;
 
@@ -37,6 +38,8 @@ public class TrackerSpeechImagePack
     /// A dictionary of all of the different reaction types for this pack
     /// </summary>
     public required Dictionary<string, TrackerSpeechReactionImages> Reactions { get; set; }
+
+    public required TrackerProfileConfig? ProfileConfig { get; set; }
 
     /// <summary>
     /// Gets the reaction images for a given reaction type. Will return the default reaction type if not specified

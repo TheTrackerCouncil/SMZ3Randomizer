@@ -14,7 +14,6 @@ namespace TrackerCouncil.Smz3.Tracking.VoiceCommands;
 /// </summary>
 public class GoalModule : TrackerModule
 {
-    private ResponseConfig _responseConfig;
     private const string ItemCountKey = "ItemCount";
 
     /// <summary>
@@ -24,11 +23,9 @@ public class GoalModule : TrackerModule
     /// <param name="playerProgressionService">Service to get item information</param>
     /// <param name="worldQueryService">Service to get world information</param>
     /// <param name="logger">Used to log information.</param>
-    /// <param name="responseConfig"></param>
-    public GoalModule(TrackerBase tracker, IPlayerProgressionService playerProgressionService, IWorldQueryService worldQueryService, ILogger<GoModeModule> logger, ResponseConfig responseConfig)
+    public GoalModule(TrackerBase tracker, IPlayerProgressionService playerProgressionService, IWorldQueryService worldQueryService, ILogger<GoModeModule> logger)
         : base(tracker, playerProgressionService, worldQueryService, logger)
     {
-        _responseConfig = responseConfig;
     }
 
     [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]

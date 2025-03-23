@@ -1,8 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Data.Options;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace TrackerCouncil.Smz3.Data.Services;
 
@@ -10,7 +14,7 @@ namespace TrackerCouncil.Smz3.Data.Services;
 /// Service for loading tracker speech sprites
 /// </summary>
 /// <param name="optionsFactory"></param>
-public class TrackerSpriteService(OptionsFactory optionsFactory)
+public class TrackerSpriteService(OptionsFactory optionsFactory, ILogger<TrackerSpriteService> logger)
 {
     private List<TrackerSpeechImagePack> _packs = [];
 
@@ -82,6 +86,9 @@ public class TrackerSpriteService(OptionsFactory optionsFactory)
             packName += " (Custom)";
         }
 
+        var config = GetConfig(Path.Combine(folder, "config.yml"))
+                     ?? GetConfig(Path.Combine(folder, "config.yaml"));
+
         _packs.Add(new TrackerSpeechImagePack
         {
             Name = packName,
@@ -90,7 +97,31 @@ public class TrackerSpriteService(OptionsFactory optionsFactory)
                 IdleImage = Path.Combine(folder, "default_idle.png"),
                 TalkingImage = Path.Combine(folder, "default_talk.png"),
             },
-            Reactions = reactions
+            Reactions = reactions,
+            ProfileConfig = config,
         });
+    }
+
+    private TrackerProfileConfig? GetConfig(string path)
+    {
+        if (!File.Exists(path))
+        {
+            return null;
+        }
+
+        var yml = File.ReadAllText(path);
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(PascalCaseNamingConvention.Instance)
+            .IgnoreUnmatchedProperties()
+            .Build();
+        try
+        {
+            return deserializer.Deserialize<TrackerProfileConfig>(yml);
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Unable to parse tracker profile config {Path}", path);
+            return null;
+        }
     }
 }
