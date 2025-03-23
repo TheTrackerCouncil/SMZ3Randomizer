@@ -72,14 +72,14 @@ public class TextToSpeechCommunicator : ICommunicator, IDisposable
     /// <summary>
     /// Selects a different text-to-speech voice.
     /// </summary>
-    public void UseAlternateVoice()
+    public void UseAlternateVoice(bool useAlt = true)
     {
         if (!OperatingSystem.IsWindows())
         {
             return;
         }
 
-        _tts.SelectVoiceByHints(VoiceGender.Male);
+        _tts.SelectVoiceByHints(useAlt ? VoiceGender.Male : VoiceGender.Female);
     }
 
     /// <summary>
