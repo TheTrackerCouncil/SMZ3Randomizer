@@ -41,7 +41,7 @@ public interface ICommunicator
     /// When overridden in an implementing class, uses an alternate voice
     /// when communicating with the player.
     /// </summary>
-    public void UseAlternateVoice() { }
+    public void UseAlternateVoice(bool useAlt = true) { }
 
     /// <summary>
     /// When overridden in an implementing class, increases the

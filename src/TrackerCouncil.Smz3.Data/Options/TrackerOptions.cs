@@ -107,6 +107,11 @@ public record TrackerOptions
     public ICollection<string?> TrackerProfiles { get; set; } = new List<string?>() { "Sassy" };
 
     /// <summary>
+    /// Gets the name of the tracker images that the user selected
+    /// </summary>
+    public string? TrackerImagePackName { get; set; }
+
+    /// <summary>
     /// The output style for the current song (Deprecated)
     /// </summary>
     public MsuTrackDisplayStyle? MsuTrackDisplayStyle { get; set; }

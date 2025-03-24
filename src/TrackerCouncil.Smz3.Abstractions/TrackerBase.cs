@@ -75,7 +75,7 @@ public abstract class TrackerBase : IDisposable
     /// <summary>
     /// Gets the configured responses.
     /// </summary>
-    public ResponseConfig Responses { get; protected init; } = null!;
+    public ResponseConfig Responses { get; protected set; } = null!;
 
     /// <summary>
     /// Gets a collection of basic requests and responses.
@@ -369,6 +369,12 @@ public abstract class TrackerBase : IDisposable
     {
         VoiceRecognitionEnabledChanged?.Invoke(this, EventArgs.Empty);
     }
+
+    /// <summary>
+    /// Updates the responses to reflect the selected tracker image pack
+    /// </summary>
+    /// <param name="packName">The name of the pack</param>
+    public abstract void SetImagePack(string? packName);
 
     public abstract void Dispose();
 }

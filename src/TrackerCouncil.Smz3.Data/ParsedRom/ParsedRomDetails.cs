@@ -16,6 +16,7 @@ public class ParsedRomDetails
     public required int GanonsTowerCrystalCount { get; set; }
     public required int GanonCrystalCount { get; set; }
     public required int TourianBossCount { get; set; }
+    public required bool OpenPyarmid { get; set; }
     public required bool SkipTourianBossDoor { get; set; }
     public required List<ParsedRomPlayer> Players { get; set; }
     public required List<ParsedRomLocationDetails> Locations { get; set; }

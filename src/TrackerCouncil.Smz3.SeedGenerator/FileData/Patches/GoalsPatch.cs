@@ -53,4 +53,9 @@ public class GoalsPatch : RomPatch
             return BitConverter.ToInt16(rom.Skip(Snes(0xF47200)).Take(2).ToArray());
         }
     }
+
+    public static bool GetOpenPyramid(byte[] rom)
+    {
+        return rom[Snes(0x30808B)] == 0x01;
+    }
 }

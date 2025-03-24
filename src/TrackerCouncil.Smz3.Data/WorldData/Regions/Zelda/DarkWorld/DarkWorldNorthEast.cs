@@ -74,6 +74,9 @@ public class DarkWorldNorthEast : Z3Region
             ? Config.GanonCrystalCount
             : World.State?.MarkedGanonCrystalCount ?? 7;
 
+        var numAcquiredCrystals = World.Rewards.Count(x =>
+            x.MarkedReward?.IsInAnyCategory(RewardCategory.Crystal) == true && x.HasReceivedReward);
+
         if (World.Bosses.First(x => x.Type == BossType.Ganon).Defeated)
         {
             NewAccessibility = Accessibility.Cleared;
@@ -88,7 +91,7 @@ public class DarkWorldNorthEast : Z3Region
                               World.GanonsTower.CanBeatBoss(assumedKeyProgression, true));
 
             var isPyramidOpen = World.Config.OpenPyramid || canClimbGt;
-            var canHurtGanon = progression.CrystalCount >= ganonCrystalRequirement && progression.MasterSword &&
+            var canHurtGanon = numAcquiredCrystals >= ganonCrystalRequirement && progression.MasterSword &&
                                (progression.Lamp || progression.FireRod);
 
             NewAccessibility = canAccessPyramid && isPyramidOpen && canHurtGanon
@@ -107,7 +110,7 @@ public class DarkWorldNorthEast : Z3Region
                                                                assumedKeyProgression.LegacyProgression)));
 
             var isPyramidOpen = World.Config.OpenPyramid || canClimbGt;
-            var canHurtGanon = progression.CrystalCount >= ganonCrystalRequirement && progression.MasterSword &&
+            var canHurtGanon = numAcquiredCrystals >= ganonCrystalRequirement && progression.MasterSword &&
                                (progression.Lamp || progression.FireRod);
 
             NewAccessibility = canAccessPyramid && isPyramidOpen && canHurtGanon

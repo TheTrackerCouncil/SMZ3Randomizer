@@ -269,6 +269,7 @@ public class GeneralOptions : INotifyPropertyChanged
         AutoMapUpdateBehavior = AutoMapUpdateBehavior ?? Options.AutoMapUpdateBehavior.Disabled,
         VoiceFrequency = TrackerVoiceFrequency,
         TrackerProfiles = SelectedProfiles,
+        TrackerImagePackName = TrackerSpeechImagePack,
         UndoExpirationTime = UndoExpirationTime,
         TrackDisplayFormat = TrackDisplayFormat,
         MsuTrackOutputPath = MsuTrackOutputPath,

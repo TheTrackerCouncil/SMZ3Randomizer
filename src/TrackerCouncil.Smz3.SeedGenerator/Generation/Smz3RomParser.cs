@@ -119,6 +119,7 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
             var gtCrystalCount = GoalsPatch.GetGanonsTowerCrystalCountFromRom(rom);
             var ganonCrystalCount = GoalsPatch.GetGanonCrystalCountFromRom(rom);
             var tourianBossCount = GoalsPatch.GetTourianBossCountFromRom(rom, romGenerator == RomGenerator.Cas);
+            var openPyramid = GoalsPatch.GetOpenPyramid(rom);
             var text = ZeldaTextsPatch.ParseRomText(rom);
 
             logger.LogInformation("Imported {Title} (Seed {SeedNumber})", romTitle, seedNumber);
@@ -135,6 +136,7 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
                 GanonsTowerCrystalCount = gtCrystalCount,
                 GanonCrystalCount = ganonCrystalCount,
                 TourianBossCount = tourianBossCount,
+                OpenPyarmid = openPyramid,
                 SkipTourianBossDoor = skippedTourianBossDoor,
                 RomGenerator = romGenerator.Value,
                 Players = players,
@@ -166,6 +168,7 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
         config.GanonsTowerCrystalCount = parsedRomDetails.GanonsTowerCrystalCount;
         config.GanonCrystalCount = parsedRomDetails.GanonCrystalCount;
         config.TourianBossCount = parsedRomDetails.TourianBossCount;
+        config.OpenPyramid = parsedRomDetails.OpenPyarmid;
         config.SkipTourianBossDoor = parsedRomDetails.SkipTourianBossDoor;
         config.LocationItems.Clear();
         config.ItemOptions = parsedRomDetails.StartingItems.ToDictionary(x => $"ItemType:{x.Key}", x => x.Value);

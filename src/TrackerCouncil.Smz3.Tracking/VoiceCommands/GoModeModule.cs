@@ -3,7 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 using PySpeechServiceClient.Grammar;
 using TrackerCouncil.Smz3.Abstractions;
-using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Tracking.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.VoiceCommands;
@@ -13,8 +12,6 @@ namespace TrackerCouncil.Smz3.Tracking.VoiceCommands;
 /// </summary>
 public class GoModeModule : TrackerModule
 {
-    private ResponseConfig _responseConfig;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="GoModeModule"/> class.
     /// </summary>
@@ -22,11 +19,9 @@ public class GoModeModule : TrackerModule
     /// <param name="playerProgressionService">Service to get item information</param>
     /// <param name="worldQueryService">Service to get world information</param>
     /// <param name="logger">Used to log information.</param>
-    /// <param name="responseConfig"></param>
-    public GoModeModule(TrackerBase tracker, IPlayerProgressionService playerProgressionService, IWorldQueryService worldQueryService, ILogger<GoModeModule> logger, ResponseConfig responseConfig)
+    public GoModeModule(TrackerBase tracker, IPlayerProgressionService playerProgressionService, IWorldQueryService worldQueryService, ILogger<GoModeModule> logger)
         : base(tracker, playerProgressionService, worldQueryService, logger)
     {
-        _responseConfig = responseConfig;
     }
 
     private SpeechRecognitionGrammarBuilder GetGoModeRule(List<string> prompts)
@@ -39,12 +34,12 @@ public class GoModeModule : TrackerModule
     [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
     public override void AddCommands()
     {
-        if (_responseConfig.GoModePrompts == null)
+        if (TrackerBase.Responses.GoModePrompts == null)
         {
             return;
         }
 
-        AddCommand("Toggle Go Mode", GetGoModeRule(_responseConfig.GoModePrompts), (result) =>
+        AddCommand("Toggle Go Mode", GetGoModeRule(TrackerBase.Responses.GoModePrompts), (result) =>
         {
             TrackerBase.ModeTracker.ToggleGoMode(result.Confidence);
         });
