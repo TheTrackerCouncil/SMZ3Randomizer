@@ -144,7 +144,7 @@ public class WestCrateria : SMRegion
                                       (!World.Config.MetroidKeysanity || World.Config.SkipTourianBossDoor ||
                                        progression.CardCrateriaBoss);
 
-            var canEnterTourian = World.GoldenBosses.Count(x => x.Defeated) >= tourianBossRequirement;
+            var canEnterTourian = World.Rewards.Count(x => x.MarkedReward?.IsInCategory(RewardCategory.Metroid) == true && x.HasReceivedReward) >= tourianBossRequirement;
 
             NewAccessibility = canAccessStatueRoom && canEnterTourian
                 ? Accessibility.Available
