@@ -105,6 +105,7 @@ public class AutoTracker : AutoTrackerBase
 
         HasStarted = false;
         CurrentGame = Game.Neither;
+        OnGameChanged();
         _hasValidState = false;
 
         if (_numDisconnects > 10)
@@ -200,6 +201,7 @@ public class AutoTracker : AutoTrackerBase
     {
         PreviousGame = CurrentGame;
         CurrentGame = game;
+        OnGameChanged();
     }
 
     public override void UpdateValidState(bool hasValidState)
