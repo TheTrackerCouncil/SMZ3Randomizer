@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using SnesConnectorLibrary;
 using SnesConnectorLibrary.Requests;
 using SNI;
@@ -12,6 +13,8 @@ namespace TrackerCouncil.Smz3.Tracking.AutoTracking.ZeldaStateChecks;
 /// </summary>
 public class PegWorld(TrackerBase tracker, ISnesConnectorService snesConnector) : IZeldaStateCheck
 {
+    private bool _enabledOnGameChangedCheck;
+
     /// <summary>
     /// Executes the check for the current state
     /// </summary>
@@ -27,7 +30,41 @@ public class PegWorld(TrackerBase tracker, ISnesConnectorService snesConnector) 
             return true;
         }
 
+        if (tracker.ModeTracker.PegWorldMode && !(currentState.OverworldScreen == 0x62 || currentState is { OverworldScreen: 0, CurrentRoom: 295 }))
+        {
+            DisablePegWorldNode();
+        }
+
         return false;
+    }
+
+    private void EnableGameChangedCheck()
+    {
+        if (_enabledOnGameChangedCheck || tracker.AutoTracker == null) return;
+        _enabledOnGameChangedCheck = true;
+        tracker.AutoTracker.GameChanged += AutoTrackerOnGameChanged;
+    }
+
+    private void DisableGameChangedCheck()
+    {
+        if (!_enabledOnGameChangedCheck || tracker.AutoTracker == null ) return;
+        _enabledOnGameChangedCheck = false;
+        tracker.AutoTracker.GameChanged -= AutoTrackerOnGameChanged;
+    }
+
+    private void AutoTrackerOnGameChanged(object? sender, EventArgs e)
+    {
+        DisablePegWorldNode();
+    }
+
+    private void DisablePegWorldNode()
+    {
+        if (tracker.ModeTracker.PegWorldMode)
+        {
+            tracker.ModeTracker.StopPegWorldMode();
+        }
+
+        DisableGameChangedCheck();
     }
 
     private async Task CountPegs()
@@ -46,9 +83,9 @@ public class PegWorld(TrackerBase tracker, ISnesConnectorService snesConnector) 
 
         var count = response.Data.ReadUInt8(0);
 
-        if (count != null)
+        if (count != null && tracker.ModeTracker.SetPegs((int)count))
         {
-            tracker.ModeTracker.SetPegs((int)count);
+            EnableGameChangedCheck();
         }
     }
 }

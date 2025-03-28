@@ -71,7 +71,12 @@ public interface ITrackerModeService
     /// <param name="confidence">The speech recognition confidence.</param>
     public void Peg(float? confidence = null);
 
-    public void SetPegs(int count);
+    /// <summary>
+    /// Updates the number of pegs by auto tracker
+    /// </summary>
+    /// <param name="count">The current number of pegs</param>
+    /// <returns>True if the peg count was updated, false otherwise</returns>
+    public bool SetPegs(int count);
 
     /// <summary>
     /// Starts Peg World mode.

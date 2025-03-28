@@ -72,15 +72,18 @@ internal class TrackerModeService() : TrackerService, ITrackerModeService
         RestartIdleTimers();
     }
 
-    public void SetPegs(int count)
+    public bool SetPegs(int count)
     {
         if (count <= PegsPegged)
-            return;
+            return false;
+
+        var updated = false;
 
         if (!PegWorldMode)
         {
             PegWorldMode = true;
             ToggledPegWorldModeOn?.Invoke(this, new TrackerEventArgs(null, true));
+            updated = true;
         }
 
         if (count <= PegWorldModeModule.TotalPegs)
@@ -90,7 +93,10 @@ internal class TrackerModeService() : TrackerService, ITrackerModeService
             PegsPegged = count;
             Tracker.Say(responses: Responses.PegWorldModePeggedMultiple, tieredKey: delta, wait: true);
             PegPegged?.Invoke(this, new TrackerEventArgs(null, true));
+            updated = true;
         }
+
+        return updated;
     }
 
     public void StartPegWorldMode(float? confidence = null)
