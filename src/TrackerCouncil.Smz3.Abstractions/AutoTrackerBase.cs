@@ -65,6 +65,11 @@ public abstract class AutoTrackerBase : IDisposable
     public event EventHandler? AutoTrackerDisconnected;
 
     /// <summary>
+    /// Occurs when the tracker detects that the game has changed
+    /// </summary>
+    public event EventHandler? GameChanged;
+
+    /// <summary>
     /// The action to run when the player asks Tracker to look at the game
     /// </summary>
     public AutoTrackerViewedAction? LatestViewAction { get; set; }
@@ -154,6 +159,14 @@ public abstract class AutoTrackerBase : IDisposable
     protected virtual void OnAutoTrackerConnectorChanged()
     {
         AutoTrackerConnectorChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>
+    /// Invokes the GameChanged event
+    /// </summary>
+    protected virtual void OnGameChanged()
+    {
+        GameChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public abstract void Dispose();
