@@ -13,6 +13,8 @@ namespace TrackerCouncil.Smz3.Tracking.Services;
 internal class PyTextToSpeechCommunicator : ICommunicator
 {
     private readonly IPySpeechService _pySpeechService;
+    private (string onnxPath, string jsonPath)? _defaultPrimaryVoice;
+    private (string onnxPath, string jsonPath)? _defaultAltVoice;
     private (string onnxPath, string jsonPath)? _primaryVoice;
     private (string onnxPath, string jsonPath)? _altVoice;
     private double _rate = 1;
@@ -31,8 +33,8 @@ internal class PyTextToSpeechCommunicator : ICommunicator
         {
             var femaleDetails = GetModelPath("Tracker_Female");
             var maleDetails = GetModelPath("Tracker_Male");
-            _primaryVoice = femaleDetails ?? maleDetails;
-            _altVoice = maleDetails ?? femaleDetails;
+            _primaryVoice = _defaultPrimaryVoice = femaleDetails ?? maleDetails;
+            _altVoice = _defaultAltVoice = maleDetails ?? femaleDetails;
         }
 
         volume = trackerOptionsAccessor.Options?.TextToSpeechVolume ?? 100;
@@ -81,9 +83,18 @@ internal class PyTextToSpeechCommunicator : ICommunicator
         _isEnabled = trackerOptionsAccessor.Options?.VoiceFrequency != Shared.Enums.TrackerVoiceFrequency.Disabled;
     }
 
-    public void UseAlternateVoice()
+    public void UseAlternateVoice(bool useAlt = true)
     {
-        (_primaryVoice, _altVoice) = (_altVoice, _primaryVoice);
+        if (useAlt)
+        {
+            _primaryVoice = _defaultAltVoice;
+            _altVoice = _defaultPrimaryVoice;
+        }
+        else
+        {
+            _primaryVoice = _defaultPrimaryVoice;
+            _altVoice = _defaultAltVoice;
+        }
     }
 
     private async Task Initialize()

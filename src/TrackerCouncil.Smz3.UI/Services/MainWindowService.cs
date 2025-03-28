@@ -97,7 +97,7 @@ public class MainWindowService(
         {
             return;
         }
-        
+
         pySpeechService.AutoReconnect = true;
         await pySpeechService.StartAsync();
         await pySpeechService.SetSpeechSettingsAsync(new SpeechSettings());
@@ -166,7 +166,7 @@ public class MainWindowService(
             DestinationFolder = RandomizerDirectories.TrackerSpritePath,
             HashPath = RandomizerDirectories.TrackerSpriteHashYamlFilePath,
             InitialJsonPath = RandomizerDirectories.TrackerSpriteInitialJsonFilePath,
-            ValidPathCheck = p => p.EndsWith(".png", StringComparison.OrdinalIgnoreCase) || p.EndsWith(".gif", StringComparison.OrdinalIgnoreCase),
+            ValidPathCheck = p => p.EndsWith(".png", StringComparison.OrdinalIgnoreCase) || p.EndsWith(".gif", StringComparison.OrdinalIgnoreCase) || p.EndsWith(".yml", StringComparison.OrdinalIgnoreCase),
             DeleteExtraFiles = RandomizerDirectories.DeleteSprites
         };
 

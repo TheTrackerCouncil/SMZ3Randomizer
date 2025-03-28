@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="PySpeechServiceClient" Version="0.0.35" />
+      <PackageReference Include="PySpeechServiceClient" Version="0.1.0" />
     </ItemGroup>
 
     <ItemGroup>
