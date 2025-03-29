@@ -284,6 +284,9 @@ public class ItemData : IMergeable<ItemData>
     /// </remarks>
     public bool IsJunk(Config? config)
     {
+        if (InternalItemType == ItemType.OtherGameProgressionItem)
+            return false;
+
         if (config?.ZeldaKeysanity == true && InternalItemType.IsInAnyCategory(new[] { ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Map }))
             return false;
 
