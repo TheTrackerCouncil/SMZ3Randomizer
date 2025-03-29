@@ -11,8 +11,4 @@
       <ProjectReference Include="..\TrackerCouncil.Smz3.Shared\TrackerCouncil.Smz3.Shared.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Speech\" />
-    </ItemGroup>
-
 </Project>
