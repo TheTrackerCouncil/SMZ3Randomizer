@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Speech.Synthesis;
 
 namespace TrackerCouncil.Smz3.Tracking.Services;
 
 /// <summary>
 /// Event for when tracker says a new line
 /// </summary>
-/// <param name="visemeDetails">The original viseme details</param>
+/// <param name="isSpeaking">If the TTS service is currently speaking</param>
 /// <param name="request">The original speech request</param>
-public class SpeakVisemeReachedEventArgs(VisemeReachedEventArgs visemeDetails, SpeechRequest? request) : EventArgs
+public class SpeakingUpdatedEventArgs(bool isSpeaking, SpeechRequest? request) : EventArgs
 {
     /// <summary>
-    /// Original viseme details
+    /// If the TTS service is currently speaking
     /// </summary>
-    public VisemeReachedEventArgs VisemeDetails => visemeDetails;
+    public bool IsSpeaking => isSpeaking;
 
     /// <summary>
     /// The original speech request

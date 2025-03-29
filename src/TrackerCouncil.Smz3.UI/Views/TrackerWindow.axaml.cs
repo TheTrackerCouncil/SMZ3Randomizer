@@ -13,6 +13,7 @@ using Material.Icons;
 using Material.Icons.Avalonia;
 using SnesConnectorLibrary;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
+using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Models;
 using TrackerCouncil.Smz3.UI.Services;
 using TrackerCouncil.Smz3.UI.ViewModels;

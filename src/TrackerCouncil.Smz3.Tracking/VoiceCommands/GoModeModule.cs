@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
+using PySpeechService.Recognition;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Tracking.Services;
 
@@ -23,9 +24,9 @@ public class GoModeModule : TrackerModule
     {
     }
 
-    private GrammarBuilder GetGoModeRule(List<string> prompts)
+    private SpeechRecognitionGrammarBuilder GetGoModeRule(List<string> prompts)
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf(prompts.ToArray());
     }

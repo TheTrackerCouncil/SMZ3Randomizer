@@ -7,6 +7,7 @@ using AvaloniaControls.Controls;
 using AvaloniaControls.Services;
 using Microsoft.Extensions.DependencyInjection;
 using TrackerCouncil.Smz3.Data.Options;
+using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.UI.Services;
 using TrackerCouncil.Smz3.UI.ViewModels;
 

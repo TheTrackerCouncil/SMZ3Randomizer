@@ -35,6 +35,8 @@ public class TextToSpeechCommunicator : ICommunicator, IDisposable
         _tts = new SpeechSynthesizer();
         _tts.SelectVoiceByHints(VoiceGender.Female);
 
+        _tts.Volume = trackerOptionsAccessor.Options?.TextToSpeechVolume ?? 100;
+
         _tts.SpeakStarted += (sender, args) =>
         {
             if (IsSpeaking) return;
@@ -63,7 +65,7 @@ public class TextToSpeechCommunicator : ICommunicator, IDisposable
         _tts.VisemeReached += (sender, args) =>
         {
             if (!OperatingSystem.IsWindows()) return;
-            VisemeReached?.Invoke(this, new SpeakVisemeReachedEventArgs(args, _currentSpeechRequest));
+            VisemeReached?.Invoke(this, new SpeakingUpdatedEventArgs(args.Viseme > 0, _currentSpeechRequest));
         };
 
         _canSpeak = trackerOptionsAccessor.Options?.VoiceFrequency != Shared.Enums.TrackerVoiceFrequency.Disabled;
@@ -149,11 +151,21 @@ public class TextToSpeechCommunicator : ICommunicator, IDisposable
 
     public bool IsSpeaking { get; private set; }
 
+    public void UpdateVolume(int volume)
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            return;
+        }
+
+        _tts.Volume = volume;
+    }
+
     public event EventHandler? SpeakStarted;
 
     public event EventHandler<SpeakCompletedEventArgs>? SpeakCompleted;
 
-    public event EventHandler<SpeakVisemeReachedEventArgs>? VisemeReached;
+    public event EventHandler<SpeakingUpdatedEventArgs>? VisemeReached;
 
     /// <inheritdoc/>
     public void Dispose()

@@ -2,6 +2,7 @@ using System.IO;
 using Avalonia.Controls;
 using AvaloniaControls.Controls;
 using AvaloniaControls.Services;
+using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.UI.Services;
 
 namespace TrackerCouncil.Smz3.UI.Views;

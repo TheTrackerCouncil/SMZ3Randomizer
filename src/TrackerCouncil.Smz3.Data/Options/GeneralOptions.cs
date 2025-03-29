@@ -49,6 +49,9 @@ public class GeneralOptions : INotifyPropertyChanged
     [Range(0.0, 1.0)]
     public float TrackerConfidenceSassThreshold { get; set; } = 0.92f;
 
+    [Range(0, 100)]
+    public int TextToSpeechVolume { get; set; } = 100;
+
     public byte[] TrackerBGColor { get; set; } = [0xFF, 0x21, 0x21, 0x21];
 
     public bool TrackerShadows { get; set; } = true;
@@ -256,6 +259,7 @@ public class GeneralOptions : INotifyPropertyChanged
         MinimumRecognitionConfidence = TrackerRecognitionThreshold,
         MinimumExecutionConfidence = TrackerConfidenceThreshold,
         MinimumSassConfidence = TrackerConfidenceSassThreshold,
+        TextToSpeechVolume = TextToSpeechVolume,
         HintsEnabled = TrackerHintsEnabled,
         SpoilersEnabled = TrackerSpoilersEnabled,
         UserName = TwitchChannel,

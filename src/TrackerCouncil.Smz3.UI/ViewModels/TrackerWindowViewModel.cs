@@ -48,7 +48,7 @@ public class TrackerWindowViewModel : ViewModelBase
     [ReactiveLinkedProperties(nameof(StatusBarBackground), nameof(StatusBarBorder))]
     public bool IsInGoMode { get; set; }
 
-    public bool ShowSpeechRecognition => OperatingSystem.IsWindows();
+    public bool ShowSpeechRecognition => !OperatingSystem.IsMacOS();
 
     [Reactive] public string SpeechConfidence { get; set; } = "Voice Disabled";
 

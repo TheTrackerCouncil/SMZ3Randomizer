@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Runtime.Versioning;
 using Microsoft.Extensions.Logging;
+using PySpeechService.Recognition;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Shared;
@@ -27,78 +27,74 @@ public class BossTrackingModule : TrackerModule
 
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetMarkBossAsDefeatedRule()
+    private SpeechRecognitionGrammarBuilder GetMarkBossAsDefeatedRule()
     {
         var bossNames = GetBossNames();
-        var beatBoss = new GrammarBuilder()
+        var beatBoss = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
-            .Optional(GrammarBuilder.ForceCommandIdentifiers)
+            .Optional(ForceCommandIdentifiers)
             .OneOf("track", "I beat", "I defeated", "I beat off", "I killed")
             .Append(BossKey, bossNames);
 
-        var markBoss = new GrammarBuilder()
+        var markBoss = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
-            .Optional(GrammarBuilder.ForceCommandIdentifiers)
+            .Optional(ForceCommandIdentifiers)
             .Append("mark")
             .Append(BossKey, bossNames)
             .Append("as")
             .OneOf("beaten", "beaten off", "dead", "fucking dead", "defeated");
 
-        var bossIsDead = new GrammarBuilder()
+        var bossIsDead = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Append(BossKey, bossNames)
             .OneOf("is dead", "is fucking dead");
 
-        return GrammarBuilder.Combine(beatBoss, markBoss, bossIsDead);
+        return SpeechRecognitionGrammarBuilder.Combine(beatBoss, markBoss, bossIsDead);
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetMarkBossAsNotDefeatedRule()
+    private SpeechRecognitionGrammarBuilder GetMarkBossAsNotDefeatedRule()
     {
         var bossNames = GetBossNames();
 
-        var markBoss = new GrammarBuilder()
+        var markBoss = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
-            .Optional(GrammarBuilder.ForceCommandIdentifiers)
+            .Optional(ForceCommandIdentifiers)
             .Append("mark")
             .Append(BossKey, bossNames)
             .Append("as")
             .OneOf("alive", "not defeated", "undefeated");
 
-        var untrack = new GrammarBuilder()
+        var untrack = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
-            .Optional(GrammarBuilder.ForceCommandIdentifiers)
+            .Optional(ForceCommandIdentifiers)
             .Append("untrack")
             .Append(BossKey, bossNames);
 
-        var bossIsAlive = new GrammarBuilder()
+        var bossIsAlive = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Append(BossKey, bossNames)
             .OneOf("is alive", "is still alive");
 
-        return GrammarBuilder.Combine(markBoss, untrack, bossIsAlive);
+        return SpeechRecognitionGrammarBuilder.Combine(markBoss, untrack, bossIsAlive);
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetBossDefeatedWithContentRule()
+    private SpeechRecognitionGrammarBuilder GetBossDefeatedWithContentRule()
     {
         var bossNames = GetBossNames();
-        var beatBoss = new GrammarBuilder()
+        var beatBoss = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("I beat", "I defeated", "I beat off", "I killed")
             .Append(BossKey, bossNames)
             .OneOf("Without getting hit", "Without taking damage", "And didn't get hit", "And didn't take damage", "In one cycle");
 
-        var oneCycled = new GrammarBuilder()
+        var oneCycled = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("I one cycled", "I quick killed")
             .Append(BossKey, bossNames);
 
-        return GrammarBuilder.Combine(beatBoss, oneCycled);
+        return SpeechRecognitionGrammarBuilder.Combine(beatBoss, oneCycled);
     }
 
-    [SupportedOSPlatform("windows")]
     public override void AddCommands()
     {
         AddCommand("Mark boss as defeated", GetMarkBossAsDefeatedRule(), (result) =>
@@ -109,7 +105,7 @@ public class BossTrackingModule : TrackerModule
             var admittedGuilt = result.Text.ContainsAny("killed", "beat", "defeated", "dead")
                                 && !result.Text.ContainsAny("beat off", "beaten off");
 
-            var force = result.Text.ContainsAny(GrammarBuilder.ForceCommandIdentifiers);
+            var force = result.Text.ContainsAny(ForceCommandIdentifiers);
 
             if (boss.Region != null)
             {
@@ -126,7 +122,7 @@ public class BossTrackingModule : TrackerModule
         {
             var boss = GetBossFromResult(TrackerBase, result) ?? throw new Exception($"Could not find boss or dungeon in command: '{result.Text}'");
 
-            var force = result.Text.ContainsAny(GrammarBuilder.ForceCommandIdentifiers);
+            var force = result.Text.ContainsAny(ForceCommandIdentifiers);
 
             if (boss.Region != null)
             {

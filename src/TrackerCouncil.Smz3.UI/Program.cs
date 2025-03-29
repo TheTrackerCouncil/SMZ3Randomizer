@@ -15,6 +15,7 @@ using MSURandomizer.Services;
 using MSURandomizerLibrary.Models;
 using MSURandomizerLibrary.Services;
 using Serilog;
+using TrackerCouncil.Smz3.Shared;
 
 namespace TrackerCouncil.Smz3.UI;
 

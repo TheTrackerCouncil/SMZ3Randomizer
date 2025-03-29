@@ -95,6 +95,12 @@ public static class ConfigServiceCollectionExtensions
             return configs.HintTileConfig;
         });
 
+        services.AddScoped(serviceProvider =>
+        {
+            var configs = serviceProvider.GetRequiredService<Configs>();
+            return configs.MetadataConfig;
+        });
+
         return services;
     }
 }

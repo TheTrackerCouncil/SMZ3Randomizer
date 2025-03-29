@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Runtime.Versioning;
 using System.Speech.Recognition;
 
 using Microsoft.Extensions.Logging;
+using PySpeechService.Recognition;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.WorldData;
@@ -21,6 +21,11 @@ namespace TrackerCouncil.Smz3.Tracking.VoiceCommands;
 /// </summary>
 public abstract class TrackerModule
 {
+    /// <summary>
+    /// Phrases for forcing a commmand when using auto tracking
+    /// </summary>
+    protected static string[] ForceCommandIdentifiers = ["would you please", "please, I'm begging you"];
+
     /// <summary>
     /// Gets the semantic result key used to identify the name of a dungeon.
     /// </summary>
@@ -112,8 +117,8 @@ public abstract class TrackerModule
     /// Gets a list of speech recognition grammars provided by the module.
     /// </summary>
     [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
-    protected IList<Grammar> Grammars { get; }
-        = new List<Grammar>();
+    public IList<SpeechRecognitionGrammar> Grammars { get; }
+        = new List<SpeechRecognitionGrammar>();
 
     /// <summary>
     /// Gets a logger for the current module.
@@ -124,14 +129,12 @@ public abstract class TrackerModule
     /// Loads the voice commands provided by the module into the specified
     /// recognition engine.
     /// </summary>
-    /// <param name="engine">
-    /// The speech recognition engine to initialize.
+    /// <param name="grammar">
+    /// The speech recognition grammar to initialize
     /// </param>
-    [SupportedOSPlatform("windows")]
-    public void LoadInto(SpeechRecognitionEngine engine)
+    public void LoadInto(List<SpeechRecognitionGrammar> grammar)
     {
-        foreach (var grammar in Grammars)
-            engine.LoadGrammar(grammar);
+        grammar.AddRange(Grammars);
     }
 
     /// <summary>
@@ -143,8 +146,7 @@ public abstract class TrackerModule
     /// <returns>
     /// A <see cref="DungeonInfo"/> from the recognition result.
     /// </returns>
-    [SupportedOSPlatform("windows")]
-    protected static IHasTreasure GetDungeonFromResult(TrackerBase tracker, RecognitionResult result)
+    protected static IHasTreasure GetDungeonFromResult(TrackerBase tracker, SpeechRecognitionResult result)
     {
         var name = (string)result.Semantics[DungeonKey].Value;
         var dungeon = tracker.World.TreasureRegions.FirstOrDefault(x => x.Name == name);
@@ -160,8 +162,7 @@ public abstract class TrackerModule
     /// <returns>
     /// A <see cref="DungeonInfo"/> from the recognition result.
     /// </returns>
-    [SupportedOSPlatform("windows")]
-    protected static IHasTreasure? GetBossDungeonFromResult(TrackerBase tracker, RecognitionResult result)
+    protected static IHasTreasure? GetBossDungeonFromResult(TrackerBase tracker, SpeechRecognitionResult result)
     {
         var name = (string)result.Semantics[BossKey].Value;
         return tracker.World.TreasureRegions.FirstOrDefault(x => x.Name == name);
@@ -176,8 +177,7 @@ public abstract class TrackerModule
     /// <returns>
     /// A <see cref="BossInfo"/> from the recognition result.
     /// </returns>
-    [SupportedOSPlatform("windows")]
-    protected static Boss? GetBossFromResult(TrackerBase tracker, RecognitionResult result)
+    protected static Boss? GetBossFromResult(TrackerBase tracker, SpeechRecognitionResult result)
     {
         var bossName = (string)result.Semantics[BossKey].Value;
         return tracker.World.AllBosses.SingleOrDefault(x => x.Name.Contains(bossName, StringComparison.Ordinal));
@@ -195,8 +195,7 @@ public abstract class TrackerModule
     /// <returns>
     /// An <see cref="ItemData"/> from the recognition result.
     /// </returns>
-    [SupportedOSPlatform("windows")]
-    protected Item GetItemFromResult(TrackerBase tracker, RecognitionResult result, out string itemName)
+    protected Item GetItemFromResult(TrackerBase tracker, SpeechRecognitionResult result, out string itemName)
     {
         itemName = (string)result.Semantics[ItemNameKey].Value;
         var item = WorldQueryService.FirstOrDefault(itemName);
@@ -213,10 +212,9 @@ public abstract class TrackerModule
     /// <returns>
     /// A <see cref="Location"/> from the recognition result.
     /// </returns>
-    [SupportedOSPlatform("windows")]
-    protected static Location GetLocationFromResult(TrackerBase tracker, RecognitionResult result)
+    protected static Location GetLocationFromResult(TrackerBase tracker, SpeechRecognitionResult result)
     {
-        var id = (LocationId)result.Semantics[LocationKey].Value;
+        var id = (LocationId)int.Parse(result.Semantics[LocationKey].Value);
         var location = tracker.World.Locations.First(x => x.Id == id);
         return location ?? throw new Exception($"Could not find a location with ID {id} (\"{result.Text}\")");
     }
@@ -228,10 +226,9 @@ public abstract class TrackerModule
     /// <param name="tracker">The tracker instance.</param>
     /// <param name="result">The speech recognition result.</param>
     /// <returns>A <see cref="Room"/> from the recognition result.</returns>
-    [SupportedOSPlatform("windows")]
-    protected static Room GetRoomFromResult(TrackerBase tracker, RecognitionResult result)
+    protected static Room GetRoomFromResult(TrackerBase tracker, SpeechRecognitionResult result)
     {
-        var roomTypeName = (string)result.Semantics[RoomKey].Value;
+        var roomTypeName = result.Semantics[RoomKey].Value;
         var room = tracker.World.Rooms.First(x => x.GetType().FullName == roomTypeName);
         return room ?? throw new Exception($"Could not find room {roomTypeName} (\"{result.Text}\").");
     }
@@ -245,10 +242,9 @@ public abstract class TrackerModule
     /// <returns>
     /// A <see cref="Region"/> from the recognition result.
     /// </returns>
-    [SupportedOSPlatform("windows")]
-    protected static Region GetRegionFromResult(TrackerBase tracker, RecognitionResult result)
+    protected static Region GetRegionFromResult(TrackerBase tracker, SpeechRecognitionResult result)
     {
-        var regionTypeName = (string)result.Semantics[RegionKey].Value;
+        var regionTypeName = result.Semantics[RegionKey].Value;
         var region = tracker.World.Regions.First(x => x.GetType().FullName == regionTypeName);
         return region ?? throw new Exception($"Could not find region {regionTypeName} (\"{result.Text}\").");
     }
@@ -262,8 +258,7 @@ public abstract class TrackerModule
     /// <returns>
     /// The recognized area from the recognition result.
     /// </returns>
-    [SupportedOSPlatform("windows")]
-    protected static IHasLocations GetAreaFromResult(TrackerBase tracker, RecognitionResult result)
+    protected static IHasLocations GetAreaFromResult(TrackerBase tracker, SpeechRecognitionResult result)
     {
         if (result.Semantics.ContainsKey(RegionKey))
             return GetRegionFromResult(tracker, result);
@@ -281,14 +276,12 @@ public abstract class TrackerModule
     /// <param name="executeCommand">
     /// The command to execute when the phrase is recognized.
     /// </param>
-    [SupportedOSPlatform("windows")]
     protected void AddCommand(string ruleName, string phrase,
-        Action<RecognitionResult> executeCommand)
+        Action<SpeechRecognitionResult> executeCommand)
     {
-        var builder = new GrammarBuilder()
+        var builder = new SpeechRecognitionGrammarBuilder()
             .Append(phrase);
 
-        _syntax[ruleName] = new[] { phrase };
         AddCommand(ruleName, builder, executeCommand);
     }
 
@@ -300,14 +293,12 @@ public abstract class TrackerModule
     /// <param name="executeCommand">
     /// The command to execute when any of the phrases is recognized.
     /// </param>
-    [SupportedOSPlatform("windows")]
     protected void AddCommand(string ruleName, string[] phrases,
-        Action<RecognitionResult> executeCommand)
+        Action<SpeechRecognitionResult> executeCommand)
     {
-        var builder = new GrammarBuilder()
+        var builder = new SpeechRecognitionGrammarBuilder()
             .OneOf(phrases);
 
-        _syntax[ruleName] = phrases;
         AddCommand(ruleName, builder, executeCommand);
     }
 
@@ -320,20 +311,13 @@ public abstract class TrackerModule
     /// The command to execute when speech matching the grammar is
     /// recognized.
     /// </param>
-    [SupportedOSPlatform("windows")]
-    protected void AddCommand(string ruleName, GrammarBuilder grammarBuilder,
-        Action<RecognitionResult> executeCommand)
+    protected void AddCommand(string ruleName, SpeechRecognitionGrammarBuilder grammarBuilder,
+        Action<SpeechRecognitionResult> executeCommand)
     {
-        if (!OperatingSystem.IsWindows())
-        {
-            return;
-        }
-
-        _syntax.TryAdd(ruleName, grammarBuilder.ToString().Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
-
         try
         {
-            var grammar = grammarBuilder.Build(ruleName);
+            var grammar = grammarBuilder.BuildGrammar(ruleName);
+            _syntax.TryAdd(ruleName, grammar.HelpText);
             grammar.SpeechRecognized += (_, e) =>
             {
                 try
@@ -385,10 +369,9 @@ public abstract class TrackerModule
     /// A new <see cref="Choices"/> object representing all possible item
     /// names.
     /// </returns>
-    [SupportedOSPlatform("windows")]
-    protected virtual Choices GetPluralItemNames()
+    protected virtual List<GrammarKeyValueChoice> GetPluralItemNames()
     {
-        var itemNames = new Choices();
+        var itemNames = new List<GrammarKeyValueChoice>();
         foreach (var item in WorldQueryService.LocalPlayersItems().Where(x => x.Metadata is { Multiple: true, HasStages: false }))
         {
             if (item.Metadata.Plural == null)
@@ -398,7 +381,7 @@ public abstract class TrackerModule
             }
 
             foreach (var name in item.Metadata.Plural)
-                itemNames.Add(new SemanticResultValue(name.ToString(), item.Name));
+                itemNames.Add(new GrammarKeyValueChoice(name.ToString(), item.Name));
         }
 
         return itemNames;
@@ -411,31 +394,43 @@ public abstract class TrackerModule
     /// A new <see cref="Choices"/> object representing all possible item
     /// names.
     /// </returns>
-    [SupportedOSPlatform("windows")]
-    protected virtual Choices GetItemNames(Func<Item, bool>? where = null)
+    protected virtual List<GrammarKeyValueChoice> GetItemNames(Func<Item, bool>? where = null)
     {
         where ??= _ => true;
 
-        var itemNames = new Choices();
+        var addedNames = new HashSet<string>();
+        var itemNames = new List<GrammarKeyValueChoice>();
         foreach (var item in WorldQueryService.LocalPlayersItems().Where(where))
         {
             if (item.Metadata.Name != null)
             {
                 foreach (var name in item.Metadata.Name)
                 {
-                    itemNames.Add(new SemanticResultValue(name.ToString(), item.Name));
+                    if (!addedNames.Contains(name.ToString()))
+                    {
+                        itemNames.Add(new GrammarKeyValueChoice(name.ToString(), item.Name));
+                        addedNames.Add(name.ToString());
+                    }
                 }
             }
             else
             {
-                itemNames.Add(new SemanticResultValue(item.Metadata.Item, item.Name));
+                if (!addedNames.Contains(item.Metadata.Item))
+                {
+                    itemNames.Add(new GrammarKeyValueChoice(item.Metadata.Item, item.Name));
+                    addedNames.Add(item.Metadata.Item);
+                }
             }
 
             if (item.Metadata.Stages != null)
             {
                 foreach (var stageName in item.Metadata.Stages.SelectMany(x => x.Value))
                 {
-                    itemNames.Add(new SemanticResultValue(stageName.ToString(), item.Name));
+                    if (!addedNames.Contains(stageName.ToString()))
+                    {
+                        itemNames.Add(new GrammarKeyValueChoice(stageName.ToString(), item.Name));
+                        addedNames.Add(stageName.ToString());
+                    }
                 }
             }
         }
@@ -450,10 +445,9 @@ public abstract class TrackerModule
     /// A new <see cref="Choices"/> object representing all possible dungeon
     /// names.
     /// </returns>
-    [SupportedOSPlatform("windows")]
-    protected virtual Choices GetDungeonNames(bool includeDungeonsWithoutReward = false)
+    protected virtual List<GrammarKeyValueChoice> GetDungeonNames(bool includeDungeonsWithoutReward = false)
     {
-        var dungeonNames = new Choices();
+        var dungeonNames = new List<GrammarKeyValueChoice>();
         foreach (var dungeon in TrackerBase.World.TreasureRegions)
         {
             var rewardRegion = dungeon as IHasReward;
@@ -463,11 +457,11 @@ public abstract class TrackerModule
             if (dungeon.Metadata.Name != null)
             {
                 foreach (var name in dungeon.Metadata.Name)
-                    dungeonNames.Add(new SemanticResultValue(name.Text, dungeon.Name));
+                    dungeonNames.Add(new GrammarKeyValueChoice(name.Text, dungeon.Name));
             }
             else
             {
-                dungeonNames.Add(new SemanticResultValue(dungeon.Name, dungeon.Name));
+                dungeonNames.Add(new GrammarKeyValueChoice(dungeon.Name, dungeon.Name));
             }
         }
 
@@ -481,20 +475,19 @@ public abstract class TrackerModule
     /// A new <see cref="Choices"/> object representing all possible boss
     /// names.
     /// </returns>
-    [SupportedOSPlatform("windows")]
-    protected virtual Choices GetBossNames()
+    protected virtual List<GrammarKeyValueChoice> GetBossNames()
     {
-        var bossNames = new Choices();
+        var bossNames = new List<GrammarKeyValueChoice>();
         foreach (var boss in TrackerBase.World.AllBosses)
         {
             if (boss.Metadata.Name != null)
             {
                 foreach (var name in boss.Metadata.Name)
-                    bossNames.Add(new SemanticResultValue(name.Text, boss.Name));
+                    bossNames.Add(new GrammarKeyValueChoice(name.Text, boss.Name));
             }
             else
             {
-                bossNames.Add(new SemanticResultValue(boss.Name, boss.Name));
+                bossNames.Add(new GrammarKeyValueChoice(boss.Name, boss.Name));
             }
         }
         return bossNames;
@@ -507,21 +500,20 @@ public abstract class TrackerModule
     /// A new <see cref="Choices"/> object representing all possible
     /// location names mapped to their IDs.
     /// </returns>
-    [SupportedOSPlatform("windows")]
-    protected virtual Choices GetLocationNames()
+    protected virtual List<GrammarKeyValueChoice> GetLocationNames()
     {
-        var locationNames = new Choices();
+        var locationNames = new List<GrammarKeyValueChoice>();
 
         foreach (var location in TrackerBase.World.Locations)
         {
             if (location.Metadata.Name != null)
             {
                 foreach (var name in location.Metadata.Name)
-                    locationNames.Add(new SemanticResultValue(name.Text, (int)location.Id));
+                    locationNames.Add(new GrammarKeyValueChoice(name.Text, (int)location.Id));
             }
             else
             {
-                locationNames.Add(new SemanticResultValue(location.Name, (int)location.Id));
+                locationNames.Add(new GrammarKeyValueChoice(location.Name, (int)location.Id));
             }
         }
 
@@ -535,17 +527,16 @@ public abstract class TrackerModule
     /// A new <see cref="Choices"/> object representing all possible room
     /// names mapped to the primary room name.
     /// </returns>
-    [SupportedOSPlatform("windows")]
-    protected virtual Choices GetRoomNames()
+    protected virtual List<GrammarKeyValueChoice> GetRoomNames()
     {
-        var roomNames = new Choices();
+        var roomNames = new List<GrammarKeyValueChoice>();
 
         foreach (var room in TrackerBase.World.Rooms)
         {
             var roomName = room.GetType().FullName;
             if (roomName == null || room.Metadata.Name == null) continue;
             foreach (var name in room.Metadata.Name)
-                roomNames.Add(new SemanticResultValue(name.Text, roomName));
+                roomNames.Add(new GrammarKeyValueChoice(name.Text, roomName));
         }
 
         return roomNames;
@@ -558,10 +549,9 @@ public abstract class TrackerModule
     /// A new <see cref="Choices"/> object representing all possible region
     /// names mapped to the primary region name.
     /// </returns>
-    [SupportedOSPlatform("windows")]
-    protected virtual Choices GetRegionNames(bool excludeDungeons = false)
+    protected virtual List<GrammarKeyValueChoice> GetRegionNames(bool excludeDungeons = false)
     {
-        var regionNames = new Choices();
+        var regionNames = new List<GrammarKeyValueChoice>();
 
         foreach (var region in TrackerBase.World.Regions)
         {
@@ -570,7 +560,7 @@ public abstract class TrackerModule
                 continue;
 
             foreach (var name in region.Metadata.Name)
-                regionNames.Add(new SemanticResultValue(name.Text, regionName));
+                regionNames.Add(new GrammarKeyValueChoice(name.Text, regionName));
         }
 
         return regionNames;
@@ -583,19 +573,18 @@ public abstract class TrackerModule
     /// A new <see cref="Choices"/> object representing all possible medallion
     /// names mapped to the primary item name.
     /// </returns>
-    [SupportedOSPlatform("windows")]
-    protected virtual Choices GetMedallionNames()
+    protected virtual List<GrammarKeyValueChoice> GetMedallionNames()
     {
-        var medallions = new Choices();
+        var medallions = new List<GrammarKeyValueChoice>();
 
         var medallionTypes = new List<ItemType>(Enum.GetValues<ItemType>());
         foreach (var medallion in medallionTypes.Where(x => x == ItemType.Nothing || x.IsInCategory(ItemCategory.Medallion)))
         {
             var item = WorldQueryService.FirstOrDefault(medallion);
-            if (item?.Metadata?.Name != null)
+            if (item?.Metadata.Name != null)
             {
                 foreach (var name in item.Metadata.Name)
-                    medallions.Add(new SemanticResultValue(medallion.ToString(), item.Name));
+                    medallions.Add(new GrammarKeyValueChoice(medallion.ToString(), item.Name));
             }
         }
 
@@ -608,12 +597,11 @@ public abstract class TrackerModule
     /// <param name="min">Minimum number choice</param>
     /// <param name="max">Maximum number choice</param>
     /// <returns>The choices for the user to choose from in speech recognition</returns>
-    [SupportedOSPlatform("windows")]
-    protected virtual Choices GetNumberChoices(int min, int max)
+    protected virtual List<GrammarKeyValueChoice> GetNumberChoices(int min, int max)
     {
-        var numbers = new Choices();
+        var numbers = new List<GrammarKeyValueChoice>();
         for (var i = min; i <= max; i++)
-            numbers.Add(new SemanticResultValue(i.ToString(), i));
+            numbers.Add(new GrammarKeyValueChoice(i.ToString(), i));
         return numbers;
     }
 
@@ -622,8 +610,7 @@ public abstract class TrackerModule
     /// </summary>
     /// <param name="max">Maximum number choice</param>
     /// <returns>The choices for the user to choose from in speech recognition</returns>
-    [SupportedOSPlatform("windows")]
-    protected virtual Choices GetNumberChoices(int max)
+    protected virtual List<GrammarKeyValueChoice> GetNumberChoices(int max)
 
     {
         return GetNumberChoices(0, max);

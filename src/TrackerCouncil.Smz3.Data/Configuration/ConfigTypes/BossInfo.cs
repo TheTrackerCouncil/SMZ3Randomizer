@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 using TrackerCouncil.Smz3.Shared.Enums;
 using YamlDotNet.Serialization;
 
@@ -7,10 +8,6 @@ namespace TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 /// <summary>
 /// Represents a boss whose defeat can be tracked.
 /// </summary>
-/// <remarks>
-/// This class is typically only used for tracking bosses not already
-/// represented by <see cref="DungeonInfo"/>, e.g. Metroid bosses.
-/// </remarks>
 public class BossInfo : IMergeable<BossInfo>
 {
     public BossInfo()

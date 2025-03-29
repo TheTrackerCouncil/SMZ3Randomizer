@@ -4,14 +4,18 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AvaloniaControls.ControlServices;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Chat.Integration;
+using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Options;
+using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.ViewModels;
+using TrackerCouncil.Smz3.Tracking.Services;
 using ConfigProvider = TrackerCouncil.Smz3.Data.Configuration.ConfigProvider;
 
-namespace TrackerCouncil.Smz3.Data.Services;
+namespace TrackerCouncil.Smz3.UI.Services;
 
 public class TwitchErrorEventHandler(string error) : EventArgs
 {
@@ -27,7 +31,8 @@ public class OptionsWindowService(
     IGitHubConfigDownloaderService gitHubConfigDownloaderService,
     IGitHubFileSynchronizerService gitHubFileSynchronizerService,
     TrackerSpriteService trackerSpriteService,
-    Configs configs)
+    ICommunicator communicator,
+    Configs configs) : ControlService
 {
     private Dictionary<string, string> _availableInputDevices = new() { { "Default", "Default" } };
     private OptionsWindowViewModel _model = new();
@@ -57,6 +62,12 @@ public class OptionsWindowService(
         _model.RandomizerOptions.UpdateSpritesButtonPressed += (sender, args) =>
         {
             _ = UpdateSpritesAsync();
+        };
+
+        _model.TrackerOptions.TestTextToSpeechPressed += (sender, args) =>
+        {
+            communicator.UpdateVolume(_model.TrackerOptions.TextToSpeechVolume);
+            communicator.Say(new SpeechRequest("This is a test message", null, true));
         };
 
         _model.TwitchIntegration.TwitchLoginPressed += (sender, args) =>
