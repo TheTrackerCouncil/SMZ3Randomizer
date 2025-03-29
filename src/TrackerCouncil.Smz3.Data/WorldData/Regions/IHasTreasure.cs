@@ -54,7 +54,7 @@ public interface IHasTreasure
     public int GetTreasureCount()
     {
         var region = (Region)this;
-        return region.Locations.Count(x => x.Item.Type != ItemType.Nothing && (!x.Item.IsDungeonItem || region.World.Config.ZeldaKeysanity) && x.Type != LocationType.NotInDungeon);
+        return region.Locations.Count(x => x.Item.Type != ItemType.Nothing && (!x.Item.IsDungeonItem || region.World.Config.ZeldaKeysanity || !x.Item.IsLocalPlayerItem) && x.Type != LocationType.NotInDungeon);
     }
 
     public void ApplyState(TrackerState? state)
