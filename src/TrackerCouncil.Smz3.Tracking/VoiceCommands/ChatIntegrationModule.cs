@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
-using PySpeechServiceClient.Grammar;
+using PySpeechService.Recognition;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Chat.Integration;
 using TrackerCouncil.Smz3.Chat.Integration.Models;

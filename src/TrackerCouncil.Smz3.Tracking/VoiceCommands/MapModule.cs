@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Versioning;
-using System.Speech.Recognition;
 using Microsoft.Extensions.Logging;
-using PySpeechServiceClient.Grammar;
+using PySpeechService.Recognition;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Shared.Enums;

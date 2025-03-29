@@ -55,11 +55,16 @@ public static class TrackerServiceCollectionExtensions
             services.AddTransient<IMicrophoneService, MicrophoneService>();
             services.AddSingleton<IGlobalHook, TaskPoolGlobalHook>();
         }
-        else
+        else if (OperatingSystem.IsLinux())
         {
             services.AddScoped<ICommunicator, PyTextToSpeechCommunicator>();
-            services.AddSingleton<IMicrophoneService, NullMicrophoneService>();
             services.AddScoped<PySpeechRecognitionService>();
+            services.AddSingleton<IMicrophoneService, NullMicrophoneService>();
+            services.AddScoped<NullSpeechRecognitionService>();
+        }
+        else
+        {
+            services.AddSingleton<IMicrophoneService, NullMicrophoneService>();
             services.AddScoped<NullSpeechRecognitionService>();
         }
 

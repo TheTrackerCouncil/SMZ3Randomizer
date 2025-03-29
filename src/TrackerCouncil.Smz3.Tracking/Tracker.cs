@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using BunLabs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using PySpeechServiceClient.Models;
+using PySpeechService.Recognition;
 using TrackerCouncil.Smz3.Chat.Integration;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Configuration;

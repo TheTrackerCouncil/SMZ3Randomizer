@@ -6,8 +6,7 @@ using System.Linq;
 using System.Speech.Recognition;
 
 using Microsoft.Extensions.Logging;
-using PySpeechServiceClient.Grammar;
-using PySpeechServiceClient.Models;
+using PySpeechService.Recognition;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.WorldData;

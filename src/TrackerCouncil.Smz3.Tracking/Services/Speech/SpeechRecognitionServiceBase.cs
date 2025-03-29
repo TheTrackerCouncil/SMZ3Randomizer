@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Speech.Recognition;
-using PySpeechServiceClient.Grammar;
-using PySpeechServiceClient.Models;
+using PySpeechService.Recognition;
 
 namespace TrackerCouncil.Smz3.Tracking.Services.Speech;
 

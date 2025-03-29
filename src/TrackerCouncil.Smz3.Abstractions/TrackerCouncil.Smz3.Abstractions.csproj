@@ -12,10 +12,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="PySpeechServiceClient" Version="0.1.0" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Folder Include="Speech\" />
     </ItemGroup>
 

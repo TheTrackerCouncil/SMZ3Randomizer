@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Speech.Recognition;
 
 using Microsoft.Extensions.Logging;
-using PySpeechServiceClient.Grammar;
+using PySpeechService.Recognition;
 
 namespace TrackerCouncil.Smz3.Tracking.Services.Speech;
 

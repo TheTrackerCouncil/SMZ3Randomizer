@@ -1,14 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 using System.Speech.Recognition;
 using System.Threading.Tasks;
-using PySpeechServiceClient;
-using PySpeechServiceClient.Grammar;
+using Microsoft.Extensions.Logging;
+using PySpeechService.Client;
+using PySpeechService.Recognition;
 using TrackerCouncil.Smz3.Data.Configuration;
 
 namespace TrackerCouncil.Smz3.Tracking.Services.Speech;
 
-public class PySpeechRecognitionService(IPySpeechService pySpeechService, Configs configs) : SpeechRecognitionServiceBase
+[SupportedOSPlatform("linux")]
+public class PySpeechRecognitionService(IPySpeechService pySpeechService, Configs configs, ILogger<PySpeechRecognitionService> logger) : SpeechRecognitionServiceBase
 {
     private bool _isEnabled;
     private float _minRequiredConfidence = 0.8f;
@@ -82,9 +85,9 @@ public class PySpeechRecognitionService(IPySpeechService pySpeechService, Config
         {
             await pySpeechService.StartSpeechRecognitionAsync(requiredConfidence: _minRequiredConfidence * 100);
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            // do nothing
+            logger.LogError(e, "Failed to start PySpeechService SpeechRecognition");
         }
 
     }

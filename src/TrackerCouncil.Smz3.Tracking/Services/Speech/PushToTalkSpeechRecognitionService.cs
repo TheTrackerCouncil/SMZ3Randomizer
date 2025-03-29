@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
 using NAudio.Wave;
-using PySpeechServiceClient.Grammar;
+using PySpeechService.Recognition;
 using SharpHook;
 using SharpHook.Native;
 using TrackerCouncil.Smz3.Data.Options;

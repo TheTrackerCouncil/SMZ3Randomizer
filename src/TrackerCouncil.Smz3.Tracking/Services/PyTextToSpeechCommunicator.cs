@@ -2,14 +2,16 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Versioning;
 using System.Threading.Tasks;
-using PySpeechServiceClient;
-using PySpeechServiceClient.Models;
+using PySpeechService.Client;
+using PySpeechService.TextToSpeech;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Shared;
 
 namespace TrackerCouncil.Smz3.Tracking.Services;
 
+[SupportedOSPlatform("linux")]
 internal class PyTextToSpeechCommunicator : ICommunicator
 {
     private readonly IPySpeechService _pySpeechService;
