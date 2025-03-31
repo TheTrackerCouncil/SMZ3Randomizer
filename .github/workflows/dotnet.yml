@@ -2,7 +2,7 @@ name: .NET Build + Test + Publish
 
 on:
   push:
-    branches: [main, linux-speech-recognition]
+    branches: [main]
   pull_request:
     branches: [main]
 

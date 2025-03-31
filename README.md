@@ -31,10 +31,13 @@ In addition to making IBJ completely optional, there is also:
 
 ### Windows
  - Download the latest version from the [GitHub releases] and run the installer
+ 
 ### Linux
  - Install [.NET 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
  - Download the latest version from the [GitHub releases] and extract into the desired folder
  - Make the SMZ3CasRandomizer file executable and run it
+ - (Optional) Download or install the [PySpeechService application](https://github.com/MattEqualsCoder/PySpeechService) for voice recognition and text-to-speech
+
 ### Mac
  - Install [.NET 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
  - Download the latest version from the [GitHub releases] and move to the desired folder
