@@ -25,7 +25,7 @@ In addition to making IBJ completely optional, there is also:
  - Sprites made by members of [Diabetus’](https://twitch.tv/the_betus) community and others;
 
 > [!NOTE]
-> Voice recognition and text-to-speech functionality is currently only available on Windows.
+> Voice recognition and text-to-speech functionality currently only has native support available on Windows. Linux users can use the [PySpeechService application](https://github.com/MattEqualsCoder/PySpeechService) for voice recognition and text-to-speech.
 
 ## Installation
 

@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="BunLabs.Common" Version="1.0.4" />
     <PackageReference Include="MattEqualsCoder.MSURandomizer.Library" Version="3.1.1" />
-    <PackageReference Include="MattEqualsCoder.PySpeechService.Client" Version="0.1.1" />
+    <PackageReference Include="MattEqualsCoder.PySpeechService.Client" Version="0.1.2" />
     <PackageReference Include="MattEqualsCoder.PySpeechService.Recognition" Version="0.1.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.3" />
     <PackageReference Include="NAudio.Wasapi" Version="2.2.1" />
