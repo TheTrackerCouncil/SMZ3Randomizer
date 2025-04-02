@@ -9,4 +9,5 @@ public class TrackerSpeechWindowViewModel : ViewModelBase
     [Reactive] public string? TrackerImage { get; set; }
     [Reactive] public Thickness AnimationMargin { get; set; } = new(0, 0, 0, 0);
     [Reactive] public SolidColorBrush Background { get; set; } = new(new Color(0xFF, 0x48, 0x3D, 0x8B));
+    [Reactive] public bool IsTrackerImageVisible { get; set; } = false;
 }

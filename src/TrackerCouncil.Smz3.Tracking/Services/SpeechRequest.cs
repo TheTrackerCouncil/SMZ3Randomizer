@@ -22,4 +22,9 @@ public class SpeechRequest(string text, string? trackerImage = null, bool wait =
     /// If the communicator should block the calling thread
     /// </summary>
     public bool Wait => wait;
+
+    /// <summary>
+    /// If the next tracker image is a blank one
+    /// </summary>
+    public bool FollowedByBlankImage { get; set; }
 }

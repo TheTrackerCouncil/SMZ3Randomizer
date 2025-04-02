@@ -502,6 +502,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     {
         SchrodingersString? selectedResponse = null;
         string? trackerImage = null;
+        List<PossibilityAdditionalLine>? additionalLines = null;
 
         if (key != null)
         {
@@ -547,11 +548,30 @@ public sealed class Tracker : TrackerBase, IDisposable
 
             text = trackerSpeechDetails.Value.SpeechText;
             trackerImage = trackerSpeechDetails.Value.TrackerImage;
+            additionalLines = trackerSpeechDetails.Value.AdditionalLines;
         }
 
-        var formattedText = FormatPlaceholders(text);
+        var speechRequests = new List<SpeechRequest>();
 
-        _communicator.Say(new SpeechRequest(formattedText, trackerImage, wait));
+        var formattedText = FormatPlaceholders(text);
+        speechRequests.Add(new SpeechRequest(formattedText, trackerImage, wait));
+
+        if (additionalLines?.Count > 0)
+        {
+            speechRequests.AddRange(additionalLines.Select(x =>
+                new SpeechRequest(FormatPlaceholders(x.Text), x.TrackerImage, wait)));
+        }
+
+        for (var i = 0; i < speechRequests.Count; i++)
+        {
+            if (i < speechRequests.Count - 1)
+            {
+                speechRequests[i].FollowedByBlankImage = "blank".Equals(speechRequests[i + 1].TrackerImage,
+                    StringComparison.OrdinalIgnoreCase);
+            }
+            _communicator.Say(speechRequests[i]);
+        }
+
         _lastSpokenText = formattedText;
 
         return true;
