@@ -5,7 +5,7 @@ namespace TrackerCouncil.Smz3.Tracking.Services;
 /// <summary>
 /// Defines a mechanism to communicate with the player.
 /// </summary>
-public interface ICommunicator
+public interface ICommunicator : IDisposable
 {
     /// <summary>
     /// Communicates the specified text to the player

@@ -10,7 +10,7 @@ namespace TrackerCouncil.Smz3.Tracking.Services;
 /// Facilitates communication with the player using Windows' built-in
 /// text-to-speech engine.
 /// </summary>
-public class TextToSpeechCommunicator : ICommunicator, IDisposable
+public class TextToSpeechCommunicator : ICommunicator
 {
     private readonly SpeechSynthesizer _tts = null!;
     private bool _canSpeak;
@@ -53,8 +53,9 @@ public class TextToSpeechCommunicator : ICommunicator, IDisposable
             {
                 IsSpeaking = false;
                 var duration = DateTime.Now - _startSpeakingTime;
+                var request = _currentSpeechRequest;
                 _currentSpeechRequest = null;
-                SpeakCompleted?.Invoke(this, new SpeakCompletedEventArgs(duration));
+                SpeakCompleted?.Invoke(this, new SpeakCompletedEventArgs(duration, request));
             }
             else
             {

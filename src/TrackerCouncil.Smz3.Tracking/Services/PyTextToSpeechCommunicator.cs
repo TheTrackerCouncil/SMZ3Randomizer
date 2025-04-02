@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Versioning;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using PySpeechService.Client;
 using PySpeechService.TextToSpeech;
 using TrackerCouncil.Smz3.Data.Options;
@@ -15,6 +16,8 @@ namespace TrackerCouncil.Smz3.Tracking.Services;
 internal class PyTextToSpeechCommunicator : ICommunicator
 {
     private readonly IPySpeechService _pySpeechService;
+    private readonly ILogger<PyTextToSpeechCommunicator> _logger;
+    private DateTime? _startSpeakingTime;
     private (string onnxPath, string jsonPath)? _defaultPrimaryVoice;
     private (string onnxPath, string jsonPath)? _defaultAltVoice;
     private (string onnxPath, string jsonPath)? _primaryVoice;
@@ -25,9 +28,10 @@ internal class PyTextToSpeechCommunicator : ICommunicator
     private int volume;
     private ConcurrentDictionary<string, SpeechRequest> _pendingRequests = [];
 
-    public PyTextToSpeechCommunicator(IPySpeechService pySpeechService, TrackerOptionsAccessor trackerOptionsAccessor)
+    public PyTextToSpeechCommunicator(IPySpeechService pySpeechService, TrackerOptionsAccessor trackerOptionsAccessor, ILogger<PyTextToSpeechCommunicator> logger)
     {
         _pySpeechService = pySpeechService;
+        _logger = logger;
 
         // Check to see if the user has the tracker voice files to use
         var piperPath = Path.Combine(Directories.AppDataFolder, "PiperModels");
@@ -42,47 +46,70 @@ internal class PyTextToSpeechCommunicator : ICommunicator
         volume = trackerOptionsAccessor.Options?.TextToSpeechVolume ?? 100;
         _ = Initialize();
 
-        _pySpeechService.Initialized += (_, _) =>
-        {
-            _ = Initialize();
-        };
-
-        _pySpeechService.SpeakCommandResponded += (_, args) =>
-        {
-            _pendingRequests.TryGetValue(args.Response.FullMessage, out var request);
-
-            if (args.Response.IsStartOfChunk)
-            {
-                VisemeReached?.Invoke(this, new SpeakingUpdatedEventArgs(true, request));
-            }
-            else if (args.Response.IsEndOfChunk)
-            {
-                VisemeReached?.Invoke(this, new SpeakingUpdatedEventArgs(false, request));
-            }
-
-            if (args.Response.IsStartOfMessage)
-            {
-                _isSpeaking = true;
-                SpeakStarted?.Invoke(this, EventArgs.Empty);
-            }
-            else if (args.Response.IsEndOfMessage)
-            {
-                SpeakCompleted?.Invoke(this, new SpeakCompletedEventArgs(TimeSpan.FromSeconds(3)));
-
-                if (request != null)
-                {
-                    _pendingRequests.TryRemove(
-                        new KeyValuePair<string, SpeechRequest>(args.Response.FullMessage, request));
-                }
-
-                if (!args.Response.HasAnotherRequest)
-                {
-                    _isSpeaking = false;
-                }
-            }
-        };
+        _pySpeechService.Initialized += PySpeechServiceOnInitialized;
+        _pySpeechService.SpeakCommandResponded += PySpeechServiceOnSpeakCommandResponded;
 
         _isEnabled = trackerOptionsAccessor.Options?.VoiceFrequency != Shared.Enums.TrackerVoiceFrequency.Disabled;
+    }
+
+    private void PySpeechServiceOnSpeakCommandResponded(object? sender, SpeakCommandResponseEventArgs args)
+    {
+        SpeechRequest? request = null;
+
+        _logger.LogInformation("Response: {Id}", args.Response.MessageId);
+
+        if (string.IsNullOrEmpty(args.Response.MessageId) || !_pendingRequests.TryGetValue(args.Response.MessageId, out request))
+        {
+            _logger.LogError("Received PySpeechService SpeakCommandResponse with no valid message id");
+        }
+
+        if (args.Response.IsStartOfChunk)
+        {
+            VisemeReached?.Invoke(this, new SpeakingUpdatedEventArgs(true, request));
+        }
+        else if (args.Response.IsEndOfChunk)
+        {
+            VisemeReached?.Invoke(this, new SpeakingUpdatedEventArgs(false, request));
+        }
+
+        if (args.Response.IsStartOfMessage)
+        {
+            if (_startSpeakingTime == null)
+            {
+                _startSpeakingTime = DateTime.Now;
+            }
+
+            _isSpeaking = true;
+            SpeakStarted?.Invoke(this, EventArgs.Empty);
+        }
+        else if (args.Response.IsEndOfMessage)
+        {
+            if (request != null)
+            {
+                _pendingRequests.TryRemove(
+                    new KeyValuePair<string, SpeechRequest>(args.Response.MessageId!, request));
+            }
+
+            if (!args.Response.HasAnotherRequest)
+            {
+                var duration = DateTime.Now - _startSpeakingTime;
+                _startSpeakingTime = null;
+                SpeakCompleted?.Invoke(this, new SpeakCompletedEventArgs(duration ?? TimeSpan.Zero, request));
+                _isSpeaking = false;
+            }
+        }
+    }
+
+    private async void PySpeechServiceOnInitialized(object? sender, EventArgs args)
+    {
+        try
+        {
+            await Initialize();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error initializing PySpeechService");
+        }
     }
 
     public void UseAlternateVoice(bool useAlt = true)
@@ -133,15 +160,18 @@ internal class PyTextToSpeechCommunicator : ICommunicator
     {
         if (!_isEnabled || !_pySpeechService.IsSpeechEnabled) return;
 
-        _pendingRequests.TryAdd(request.Text, request);
+        var messageId = Guid.NewGuid().ToString();
+        _pendingRequests.TryAdd(messageId, request);
+
+        _logger.LogInformation("Request: {Id}", messageId);
 
         if (request.Wait)
         {
-            _pySpeechService.Speak(request.Text, GetSpeechSettings());
+            _pySpeechService.Speak(request.Text, GetSpeechSettings(), messageId);
         }
         else
         {
-            _pySpeechService.SpeakAsync(request.Text, GetSpeechSettings());
+            _pySpeechService.SpeakAsync(request.Text, GetSpeechSettings(), messageId);
         }
     }
 
@@ -188,4 +218,10 @@ internal class PyTextToSpeechCommunicator : ICommunicator
     public event EventHandler? SpeakStarted;
     public event EventHandler<SpeakCompletedEventArgs>? SpeakCompleted;
     public event EventHandler<SpeakingUpdatedEventArgs>? VisemeReached;
+
+    public void Dispose()
+    {
+        _pySpeechService.Initialized -= PySpeechServiceOnInitialized;
+        _pySpeechService.SpeakCommandResponded -= PySpeechServiceOnSpeakCommandResponded;
+    }
 }
