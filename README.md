@@ -37,6 +37,11 @@ In addition to making IBJ completely optional, there is also:
  - Download the latest version from the [GitHub releases] and extract into the desired folder
  - Make the SMZ3CasRandomizer file executable and run it
  - (Optional) Download or install the [PySpeechService application](https://github.com/MattEqualsCoder/PySpeechService) for voice recognition and text-to-speech
+    - Note that if you want custom Piper voices, you will need to add the following [Piper speech files](https://huggingface.co/rhasspy/piper-voices/tree/main/en) to `~/.local/share/SMZ3CasRandomizer/PiperModels/`:
+        - Tracker_Female.json
+        - Tracker_Female.onnx
+        - Tracker_Male.json
+        - Tracker_Male.onnx
 
 ### Mac
  - Install [.NET 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
