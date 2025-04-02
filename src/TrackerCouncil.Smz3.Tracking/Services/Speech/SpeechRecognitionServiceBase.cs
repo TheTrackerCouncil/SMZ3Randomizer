@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Speech.Recognition;
+using PySpeechService.Recognition;
 
 namespace TrackerCouncil.Smz3.Tracking.Services.Speech;
 
@@ -12,7 +15,7 @@ public abstract class SpeechRecognitionServiceBase : ISpeechRecognitionService, 
     /// <summary>
     /// Event fired when speech was successfully understood
     /// </summary>
-    public event EventHandler<SpeechRecognizedEventArgs>? SpeechRecognized;
+    public event EventHandler<SpeechRecognitionResultEventArgs>? SpeechRecognized;
 
     /// <summary>
     /// The internal speech recognition engine used by the service, if
@@ -39,7 +42,12 @@ public abstract class SpeechRecognitionServiceBase : ISpeechRecognitionService, 
     /// Initializes the microphone to the default Windows mic
     /// </summary>
     /// <returns>True if successful, false otherwise</returns>
-    public abstract bool Initialize(out bool foundRequestedDevice);
+    public abstract bool Initialize(float minRequiredConfidence, out bool foundRequestedDevice);
+
+    /// <summary>
+    /// Adds a series of grammar rules to the recognition service
+    /// </summary>
+    public abstract void AddGrammar(List<SpeechRecognitionGrammar> grammars);
 
     /// <summary>
     /// Releases all resources used by the service.
@@ -74,7 +82,21 @@ public abstract class SpeechRecognitionServiceBase : ISpeechRecognitionService, 
     /// <param name="args"></param>
     protected virtual void OnSpeechRecognized(object? sender, SpeechRecognizedEventArgs args)
     {
-        if (OperatingSystem.IsWindows())
-            SpeechRecognized?.Invoke(sender, args);
+        if (!OperatingSystem.IsWindows()) return;
+
+        SpeechRecognized?.Invoke(sender, new SpeechRecognitionResultEventArgs(new SpeechRecognitionResult()
+        {
+            Text = args.Result.Text ?? string.Empty,
+            Confidence = args.Result.Confidence,
+#pragma warning disable CA1416
+            Semantics = args.Result.Semantics.ToDictionary(x => x.Key, x => new SpeechRecognitionSemantic(x.Key.ToString(), x.Value.ToString() ?? string.Empty)),
+#pragma warning restore CA1416
+            NativeResult = args.Result
+        }));
+    }
+
+    protected virtual void OnSpeechRecognized(object? sender, SpeechRecognitionResultEventArgs args)
+    {
+        SpeechRecognized?.Invoke(sender, args);
     }
 }

@@ -25,16 +25,24 @@ In addition to making IBJ completely optional, there is also:
  - Sprites made by members of [Diabetus’](https://twitch.tv/the_betus) community and others;
 
 > [!NOTE]
-> Voice recognition and text-to-speech functionality is currently only available on Windows.
+> Voice recognition and text-to-speech functionality currently only has native support available on Windows. Linux users can use the [PySpeechService application](https://github.com/MattEqualsCoder/PySpeechService) for voice recognition and text-to-speech.
 
 ## Installation
 
 ### Windows
  - Download the latest version from the [GitHub releases] and run the installer
+ 
 ### Linux
  - Install [.NET 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
  - Download the latest version from the [GitHub releases] and extract into the desired folder
  - Make the SMZ3CasRandomizer file executable and run it
+ - (Optional) Download or install the [PySpeechService application](https://github.com/MattEqualsCoder/PySpeechService) for voice recognition and text-to-speech
+    - Note that if you want custom Piper voices, you will need to add the following [Piper speech files](https://huggingface.co/rhasspy/piper-voices/tree/main/en) to `~/.local/share/SMZ3CasRandomizer/PiperModels/`:
+        - Tracker_Female.json
+        - Tracker_Female.onnx
+        - Tracker_Male.json
+        - Tracker_Male.onnx
+
 ### Mac
  - Install [.NET 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
  - Download the latest version from the [GitHub releases] and move to the desired folder

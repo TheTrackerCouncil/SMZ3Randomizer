@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DynamicForms.Library.Core;
 using DynamicForms.Library.Core.Attributes;
 using TrackerCouncil.Smz3.Data.Options;
+using TrackerCouncil.Smz3.Shared;
 
 namespace TrackerCouncil.Smz3.Data.ViewModels;
 
@@ -20,6 +22,12 @@ public class OptionsWindowViewModel
     public OptionsWindowViewModel(GeneralOptions options, Dictionary<string, string> trackerImagePacks, Dictionary<string, string> audioInputDevices,
         List<string> availableProfiles)
     {
+        if (OperatingSystem.IsLinux() &&
+            options.SpeechRecognitionMode is SpeechRecognitionMode.AlwaysOn or SpeechRecognitionMode.PushToTalk)
+        {
+            options.SpeechRecognitionMode = SpeechRecognitionMode.PySpeechService;
+        }
+
         RandomizerOptions.Z3RomPath = options.Z3RomPath;
         RandomizerOptions.SMRomPath = options.SMRomPath;
         RandomizerOptions.RomOutputPath = options.RomOutputPath;
@@ -40,8 +48,9 @@ public class OptionsWindowViewModel
         TrackerOptions.TrackerRecognitionThreshold = options.TrackerRecognitionThreshold * 100;
         TrackerOptions.TrackerConfidenceThreshold = options.TrackerConfidenceThreshold * 100;
         TrackerOptions.TrackerConfidenceSassThreshold = options.TrackerConfidenceSassThreshold * 100;
+        TrackerOptions.TextToSpeechVolume = options.TextToSpeechVolume;
         TrackerOptions.TrackerVoiceFrequency = options.TrackerVoiceFrequency;
-        TrackerOptions.SpeechRecognitionMode = options.SpeechRecognitionMode;
+        TrackerOptions.SpeechRecognitionMode = options.SpeechRecognitionMode.ToString();
         TrackerOptions.PushToTalkKey = options.PushToTalkKey;
         TrackerOptions.PushToTalkDevice = options.PushToTalkDevice;
         TrackerOptions.UndoExpirationTime = options.UndoExpirationTime;
@@ -59,6 +68,7 @@ public class OptionsWindowViewModel
         TrackerOptions.MsuMessageReceiverEnabled = options.MsuMessageReceiverEnabled;
         TrackerOptions.TrackerSpeechImagePacks = trackerImagePacks;
         TrackerOptions.AudioDevices = audioInputDevices;
+        TrackerOptions.SpeechRecognitionTypes = GetSpeechRecognitionTypes();
 
         TwitchIntegration.TwitchUserName = options.TwitchUserName;
         TwitchIntegration.TwitchChannel = options.TwitchChannel;
@@ -75,6 +85,12 @@ public class OptionsWindowViewModel
 
     public void UpdateOptions(GeneralOptions options)
     {
+        var speechRecognitionMode = SpeechRecognitionMode.AlwaysOn;
+        if (Enum.TryParse(TrackerOptions.SpeechRecognitionMode, out SpeechRecognitionMode parsedSpeechRecognitionMode))
+        {
+            speechRecognitionMode = parsedSpeechRecognitionMode;
+        }
+
         options.Z3RomPath = RandomizerOptions.Z3RomPath;
         options.SMRomPath = RandomizerOptions.SMRomPath;
         options.RomOutputPath = RandomizerOptions.RomOutputPath;
@@ -95,8 +111,9 @@ public class OptionsWindowViewModel
         options.TrackerRecognitionThreshold = TrackerOptions.TrackerRecognitionThreshold / 100;
         options.TrackerConfidenceThreshold = TrackerOptions.TrackerConfidenceThreshold / 100;
         options.TrackerConfidenceSassThreshold = TrackerOptions.TrackerConfidenceSassThreshold / 100;
+        options.TextToSpeechVolume = TrackerOptions.TextToSpeechVolume;
         options.TrackerVoiceFrequency = TrackerOptions.TrackerVoiceFrequency;
-        options.SpeechRecognitionMode = TrackerOptions.SpeechRecognitionMode;
+        options.SpeechRecognitionMode = speechRecognitionMode;
         options.PushToTalkKey = TrackerOptions.PushToTalkKey;
         options.PushToTalkDevice = TrackerOptions.PushToTalkDevice;
         options.UndoExpirationTime = TrackerOptions.UndoExpirationTime;
@@ -136,4 +153,23 @@ public class OptionsWindowViewModel
 
     [DynamicFormObject(groupName:"Tracker profiles")]
     public OptionsWindowTrackerProfiles TrackerProfiles { get; set; } = new();
+
+    private Dictionary<string, string> GetSpeechRecognitionTypes()
+    {
+        var toReturn = new Dictionary<string, string>();
+
+        if (OperatingSystem.IsWindows())
+        {
+            toReturn[SpeechRecognitionMode.AlwaysOn.ToString()] = SpeechRecognitionMode.AlwaysOn.GetDescription();
+            toReturn[SpeechRecognitionMode.PushToTalk.ToString()] = SpeechRecognitionMode.PushToTalk.GetDescription();
+        }
+        else if (OperatingSystem.IsLinux())
+        {
+            toReturn[SpeechRecognitionMode.PySpeechService.ToString()] = SpeechRecognitionMode.PySpeechService.GetDescription();
+        }
+
+        toReturn[SpeechRecognitionMode.Disabled.ToString()] = SpeechRecognitionMode.Disabled.GetDescription();
+
+        return toReturn;
+    }
 }

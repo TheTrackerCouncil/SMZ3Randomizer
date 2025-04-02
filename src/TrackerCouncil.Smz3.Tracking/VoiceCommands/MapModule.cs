@@ -1,7 +1,7 @@
-﻿using System.Linq;
-using System.Runtime.Versioning;
-using System.Speech.Recognition;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Extensions.Logging;
+using PySpeechService.Recognition;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Shared.Enums;
@@ -33,30 +33,29 @@ public class MapModule : TrackerModule
         _config = config;
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetChangeMapRule()
+    private SpeechRecognitionGrammarBuilder GetChangeMapRule()
     {
         var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
         var itemNames = GetItemNames(x => x.Name != "Content");
         var locationNames = GetLocationNames();
         var roomNames = GetRoomNames();
 
-        var maps = new Choices();
+        var maps = new List<GrammarKeyValueChoice>();
         foreach (var map in _config.Maps)
         {
             foreach (var name in map.Name)
             {
-                maps.Add(new SemanticResultValue(name, map.ToString()));
+                maps.Add(new GrammarKeyValueChoice(name, map.ToString()));
             }
         }
 
-        var version1 = new GrammarBuilder()
+        var version1 = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Optional("please", "would you kindly")
             .OneOf("update my map to", "change my map to")
             .Append(MapKey, maps);
 
-        var version2 = new GrammarBuilder()
+        var version2 = new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Optional("please", "would you kindly")
             .OneOf("show me")
@@ -64,26 +63,23 @@ public class MapModule : TrackerModule
             .Append(MapKey, maps)
             .Optional("map");
 
-        return GrammarBuilder.Combine(version1, version2);
+        return SpeechRecognitionGrammarBuilder.Combine(version1, version2);
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder DarkRoomRule()
+    private SpeechRecognitionGrammarBuilder DarkRoomRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("it's dark in here", "I can't see", "show me this dark room map");
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder CanSeeRule()
+    private SpeechRecognitionGrammarBuilder CanSeeRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("I can see now", "I can see clearly now", "it's no longer dark", "I'm out of the dark room", "stop showing me the dark room map");
     }
 
-    [SupportedOSPlatform("windows")]
     public override void AddCommands()
     {
         var darkRoomMaps = _config.Maps.Where(x => x.IsDarkRoomMap == true && x.MemoryRoomNumbers?.Count > 0).ToList();

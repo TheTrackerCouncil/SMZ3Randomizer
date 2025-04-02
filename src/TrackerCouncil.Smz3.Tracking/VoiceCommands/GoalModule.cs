@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Speech.Recognition;
+﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
+using PySpeechService.Recognition;
 using TrackerCouncil.Smz3.Abstractions;
-using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Tracking.Services;
 
@@ -28,10 +26,9 @@ public class GoalModule : TrackerModule
     {
     }
 
-    [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
-    private GrammarBuilder GetGanonsTowerCrystalCountRule()
+    private SpeechRecognitionGrammarBuilder GetGanonsTowerCrystalCountRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("Ganon's Tower", "G T")
             .OneOf("requires", "needs")
@@ -40,10 +37,9 @@ public class GoalModule : TrackerModule
             .Optional("to enter");
     }
 
-    [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
-    private GrammarBuilder GetGanonsCrystalCountRule()
+    private SpeechRecognitionGrammarBuilder GetGanonsCrystalCountRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("Ganon", "Ganondorf")
             .OneOf("requires", "needs")
@@ -53,9 +49,9 @@ public class GoalModule : TrackerModule
     }
 
     [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
-    private GrammarBuilder GetTourianBossCountRule()
+    private SpeechRecognitionGrammarBuilder GetTourianBossCountRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("tourian", "the statue room", "the metroid statue room", "the golden statue room")
             .OneOf("requires", "needs")
@@ -63,7 +59,6 @@ public class GoalModule : TrackerModule
             .OneOf("bosses", "boss tokens");
     }
 
-    [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
     public override void AddCommands()
     {
         if (TrackerBase.World.Config.RomGenerator == RomGenerator.Cas)
@@ -73,19 +68,19 @@ public class GoalModule : TrackerModule
 
         AddCommand("GT Crystal Count", GetGanonsTowerCrystalCountRule(), (result) =>
         {
-            var count = (int)result.Semantics[ItemCountKey].Value;
+            var count = int.Parse(result.Semantics[ItemCountKey].Value);
             TrackerBase.GameStateTracker.UpdateGanonsTowerRequirement(count, false);
         });
 
         AddCommand("Ganon Crystal Count", GetGanonsCrystalCountRule(), (result) =>
         {
-            var count = (int)result.Semantics[ItemCountKey].Value;
+            var count = int.Parse(result.Semantics[ItemCountKey].Value);
             TrackerBase.GameStateTracker.UpdateGanonRequirement(count, false);
         });
 
         AddCommand("Tourian Boss Count", GetTourianBossCountRule(), (result) =>
         {
-            var count = (int)result.Semantics[ItemCountKey].Value;
+            var count = int.Parse(result.Semantics[ItemCountKey].Value);
             TrackerBase.GameStateTracker.UpdateTourianRequirement(count, false);
         });
     }

@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Speech.Synthesis;
 
 namespace TrackerCouncil.Smz3.Tracking.Services;
 
 /// <summary>
 /// Defines a mechanism to communicate with the player.
 /// </summary>
-public interface ICommunicator
+public interface ICommunicator : IDisposable
 {
     /// <summary>
     /// Communicates the specified text to the player
@@ -59,7 +58,13 @@ public interface ICommunicator
     /// <summary>
     /// If the TTS is currently speaking
     /// </summary>
-    public bool IsSpeaking { get;  }
+    public bool IsSpeaking { get; }
+
+    /// <summary>
+    /// Updates the volume of the text to speech engine.
+    /// </summary>
+    /// <param name="volume">New volume between 0-100 with 0 being silent and 100 being the default max value.</param>
+    public void UpdateVolume(int volume);
 
     /// <summary>
     /// Event for when the communicator has started speaking
@@ -74,7 +79,7 @@ public interface ICommunicator
     /// <summary>
     /// Event for when the communicator has reached a new viseme
     /// </summary>
-    public event EventHandler<SpeakVisemeReachedEventArgs> VisemeReached;
+    public event EventHandler<SpeakingUpdatedEventArgs> VisemeReached;
 
 
 }

@@ -2,157 +2,156 @@ name: .NET Build + Test + Publish
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
-
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Download config repo
-      uses: actions/checkout@v4
-      with:
-        repository: TheTrackerCouncil/SMZ3CasConfigs
-        path: configs
-        ref: main
-    - name: Download sprite repo
-      uses: actions/checkout@v4
-      with:
-        repository: TheTrackerCouncil/SMZ3CasSprites
-        path: sprites
-        ref: main
-    - name: Download tracker sprite repo
-      uses: actions/checkout@v4
-      with:
-        repository: TheTrackerCouncil/TrackerSprites
-        path: trackersprites
-        ref: main
-    - name: Download git trees
-      if: ${{ github.event_name != 'pull_request' }}
-      shell: pwsh
-      env:
+      - uses: actions/checkout@v4
+      - name: Download config repo
+        uses: actions/checkout@v4
+        with:
+          repository: TheTrackerCouncil/SMZ3CasConfigs
+          path: configs
+          ref: main
+      - name: Download sprite repo
+        uses: actions/checkout@v4
+        with:
+          repository: TheTrackerCouncil/SMZ3CasSprites
+          path: sprites
+          ref: main
+      - name: Download tracker sprite repo
+        uses: actions/checkout@v4
+        with:
+          repository: TheTrackerCouncil/TrackerSprites
+          path: trackersprites
+          ref: main
+      - name: Download git trees
+        if: ${{ github.event_name != 'pull_request' }}
+        shell: pwsh
+        env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        $headers = @{
-          Authorization="Bearer $Env:GH_TOKEN"
-        }
-        Invoke-RestMethod -Uri https://api.github.com/repos/TheTrackerCouncil/SMZ3CasSprites/git/trees/main?recursive=1 -OutFile sprites/Sprites/sprites.json -Headers $headers
-        Invoke-RestMethod -Uri https://api.github.com/repos/TheTrackerCouncil/TrackerSprites/git/trees/main?recursive=1 -OutFile trackersprites/tracker-sprites.json -Headers $headers
-        Remove-Item -LiteralPath "trackersprites/.git" -Force -Recurse  
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore -p:PostBuildEvent=
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
-    - name: Publish Windows 64bit
-      if: ${{ github.event_name != 'pull_request' }}
-      run: dotnet publish --os win --arch x64 -c Release --self-contained false  src/TrackerCouncil.Smz3.UI/TrackerCouncil.Smz3.UI.csproj
-    - name: Publish Windows 32bit
-      if: ${{ github.event_name != 'pull_request' }}
-      run: dotnet publish --os win --arch x86 -c Release --self-contained false  src/TrackerCouncil.Smz3.UI/TrackerCouncil.Smz3.UI.csproj
-    - name: Get version number
-      if: ${{ github.event_name != 'pull_request' }}
-      id: version
-      run: |
-        $version = (Get-Item "src\TrackerCouncil.Smz3.UI\bin\Release\net8.0\win-x86\publish\SMZ3CasRandomizer.exe").VersionInfo.ProductVersion
-        $version = $version -replace "\+.*", ""
-        Write-Output "number=$version" >> $env:GITHUB_OUTPUT
-      shell: pwsh
-    - name: Publish Linux 64bit
-      if: ${{ github.event_name != 'pull_request' }}
-      run: dotnet publish --os linux --arch x64 -c Release --self-contained false  src/TrackerCouncil.Smz3.UI/TrackerCouncil.Smz3.UI.csproj
-    - name: Publish Multiplayer Server
-      if: ${{ github.event_name != 'pull_request' }}
-      run: dotnet publish -c Release --self-contained false src//TrackerCouncil.Smz3.Multiplayer.Server//TrackerCouncil.Smz3.Multiplayer.Server.csproj
-    - name: Building the Windows installer
-      if: ${{ github.event_name != 'pull_request' }}
-      run: "\"%programfiles(x86)%/Inno Setup 6/iscc.exe\" \"setup/randomizer.app.iss\""
-      shell: cmd
-    - name: Building the Linux 64bit package
-      if: ${{ github.event_name != 'pull_request' }}
-      working-directory: setup
-      run: "./LinuxBuildZipper.ps1"
-      shell: pwsh
-    - name: Building the Multiplayer Server package
-      if: ${{ github.event_name != 'pull_request' }}
-      working-directory: setup
-      run: "./MultiplayerServerZipper.ps1"
-      shell: pwsh
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      if: ${{ github.event_name != 'pull_request' }}
-      with:
-        path: "setup/Output/*"
-        name: SMZ3CasRandomizer_${{ steps.version.outputs.number }}
+        run: |
+          $headers = @{
+            Authorization="Bearer $Env:GH_TOKEN"
+          }
+          Invoke-RestMethod -Uri https://api.github.com/repos/TheTrackerCouncil/SMZ3CasSprites/git/trees/main?recursive=1 -OutFile sprites/Sprites/sprites.json -Headers $headers
+          Invoke-RestMethod -Uri https://api.github.com/repos/TheTrackerCouncil/TrackerSprites/git/trees/main?recursive=1 -OutFile trackersprites/tracker-sprites.json -Headers $headers
+          Remove-Item -LiteralPath "trackersprites/.git" -Force -Recurse
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore -p:PostBuildEvent=
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
+      - name: Publish Windows 64bit
+        if: ${{ github.event_name != 'pull_request' }}
+        run: dotnet publish --os win --arch x64 -c Release --self-contained false  src/TrackerCouncil.Smz3.UI/TrackerCouncil.Smz3.UI.csproj
+      - name: Publish Windows 32bit
+        if: ${{ github.event_name != 'pull_request' }}
+        run: dotnet publish --os win --arch x86 -c Release --self-contained false  src/TrackerCouncil.Smz3.UI/TrackerCouncil.Smz3.UI.csproj
+      - name: Get version number
+        if: ${{ github.event_name != 'pull_request' }}
+        id: version
+        run: |
+          $version = (Get-Item "src\TrackerCouncil.Smz3.UI\bin\Release\net8.0\win-x86\publish\SMZ3CasRandomizer.exe").VersionInfo.ProductVersion
+          $version = $version -replace "\+.*", ""
+          Write-Output "number=$version" >> $env:GITHUB_OUTPUT
+        shell: pwsh
+      - name: Publish Linux 64bit
+        if: ${{ github.event_name != 'pull_request' }}
+        run: dotnet publish --os linux --arch x64 -c Release --self-contained false  src/TrackerCouncil.Smz3.UI/TrackerCouncil.Smz3.UI.csproj
+      - name: Publish Multiplayer Server
+        if: ${{ github.event_name != 'pull_request' }}
+        run: dotnet publish -c Release --self-contained false src//TrackerCouncil.Smz3.Multiplayer.Server//TrackerCouncil.Smz3.Multiplayer.Server.csproj
+      - name: Building the Windows installer
+        if: ${{ github.event_name != 'pull_request' }}
+        run: '"%programfiles(x86)%/Inno Setup 6/iscc.exe" "setup/randomizer.app.iss"'
+        shell: cmd
+      - name: Building the Linux 64bit package
+        if: ${{ github.event_name != 'pull_request' }}
+        working-directory: setup
+        run: "./LinuxBuildZipper.ps1"
+        shell: pwsh
+      - name: Building the Multiplayer Server package
+        if: ${{ github.event_name != 'pull_request' }}
+        working-directory: setup
+        run: "./MultiplayerServerZipper.ps1"
+        shell: pwsh
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        if: ${{ github.event_name != 'pull_request' }}
+        with:
+          path: "setup/Output/*"
+          name: SMZ3CasRandomizer_${{ steps.version.outputs.number }}
   build-mac:
     runs-on: macos-latest
     if: ${{ github.event_name != 'pull_request' }}
     steps:
-    - uses: actions/checkout@v4
-    - name: Download config repo
-      uses: actions/checkout@v4
-      with:
-        repository: TheTrackerCouncil/SMZ3CasConfigs
-        path: configs
-        ref: main
-    - name: Download sprite repo
-      uses: actions/checkout@v4
-      with:
-        repository: TheTrackerCouncil/SMZ3CasSprites
-        path: sprites
-        ref: main
-    - name: Download tracker sprite repo
-      uses: actions/checkout@v4
-      with:
-        repository: TheTrackerCouncil/TrackerSprites
-        path: trackersprites
-        ref: main
-    - name: Download git trees
-      if: ${{ github.event_name != 'pull_request' }}
-      shell: pwsh
-      env:
+      - uses: actions/checkout@v4
+      - name: Download config repo
+        uses: actions/checkout@v4
+        with:
+          repository: TheTrackerCouncil/SMZ3CasConfigs
+          path: configs
+          ref: main
+      - name: Download sprite repo
+        uses: actions/checkout@v4
+        with:
+          repository: TheTrackerCouncil/SMZ3CasSprites
+          path: sprites
+          ref: main
+      - name: Download tracker sprite repo
+        uses: actions/checkout@v4
+        with:
+          repository: TheTrackerCouncil/TrackerSprites
+          path: trackersprites
+          ref: main
+      - name: Download git trees
+        if: ${{ github.event_name != 'pull_request' }}
+        shell: pwsh
+        env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        $headers = @{
-          Authorization="Bearer $Env:GH_TOKEN"
-        }
-        Invoke-RestMethod -Uri https://api.github.com/repos/TheTrackerCouncil/SMZ3CasSprites/git/trees/main?recursive=1 -OutFile sprites/Sprites/sprites.json -Headers $headers
-        Invoke-RestMethod -Uri https://api.github.com/repos/TheTrackerCouncil/TrackerSprites/git/trees/main?recursive=1 -OutFile trackersprites/tracker-sprites.json -Headers $headers
-        Remove-Item -LiteralPath "trackersprites/.git" -Force -Recurse
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-    - name: Restore dependencies
-      run: dotnet restore src/TrackerCouncil.Smz3.UI/TrackerCouncil.Smz3.UI.csproj
-    - name: Build
-      run: dotnet build --no-restore -p:PostBuildEvent= src/TrackerCouncil.Smz3.UI/TrackerCouncil.Smz3.UI.csproj
-    - name: Publish
-      run: dotnet publish -r osx-arm64 --configuration Release -p:UseAppHost=true src/TrackerCouncil.Smz3.UI/TrackerCouncil.Smz3.UI.csproj
-    - name: Get version number
-      id: version
-      run: |
-        $version = (Get-Item "src\TrackerCouncil.Smz3.UI\bin\Release\net8.0\osx-arm64\publish\SMZ3CasRandomizer.dll").VersionInfo.ProductVersion
-        $version = $version -replace "\+.*", ""
-        $versionShort = $version -replace "\-.*", ""
-        (Get-Content setup/Info.plist).Replace('%FULL_VERSION%', $version).Replace('%SHORT_VERSION%', $versionShort) | Set-Content setup/Info.plist
-        Write-Output "number=$version" >> $env:GITHUB_OUTPUT
-      shell: pwsh
-    - name: Prepare packaging script
-      run: |
-        chmod +x ./setup/package-macos-app.sh
-        ./setup/package-macos-app.sh "${{ steps.version.outputs.number }}"
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        path: "setup/output/*"
-        name: SMZ3CasRandomizerMacOS_${{ steps.version.outputs.number }}
+        run: |
+          $headers = @{
+            Authorization="Bearer $Env:GH_TOKEN"
+          }
+          Invoke-RestMethod -Uri https://api.github.com/repos/TheTrackerCouncil/SMZ3CasSprites/git/trees/main?recursive=1 -OutFile sprites/Sprites/sprites.json -Headers $headers
+          Invoke-RestMethod -Uri https://api.github.com/repos/TheTrackerCouncil/TrackerSprites/git/trees/main?recursive=1 -OutFile trackersprites/tracker-sprites.json -Headers $headers
+          Remove-Item -LiteralPath "trackersprites/.git" -Force -Recurse
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore dependencies
+        run: dotnet restore src/TrackerCouncil.Smz3.UI/TrackerCouncil.Smz3.UI.csproj
+      - name: Build
+        run: dotnet build --no-restore -p:PostBuildEvent= src/TrackerCouncil.Smz3.UI/TrackerCouncil.Smz3.UI.csproj
+      - name: Publish
+        run: dotnet publish -r osx-arm64 --configuration Release -p:UseAppHost=true src/TrackerCouncil.Smz3.UI/TrackerCouncil.Smz3.UI.csproj
+      - name: Get version number
+        id: version
+        run: |
+          $version = (Get-Item "src\TrackerCouncil.Smz3.UI\bin\Release\net8.0\osx-arm64\publish\SMZ3CasRandomizer.dll").VersionInfo.ProductVersion
+          $version = $version -replace "\+.*", ""
+          $versionShort = $version -replace "\-.*", ""
+          (Get-Content setup/Info.plist).Replace('%FULL_VERSION%', $version).Replace('%SHORT_VERSION%', $versionShort) | Set-Content setup/Info.plist
+          Write-Output "number=$version" >> $env:GITHUB_OUTPUT
+        shell: pwsh
+      - name: Prepare packaging script
+        run: |
+          chmod +x ./setup/package-macos-app.sh
+          ./setup/package-macos-app.sh "${{ steps.version.outputs.number }}"
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: "setup/output/*"
+          name: SMZ3CasRandomizerMacOS_${{ steps.version.outputs.number }}

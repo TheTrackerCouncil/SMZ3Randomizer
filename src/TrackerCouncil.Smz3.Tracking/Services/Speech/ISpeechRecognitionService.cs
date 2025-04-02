@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Speech.Recognition;
+using System.Collections.Generic;
+using PySpeechService.Recognition;
 
 namespace TrackerCouncil.Smz3.Tracking.Services.Speech;
 
@@ -11,7 +12,7 @@ public interface ISpeechRecognitionService
     /// <summary>
     /// Occurs when speech was successfully understood.
     /// </summary>
-    event EventHandler<SpeechRecognizedEventArgs>? SpeechRecognized;
+    event EventHandler<SpeechRecognitionResultEventArgs>? SpeechRecognized;
 
     /// <summary>
     /// Performs first-time initialization of the speech recognition service.
@@ -20,7 +21,7 @@ public interface ISpeechRecognitionService
     /// <see langword="true"/> if initialization was successful; <see
     /// langword="false"/> to disable speech recognition.
     /// </returns>
-    bool Initialize(out bool foundRequestedDevice);
+    bool Initialize(float minRequiredConfidence, out bool foundRequestedDevice);
 
     /// <summary>
     /// Re-initializes the input device to ensure a valid microphone is being
@@ -37,4 +38,10 @@ public interface ISpeechRecognitionService
     /// Stops speech recognition in the background.
     /// </summary>
     void StopRecognition();
+
+    /// <summary>
+    /// Add grammar to the speech recognition service
+    /// </summary>
+    /// <param name="grammars">List of created grammar details to add to the speech recognition service</param>
+    public void AddGrammar(List<SpeechRecognitionGrammar> grammars);
 }

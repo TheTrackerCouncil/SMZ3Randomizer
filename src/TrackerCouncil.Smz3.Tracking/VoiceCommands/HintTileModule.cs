@@ -1,14 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Versioning;
-using System.Speech.Recognition;
 using Microsoft.Extensions.Logging;
+using PySpeechService.Recognition;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
-using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Tracking.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.VoiceCommands;
@@ -40,7 +39,6 @@ public class HintTileModule : TrackerModule
     /// <summary>
     /// Adds the voice commands
     /// </summary>
-    [SupportedOSPlatform("windows")]
     public override void AddCommands()
     {
         AddCommand("Hint Tile", GetHintTileRules(), (result) =>
@@ -60,10 +58,9 @@ public class HintTileModule : TrackerModule
         });
     }
 
-    [SupportedOSPlatform("windows")]
-    private Choices GetHintTileNames()
+    private List<GrammarKeyValueChoice> GetHintTileNames()
     {
-        var hintTileNames = new Choices();
+        var hintTileNames = new List<GrammarKeyValueChoice>();
 
         if (_hintTileConfig.HintTiles == null)
         {
@@ -77,16 +74,15 @@ public class HintTileModule : TrackerModule
                 continue;
             }
             foreach (var name in hintTile.Name)
-                hintTileNames.Add(new SemanticResultValue(name.Text, hintTile.HintTileKey));
+                hintTileNames.Add(new GrammarKeyValueChoice(name.Text, hintTile.HintTileKey));
         }
 
         return hintTileNames;
     }
 
-    [SupportedOSPlatform("windows")]
-    private GrammarBuilder GetHintTileRules()
+    private SpeechRecognitionGrammarBuilder GetHintTileRules()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Append("what does the")
             .Append(_hintTileKey, GetHintTileNames())
@@ -94,8 +90,7 @@ public class HintTileModule : TrackerModule
             .OneOf("say", "state");
     }
 
-    [SupportedOSPlatform("windows")]
-    private (HintTile HintTile, Shared.Models.PlayerHintTile PlayerHintTile) GetHintTileFromResult(RecognitionResult result)
+    private (HintTile HintTile, Shared.Models.PlayerHintTile PlayerHintTile) GetHintTileFromResult(SpeechRecognitionResult result)
     {
         var key = (string)result.Semantics[_hintTileKey].Value;
         var hintTile = _hintTileConfig.HintTiles?.FirstOrDefault(x => x.HintTileKey == key) ??

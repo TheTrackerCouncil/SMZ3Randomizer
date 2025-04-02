@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Speech.Recognition;
-
 using Microsoft.Extensions.Logging;
+using PySpeechService.Recognition;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Tracking.Services;
 
@@ -36,44 +36,44 @@ public class MetaModule : TrackerModule
     }
 
     [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
-    private static Choices GetIncreaseDecrease()
+    private static List<GrammarKeyValueChoice> GetIncreaseDecrease()
     {
-        var modifiers = new Choices();
-        modifiers.Add(new SemanticResultValue("increase", 1));
-        modifiers.Add(new SemanticResultValue("decrease", -1));
+        var modifiers = new List<GrammarKeyValueChoice>();
+        modifiers.Add(new GrammarKeyValueChoice("increase", 1));
+        modifiers.Add(new GrammarKeyValueChoice("decrease", -1));
         return modifiers;
     }
 
     [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
-    private static Choices GetOneThroughTenPercent()
+    private static List<GrammarKeyValueChoice> GetOneThroughTenPercent()
     {
-        var values = new Choices();
-        values.Add(new SemanticResultValue("one percent", 0.01));
-        values.Add(new SemanticResultValue("two percent", 0.02));
-        values.Add(new SemanticResultValue("three percent", 0.03));
-        values.Add(new SemanticResultValue("four percent", 0.04));
-        values.Add(new SemanticResultValue("five percent", 0.05));
-        values.Add(new SemanticResultValue("six percent", 0.06));
-        values.Add(new SemanticResultValue("seven percent", 0.07));
-        values.Add(new SemanticResultValue("eight percent", 0.08));
-        values.Add(new SemanticResultValue("nine percent", 0.09));
-        values.Add(new SemanticResultValue("ten percent", 0.10));
+        var values = new List<GrammarKeyValueChoice>();
+        values.Add(new GrammarKeyValueChoice("one percent", 0.01));
+        values.Add(new GrammarKeyValueChoice("two percent", 0.02));
+        values.Add(new GrammarKeyValueChoice("three percent", 0.03));
+        values.Add(new GrammarKeyValueChoice("four percent", 0.04));
+        values.Add(new GrammarKeyValueChoice("five percent", 0.05));
+        values.Add(new GrammarKeyValueChoice("six percent", 0.06));
+        values.Add(new GrammarKeyValueChoice("seven percent", 0.07));
+        values.Add(new GrammarKeyValueChoice("eight percent", 0.08));
+        values.Add(new GrammarKeyValueChoice("nine percent", 0.09));
+        values.Add(new GrammarKeyValueChoice("ten percent", 0.10));
         return values;
     }
 
     [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
-    private static Choices GetThresholdSettings()
+    private static List<GrammarKeyValueChoice> GetThresholdSettings()
     {
-        var settings = new Choices();
-        settings.Add(new SemanticResultValue("recognition", ThresholdSetting_Recognition));
-        settings.Add(new SemanticResultValue("execution", ThresholdSetting_Execution));
-        settings.Add(new SemanticResultValue("sass", ThresholdSetting_Sass));
+        var settings = new List<GrammarKeyValueChoice>();
+        settings.Add(new GrammarKeyValueChoice("recognition", ThresholdSetting_Recognition));
+        settings.Add(new GrammarKeyValueChoice("execution", ThresholdSetting_Execution));
+        settings.Add(new GrammarKeyValueChoice("sass", ThresholdSetting_Sass));
         return settings;
     }
 
-    private GrammarBuilder GetRepeatThatRule()
+    private SpeechRecognitionGrammarBuilder GetRepeatThatRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .OneOf("can you repeat that?",
                 "can you please repeat that?",
@@ -82,20 +82,20 @@ public class MetaModule : TrackerModule
                 "please repeat that");
     }
 
-    private GrammarBuilder GetShutUpRule()
+    private SpeechRecognitionGrammarBuilder GetShutUpRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .Optional("please")
             .OneOf("shut up", "be quiet", "stop talking");
     }
 
-    private GrammarBuilder GetIncreaseThresholdGrammar()
+    private SpeechRecognitionGrammarBuilder GetIncreaseThresholdGrammar()
     {
         var modifiers = GetIncreaseDecrease();
         var settings = GetThresholdSettings();
         var values = GetOneThroughTenPercent();
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
             .Append(ModifierKey, modifiers)
             .Optional("minimum")
@@ -105,49 +105,49 @@ public class MetaModule : TrackerModule
             .Append(ValueKey, values);
     }
 
-    private GrammarBuilder GetPauseTimerRule()
+    private SpeechRecognitionGrammarBuilder GetPauseTimerRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .Optional("please")
             .OneOf("pause the timer", "stop the timer");
     }
 
-    private GrammarBuilder GetResumeTimerRule()
+    private SpeechRecognitionGrammarBuilder GetResumeTimerRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .Optional("please")
             .OneOf("resume the timer", "start the timer");
     }
 
-    private GrammarBuilder GetResetTimerRule()
+    private SpeechRecognitionGrammarBuilder GetResetTimerRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .Optional("please")
             .OneOf("reset the timer");
     }
 
-    private GrammarBuilder GetMuteRule()
+    private SpeechRecognitionGrammarBuilder GetMuteRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .Optional("please")
             .OneOf("mute yourself", "silence yourself");
     }
 
-    private GrammarBuilder GetUnmuteRule()
+    private SpeechRecognitionGrammarBuilder GetUnmuteRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .Optional("please")
             .OneOf("unmute yourself", "unsilence yourself");
     }
 
-    private GrammarBuilder GetBeatGameRule()
+    private SpeechRecognitionGrammarBuilder GetBeatGameRule()
     {
-        return new GrammarBuilder()
+        return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .OneOf("I beat", "I finished")
             .OneOf("the game", "the seed");
@@ -168,9 +168,9 @@ public class MetaModule : TrackerModule
 
         AddCommand("Temporarily change threshold setting", GetIncreaseThresholdGrammar(), (result) =>
         {
-            var modifier = (int)result.Semantics[ModifierKey].Value;
-            var thresholdSetting = (int)result.Semantics[ThresholdSettingKey].Value;
-            var value = (float)(double)result.Semantics[ValueKey].Value;
+            var modifier = int.Parse(result.Semantics[ModifierKey].Value);
+            var thresholdSetting = int.Parse(result.Semantics[ThresholdSettingKey].Value);
+            var value = float.Parse(result.Semantics[ValueKey].Value);
 
             var adjustment = modifier * value;
             switch (thresholdSetting)
@@ -223,7 +223,8 @@ public class MetaModule : TrackerModule
         {
             if (_communicator.IsEnabled)
             {
-                TrackerBase.Say(x => x.Muted);
+                _communicator.Abort();
+                TrackerBase.Say(x => x.Muted, wait: true);
                 _communicator.Disable();
                 TrackerBase.AddUndo(() =>
                 {

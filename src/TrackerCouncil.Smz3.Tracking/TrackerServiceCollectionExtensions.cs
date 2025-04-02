@@ -40,7 +40,6 @@ public static class TrackerServiceCollectionExtensions
         services.AddScoped<ITrackerTimerService, TrackerTimerService>();
         services.AddScoped<IHistoryService, HistoryService>();
         services.AddScoped<IPlayerProgressionService, PlayerProgressionService>();
-        services.AddScoped<ICommunicator, TextToSpeechCommunicator>();
         services.AddScoped<IUIService, UIService>();
         services.AddScoped<IWorldQueryService, WorldQueryService>();
         services.AddScoped<IRandomizerConfigService, RandomizerConfigService>();
@@ -49,11 +48,19 @@ public static class TrackerServiceCollectionExtensions
 
         if (OperatingSystem.IsWindows())
         {
+            services.AddScoped<ICommunicator, TextToSpeechCommunicator>();
             services.AddScoped<AlwaysOnSpeechRecognitionService>();
             services.AddScoped<PushToTalkSpeechRecognitionService>();
             services.AddScoped<NullSpeechRecognitionService>();
             services.AddTransient<IMicrophoneService, MicrophoneService>();
             services.AddSingleton<IGlobalHook, TaskPoolGlobalHook>();
+        }
+        else if (OperatingSystem.IsLinux())
+        {
+            services.AddScoped<ICommunicator, PyTextToSpeechCommunicator>();
+            services.AddScoped<PySpeechRecognitionService>();
+            services.AddSingleton<IMicrophoneService, NullMicrophoneService>();
+            services.AddScoped<NullSpeechRecognitionService>();
         }
         else
         {

@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Speech.Recognition;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using BunLabs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using PySpeechService.Recognition;
 using TrackerCouncil.Smz3.Chat.Integration;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Configuration;
@@ -127,14 +127,18 @@ public sealed class Tracker : TrackerBase, IDisposable
         }
 
         // Initialize the speech recognition engine
-        if (_trackerOptions.Options.SpeechRecognitionMode == SpeechRecognitionMode.Disabled ||
-            !OperatingSystem.IsWindows())
+        if (_trackerOptions.Options.SpeechRecognitionMode == SpeechRecognitionMode.Disabled || OperatingSystem.IsMacOS())
         {
             _recognizer = serviceProvider.GetRequiredService<NullSpeechRecognitionService>();
         }
-        else if (_trackerOptions.Options.SpeechRecognitionMode == SpeechRecognitionMode.PushToTalk)
+        else if (_trackerOptions.Options.SpeechRecognitionMode == SpeechRecognitionMode.PushToTalk && OperatingSystem.IsWindows())
         {
             _recognizer = serviceProvider.GetRequiredService<PushToTalkSpeechRecognitionService>();
+        }
+        else if (_trackerOptions.Options.SpeechRecognitionMode == SpeechRecognitionMode.PySpeechService ||
+                 OperatingSystem.IsLinux())
+        {
+            _recognizer = serviceProvider.GetRequiredService<PySpeechRecognitionService>();
         }
         else
         {
@@ -184,7 +188,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     public override bool InitializeMicrophone()
     {
         if (MicrophoneInitialized) return true;
-        MicrophoneInitialized = _recognizer.Initialize(out var foundRequestedDevice);
+        MicrophoneInitialized = _recognizer.Initialize(_trackerOptions.Options?.MinimumRecognitionConfidence ?? 0.75f, out var foundRequestedDevice);
         MicrophoneInitializedAsDesiredDevice = foundRequestedDevice;
         return MicrophoneInitialized;
     }
@@ -321,10 +325,9 @@ public sealed class Tracker : TrackerBase, IDisposable
         bool loadError;
         try
         {
-            var recognitionEngine = _recognizer is SpeechRecognitionServiceBase recognitionBase
-                ? recognitionBase.RecognitionEngine
-                : null;
-            Syntax = _moduleFactory.LoadAll(this, recognitionEngine, out loadError);
+            var grammars = _moduleFactory.RetrieveGrammar(this, out loadError);
+            _recognizer.AddGrammar(grammars);
+            Syntax = _moduleFactory.Syntax;
         }
         catch (Exception e)
         {
@@ -459,7 +462,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     /// </summary>
     public override void EnableVoiceRecognition()
     {
-        if (MicrophoneInitialized && !VoiceRecognitionEnabled && OperatingSystem.IsWindows())
+        if (MicrophoneInitialized && !VoiceRecognitionEnabled && _recognizer is not NullSpeechRecognitionService)
         {
             _logger.LogInformation("Starting speech recognition");
             _recognizer.ResetInputDevice();
@@ -588,7 +591,7 @@ public sealed class Tracker : TrackerBase, IDisposable
             return;
         }
 
-        if (_lastSpokenText == null)
+        if (string.IsNullOrEmpty(_lastSpokenText))
         {
             Say(text: "I haven't said anything yet.");
             return;
@@ -596,8 +599,10 @@ public sealed class Tracker : TrackerBase, IDisposable
 
         _communicator.Say(new SpeechRequest("I said"));
         _communicator.SlowDown();
+        var prevLastSpokenText = _lastSpokenText;
         Say(text: _lastSpokenText, wait: true);
         _communicator.SpeedUp();
+        _lastSpokenText = prevLastSpokenText;
     }
 
     /// <summary>
@@ -703,12 +708,9 @@ public sealed class Tracker : TrackerBase, IDisposable
         Say(response: Responses.Idle?[key]);
     }
 
-    private void Recognizer_SpeechRecognized(object? sender, SpeechRecognizedEventArgs e)
+    private void Recognizer_SpeechRecognized(object? sender, SpeechRecognitionResultEventArgs e)
     {
-        if (OperatingSystem.IsWindows())
-        {
-            RestartIdleTimers();
-            OnSpeechRecognized(new(e.Result.Confidence, e.Result.Text));
-        }
+        RestartIdleTimers();
+        OnSpeechRecognized(new(e.Result.Confidence, e.Result.Text));
     }
 }
