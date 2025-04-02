@@ -501,9 +501,13 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
             sb.AppendLine($"  - Player Name: {details.Players.First(x => x.IsLocalPlayer).PlayerName}");
             sb.AppendLine($"  - Player Count: {playerCount}");
 
-            sb.AppendLine($"  - GT Crystal Count: {details.GanonsTowerCrystalCount}");
-            sb.AppendLine($"  - Ganon Crystal Count: {details.GanonCrystalCount}");
-            sb.AppendLine($"  - Tourian Boss Count: {details.TourianBossCount}");
+            if (details.RomGenerator == RomGenerator.Mainline)
+            {
+                sb.AppendLine($"  - GT Crystal Count: {details.GanonsTowerCrystalCount}");
+                sb.AppendLine($"  - Ganon Crystal Count: {details.GanonCrystalCount}");
+                sb.AppendLine($"  - Tourian Boss Count: {details.TourianBossCount}");
+                sb.AppendLine($"  - Open Pyramid: {details.OpenPyarmid}");
+            }
 
             sb.AppendLine($"  - IsMultiworld: {ynResponses[details.IsMultiworld]}");
             sb.AppendLine($"  - IsHardLogic: {ynResponses[details.IsHardLogic]}");
