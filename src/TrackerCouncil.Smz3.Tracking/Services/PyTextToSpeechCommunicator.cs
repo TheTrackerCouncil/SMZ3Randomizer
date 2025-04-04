@@ -56,8 +56,6 @@ internal class PyTextToSpeechCommunicator : ICommunicator
     {
         SpeechRequest? request = null;
 
-        _logger.LogInformation("Response: {Id}", args.Response.MessageId);
-
         if (string.IsNullOrEmpty(args.Response.MessageId) || !_pendingRequests.TryGetValue(args.Response.MessageId, out request))
         {
             _logger.LogError("Received PySpeechService SpeakCommandResponse with no valid message id");
@@ -163,15 +161,20 @@ internal class PyTextToSpeechCommunicator : ICommunicator
         var messageId = Guid.NewGuid().ToString();
         _pendingRequests.TryAdd(messageId, request);
 
-        _logger.LogInformation("Request: {Id}", messageId);
+        var speechSettings = GetSpeechSettings();
+        if (request.TrackerImage == "alt")
+        {
+            (speechSettings.OnnxPath, speechSettings.AltOnnxPath) = (speechSettings.AltOnnxPath, speechSettings.OnnxPath);
+            (speechSettings.ConfigPath, speechSettings.AltConfigPath) = (speechSettings.AltConfigPath, speechSettings.ConfigPath);
+        }
 
         if (request.Wait)
         {
-            _pySpeechService.Speak(request.Text, GetSpeechSettings(), messageId);
+            _pySpeechService.Speak(request.Text, speechSettings, messageId);
         }
         else
         {
-            _pySpeechService.SpeakAsync(request.Text, GetSpeechSettings(), messageId);
+            _pySpeechService.SpeakAsync(request.Text, speechSettings, messageId);
         }
     }
 

@@ -14,7 +14,6 @@ internal abstract class TrackerService
     protected static readonly Random Random = new();
 
     internal TrackerBase Tracker { get; set; } = null!;
-    protected Configs Configs => Tracker.Configs;
     protected ResponseConfig Responses => Tracker.Responses;
     protected World World => Tracker.World;
     protected TrackerOptions Options => Tracker.Options;

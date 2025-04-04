@@ -186,11 +186,12 @@ public class SharedCrossplatformService(
 
         try
         {
-            smz3GeneratedRomLoader.LoadGeneratedRom(rom);
-
             var scope = serviceProvider.CreateScope();
             var trackerOptionsAccessor = scope.ServiceProvider.GetRequiredService<TrackerOptionsAccessor>();
             trackerOptionsAccessor.Options = Options.GeneralOptions.GetTrackerOptions();
+
+            var metadataService = scope.ServiceProvider.GetRequiredService<IMetadataService>();
+            smz3GeneratedRomLoader.LoadGeneratedRom(rom, metadataService);
 
             s_trackerWindow = scope.ServiceProvider.GetRequiredService<TrackerWindow>();
             s_trackerWindow.Closed += (_, _) =>

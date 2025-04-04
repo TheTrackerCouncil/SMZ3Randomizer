@@ -53,7 +53,6 @@ public sealed class Tracker : TrackerBase, IDisposable
     private bool _disposed;
     private string? _lastSpokenText;
     private string? _previousImagePackName;
-    private ResponseConfig _defaultResponseConfig;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Tracker"/> class.
@@ -87,7 +86,8 @@ public sealed class Tracker : TrackerBase, IDisposable
         ITrackerStateService stateService,
         ITrackerTimerService timerService,
         IServiceProvider serviceProvider,
-        TrackerSpriteService trackerSpriteService)
+        TrackerSpriteService trackerSpriteService,
+        IMetadataService metadata)
     {
         if (trackerOptions.Options == null)
             throw new InvalidOperationException("Tracker options have not yet been activated.");
@@ -106,10 +106,9 @@ public sealed class Tracker : TrackerBase, IDisposable
         _trackerSpriteService = trackerSpriteService;
 
         // Initialize the tracker configuration
-        Configs = configs;
-        _defaultResponseConfig = Responses = configs.Responses;
+        Responses = metadata.Responses;
         SetImagePack(trackerOptions.Options.TrackerImagePackName);
-        Requests = configs.Requests;
+        Requests = metadata.Requests;
         PlayerProgressionService.ResetProgression();
 
         History = historyService;
@@ -230,18 +229,6 @@ public sealed class Tracker : TrackerBase, IDisposable
         _previousImagePackName = packName;
         var profileConfig = _trackerSpriteService.GetPack(packName).ProfileConfig;
         _communicator.UseAlternateVoice(profileConfig?.UseAltVoice ?? false);
-
-        if (profileConfig?.ResponseConfig == null)
-        {
-            Responses = _defaultResponseConfig;
-            return;
-        }
-
-        var newResponseConfig = ResponseConfig.Default();
-        IMergeable<ResponseConfig> mergeableConfig = newResponseConfig;
-        mergeableConfig.MergeFrom(_defaultResponseConfig);
-        mergeableConfig.MergeFrom(profileConfig.ResponseConfig);
-        Responses = newResponseConfig;
     }
 
     private void LoadServices(IServiceProvider serviceProvider)
