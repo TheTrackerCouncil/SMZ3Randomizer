@@ -16,8 +16,11 @@ public class TextToSpeechCommunicator : ICommunicator
     private bool _canSpeak;
     private DateTime _startSpeakingTime;
     private ConcurrentQueue<SpeechRequest> _pendingRequests = [];
+    private ConcurrentDictionary<Prompt, SpeechRequest> _pendingPrompts = [];
     private SpeechRequest? _currentSpeechRequest;
+    private Prompt? _currentSpeechPrompt;
     private ILogger<ICommunicator> _logger;
+    private bool _isAltVoice;
 
     /// <summary>
     /// Initializes a new instance of the <see
@@ -55,6 +58,7 @@ public class TextToSpeechCommunicator : ICommunicator
                 var duration = DateTime.Now - _startSpeakingTime;
                 var request = _currentSpeechRequest;
                 _currentSpeechRequest = null;
+                _currentSpeechPrompt = null;
                 SpeakCompleted?.Invoke(this, new SpeakCompletedEventArgs(duration, request));
             }
             else
@@ -66,6 +70,16 @@ public class TextToSpeechCommunicator : ICommunicator
         _tts.VisemeReached += (sender, args) =>
         {
             if (!OperatingSystem.IsWindows()) return;
+
+            if (args.Prompt != _currentSpeechPrompt)
+            {
+                if (_pendingPrompts.TryGetValue(args.Prompt, out var request))
+                {
+                    _currentSpeechPrompt = args.Prompt;
+                    _currentSpeechRequest = request;
+                }
+            }
+
             VisemeReached?.Invoke(this, new SpeakingUpdatedEventArgs(args.Viseme > 0, _currentSpeechRequest));
         };
 
@@ -82,6 +96,7 @@ public class TextToSpeechCommunicator : ICommunicator
             return;
         }
 
+        _isAltVoice = useAlt;
         _tts.SelectVoiceByHints(useAlt ? VoiceGender.Male : VoiceGender.Female);
     }
 
@@ -179,8 +194,9 @@ public class TextToSpeechCommunicator : ICommunicator
     /// Creates a new <see cref="Prompt"/> based on the specified text.
     /// </summary>
     /// <param name="text">The plain text or SSML markup to parse.</param>
+    /// <param name="useAlternateVoice"></param>
     /// <returns>A new <see cref="Prompt"/>.</returns>
-    protected static Prompt? GetPromptFromText(string text)
+    protected Prompt? GetPromptFromText(string text, bool useAlternateVoice)
     {
         if (!OperatingSystem.IsWindows())
         {
@@ -189,8 +205,20 @@ public class TextToSpeechCommunicator : ICommunicator
 
         // If text does not contain any XML elements, just interpret it as
         // text
-        if (!text.Contains("<") && !text.Contains("/>"))
+        if (!text.Contains("<") && !text.Contains("/>") && !useAlternateVoice)
             return new Prompt(text);
+
+        if (useAlternateVoice)
+        {
+            if (_isAltVoice)
+            {
+                text = "<voice gender='female'>" + text + "</voice>";
+            }
+            else
+            {
+                text = "<voice gender='male'>" + text + "</voice>";
+            }
+        }
 
         var prompt = new PromptBuilder();
         prompt.AppendSsmlMarkup(text);
@@ -249,13 +277,14 @@ public class TextToSpeechCommunicator : ICommunicator
             request = nextRequest;
         }
 
-        var prompt = GetPromptFromText(request.Text);
+        var useAltVoice = "alt".Equals(request.TrackerImage, StringComparison.OrdinalIgnoreCase);
+        var prompt = GetPromptFromText(request.Text, useAltVoice);
         if (prompt == null)
         {
             return;
         }
 
-        _currentSpeechRequest = request;
+        _pendingPrompts.TryAdd(prompt, request);
 
         if (request.Wait)
         {
