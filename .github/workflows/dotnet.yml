@@ -2,7 +2,7 @@ name: .NET Build + Test + Publish
 
 on:
   push:
-    branches: [main]
+    branches: [main, betus-april-fools]
   pull_request:
     branches: [main]
 

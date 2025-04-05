@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
@@ -18,15 +19,15 @@ public class SpritePatcherService
 
     public void ApplySpriteOptions(byte[] bytes, out string linkSpriteName, out string samusSpriteName)
     {
-        var linkSprite = _spriteService.GetSprite(SpriteType.Link);
+        var linkSprite = _spriteService.Sprites.First(x => x is { SpriteType: SpriteType.Link, Name: "Captain Novolin" });
         ApplyRdcSpriteTo(linkSprite, bytes);
         linkSpriteName = string.IsNullOrEmpty(linkSprite.Name) ? "Link" : linkSprite.Name;
 
-        var samusSprite = _spriteService.GetSprite(SpriteType.Samus);
+        var samusSprite = _spriteService.Sprites.First(x => x is { SpriteType: SpriteType.Samus, Name: "Captain Novolin" });
         ApplyRdcSpriteTo(samusSprite, bytes);
         samusSpriteName = string.IsNullOrEmpty(samusSprite.Name) ? "Samus" : samusSprite.Name;
 
-        var shipSprite = _spriteService.GetSprite(SpriteType.Ship);
+        var shipSprite = _spriteService.Sprites.First(x => x is { SpriteType: SpriteType.Ship, Name: "Captain's Endocrinologist" });
         ApplyShipSpriteTo(shipSprite, bytes);
     }
 
