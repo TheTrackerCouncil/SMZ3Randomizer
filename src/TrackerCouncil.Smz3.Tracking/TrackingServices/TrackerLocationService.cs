@@ -26,7 +26,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, IP
 
     public void Clear(Location location, float? confidence = null, bool autoTracked = false, bool stateResponse = true, bool allowLocationComments = false, bool updateTreasureCount = true)
     {
-        if (!stateResponse && allowLocationComments)
+        if (stateResponse && allowLocationComments)
         {
             GiveLocationComment(location.Item.Type, location, isTracking: true, confidence, location.Item.Metadata);
             GivePreConfiguredLocationSass(location);
@@ -477,22 +477,22 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, IP
             {
                 if (!isTracking && locationInfo.WhenMarkingJunk?.Count > 0)
                 {
-                    Tracker.Say(text: locationInfo.WhenMarkingJunk.Random(Random)!);
+                    Tracker.Say(response: locationInfo.WhenMarkingJunk);
                 }
                 else if (locationInfo.WhenTrackingJunk?.Count > 0)
                 {
-                    Tracker.Say(text: locationInfo.WhenTrackingJunk.Random(Random)!);
+                    Tracker.Say(response: locationInfo.WhenTrackingJunk);
                 }
             }
             else if (!isJunk)
             {
                 if (!isTracking && locationInfo.WhenMarkingProgression?.Count > 0)
                 {
-                    Tracker.Say(text: locationInfo.WhenMarkingProgression.Random(Random)!);
+                    Tracker.Say(response: locationInfo.WhenMarkingProgression);
                 }
                 else if (locationInfo.WhenTrackingProgression?.Count > 0)
                 {
-                    Tracker.Say(text: locationInfo.WhenTrackingProgression.Random(Random)!);
+                    Tracker.Say(response: locationInfo.WhenTrackingProgression);
                 }
             }
         }

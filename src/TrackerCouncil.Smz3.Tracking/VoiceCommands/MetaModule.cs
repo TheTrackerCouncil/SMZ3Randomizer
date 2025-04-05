@@ -118,7 +118,7 @@ public class MetaModule : TrackerModule
         return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker, ")
             .Optional("please")
-            .OneOf("resume the timer", "start the timer");
+            .OneOf("resume the timer", "start the timer", "continue the timer", "unpause the timer");
     }
 
     private SpeechRecognitionGrammarBuilder GetResetTimerRule()

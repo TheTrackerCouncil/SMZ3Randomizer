@@ -94,6 +94,11 @@ public class TrackerSpeechWindowService(ICommunicator communicator, OptionsFacto
 
     private void Communicator_VisemeReached(object? sender, SpeakingUpdatedEventArgs e)
     {
+        if (!_model.IsTrackerImageVisible)
+        {
+            _model.IsTrackerImageVisible = true;
+        }
+
         SetReactionType(e.Request?.TrackerImage ?? "default");
 
         if (!e.IsSpeaking)
@@ -115,7 +120,7 @@ public class TrackerSpeechWindowService(ICommunicator communicator, OptionsFacto
 
     private void Communicator_SpeakCompleted(object? sender, SpeakCompletedEventArgs e)
     {
-        SetReactionType();
+        SetReactionType(e.SpeechRequest?.FollowedByBlankImage == true ? "blank" : "default");
         _model.TrackerImage = _currentSpeechImages?.IdleImage;
         _prevSpeaking = false;
     }

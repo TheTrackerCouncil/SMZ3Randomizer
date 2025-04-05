@@ -17,7 +17,8 @@
     <Panel>
       <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{Binding Background}"></Rectangle>
       <Image Margin="{Binding AnimationMargin}" VerticalAlignment="Bottom"
-             Source="{Binding TrackerImage, Converter={StaticResource StringToImageConverter}}"/>
+             Source="{Binding TrackerImage, Converter={StaticResource StringToImageConverter}}"
+             IsVisible="{Binding IsTrackerImageVisible}"/>
     </Panel>
   </DockPanel>
 </Window>

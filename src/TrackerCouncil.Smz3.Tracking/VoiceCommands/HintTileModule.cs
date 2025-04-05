@@ -7,6 +7,7 @@ using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
+using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
 using TrackerCouncil.Smz3.Tracking.Services;
 
@@ -29,11 +30,11 @@ public class HintTileModule : TrackerModule
     /// <param name="worldQueryService"></param>
     /// <param name="logger"></param>
     /// <param name="gameHintService"></param>
-    /// <param name="configs"></param>
-    public HintTileModule(TrackerBase tracker, IPlayerProgressionService playerProgressionService, IWorldQueryService worldQueryService, ILogger<HintTileModule> logger, IGameHintService gameHintService, Configs configs) : base(tracker, playerProgressionService, worldQueryService, logger)
+    /// <param name="metadataService"></param>
+    public HintTileModule(TrackerBase tracker, IPlayerProgressionService playerProgressionService, IWorldQueryService worldQueryService, ILogger<HintTileModule> logger, IGameHintService gameHintService, IMetadataService metadataService) : base(tracker, playerProgressionService, worldQueryService, logger)
     {
         _gameHintService = gameHintService;
-        _hintTileConfig = configs.HintTileConfig;
+        _hintTileConfig = metadataService.HintTiles;
     }
 
     /// <summary>

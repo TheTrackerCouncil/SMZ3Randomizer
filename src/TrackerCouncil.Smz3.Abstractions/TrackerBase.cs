@@ -83,11 +83,6 @@ public abstract class TrackerBase : IDisposable
     public IReadOnlyCollection<BasicVoiceRequest> Requests { get; protected init; } = null!;
 
     /// <summary>
-    /// Metadata configs
-    /// </summary>
-    public Configs Configs { get; protected init; } = null!;
-
-    /// <summary>
     /// Gets a dictionary containing the rules and the various speech
     /// recognition syntaxes.
     /// </summary>

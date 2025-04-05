@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
+using TrackerCouncil.Smz3.Shared;
 
 namespace TrackerCouncil.Smz3.Data.Configuration;
 
@@ -21,7 +22,7 @@ public interface IMergeable<T>
     /// Merges the data from the other object into the current instance
     /// </summary>
     /// <param name="other">The object to be merged into this one</param>
-    public void MergeFrom(IMergeable<T> other)
+    public IMergeable<T> MergeFrom(IMergeable<T> other)
     {
         if (GetType().IsSubclassOf(typeof(List<T>)))
         {
@@ -31,6 +32,8 @@ public interface IMergeable<T>
         {
             MergeProperties(this, other);
         }
+
+        return this;
     }
 
     private static void MergeLists(IMergeable<T> first, IMergeable<T>? second)
@@ -84,6 +87,21 @@ public interface IMergeable<T>
             }
         }
 
+    }
+
+    public static TConfig Combine<TConfig>(TConfig config, params TConfig?[] additionalConfigs) where TConfig : class, IMergeable<T>
+    {
+        if (additionalConfigs.Length == 0)
+        {
+            return config;
+        }
+
+        foreach (var additionalConfig in additionalConfigs.NonNull())
+        {
+            config.MergeFrom(additionalConfig);
+        }
+
+        return config;
     }
 
     private static void MergeProperties(IMergeable<T> primary, IMergeable<T> other)

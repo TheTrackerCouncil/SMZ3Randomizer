@@ -99,15 +99,6 @@ public partial class ConfigProvider
         LoadYamlConfigs<BossConfig, BossInfo>("bosses.yml", profiles, mood);
 
     /// <summary>
-    /// Returns the configs with additional information for dungeons
-    /// </summary>
-    /// <param name="profiles">The selected tracker profile(s) to load</param>
-    /// <param name="mood">The current tracker mood to pick the specific mood file</param>
-    /// <returns></returns>
-    public virtual DungeonConfig GetDungeonConfig(IReadOnlyCollection<string> profiles, string? mood) =>
-        LoadYamlConfigs<DungeonConfig, DungeonInfo>("dungeons.yml", profiles, mood);
-
-    /// <summary>
     /// Returns the configs with additional information for items
     /// </summary>
     /// <param name="profiles">The selected tracker profile(s) to load</param>

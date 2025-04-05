@@ -4,7 +4,9 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Configuration;
+using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
+using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Shared.Enums;
@@ -24,52 +26,96 @@ public class MetadataService : IMetadataService
     /// </summary>
     /// <param name="configs">All configs</param>
     /// <param name="logger"></param>
-    public MetadataService(Configs configs, ILogger<MetadataService> logger)
+    public MetadataService(Configs configs, ILogger<MetadataService> logger, TrackerOptionsAccessor trackerOptionsAccessor, TrackerSpriteService trackerSpriteService)
     {
-        Regions = configs.Regions;
-        Dungeons = configs.Dungeons;
-        Rooms = configs.Rooms;
-        Locations = configs.Locations;
-        Bosses = configs.Bosses;
-        Items = configs.Items;
-        Rewards = configs.Rewards;
+        var options = trackerOptionsAccessor.Options;
+        TrackerProfileConfig? profileConfig = null;
+
+        if (options != null)
+        {
+            var trackerPack = options.TrackerImagePackName ?? "default";
+            profileConfig = trackerSpriteService.GetPack(trackerPack).ProfileConfig;
+        }
+
+        if (profileConfig == null)
+        {
+            Bosses = configs.Bosses;
+            GameLines = configs.GameLines;
+            HintTiles = configs.HintTileConfig;
+            Items = configs.Items;
+            Locations = configs.Locations;
+            Metadata = configs.MetadataConfig;
+            MsuConfig = configs.MsuConfig;
+            Regions = configs.Regions;
+            Requests = configs.Requests;
+            Responses = configs.Responses;
+            Rewards = configs.Rewards;
+            Rooms = configs.Rooms;
+            UILayouts = configs.UILayouts;
+        }
+        else
+        {
+            Bosses = IMergeable<BossInfo>.Combine(BossConfig.Default(), configs.Bosses, profileConfig.BossConfig);
+            GameLines = IMergeable<GameLinesConfig>.Combine(GameLinesConfig.Default(), configs.GameLines);
+            HintTiles = IMergeable<HintTileConfig>.Combine(HintTileConfig.Default(), configs.HintTileConfig);
+            Items = IMergeable<ItemData>.Combine(ItemConfig.Default(), configs.Items, profileConfig.ItemConfig);
+            Locations = IMergeable<LocationInfo>.Combine(LocationConfig.Default(), configs.Locations, profileConfig.LocationConfig);
+            Metadata = IMergeable<MetadataConfig>.Combine(MetadataConfig.Default(), configs.MetadataConfig);
+            MsuConfig = IMergeable<MsuConfig>.Combine(MsuConfig.Default(), configs.MsuConfig);
+            Regions = IMergeable<RegionInfo>.Combine(RegionConfig.Default(), configs.Regions, profileConfig.RegionConfig);
+            Requests = IMergeable<BasicVoiceRequest>.Combine(RequestConfig.Default(), configs.Requests, profileConfig.RequestConfig);
+            Responses = IMergeable<ResponseConfig>.Combine(ResponseConfig.Default(), configs.Responses, profileConfig.ResponseConfig);
+            Rewards = IMergeable<RewardInfo>.Combine(RewardConfig.Default(), configs.Rewards, profileConfig.RewardConfig);
+            Rooms = IMergeable<RoomInfo>.Combine(RoomConfig.Default(), configs.Rooms, profileConfig.RoomConfig);
+            UILayouts = IMergeable<UILayout>.Combine(UIConfig.Default(), configs.UILayouts);
+        }
+
         _logger = logger;
     }
 
     /// <summary>
     /// Collection of all additional region information
     /// </summary>
-    public IReadOnlyCollection<RegionInfo> Regions { get; }
-
-    /// <summary>
-    /// Collection of all additional dungeon information
-    /// </summary>
-    public IReadOnlyCollection<DungeonInfo> Dungeons { get; }
+    public RegionConfig Regions { get; }
 
     /// <summary>
     /// Collection of all additional room information
     /// </summary>
-    public IReadOnlyCollection<RoomInfo> Rooms { get; }
+    public RoomConfig Rooms { get; }
 
     /// <summary>
     /// Collection of all additional location information
     /// </summary>
-    public IReadOnlyCollection<LocationInfo> Locations { get; }
+    public LocationConfig Locations { get; }
 
     /// <summary>
     /// Collection of all additional boss information
     /// </summary>
-    public IReadOnlyCollection<BossInfo> Bosses { get; }
+    public BossConfig Bosses { get; }
 
     /// <summary>
     /// Collection of all additional item information
     /// </summary>
-    public IReadOnlyCollection<ItemData> Items { get; }
+    public ItemConfig Items { get; }
 
     /// <summary>
     /// Collection of all additional reward information
     /// </summary>
-    public IReadOnlyCollection<RewardInfo> Rewards { get; }
+    public RewardConfig Rewards { get; }
+
+    public GameLinesConfig GameLines { get; }
+
+    public HintTileConfig HintTiles { get; }
+
+    public MetadataConfig Metadata { get; }
+
+    public MsuConfig MsuConfig { get; }
+
+    public IReadOnlyCollection<BasicVoiceRequest> Requests { get; }
+
+    public ResponseConfig Responses { get; }
+
+    public UIConfig UILayouts { get; set; }
 
     /// <summary>
     /// Returns extra information for the specified region.
@@ -116,69 +162,6 @@ public class MetadataService : IMetadataService
     /// </returns>
     public RegionInfo Region<TRegion>() where TRegion : Region
         => Region(typeof(TRegion));
-
-    /// <summary>
-    /// Returns extra information for the specified dungeon.
-    /// </summary>
-    /// <param name="name">
-    /// The name or fully qualified type name of the dungeon region.
-    /// </param>
-    /// <returns>
-    /// A new <see cref="DungeonInfo"/> for the specified dungeon region, or
-    /// <c>null</c> if <paramref name="name"/> is not a valid dungeon.
-    /// </returns>
-    public DungeonInfo? Dungeon(string name)
-        => Dungeons.SingleOrDefault(x => x.Type?.Name == name || x.Dungeon == name);
-
-    /// <summary>
-    /// Returns extra information for the specified dungeon.
-    /// </summary>
-    /// <param name="type">
-    /// The type of dungeon to be looked up
-    /// </param>
-    /// <returns>
-    /// A new <see cref="DungeonInfo"/> for the specified dungeon region, or
-    /// <c>null</c> if <paramref name="type"/> is not a valid dungeon.
-    /// </returns>
-    public DungeonInfo Dungeon(Type type)
-        => Dungeons.Single(x => type == x.Type);
-
-    /// <summary>
-    /// Returns extra information for the specified dungeon.
-    /// </summary>
-    /// <param name="region">
-    /// The dungeon region to get extra information for.
-    /// </param>
-    /// <returns>
-    /// A new <see cref="DungeonInfo"/> for the specified dungeon region.
-    /// </returns>
-    public DungeonInfo Dungeon(Region region)
-        => Dungeon(region.GetType());
-
-    /// <summary>
-    /// Returns extra information for the specified dungeon.
-    /// </summary>
-    /// <typeparam name="TRegion">
-    /// The type of region that represents the dungeon to get extra
-    /// information for.
-    /// </typeparam>
-    /// <returns>
-    /// A new <see cref="DungeonInfo"/> for the specified dungeon region.
-    /// </returns>
-    public DungeonInfo Dungeon<TRegion>() where TRegion : Region
-        => Dungeon(typeof(TRegion));
-
-    /// <summary>
-    /// Returns extra information for the specified dungeon.
-    /// </summary>
-    /// <param name="hasTreasure">
-    /// The dungeon to get extra information for.
-    /// </param>
-    /// <returns>
-    /// A new <see cref="DungeonInfo"/> for the specified dungeon region.
-    /// </returns>
-    public DungeonInfo Dungeon(IHasTreasure hasTreasure)
-        => Dungeon(hasTreasure.GetType());
 
     /// <summary>
     /// Returns extra information for the specified room.

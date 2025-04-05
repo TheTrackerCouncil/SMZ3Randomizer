@@ -10,6 +10,7 @@ using AvaloniaControls.ControlServices;
 using AvaloniaControls.Models;
 using AvaloniaControls.Services;
 using GitHubReleaseChecker;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PySpeechService.Client;
 using PySpeechService.TextToSpeech;
@@ -32,8 +33,8 @@ public class MainWindowService(
     IGitHubFileSynchronizerService gitHubFileSynchronizerService,
     SpriteService spriteService,
     TrackerSpriteService trackerSpriteService,
-    IPySpeechService pySpeechService,
-    Configs configs) : ControlService
+    Configs configs,
+    IServiceProvider serviceProvider) : ControlService
 {
     private MainWindowViewModel _model = new();
     private RandomizerOptions _options = null!;
@@ -98,9 +99,13 @@ public class MainWindowService(
             return;
         }
 
-        pySpeechService.AutoReconnect = true;
-        await pySpeechService.StartAsync();
-        await pySpeechService.SetSpeechSettingsAsync(new SpeechSettings());
+        var pySpeechService = serviceProvider.GetService<IPySpeechService>();
+        if (pySpeechService != null)
+        {
+            pySpeechService.AutoReconnect = true;
+            await pySpeechService.StartAsync();
+            await pySpeechService.SetSpeechSettingsAsync(new SpeechSettings());
+        }
     }
     public async Task DownloadConfigsAsync()
     {

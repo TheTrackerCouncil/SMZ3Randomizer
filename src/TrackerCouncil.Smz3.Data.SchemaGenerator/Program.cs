@@ -23,7 +23,6 @@ public static class Program
     private static readonly List<(Type, string)> s_generationTypes = new()
     {
         (typeof(BossConfig), "bosses.json"),
-        (typeof(DungeonConfig), "dungeons.json"),
         (typeof(GameLinesConfig), "game.json"),
         (typeof(HintTileConfig), "hint_tiles.json"),
         (typeof(ItemConfig), "items.json"),
@@ -138,13 +137,6 @@ public static class Program
         templateBossConfig.AddRange(bossConfig.Select(boss => new BossInfo() { Boss = boss.Boss }));
         var exampleBossConfig = BossConfig.Example();
         WriteTemplate(templatePath, "bosses", templateBossConfig, exampleBossConfig);
-
-        // Dungeon Template
-        var dungeonConfig = configProvider.GetDungeonConfig(new List<string>(), null);
-        var templateDungeonConfig = new DungeonConfig();
-        templateDungeonConfig.AddRange(dungeonConfig.Select(dungeon => new DungeonInfo() { Dungeon = dungeon.Dungeon, Type = templateDungeonConfig.GetType() }));
-        var exampleDungeonConfig = DungeonConfig.Example();
-        WriteTemplate(templatePath, "dungeons", templateDungeonConfig, exampleDungeonConfig);
 
         // Item Template
         var itemConfig = configProvider.GetItemConfig(new List<string>(), null);

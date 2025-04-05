@@ -15,90 +15,85 @@ public static class ConfigServiceCollectionExtensions
         });
 
         services.AddSingleton<Configs>();
-        services.AddTransient<IMetadataService, MetadataService>();
+
+        services.AddScoped<IMetadataService, MetadataService>();
 
         services.AddScoped(serviceProvider =>
         {
-            var configs = serviceProvider.GetRequiredService<Configs>();
+            var configs = serviceProvider.GetRequiredService<IMetadataService>();
             return configs.Bosses;
         });
 
         services.AddScoped(serviceProvider =>
         {
-            var configs = serviceProvider.GetRequiredService<Configs>();
-            return configs.Dungeons;
-        });
-
-        services.AddScoped(serviceProvider =>
-        {
-            var configs = serviceProvider.GetRequiredService<Configs>();
+            var configs = serviceProvider.GetRequiredService<IMetadataService>();
             return configs.Items;
         });
 
         services.AddScoped(serviceProvider =>
         {
-            var configs = serviceProvider.GetRequiredService<Configs>();
+            var configs = serviceProvider.GetRequiredService<IMetadataService>();
             return configs.Locations;
         });
 
         services.AddScoped(serviceProvider =>
         {
-            var configs = serviceProvider.GetRequiredService<Configs>();
+            var configs = serviceProvider.GetRequiredService<IMetadataService>();
             return configs.Regions;
         });
 
         services.AddScoped(serviceProvider =>
         {
-            var configs = serviceProvider.GetRequiredService<Configs>();
+            var configs = serviceProvider.GetRequiredService<IMetadataService>();
             return configs.Requests;
         });
 
         services.AddScoped(serviceProvider =>
         {
-            var configs = serviceProvider.GetRequiredService<Configs>();
+            var configs = serviceProvider.GetRequiredService<IMetadataService>();
             return configs.Responses;
         });
 
         services.AddScoped(serviceProvider =>
         {
-            var configs = serviceProvider.GetRequiredService<Configs>();
+            var configs = serviceProvider.GetRequiredService<IMetadataService>();
             return configs.Rooms;
         });
 
         services.AddScoped(serviceProvider =>
         {
-            var configs = serviceProvider.GetRequiredService<Configs>();
+            var configs = serviceProvider.GetRequiredService<IMetadataService>();
             return configs.Rewards;
         });
 
         services.AddScoped(serviceProvider =>
         {
-            var configs = serviceProvider.GetRequiredService<Configs>();
+            var configs = serviceProvider.GetRequiredService<IMetadataService>();
             return configs.UILayouts;
         });
 
         services.AddScoped(serviceProvider =>
         {
-            var configs = serviceProvider.GetRequiredService<Configs>();
+            var configs = serviceProvider.GetRequiredService<IMetadataService>();
             return configs.GameLines;
         });
 
         services.AddScoped(serviceProvider =>
         {
-            var configs = serviceProvider.GetRequiredService<Configs>();
+            var configs = serviceProvider.GetRequiredService<IMetadataService>();
             return configs.MsuConfig;
         });
 
         services.AddScoped(serviceProvider =>
         {
-            var configs = serviceProvider.GetRequiredService<Configs>();
-            return configs.HintTileConfig;
+            var configs = serviceProvider.GetRequiredService<IMetadataService>();
+            return configs.HintTiles;
         });
 
         services.AddScoped(serviceProvider =>
         {
-            var configs = serviceProvider.GetRequiredService<Configs>();
-            return configs.MetadataConfig;
+            var configs = serviceProvider.GetRequiredService<IMetadataService>();
+            return configs.Metadata;
         });
 
         return services;

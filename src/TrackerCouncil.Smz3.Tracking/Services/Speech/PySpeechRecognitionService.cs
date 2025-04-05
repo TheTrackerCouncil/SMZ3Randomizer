@@ -7,11 +7,12 @@ using Microsoft.Extensions.Logging;
 using PySpeechService.Client;
 using PySpeechService.Recognition;
 using TrackerCouncil.Smz3.Data.Configuration;
+using TrackerCouncil.Smz3.Data.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.Services.Speech;
 
 [SupportedOSPlatform("linux")]
-public class PySpeechRecognitionService(IPySpeechService pySpeechService, Configs configs, ILogger<PySpeechRecognitionService> logger) : SpeechRecognitionServiceBase
+public class PySpeechRecognitionService(IPySpeechService pySpeechService, IMetadataService metadata, ILogger<PySpeechRecognitionService> logger) : SpeechRecognitionServiceBase
 {
     private bool _isEnabled;
     private float _minRequiredConfidence = 0.8f;
@@ -58,7 +59,7 @@ public class PySpeechRecognitionService(IPySpeechService pySpeechService, Config
     {
         _isEnabled = true;
 
-        pySpeechService.AddSpeechRecognitionReplacements(configs.MetadataConfig.PySpeechRecognitionReplacements);
+        pySpeechService.AddSpeechRecognitionReplacements(metadata.Metadata.PySpeechRecognitionReplacements);
 
         if (pySpeechService.IsConnected)
         {

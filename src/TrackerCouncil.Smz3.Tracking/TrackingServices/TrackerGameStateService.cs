@@ -4,6 +4,7 @@ using System.Linq;
 using MSURandomizerLibrary.Configs;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Options;
+using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.Tracking;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
@@ -12,7 +13,7 @@ using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Tracking.TrackingServices;
 
-internal class TrackerGameStateService : TrackerService, ITrackerGameStateService
+internal class TrackerGameStateService(IMetadataService metadataService) : TrackerService, ITrackerGameStateService
 {
     public bool HasBeatenGame { get; protected set; }
     public ViewedObject? LastViewedObject { get; set; }
@@ -206,7 +207,7 @@ internal class TrackerGameStateService : TrackerService, ITrackerGameStateServic
             if (locations.All(x => x.Autotracked || x.Cleared))
             {
                 hintTile.HintState = HintState.Cleared;
-                Tracker.Say(response: Configs.HintTileConfig.ViewedHintTileAlreadyVisited, args: [hintTile.LocationKey]);
+                Tracker.Say(response: metadataService.HintTiles.ViewedHintTileAlreadyVisited, args: [hintTile.LocationKey]);
             }
             else
             {
@@ -214,15 +215,15 @@ internal class TrackerGameStateService : TrackerService, ITrackerGameStateServic
                 {
                     case LocationUsefulness.Mandatory:
                         hintTile.HintState = HintState.Viewed;
-                        Tracker.Say(response: Configs.HintTileConfig.ViewedHintTileMandatory, args: [hintTile.LocationKey]);
+                        Tracker.Say(response: metadataService.HintTiles.ViewedHintTileMandatory, args: [hintTile.LocationKey]);
                         break;
                     case LocationUsefulness.Useless:
                         hintTile.HintState = HintState.Viewed;
-                        Tracker.Say(response: Configs.HintTileConfig.ViewedHintTileUseless, args: [hintTile.LocationKey]);
+                        Tracker.Say(response: metadataService.HintTiles.ViewedHintTileUseless, args: [hintTile.LocationKey]);
                         break;
                     default:
                         hintTile.HintState = HintState.Viewed;
-                        Tracker.Say(response: Configs.HintTileConfig.ViewedHintTile);
+                        Tracker.Say(response: metadataService.HintTiles.ViewedHintTile);
                         break;
                 }
 
@@ -253,7 +254,7 @@ internal class TrackerGameStateService : TrackerService, ITrackerGameStateServic
 
             if (hintTile.State == null)
             {
-                Tracker.Say(response: Configs.HintTileConfig.NoPreviousHintTile);
+                Tracker.Say(response: metadataService.HintTiles.NoPreviousHintTile);
             }
             else if (hintTile.HintState != HintState.Cleared && hintTile.Locations?.Count() > 0)
             {
@@ -267,12 +268,12 @@ internal class TrackerGameStateService : TrackerService, ITrackerGameStateServic
                 }
                 else
                 {
-                    Tracker.Say(response: Configs.HintTileConfig.ClearHintTileFailed);
+                    Tracker.Say(response: metadataService.HintTiles.ClearHintTileFailed);
                 }
             }
             else
             {
-                Tracker.Say(response: Configs.HintTileConfig.ClearHintTileFailed);
+                Tracker.Say(response: metadataService.HintTiles.ClearHintTileFailed);
             }
         }
         else

@@ -105,7 +105,7 @@ public class SchrodingersString : Collection<SchrodingersString.Possibility>, IM
     /// </summary>
     /// <param name="args"></param>
     /// <returns>The text for tracker to speak and the image to display, if applicable</returns>
-    public (string SpeechText, string? TrackerImage)? GetSpeechDetails(params object?[] args)
+    public (string SpeechText, string? TrackerImage, List<PossibilityAdditionalLine>? AdditionalLines)? GetSpeechDetails(params object?[] args)
     {
         var selectedPossibility = Random(s_random);
         if (selectedPossibility == null)
@@ -113,7 +113,7 @@ public class SchrodingersString : Collection<SchrodingersString.Possibility>, IM
             return null;
         }
         var formattedText = string.Format(selectedPossibility.Text, args);
-        return (formattedText, selectedPossibility.TrackerImage);
+        return (formattedText, selectedPossibility.TrackerImage, selectedPossibility.AdditionalLines);
     }
 
     /// <summary>
@@ -143,7 +143,18 @@ public class SchrodingersString : Collection<SchrodingersString.Possibility>, IM
         if (Items.Count == 0)
             return null;
 
-        var target = random.NextDouble() * GetTotalWeight();
+        var totalWeight = GetTotalWeight();
+
+        if (totalWeight >= 1000)
+        {
+            var item = Items.FirstOrDefault(x => x.Weight >= 1000);
+            if (item != null)
+            {
+                return item;
+            }
+        }
+
+        var target = random.NextDouble() * totalWeight;
         foreach (var item in Items)
         {
             if (target < item.Weight)
@@ -231,6 +242,12 @@ public class SchrodingersString : Collection<SchrodingersString.Possibility>, IM
         public string? TrackerImage { get; init; } = null;
 
         /// <summary>
+        /// Additional lines to be stated after the initial line. Used
+        /// for adding additional poses.
+        /// </summary>
+        public List<PossibilityAdditionalLine>? AdditionalLines { get; set; }
+
+        /// <summary>
         /// Converts the possibility to a string.
         /// </summary>
         /// <param name="item">The item to convert.</param>
@@ -268,4 +285,11 @@ public class SchrodingersString : Collection<SchrodingersString.Possibility>, IM
             return false;
         }
     }
+}
+
+public class PossibilityAdditionalLine
+{
+    public string Text { get; init; } = "";
+
+    public string? TrackerImage { get; init; } = null;
 }

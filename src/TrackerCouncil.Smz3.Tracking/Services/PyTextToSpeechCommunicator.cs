@@ -161,13 +161,20 @@ internal class PyTextToSpeechCommunicator : ICommunicator
         var messageId = Guid.NewGuid().ToString();
         _pendingRequests.TryAdd(messageId, request);
 
+        var speechSettings = GetSpeechSettings();
+        if (request.TrackerImage == "alt")
+        {
+            (speechSettings.OnnxPath, speechSettings.AltOnnxPath) = (speechSettings.AltOnnxPath, speechSettings.OnnxPath);
+            (speechSettings.ConfigPath, speechSettings.AltConfigPath) = (speechSettings.AltConfigPath, speechSettings.ConfigPath);
+        }
+
         if (request.Wait)
         {
-            _pySpeechService.Speak(request.Text, GetSpeechSettings(), messageId);
+            _pySpeechService.Speak(request.Text, speechSettings, messageId);
         }
         else
         {
-            _pySpeechService.SpeakAsync(request.Text, GetSpeechSettings(), messageId);
+            _pySpeechService.SpeakAsync(request.Text, speechSettings, messageId);
         }
     }
 

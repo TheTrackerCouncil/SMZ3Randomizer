@@ -66,12 +66,12 @@ public class GameHintService : IGameHintService
     private readonly PlaythroughService _playthroughService;
     private Random _random;
 
-    public GameHintService(Configs configs, IMetadataService metadataService, ILogger<GameHintService> logger, PlaythroughService playthroughService)
+    public GameHintService(IMetadataService metadataService, ILogger<GameHintService> logger, PlaythroughService playthroughService)
     {
-        _gameLines = configs.GameLines;
+        _gameLines = metadataService.GameLines;
         _logger = logger;
         _playthroughService = playthroughService;
-        _hintTileConfig = configs.HintTileConfig;
+        _hintTileConfig = metadataService.HintTiles;
         _metadataService = metadataService;
         _random = new Random();
     }
@@ -585,7 +585,7 @@ public class GameHintService : IGameHintService
 
     private string GetDungeonName(World hintPlayerWorld, IHasTreasure hasTreasure, Region region)
     {
-        var dungeonName = _metadataService.Dungeon(hasTreasure).Name?.ToString() ?? hasTreasure.Name;
+        var dungeonName = _metadataService.Region(region).Name?.ToString() ?? hasTreasure.Name;
         return $"{dungeonName}{GetMultiworldSuffix(hintPlayerWorld, region.World)}";
     }
 
@@ -699,7 +699,7 @@ public class GameHintService : IGameHintService
     {
         if (tile.Type == HintTileType.Requirement && tile.MedallionType != null)
         {
-            var dungeon = _metadataService.Dungeons.FirstOrDefault(x => x.Dungeon == tile.LocationKey);
+            var dungeon = _metadataService.Regions.FirstOrDefault(x => x.Region == tile.LocationKey);
             var dungeonName = dungeon?.Name?.ToString() ?? tile.LocationKey;
             var itemName = GetItemName(tile.MedallionType.Value);
             return _gameLines.HintDungeonMedallion?.Format(dungeonName, itemName);
