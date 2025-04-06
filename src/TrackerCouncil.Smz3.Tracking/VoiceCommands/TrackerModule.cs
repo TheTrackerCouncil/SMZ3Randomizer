@@ -138,13 +138,13 @@ public abstract class TrackerModule
     }
 
     /// <summary>
-    /// Returns the <see cref="DungeonInfo"/> that was detected in a voice
+    /// Returns the <see cref="IHasTreasure"/> that was detected in a voice
     /// command using <see cref="DungeonKey"/>.
     /// </summary>
     /// <param name="tracker">The tracker instance.</param>
     /// <param name="result">The speech recognition result.</param>
     /// <returns>
-    /// A <see cref="DungeonInfo"/> from the recognition result.
+    /// A <see cref="IHasTreasure"/> from the recognition result.
     /// </returns>
     protected static IHasTreasure GetDungeonFromResult(TrackerBase tracker, SpeechRecognitionResult result)
     {
@@ -154,13 +154,13 @@ public abstract class TrackerModule
     }
 
     /// <summary>
-    /// Returns the <see cref="DungeonInfo"/> that was detected in a voice
+    /// Returns the <see cref="IHasTreasure"/> that was detected in a voice
     /// command using <see cref="BossKey"/>.
     /// </summary>
     /// <param name="tracker">The tracker instance.</param>
     /// <param name="result">The speech recognition result.</param>
     /// <returns>
-    /// A <see cref="DungeonInfo"/> from the recognition result.
+    /// A <see cref="IHasTreasure"/> from the recognition result.
     /// </returns>
     protected static IHasTreasure? GetBossDungeonFromResult(TrackerBase tracker, SpeechRecognitionResult result)
     {
@@ -509,11 +509,11 @@ public abstract class TrackerModule
             if (location.Metadata.Name != null)
             {
                 foreach (var name in location.Metadata.Name)
-                    locationNames.Add(new GrammarKeyValueChoice(name.Text, (int)location.Id));
+                    locationNames.Add(new GrammarKeyValueChoice(name.Text, ((int)location.Id).ToString()));
             }
             else
             {
-                locationNames.Add(new GrammarKeyValueChoice(location.Name, (int)location.Id));
+                locationNames.Add(new GrammarKeyValueChoice(location.Name, ((int)location.Id).ToString()));
             }
         }
 

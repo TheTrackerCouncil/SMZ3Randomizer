@@ -74,6 +74,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     /// <param name="timerService"></param>
     /// <param name="serviceProvider"></param>
     /// <param name="trackerSpriteService"></param>
+    /// <param name="metadata"></param>
     public Tracker(IWorldAccessor worldAccessor,
         TrackerModuleFactory moduleFactory,
         IChatClient chatClient,
@@ -698,7 +699,7 @@ public sealed class Tracker : TrackerBase, IDisposable
             if (disposing)
             {
                 (_recognizer as IDisposable)?.Dispose();
-                (_communicator as IDisposable)?.Dispose();
+                _communicator.Dispose();
                 _moduleFactory.Dispose();
 
                 foreach (var timer in _idleTimers.Values)

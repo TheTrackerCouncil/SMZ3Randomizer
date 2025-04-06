@@ -26,6 +26,8 @@ public class MetadataService : IMetadataService
     /// </summary>
     /// <param name="configs">All configs</param>
     /// <param name="logger"></param>
+    /// <param name="trackerOptionsAccessor"></param>
+    /// <param name="trackerSpriteService"></param>
     public MetadataService(Configs configs, ILogger<MetadataService> logger, TrackerOptionsAccessor trackerOptionsAccessor, TrackerSpriteService trackerSpriteService)
     {
         var options = trackerOptionsAccessor.Options;
