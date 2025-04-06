@@ -108,7 +108,7 @@ public class AutoTrackerMetroidState
     /// Checks to make sure that the state is valid and fully loaded. There's a period upon first booting up that
     /// all of these are 0s, but some of the memory in the location data can be screwy.
     /// </summary>
-    public bool IsValid => CurrentRoom != 0 || CurrentRegion != 0 || CurrentRoomInRegion != 0;
+    public bool IsValid => (CurrentRoom != 0 || CurrentRegion != 0 || CurrentRoomInRegion != 0) && MaxSuperMissiles <= 80 && MaxPowerBombs <= 50 && MaxMissiles <= 200 && MaxEnergy <= 2000 && MaxReserveTanks <= 500;
 
     /// <summary>
     /// Prints debug data for the state
