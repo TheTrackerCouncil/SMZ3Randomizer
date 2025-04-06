@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using TrackerCouncil.Smz3.Shared;
+using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
@@ -17,37 +17,67 @@ public interface IMetadataService
     /// <summary>
     /// Collection of all additional region information
     /// </summary>
-    public IReadOnlyCollection<RegionInfo> Regions { get; }
-
-    /// <summary>
-    /// Collection of all additional dungeon information
-    /// </summary>
-    public IReadOnlyCollection<DungeonInfo> Dungeons { get; }
+    public RegionConfig Regions { get; }
 
     /// <summary>
     /// Collection of all additional room information
     /// </summary>
-    public IReadOnlyCollection<RoomInfo> Rooms { get; }
+    public RoomConfig Rooms { get; }
 
     /// <summary>
     /// Collection of all additional location information
     /// </summary>
-    public IReadOnlyCollection<LocationInfo> Locations { get; }
+    public LocationConfig Locations { get; }
 
     /// <summary>
     /// Collection of all additional boss information
     /// </summary>
-    public IReadOnlyCollection<BossInfo> Bosses { get; }
+    public BossConfig Bosses { get; }
 
     /// <summary>
     /// Collection of all additional item information
     /// </summary>
-    public IReadOnlyCollection<ItemData> Items { get; }
+    public ItemConfig Items { get; }
 
     /// <summary>
     /// Collection of all additional reward information
     /// </summary>
-    public IReadOnlyCollection<RewardInfo> Rewards { get; }
+    public RewardConfig Rewards { get; }
+
+    /// <summary>
+    /// Lines that are displayed in the rom itself
+    /// </summary>
+    public GameLinesConfig GameLines { get; }
+
+    /// <summary>
+    /// Data about all of the potential hint tiles and text used
+    /// </summary>
+    public HintTileConfig HintTiles { get; }
+
+    /// <summary>
+    /// General tracker metadata and settings
+    /// </summary>
+    public MetadataConfig Metadata { get; }
+
+    /// <summary>
+    /// Data for MSUs and particular track responses
+    /// </summary>
+    public MsuConfig MsuConfig { get; }
+
+    /// <summary>
+    /// Different requests that the user can ask tracker
+    /// </summary>
+    public IReadOnlyCollection<BasicVoiceRequest> Requests { get; }
+
+    /// <summary>
+    /// Different lines for tracker to respond to the player
+    /// </summary>
+    public ResponseConfig Responses { get; }
+
+    /// <summary>
+    /// Layouts used by the UI
+    /// </summary>
+    public UIConfig UILayouts { get; set; }
 
     /// <summary>
     /// Returns extra information for the specified region.
@@ -90,64 +120,6 @@ public interface IMetadataService
     /// A new <see cref="RegionInfo"/> for the specified region.
     /// </returns>
     public RegionInfo Region<TRegion>() where TRegion : Region;
-
-    /// <summary>
-    /// Returns extra information for the specified dungeon.
-    /// </summary>
-    /// <param name="name">
-    /// The name or fully qualified type name of the dungeon region.
-    /// </param>
-    /// <returns>
-    /// A new <see cref="DungeonInfo"/> for the specified dungeon region, or
-    /// <c>null</c> if <paramref name="name"/> is not a valid dungeon.
-    /// </returns>
-    public DungeonInfo? Dungeon(string name);
-
-    /// <summary>
-    /// Returns extra information for the specified dungeon.
-    /// </summary>
-    /// <param name="type">
-    /// The type of dungeon to be looked up
-    /// </param>
-    /// <returns>
-    /// A new <see cref="DungeonInfo"/> for the specified dungeon region, or
-    /// <c>null</c> if <paramref name="type"/> is not a valid dungeon.
-    /// </returns>
-    public DungeonInfo Dungeon(Type type);
-
-    /// <summary>
-    /// Returns extra information for the specified dungeon.
-    /// </summary>
-    /// <param name="region">
-    /// The dungeon region to get extra information for.
-    /// </param>
-    /// <returns>
-    /// A new <see cref="DungeonInfo"/> for the specified dungeon region.
-    /// </returns>
-    public DungeonInfo Dungeon(Region region);
-
-    /// <summary>
-    /// Returns extra information for the specified dungeon.
-    /// </summary>
-    /// <typeparam name="TRegion">
-    /// The type of region that represents the dungeon to get extra
-    /// information for.
-    /// </typeparam>
-    /// <returns>
-    /// A new <see cref="DungeonInfo"/> for the specified dungeon region.
-    /// </returns>
-    public DungeonInfo Dungeon<TRegion>() where TRegion : Region;
-
-    /// <summary>
-    /// Returns extra information for the specified dungeon.
-    /// </summary>
-    /// <param name="hasTreasure">
-    /// The dungeon to get extra information for.
-    /// </param>
-    /// <returns>
-    /// A new <see cref="DungeonInfo"/> for the specified dungeon region.
-    /// </returns>
-    public DungeonInfo Dungeon(IHasTreasure hasTreasure);
 
     /// <summary>
     /// Returns extra information for the specified room.

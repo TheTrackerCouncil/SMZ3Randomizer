@@ -172,6 +172,8 @@ public class RandomizerTests
             .AddSingleton<IMetadataService, MetadataService>()
             .AddSingleton<IGameHintService, GameHintService>()
             .AddSingleton<IPatcherService, PatcherService>()
+            .AddSingleton<TrackerOptionsAccessor>()
+            .AddSingleton<TrackerSpriteService>()
             .AddTransient<PlaythroughService>()
             .AddConfigs()
             .BuildServiceProvider();

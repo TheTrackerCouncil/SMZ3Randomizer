@@ -12,6 +12,7 @@ using PySpeechService.Recognition;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
+using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Tracking.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.VoiceCommands;
@@ -46,7 +47,7 @@ public class MsuModule : TrackerModule, IDisposable
     /// <param name="msuMonitorService"></param>
     /// <param name="msuTypeService"></param>
     /// <param name="msuUserOptionsService"></param>
-    /// <param name="config"></param>
+    /// <param name="metadataService"></param>
     /// <param name="gameService"></param>
     /// <param name="msuMessageReceiver"></param>
     public MsuModule(
@@ -58,7 +59,7 @@ public class MsuModule : TrackerModule, IDisposable
         IMsuMonitorService msuMonitorService,
         IMsuTypeService msuTypeService,
         IMsuUserOptionsService msuUserOptionsService,
-        Configs config,
+        IMetadataService metadataService,
         IGameService gameService,
         IMsuMessageReceiver msuMessageReceiver)
         : base(tracker, playerProgressionService, worldQueryService, logger)
@@ -69,7 +70,7 @@ public class MsuModule : TrackerModule, IDisposable
         _msuLookupService = msuLookupService;
         _msuUserOptionsService = msuUserOptionsService;
         var msuType = msuTypeService.GetSMZ3MsuType();
-        _msuConfig = config.MsuConfig;
+        _msuConfig = metadataService.MsuConfig;
         _validTrackNumbers = msuType!.ValidTrackNumbers;
 
         if (!File.Exists(tracker.RomPath))

@@ -39,7 +39,6 @@ public class Configs
         _logger.LogInformation("Tracker is feeling {Mood} today", CurrentMood);
 
         Bosses = _configProvider.GetBossConfig(profiles, CurrentMood);
-        Dungeons = _configProvider.GetDungeonConfig(profiles, CurrentMood);
         Items = _configProvider.GetItemConfig(profiles, CurrentMood);
         Locations = _configProvider.GetLocationConfig(profiles, CurrentMood);
         Regions = _configProvider.GetRegionConfig(profiles, CurrentMood);
@@ -108,11 +107,6 @@ public class Configs
     /// Gets a collection of extra information about regions.
     /// </summary>
     public RegionConfig Regions { get; private set; } = null!;
-
-    /// <summary>
-    /// Gets a collection of extra information about dungeons.
-    /// </summary>
-    public DungeonConfig Dungeons { get; private set; } = null!;
 
     /// <summary>
     /// Gets a collection of bosses.

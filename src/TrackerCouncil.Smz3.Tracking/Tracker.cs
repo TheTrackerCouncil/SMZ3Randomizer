@@ -53,7 +53,6 @@ public sealed class Tracker : TrackerBase, IDisposable
     private bool _disposed;
     private string? _lastSpokenText;
     private string? _previousImagePackName;
-    private ResponseConfig _defaultResponseConfig;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Tracker"/> class.
@@ -75,6 +74,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     /// <param name="timerService"></param>
     /// <param name="serviceProvider"></param>
     /// <param name="trackerSpriteService"></param>
+    /// <param name="metadata"></param>
     public Tracker(IWorldAccessor worldAccessor,
         TrackerModuleFactory moduleFactory,
         IChatClient chatClient,
@@ -87,7 +87,8 @@ public sealed class Tracker : TrackerBase, IDisposable
         ITrackerStateService stateService,
         ITrackerTimerService timerService,
         IServiceProvider serviceProvider,
-        TrackerSpriteService trackerSpriteService)
+        TrackerSpriteService trackerSpriteService,
+        IMetadataService metadata)
     {
         if (trackerOptions.Options == null)
             throw new InvalidOperationException("Tracker options have not yet been activated.");
@@ -106,10 +107,9 @@ public sealed class Tracker : TrackerBase, IDisposable
         _trackerSpriteService = trackerSpriteService;
 
         // Initialize the tracker configuration
-        Configs = configs;
-        _defaultResponseConfig = Responses = configs.Responses;
+        Responses = metadata.Responses;
         SetImagePack(trackerOptions.Options.TrackerImagePackName);
-        Requests = configs.Requests;
+        Requests = metadata.Requests;
         PlayerProgressionService.ResetProgression();
 
         History = historyService;
@@ -230,18 +230,6 @@ public sealed class Tracker : TrackerBase, IDisposable
         _previousImagePackName = packName;
         var profileConfig = _trackerSpriteService.GetPack(packName).ProfileConfig;
         _communicator.UseAlternateVoice(profileConfig?.UseAltVoice ?? false);
-
-        if (profileConfig?.ResponseConfig == null)
-        {
-            Responses = _defaultResponseConfig;
-            return;
-        }
-
-        var newResponseConfig = ResponseConfig.Default();
-        IMergeable<ResponseConfig> mergeableConfig = newResponseConfig;
-        mergeableConfig.MergeFrom(_defaultResponseConfig);
-        mergeableConfig.MergeFrom(profileConfig.ResponseConfig);
-        Responses = newResponseConfig;
     }
 
     private void LoadServices(IServiceProvider serviceProvider)
@@ -502,6 +490,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     {
         SchrodingersString? selectedResponse = null;
         string? trackerImage = null;
+        List<PossibilityAdditionalLine>? additionalLines = null;
 
         if (key != null)
         {
@@ -547,11 +536,30 @@ public sealed class Tracker : TrackerBase, IDisposable
 
             text = trackerSpeechDetails.Value.SpeechText;
             trackerImage = trackerSpeechDetails.Value.TrackerImage;
+            additionalLines = trackerSpeechDetails.Value.AdditionalLines;
         }
 
-        var formattedText = FormatPlaceholders(text);
+        var speechRequests = new List<SpeechRequest>();
 
-        _communicator.Say(new SpeechRequest(formattedText, trackerImage, wait));
+        var formattedText = FormatPlaceholders(text);
+        speechRequests.Add(new SpeechRequest(formattedText, trackerImage, wait));
+
+        if (additionalLines?.Count > 0)
+        {
+            speechRequests.AddRange(additionalLines.Select(x =>
+                new SpeechRequest(FormatPlaceholders(x.Text), x.TrackerImage, wait)));
+        }
+
+        for (var i = 0; i < speechRequests.Count; i++)
+        {
+            if (i < speechRequests.Count - 1)
+            {
+                speechRequests[i].FollowedByBlankImage = "blank".Equals(speechRequests[i + 1].TrackerImage,
+                    StringComparison.OrdinalIgnoreCase);
+            }
+            _communicator.Say(speechRequests[i]);
+        }
+
         _lastSpokenText = formattedText;
 
         return true;
@@ -691,7 +699,7 @@ public sealed class Tracker : TrackerBase, IDisposable
             if (disposing)
             {
                 (_recognizer as IDisposable)?.Dispose();
-                (_communicator as IDisposable)?.Dispose();
+                _communicator.Dispose();
                 _moduleFactory.Dispose();
 
                 foreach (var timer in _idleTimers.Values)

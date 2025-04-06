@@ -20,13 +20,11 @@ namespace TrackerCouncil.Smz3.SeedGenerator.Generation;
 public class Smz3GeneratedRomLoader
 {
     private readonly IWorldAccessor _worldAccessor;
-    private readonly IMetadataService _metadata;
     private readonly RandomizerContext _randomizerContext;
 
-    public Smz3GeneratedRomLoader(IWorldAccessor worldAccessor, IMetadataService metadata, RandomizerContext dbContext)
+    public Smz3GeneratedRomLoader(IWorldAccessor worldAccessor, RandomizerContext dbContext)
     {
         _worldAccessor = worldAccessor;
-        _metadata = metadata;
         _randomizerContext = dbContext;
     }
 
@@ -35,7 +33,8 @@ public class Smz3GeneratedRomLoader
     /// the given GeneratedRom
     /// </summary>
     /// <param name="rom"></param>
-    public List<World> LoadGeneratedRom(GeneratedRom rom)
+    /// <param name="metadata"></param>
+    public List<World> LoadGeneratedRom(GeneratedRom rom, IMetadataService metadata)
     {
         var trackerState = rom.TrackerState;
 
@@ -57,7 +56,7 @@ public class Smz3GeneratedRomLoader
 
         var configs = Config.FromConfigString(rom.Settings);
         var worlds = configs.Select(config => new World(config, string.IsNullOrEmpty(config.PlayerName) ? "Player" : config.PlayerName, config.Id, config.PlayerGuid,
-            config.Id == trackerState.LocalWorldId, _metadata, trackerState)).ToList();
+            config.Id == trackerState.LocalWorldId, metadata, trackerState)).ToList();
 
         // Load world items from state
         foreach (var location in worlds.SelectMany(x => x.Locations))
@@ -66,7 +65,7 @@ public class Smz3GeneratedRomLoader
                 s.WorldId == location.World.Id && s.LocationId == location.Id);
             var itemState = trackerState.ItemStates.First(s =>
                 s.Type == locationState.Item && s.WorldId == locationState.ItemWorldId);
-            var itemMetadata = _metadata.Item(locationState.Item) ?? new ItemData(locationState.Item);
+            var itemMetadata = metadata.Item(locationState.Item) ?? new ItemData(locationState.Item);
             var itemWorld = worlds.First(w => w.Id == locationState.ItemWorldId);
             location.Item = new Item(locationState.Item, itemWorld,
                 itemState.ItemName, itemMetadata, itemState,
@@ -79,7 +78,7 @@ public class Smz3GeneratedRomLoader
         // Create items for saved state items not in the world
         foreach (var itemState in trackerState.ItemStates.Where(s => worlds.SelectMany(w => w.LocationItems).All(i => !(i.Type == s.Type && s.WorldId == i.World.Id && i.IsLocalPlayerItem))))
         {
-            var itemMetadata = (itemState.Type != null && itemState.Type != ItemType.Nothing ? _metadata.Item(itemState.Type ?? ItemType.Nothing) : _metadata.Item(itemState.ItemName)) ??
+            var itemMetadata = (itemState.Type != null && itemState.Type != ItemType.Nothing ? metadata.Item(itemState.Type ?? ItemType.Nothing) : metadata.Item(itemState.ItemName)) ??
                                new ItemData(new SchrodingersString(itemState.ItemName),
                                    itemState.Type ?? ItemType.Nothing, new SchrodingersString());
             var world = worlds.First(w => w.Id == itemState.WorldId);
@@ -90,7 +89,7 @@ public class Smz3GeneratedRomLoader
         var allItems = worlds.SelectMany(x => x.AllItems).ToList();
         foreach (var world in worlds)
         {
-            foreach (var itemMetadata in _metadata.Items.Where(m => !allItems.Any(i => i.World == world && i.Is(m.InternalItemType, m.Item))))
+            foreach (var itemMetadata in metadata.Items.Where(m => !allItems.Any(i => i.World == world && i.Is(m.InternalItemType, m.Item))))
             {
                 var itemState = new TrackerItemState
                 {
@@ -108,7 +107,7 @@ public class Smz3GeneratedRomLoader
         // Create custom bosses from the tracker states
         foreach (var bossState in trackerState.BossStates.Where(x => x.Type == BossType.None))
         {
-            var bossMetadata = _metadata.Boss(bossState.BossName) ?? new BossInfo(bossState.BossName);
+            var bossMetadata = metadata.Boss(bossState.BossName) ?? new BossInfo(bossState.BossName);
             var world = worlds.First(w => w.Id == bossState.WorldId);
             world.CustomBosses.Add(new Boss(BossType.None, world, bossMetadata, bossState));
         }
@@ -116,7 +115,7 @@ public class Smz3GeneratedRomLoader
         // Create custom bosses for metadata items not in the world
         foreach (var world in worlds)
         {
-            foreach (var bossMetadata in _metadata.Bosses.Where(m => m.Type == BossType.None && !world.AllBosses.Any(b => b.Is(BossType.None, m.Boss))))
+            foreach (var bossMetadata in metadata.Bosses.Where(m => m.Type == BossType.None && !world.AllBosses.Any(b => b.Is(BossType.None, m.Boss))))
             {
                 var bossState = new TrackerBossState()
                 {
