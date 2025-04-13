@@ -51,6 +51,9 @@ public class CasPatches : ViewModelBase
     [DynamicFormFieldCheckBox(checkBoxText: "Fast Metroid Elevators", toolTipText: "Speeds up the transition between Metroid areas via elevators.\nPatch developed by Lioran.", groupName: "Middle")]
     public bool FastElevators { get; set; } = true;
 
+    [DynamicFormFieldCheckBox(checkBoxText: "Fast Metroid Pause Menu", toolTipText: "Speeds up the fades to, from, and within the Metroid pause menu.", groupName: "Middle")]
+    public bool MetroidFastPauseMenu { get; set; } = true;
+
     [DynamicFormFieldCheckBox(checkBoxText: "Refill at Save Stations", toolTipText: "Save stations will refill your ammo.\nPatch developed by Adam.", groupName: "Middle")]
     public bool RefillAtSaveStation { get; set; } = true;
 
