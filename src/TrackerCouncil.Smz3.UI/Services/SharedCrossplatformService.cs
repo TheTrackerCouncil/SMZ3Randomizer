@@ -33,6 +33,7 @@ public class SharedCrossplatformService(
     IMsuLookupService msuLookupService,
     Smz3GeneratedRomLoader smz3GeneratedRomLoader,
     IMsuTypeService msuTypeService,
+    IMetadataService metadataService,
     ILogger<SharedCrossplatformService> logger)
 {
     private static TrackerWindow? s_trackerWindow;
@@ -166,6 +167,8 @@ public class SharedCrossplatformService(
             DisplayError("Invalid rom");
             return null;
         }
+
+        metadataService.ReloadConfigs();
 
         if (!force && rom.GeneratorVersion != RandomizerVersion.MajorVersion)
         {

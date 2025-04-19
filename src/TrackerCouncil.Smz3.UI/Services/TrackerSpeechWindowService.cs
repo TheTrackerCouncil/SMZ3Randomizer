@@ -26,10 +26,17 @@ public class TrackerSpeechWindowService(ICommunicator communicator, OptionsFacto
     private readonly double _bounceHeight = 6;
     private bool _prevSpeaking;
     private bool _enableBounce;
+    private bool _isValid;
 
     public TrackerSpeechWindowViewModel GetViewModel()
     {
         _trackerSpeechImagePack = trackerSpriteService.GetPack();
+
+        if (_trackerSpeechImagePack == null)
+        {
+            return new TrackerSpeechWindowViewModel();
+        }
+
         SetReactionType();
 
         var options = optionsFactory.Create();
@@ -73,6 +80,9 @@ public class TrackerSpeechWindowService(ICommunicator communicator, OptionsFacto
 
         communicator.SpeakCompleted += Communicator_SpeakCompleted;
         communicator.VisemeReached += Communicator_VisemeReached;
+
+        _isValid = true;
+
         return _model;
     }
 
@@ -94,6 +104,11 @@ public class TrackerSpeechWindowService(ICommunicator communicator, OptionsFacto
 
     private void Communicator_VisemeReached(object? sender, SpeakingUpdatedEventArgs e)
     {
+        if (!_isValid)
+        {
+            return;
+        }
+
         if (!_model.IsTrackerImageVisible)
         {
             _model.IsTrackerImageVisible = true;
@@ -120,6 +135,11 @@ public class TrackerSpeechWindowService(ICommunicator communicator, OptionsFacto
 
     private void Communicator_SpeakCompleted(object? sender, SpeakCompletedEventArgs e)
     {
+        if (!_isValid)
+        {
+            return;
+        }
+
         SetReactionType(e.SpeechRequest?.FollowedByBlankImage == true ? "blank" : "default");
         _model.TrackerImage = _currentSpeechImages?.IdleImage;
         _prevSpeaking = false;

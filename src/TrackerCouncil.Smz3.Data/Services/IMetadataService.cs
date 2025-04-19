@@ -77,7 +77,22 @@ public interface IMetadataService
     /// <summary>
     /// Layouts used by the UI
     /// </summary>
-    public UIConfig UILayouts { get; set; }
+    public UIConfig UILayouts { get; }
+
+    /// <summary>
+    /// The current selected mood
+    /// </summary>
+    public string Mood { get; }
+
+    /// <summary>
+    /// The selected tracker sprite profile config, if applicable
+    /// </summary>
+    public TrackerProfileConfig? TrackerSpriteProfile { get; }
+
+    /// <summary>
+    /// Updates the configs and picks a new mood
+    /// </summary>
+    public void ReloadConfigs();
 
     /// <summary>
     /// Returns extra information for the specified region.

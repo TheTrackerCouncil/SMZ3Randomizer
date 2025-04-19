@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Shared;
-using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.Options;
+using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
@@ -18,13 +16,13 @@ using TrackerCouncil.Smz3.Shared.Models;
 namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
 
 [Order(-5)]
-public class ZeldaTextsPatch(Configs configs, IGameHintService gameHintService) : RomPatch
+public class ZeldaTextsPatch(IMetadataService metadataService, IGameHintService gameHintService) : RomPatch
 {
     private StringTable _stringTable = null!;
     private PlandoTextConfig _plandoText = null!;
-    private GameLinesConfig GameLines => configs.GameLines;
-    private ItemConfig Items => configs.Items;
-    private RegionConfig Regions => configs.Regions;
+    private GameLinesConfig GameLines => metadataService.GameLines;
+    private ItemConfig Items => metadataService.Items;
+    private RegionConfig Regions => metadataService.Regions;
     private GetPatchesRequest _data = null!;
 
     public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)

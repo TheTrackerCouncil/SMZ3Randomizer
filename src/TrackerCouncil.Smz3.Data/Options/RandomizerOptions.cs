@@ -9,6 +9,7 @@ using MSURandomizerLibrary;
 using SnesConnectorLibrary;
 using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Logic;
+using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
 using YamlDotNet.Serialization;
 
@@ -75,7 +76,7 @@ public class RandomizerOptions : INotifyPropertyChanged
     {
         get => Directory.Exists(GeneralOptions.RomOutputPath)
             ? GeneralOptions.RomOutputPath
-            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "Seeds");
+            : Directories.DefaultSeedPath;
     }
 
     [YamlIgnore]
@@ -83,7 +84,7 @@ public class RandomizerOptions : INotifyPropertyChanged
     {
         get => Directory.Exists(GeneralOptions.AutoTrackerScriptsOutputPath)
             ? GeneralOptions.AutoTrackerScriptsOutputPath
-            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "AutoTrackerScripts");
+            : Directories.DefaultAutoTrackerScriptsPath;
     }
 
     public static RandomizerOptions Load(string loadPath, string savePath, bool isYaml)

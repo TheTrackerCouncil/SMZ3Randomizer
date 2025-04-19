@@ -11,7 +11,6 @@ using Microsoft.Extensions.Logging;
 using PySpeechService.Recognition;
 using TrackerCouncil.Smz3.Chat.Integration;
 using TrackerCouncil.Smz3.Abstractions;
-using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.Options;
@@ -47,12 +46,10 @@ public sealed class Tracker : TrackerBase, IDisposable
     private readonly ITrackerStateService _stateService;
     private readonly ITrackerTimerService _timerService;
     private readonly ISpeechRecognitionService _recognizer;
-    private readonly TrackerSpriteService _trackerSpriteService;
     private readonly HashSet<SchrodingersString> _saidLines = new();
 
     private bool _disposed;
     private string? _lastSpokenText;
-    private string? _previousImagePackName;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Tracker"/> class.
@@ -69,11 +66,9 @@ public sealed class Tracker : TrackerBase, IDisposable
     /// <param name="playerProgressionService"></param>
     /// <param name="communicator"></param>
     /// <param name="historyService">Service for</param>
-    /// <param name="configs"></param>
     /// <param name="stateService"></param>
     /// <param name="timerService"></param>
     /// <param name="serviceProvider"></param>
-    /// <param name="trackerSpriteService"></param>
     /// <param name="metadata"></param>
     public Tracker(IWorldAccessor worldAccessor,
         TrackerModuleFactory moduleFactory,
@@ -83,11 +78,9 @@ public sealed class Tracker : TrackerBase, IDisposable
         IPlayerProgressionService playerProgressionService,
         ICommunicator communicator,
         IHistoryService historyService,
-        Configs configs,
         ITrackerStateService stateService,
         ITrackerTimerService timerService,
         IServiceProvider serviceProvider,
-        TrackerSpriteService trackerSpriteService,
         IMetadataService metadata)
     {
         if (trackerOptions.Options == null)
@@ -104,11 +97,10 @@ public sealed class Tracker : TrackerBase, IDisposable
         _communicator = communicator;
         _stateService = stateService;
         _timerService = timerService;
-        _trackerSpriteService = trackerSpriteService;
 
         // Initialize the tracker configuration
+        _communicator.UseAlternateVoice(metadata.TrackerSpriteProfile?.UseAltVoice ?? false);
         Responses = metadata.Responses;
-        SetImagePack(trackerOptions.Options.TrackerImagePackName);
         Requests = metadata.Requests;
         PlayerProgressionService.ResetProgression();
 
@@ -150,7 +142,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         World = _worldAccessor.World;
         Options = _trackerOptions.Options;
 
-        Mood = configs.CurrentMood ?? "";
+        Mood = metadata.Mood;
     }
 
     ~Tracker()
@@ -218,18 +210,6 @@ public sealed class Tracker : TrackerBase, IDisposable
         }
 
         return false;
-    }
-
-    public override void SetImagePack(string? packName)
-    {
-        if (packName == _previousImagePackName)
-        {
-            return;
-        }
-
-        _previousImagePackName = packName;
-        var profileConfig = _trackerSpriteService.GetPack(packName).ProfileConfig;
-        _communicator.UseAlternateVoice(profileConfig?.UseAltVoice ?? false);
     }
 
     private void LoadServices(IServiceProvider serviceProvider)

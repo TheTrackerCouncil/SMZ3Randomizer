@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Microsoft.Extensions.Logging;
+using TrackerCouncil.Smz3.Shared;
 
 namespace TrackerCouncil.Smz3.Data.Options;
 
@@ -16,8 +17,7 @@ public class OptionsFactory
 
     public static string GetFileFolder()
     {
-        var basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "SMZ3CasRandomizer");
+        var basePath = Directories.AppDataFolder;
         Directory.CreateDirectory(basePath);
         return basePath;
     }

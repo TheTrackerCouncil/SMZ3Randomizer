@@ -167,7 +167,7 @@ public class RandomizerTests
         var serviceProvider = new ServiceCollection()
             .AddLogging(options => { })
             .AddSingleton<OptionsFactory>()
-            .AddSingleton<Configs>()
+            .AddSingleton<ConfigProvider>()
             .AddSingleton<RomPatchFactory>()
             .AddSingleton<IMetadataService, MetadataService>()
             .AddSingleton<IGameHintService, GameHintService>()

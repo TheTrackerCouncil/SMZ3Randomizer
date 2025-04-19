@@ -14,6 +14,7 @@ echo $GITHUB_OUTPUT
 
 # Create the .app bundle structure
 mkdir -p "$APP_NAME/Contents/MacOS"
+mkdir -p "$APP_NAME/Contents/MacOS/DefaultData"
 mkdir -p "$APP_NAME/Contents/Resources"
 
 # Copy the Info.plist file and the icon
@@ -24,9 +25,10 @@ cp "setup/$ICON_FILE" "$APP_NAME/Contents/Resources/AppIcon.icns"
 cp -a "$PUBLISH_OUTPUT_DIRECTORY/." "$APP_NAME/Contents/MacOS"
 
 # Bundle sprites and configs
-cp -r "sprites/Sprites" "$APP_NAME/Contents/MacOS/Sprites"
-cp -r "trackersprites" "$APP_NAME/Contents/MacOS/TrackerSprites"
-cp -r "configs/Profiles" "$APP_NAME/Contents/MacOS/Configs"
+cp -r "sprites/Sprites" "$APP_NAME/Contents/MacOS/DefaultData/Sprites"
+cp -r "trackersprites" "$APP_NAME/Contents/MacOS/DefaultData/TrackerSprites"
+cp -r "configs/Profiles" "$APP_NAME/Contents/MacOS/DefaultData/Configs"
+cp -r "configs/Schemas" "$APP_NAME/Contents/MacOS/DefaultData/Schemas"
 
 echo "Packaged $APP_NAME successfully."
 

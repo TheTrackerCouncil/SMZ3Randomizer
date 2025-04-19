@@ -14,11 +14,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SnesConnectorLibrary;
 using TrackerCouncil.Smz3.Abstractions;
+using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
+using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Models;
 using TrackerCouncil.Smz3.Tracking.Services;
@@ -401,7 +403,7 @@ public class TrackerWindowService(
         var path = Options.AutoTrackerScriptsOutputPath;
         if (string.IsNullOrEmpty(path))
         {
-            path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "AutoTrackerScripts");
+            path = Directories.DefaultAutoTrackerScriptsPath;
         }
 
         CrossPlatformTools.OpenDirectory(path);

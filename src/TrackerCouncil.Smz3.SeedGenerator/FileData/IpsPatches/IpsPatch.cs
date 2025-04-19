@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using TrackerCouncil.Smz3.Data;
+using TrackerCouncil.Smz3.Shared;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.FileData.IpsPatches;
 
@@ -9,7 +10,7 @@ public static class IpsPatch
     public static Stream GetStream(string name)
     {
 #if DEBUG
-        var path = Path.Combine(RandomizerDirectories.SolutionPath, "src", "TrackerCouncil.Smz3.SeedGenerator", "FileData", "IpsPatches", name);
+        var path = Path.Combine(Directories.SolutionPath, "src", "TrackerCouncil.Smz3.SeedGenerator", "FileData", "IpsPatches", name);
         return File.OpenRead(path);
 #else
         var type = typeof(IpsPatch);

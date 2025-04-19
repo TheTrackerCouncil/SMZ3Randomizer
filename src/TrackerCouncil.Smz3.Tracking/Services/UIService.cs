@@ -34,11 +34,11 @@ public class UIService: IUIService
     {
         _layouts = uiConfig;
 
-        var iconPaths = options.Options?.TrackerProfiles
-            .Where(x => !string.IsNullOrEmpty(x))
-            .NonNull()
-            .Select(x => Path.Combine(configProvider.ConfigDirectory, x, "Sprites")).Reverse().ToList() ?? new();
-        iconPaths.Add(RandomizerDirectories.SpritePath);
+        var selectedTrackerProfiles = (options.Options?.TrackerProfiles ?? []).ToList();
+
+        var iconPaths = configProvider.GetConfigSpritePaths(selectedTrackerProfiles)
+            .Concat([ Directories.UserSpritePath, Directories.SpritePath ])
+            .ToList();
         _iconPaths = iconPaths;
     }
 

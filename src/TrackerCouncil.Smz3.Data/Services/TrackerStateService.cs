@@ -5,8 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Shared;
-using TrackerCouncil.Smz3.Data.Configuration;
-using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData;
@@ -20,13 +18,13 @@ public class TrackerStateService : ITrackerStateService
 {
     private readonly RandomizerContext _randomizerContext;
     private readonly ILogger<TrackerStateService> _logger;
-    private readonly Configs _configs;
+    private readonly IMetadataService _metadata;
 
-    public TrackerStateService(RandomizerContext dbContext, ILogger<TrackerStateService> logger, Configs configs)
+    public TrackerStateService(RandomizerContext dbContext, ILogger<TrackerStateService> logger, IMetadataService metadata)
     {
         _randomizerContext = dbContext;
         _logger = logger;
-        _configs = configs;
+        _metadata = metadata;
     }
 
     public async Task CreateStateAsync(IEnumerable<World> worlds, GeneratedRom generatedRom)
@@ -63,7 +61,7 @@ public class TrackerStateService : ITrackerStateService
 
         var itemStates = new List<TrackerItemState>();
 
-        var configItems = _configs.Items;
+        var configItems = _metadata.Items;
         var enumItems = Enum.GetValues(typeof(ItemType)).Cast<ItemType>().Where(it => it != ItemType.Nothing && configItems.All(ci => ci.InternalItemType != it))
             .Select(x => new ItemData(x));
         var itemData = configItems.Concat(enumItems).ToList();

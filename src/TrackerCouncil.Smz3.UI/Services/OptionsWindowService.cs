@@ -7,11 +7,10 @@ using System.Threading.Tasks;
 using AvaloniaControls.ControlServices;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Chat.Integration;
-using TrackerCouncil.Smz3.Data;
-using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.ViewModels;
+using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Tracking.Services;
 using ConfigProvider = TrackerCouncil.Smz3.Data.Configuration.ConfigProvider;
 
@@ -32,9 +31,9 @@ public class OptionsWindowService(
     IGitHubFileSynchronizerService gitHubFileSynchronizerService,
     TrackerSpriteService trackerSpriteService,
     ICommunicator communicator,
-    Configs configs) : ControlService
+    ConfigProvider configs) : ControlService
 {
-    private Dictionary<string, string> _availableInputDevices = new() { { "Default", "Default" } };
+    private readonly Dictionary<string, string> _availableInputDevices = new() { { "Default", "Default" } };
     private OptionsWindowViewModel _model = new();
 
     public event EventHandler? SpriteDownloadStarted;
@@ -54,38 +53,38 @@ public class OptionsWindowService(
             trackerSpriteService.GetPackOptions(), _availableInputDevices,
             configProvider.GetAvailableProfiles().ToList());
 
-        _model.RandomizerOptions.UpdateConfigButtonPressed += (sender, args) =>
+        _model.RandomizerOptions.UpdateConfigButtonPressed += (_, _) =>
         {
             _ = UpdateConfigsAsync();
         };
 
-        _model.RandomizerOptions.UpdateSpritesButtonPressed += (sender, args) =>
+        _model.RandomizerOptions.UpdateSpritesButtonPressed += (_, _) =>
         {
             _ = UpdateSpritesAsync();
         };
 
-        _model.TrackerOptions.TestTextToSpeechPressed += (sender, args) =>
+        _model.TrackerOptions.TestTextToSpeechPressed += (_, _) =>
         {
             communicator.UpdateVolume(_model.TrackerOptions.TextToSpeechVolume);
             communicator.Say(new SpeechRequest("This is a test message", null, true));
         };
 
-        _model.TwitchIntegration.TwitchLoginPressed += (sender, args) =>
+        _model.TwitchIntegration.TwitchLoginPressed += (_, _) =>
         {
             TwitchLogin();
         };
 
-        _model.TwitchIntegration.TwitchLogoutPressed += (sender, args) =>
+        _model.TwitchIntegration.TwitchLogoutPressed += (_, _) =>
         {
             TwitchLogout();
         };
 
-        _model.TrackerProfiles.OpenProfileFolderPressed += (sender, args) =>
+        _model.TrackerProfiles.OpenProfileFolderPressed += (_, _) =>
         {
             OpenProfileFolder();
         };
 
-        _model.TrackerProfiles.RefreshProfilesPressed += (sender, args) =>
+        _model.TrackerProfiles.RefreshProfilesPressed += (_, _) =>
         {
             _model.TrackerProfiles.AvailableProfiles = configProvider.GetAvailableProfiles()
                 .Where(x => !string.IsNullOrEmpty(x) && !"Default".Equals(x)).ToList();
@@ -212,7 +211,8 @@ public class OptionsWindowService(
 
         if (await gitHubConfigDownloaderService.DownloadFromSourceAsync(configSource))
         {
-            configs.LoadConfigs();
+            configs.LoadConfigProfiles();
+            configs.CopySchemaFolder();
         }
     }
 
@@ -222,12 +222,12 @@ public class OptionsWindowService(
         {
             RepoOwner = "TheTrackerCouncil",
             RepoName = "SMZ3CasSprites",
-            DestinationFolder = RandomizerDirectories.SpritePath,
-            HashPath = RandomizerDirectories.SpriteHashYamlFilePath,
-            InitialJsonPath = RandomizerDirectories.SpriteInitialJsonFilePath,
+            DestinationFolder = Directories.SpritePath,
+            HashPath = Directories.SpriteHashYamlFilePath,
+            InitialJsonPath = Directories.SpriteInitialJsonFilePath,
             ValidPathCheck = p => p.StartsWith("Sprites/") && p.Contains('.'),
             ConvertGitHubPathToLocalPath = p => p.Replace("Sprites/", ""),
-            DeleteExtraFiles = RandomizerDirectories.DeleteSprites
+            DeleteExtraFiles = Directories.DeleteSprites
         };
 
         var sprites = await gitHubFileSynchronizerService.GetGitHubFileDetailsAsync(spriteDownloadRequest);
@@ -236,11 +236,11 @@ public class OptionsWindowService(
         {
             RepoOwner = "TheTrackerCouncil",
             RepoName = "TrackerSprites",
-            DestinationFolder = RandomizerDirectories.TrackerSpritePath,
-            HashPath = RandomizerDirectories.TrackerSpritePath,
-            InitialJsonPath = RandomizerDirectories.TrackerSpritePath,
+            DestinationFolder = Directories.TrackerSpritePath,
+            HashPath = Directories.TrackerSpritePath,
+            InitialJsonPath = Directories.TrackerSpritePath,
             ValidPathCheck = p => p.EndsWith(".png", StringComparison.OrdinalIgnoreCase) || p.EndsWith(".gif", StringComparison.OrdinalIgnoreCase),
-            DeleteExtraFiles = RandomizerDirectories.DeleteTrackerSprites
+            DeleteExtraFiles = Directories.DeleteTrackerSprites
         };
 
         sprites.AddRange(await gitHubFileSynchronizerService.GetGitHubFileDetailsAsync(spriteDownloadRequest));
@@ -259,14 +259,14 @@ public class OptionsWindowService(
         {
             Process.Start(new ProcessStartInfo()
             {
-                FileName = configProvider.ConfigDirectory,
+                FileName = Directories.UserConfigPath,
                 UseShellExecute = true,
                 Verb = "open"
             });
         }
         catch (Exception e)
         {
-            logger.LogError(e, $"Could not open profile folder {configProvider.ConfigDirectory}");
+            logger.LogError(e, $"Could not open profile folder {Directories.UserConfigPath}");
         }
     }
 }

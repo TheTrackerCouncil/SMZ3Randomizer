@@ -9,6 +9,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.GeneratedData;
 using TrackerCouncil.Smz3.Data.Interfaces;
@@ -165,8 +166,7 @@ public class StatGenerator(Smz3Randomizer randomizer): IStatGenerator
             DungeonItems = dungeonItems
         }, options);
 
-        var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "SMZ3CasRandomizer", "item_generation_stats.json");
+        var path = Path.Combine(Directories.AppDataFolder, "item_generation_stats.json");
         File.WriteAllText(path, json);
 
         var startInfo = new ProcessStartInfo(path)

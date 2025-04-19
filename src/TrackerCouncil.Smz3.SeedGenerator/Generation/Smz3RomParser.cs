@@ -10,6 +10,7 @@ using TrackerCouncil.Smz3.Data.GeneratedData;
 using TrackerCouncil.Smz3.Data.Logic;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.ParsedRom;
+using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
 using TrackerCouncil.Smz3.SeedGenerator.FileData;
@@ -19,7 +20,7 @@ using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.Generation;
 
-public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor worldAccessor, IPatcherService patcherService, ParsedRomFiller parsedRomFiller, Configs configs, IGameHintService gameHintService)
+public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor worldAccessor, IPatcherService patcherService, ParsedRomFiller parsedRomFiller, IMetadataService metadataService, IGameHintService gameHintService)
 {
     [GeneratedRegex(@"\b[0-9A-Fa-f]+\b")]
     private static partial Regex HexRegex();
@@ -49,7 +50,7 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
             }).ToList();
             logger.LogInformation("Parsed players {PlayerList}", string.Join(", ", players.Select(p => p.PlayerName)));
 
-            var itemTypes = configs.Items.Where(x => x.InternalItemType != ItemType.Nothing)
+            var itemTypes = metadataService.Items.Where(x => x.InternalItemType != ItemType.Nothing)
                 .Select(x => (int)x.InternalItemType).ToList();
 
             var prerequisites = MedallionPatch.GetPrerequisitesFromRom(rom, exampleWorld.PrerequisiteRegions);

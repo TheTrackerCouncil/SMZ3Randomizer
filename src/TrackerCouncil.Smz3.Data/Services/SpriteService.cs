@@ -21,6 +21,7 @@ public class SpriteService
     {
         _logger = logger;
         _options = optionsFactory.Create();
+        InitUserSpriteFolder();
     }
 
     public List<Sprite> Sprites { get; set; } = [];
@@ -33,21 +34,21 @@ public class SpriteService
     /// </summary>
     public Task LoadSpritesAsync()
     {
-        if (Sprites.Any() || !Directory.Exists(RandomizerDirectories.SpritePath)) return Task.CompletedTask;
+        if (Sprites.Any() || !Directory.Exists(Directories.SpritePath)) return Task.CompletedTask;
 
         return Task.Run(() =>
         {
             var defaults = new List<Sprite>() { Sprite.DefaultSamus, Sprite.DefaultLink, Sprite.DefaultShip, Sprite.RandomSamus, Sprite.RandomLink, Sprite.RandomShip };
 
-            var playerSprites = Directory.EnumerateFiles(RandomizerDirectories.SpritePath, "*.rdc", SearchOption.AllDirectories)
+            var playerSprites = Directory.EnumerateFiles(Directories.SpritePath, "*.rdc", SearchOption.AllDirectories)
                 .Select(LoadRdcSprite);
 
-            var shipSprites = Directory.EnumerateFiles(Path.Combine(RandomizerDirectories.SpritePath, "Ships"), "*.ips", SearchOption.AllDirectories)
+            var shipSprites = Directory.EnumerateFiles(Path.Combine(Directories.SpritePath, "Ships"), "*.ips", SearchOption.AllDirectories)
                 .Select(LoadIpsSprite);
 
             var sprites = playerSprites.Concat(shipSprites).Concat(defaults).OrderBy(x => x.Name).ToList();
 
-            var extraSpriteDirectory = RandomizerDirectories.UserSpritePath;
+            var extraSpriteDirectory = Directories.UserSpritePath;
 
             if (Directory.Exists(extraSpriteDirectory))
             {
@@ -63,11 +64,36 @@ public class SpriteService
         });
     }
 
+    private void InitUserSpriteFolder()
+    {
+        if (Directory.Exists(Directories.UserSpritePath))
+        {
+            return;
+        }
+
+        Directory.CreateDirectory(Directories.UserSpritePath);
+
+        var deprecratedDirectory = Path.Combine(Directories.AppDataFolder, "Sprites");
+
+        if (!Directory.Exists(deprecratedDirectory))
+        {
+            return;
+        }
+
+        foreach (var oldPath in Directory.GetDirectories(deprecratedDirectory))
+        {
+            var name = new DirectoryInfo(oldPath).Name;
+            var newPath = Path.Combine(Directories.UserSpritePath, name);
+            Directory.Move(oldPath, newPath);
+            _logger.LogInformation("Migrated user sprite folder {Name} from {Old} to {New}", name, oldPath, newPath);
+        }
+    }
+
     public Sprite? AddCustomSprite(string spritePath, string? previewImagePath)
     {
-        var userSpritePath = RandomizerDirectories.UserSpritePath;
+        var userSpritePath = Directories.UserSpritePath;
 
-        if (spritePath.StartsWith(RandomizerDirectories.SpritePath) ||
+        if (spritePath.StartsWith(Directories.SpritePath) ||
             spritePath.StartsWith(userSpritePath) ||
             !File.Exists(spritePath))
         {
@@ -115,7 +141,7 @@ public class SpriteService
     public string GetRandomPreviewImage(SpriteType type)
     {
         var spriteFolder = type == SpriteType.Ship ? "Ships" : type.ToString();
-        return Path.Combine(RandomizerDirectories.SpritePath, spriteFolder, "random.png");
+        return Path.Combine(Directories.SpritePath, spriteFolder, "random.png");
     }
 
     /// <summary>

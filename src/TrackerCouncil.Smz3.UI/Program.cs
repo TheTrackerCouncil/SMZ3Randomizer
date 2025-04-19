@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -15,6 +17,7 @@ using MSURandomizer.Services;
 using MSURandomizerLibrary.Models;
 using MSURandomizerLibrary.Services;
 using Serilog;
+using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Shared;
 
 namespace TrackerCouncil.Smz3.UI;
@@ -47,6 +50,13 @@ sealed class Program
             .WriteTo.Console()
 #endif
             .CreateLogger();
+
+        Log.Information("Starting SMZ3 Cas' Randomizer {Version}", FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion);
+        Log.Information("Config Path: {Directory}", Directories.ConfigPath);
+        Log.Information("Sprite Path: {Directory}", Directories.SpritePath);
+        Log.Information("Tracker Sprite Path: {Directory}", Directories.TrackerSpritePath);
+
+        CopyDefaultFolder();
 
         MainHost = Host.CreateDefaultBuilder(args)
             .UseSerilog()
@@ -122,5 +132,62 @@ sealed class Program
                 await Task.Delay(500);
             }
         });
+    }
+
+    // Copies bundled data on Linux and Mac builds to the local data folder
+    private static void CopyDefaultFolder()
+    {
+        var source = Path.Combine(AppContext.BaseDirectory, "DefaultData");
+        if (!Directory.Exists(source))
+        {
+            return;
+        }
+
+        if (Directory.Exists(Directories.DefaultDataPath))
+        {
+            try
+            {
+                Directory.Delete(Directories.DefaultDataPath, true);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Unable to delete default data folder {Path}", Directories.DefaultDataPath);
+                return;
+            }
+        }
+
+        try
+        {
+            CopyDirectory(source, Directories.DefaultDataPath);
+        }
+        catch (Exception e)
+        {
+            Log.Error(e, "Unable to copy default data folder from {OldPath} to {NewPath}", source, Directories.DefaultDataPath);
+            return;
+        }
+
+        Log.Information("Copied default data folder from {OldPath} to {NewPath}", source, Directories.DefaultDataPath);
+    }
+
+    private static void CopyDirectory(string source, string destination)
+    {
+        var sourceDirectory = new DirectoryInfo(source);
+        if (!sourceDirectory.Exists)
+            throw new DirectoryNotFoundException($"Source directory not found: {sourceDirectory.FullName}");
+
+        var directories = sourceDirectory.GetDirectories();
+        Directory.CreateDirectory(destination);
+
+        foreach (var file in sourceDirectory.GetFiles())
+        {
+            var targetFilePath = Path.Combine(destination, file.Name);
+            file.CopyTo(targetFilePath);
+        }
+
+        foreach (var subDirectory in directories)
+        {
+            var newDestinationDir = Path.Combine(destination, subDirectory.Name);
+            CopyDirectory(subDirectory.FullName, newDestinationDir);
+        }
     }
 }

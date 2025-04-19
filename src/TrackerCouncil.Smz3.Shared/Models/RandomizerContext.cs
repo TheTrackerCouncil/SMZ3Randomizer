@@ -65,9 +65,9 @@ public sealed class RandomizerContext : DbContext
     public DbSet<MultiplayerGameDetails> MultiplayerGames { get; set; }
 
 #if DEBUG
-    private static string DbPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "smz3-debug.db");
+    private static string DbPath => Path.Combine(Directories.AppDataFolder, "smz3-debug.db");
 #else
-    private static string DbPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "smz3.db");
+    private static string DbPath => Path.Combine(Directories.AppDataFolder, "smz3.db");
 #endif
 
 }

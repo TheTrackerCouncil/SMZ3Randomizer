@@ -11,6 +11,7 @@ using TrackerCouncil.Smz3.Data.GeneratedData;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
+using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.Generation;
@@ -100,8 +101,8 @@ public class RomTextService(ILogger<RomTextService> logger, IGameHintService gam
     private static string GetPlandoSchemaPath()
     {
 #if DEBUG
-        var parentDir = new DirectoryInfo(RandomizerDirectories.SolutionPath).Parent;
-        var localPlandoSchemaPath = Path.Combine(parentDir?.FullName ?? RandomizerDirectories.SolutionPath, "SMZ3CasConfigs", "Schemas", "plando.json");
+        var parentDir = new DirectoryInfo(Directories.SolutionPath).Parent;
+        var localPlandoSchemaPath = Path.Combine(parentDir?.FullName ?? Directories.SolutionPath, "SMZ3CasConfigs", "Schemas", "plando.json");
         if (File.Exists(localPlandoSchemaPath))
         {
             return localPlandoSchemaPath;

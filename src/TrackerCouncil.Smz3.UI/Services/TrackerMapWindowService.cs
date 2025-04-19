@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Avalonia;
-using AvaloniaControls;
 using AvaloniaControls.ControlServices;
 using AvaloniaControls.Services;
 using TrackerCouncil.Smz3.Abstractions;
@@ -16,9 +15,11 @@ using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Data.WorldData.Regions.SuperMetroid.Crateria;
 using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda.DarkWorld;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
+using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Tracking.Services;
 using TrackerCouncil.Smz3.UI.ViewModels;
+using EnumExtensions = AvaloniaControls.EnumExtensions;
 
 namespace TrackerCouncil.Smz3.UI.Services;
 
@@ -45,8 +46,8 @@ public class TrackerMapWindowService(
 
     private void InitViewModelData()
     {
-        _markedImageGoodPath = Path.Combine(RandomizerDirectories.SpritePath, "Maps", "marked_good.png");
-        _markedImageUselessPath = Path.Combine(RandomizerDirectories.SpritePath, "Maps", "marked_useless.png");
+        _markedImageGoodPath = Path.Combine(Directories.SpritePath, "Maps", "marked_good.png");
+        _markedImageUselessPath = Path.Combine(Directories.SpritePath, "Maps", "marked_useless.png");
 
         var allLocations = worldAccessor.World.Locations.ToList();
 
@@ -225,7 +226,7 @@ public class TrackerMapWindowService(
 
         if (location.RewardRegion is { HasReceivedReward: false } rewardRegion && rewardRegion.GetKeysanityAdjustedBossAccessibility() == Accessibility.Available)
         {
-            image = rewardRegion.MarkedReward.GetDescription().ToLowerInvariant() + ".png";
+            image = EnumExtensions.GetDescription(rewardRegion.MarkedReward).ToLowerInvariant() + ".png";
             location.IsInLogic = true;
         }
         else if (location.BossRegion is { BossDefeated: false } && location.BossRegion.GetKeysanityAdjustedBossAccessibility() == Accessibility.Available)
@@ -302,7 +303,7 @@ public class TrackerMapWindowService(
     {
         if (!string.IsNullOrEmpty(image))
         {
-            location.ImagePath = Path.Combine(RandomizerDirectories.SpritePath, "Maps", image);
+            location.ImagePath = Path.Combine(Directories.SpritePath, "Maps", image);
             location.HasImage = true;
         }
         else
@@ -313,7 +314,7 @@ public class TrackerMapWindowService(
         if (displayNumber > 1)
         {
             location.NumberImagePath = Path.Combine(
-                RandomizerDirectories.SpritePath, "Marks", $"{Math.Min(9, displayNumber)}.png");
+                Directories.SpritePath, "Marks", $"{Math.Min(9, displayNumber)}.png");
             location.NumberVisibility = true;
         }
         else

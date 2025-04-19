@@ -6,6 +6,7 @@ using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Data.Interfaces;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.SeedGenerator.Infrastructure;
+using TrackerCouncil.Smz3.Shared;
 
 namespace TrackerCouncil.Smz3.PatchBuilder;
 
@@ -25,7 +26,7 @@ public class PatchBuilderService
     {
         _logger = logger;
         _romGenerationService = romGenerationService;
-        _solutionPath = RandomizerDirectories.SolutionPath;
+        _solutionPath = Directories.SolutionPath;
         _randomizerRomPath = Path.Combine(_solutionPath, "alttp_sm_combo_randomizer_rom");
         _optionsFactory = optionsFactory;
         _msuLookupService = msuLookupService;

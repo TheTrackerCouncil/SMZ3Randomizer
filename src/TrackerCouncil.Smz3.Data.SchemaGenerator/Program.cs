@@ -13,6 +13,7 @@ using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.Options;
+using TrackerCouncil.Smz3.Shared;
 using YamlDotNet.Serialization;
 using JsonSchemaGenerator = NJsonSchema.Generation.JsonSchemaGenerator;
 
@@ -288,7 +289,7 @@ public static class Program
 
     private static string GetOutputPath()
     {
-        var slnDirectory = new DirectoryInfo(RandomizerDirectories.SolutionPath);
+        var slnDirectory = new DirectoryInfo(Directories.SolutionPath);
         if (slnDirectory.Parent?.GetDirectories().Any(x => x.Name == "SMZ3CasConfigs") == true)
         {
             return slnDirectory.Parent.GetDirectories().First(x => x.Name == "SMZ3CasConfigs").FullName;
