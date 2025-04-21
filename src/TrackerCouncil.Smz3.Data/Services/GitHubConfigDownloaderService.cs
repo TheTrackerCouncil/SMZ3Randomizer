@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using GitHubReleaseChecker;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Data.Options;
+using TrackerCouncil.Smz3.Shared;
 
 namespace TrackerCouncil.Smz3.Data.Services;
 
@@ -24,8 +25,7 @@ public class GitHubConfigDownloaderService : IGitHubConfigDownloaderService
         _logger = logger;
         _gitHubReleaseService = gitHubReleaseService;
         _tempDirectory = Path.Combine(Path.GetTempPath(), "SMZ3CasConfigs");
-        _targetDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "SMZ3CasRandomizer", "Configs");
+        _targetDirectory = Directories.ConfigPath;
         if (Directory.Exists(_tempDirectory))
         {
             Directory.Delete(_tempDirectory, true);

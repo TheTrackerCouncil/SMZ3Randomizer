@@ -6,6 +6,7 @@ using ReactiveUI.Fody.Helpers;
 using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.Options;
+using TrackerCouncil.Smz3.Shared;
 
 namespace TrackerCouncil.Smz3.UI.ViewModels;
 
@@ -19,7 +20,7 @@ public class TrackerMapWindowViewModel : ViewModelBase
 
     public string MainImage => SelectedMap == null
         ? ""
-        : Path.Combine(RandomizerDirectories.SpritePath, "Maps", SelectedMap.Image);
+        : Path.Combine(Directories.SpritePath, "Maps", SelectedMap.Image);
 
     [Reactive] public List<TrackerMapLocationViewModel> Locations { get; set; } = [];
     [Reactive] public bool FinishedLoading { get; set; }

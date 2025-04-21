@@ -19,6 +19,7 @@ using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
+using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.UI.ViewModels;
 using TrackerCouncil.Smz3.UI.Views;
 
@@ -33,7 +34,7 @@ public class MainWindowService(
     IGitHubFileSynchronizerService gitHubFileSynchronizerService,
     SpriteService spriteService,
     TrackerSpriteService trackerSpriteService,
-    Configs configs,
+    ConfigProvider configs,
     IServiceProvider serviceProvider) : ControlService
 {
     private MainWindowViewModel _model = new();
@@ -114,10 +115,7 @@ public class MainWindowService(
         if (string.IsNullOrEmpty(_options.GeneralOptions.Z3RomPath) ||
             !_options.GeneralOptions.DownloadConfigsOnStartup)
         {
-            if (configsUpdated)
-            {
-                configs.LoadConfigs();
-            }
+            configs.LoadConfigProfiles();
             return;
         }
 
@@ -136,7 +134,7 @@ public class MainWindowService(
         if (configsUpdated)
         {
             _options.Save();
-            configs.LoadConfigs();
+            configs.LoadConfigProfiles();
         }
     }
 
@@ -154,12 +152,12 @@ public class MainWindowService(
         {
             RepoOwner = "TheTrackerCouncil",
             RepoName = "SMZ3CasSprites",
-            DestinationFolder = RandomizerDirectories.SpritePath,
-            HashPath = RandomizerDirectories.SpriteHashYamlFilePath,
-            InitialJsonPath = RandomizerDirectories.SpriteInitialJsonFilePath,
+            DestinationFolder = Directories.SpritePath,
+            HashPath = Directories.SpriteHashYamlFilePath,
+            InitialJsonPath = Directories.SpriteInitialJsonFilePath,
             ValidPathCheck = p => Sprite.ValidDownloadExtensions.Contains(Path.GetExtension(p).ToLowerInvariant()),
             ConvertGitHubPathToLocalPath = p => p.Replace("Sprites/", ""),
-            DeleteExtraFiles = RandomizerDirectories.DeleteSprites
+            DeleteExtraFiles = Directories.DeleteSprites
         };
 
         var toDownload = await gitHubFileSynchronizerService.GetGitHubFileDetailsAsync(spriteDownloadRequest);
@@ -168,11 +166,11 @@ public class MainWindowService(
         {
             RepoOwner = "TheTrackerCouncil",
             RepoName = "TrackerSprites",
-            DestinationFolder = RandomizerDirectories.TrackerSpritePath,
-            HashPath = RandomizerDirectories.TrackerSpriteHashYamlFilePath,
-            InitialJsonPath = RandomizerDirectories.TrackerSpriteInitialJsonFilePath,
+            DestinationFolder = Directories.TrackerSpritePath,
+            HashPath = Directories.TrackerSpriteHashYamlFilePath,
+            InitialJsonPath = Directories.TrackerSpriteInitialJsonFilePath,
             ValidPathCheck = p => p.EndsWith(".png", StringComparison.OrdinalIgnoreCase) || p.EndsWith(".gif", StringComparison.OrdinalIgnoreCase) || p.EndsWith(".yml", StringComparison.OrdinalIgnoreCase),
-            DeleteExtraFiles = RandomizerDirectories.DeleteSprites
+            DeleteExtraFiles = Directories.DeleteSprites
         };
 
         toDownload.AddRange(await gitHubFileSynchronizerService.GetGitHubFileDetailsAsync(spriteDownloadRequest));

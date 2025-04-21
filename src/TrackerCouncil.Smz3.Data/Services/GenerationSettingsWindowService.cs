@@ -20,7 +20,7 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace TrackerCouncil.Smz3.Data.Services;
 
-public class GenerationSettingsWindowService(SpriteService spriteService, OptionsFactory optionsFactory, IRomGenerationService romGenerator, LocationConfig locations, ILogger<GenerationSettingsWindowService> logger, IMsuLookupService msuLookupService)
+public class GenerationSettingsWindowService(SpriteService spriteService, OptionsFactory optionsFactory, IRomGenerationService romGenerator, LocationConfig locations, ILogger<GenerationSettingsWindowService> logger, IMsuLookupService msuLookupService, IMetadataService metadataService)
 {
     private RandomizerOptions _options = null!;
     private GenerationWindowViewModel _model = null!;
@@ -28,7 +28,12 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
 
     public GenerationWindowViewModel GetViewModel()
     {
+        MigrateOldPresets();
+
         _options = optionsFactory.Create();
+
+        metadataService.ReloadConfigs();
+
         _model = new GenerationWindowViewModel();
 
         _model.Basic.Presets = GetPresets();
@@ -388,8 +393,7 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
 
         presets.AddRange(RandomizerPreset.GetDefaultPresets());
 
-        var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "SMZ3CasRandomizer", "Presets");
+        var folder = Directories.UserPresetsPath;
 
         var deserializer = new DeserializerBuilder()
             .WithNamingConvention(PascalCaseNamingConvention.Instance)
@@ -402,8 +406,9 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
             {
                 try
                 {
-
-                    presets.Add(deserializer.Deserialize<RandomizerPreset>(File.ReadAllText(file)));
+                    var preset = deserializer.Deserialize<RandomizerPreset>(File.ReadAllText(file));
+                    preset.FilePath = file;
+                    presets.Add(preset);
                 }
                 catch (Exception e)
                 {
@@ -448,8 +453,7 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
     {
         error = null;
 
-        var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "SMZ3CasRandomizer", "Presets");
+        var folder = Directories.UserPresetsPath;
 
         if (!Directory.Exists(folder))
         {
@@ -684,5 +688,16 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         }
     }
 
+    private void MigrateOldPresets()
+    {
+        var oldDirectory = Path.Combine(Directories.AppDataFolder, "Presets");
+        var newDirectory = Directories.UserPresetsPath;
 
+        if (!Directory.Exists(oldDirectory) || Directory.Exists(newDirectory))
+        {
+            return;
+        }
+
+        Directory.Move(oldDirectory, newDirectory);
+    }
 }

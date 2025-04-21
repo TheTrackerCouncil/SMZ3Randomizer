@@ -31,8 +31,9 @@ public partial class ConfigProvider
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     };
 
-    private readonly string _basePath;
     private readonly ILogger<ConfigProvider>? _logger;
+    private List<ConfigProfileDetails> _profiles = new();
+    private HashSet<string> _moods = [];
 
     /// <summary>
     /// Initializes a new instance of the <see
@@ -40,18 +41,102 @@ public partial class ConfigProvider
     /// </summary>
     public ConfigProvider(ILogger<ConfigProvider>? logger)
     {
-        _basePath = RandomizerDirectories.ConfigPath;
         _logger = logger;
+        InitUserConfigFolder();
+        LoadConfigProfiles();
+    }
 
-        if (Directory.Exists(_basePath))
+    private void InitUserConfigFolder()
+    {
+        if (Directory.Exists(Directories.UserConfigPath))
         {
-            var toDelete = Directory.EnumerateDirectories(_basePath)
-                .Where(directory => DeprecatedConfigProfiles.Contains(Path.GetFileName(directory))).ToList();
-            foreach (var directory in toDelete)
+           CopySchemaFolder();
+            return;
+        }
+
+        Directory.CreateDirectory(Directories.UserConfigPath);
+
+        _logger?.LogInformation("Created user config directory {Path}", Directories.UserConfigPath);
+
+        var deprecatedConfigDirectory = Path.Combine(Directories.AppDataFolder, "Configs");
+        if (!Directory.Exists(deprecatedConfigDirectory))
+        {
+            return;
+        }
+
+        var defaultConfigNames = Directory
+            .GetDirectories(Directories.ConfigPath)
+            .Select(x => new DirectoryInfo(x).Name)
+            .ToList();
+
+        var toMigrateConfigs = Directory
+            .GetDirectories(deprecatedConfigDirectory)
+            .Select(x => new DirectoryInfo(x).Name)
+            .Where(x => !defaultConfigNames.Contains(x) && !DeprecatedConfigProfiles.Contains(x))
+            .ToList();
+
+        foreach (var configName in toMigrateConfigs)
+        {
+            var oldPath = Path.Combine(deprecatedConfigDirectory, configName);
+            var newPath = Path.Combine(Directories.UserConfigPath, configName);
+            Directory.Move(oldPath, newPath);
+            _logger?.LogInformation("Migrated user config {ConfigName} from {Old} to {New}", configName, oldPath, newPath);
+        }
+
+        CopySchemaFolder();
+    }
+
+    public void LoadConfigProfiles()
+    {
+        var newProfiles = new List<ConfigProfileDetails>();
+
+        if (Directory.Exists(Directories.ConfigPath))
+        {
+            newProfiles.AddRange(Directory
+                .GetDirectories(Directories.ConfigPath)
+                .Select(GetConfigProfile)
+                .NonNull());
+        }
+
+        if (Directory.Exists(Directories.UserConfigPath))
+        {
+            var currentConfigNames = newProfiles.Select(x => x.Name).ToHashSet();
+            newProfiles.AddRange(Directory
+                .GetDirectories(Directories.UserConfigPath)
+                .Select(GetConfigProfile)
+                .NonNull()
+                .Where(x => !currentConfigNames.Contains(x.Name)));
+        }
+
+        _profiles = newProfiles;
+        _moods = _profiles.SelectMany(x => x.Moods ?? []).ToHashSet();
+    }
+
+    public ConfigProfileDetails? GetConfigProfile(string folder)
+    {
+        var name = new FileInfo(folder).Name;
+
+        if (name == "Templates")
+        {
+            return null;
+        }
+
+        var files = Directory.GetFiles(folder, "*.yml");
+
+        var moods = new HashSet<string>();
+        foreach (var file in files)
+        {
+            var filename = new FileInfo(file).Name;
+            var match = ProfileFileNameWithMoodRegex().Match(filename);
+            var mood = "";
+            if (match.Success)
             {
-                Directory.Delete(directory, true);
+                mood = match.Groups["mood"].Value;
+                moods.Add(mood);
             }
         }
+
+        return new ConfigProfileDetails(folder, moods);
     }
 
     /// <summary>
@@ -59,7 +144,7 @@ public partial class ConfigProvider
     /// </summary>
     /// <returns>A new <see cref="TrackerMapConfig"/> object.</returns>
     public virtual TrackerMapConfig GetMapConfig()
-        => LoadConfig<TrackerMapConfig>("maps.json");
+        => LoadJsonConfig<TrackerMapConfig>("maps.json");
 
     /// <summary>
     /// Loads the specified configuration instance from the specified
@@ -71,12 +156,12 @@ public partial class ConfigProvider
     /// <exception cref="InvalidOperationException">
     /// An unknown error occurred while deserializing the JSON file.
     /// </exception>
-    protected virtual T LoadConfig<T>(string fileName)
+    protected virtual T LoadJsonConfig<T>(string fileName)
     {
 #if DEBUG
         return GetBuiltInConfig<T>(fileName);
 #else
-            var jsonPath = Path.Combine(_basePath, fileName);
+            var jsonPath = Path.Combine(Directories.ConfigPath, fileName);
             if (!File.Exists(jsonPath))
             {
                 _logger?.LogWarning("Could not find configuration file '{path}'. Falling back to embedded resource.", jsonPath);
@@ -213,11 +298,7 @@ public partial class ConfigProvider
     /// <returns></returns>
     public virtual ICollection<string> GetAvailableProfiles()
     {
-        return Directory
-            .GetDirectories(_basePath)
-            .Select(x => new DirectoryInfo(x).Name)
-            .Where(x => x != "Templates")
-            .ToList();
+        return _profiles.Select(x => x.Name).ToList();
     }
 
     /// <summary>
@@ -227,70 +308,47 @@ public partial class ConfigProvider
     /// <returns>A list of names of moods that are available in the selected profiles.</returns>
     public virtual IReadOnlyList<string> GetAvailableMoods(IReadOnlyCollection<string> profiles)
     {
-        return GetBuiltInMoods(profiles)
-            .Concat(GetFileSystemMoods(profiles))
+        return _profiles.Where(x => profiles.Contains(x.Name))
+            .SelectMany(x => x.Moods ?? [])
             .Distinct(StringComparer.InvariantCultureIgnoreCase)
             .ToImmutableList();
     }
 
     /// <summary>
-    /// Returns the path of the config files
+    /// Copies the schema folder from the default config folder to the user's config folder
     /// </summary>
-    public virtual string ConfigDirectory => _basePath;
-
-    protected virtual IReadOnlyList<string> GetBuiltInMoods(IReadOnlyCollection<string> profiles)
+    public void CopySchemaFolder()
     {
-        return Assembly.GetExecutingAssembly()
-            .GetManifestResourceNames()
-            .Select(x =>
-            {
-                foreach (var profile in profiles)
-                {
-                    var expectedPrefix = $"TrackerCouncil.Smz3.Data.Configuration.Yaml.{profile}";
-                    if (x.StartsWith(expectedPrefix, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        var embeddedFileName = x.Substring(expectedPrefix.Length);
-                        var match = ProfileFileNameWithMoodRegex().Match(embeddedFileName);
-                        if (match.Success)
-                        {
-                            return match.Groups["mood"].Value;
-                        }
-                    }
-                }
+        var defaultSchemaFolder = Path.Combine(Directories.DefaultDataPath, "Schemas");
 
-                return null;
-            })
-            .NonNull()
-            .Distinct()
-            .ToImmutableList();
+        if (!Directory.Exists(defaultSchemaFolder))
+        {
+            return;
+        }
+
+        var userSchemaFolder = Path.Combine(Directories.UserDataPath, "Schemas");
+
+        if (Directory.Exists(userSchemaFolder))
+        {
+            Directory.Delete(userSchemaFolder, true);
+        }
+
+        Directory.CreateDirectory(userSchemaFolder);
+
+        foreach (var file in Directory.EnumerateFiles(defaultSchemaFolder))
+        {
+            var fileName = new FileInfo(file).Name;
+            File.Copy(file, Path.Combine(userSchemaFolder, fileName));
+        }
     }
 
-    protected virtual IReadOnlyList<string> GetFileSystemMoods(IReadOnlyCollection<string> profiles)
+    public IImmutableList<string> GetConfigSpritePaths(List<string?> profiles)
     {
-        if (!Directory.Exists(_basePath))
-            return ImmutableList.Create<string>();
-
-        return Directory.EnumerateFiles(_basePath, "*.yml", SearchOption.AllDirectories)
-            .Select(path =>
-            {
-                foreach (var profile in profiles)
-                {
-                    var expectedPrefix = Path.Combine(_basePath, profile);
-                    if (path.StartsWith(expectedPrefix, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        var embeddedFileName = Path.GetFileName(path);
-                        var match = ProfileFileNameWithMoodRegex().Match(embeddedFileName);
-                        if (match.Success)
-                        {
-                            return match.Groups["mood"].Value;
-                        }
-                    }
-                }
-
-                return null;
-            })
+        return _profiles
+            .Where(x => x.HasSprites && profiles.Contains(x.Name))
+            .OrderBy(x => profiles.IndexOf(x.Name))
+            .Select(x => x.SpritePath)
             .NonNull()
-            .Distinct()
             .ToImmutableList();
     }
 
@@ -357,7 +415,7 @@ public partial class ConfigProvider
 
     private T? LoadYamlFile<T>(string fileName, string profile)
     {
-        var path = Path.Combine(_basePath, profile, fileName);
+        var path = Path.Combine(Directories.ConfigPath, profile, fileName);
         string yml;
         if (!File.Exists(path))
         {
@@ -390,35 +448,6 @@ public partial class ConfigProvider
         _logger?.LogInformation("Loaded config file {Path}", path);
 
         return obj;
-    }
-
-    private T? LoadBuiltInYamlFile<T>(string fileName)
-    {
-        var stream = Assembly.GetExecutingAssembly()
-            .GetManifestResourceStream($"TrackerCouncil.Smz3.Data.Configuration.Yaml.{fileName}");
-        if (stream == null)
-            return default;
-
-        try
-        {
-            var deserializer = new DeserializerBuilder()
-                .WithNamingConvention(PascalCaseNamingConvention.Instance)
-                .IgnoreUnmatchedProperties()
-                .Build();
-            using var reader = new StreamReader(stream, detectEncodingFromByteOrderMarks: true);
-            var yml = reader.ReadToEnd();
-            return deserializer.Deserialize<T>(yml);
-        }
-        catch (Exception ex) when (ex is YamlDotNet.Core.SemanticErrorException or YamlDotNet.Core.YamlException)
-        {
-            _logger?.LogError(ex, "Unable to load config file {Path}", fileName);
-            throw new YamlDotNet.Core.SemanticErrorException("Unable to load config file " + fileName, ex);
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError(ex, "Unable to load config file {Path}", fileName);
-            throw;
-        }
     }
 
     private static T GetBuiltInConfig<T>(string fileName)

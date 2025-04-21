@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Shared;
@@ -17,107 +18,105 @@ namespace TrackerCouncil.Smz3.Data.Services;
 /// Service for retrieving additional metadata information
 /// about objects and locations within the world
 /// </summary>
-public class MetadataService : IMetadataService
+internal class MetadataService : IMetadataService
 {
+    private readonly ConfigProvider _configProvider;
     private readonly ILogger<MetadataService> _logger;
+    private readonly OptionsFactory _optionsFactory;
+    private readonly TrackerSpriteService _trackerSpriteService;
 
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="configs">All configs</param>
-    /// <param name="logger"></param>
-    /// <param name="trackerOptionsAccessor"></param>
-    /// <param name="trackerSpriteService"></param>
-    public MetadataService(Configs configs, ILogger<MetadataService> logger, TrackerOptionsAccessor trackerOptionsAccessor, TrackerSpriteService trackerSpriteService)
+    public MetadataService(ConfigProvider configs, ILogger<MetadataService> logger,
+        OptionsFactory optionsFactory, TrackerSpriteService trackerSpriteService)
     {
-        var options = trackerOptionsAccessor.Options;
-        TrackerProfileConfig? profileConfig = null;
+        _configProvider = configs;
+        _logger = logger;
+        _optionsFactory = optionsFactory;
+        _trackerSpriteService = trackerSpriteService;
+        ReloadConfigs();
+    }
 
-        if (options != null)
+    public RegionConfig Regions { get; private set; } = null!;
+
+    public RoomConfig Rooms { get; private set; } = null!;
+
+    public LocationConfig Locations { get; private set; } = null!;
+
+    public BossConfig Bosses { get; private set; } = null!;
+
+    public ItemConfig Items { get; private set; } = null!;
+
+    public RewardConfig Rewards { get; private set; } = null!;
+
+    public GameLinesConfig GameLines { get; private set; } = null!;
+
+    public HintTileConfig HintTiles { get; private set; } = null!;
+
+    public MetadataConfig Metadata { get; private set; } = null!;
+
+    public MsuConfig MsuConfig { get; private set; } = null!;
+
+    public IReadOnlyCollection<BasicVoiceRequest> Requests { get; private set; } = null!;
+
+    public ResponseConfig Responses { get; private set; } = null!;
+
+    public UIConfig UILayouts { get; private set; } = null!;
+
+    public string Mood { get; private set; } = null!;
+
+    public TrackerProfileConfig? TrackerSpriteProfile { get; private set; } = null!;
+
+    public void ReloadConfigs()
+    {
+        var options = _optionsFactory.Create();
+
+        var trackerPack = options.GeneralOptions.TrackerSpeechImagePack;
+        if (string.IsNullOrEmpty(trackerPack))
         {
-            var trackerPack = options.TrackerImagePackName ?? "default";
-            profileConfig = trackerSpriteService.GetPack(trackerPack).ProfileConfig;
+            trackerPack = "default";
         }
+        TrackerSpriteProfile = _trackerSpriteService.GetPack(trackerPack)?.ProfileConfig;
 
-        if (profileConfig == null)
+        var profiles = options.GeneralOptions.SelectedProfiles.NonNull().ToImmutableList();
+        Mood = _configProvider.GetAvailableMoods(profiles.NonNull().ToImmutableList()).Random(Random.Shared) ?? "";
+
+        _logger.LogInformation("Utilizing tracker profiles {List}", string.Join(", ", profiles));
+        _logger.LogInformation("Tracker is feeling {Mood} today", Mood);
+
+        if (TrackerSpriteProfile == null)
         {
-            Bosses = configs.Bosses;
-            GameLines = configs.GameLines;
-            HintTiles = configs.HintTileConfig;
-            Items = configs.Items;
-            Locations = configs.Locations;
-            Metadata = configs.MetadataConfig;
-            MsuConfig = configs.MsuConfig;
-            Regions = configs.Regions;
-            Requests = configs.Requests;
-            Responses = configs.Responses;
-            Rewards = configs.Rewards;
-            Rooms = configs.Rooms;
-            UILayouts = configs.UILayouts;
+            _logger.LogInformation("No tracker sprite profile config found for profile {Name}", trackerPack);
+            Bosses = _configProvider.GetBossConfig(profiles, Mood);
+            GameLines = _configProvider.GetGameConfig(profiles, Mood);
+            HintTiles = _configProvider.GetHintTileConfig(profiles, Mood);
+            Items = _configProvider.GetItemConfig(profiles, Mood);
+            Locations = _configProvider.GetLocationConfig(profiles, Mood);
+            Metadata = _configProvider.GetMetadataConfig(profiles, Mood);
+            MsuConfig = _configProvider.GetMsuConfig(profiles, Mood);
+            Regions = _configProvider.GetRegionConfig(profiles, Mood);
+            Requests = _configProvider.GetRequestConfig(profiles, Mood);
+            Responses = _configProvider.GetResponseConfig(profiles, Mood);
+            Rewards = _configProvider.GetRewardConfig(profiles, Mood);
+            Rooms = _configProvider.GetRoomConfig(profiles, Mood);
+            UILayouts = _configProvider.GetUIConfig(profiles, Mood);
         }
         else
         {
-            Bosses = IMergeable<BossInfo>.Combine(BossConfig.Default(), configs.Bosses, profileConfig.BossConfig);
-            GameLines = IMergeable<GameLinesConfig>.Combine(GameLinesConfig.Default(), configs.GameLines);
-            HintTiles = IMergeable<HintTileConfig>.Combine(HintTileConfig.Default(), configs.HintTileConfig);
-            Items = IMergeable<ItemData>.Combine(ItemConfig.Default(), configs.Items, profileConfig.ItemConfig);
-            Locations = IMergeable<LocationInfo>.Combine(LocationConfig.Default(), configs.Locations, profileConfig.LocationConfig);
-            Metadata = IMergeable<MetadataConfig>.Combine(MetadataConfig.Default(), configs.MetadataConfig);
-            MsuConfig = IMergeable<MsuConfig>.Combine(MsuConfig.Default(), configs.MsuConfig);
-            Regions = IMergeable<RegionInfo>.Combine(RegionConfig.Default(), configs.Regions, profileConfig.RegionConfig);
-            Requests = IMergeable<BasicVoiceRequest>.Combine(RequestConfig.Default(), configs.Requests, profileConfig.RequestConfig);
-            Responses = IMergeable<ResponseConfig>.Combine(ResponseConfig.Default(), configs.Responses, profileConfig.ResponseConfig);
-            Rewards = IMergeable<RewardInfo>.Combine(RewardConfig.Default(), configs.Rewards, profileConfig.RewardConfig);
-            Rooms = IMergeable<RoomInfo>.Combine(RoomConfig.Default(), configs.Rooms, profileConfig.RoomConfig);
-            UILayouts = IMergeable<UILayout>.Combine(UIConfig.Default(), configs.UILayouts);
+            _logger.LogInformation("Adding tracker sprite profile {Name} config", trackerPack);
+            Bosses = IMergeable<BossInfo>.Combine(_configProvider.GetBossConfig(profiles, Mood), TrackerSpriteProfile.BossConfig);
+            GameLines = _configProvider.GetGameConfig(profiles, Mood);
+            HintTiles = _configProvider.GetHintTileConfig(profiles, Mood);
+            Items = IMergeable<ItemData>.Combine(_configProvider.GetItemConfig(profiles, Mood), TrackerSpriteProfile.ItemConfig);
+            Locations = IMergeable<LocationInfo>.Combine(_configProvider.GetLocationConfig(profiles, Mood), TrackerSpriteProfile.LocationConfig);
+            Metadata = _configProvider.GetMetadataConfig(profiles, Mood);
+            MsuConfig = _configProvider.GetMsuConfig(profiles, Mood);
+            Regions = IMergeable<RegionInfo>.Combine(_configProvider.GetRegionConfig(profiles, Mood), TrackerSpriteProfile.RegionConfig);
+            Requests = IMergeable<BasicVoiceRequest>.Combine(_configProvider.GetRequestConfig(profiles, Mood), TrackerSpriteProfile.RequestConfig);
+            Responses = IMergeable<ResponseConfig>.Combine(_configProvider.GetResponseConfig(profiles, Mood), TrackerSpriteProfile.ResponseConfig);
+            Rewards = IMergeable<RewardInfo>.Combine(_configProvider.GetRewardConfig(profiles, Mood), TrackerSpriteProfile.RewardConfig);
+            Rooms = IMergeable<RoomInfo>.Combine(_configProvider.GetRoomConfig(profiles, Mood), TrackerSpriteProfile.RoomConfig);
+            UILayouts = _configProvider.GetUIConfig(profiles, Mood);
         }
-
-        _logger = logger;
     }
-
-    /// <summary>
-    /// Collection of all additional region information
-    /// </summary>
-    public RegionConfig Regions { get; }
-
-    /// <summary>
-    /// Collection of all additional room information
-    /// </summary>
-    public RoomConfig Rooms { get; }
-
-    /// <summary>
-    /// Collection of all additional location information
-    /// </summary>
-    public LocationConfig Locations { get; }
-
-    /// <summary>
-    /// Collection of all additional boss information
-    /// </summary>
-    public BossConfig Bosses { get; }
-
-    /// <summary>
-    /// Collection of all additional item information
-    /// </summary>
-    public ItemConfig Items { get; }
-
-    /// <summary>
-    /// Collection of all additional reward information
-    /// </summary>
-    public RewardConfig Rewards { get; }
-
-    public GameLinesConfig GameLines { get; }
-
-    public HintTileConfig HintTiles { get; }
-
-    public MetadataConfig Metadata { get; }
-
-    public MsuConfig MsuConfig { get; }
-
-    public IReadOnlyCollection<BasicVoiceRequest> Requests { get; }
-
-    public ResponseConfig Responses { get; }
-
-    public UIConfig UILayouts { get; set; }
 
     /// <summary>
     /// Returns extra information for the specified region.
