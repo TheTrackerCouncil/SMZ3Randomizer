@@ -50,6 +50,7 @@ public sealed class Tracker : TrackerBase, IDisposable
 
     private bool _disposed;
     private string? _lastSpokenText;
+    private bool _isAltMode;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Tracker"/> class.
@@ -97,6 +98,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         _communicator = communicator;
         _stateService = stateService;
         _timerService = timerService;
+        _isAltMode = metadata.IsAltTrackerPack;
 
         // Initialize the tracker configuration
         _communicator.UseAlternateVoice(metadata.TrackerSpriteProfile?.UseAltVoice ?? false);
@@ -313,7 +315,15 @@ public sealed class Tracker : TrackerBase, IDisposable
             loadError = true;
         }
 
-        Say(response: Responses.StartedTracking);
+        if (_isAltMode)
+        {
+            Say(response: Responses.StartingTrackingAlternate);
+        }
+        else
+        {
+            Say(response: Responses.StartedTracking);
+        }
+
         RestartIdleTimers();
         return !loadError;
     }

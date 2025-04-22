@@ -10,7 +10,7 @@ using TrackerCouncil.Smz3.UI.ViewModels;
 
 namespace TrackerCouncil.Smz3.UI.Services;
 
-public class TrackerSpeechWindowService(ICommunicator communicator, OptionsFactory optionsFactory, TrackerSpriteService trackerSpriteService) : ControlService
+public class TrackerSpeechWindowService(ICommunicator communicator, OptionsFactory optionsFactory, IMetadataService metadataService) : ControlService
 {
     TrackerSpeechWindowViewModel _model = new();
 
@@ -30,7 +30,7 @@ public class TrackerSpeechWindowService(ICommunicator communicator, OptionsFacto
 
     public TrackerSpeechWindowViewModel GetViewModel()
     {
-        _trackerSpeechImagePack = trackerSpriteService.GetPack();
+        _trackerSpeechImagePack = metadataService.TrackerSpeechImagePack;
 
         if (_trackerSpeechImagePack == null)
         {
