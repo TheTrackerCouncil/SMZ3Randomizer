@@ -112,13 +112,14 @@ public partial class SetupWindow : Window
 
     private void NextButton_OnClick(object? sender, RoutedEventArgs e)
     {
+        _service?.SaveSettings();
+
         if (_model.StepNumber < 4)
         {
             _model.StepNumber++;
         }
         else
         {
-            _service?.SaveSettings();
             Close();
         }
     }
