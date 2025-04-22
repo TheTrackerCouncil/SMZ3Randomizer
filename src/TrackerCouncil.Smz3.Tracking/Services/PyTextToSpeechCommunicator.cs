@@ -126,6 +126,8 @@ internal class PyTextToSpeechCommunicator : ICommunicator
 
     private async Task Initialize()
     {
+        if (!OperatingSystem.IsLinux()) return;
+
         await _pySpeechService.SetSpeechSettingsAsync(GetSpeechSettings());
         await _pySpeechService.SetVolumeAsync(volume / 100.0);
     }
@@ -156,7 +158,7 @@ internal class PyTextToSpeechCommunicator : ICommunicator
 
     public void Say(SpeechRequest request)
     {
-        if (!_isEnabled || !_pySpeechService.IsSpeechEnabled) return;
+        if (!OperatingSystem.IsLinux() || !_isEnabled || !_pySpeechService.IsSpeechEnabled) return;
 
         var messageId = Guid.NewGuid().ToString();
         _pendingRequests.TryAdd(messageId, request);
@@ -182,6 +184,8 @@ internal class PyTextToSpeechCommunicator : ICommunicator
 
     public void Enable()
     {
+        if (!OperatingSystem.IsLinux()) return;
+
         if (!_pySpeechService.IsSpeechEnabled)
         {
             _ = _pySpeechService.SetSpeechSettingsAsync(GetSpeechSettings());
@@ -207,6 +211,7 @@ internal class PyTextToSpeechCommunicator : ICommunicator
 
     public void Abort()
     {
+        if (!OperatingSystem.IsLinux()) return;
         _ = _pySpeechService.StopSpeakingAsync();
     }
 
@@ -214,6 +219,7 @@ internal class PyTextToSpeechCommunicator : ICommunicator
 
     public void UpdateVolume(int newVolume)
     {
+        if (!OperatingSystem.IsLinux()) return;
         volume = newVolume;
         _ = _pySpeechService.SetVolumeAsync(newVolume / 100.0f);
     }

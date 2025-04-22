@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TrackerCouncil.Smz3.Shared;
 using YamlDotNet.Serialization;
 
 namespace TrackerCouncil.Smz3.Data.Options;
@@ -39,7 +40,7 @@ public class Sprite : IEquatable<Sprite>
         SpriteType = spriteType;
         PreviewPath = previewPath;
         SpriteOption = spriteOption;
-        IsUserSprite = filePath.StartsWith(RandomizerDirectories.UserSpritePath);
+        IsUserSprite = filePath.StartsWith(Directories.UserSpritePath);
 
         if (string.IsNullOrEmpty(filePath))
             IsDefault = true;
@@ -52,7 +53,7 @@ public class Sprite : IEquatable<Sprite>
         SpriteType = spriteType;
         IsDefault = isDefault;
         IsRandomSprite = isRandomSprite;
-        PreviewPath = Path.Combine(RandomizerDirectories.SpritePath, s_folderNames[spriteType], sprite);
+        PreviewPath = Path.Combine(Directories.SpritePath, s_folderNames[spriteType], sprite);
     }
 
     [YamlIgnore]

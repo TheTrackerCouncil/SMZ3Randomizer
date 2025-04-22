@@ -64,6 +64,7 @@ public static class TrackerServiceCollectionExtensions
         }
         else
         {
+            services.AddScoped<ICommunicator, NullCommunicator>();
             services.AddSingleton<IMicrophoneService, NullMicrophoneService>();
             services.AddScoped<NullSpeechRecognitionService>();
         }

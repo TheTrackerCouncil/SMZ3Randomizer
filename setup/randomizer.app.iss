@@ -53,16 +53,15 @@ Type: filesandordirs; Name: "{app}\TrackerSprites"
 [Files]
 Source: "netcorecheck.exe"; Flags: dontcopy noencryption
 Source: "netcorecheck_x64.exe"; Flags: dontcopy noencryption
-Source: "..\sprites\Sprites\*"; DestDir: "{app}\Sprites"; Excludes: "\bin\*,obj\*,*.cs,*.csproj"; Flags: ignoreversion recursesubdirs createallsubdirs
-
-Source: "..\trackersprites\*"; DestDir: "{app}\TrackerSprites"; Excludes: "\bin\*,obj\*,*.cs,*.csproj"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\sprites\Sprites\*"; DestDir: "{localappdata}\SMZ3CasRandomizer\DefaultData\Sprites"; Excludes: "\bin\*,obj\*,*.cs,*.csproj"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\trackersprites\*"; DestDir: "{localappdata}\SMZ3CasRandomizer\DefaultData\TrackerSprites"; Excludes: "\bin\*,obj\*,*.cs,*.csproj"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\src\TrackerCouncil.Smz3.UI\bin\Release\net8.0\win-x64\publish\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; Check: Is64BitInstallMode;
 Source: "..\src\TrackerCouncil.Smz3.UI\bin\Release\net8.0\win-x64\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: Is64BitInstallMode;
 Source: "..\src\TrackerCouncil.Smz3.UI\bin\Release\net8.0\win-x86\publish\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; Check: "not Is64BitInstallMode";
 Source: "..\src\TrackerCouncil.Smz3.UI\bin\Release\net8.0\win-x86\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: "not Is64BitInstallMode";
 Source: "..\src\TrackerCouncil.Smz3.Data\maps.json"; DestDir: "{localappdata}\SMZ3CasRandomizer"; Flags: comparetimestamp
-Source: "..\configs\Profiles\*"; DestDir: "{localappdata}\SMZ3CasRandomizer\Configs"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\configs\Schemas\*"; DestDir: "{localappdata}\SMZ3CasRandomizer\Schemas"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\configs\Profiles\*"; DestDir: "{localappdata}\SMZ3CasRandomizer\DefaultData\Configs"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\configs\Schemas\*"; DestDir: "{localappdata}\SMZ3CasRandomizer\DefaultData\Schemas"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

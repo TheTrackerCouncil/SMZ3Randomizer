@@ -14,9 +14,7 @@ public static class ConfigServiceCollectionExtensions
             return configProvider.GetMapConfig();
         });
 
-        services.AddSingleton<Configs>();
-
-        services.AddScoped<IMetadataService, MetadataService>();
+        services.AddSingleton<IMetadataService, MetadataService>();
 
         services.AddScoped(serviceProvider =>
         {

@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Data.Options;
+using TrackerCouncil.Smz3.Shared;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
@@ -21,9 +22,37 @@ public class TrackerSpriteService(OptionsFactory optionsFactory, ILogger<Tracker
 
     public void LoadSprites()
     {
+        InitUserTrackerSpriteFolder();
         _packs = [];
-        LoadFolderPacks(RandomizerDirectories.TrackerSpritePath, false);
-        LoadFolderPacks(RandomizerDirectories.UserTrackerSpritePath, true);
+        LoadFolderPacks(Directories.TrackerSpritePath, false);
+        LoadFolderPacks(Directories.UserTrackerSpritePath, true);
+        logger.LogInformation("{Count} Tracker Sprite Packs", _packs.Count);
+    }
+
+    private void InitUserTrackerSpriteFolder()
+    {
+        if (Directory.Exists(Directories.UserTrackerSpritePath))
+        {
+            return;
+        }
+
+        Directory.CreateDirectory(Directories.UserTrackerSpritePath);
+        logger.LogInformation("Created user tracker sprite folder {Path}", Directories.UserTrackerSpritePath);
+
+        var deprecratedDirectory = Path.Combine(Directories.AppDataFolder, "TrackerSprites");
+
+        if (!Directory.Exists(deprecratedDirectory))
+        {
+            return;
+        }
+
+        foreach (var oldPath in Directory.GetDirectories(deprecratedDirectory))
+        {
+            var name = new DirectoryInfo(oldPath).Name;
+            var newPath = Path.Combine(Directories.UserTrackerSpritePath, name);
+            Directory.Move(oldPath, newPath);
+            logger.LogInformation("Migrated user tracker sprite folder {Name} from {Old} to {New}", name, oldPath, newPath);
+        }
     }
 
     public Dictionary<string, string> GetPackOptions()
@@ -34,11 +63,11 @@ public class TrackerSpriteService(OptionsFactory optionsFactory, ILogger<Tracker
             .ToDictionary(x => x.Name, x => x.Name);
     }
 
-    public TrackerSpeechImagePack GetPack(string? packName = null)
+    public TrackerSpeechImagePack? GetPack(string? packName = null)
     {
         packName ??= optionsFactory.Create().GeneralOptions.TrackerSpeechImagePack;
         return _packs.FirstOrDefault(x => x.Name == packName) ??
-               _packs.FirstOrDefault(x => x.Name == "Default") ?? _packs.First();
+               _packs.FirstOrDefault(x => x.Name == "Default") ?? _packs.FirstOrDefault();
     }
 
     private void LoadFolderPacks(string folder, bool isUserPack)

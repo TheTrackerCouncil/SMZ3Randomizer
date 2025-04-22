@@ -6,6 +6,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using MSURandomizerLibrary;
 using SnesConnectorLibrary;
+using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
 using YamlDotNet.Serialization;
 
@@ -28,8 +29,7 @@ public class GeneralOptions : INotifyPropertyChanged
 
     public string? SMRomPath { get; set; }
 
-    public string RomOutputPath { get; set; }
-        = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "Seeds");
+    public string RomOutputPath { get; set; } = Directories.DefaultSeedPath;
 
     public string? MsuPath { get; set; }
 
@@ -37,8 +37,7 @@ public class GeneralOptions : INotifyPropertyChanged
 
     public string? LaunchArguments { get; set; }
 
-    public string AutoTrackerScriptsOutputPath { get; set; }
-        = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "AutoTrackerScripts");
+    public string AutoTrackerScriptsOutputPath { get; set; } = Directories.DefaultAutoTrackerScriptsPath;
 
     [Range(0.0, 1.0)]
     public float TrackerRecognitionThreshold { get; set; } = 0.75f;
