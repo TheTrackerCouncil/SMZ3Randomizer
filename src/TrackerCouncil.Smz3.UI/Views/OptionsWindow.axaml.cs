@@ -1,3 +1,4 @@
+using Avalonia.Controls;
 using Avalonia.Interactivity;
 using AvaloniaControls.Controls;
 using AvaloniaControls.Models;
@@ -62,6 +63,11 @@ public partial class OptionsWindow : ScalableWindow
         _service?.SaveViewModel();
         GlobalScaleFactor = _model.RandomizerOptions.UIScaleFactor;
         Close();
+    }
+
+    private void Window_OnClosing(object? sender, WindowClosingEventArgs e)
+    {
+        _service?.Close();
     }
 }
 
