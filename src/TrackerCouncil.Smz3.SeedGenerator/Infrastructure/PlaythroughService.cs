@@ -67,18 +67,18 @@ public class PlaythroughService
     /// Returns a list of all of the spheres for a given set of locations
     /// </summary>
     /// <param name="allLocations">List of locations to iterate through</param>
-    /// <param name="defaultRewards"></param>
     /// <param name="defaultReward"></param>
+    /// <param name="defaultItems"></param>
     /// <returns>A list of the spheres</returns>
     /// <exception cref="RandomizerGenerationException">When not all locations are </exception>
-    public IEnumerable<Playthrough.Sphere> GenerateSpheres(IEnumerable<Location> allLocations, Reward? defaultReward = null)
+    public IEnumerable<Playthrough.Sphere> GenerateSpheres(IEnumerable<Location> allLocations, Reward? defaultReward = null, List<Item>? defaultItems = null)
     {
         var allLocationsList = allLocations.ToList();
         var worlds = allLocationsList.Select(x => x.Region.World).Distinct().ToList();
 
         var spheres = new List<Playthrough.Sphere>();
         var locations = new List<Location>();
-        var items = new List<Item>();
+        var items = defaultItems ?? [];
         var defaultRewards = new List<Reward>();
         if (defaultReward != null)
         {

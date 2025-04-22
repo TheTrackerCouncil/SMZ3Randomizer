@@ -82,7 +82,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
 
         var result = _gameHintService.FindMostValueableLocation(WorldQueryService.Worlds, locations);
 
-        if (result is not { Usefulness: LocationUsefulness.Mandatory })
+        if (result is not { Usefulness: LocationUsefulness.Mandatory or LocationUsefulness.Key})
         {
             TrackerBase.Say(x => x.Hints.NoApplicableHints);
             return;
@@ -149,6 +149,10 @@ public class SpoilerModule : TrackerModule, IOptionalModule
             if (usefulness == LocationUsefulness.Mandatory)
             {
                 TrackerBase.Say(x => x.Hints.AreaHasSomethingMandatory, args: [area.GetName()]);
+            }
+            else if (usefulness == LocationUsefulness.Key)
+            {
+                TrackerBase.Say(x => x.Hints.AreaHasKey, args: [area.GetName()]);
             }
             else if (usefulness is LocationUsefulness.NiceToHave or LocationUsefulness.Sword)
             {
@@ -479,6 +483,8 @@ public class SpoilerModule : TrackerModule, IOptionalModule
                 {
                     case LocationUsefulness.Mandatory:
                         return GiveLocationHint(x => x.LocationHasMandatoryItem, location, characterName);
+                    case LocationUsefulness.Key:
+                        return GiveLocationHint(x => x.LocationHasKey, location, characterName);
                     case LocationUsefulness.NiceToHave or LocationUsefulness.Sword:
                         return GiveLocationHint(x => x.LocationHasUsefulItem, location, characterName);
                     default:

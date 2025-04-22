@@ -195,6 +195,13 @@ public class HintsConfig : IMergeable<HintsConfig>
     public SchrodingersString? LocationHasMandatoryItem { get; init; }
 
     /// <summary>
+    /// Gets the hints for locations that have a key or keycard
+    /// <c>{0}</c> is placeholder for the name of the location.
+    /// <c>{1}</c> is placeholder for the name of the character who the item is for.
+    /// </summary>
+    public SchrodingersString? LocationHasKey { get; init; }
+
+    /// <summary>
     /// Gets the hints for locations that might have something useful.
     /// <c>{0}</c> is placeholder for the name of the location.
     /// <c>{1}</c> is placeholder for the name of the character who the item is for.
@@ -255,6 +262,13 @@ public class HintsConfig : IMergeable<HintsConfig>
     /// <c>{0}</c> is a placeholder for the name of the area.
     /// </summary>
     public SchrodingersString? AreaHasSomethingMandatory { get; init; }
+
+    /// <summary>
+    /// Gets the hint to give for an area that has one or more useful
+    /// keys or keycards.
+    /// <c>{0}</c> is a placeholder for the name of the area.
+    /// </summary>
+    public SchrodingersString? AreaHasKey { get; init; }
 
     /// <summary>
     /// Gets the hint to give for an area that might have one or more useful
