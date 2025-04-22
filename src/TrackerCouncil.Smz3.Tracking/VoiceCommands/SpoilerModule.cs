@@ -755,18 +755,20 @@ public class SpoilerModule : TrackerModule, IOptionalModule
                     Logger.LogDebug("{Item} spoiler: sphere {Sphere}, early: {Early}, late: {Late}", item, sphere, earlyThreshold, lateThreshold);
                     if (sphere == 0)
                         return GiveItemHint(x => x.ItemInSphereZero, item);
-                    if (sphere <= earlyThreshold)
+                    if (sphere < earlyThreshold)
                         return GiveItemHint(x => x.ItemInEarlySphere, item);
-                    if (sphere >= lateThreshold)
+                    if (sphere > lateThreshold)
                         return GiveItemHint(x => x.ItemInLateSphere, item);
 
                     var areaWithoutItem = TrackerBase.World.Regions
                         .GroupBy(x => x.Area)
                         .Where(x => x.SelectMany(r => r.Locations)
-                            .Where(l => l.Cleared == false)
+                            .Where(l => l is { Cleared: false, Autotracked: false })
                             .All(l => l.Item.Type != item.Type))
+                        .OrderByDescending(x =>
+                            x.SelectMany(r => r.Locations).Count(l => l is { Cleared: false, Autotracked: false, Accessibility: Accessibility.Available or Accessibility.AvailableWithKeys }))
                         .Select(x => x.Key)
-                        .Random();
+                        .FirstOrDefault();
                     if (areaWithoutItem != null)
                         return GiveItemHint(x => x.ItemNotInArea, item, areaWithoutItem);
 
