@@ -35,6 +35,7 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
     private DateTimeOffset? _guessingGameStart;
     private DateTimeOffset? _guessingGameClosed ;
     private int? _trackerGuess;
+    private bool waitingOnReconnect = false;
 
     /// <summary>
     /// Initializes a new instance of the <see
@@ -509,14 +510,33 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
         TrackerBase.Say(x => x.Chat.WhenConnected);
     }
 
-    private void ChatClient_Disconnected(object? sender, EventArgs e)
+    private async void ChatClient_Disconnected(object? sender, EventArgs e)
     {
-        TrackerBase.Say(x => x.Chat.WhenDisconnected);
+        try
+        {
+            waitingOnReconnect = true;
+            await Task.Delay(TimeSpan.FromSeconds(15));
+            if (waitingOnReconnect)
+            {
+                TrackerBase.Say(x => x.Chat.WhenDisconnected);
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Unable to wait for reconnection");
+        }
     }
 
     private void ChatClient_Reconnected(object? sender, EventArgs e)
     {
-        TrackerBase.Say(x => x.Chat.WhenReconnected);
+        if (waitingOnReconnect)
+        {
+            waitingOnReconnect = false;
+        }
+        else
+        {
+            TrackerBase.Say(x => x.Chat.WhenReconnected);
+        }
     }
 
     private void ChatClient_SendMessageFailure(object? sender, EventArgs e)
