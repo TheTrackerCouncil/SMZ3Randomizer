@@ -12,61 +12,61 @@
         Icon="/Assets/smz3.ico"
         Title="Tracker Locations — SMZ3 Cas' Randomizer">
   <LayoutTransformControl x:Name="MainLayout">
-    <DockPanel IsVisible="{Binding FinishedLoading}">
-      <StackPanel Orientation="Vertical" DockPanel.Dock="Top" Margin="5">
-        <TextBlock Text="Marked locations" FontSize="20"/>
-        <ItemsControl ItemsSource="{Binding MarkedLocations}" Margin="5 10">
-          <ItemsControl.ItemTemplate>
-            <DataTemplate>
-              <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="32,7,*" Margin="2">
+    <ScrollViewer>
+      <DockPanel IsVisible="{Binding FinishedLoading}">
+        <StackPanel Orientation="Vertical" DockPanel.Dock="Top" Margin="5">
+          <TextBlock Text="Marked locations" FontSize="20"/>
+          <ItemsControl ItemsSource="{Binding MarkedLocations}" Margin="5 10">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="32,7,*" Margin="2">
 
-                <Image Grid.Row="0" Source="{Binding ItemSprite, Converter={StaticResource StringToImageConverter}}"
-                       Opacity="{Binding Opacity}"
-                       Grid.RowSpan="2"
-                       Grid.Column="0" />
+                  <Image Grid.Row="0" Source="{Binding ItemSprite, Converter={StaticResource StringToImageConverter}}"
+                         Opacity="{Binding Opacity}"
+                         Grid.RowSpan="2"
+                         Grid.Column="0" />
 
-                <TextBlock Text="{Binding LocationName}"
-                           Grid.Row="0"
-                           Grid.Column="2"
-                           Opacity="{Binding Opacity}"
-                           TextTrimming="CharacterEllipsis"
-                           FontWeight="Bold" />
-                <TextBlock Text="{Binding Area}"
-                           Grid.Row="1"
-                           Grid.Column="2"
-                           TextTrimming="CharacterEllipsis"
-                           Opacity="{Binding Opacity}" />
-              </Grid>
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
+                  <TextBlock Text="{Binding LocationName}"
+                             Grid.Row="0"
+                             Grid.Column="2"
+                             Opacity="{Binding Opacity}"
+                             TextTrimming="CharacterEllipsis"
+                             FontWeight="Bold" />
+                  <TextBlock Text="{Binding Area}"
+                             Grid.Row="1"
+                             Grid.Column="2"
+                             TextTrimming="CharacterEllipsis"
+                             Opacity="{Binding Opacity}" />
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
 
-        <TextBlock Text="Viewed Hints" Margin="0 0 0 0" FontSize="20"/>
-        <ItemsControl ItemsSource="{Binding HintTiles}"
-                  BorderThickness="0"
-                  Margin="10 10">
-          <ItemsControl.ItemTemplate>
-            <DataTemplate>
-              <StackPanel Orientation="Horizontal" Opacity="{Binding Opacity}" IsVisible="{Binding IsVisible}">
-                <TextBlock Text="{Binding Name}"
-                           FontWeight="Bold" />
-                <TextBlock Margin="0 0 5 0">: </TextBlock>
-                <TextBlock Text="{Binding Quality}" />
-              </StackPanel>
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
+          <TextBlock Text="Viewed Hints" Margin="0 0 0 0" FontSize="20"/>
+          <ItemsControl ItemsSource="{Binding HintTiles}"
+                    BorderThickness="0"
+                    Margin="10 10">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <StackPanel Orientation="Horizontal" Opacity="{Binding Opacity}" IsVisible="{Binding IsVisible}">
+                  <TextBlock Text="{Binding Name}"
+                             FontWeight="Bold" />
+                  <TextBlock Margin="0 0 5 0">: </TextBlock>
+                  <TextBlock Text="{Binding Quality}" />
+                </StackPanel>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
 
-        <Grid ColumnDefinitions="*, Auto, Auto, Auto">
-            <TextBlock Text="All locations" FontSize="20" Margin="0" Grid.Column="0" />
-            <CheckBox Content="Show out-of-logic" VerticalAlignment="Center" Grid.Column="1" Margin="15 0" IsChecked="{Binding ShowOutOfLogic}" IsCheckedChanged="ToggleShowOutOfLogicButton_OnIsCheckedChanged" />
-            <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="5 0">Filter:</TextBlock>
-            <controls:EnumComboBox Grid.Column="3" MinWidth="100" Value="{Binding Filter}" EnumType="{Binding Filter, Converter={StaticResource TypeConverter}}" ValueChanged="FilterComboBox_OnValueChanged" />
-        </Grid>
-      </StackPanel>
+          <Grid ColumnDefinitions="*, Auto, Auto, Auto">
+              <TextBlock Text="All locations" FontSize="20" Margin="0" Grid.Column="0" />
+              <CheckBox Content="Show out-of-logic" VerticalAlignment="Center" Grid.Column="1" Margin="15 0" IsChecked="{Binding ShowOutOfLogic}" IsCheckedChanged="ToggleShowOutOfLogicButton_OnIsCheckedChanged" />
+              <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="5 0">Filter:</TextBlock>
+              <controls:EnumComboBox Grid.Column="3" MinWidth="100" Value="{Binding Filter}" EnumType="{Binding Filter, Converter={StaticResource TypeConverter}}" ValueChanged="FilterComboBox_OnValueChanged" />
+          </Grid>
+        </StackPanel>
 
-      <Grid Margin="5">
-        <ScrollViewer>
+        <Grid Margin="5">
           <ItemsControl ItemsSource="{Binding Regions}" Margin="10 0">
             <ItemsControl.ItemTemplate>
               <DataTemplate>
@@ -95,9 +95,9 @@
               </DataTemplate>
             </ItemsControl.ItemTemplate>
           </ItemsControl>
-        </ScrollViewer>
-      </Grid>
-    </DockPanel>
+        </Grid>
+      </DockPanel>
+    </ScrollViewer>
   </LayoutTransformControl>
 </Window>
 
