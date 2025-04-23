@@ -82,7 +82,7 @@ public class SpoilerModule : TrackerModule, IOptionalModule
 
         var result = _gameHintService.FindMostValueableLocation(WorldQueryService.Worlds, locations);
 
-        if (result is not { Usefulness: LocationUsefulness.Mandatory })
+        if (result is not { Usefulness: LocationUsefulness.Mandatory or LocationUsefulness.Key})
         {
             TrackerBase.Say(x => x.Hints.NoApplicableHints);
             return;
@@ -149,6 +149,10 @@ public class SpoilerModule : TrackerModule, IOptionalModule
             if (usefulness == LocationUsefulness.Mandatory)
             {
                 TrackerBase.Say(x => x.Hints.AreaHasSomethingMandatory, args: [area.GetName()]);
+            }
+            else if (usefulness == LocationUsefulness.Key)
+            {
+                TrackerBase.Say(x => x.Hints.AreaHasKey, args: [area.GetName()]);
             }
             else if (usefulness is LocationUsefulness.NiceToHave or LocationUsefulness.Sword)
             {
@@ -479,6 +483,8 @@ public class SpoilerModule : TrackerModule, IOptionalModule
                 {
                     case LocationUsefulness.Mandatory:
                         return GiveLocationHint(x => x.LocationHasMandatoryItem, location, characterName);
+                    case LocationUsefulness.Key:
+                        return GiveLocationHint(x => x.LocationHasKey, location, characterName);
                     case LocationUsefulness.NiceToHave or LocationUsefulness.Sword:
                         return GiveLocationHint(x => x.LocationHasUsefulItem, location, characterName);
                     default:
@@ -749,18 +755,20 @@ public class SpoilerModule : TrackerModule, IOptionalModule
                     Logger.LogDebug("{Item} spoiler: sphere {Sphere}, early: {Early}, late: {Late}", item, sphere, earlyThreshold, lateThreshold);
                     if (sphere == 0)
                         return GiveItemHint(x => x.ItemInSphereZero, item);
-                    if (sphere <= earlyThreshold)
+                    if (sphere < earlyThreshold)
                         return GiveItemHint(x => x.ItemInEarlySphere, item);
-                    if (sphere >= lateThreshold)
+                    if (sphere > lateThreshold)
                         return GiveItemHint(x => x.ItemInLateSphere, item);
 
                     var areaWithoutItem = TrackerBase.World.Regions
                         .GroupBy(x => x.Area)
                         .Where(x => x.SelectMany(r => r.Locations)
-                            .Where(l => l.Cleared == false)
+                            .Where(l => l is { Cleared: false, Autotracked: false })
                             .All(l => l.Item.Type != item.Type))
+                        .OrderByDescending(x =>
+                            x.SelectMany(r => r.Locations).Count(l => l is { Cleared: false, Autotracked: false, Accessibility: Accessibility.Available or Accessibility.AvailableWithKeys }))
                         .Select(x => x.Key)
-                        .Random();
+                        .FirstOrDefault();
                     if (areaWithoutItem != null)
                         return GiveItemHint(x => x.ItemNotInArea, item, areaWithoutItem);
 

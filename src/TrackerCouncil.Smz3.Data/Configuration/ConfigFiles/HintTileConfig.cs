@@ -43,6 +43,11 @@ public class HintTileConfig : IMergeable<HintTileConfig>, IConfigFile<HintTileCo
     public SchrodingersString? ViewedHintTileMandatory { get; set; }
 
     /// <summary>
+    /// The response for viewing a hint tile for a place that has a key or a keycard
+    /// </summary>
+    public SchrodingersString? ViewedHintTileKey { get; set; }
+
+    /// <summary>
     /// The response for viewing a hint tile for a place that's useless
     /// </summary>
     public SchrodingersString? ViewedHintTileUseless { get; set; }

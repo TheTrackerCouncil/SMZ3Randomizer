@@ -63,7 +63,9 @@ internal class MetadataService : IMetadataService
 
     public string Mood { get; private set; } = null!;
 
-    public TrackerProfileConfig? TrackerSpriteProfile { get; private set; } = null!;
+    public bool IsAltTrackerPack { get; private set; }
+    public TrackerSpeechImagePack? TrackerSpeechImagePack { get; private set; }
+    public TrackerProfileConfig? TrackerSpriteProfile { get; private set; }
 
     public void ReloadConfigs()
     {
@@ -72,9 +74,18 @@ internal class MetadataService : IMetadataService
         var trackerPack = options.GeneralOptions.TrackerSpeechImagePack;
         if (string.IsNullOrEmpty(trackerPack))
         {
-            trackerPack = "default";
+            trackerPack = "Default";
         }
-        TrackerSpriteProfile = _trackerSpriteService.GetPack(trackerPack)?.ProfileConfig;
+
+        IsAltTrackerPack = false;
+        if (trackerPack == "Default" && new Random().NextDouble() <= .01)
+        {
+            IsAltTrackerPack = true;
+            trackerPack = "Mr Smooth";
+        }
+
+        TrackerSpeechImagePack = _trackerSpriteService.GetPack(trackerPack) ?? _trackerSpriteService.GetPack("Default");
+        TrackerSpriteProfile = TrackerSpeechImagePack?.ProfileConfig;
 
         var profiles = options.GeneralOptions.SelectedProfiles.NonNull().ToImmutableList();
         Mood = _configProvider.GetAvailableMoods(profiles.NonNull().ToImmutableList()).Random(Random.Shared) ?? "";

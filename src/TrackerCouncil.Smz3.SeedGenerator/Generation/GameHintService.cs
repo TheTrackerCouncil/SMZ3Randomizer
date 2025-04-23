@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Shared;
-using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Data.GeneratedData;
 using TrackerCouncil.Smz3.Data.Services;
@@ -172,11 +171,24 @@ public class GameHintService : IGameHintService
         Parallel.ForEach(locationsToCheck, location =>
         {
             var usefulness =
-                CheckIfLocationsAreImportant(allWorlds, importantLocations, new List<Location>() { location });
+                CheckIfLocationsAreImportant(allWorlds, importantLocations, [location]);
             locationUsefulness.Add((location, usefulness));
         });
 
-        return locationUsefulness.MaxBy(x => (int)x.Usefulness);
+        return locationUsefulness.MaxBy(x => UsefulnessValue(x.Usefulness));
+    }
+
+    private int UsefulnessValue(LocationUsefulness usefulness)
+    {
+        return usefulness switch
+        {
+            LocationUsefulness.Mandatory => 5,
+            LocationUsefulness.Key => 4,
+            LocationUsefulness.Sword => 3,
+            LocationUsefulness.NiceToHave => 2,
+            LocationUsefulness.Useless => 1,
+            _ => 0
+        };
     }
 
     public LocationUsefulness GetUsefulness(List<Location> locations, List<World> allWorlds, Reward? ignoredReward)
@@ -431,12 +443,12 @@ public class GameHintService : IGameHintService
     /// Checks how useful a location is based on if the seed can be completed if we remove those
     /// locations from the playthrough and if the items there are at least slightly useful
     /// </summary>
-    private LocationUsefulness CheckIfLocationsAreImportant(List<World> allWorlds, IEnumerable<Location> importantLocations, List<Location> locations, Reward? ignoredReward = null)
+    private LocationUsefulness CheckIfLocationsAreImportant(List<World> allWorlds, List<Location> importantLocations, List<Location> locations, Reward? ignoredReward = null, List<Item>? defaultItems = null)
     {
         var worldLocations = importantLocations.Except(locations).ToList();
         try
         {
-            var spheres = _playthroughService.GenerateSpheres(worldLocations, ignoredReward);
+            var spheres = _playthroughService.GenerateSpheres(worldLocations, ignoredReward, defaultItems);
             var sphereLocations = spheres.SelectMany(x => x.Locations).ToList();
 
             var canBeatGT = CheckSphereLocationCount(sphereLocations, locations, LocationId.GanonsTowerMoldormChest, allWorlds.Count);
@@ -449,7 +461,7 @@ public class GameHintService : IGameHintService
             // Make sure all players have the silver arrows
             if (sphereLocations.Count(x => x.Item.Type == ItemType.SilverArrows) < allWorlds.Count)
             {
-                return LocationUsefulness.Mandatory;
+                return VerifyMandatoryUsefulness(allWorlds, importantLocations, locations, ignoredReward);
             }
 
             // Make sure all players have the master sword
@@ -458,7 +470,7 @@ public class GameHintService : IGameHintService
                 if (sphereLocations.Count(x => x.Item.Type == ItemType.ProgressiveSword && x.Item.World == world) <
                     2)
                 {
-                    return LocationUsefulness.Mandatory;
+                    return VerifyMandatoryUsefulness(allWorlds, importantLocations, locations, ignoredReward);
                 }
             }
 
@@ -480,13 +492,13 @@ public class GameHintService : IGameHintService
                 }
                 if (possibleCrystalRewards.Count < numCrystalsNeeded)
                 {
-                    return LocationUsefulness.Mandatory;
+                    return VerifyMandatoryUsefulness(allWorlds, importantLocations, locations, ignoredReward);
                 }
             }
 
             if (!canBeatGT || !canBeatKraid || !canBeatPhantoon || !canBeatDraygon || !canBeatRidley || !allCrateriaBossKeys)
             {
-                return LocationUsefulness.Mandatory;
+                return VerifyMandatoryUsefulness(allWorlds, importantLocations, locations, ignoredReward);
             }
 
             if (locations.Any(x => x.Item.Type == ItemType.ProgressiveSword))
@@ -502,8 +514,37 @@ public class GameHintService : IGameHintService
         }
         catch
         {
+            return VerifyMandatoryUsefulness(allWorlds, importantLocations, locations, ignoredReward);
+        }
+    }
+
+    private LocationUsefulness VerifyMandatoryUsefulness(List<World> allWorlds,
+        List<Location> importantLocations, List<Location> locations, Reward? ignoredReward = null)
+    {
+        var keysanityKeyLocations = locations.Where(x => IsKeysanityKeyItemLocation(x.Item)).ToList();
+        if (keysanityKeyLocations.Count == 0)
+        {
             return LocationUsefulness.Mandatory;
         }
+
+        var remainingLocations = locations.Where(x => !keysanityKeyLocations.Contains(x)).ToList();
+        var keyItems = keysanityKeyLocations.Select(x => x.Item).ToList();
+        var verifiedUsefulness = CheckIfLocationsAreImportant(allWorlds, importantLocations, remainingLocations, ignoredReward, keyItems);
+        if (verifiedUsefulness == LocationUsefulness.Mandatory)
+        {
+            return verifiedUsefulness;
+        }
+        else
+        {
+            return LocationUsefulness.Key;
+        }
+    }
+
+    private bool IsKeysanityKeyItemLocation(Item item)
+    {
+        return (item.Type.IsInAnyCategory(ItemCategory.SmallKey, ItemCategory.BigKey) &&
+                item.World.Config.ZeldaKeysanity) ||
+               (item.Type.IsInCategory(ItemCategory.Keycard) && item.World.Config.MetroidKeysanity);
     }
 
     /// <summary>
@@ -660,7 +701,7 @@ public class GameHintService : IGameHintService
         }
     }
 
-    private IEnumerable<Location> GetImportantLocations(List<World> allWorlds)
+    private List<Location> GetImportantLocations(List<World> allWorlds)
     {
         // Get the first accessible ammo locations to make sure early ammo isn't considered mandatory when there
         // are others available
@@ -692,7 +733,8 @@ public class GameHintService : IGameHintService
                         l.Item.Type.IsInAnyCategory(ItemCategory.SmallKey, ItemCategory.BigKey,
                             ItemCategory.Keycard, ItemCategory.PossibleProgression))
             .Concat(ammoLocations)
-            .Distinct();
+            .Distinct()
+            .ToList();
     }
 
     public string? GetHintTileText(PlayerHintTile tile, World hintPlayerWorld, List<World> worlds)
@@ -743,6 +785,10 @@ public class GameHintService : IGameHintService
             if (usefulness == LocationUsefulness.Mandatory)
             {
                 return _gameLines.HintLocationIsMandatory?.Format(areaName);
+            }
+            else if (usefulness == LocationUsefulness.Key)
+            {
+                return _gameLines.HintLocationHasKey?.Format(areaName);
             }
             else if (usefulness == LocationUsefulness.NiceToHave)
             {

@@ -38,6 +38,11 @@ public class GameLinesConfig : IMergeable<GameLinesConfig>, IConfigFile<GameLine
     public SchrodingersString? HintLocationIsMandatory { get; init; }
 
     /// <summary>
+    /// Hints for stating that a location has a dungeon key or keycard
+    /// </summary>
+    public SchrodingersString? HintLocationHasKey { get; init; }
+
+    /// <summary>
     /// Hints for stating that a location has an item that is useful, but not
     /// mandatory for completing the game
     /// </summary>

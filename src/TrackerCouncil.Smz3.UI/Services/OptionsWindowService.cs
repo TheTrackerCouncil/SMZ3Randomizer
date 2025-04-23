@@ -95,6 +95,11 @@ public class OptionsWindowService(
         return _model;
     }
 
+    public void Close()
+    {
+        communicator.Dispose();
+    }
+
     public void SaveViewModel()
     {
         var options = optionsFactory.Create();

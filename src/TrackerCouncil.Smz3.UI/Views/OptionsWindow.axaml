@@ -12,6 +12,7 @@
         Width="600"
         CanResize="False"
         WindowStartupLocation="CenterOwner"
+        Closing="Window_OnClosing"
         Icon="/Assets/smz3.ico"
         x:DataType="viewModels:OptionsWindowViewModel">
   <LayoutTransformControl x:Name="MainLayout">

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
+using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Shared.Enums;
@@ -83,6 +84,16 @@ public interface IMetadataService
     /// The current selected mood
     /// </summary>
     public string Mood { get; }
+
+    /// <summary>
+    /// If an alternate tracker sprite pack was picked
+    /// </summary>
+    public bool IsAltTrackerPack { get; }
+
+    /// <summary>
+    /// The selected tracker sprite pack, if applicable
+    /// </summary>
+    public TrackerSpeechImagePack? TrackerSpeechImagePack { get; }
 
     /// <summary>
     /// The selected tracker sprite profile config, if applicable
