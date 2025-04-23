@@ -519,6 +519,7 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
             if (waitingOnReconnect)
             {
                 TrackerBase.Say(x => x.Chat.WhenDisconnected);
+                waitingOnReconnect = false;
             }
         }
         catch (Exception ex)
