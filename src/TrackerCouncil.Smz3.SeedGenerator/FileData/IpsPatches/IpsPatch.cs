@@ -206,5 +206,9 @@ public static class IpsPatch
     /// <returns>A new stream that contains the IPS patch.</returns>
     public static Stream MaridiaTopEntrance() => GetStream("maridia_entrance.ips");
 
-
+    /// <summary>
+    /// Gets a stream for the IPS patch to add MSU support to Archipelago seeds
+    /// </summary>
+    /// <returns>A new stream that contains the IPS patch.</returns>
+    public static Stream ArchipelagoMsu() => GetStream("ArchipelagoMSU.ips");
 }

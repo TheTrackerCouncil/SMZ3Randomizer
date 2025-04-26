@@ -57,11 +57,6 @@ public partial class GenerationSettingsWindow : ScalableWindow
             return;
         }
 
-        if (importDetails.RomGenerator == RomGenerator.Archipelago)
-        {
-            _model.Basic.CanSetMsu = false;
-        }
-
         _model.IsImportMode = true;
         _model.ImportDetails = importDetails;
     }

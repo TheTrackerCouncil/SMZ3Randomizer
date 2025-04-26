@@ -146,6 +146,12 @@ public class RomGenerationService(
             }
         }
 
+        if (options.PatchOptions.MsuPaths.Any() && parsedRomDetails?.RomGenerator == RomGenerator.Archipelago)
+        {
+            using var patch = IpsPatch.ArchipelagoMsu();
+            Rom.ApplyIps(rom, patch);
+        }
+
         spritePatcherService.ApplySpriteOptions(rom, out var linkSpriteName, out var samusSpriteName);
 
         if (seed != null)
