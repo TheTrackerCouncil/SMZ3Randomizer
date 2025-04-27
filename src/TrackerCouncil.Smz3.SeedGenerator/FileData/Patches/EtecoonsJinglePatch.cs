@@ -1,4 +1,8 @@
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using TrackerCouncil.Smz3.Data.Options;
+using TrackerCouncil.Smz3.Shared;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
 
@@ -15,43 +19,181 @@ namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
 /// </remarks>
 public class EtecoonsJinglePatch : RomPatch
 {
+    private class Jingle
+    {
+        public required Voice Voice1 { get; init; }
+        public Voice? Voice2 { get; init; }
+    }
+
+    private class Note
+    {
+        public required byte Duration { get; init; }
+        public byte Pan { get; init; } = 0x0A;
+        public required NoteValue Value { get; init; }
+        public required byte Volume { get; init; }
+
+        public List<byte> ToBytes()
+        {
+            return
+            [
+                0x1D, // Etecoon cry
+                Volume,
+                Pan,
+                (byte)Value,
+                Duration
+            ];
+        }
+    }
+
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
+    private enum NoteValue : byte
+    {
+        C1 = 0x85, Cs1, D1, Ds1, E1, F1, Fs1, G1, Gs1, A1, As1, B1,
+        C2, Cs2, D2, Ds2, E2, F2, Fs2, G2, Gs2, A2, As2, B2,
+        C3, Cs3, D3, Ds3, E3, F3, Fs3, G3, Gs3, A3, As3, B3,
+        C4, Cs4, D4, Ds4, E4, F4, Fs4, G4, Gs4, A4, As4, B4,
+        C5, Cs5, D5, Ds5, E5, F5, Fs5, G5, Gs5, A5, As5, B5,
+        C6, Cs6, D6, Ds6, E6, F6, Fs6, G6, Gs6, A6, As6, B6,
+        C7, Cs7, D7, Ds7, E7, F7, Fs7, G7, Gs7, A7, As7, B7
+    }
+
+    private class Voice
+    {
+        public required List<Note> Notes { get; init; }
+
+        public List<byte> ToBytes()
+        {
+            var bytes = new List<byte>();
+
+            foreach (var note in Notes)
+            {
+                bytes.AddRange(note.ToBytes());
+            }
+
+            bytes.Add(0xFF); // Instruction list terminator
+
+            return bytes;
+        }
+    }
+
+    private static readonly Dictionary<EtecoonsJingle, Jingle> s_jingles = new()
+    {
+        {
+            EtecoonsJingle.Vanilla, new Jingle
+            {
+                Voice1 = new Voice
+                {
+                    Notes =
+                    [
+                        new Note { Value = NoteValue.C4, Duration = 0x07, Volume = 0x70 },
+                        new Note { Value = NoteValue.C4, Duration = 0x07, Volume = 0x20 },
+                        new Note { Value = NoteValue.F4, Duration = 0x07, Volume = 0x70 },
+                        new Note { Value = NoteValue.F4, Duration = 0x07, Volume = 0x20 },
+                        new Note { Value = NoteValue.G4, Duration = 0x07, Volume = 0x70 },
+                        new Note { Value = NoteValue.G4, Duration = 0x07, Volume = 0x20 },
+                        new Note { Value = NoteValue.A4, Duration = 0x07, Volume = 0x70 },
+                        new Note { Value = NoteValue.A4, Duration = 0x07, Volume = 0x20 },
+                        new Note { Value = NoteValue.B4, Duration = 0x07, Volume = 0x70 },
+                        new Note { Value = NoteValue.B4, Duration = 0x07, Volume = 0x20 },
+                        new Note { Value = NoteValue.G4, Duration = 0x07, Volume = 0x70 },
+                        new Note { Value = NoteValue.G4, Duration = 0x07, Volume = 0x20 },
+                        new Note { Value = NoteValue.D4, Duration = 0x07, Volume = 0x70 },
+                        new Note { Value = NoteValue.D4, Duration = 0x07, Volume = 0x20 },
+                        new Note { Value = NoteValue.G4, Duration = 0x07, Volume = 0x70 },
+                        new Note { Value = NoteValue.G4, Duration = 0x07, Volume = 0x20 },
+                        new Note { Value = NoteValue.C5, Duration = 0x07, Volume = 0x70 },
+                        new Note { Value = NoteValue.C5, Duration = 0x07, Volume = 0x20 },
+                        new Note { Value = NoteValue.A4, Duration = 0x07, Volume = 0x70 },
+                        new Note { Value = NoteValue.A4, Duration = 0x07, Volume = 0x20 },
+                        new Note { Value = NoteValue.F4, Duration = 0x07, Volume = 0x70 },
+                        new Note { Value = NoteValue.F4, Duration = 0x07, Volume = 0x20 },
+                        new Note { Value = NoteValue.D4, Duration = 0x07, Volume = 0x70 },
+                        new Note { Value = NoteValue.D4, Duration = 0x07, Volume = 0x20 },
+                        new Note { Value = NoteValue.E4, Duration = 0x20, Volume = 0x70 }
+                    ]
+                }
+            }
+        },
+        {
+            EtecoonsJingle.SMB1, new Jingle
+            {
+                Voice1 = new Voice
+                {
+                    Notes =
+                    [
+                        new Note { Value = NoteValue.E4, Duration = 0x08, Volume = 0x80 },
+                        new Note { Value = NoteValue.E4, Duration = 0x18, Volume = 0x80 },
+                        new Note { Value = NoteValue.E4, Duration = 0x18, Volume = 0x80 },
+                        new Note { Value = NoteValue.C4, Duration = 0x08, Volume = 0x80 },
+                        new Note { Value = NoteValue.E4, Duration = 0x18, Volume = 0x80 },
+                        new Note { Value = NoteValue.G4, Duration = 0x30, Volume = 0x80 },
+                        new Note { Value = NoteValue.G3, Duration = 0x30, Volume = 0x80 }
+                    ]
+                },
+                Voice2 = new Voice
+                {
+                    Notes =
+                    [
+                        new Note { Value = NoteValue.D3, Duration = 0x08, Volume = 0x70 },
+                        new Note { Value = NoteValue.D3, Duration = 0x18, Volume = 0x70 },
+                        new Note { Value = NoteValue.D3, Duration = 0x18, Volume = 0x70 },
+                        new Note { Value = NoteValue.D3, Duration = 0x08, Volume = 0x70 },
+                        new Note { Value = NoteValue.D3, Duration = 0x18, Volume = 0x70 },
+                        new Note { Value = NoteValue.G3, Duration = 0x30, Volume = 0x70 },
+                        new Note { Value = NoteValue.G2, Duration = 0x30, Volume = 0x70 }
+                    ]
+                }
+            }
+        }
+    };
+
     public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
     {
-        // These values represent offsets into the SPC engine.
-        // Convert a ROM address to an offset by subtracting $CF0108 for the starting location in the ROM and an
-        // additional $1500 for the data block and echo buffer, after which the engine code itself starts.
-        // (We'll make juggling these values easier when we add more jingles.)
+        var jingle = GetJingle(data);
+        var voice1 = jingle.Voice1.ToBytes();
+        var voice2 = jingle.Voice2?.ToBytes();
 
-        // Overwrite the setup call to use two voices at high priority.
-        yield return new GeneratedPatch(Snes(0xCF2510), UshortBytes(0x39A8));
+        // Make room for the second voice pointer, if necessary.
+        var voice1Offset = voice2 is null ? 0xCF2BA9 : 0xCF2BAB;
 
-        // Write the two voice pointers.
-        // For reference, this first value is at engine offset $3F9F.
-        yield return new GeneratedPatch(Snes(0xCF2BA7), UshortBytes(0x3FA3));
-        yield return new GeneratedPatch(Snes(0xCF2BA9), UshortBytes(0x3FA3 + 36));
+        if (voice1Offset + voice1.Count + (voice2?.Count ?? 0) >= 0xCF2C29)
+        {
+            throw new Exception("Etecoons jingle does not fit in the available space!");
+        }
 
-        // Voice 0 (melody), 36 bytes
-        yield return new GeneratedPatch(Snes(0xCF2BAB), [
-            0x1D, 0x80, 0x0A, 0xAD, 0x0B,
-            0x1D, 0x80, 0x0A, 0xAD, 0x18,
-            0x1D, 0x80, 0x0A, 0xAD, 0x18,
-            0x1D, 0x80, 0x0A, 0xA9, 0x0B,
-            0x1D, 0x80, 0x0A, 0xAD, 0x1B,
-            0x1D, 0x80, 0x0A, 0xB0, 0x30,
-            0x1D, 0x80, 0x0A, 0xA4, 0x30,
-            0xFF
-        ]);
+        var bytes = new List<byte>();
 
-        // Voice 1 (bassline), 36 bytes
-        yield return new GeneratedPatch(Snes(0xCF2BAB + 36), [
-            0x1D, 0x70, 0x0A, 0x9F, 0x0B,
-            0x1D, 0x70, 0x0A, 0x9F, 0x18,
-            0x1D, 0x70, 0x0A, 0x9F, 0x18,
-            0x1D, 0x70, 0x0A, 0x9F, 0x0B,
-            0x1D, 0x70, 0x0A, 0x9F, 0x18,
-            0x1D, 0x70, 0x0A, 0xA4, 0x30,
-            0x1D, 0x70, 0x0A, 0x98, 0x30,
-            0xFF
-        ]);
+        bytes.AddRange(jingle.Voice1.ToBytes());
+
+        if (voice2 != null)
+        {
+            // Overwrite the setup call to use two voices at high priority.
+            yield return new GeneratedPatch(Snes(0xCF2510), UshortBytes(0x39A8));
+
+            // Write the two voice pointers.
+            yield return new GeneratedPatch(Snes(0xCF2BA7), UshortBytes(0x3FA3));
+            yield return new GeneratedPatch(Snes(0xCF2BA9), UshortBytes(0x3FA3 + voice1.Count));
+
+            bytes.AddRange(jingle.Voice2!.ToBytes());
+        }
+
+        yield return new GeneratedPatch(Snes(voice1Offset), bytes.ToArray());
+
+        // Uncomment these lines to make the uncharged power beam sound effect use the Etecoon jingle instead.
+        // Note that you still have to be in Green Brinstar to get the correct instruments.
+        //yield return new GeneratedPatch(Snes(0x90B8DE), [0xA9, 0x35, 0x00]); // LDA #$0035
+        //yield return new GeneratedPatch(Snes(0x90B8E1), [0x22, 0xA3, 0x90, 0x80]); // JSL $8090A3
+    }
+
+    private Jingle GetJingle(GetPatchesRequest data)
+    {
+        if (data.Config.EtecoonsJingle == EtecoonsJingle.Random)
+        {
+            var random = new Random().Sanitize();
+
+            return s_jingles.Values.Random(random)!;
+        }
+
+        return s_jingles[data.Config.EtecoonsJingle];
     }
 }

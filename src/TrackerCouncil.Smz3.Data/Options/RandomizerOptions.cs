@@ -219,6 +219,7 @@ public class RandomizerOptions : INotifyPropertyChanged
             DisableLowEnergyBeep = PatchOptions.DisableLowEnergyBeep,
             CasualSMPatches = PatchOptions.CasualSuperMetroidPatches,
             MenuSpeed = PatchOptions.MenuSpeed,
+            EtecoonsJingle = PatchOptions.EtecoonsJingle,
             LocationItems = SeedOptions.LocationItems,
             LogicConfig = LogicConfig.Clone(),
             CasPatches = PatchOptions.CasPatches.Clone(),

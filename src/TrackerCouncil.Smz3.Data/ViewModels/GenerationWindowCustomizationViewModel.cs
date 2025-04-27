@@ -32,6 +32,9 @@ public class GenerationWindowCustomizationViewModel : ViewModelBase
     [DynamicFormFieldComboBox(label: "ALttP menu speed:", groupName: "Interface Top")]
     public MenuSpeed MenuSpeed { get; set; }
 
+    [DynamicFormFieldComboBox(label: "Etecoons jingle:", groupName: "Interface Top")]
+    public EtecoonsJingle EtecoonsJingle { get; set; }
+
     [DynamicFormFieldComboBox(label: "Low health beep speed:", groupName: "Interface Top")]
     public LowHealthBeepSpeed LowHealthBeepSpeed { get; set; }
 

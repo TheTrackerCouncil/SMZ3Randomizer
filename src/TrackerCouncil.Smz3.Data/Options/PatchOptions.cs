@@ -124,6 +124,8 @@ public class PatchOptions : INotifyPropertyChanged
     public MenuSpeed MenuSpeed { get; set; }
         = MenuSpeed.Default;
 
+    public EtecoonsJingle EtecoonsJingle { get; set; } = EtecoonsJingle.Random;
+
     public ZeldaDrops? ZeldaDrops { get; set; }
 
     public bool DisableLowEnergyBeep { get; set; }
