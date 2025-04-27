@@ -87,6 +87,46 @@ public class SpriteService
             Directory.Move(oldPath, newPath);
             _logger.LogInformation("Migrated user sprite folder {Name} from {Old} to {New}", name, oldPath, newPath);
         }
+
+        foreach (var oldFilePath in Directory.EnumerateFiles(deprecratedDirectory, "*.*"))
+        {
+            var extension = Path.GetExtension(oldFilePath);
+
+            if (".png".Equals(extension, StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            Sprite sprite;
+            try
+            {
+                sprite = ".rdc".Equals(Path.GetExtension(oldFilePath), StringComparison.OrdinalIgnoreCase)
+                    ? LoadRdcSprite(oldFilePath)
+                    : LoadIpsSprite(oldFilePath);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to load Sprite {SpritePath}", oldFilePath);
+                continue;
+            }
+
+            var subfolder = Sprite.GetFolderName(sprite.SpriteType);
+            var destinationPath = Path.Combine(Directories.UserSpritePath, subfolder);
+            if (!Directory.Exists(destinationPath))
+            {
+                Directory.CreateDirectory(destinationPath);
+            }
+
+            var spriteFileName = Path.GetFileName(oldFilePath);
+            File.Move(oldFilePath, Path.Combine(destinationPath, spriteFileName));
+
+            var spriteImageName = Path.GetFileNameWithoutExtension(oldFilePath) + ".png";
+            var spriteImagePath = Path.Combine(deprecratedDirectory, spriteImageName);
+            if (File.Exists(spriteImagePath))
+            {
+                File.Move(spriteImagePath, Path.Combine(destinationPath, spriteImageName));
+            }
+        }
     }
 
     public Sprite? AddCustomSprite(string spritePath, string? previewImagePath)
@@ -100,15 +140,33 @@ public class SpriteService
             return null;
         }
 
-        var destinationSpritePath = Path.Combine(userSpritePath, Path.GetFileName(spritePath));
+        Sprite sprite;
+        try
+        {
+            sprite = ".rdc".Equals(Path.GetExtension(spritePath), StringComparison.OrdinalIgnoreCase)
+                ? LoadRdcSprite(spritePath)
+                : LoadIpsSprite(spritePath);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to load Sprite {SpritePath}", spritePath);
+            return null;
+        }
+
+        var spriteSubDirectory = Path.Combine(userSpritePath, Sprite.GetFolderName(sprite.SpriteType));
+        var destinationSpritePath = Path.Combine(spriteSubDirectory, Path.GetFileName(spritePath));
+        if (!Directory.Exists(spriteSubDirectory))
+        {
+            Directory.CreateDirectory(spriteSubDirectory);
+        }
+
         File.Copy(spritePath, destinationSpritePath, true);
         if (File.Exists(previewImagePath))
         {
             var baseFileName = Path.GetFileNameWithoutExtension(spritePath);
-            File.Copy(previewImagePath, Path.Combine(userSpritePath, $"{baseFileName}.png"), true);
+            File.Copy(previewImagePath, Path.Combine(spriteSubDirectory, $"{baseFileName}.png"), true);
         }
 
-        var sprite = new Sprite();
         try
         {
             sprite = ".rdc".Equals(Path.GetExtension(destinationSpritePath), StringComparison.OrdinalIgnoreCase)

@@ -78,6 +78,11 @@ public class Sprite : IEquatable<Sprite>
 
     public bool IsUserSprite { get; set; }
 
+    public static string GetFolderName(SpriteType type)
+    {
+        return s_folderNames[type];
+    }
+
     public bool MatchesFilter(string searchTerm, SpriteFilter spriteFilter) => (string.IsNullOrEmpty(searchTerm) ||
                                                                                    Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
                                                                                    Author.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) &&
