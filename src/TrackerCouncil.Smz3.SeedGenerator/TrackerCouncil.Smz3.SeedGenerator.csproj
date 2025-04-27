@@ -46,6 +46,7 @@
     <EmbeddedResource Include="FileData\IpsPatches\spazer.ips" />
     <EmbeddedResource Include="FileData\IpsPatches\spospo_save.ips" />
     <EmbeddedResource Include="FileData\IpsPatches\maridia_entrance.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\ArchipelagoMSU.ips" />
   </ItemGroup>
 
   <ItemGroup>
