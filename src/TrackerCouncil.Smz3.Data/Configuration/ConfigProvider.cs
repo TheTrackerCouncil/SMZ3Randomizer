@@ -415,7 +415,13 @@ public partial class ConfigProvider
 
     private T? LoadYamlFile<T>(string fileName, string profile)
     {
-        var path = Path.Combine(Directories.ConfigPath, profile, fileName);
+        var profileConfig = _profiles.FirstOrDefault(x => x.Name == profile);
+        if (profileConfig == null)
+        {
+            return default;
+        }
+
+        var path = Path.Combine(profileConfig.ConfigFolderPath, fileName);
         string yml;
         if (!File.Exists(path))
         {
