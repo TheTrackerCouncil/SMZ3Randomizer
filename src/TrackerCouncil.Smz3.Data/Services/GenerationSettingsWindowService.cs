@@ -72,6 +72,7 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
 
         _model.Customizations.HeartColor = _options.PatchOptions.HeartColor;
         _model.Customizations.MenuSpeed = _options.PatchOptions.MenuSpeed;
+        _model.Customizations.EtecoonsJingle = _options.PatchOptions.EtecoonsJingle;
         _model.Customizations.LowHealthBeepSpeed = _options.PatchOptions.LowHealthBeepSpeed;
         _model.Customizations.DisableLowEnergyBeep = _options.PatchOptions.DisableLowEnergyBeep;
         _model.Customizations.RunButtonBehavior = _options.PatchOptions.MetroidControls.RunButtonBehavior;
@@ -203,6 +204,7 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
 
         _options.PatchOptions.HeartColor = _model.Customizations.HeartColor;
         _options.PatchOptions.MenuSpeed = _model.Customizations.MenuSpeed;
+        _options.PatchOptions.EtecoonsJingle = _model.Customizations.EtecoonsJingle;
         _options.PatchOptions.LowHealthBeepSpeed = _model.Customizations.LowHealthBeepSpeed;
         _options.PatchOptions.DisableLowEnergyBeep = _model.Customizations.DisableLowEnergyBeep;
         _options.PatchOptions.MetroidControls.RunButtonBehavior = _model.Customizations.RunButtonBehavior;

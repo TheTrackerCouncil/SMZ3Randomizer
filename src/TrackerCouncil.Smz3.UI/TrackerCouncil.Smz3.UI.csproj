@@ -6,7 +6,7 @@
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-        <Version>9.9.6</Version>
+        <Version>9.9.7</Version>
         <AssemblyName>SMZ3CasRandomizer</AssemblyName>
         <ApplicationIcon>Assets\smz3.ico</ApplicationIcon>
         <RootNamespace>$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>

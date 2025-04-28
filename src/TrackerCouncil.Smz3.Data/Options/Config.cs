@@ -164,6 +164,14 @@ public enum MenuSpeed
     Slow
 }
 
+public enum EtecoonsJingle
+{
+    Random = 0,
+    Vanilla,
+    [Description("Super Mario Bros. 1")]
+    SMB1
+}
+
 public class Config
 {
     private static readonly JsonSerializerOptions s_options = new()
@@ -186,6 +194,7 @@ public class Config
     public LowHealthBeepSpeed LowHealthBeepSpeed { get; set; } = LowHealthBeepSpeed.Normal;
     public bool DisableLowEnergyBeep { get; set; } = false;
     public MenuSpeed MenuSpeed { get; set; } = MenuSpeed.Default;
+    public EtecoonsJingle EtecoonsJingle { get; set; } = EtecoonsJingle.Random;
     public bool CasualSMPatches { get; set; } = false;
     public ZeldaDrops? ZeldaDrops { get; set; }
     public RomGenerator RomGenerator { get; set; } = RomGenerator.Cas;
