@@ -180,9 +180,12 @@ public class EtecoonsJinglePatch : RomPatch
         yield return new GeneratedPatch(Snes(voice1Offset), bytes.ToArray());
 
         // Uncomment these lines to make the uncharged power beam sound effect use the Etecoon jingle instead.
-        // Note that you still have to be in Green Brinstar to get the correct instruments.
-        //yield return new GeneratedPatch(Snes(0x90B8DE), [0xA9, 0x35, 0x00]); // LDA #$0035
-        //yield return new GeneratedPatch(Snes(0x90B8E1), [0x22, 0xA3, 0x90, 0x80]); // JSL $8090A3
+        // The last two lines should make the Green Brinstar theme play at Samus's ship, which loads the right sample.
+        // The jingle may play louder than usual, so be sure to check how it sounds in the actual Hell room.
+        // yield return new GeneratedPatch(Snes(0x90B8DE), [0xA9, 0x35, 0x00]); // LDA #$0035
+        // yield return new GeneratedPatch(Snes(0x90B8E1), [0x22, 0xA3, 0x90, 0x80]); // JSL $8090A3
+        // yield return new GeneratedPatch(Snes(0x8FE7E7), [0x3C, 0x93, 0xD3]); // Empty Crateria
+        // yield return new GeneratedPatch(Snes(0x8FE7ED), [0x3C, 0x93, 0xD3]); // Upper Crateria
     }
 
     private Jingle GetJingle(GetPatchesRequest data)
