@@ -115,6 +115,114 @@ public class EtecoonsJinglePatch : RomPatch
             }
         },
         {
+            EtecoonsJingle.BlueBadger, new Jingle
+            {
+                Voice1 = new Voice
+                {
+                    Notes =
+                    [
+                        new Note { Value = NoteValue.D4, Duration = 0x08, Volume = 0x70, Pan = 0x08 },
+                        new Note { Value = NoteValue.E4, Duration = 0x08, Volume = 0x70, Pan = 0x08 },
+                        new Note { Value = NoteValue.Fs4, Duration = 0x08, Volume = 0x70, Pan = 0x09 },
+                        new Note { Value = NoteValue.G4, Duration = 0x08, Volume = 0x70, Pan = 0x09 },
+                        new Note { Value = NoteValue.A4, Duration = 0x10, Volume = 0x70, Pan = 0x0A },
+                        new Note { Value = NoteValue.A4, Duration = 0x10, Volume = 0x70, Pan = 0x0A },
+
+                        new Note { Value = NoteValue.D5, Duration = 0x10, Volume = 0x70, Pan = 0x0B },
+                        new Note { Value = NoteValue.A4, Duration = 0x10, Volume = 0x70, Pan = 0x0A },
+                        new Note { Value = NoteValue.A4, Duration = 0x08, Volume = 0x70, Pan = 0x09 },
+                        new Note { Value = NoteValue.G4, Duration = 0x08, Volume = 0x70, Pan = 0x09 },
+                        new Note { Value = NoteValue.Fs4, Duration = 0x10, Volume = 0x70, Pan = 0x08 },
+
+                        new Note { Value = NoteValue.D4, Duration = 0x08, Volume = 0x70, Pan = 0x08 },
+                        new Note { Value = NoteValue.E4, Duration = 0x08, Volume = 0x70, Pan = 0x08 },
+                        new Note { Value = NoteValue.Fs4, Duration = 0x08, Volume = 0x70, Pan = 0x09 },
+                        new Note { Value = NoteValue.G4, Duration = 0x08, Volume = 0x70, Pan = 0x09 },
+                        new Note { Value = NoteValue.A4, Duration = 0x10, Volume = 0x70, Pan = 0x0A },
+                        new Note { Value = NoteValue.A4, Duration = 0x10, Volume = 0x70, Pan = 0x0A },
+
+                        new Note { Value = NoteValue.D5, Duration = 0x08, Volume = 0x70, Pan = 0x0B },
+                        new Note { Value = NoteValue.A4, Duration = 0x08, Volume = 0x70, Pan = 0x0A },
+                        new Note { Value = NoteValue.Fs4, Duration = 0x08, Volume = 0x70, Pan = 0x09 },
+                        new Note { Value = NoteValue.G4, Duration = 0x08, Volume = 0x70, Pan = 0x09 },
+                        new Note { Value = NoteValue.A4, Duration = 0x10, Volume = 0x70, Pan = 0x08 }
+
+                        // The rest of the jingle would take too long and wouldn't fit besides.
+                        // new Note { Value = NoteValue.D4, Duration = 0x08, Volume = 0x70 },
+                        // new Note { Value = NoteValue.E4, Duration = 0x08, Volume = 0x70 },
+                        // new Note { Value = NoteValue.Fs4, Duration = 0x08, Volume = 0x70 },
+                        // new Note { Value = NoteValue.G4, Duration = 0x08, Volume = 0x70 },
+                        // new Note { Value = NoteValue.A4, Duration = 0x10, Volume = 0x70 },
+                        // new Note { Value = NoteValue.A4, Duration = 0x10, Volume = 0x70 },
+                        //
+                        // new Note { Value = NoteValue.D5, Duration = 0x10, Volume = 0x70 },
+                        // new Note { Value = NoteValue.A4, Duration = 0x10, Volume = 0x70 },
+                        // new Note { Value = NoteValue.A4, Duration = 0x08, Volume = 0x70 },
+                        // new Note { Value = NoteValue.G4, Duration = 0x08, Volume = 0x70 },
+                        // new Note { Value = NoteValue.Fs4, Duration = 0x10, Volume = 0x70 },
+                        //
+                        // new Note { Value = NoteValue.G4, Duration = 0x10, Volume = 0x70 },
+                        // new Note { Value = NoteValue.G4, Duration = 0x08, Volume = 0x70 },
+                        // new Note { Value = NoteValue.A4, Duration = 0x08, Volume = 0x70 },
+                        // new Note { Value = NoteValue.B4, Duration = 0x10, Volume = 0x70 },
+                        // new Note { Value = NoteValue.B4, Duration = 0x08, Volume = 0x70 },
+                        // new Note { Value = NoteValue.Cs5, Duration = 0x08, Volume = 0x70 },
+                        //
+                        // new Note { Value = NoteValue.D5, Duration = 0x08, Volume = 0x70 },
+                        // new Note { Value = NoteValue.Fs4, Duration = 0x08, Volume = 0x70 },
+                        // new Note { Value = NoteValue.A4, Duration = 0x10, Volume = 0x70 },
+                        // new Note { Value = NoteValue.D4, Duration = 0x10, Volume = 0x70 }
+                    ]
+                }
+                // We can do two measures with a bassline or four without. Choosing four (for now?).
+                // Voice2 = new Voice
+                // {
+                //     Notes =
+                //     [
+                //         new Note { Value = NoteValue.A3, Duration = 0x10, Volume = 0x70 },
+                //         new Note { Value = NoteValue.D3, Duration = 0x10, Volume = 0x70 },
+                //         new Note { Value = NoteValue.D4, Duration = 0x10, Volume = 0x70 },
+                //         new Note { Value = NoteValue.D3, Duration = 0x10, Volume = 0x70 },
+                //
+                //         new Note { Value = NoteValue.A3, Duration = 0x10, Volume = 0x70 },
+                //         new Note { Value = NoteValue.D3, Duration = 0x10, Volume = 0x70 },
+                //         new Note { Value = NoteValue.D4, Duration = 0x10, Volume = 0x70 },
+                //         new Note { Value = NoteValue.D3, Duration = 0x10, Volume = 0x70 },
+                //
+                //         new Note { Value = NoteValue.A3, Duration = 0x10, Volume = 0x70 },
+                //         new Note { Value = NoteValue.D3, Duration = 0x10, Volume = 0x70 },
+                //         new Note { Value = NoteValue.D4, Duration = 0x10, Volume = 0x70 },
+                //         new Note { Value = NoteValue.D3, Duration = 0x10, Volume = 0x70 },
+                //
+                //         new Note { Value = NoteValue.A3, Duration = 0x10, Volume = 0x70 },
+                //         new Note { Value = NoteValue.D3, Duration = 0x10, Volume = 0x70 },
+                //         new Note { Value = NoteValue.D4, Duration = 0x10, Volume = 0x70 },
+                //         new Note { Value = NoteValue.C4, Duration = 0x08, Volume = 0x70 },
+                //         new Note { Value = NoteValue.B3, Duration = 0x08, Volume = 0x70 },
+                //
+                //         new Note { Value = NoteValue.A3, Duration = 0x10, Volume = 0x70 },
+                //         new Note { Value = NoteValue.D3, Duration = 0x10, Volume = 0x70 },
+                //         new Note { Value = NoteValue.D4, Duration = 0x10, Volume = 0x70 },
+                //         new Note { Value = NoteValue.D3, Duration = 0x10, Volume = 0x70 },
+                //
+                //         new Note { Value = NoteValue.A3, Duration = 0x10, Volume = 0x70 },
+                //         new Note { Value = NoteValue.D3, Duration = 0x10, Volume = 0x70 },
+                //         new Note { Value = NoteValue.D4, Duration = 0x10, Volume = 0x70 },
+                //         new Note { Value = NoteValue.D3, Duration = 0x10, Volume = 0x70 },
+                //
+                //         new Note { Value = NoteValue.A3, Duration = 0x10, Volume = 0x70 },
+                //         new Note { Value = NoteValue.D3, Duration = 0x10, Volume = 0x70 },
+                //         new Note { Value = NoteValue.A3, Duration = 0x10, Volume = 0x70 },
+                //         new Note { Value = NoteValue.D4, Duration = 0x10, Volume = 0x70 },
+                //
+                //         new Note { Value = NoteValue.Fs3, Duration = 0x10, Volume = 0x70 },
+                //         new Note { Value = NoteValue.E3, Duration = 0x10, Volume = 0x70 },
+                //         new Note { Value = NoteValue.D3, Duration = 0x10, Volume = 0x70 }
+                //     ]
+                // }
+            }
+        },
+        {
             EtecoonsJingle.SMB1, new Jingle
             {
                 Voice1 = new Voice
@@ -141,6 +249,33 @@ public class EtecoonsJinglePatch : RomPatch
                         new Note { Value = NoteValue.D3, Duration = 0x18, Volume = 0x70 },
                         new Note { Value = NoteValue.G3, Duration = 0x30, Volume = 0x70 },
                         new Note { Value = NoteValue.G2, Duration = 0x30, Volume = 0x70 }
+                    ]
+                }
+            }
+        },
+        {
+            EtecoonsJingle.ZeldaSecret, new Jingle
+            {
+                Voice1 = new Voice
+                {
+                    Notes =
+                    [
+                        new Note { Value = NoteValue.E4, Duration = 0x12, Volume = 0x70, Pan = 0x80 },
+                        new Note { Value = NoteValue.C4, Duration = 0x12, Volume = 0x70, Pan = 0x80 },
+                        new Note { Value = NoteValue.F3, Duration = 0x12, Volume = 0x70, Pan = 0x80 },
+                        new Note { Value = NoteValue.F4, Duration = 0x12, Volume = 0x70, Pan = 0x80 }
+                    ]
+                },
+                Voice2 = new Voice
+                {
+                    Notes =
+                    [
+                        new Note { Value = NoteValue.Ds4, Duration = 0x0A, Volume = 0x00, Pan = 0xB0 },
+                        new Note { Value = NoteValue.Ds4, Duration = 0x12, Volume = 0x70, Pan = 0xB0 },
+                        new Note { Value = NoteValue.Fs3, Duration = 0x12, Volume = 0x70, Pan = 0xB0 },
+                        new Note { Value = NoteValue.Cs4, Duration = 0x12, Volume = 0x70, Pan = 0xB0 },
+                        new Note { Value = NoteValue.A4, Duration = 0x12, Volume = 0x70, Pan = 0xB0 },
+                        new Note { Value = NoteValue.A4, Duration = 0x12, Volume = 0x20, Pan = 0xB0 }
                     ]
                 }
             }
