@@ -168,8 +168,12 @@ public enum EtecoonsJingle
 {
     Random = 0,
     Vanilla,
+    [Description("Ace Attorney: Blue Badger Theme")]
+    BlueBadger,
     [Description("Super Mario Bros. 1")]
-    SMB1
+    SMB1,
+    [Description("Zelda: You Found a Secret!")]
+    ZeldaSecret
 }
 
 public class Config
