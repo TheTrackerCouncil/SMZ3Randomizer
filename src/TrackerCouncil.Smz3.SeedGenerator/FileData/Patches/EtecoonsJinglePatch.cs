@@ -260,22 +260,22 @@ public class EtecoonsJinglePatch : RomPatch
                 {
                     Notes =
                     [
-                        new Note { Value = NoteValue.E4, Duration = 0x12, Volume = 0x70, Pan = 0x80 },
-                        new Note { Value = NoteValue.C4, Duration = 0x12, Volume = 0x70, Pan = 0x80 },
-                        new Note { Value = NoteValue.F3, Duration = 0x12, Volume = 0x70, Pan = 0x80 },
-                        new Note { Value = NoteValue.F4, Duration = 0x12, Volume = 0x70, Pan = 0x80 }
+                        new Note { Value = NoteValue.E4, Duration = 0x12, Volume = 0x70, Pan = 0x08 },
+                        new Note { Value = NoteValue.C4, Duration = 0x12, Volume = 0x70, Pan = 0x08 },
+                        new Note { Value = NoteValue.F3, Duration = 0x12, Volume = 0x70, Pan = 0x08 },
+                        new Note { Value = NoteValue.F4, Duration = 0x12, Volume = 0x70, Pan = 0x08 }
                     ]
                 },
                 Voice2 = new Voice
                 {
                     Notes =
                     [
-                        new Note { Value = NoteValue.Ds4, Duration = 0x0A, Volume = 0x00, Pan = 0xB0 },
-                        new Note { Value = NoteValue.Ds4, Duration = 0x12, Volume = 0x70, Pan = 0xB0 },
-                        new Note { Value = NoteValue.Fs3, Duration = 0x12, Volume = 0x70, Pan = 0xB0 },
-                        new Note { Value = NoteValue.Cs4, Duration = 0x12, Volume = 0x70, Pan = 0xB0 },
-                        new Note { Value = NoteValue.A4, Duration = 0x12, Volume = 0x70, Pan = 0xB0 },
-                        new Note { Value = NoteValue.A4, Duration = 0x12, Volume = 0x20, Pan = 0xB0 }
+                        new Note { Value = NoteValue.Ds4, Duration = 0x0A, Volume = 0x00, Pan = 0x0B },
+                        new Note { Value = NoteValue.Ds4, Duration = 0x12, Volume = 0x70, Pan = 0x0B },
+                        new Note { Value = NoteValue.Fs3, Duration = 0x12, Volume = 0x70, Pan = 0x0B },
+                        new Note { Value = NoteValue.Cs4, Duration = 0x12, Volume = 0x70, Pan = 0x0B },
+                        new Note { Value = NoteValue.A4, Duration = 0x12, Volume = 0x70, Pan = 0x0B },
+                        new Note { Value = NoteValue.A4, Duration = 0x12, Volume = 0x20, Pan = 0x0B }
                     ]
                 }
             }
