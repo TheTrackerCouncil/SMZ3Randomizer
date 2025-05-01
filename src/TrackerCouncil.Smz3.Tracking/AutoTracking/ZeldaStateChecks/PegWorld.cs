@@ -30,7 +30,7 @@ public class PegWorld(TrackerBase tracker, ISnesConnectorService snesConnector) 
             return true;
         }
 
-        if (tracker.ModeTracker.PegWorldMode && !(currentState.OverworldScreen == 0x62 || currentState is { OverworldScreen: 0, CurrentRoom: 295 }))
+        if (tracker.ModeTracker is { PegWorldMode: true, PegsPegged: > 0 } && !(currentState.OverworldScreen == 0x62 || currentState is { OverworldScreen: 0, CurrentRoom: 295 }))
         {
             DisablePegWorldNode();
         }
