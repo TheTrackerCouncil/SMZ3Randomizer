@@ -41,7 +41,7 @@ public class TreasureTrackingModule : TrackerModule
         foreach (var reward in Enum.GetValues<RewardType>())
         {
             foreach (var name in WorldQueryService?.FirstOrDefault(reward)?.Metadata.Name ?? new SchrodingersString())
-                rewardNames.Add(new GrammarKeyValueChoice(name, (int)reward));
+                rewardNames.Add(new GrammarKeyValueChoice(name, ((int)reward).ToString()));
         }
 
         return new SpeechRecognitionGrammarBuilder()
