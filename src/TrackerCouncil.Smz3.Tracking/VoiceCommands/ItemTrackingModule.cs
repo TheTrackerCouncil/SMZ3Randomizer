@@ -171,7 +171,7 @@ public class ItemTrackingModule : TrackerModule
         var itemNames = GetPluralItemNames();
         var numbers = new List<GrammarKeyValueChoice>();
         for (var i = 0; i <= 200; i++)
-            numbers.Add(new GrammarKeyValueChoice(i.ToString(), i));
+            numbers.Add(new GrammarKeyValueChoice(i.ToString(), i.ToString()));
 
         return new SpeechRecognitionGrammarBuilder()
             .Append("Hey tracker,")
