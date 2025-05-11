@@ -14,7 +14,7 @@ public class ConfigProfileDetails
         if (Directory.Exists(Path.Combine(configFolderPath, "Sprites")))
         {
             SpritePath = Path.Combine(configFolderPath, "Sprites");
-            HasSprites = Directory.GetFiles(SpritePath).Length > 0;
+            HasSprites = Directory.GetFiles(SpritePath, "*", SearchOption.AllDirectories).Length > 0;
         }
     }
 
