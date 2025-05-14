@@ -170,8 +170,22 @@ public enum EtecoonsJingle
     Vanilla,
     [Description("Ace Attorney: Blue Badger Theme")]
     BlueBadger,
+    [Description("Final Fantasy: Victory")]
+    FFVictory,
+    [Description("King's Quest V: Town Theme")]
+    KQVTown,
+    [Description("Shadowgate: Hall of Mirrors (GitCY Theme)")]
+    Shadowgate,
+    [Description("Sonic the Hedgehog 2: Special Stage")]
+    Sonic2Bonus,
     [Description("Super Mario Bros. 1")]
     SMB1,
+    [Description("Yoshi's Island: Castle & Fortress")]
+    YICastle,
+    [Description("Zelda: Manbo's Mambo")]
+    ManbosMambo,
+    [Description("Zelda: Saria's Song")]
+    SariasSong,
     [Description("Zelda: You Found a Secret!")]
     ZeldaSecret
 }
