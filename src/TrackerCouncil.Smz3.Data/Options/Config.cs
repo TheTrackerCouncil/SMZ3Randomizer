@@ -170,16 +170,32 @@ public enum EtecoonsJingle
     Vanilla,
     [Description("Ace Attorney: Blue Badger Theme")]
     BlueBadger,
+    [Description("Battletoads: Victory")]
+    BattletoadsWin,
+    [Description("Castlevania: Vampire Killer")]
+    VampireKiller,
     [Description("Final Fantasy: Victory")]
     FFVictory,
     [Description("King's Quest V: Town Theme")]
     KQVTown,
+    [Description("Kirby: Fanfare")]
+    KirbyWin,
+    [Description("Kirby: Fanfare (buffed)")]
+    BuffedKirbyWin,
+    [Description("Mega Man series: Boss Intro")]
+    MegaManBossSelected,
+    [Description("Metal Gear Solid: Game Over")]
+    SNAAAKE,
+    [Description("Pizza Tower: It's Pizza Time!")]
+    PizzaTime,
     [Description("Shadowgate: Hall of Mirrors (GitCY Theme)")]
     Shadowgate,
     [Description("Sonic the Hedgehog 2: Special Stage")]
     Sonic2Bonus,
     [Description("Super Mario Bros. 1")]
     SMB1,
+    [Description("Super Metroid: Prologue")]
+    ThemeOfSuperMetroid,
     [Description("Yoshi's Island: Castle & Fortress")]
     YICastle,
     [Description("Zelda: Manbo's Mambo")]
