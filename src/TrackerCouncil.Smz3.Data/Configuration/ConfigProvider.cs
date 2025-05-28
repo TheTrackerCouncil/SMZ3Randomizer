@@ -346,7 +346,7 @@ public partial class ConfigProvider
     {
         return _profiles
             .Where(x => x.HasSprites && profiles.Contains(x.Name))
-            .OrderBy(x => profiles.IndexOf(x.Name))
+            .OrderByDescending(x => profiles.IndexOf(x.Name))
             .Select(x => x.SpritePath)
             .NonNull()
             .ToImmutableList();
