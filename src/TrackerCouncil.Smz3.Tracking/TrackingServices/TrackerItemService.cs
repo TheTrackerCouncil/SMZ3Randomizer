@@ -176,7 +176,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
         {
             logger.LogInformation("Clearing location for item {ItemType}", item.Type.GetDescription());
 
-            Tracker.LocationTracker.Clear(location, confidence, autoTracked, stateResponse: false, allowLocationComments: true, updateTreasureCount: true);
+            Tracker.LocationTracker.Clear(location, confidence, autoTracked, stateResponse: false, allowLocationComments: true, updateTreasureCount: true, stateTreasureResponse: true);
 
             // If this is a parsed AP/Mainline rom and this is an item for another player, let's comment on it
             if (stateResponse && item is { IsLocalPlayerItem: false } && World.Config.RomGenerator != RomGenerator.Cas)
@@ -197,6 +197,8 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
                         item.Metadata.NameWithArticle, item.PlayerName]);
                 }
             }
+
+            return true;
         }
 
         if (!didTrack)
@@ -233,7 +235,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
             // Clear the location if it's for the local player's world
             if (location != null && location.World == World && !location.Cleared)
             {
-                Tracker.LocationTracker.Clear(location, confidence, autoTracked, !silent, true);
+                Tracker.LocationTracker.Clear(location, confidence, autoTracked, !silent && !isGTPreBigKey, true);
                 undoActions.Add(autoTracked ? null : PopUndo().Action);
             }
         }

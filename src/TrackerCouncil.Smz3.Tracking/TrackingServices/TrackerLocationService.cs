@@ -24,7 +24,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, IP
     public event EventHandler<LocationClearedEventArgs>? LocationCleared;
     public event EventHandler<LocationClearedEventArgs>? LocationMarked;
 
-    public void Clear(Location location, float? confidence = null, bool autoTracked = false, bool stateResponse = true, bool allowLocationComments = false, bool updateTreasureCount = true)
+    public void Clear(Location location, float? confidence = null, bool autoTracked = false, bool stateResponse = true, bool allowLocationComments = false, bool updateTreasureCount = true, bool? stateTreasureCount = null)
     {
         if (stateResponse && allowLocationComments)
         {
@@ -48,7 +48,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, IP
         }
 
         var undoTrackTreasure = updateTreasureCount
-            ? Tracker.TreasureTracker.TryTrackDungeonTreasure(location, confidence, stateResponse: stateResponse)
+            ? Tracker.TreasureTracker.TryTrackDungeonTreasure(location, confidence, stateResponse: stateTreasureCount ?? stateResponse)
             : null;
 
         // Important: clear only after tracking dungeon treasure, as

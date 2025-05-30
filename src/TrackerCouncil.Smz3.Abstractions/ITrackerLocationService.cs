@@ -18,7 +18,11 @@ public interface ITrackerLocationService
     /// <param name="location">The location to clear.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
     /// <param name="autoTracked">If this was tracked by the auto tracker</param>
-    void Clear(Location location, float? confidence = null, bool autoTracked = false, bool stateResponse = true, bool allowLocationComments = false, bool updateTreasureCount = true);
+    /// <param name="stateResponse">If the location being cleared will be commented on by tracker</param>
+    /// <param name="allowLocationComments">If location specific comments should be stated</param>
+    /// <param name="updateTreasureCount">If the dungeon treasure count should be updated, if applicable</param>
+    /// <param name="stateTreasureResponse">If the dungeon treasure count should be commented on. If not specified, the value of stateResponse will be used.</param>
+    void Clear(Location location, float? confidence = null, bool autoTracked = false, bool stateResponse = true, bool allowLocationComments = false, bool updateTreasureCount = true, bool? stateTreasureResponse = null);
 
     /// <summary>
     /// Unclears an item from the specified location.
