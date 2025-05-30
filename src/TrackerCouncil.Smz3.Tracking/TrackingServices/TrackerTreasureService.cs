@@ -121,7 +121,7 @@ internal class TrackerTreasureService(ILogger<TrackerTreasureService> logger, IP
         }
 
         var dungeon = location.GetTreasureRegion();
-        if (dungeon != null && (location.Item.IsTreasure || World.Config.ZeldaKeysanity))
+        if (dungeon != null && (location.Item.IsTreasure || World.Config.ZeldaKeysanity || !location.Item.IsLocalPlayerItem))
         {
             if (TrackDungeonTreasure(dungeon, confidence, 1, autoTracked, stateResponse))
             {

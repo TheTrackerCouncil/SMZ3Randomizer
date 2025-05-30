@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using SnesConnectorLibrary;
@@ -85,21 +86,29 @@ public class GiftedItemSync(
         {
             if (_itemDetailLength == 4)
             {
-                // var fromPlayerId = firstBlockResponse.Data.ReadUInt16(i * 4)!.Value;
                 var itemId = (ItemType)firstBlockResponse.Data.ReadUInt16(i * 4 + 2)!.Value;
                 receivedItems.Add(Tracker.World.AllItems.First(x => x.Type == itemId && x.IsLocalPlayerItem));
             }
             else
             {
-                // var fromPlayerId = firstBlockResponse.Data.ReadUInt8(i * 2)!.Value;
-                var itemId = (ItemType)firstBlockResponse.Data.ReadUInt8(i * 2 + 1)!.Value;
-                receivedItems.Add(Tracker.World.AllItems.First(x => x.Type == itemId && x.IsLocalPlayerItem));
+                var itemId = firstBlockResponse.Data.ReadUInt8(i * 2 + 1)!.Value;
+                try
+                {
+                    var itemType = (ItemType)itemId;
+                    receivedItems.Add(Tracker.World.AllItems.First(x => x.Type == itemType && x.IsLocalPlayerItem));
+                }
+                catch (Exception)
+                {
+                    logger.LogWarning("Invalid item type {Id} received", itemId);
+                }
             }
         }
 
-        logger.LogInformation("Received Items: {Items}", string.Join(",", receivedItems));
-
-        Tracker.ItemTracker.TrackItems(receivedItems, true, true);
+        if (receivedItems.Count > 0)
+        {
+            logger.LogInformation("Received Items: {Items}", string.Join(",", receivedItems));
+            Tracker.ItemTracker.TrackItems(receivedItems, true, true);
+        }
 
         trackerState.GiftedItemCount = newItemCount.Value;
         await Tracker.SaveAsync();
