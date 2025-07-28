@@ -21,6 +21,7 @@ public class EtecoonsJinglePatch : RomPatch
 {
     internal class Jingle
     {
+        public required bool Loop { get; init; }
         public required Voice Voice1 { get; init; }
         public Voice? Voice2 { get; init; }
     }
@@ -81,6 +82,7 @@ public class EtecoonsJinglePatch : RomPatch
         {
             EtecoonsJingle.Vanilla, new Jingle
             {
+                Loop = false,
                 Voice1 = new Voice
                 {
                     Notes =
@@ -117,6 +119,7 @@ public class EtecoonsJinglePatch : RomPatch
         {
             EtecoonsJingle.BlueBadger, new Jingle
             {
+                Loop = true,
                 Voice1 = new Voice
                 {
                     Notes =
@@ -225,6 +228,7 @@ public class EtecoonsJinglePatch : RomPatch
         {
             EtecoonsJingle.SMB1, new Jingle
             {
+                Loop = false,
                 Voice1 = new Voice
                 {
                     Notes =
@@ -256,26 +260,27 @@ public class EtecoonsJinglePatch : RomPatch
         {
             EtecoonsJingle.ZeldaSecret, new Jingle
             {
+                Loop = true,
                 Voice1 = new Voice
                 {
                     Notes =
                     [
-                        new Note { Value = NoteValue.E4, Duration = 0x12, Volume = 0x70, Pan = 0x08 },
-                        new Note { Value = NoteValue.C4, Duration = 0x12, Volume = 0x70, Pan = 0x08 },
-                        new Note { Value = NoteValue.F3, Duration = 0x12, Volume = 0x70, Pan = 0x08 },
-                        new Note { Value = NoteValue.F4, Duration = 0x12, Volume = 0x70, Pan = 0x08 }
+                        new Note { Value = NoteValue.G4, Duration = 0x14, Volume = 0x70, Pan = 0x08 },
+                        new Note { Value = NoteValue.Ds4, Duration = 0x14, Volume = 0x70, Pan = 0x08 },
+                        new Note { Value = NoteValue.Gs3, Duration = 0x14, Volume = 0x70, Pan = 0x08 },
+                        new Note { Value = NoteValue.Gs4, Duration = 0x14, Volume = 0x70, Pan = 0x08 }
                     ]
                 },
                 Voice2 = new Voice
                 {
                     Notes =
                     [
-                        new Note { Value = NoteValue.Ds4, Duration = 0x0A, Volume = 0x00, Pan = 0x0B },
-                        new Note { Value = NoteValue.Ds4, Duration = 0x12, Volume = 0x70, Pan = 0x0B },
-                        new Note { Value = NoteValue.Fs3, Duration = 0x12, Volume = 0x70, Pan = 0x0B },
-                        new Note { Value = NoteValue.Cs4, Duration = 0x12, Volume = 0x70, Pan = 0x0B },
-                        new Note { Value = NoteValue.A4, Duration = 0x12, Volume = 0x70, Pan = 0x0B },
-                        new Note { Value = NoteValue.A4, Duration = 0x12, Volume = 0x20, Pan = 0x0B }
+                        new Note { Value = NoteValue.Fs4, Duration = 0x0A, Volume = 0x00, Pan = 0x0B },
+                        new Note { Value = NoteValue.Fs4, Duration = 0x14, Volume = 0x70, Pan = 0x0B },
+                        new Note { Value = NoteValue.A3, Duration = 0x14, Volume = 0x70, Pan = 0x0B },
+                        new Note { Value = NoteValue.E4, Duration = 0x14, Volume = 0x70, Pan = 0x0B },
+                        new Note { Value = NoteValue.C5, Duration = 0x14, Volume = 0x70, Pan = 0x0B },
+                        new Note { Value = NoteValue.C5, Duration = 0x14, Volume = 0x20, Pan = 0x0B }
                     ]
                 }
             }
@@ -283,6 +288,7 @@ public class EtecoonsJinglePatch : RomPatch
         {
             EtecoonsJingle.SariasSong, new Jingle
             {
+                Loop = true,
                 Voice1 = new Voice
                 {
                     Notes =
@@ -313,6 +319,7 @@ public class EtecoonsJinglePatch : RomPatch
         {
             EtecoonsJingle.KQVTown, new Jingle
             {
+                Loop = false,
                 Voice1 = new Voice
                 {
                     Notes =
@@ -354,6 +361,7 @@ public class EtecoonsJinglePatch : RomPatch
         {
             EtecoonsJingle.ManbosMambo, new Jingle
             {
+                Loop = true,
                 Voice1 = new Voice
                 {
                     Notes =
@@ -391,6 +399,7 @@ public class EtecoonsJinglePatch : RomPatch
         {
             EtecoonsJingle.Sonic2Bonus, new Jingle
             {
+                Loop = true,
                 Voice1 = new Voice
                 {
                     Notes =
@@ -428,6 +437,7 @@ public class EtecoonsJinglePatch : RomPatch
         {
             EtecoonsJingle.FFVictory, new Jingle
             {
+                Loop  = true,
                 Voice1 = new Voice
                 {
                     Notes =
@@ -463,6 +473,7 @@ public class EtecoonsJinglePatch : RomPatch
         {
             EtecoonsJingle.YICastle, new Jingle
             {
+                Loop = true,
                 Voice1 = new Voice
                 {
                     Notes =
@@ -472,7 +483,7 @@ public class EtecoonsJinglePatch : RomPatch
                         new Note { Value = NoteValue.G4,  Duration = 0x12, Volume = 0x60, },
                         new Note { Value = NoteValue.Fs4, Duration = 0x12, Volume = 0x60, },
                         new Note { Value = NoteValue.A4,  Duration = 0x24, Volume = 0x60, },
-                        
+
                         new Note { Value = NoteValue.As4, Duration = 0x1B, Volume = 0x60, },
                         new Note { Value = NoteValue.C5,  Duration = 0x09, Volume = 0x60, },
                         new Note { Value = NoteValue.As4, Duration = 0x09, Volume = 0x60, },
@@ -503,6 +514,7 @@ public class EtecoonsJinglePatch : RomPatch
         {
             EtecoonsJingle.Shadowgate, new Jingle
             {
+                Loop = true,
                 Voice1 = new Voice
                 {
                     Notes =
@@ -514,7 +526,7 @@ public class EtecoonsJinglePatch : RomPatch
                         new Note { Value = NoteValue.G4,  Duration = 0x0C, Volume = 0x70, },
                         new Note { Value = NoteValue.As4, Duration = 0x0C, Volume = 0x70, },
                         new Note { Value = NoteValue.D5,  Duration = 0x18, Volume = 0x70, },
-                        
+
                         new Note { Value = NoteValue.E5,  Duration = 0x06, Volume = 0x70, },
                         new Note { Value = NoteValue.F5,  Duration = 0x06, Volume = 0x70, },
                         new Note { Value = NoteValue.E5,  Duration = 0x24, Volume = 0x70, },
@@ -544,6 +556,7 @@ public class EtecoonsJinglePatch : RomPatch
         {
             EtecoonsJingle.SNAAAKE, new Jingle
             {
+                Loop = true,
                 Voice1 = new Voice
                 {
                     Notes =
@@ -589,6 +602,7 @@ public class EtecoonsJinglePatch : RomPatch
         {
             EtecoonsJingle.BattletoadsWin, new Jingle
             {
+                Loop = false,
                 Voice1 = new Voice
                 {
                     Notes =
@@ -628,6 +642,7 @@ public class EtecoonsJinglePatch : RomPatch
         {
             EtecoonsJingle.PizzaTime, new Jingle
             {
+                Loop = true,
                 Voice1 = new Voice
                 {
                     Notes =
@@ -656,6 +671,7 @@ public class EtecoonsJinglePatch : RomPatch
         {
             EtecoonsJingle.KirbyWin, new Jingle
             {
+                Loop = true,
                 Voice1 = new Voice
                 {
                     Notes =
@@ -683,6 +699,7 @@ public class EtecoonsJinglePatch : RomPatch
         {
             EtecoonsJingle.BuffedKirbyWin, new Jingle
             {
+                Loop = true,
                 Voice1 = new Voice
                 {
                     Notes =
@@ -710,6 +727,7 @@ public class EtecoonsJinglePatch : RomPatch
         {
             EtecoonsJingle.VampireKiller, new Jingle
             {
+                Loop = true,
                 Voice1 = new Voice
                 {
                     Notes =
@@ -736,13 +754,13 @@ public class EtecoonsJinglePatch : RomPatch
                     [
                         new Note { Value = NoteValue.A3,  Duration = 0x18, Volume = 0x60, Pan = 0x0B, },
                         new Note { Value = NoteValue.A3,  Duration = 0x28, Volume = 0x60, Pan = 0x0B, },
-                        
+
                         new Note { Value = NoteValue.A3,  Duration = 0x18, Volume = 0x60, Pan = 0x0B, },
                         new Note { Value = NoteValue.A3,  Duration = 0x28, Volume = 0x60, Pan = 0x0B, },
-                        
+
                         new Note { Value = NoteValue.F3,  Duration = 0x18, Volume = 0x60, Pan = 0x0B, },
                         new Note { Value = NoteValue.F3,  Duration = 0x28, Volume = 0x60, Pan = 0x0B, },
-                        
+
                         new Note { Value = NoteValue.G3,  Duration = 0x40, Volume = 0x60, Pan = 0x0B, }
                     ]
                 }
@@ -751,6 +769,7 @@ public class EtecoonsJinglePatch : RomPatch
         {
             EtecoonsJingle.MegaManBossSelected, new Jingle
             {
+                Loop = false,
                 Voice1 = new Voice
                 {
                     Notes =
@@ -797,6 +816,7 @@ public class EtecoonsJinglePatch : RomPatch
         {
             EtecoonsJingle.ThemeOfSuperMetroid, new Jingle
             {
+                Loop = true,
                 Voice1 = new Voice
                 {
                     Notes =
@@ -889,6 +909,19 @@ public class EtecoonsJinglePatch : RomPatch
         }
 
         yield return new GeneratedPatch(Snes(voice1Offset), bytes.ToArray());
+
+        if (jingle.Loop)
+        {
+            // Enable looping
+            yield return new GeneratedPatch(Snes(0xD33D00), [0x03]); // 0x01
+
+            // Set loop point (must be aligned with a nine-byte BRR block)
+            yield return new GeneratedPatch(Snes(0xD31356), [0x28, 0xD9]); // 0xDE9B
+
+            // Set ADSR envelope (Attack: 0ms, Delay: 1.2s, Sustain Level: 6/8, Sustain Rate: 1.2s)
+            // See: https://snes.nesdev.org/wiki/DSP_envelopes#ADSR_Envelope
+            yield return new GeneratedPatch(Snes(0xD35E11), [0x8F, 0xD0]); // 0xFF, 0xE0
+        }
 
         // Uncomment these lines to make the uncharged power beam sound effect use the Etecoon jingle instead.
         // The last two lines should make the Green Brinstar theme play at Samus's ship, which loads the right sample.
