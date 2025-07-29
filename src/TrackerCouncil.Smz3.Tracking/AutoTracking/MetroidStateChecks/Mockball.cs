@@ -26,7 +26,7 @@ public class Mockball : IMetroidStateCheck
     /// <returns>True if the check was identified, false otherwise</returns>
     public bool ExecuteCheck(TrackerBase tracker, AutoTrackerMetroidState currentState, AutoTrackerMetroidState prevState)
     {
-        if (_playerProgressionService.GetProgression(false).Contains(ItemType.CardNorfairBoss))
+        if (_playerProgressionService.GetProgression(false).Contains(ItemType.SpeedBooster))
             return false;
 
         // Brinstar Mockball
