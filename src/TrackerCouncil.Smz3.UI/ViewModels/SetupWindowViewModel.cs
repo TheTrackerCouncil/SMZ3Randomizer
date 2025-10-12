@@ -1,3 +1,4 @@
+using System;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using AvaloniaControls.Models;
@@ -77,6 +78,7 @@ public class SetupWindowViewModel : ViewModelBase
     public bool TrackerBcuDisabled { get; set; } = true;
 
     public bool DisplayPage4 => StepNumber == 4;
+    public bool DisplayLinuxDesktopButton => OperatingSystem.IsLinux();
 
 
 }

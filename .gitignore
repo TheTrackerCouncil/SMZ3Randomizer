@@ -345,7 +345,7 @@ healthchecksdb
 /Randomizer.CLI/Properties/launchSettings.json
 /WebRandomizer/randomizer.db
 /asar/
-setup/Output/
+[Ss]etup/[Oo]utput/
 patch-config*
 **/.DS_Store
 **/*.db

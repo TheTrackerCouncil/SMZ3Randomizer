@@ -10,16 +10,9 @@ public partial class AboutWindow : ScalableWindow
 {
     public AboutWindow()
     {
-        var version = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion ?? "";
-
-        if (version.Contains('+'))
-        {
-            version = version[..version.IndexOf('+')];
-        }
-
         InitializeComponent();
 
-        TextBlockVersion.Text = $"Version {version}";
+        TextBlockVersion.Text = $"Version {App.Version}";
     }
 
     private void SMZ3Button_OnClick(object? sender, RoutedEventArgs e)

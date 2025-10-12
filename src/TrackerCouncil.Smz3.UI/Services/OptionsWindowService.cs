@@ -63,6 +63,12 @@ public class OptionsWindowService(
             _ = UpdateSpritesAsync();
         };
 
+        _model.RandomizerOptions.CreateDesktopFileButtonPressed += (_, _) =>
+        {
+            if (!OperatingSystem.IsLinux()) return;
+            App.BuildLinuxDesktopFile();
+        };
+
         _model.TrackerOptions.TestTextToSpeechPressed += (_, _) =>
         {
             communicator.UpdateVolume(_model.TrackerOptions.TextToSpeechVolume);

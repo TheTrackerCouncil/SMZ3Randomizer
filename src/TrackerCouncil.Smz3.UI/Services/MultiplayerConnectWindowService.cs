@@ -82,13 +82,13 @@ public class MultiplayerConnectWindowService(
             _options.MultiplayerUrl = _model.Url;
             _options.Save();
             _ = multiplayerClientService.CreateGame(_model.DisplayName, _model.PhoneticName,
-                _model.MultiplayerGameType, GetVersion(), _model.AsyncGame, _model.SendItemsOnComplete,
+                _model.MultiplayerGameType, App.Version, _model.AsyncGame, _model.SendItemsOnComplete,
                 _model.DeathLink);
         }
         else
         {
             logger.LogInformation("Connected to Server successfully. Joining game.");
-            _ = multiplayerClientService.JoinGame(_model.GameGuid, _model.DisplayName, _model.PhoneticName, GetVersion());
+            _ = multiplayerClientService.JoinGame(_model.GameGuid, _model.DisplayName, _model.PhoneticName, App.Version);
         }
     }
 
@@ -112,17 +112,6 @@ public class MultiplayerConnectWindowService(
         {
             _model.IsConnecting = false;
         }
-    }
-
-    private string GetVersion()
-    {
-        var version = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion ?? "";
-        if (version.Contains('+'))
-        {
-            version = version[..version.IndexOf('+')];
-        }
-
-        return version;
     }
 
     public void Dispose()

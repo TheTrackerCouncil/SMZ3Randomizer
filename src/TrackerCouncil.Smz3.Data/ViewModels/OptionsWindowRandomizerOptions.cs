@@ -94,6 +94,9 @@ public class OptionsWindowRandomizerOptions : INotifyPropertyChanged
 
     [DynamicFormFieldButton(buttonText: "Update Sprites", groupName: "Bottom right", alignment: DynamicFormAlignment.Right)]
     public event EventHandler? UpdateSpritesButtonPressed;
+
+    [DynamicFormFieldButton(buttonText: "Create Desktop File", groupName: "Bottom right", alignment: DynamicFormAlignment.Right, platforms: DynamicFormPlatform.Linux)]
+    public event EventHandler? CreateDesktopFileButtonPressed;
 #pragma warning restore CS0067 // Event is never used
 
     public event PropertyChangedEventHandler? PropertyChanged;
