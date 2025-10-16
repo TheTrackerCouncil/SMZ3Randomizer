@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using AppImageDesktopFileCreator;
 using Avalonia.Threading;
 using AvaloniaControls.Controls;
 using AvaloniaControls.ControlServices;
@@ -44,6 +45,12 @@ public class MainWindowService(
     {
         _options = optionsFactory.Create();
         _model.OpenSetupWindow = !_options.GeneralOptions.HasOpenedSetupWindow;
+
+        if (!_model.OpenSetupWindow && OperatingSystem.IsLinux() && !_options.GeneralOptions.SkipDesktopFile)
+        {
+            _model.OpenDesktopFileWindow = !DesktopFileCreator.CheckIfDesktopFileExists("org.trackercouncil.smz3");
+        }
+
         ITaskService.Run(CheckForUpdates);
         ITaskService.Run(StartPySpeechService);
         return _model;
@@ -61,6 +68,19 @@ public class MainWindowService(
         _options.GeneralOptions.IgnoredUpdateUrl = _model.NewVersionGitHubUrl;
         _options.Save();
         _model.DisplayNewVersionBanner = false;
+    }
+
+    public void HandleUserDesktopResponse(bool addDesktopFile)
+    {
+        if (addDesktopFile && OperatingSystem.IsLinux())
+        {
+            App.BuildLinuxDesktopFile();
+        }
+        else
+        {
+            _options.GeneralOptions.SkipDesktopFile = true;
+            _options.Save();
+        }
     }
 
     public async Task<bool> ValidateTwitchToken()

@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using AvaloniaControls;
 using AvaloniaControls.Controls;
 using AvaloniaControls.Services;
@@ -88,6 +89,15 @@ public partial class MainWindow : RestorableWindow
         _ = ITaskService.Run(_service.DownloadConfigsAsync);
         _ = ITaskService.Run(_service.DownloadSpritesAsync);
 
+        if (_model.OpenSetupWindow || _model.OpenDesktopFileWindow)
+        {
+            _ = Dispatcher.UIThread.InvokeAsync(OpenStartingWindows);
+        }
+    }
+
+    private async Task OpenStartingWindows()
+    {
+        await Task.Delay(TimeSpan.FromSeconds(0.5));
         if (_model.OpenSetupWindow && _serviceProvider != null)
         {
             var result = await _serviceProvider.GetRequiredService<SetupWindow>()
@@ -100,6 +110,14 @@ public partial class MainWindow : RestorableWindow
             {
                 _ = SoloRomListPanel.OpenGenerationWindow();
             }
+        }
+        else if (_model.OpenDesktopFileWindow)
+        {
+            _model.OpenDesktopFileWindow = false;
+            var response = await MessageWindow.ShowYesNoDialog(
+                "Would you like to add SMZ3 to your menu by creating a desktop file?",
+                "SMZ3 Cas' Randomizer", this);
+            _service!.HandleUserDesktopResponse(response);
         }
     }
 
