@@ -10,8 +10,10 @@ public class MainWindowViewModel : ViewModelBase
     }
 
     [Reactive] public bool DisplayNewVersionBanner { get; set; }
+    [Reactive] public bool DisplayDownloadLink { get; set; }
 
     public string NewVersionGitHubUrl { get; set; } = "";
+    public string? NewVersionDownloadUrl { get; set; }
 
     public bool OpenSetupWindow { get; set; }
 

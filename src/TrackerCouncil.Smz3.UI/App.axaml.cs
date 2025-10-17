@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.Versioning;
 using System.Threading.Tasks;
-using AppImageDesktopFileCreator;
+using AppImageManager;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
@@ -17,6 +17,9 @@ namespace TrackerCouncil.Smz3.UI;
 
 public partial class App : Application
 {
+    public const string AppId = "org.trackercouncil.smz3";
+    public const string AppName = "SMZ3 Cas' Randomizer";
+
     private IGlobalHook? _hook;
     private Task? _hookRunner;
     private static readonly string? s_versionOverride = null;
@@ -71,7 +74,7 @@ public partial class App : Application
     [SupportedOSPlatform("linux")]
     internal static CreateDesktopFileResponse BuildLinuxDesktopFile()
     {
-        return new DesktopFileBuilder("org.trackercouncil.smz3", "SMZ3 Cas' Randomizer")
+        return new DesktopFileBuilder(AppId, AppName)
             .AddUninstallAction(Directories.AppDataFolder)
             .Build();
     }

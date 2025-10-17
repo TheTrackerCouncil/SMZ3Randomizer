@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using AppImageManager;
+using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using AvaloniaControls;
@@ -129,5 +131,42 @@ public partial class MainWindow : RestorableWindow
     private void AboutButton_OnClick(object? sender, RoutedEventArgs e)
     {
         _serviceProvider?.GetRequiredService<AboutWindow>().ShowDialog(this);
+    }
+
+    private async void DownloadReleaseButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(_model.NewVersionDownloadUrl))
+            {
+                return;
+            }
+
+            if (OperatingSystem.IsLinux())
+            {
+                var downloadResult = await AppImage.DownloadAsync(new DownloadAppImageRequest
+                {
+                    Url = _model.NewVersionDownloadUrl
+                });
+
+                if (downloadResult.Success)
+                {
+                    Close();
+                }
+                else if (downloadResult.DownloadedSuccessfully)
+                {
+                    await MessageWindow.ShowErrorDialog("AppImage was downloaded, but it could not be launched.");
+                }
+                else
+                {
+                    await MessageWindow.ShowErrorDialog("Failed downloading AppImage");
+                }
+            }
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception);
+            throw;
+        }
     }
 }

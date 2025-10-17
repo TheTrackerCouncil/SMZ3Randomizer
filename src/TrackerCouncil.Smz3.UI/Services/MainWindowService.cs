@@ -1,10 +1,8 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
-using AppImageDesktopFileCreator;
+using AppImageManager;
 using Avalonia.Threading;
 using AvaloniaControls.Controls;
 using AvaloniaControls.ControlServices;
@@ -16,7 +14,6 @@ using Microsoft.Extensions.Logging;
 using PySpeechService.Client;
 using PySpeechService.TextToSpeech;
 using TrackerCouncil.Smz3.Chat.Integration;
-using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
@@ -48,7 +45,7 @@ public class MainWindowService(
 
         if (!_model.OpenSetupWindow && OperatingSystem.IsLinux() && !_options.GeneralOptions.SkipDesktopFile)
         {
-            _model.OpenDesktopFileWindow = !DesktopFileCreator.DoesDesktopFileExist("org.trackercouncil.smz3");
+            _model.OpenDesktopFileWindow = !AppImage.DoesDesktopFileExist(App.AppId);
         }
 
         ITaskService.Run(CheckForUpdates);
@@ -231,6 +228,13 @@ public class MainWindowService(
             {
                 _model.DisplayNewVersionBanner = true;
                 _model.NewVersionGitHubUrl = gitHubRelease.Url;
+
+                if (OperatingSystem.IsLinux())
+                {
+                    _model.NewVersionDownloadUrl = gitHubRelease.Asset
+                        .FirstOrDefault(x => x.Url.ToLower().EndsWith(".appimage"))?.Url;
+                    _model.DisplayDownloadLink = !string.IsNullOrEmpty(_model.NewVersionDownloadUrl);
+                }
             }
         }
         catch (Exception ex)
