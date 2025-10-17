@@ -48,7 +48,7 @@ public class MainWindowService(
 
         if (!_model.OpenSetupWindow && OperatingSystem.IsLinux() && !_options.GeneralOptions.SkipDesktopFile)
         {
-            _model.OpenDesktopFileWindow = !DesktopFileCreator.CheckIfDesktopFileExists("org.trackercouncil.smz3");
+            _model.OpenDesktopFileWindow = !DesktopFileCreator.DoesDesktopFileExist("org.trackercouncil.smz3");
         }
 
         ITaskService.Run(CheckForUpdates);
