@@ -35,17 +35,17 @@ public partial class MainWindow : RestorableWindow
         InitializeComponent();
         DataContext = _model = _service.InitializeModel(this);
 
-        _service.SpriteDownloadStart += (sender, args) =>
+        _service.SpriteDownloadStart += (_, _) =>
         {
             _spriteDownloadWindow = new SpriteDownloadWindow();
-            _spriteDownloadWindow.Closed += (o, eventArgs) =>
+            _spriteDownloadWindow.Closed += (_, _) =>
             {
                 _spriteDownloadWindow = null;
             };
             _spriteDownloadWindow.ShowDialog(this);
         };
 
-        _service.SpriteDownloadEnd += (sender, args) => _spriteDownloadWindow?.Close();
+        _service.SpriteDownloadEnd += (_, _) => _spriteDownloadWindow?.Close();
     }
 
     public void Reload()
@@ -78,7 +78,7 @@ public partial class MainWindow : RestorableWindow
         _service?.DisableUpdates();
     }
 
-    private async void Control_OnLoaded(object? sender, RoutedEventArgs e)
+    private void Control_OnLoaded(object? sender, RoutedEventArgs e)
     {
         if (_service == null)
         {
