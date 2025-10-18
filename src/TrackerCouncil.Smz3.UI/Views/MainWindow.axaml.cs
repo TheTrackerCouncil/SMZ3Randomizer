@@ -1,7 +1,10 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using AppImageManager;
+using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using AvaloniaControls;
 using AvaloniaControls.Controls;
 using AvaloniaControls.Services;
@@ -34,17 +37,17 @@ public partial class MainWindow : RestorableWindow
         InitializeComponent();
         DataContext = _model = _service.InitializeModel(this);
 
-        _service.SpriteDownloadStart += (sender, args) =>
+        _service.SpriteDownloadStart += (_, _) =>
         {
             _spriteDownloadWindow = new SpriteDownloadWindow();
-            _spriteDownloadWindow.Closed += (o, eventArgs) =>
+            _spriteDownloadWindow.Closed += (_, _) =>
             {
                 _spriteDownloadWindow = null;
             };
             _spriteDownloadWindow.ShowDialog(this);
         };
 
-        _service.SpriteDownloadEnd += (sender, args) => _spriteDownloadWindow?.Close();
+        _service.SpriteDownloadEnd += (_, _) => _spriteDownloadWindow?.Close();
     }
 
     public void Reload()
@@ -77,7 +80,7 @@ public partial class MainWindow : RestorableWindow
         _service?.DisableUpdates();
     }
 
-    private async void Control_OnLoaded(object? sender, RoutedEventArgs e)
+    private void Control_OnLoaded(object? sender, RoutedEventArgs e)
     {
         if (_service == null)
         {
@@ -88,6 +91,15 @@ public partial class MainWindow : RestorableWindow
         _ = ITaskService.Run(_service.DownloadConfigsAsync);
         _ = ITaskService.Run(_service.DownloadSpritesAsync);
 
+        if (_model.OpenSetupWindow || _model.OpenDesktopFileWindow)
+        {
+            _ = Dispatcher.UIThread.InvokeAsync(OpenStartingWindows);
+        }
+    }
+
+    private async Task OpenStartingWindows()
+    {
+        await Task.Delay(TimeSpan.FromSeconds(0.5));
         if (_model.OpenSetupWindow && _serviceProvider != null)
         {
             var result = await _serviceProvider.GetRequiredService<SetupWindow>()
@@ -101,6 +113,14 @@ public partial class MainWindow : RestorableWindow
                 _ = SoloRomListPanel.OpenGenerationWindow();
             }
         }
+        else if (_model.OpenDesktopFileWindow)
+        {
+            _model.OpenDesktopFileWindow = false;
+            var response = await MessageWindow.ShowYesNoDialog(
+                "Would you like to add SMZ3 to your menu by creating a desktop file?",
+                "SMZ3 Cas' Randomizer", this);
+            _service!.HandleUserDesktopResponse(response);
+        }
     }
 
     private void OptionsMenuItem_OnClick(object? sender, RoutedEventArgs e)
@@ -111,5 +131,42 @@ public partial class MainWindow : RestorableWindow
     private void AboutButton_OnClick(object? sender, RoutedEventArgs e)
     {
         _serviceProvider?.GetRequiredService<AboutWindow>().ShowDialog(this);
+    }
+
+    private async void DownloadReleaseButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(_model.NewVersionDownloadUrl))
+            {
+                return;
+            }
+
+            if (OperatingSystem.IsLinux())
+            {
+                var downloadResult = await AppImage.DownloadAsync(new DownloadAppImageRequest
+                {
+                    Url = _model.NewVersionDownloadUrl
+                });
+
+                if (downloadResult.Success)
+                {
+                    Close();
+                }
+                else if (downloadResult.DownloadedSuccessfully)
+                {
+                    await MessageWindow.ShowErrorDialog("AppImage was downloaded, but it could not be launched.");
+                }
+                else
+                {
+                    await MessageWindow.ShowErrorDialog("Failed downloading AppImage");
+                }
+            }
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception);
+            throw;
+        }
     }
 }

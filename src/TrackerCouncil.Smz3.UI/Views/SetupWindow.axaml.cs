@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -154,6 +155,12 @@ public partial class SetupWindow : Window
     private void Window_OnClosing(object? sender, WindowClosingEventArgs e)
     {
         _service?.OnClose();
+    }
+
+    private void CreateDesktopFileButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (!OperatingSystem.IsLinux()) return;
+        App.BuildLinuxDesktopFile();
     }
 }
 

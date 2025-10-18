@@ -1,9 +1,8 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
+using AppImageManager;
 using Avalonia.Threading;
 using AvaloniaControls.Controls;
 using AvaloniaControls.ControlServices;
@@ -15,7 +14,6 @@ using Microsoft.Extensions.Logging;
 using PySpeechService.Client;
 using PySpeechService.TextToSpeech;
 using TrackerCouncil.Smz3.Chat.Integration;
-using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
@@ -44,6 +42,12 @@ public class MainWindowService(
     {
         _options = optionsFactory.Create();
         _model.OpenSetupWindow = !_options.GeneralOptions.HasOpenedSetupWindow;
+
+        if (!_model.OpenSetupWindow && OperatingSystem.IsLinux() && !_options.GeneralOptions.SkipDesktopFile)
+        {
+            _model.OpenDesktopFileWindow = !AppImage.DoesDesktopFileExist(App.AppId);
+        }
+
         ITaskService.Run(CheckForUpdates);
         ITaskService.Run(StartPySpeechService);
         return _model;
@@ -61,6 +65,19 @@ public class MainWindowService(
         _options.GeneralOptions.IgnoredUpdateUrl = _model.NewVersionGitHubUrl;
         _options.Save();
         _model.DisplayNewVersionBanner = false;
+    }
+
+    public void HandleUserDesktopResponse(bool addDesktopFile)
+    {
+        if (addDesktopFile && OperatingSystem.IsLinux())
+        {
+            App.BuildLinuxDesktopFile();
+        }
+        else
+        {
+            _options.GeneralOptions.SkipDesktopFile = true;
+            _options.Save();
+        }
     }
 
     public async Task<bool> ValidateTwitchToken()
@@ -202,17 +219,22 @@ public class MainWindowService(
             return;
         }
 
-        var version = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
-
         try
         {
             var gitHubRelease = await gitHubReleaseCheckerService
-                .GetGitHubReleaseToUpdateToAsync("TheTrackerCouncil", "SMZ3Randomizer", version ?? "", false);
+                .GetGitHubReleaseToUpdateToAsync("TheTrackerCouncil", "SMZ3Randomizer", App.Version, false);
 
             if (!string.IsNullOrWhiteSpace(gitHubRelease?.Url) && gitHubRelease.Url != _options.GeneralOptions.IgnoredUpdateUrl)
             {
                 _model.DisplayNewVersionBanner = true;
                 _model.NewVersionGitHubUrl = gitHubRelease.Url;
+
+                if (OperatingSystem.IsLinux())
+                {
+                    _model.NewVersionDownloadUrl = gitHubRelease.Asset
+                        .FirstOrDefault(x => x.Url.ToLower().EndsWith(".appimage"))?.Url;
+                    _model.DisplayDownloadLink = !string.IsNullOrEmpty(_model.NewVersionDownloadUrl);
+                }
             }
         }
         catch (Exception ex)

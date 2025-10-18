@@ -88,6 +88,8 @@ public class GeneralOptions : INotifyPropertyChanged
     public int UndoExpirationTime { get; set; } = 3;
     public double UIScaleFactor { get; set; } = 1;
 
+    public bool SkipDesktopFile { get; set; }
+
     public Dictionary<string, SpriteOptions> LinkSpriteOptions { get; set; } = new();
     public Dictionary<string, SpriteOptions> SamusSpriteOptions { get; set; } = new();
     public Dictionary<string, SpriteOptions> ShipSpriteOptions { get; set; } = new();

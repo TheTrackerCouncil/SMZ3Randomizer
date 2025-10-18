@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
+// ReSharper disable once RedundantUsingDirective
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -17,7 +17,6 @@ using MSURandomizer.Services;
 using MSURandomizerLibrary.Models;
 using MSURandomizerLibrary.Services;
 using Serilog;
-using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Shared;
 
 namespace TrackerCouncil.Smz3.UI;
@@ -51,7 +50,7 @@ sealed class Program
 #endif
             .CreateLogger();
 
-        Log.Information("Starting SMZ3 Cas' Randomizer {Version}", FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion);
+        Log.Information("Starting SMZ3 Cas' Randomizer {Version}", App.Version);
         Log.Information("Config Path: {Directory}", Directories.ConfigPath);
         Log.Information("Sprite Path: {Directory}", Directories.SpritePath);
         Log.Information("Tracker Sprite Path: {Directory}", Directories.TrackerSpritePath);
@@ -89,16 +88,16 @@ sealed class Program
         catch (Exception e)
         {
             Log.Error(e, "[CRASH] Uncaught {Name}: ", e.GetType().Name);
-            ShowExceptionPopup(e).ContinueWith(t => source.Cancel(), TaskScheduler.FromCurrentSynchronizationContext());
+            ShowExceptionPopup(e).ContinueWith(_ => source.Cancel(), TaskScheduler.FromCurrentSynchronizationContext());
             Dispatcher.UIThread.MainLoop(source.Token);
         }
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.
-    public static AppBuilder BuildAvaloniaApp()
+    private static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()
-            .With(new Win32PlatformOptions() { RenderingMode = new List<Win32RenderingMode>() { Win32RenderingMode.Software }  })
+            .With(new Win32PlatformOptions() { RenderingMode = new List<Win32RenderingMode> { Win32RenderingMode.Software }  })
             .With(new X11PlatformOptions() { UseDBusFilePicker = false })
             .WithInterFont()
             .LogToTrace()
@@ -141,6 +140,23 @@ sealed class Program
         if (!Directory.Exists(source))
         {
             return;
+        }
+
+        if (OperatingSystem.IsLinux())
+        {
+            var appImageIdPath = Path.Combine(source, "id.txt");
+            var currentIdPath = Path.Combine(Directories.DefaultDataPath, "id.txt");
+
+            if (File.Exists(appImageIdPath) && File.Exists(currentIdPath))
+            {
+                var appImageId = File.ReadAllText(appImageIdPath);
+                var currentId = File.ReadAllText(currentIdPath);
+                if (appImageId == currentId)
+                {
+                    Log.Information("DefaultData id matches: {Value}", appImageId);
+                    return;
+                }
+            }
         }
 
         if (Directory.Exists(Directories.DefaultDataPath))

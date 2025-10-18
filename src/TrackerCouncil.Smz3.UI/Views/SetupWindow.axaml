@@ -202,6 +202,12 @@
 
           <StackPanel Orientation="Vertical" Margin="0 10">
 
+            <TextBlock TextWrapping="Wrap" IsVisible="{Binding DisplayLinuxDesktopButton}">
+              You can create a .desktop file to add SMZ3 as an application in your desktop environment's menu.
+            </TextBlock>
+
+            <Button Margin="0 10" HorizontalAlignment="Left" Click="CreateDesktopFileButton_OnClick"  IsVisible="{Binding DisplayLinuxDesktopButton}">Create Desktop File</Button>
+
             <TextBlock TextWrapping="Wrap">
               You can open the full settings window to change other settings such as enabling Twitch integration,
               modifying the tracker UI background, and modifying other tracking behavior.
