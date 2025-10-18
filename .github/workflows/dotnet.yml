@@ -91,23 +91,25 @@ jobs:
     needs: [build-windows]
     permissions:
       contents: write
-    if: ${{ github.event_name != 'pull_request' }}
     steps:
       - uses: actions/checkout@v4
       - name: Download config repo
         uses: actions/checkout@v4
+        if: ${{ github.event_name != 'pull_request' }}
         with:
           repository: TheTrackerCouncil/SMZ3CasConfigs
           path: configs
           ref: main
       - name: Download sprite repo
         uses: actions/checkout@v4
+        if: ${{ github.event_name != 'pull_request' }}
         with:
           repository: TheTrackerCouncil/SMZ3CasSprites
           path: sprites
           ref: main
       - name: Download tracker sprite repo
         uses: actions/checkout@v4
+        if: ${{ github.event_name != 'pull_request' }}
         with:
           repository: TheTrackerCouncil/TrackerSprites
           path: trackersprites
@@ -126,9 +128,11 @@ jobs:
           Remove-Item -LiteralPath "trackersprites/.git" -Force -Recurse
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
+        if: ${{ github.event_name != 'pull_request' }}
         with:
           dotnet-version: 8.0.x
       - name: Update VersionOverride in source file
+        if: ${{ github.event_name != 'pull_request' }}
         run: |
           pwd
           VERSION="${{ needs.build-windows.outputs.version-number }}"
@@ -139,12 +143,15 @@ jobs:
           echo "Updated VersionOverride to: ${VERSION}"
       - name: Install PupNet
         run: dotnet tool install -g KuiperZone.PupNet
+        if: ${{ github.event_name != 'pull_request' }}
       - name: Download AppImageTool
+        if: ${{ github.event_name != 'pull_request' }}
         run: |
           wget -P "$HOME/.local/bin" "https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage"
           chmod +x "$HOME/.local/bin/appimagetool-x86_64.AppImage"
           appimagetool-x86_64.AppImage --version
       - name: Run PupNet
+        if: ${{ github.event_name != 'pull_request' }}
         run: |
           chmod +x setup/AppImageBundleFiles.sh
           pupnet setup/AppImage.pupnet.conf --kind appimage -y
@@ -157,23 +164,25 @@ jobs:
 
   build-mac:
     runs-on: macos-latest
-    if: ${{ github.event_name != 'pull_request' }}
     steps:
       - uses: actions/checkout@v4
       - name: Download config repo
         uses: actions/checkout@v4
+        if: ${{ github.event_name != 'pull_request' }}
         with:
           repository: TheTrackerCouncil/SMZ3CasConfigs
           path: configs
           ref: main
       - name: Download sprite repo
         uses: actions/checkout@v4
+        if: ${{ github.event_name != 'pull_request' }}
         with:
           repository: TheTrackerCouncil/SMZ3CasSprites
           path: sprites
           ref: main
       - name: Download tracker sprite repo
         uses: actions/checkout@v4
+        if: ${{ github.event_name != 'pull_request' }}
         with:
           repository: TheTrackerCouncil/TrackerSprites
           path: trackersprites
@@ -192,16 +201,21 @@ jobs:
           Remove-Item -LiteralPath "trackersprites/.git" -Force -Recurse
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
+        if: ${{ github.event_name != 'pull_request' }}
         with:
           dotnet-version: 8.0.x
       - name: Restore dependencies
         run: dotnet restore src/TrackerCouncil.Smz3.UI/TrackerCouncil.Smz3.UI.csproj
+        if: ${{ github.event_name != 'pull_request' }}
       - name: Build
         run: dotnet build --no-restore -p:PostBuildEvent= src/TrackerCouncil.Smz3.UI/TrackerCouncil.Smz3.UI.csproj
+        if: ${{ github.event_name != 'pull_request' }}
       - name: Publish
         run: dotnet publish -r osx-arm64 --configuration Release -p:UseAppHost=true src/TrackerCouncil.Smz3.UI/TrackerCouncil.Smz3.UI.csproj
+        if: ${{ github.event_name != 'pull_request' }}
       - name: Get version number
         id: version
+        if: ${{ github.event_name != 'pull_request' }}
         run: |
           $version = (Get-Item "src\TrackerCouncil.Smz3.UI\bin\Release\net8.0\osx-arm64\publish\SMZ3CasRandomizer.dll").VersionInfo.ProductVersion
           $version = $version -replace "\+.*", ""
@@ -210,10 +224,12 @@ jobs:
           Write-Output "number=$version" >> $env:GITHUB_OUTPUT
         shell: pwsh
       - name: Prepare packaging script
+        if: ${{ github.event_name != 'pull_request' }}
         run: |
           chmod +x ./setup/package-macos-app.sh
           ./setup/package-macos-app.sh "${{ steps.version.outputs.number }}"
       - name: Upload artifact
+        if: ${{ github.event_name != 'pull_request' }}
         uses: actions/upload-artifact@v4
         with:
           path: "setup/output/*"
@@ -229,18 +245,22 @@ jobs:
 
     steps:
       - uses: actions/download-artifact@v5
+        if: ${{ github.event_name != 'pull_request' }}
         with:
           name: SMZ3CasRandomizerWindows
           path: out
       - uses: actions/download-artifact@v5
+        if: ${{ github.event_name != 'pull_request' }}
         with:
           name: SMZ3CasRandomizerLinux
           path: out
       - uses: actions/download-artifact@v5
+        if: ${{ github.event_name != 'pull_request' }}
         with:
           name: SMZ3CasRandomizerMacOS
           path: out
       - name: Extract some files
+        if: ${{ github.event_name != 'pull_request' }}
         run: |
           ls -alR
       - name: Upload artifact
@@ -250,6 +270,7 @@ jobs:
           path: "out/*"
           name: SMZ3CasRandomizer_${{ needs.build-windows.outputs.version-number }}
       - name: Delete old artifacts
+        if: ${{ github.event_name != 'pull_request' }}
         uses: geekyeggo/delete-artifact@v5
         with:
           name: |
