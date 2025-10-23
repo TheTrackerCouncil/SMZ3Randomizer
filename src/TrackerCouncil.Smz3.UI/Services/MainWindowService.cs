@@ -1,6 +1,8 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using AppImageManager;
 using Avalonia.Threading;
@@ -212,6 +214,70 @@ public class MainWindowService(
         trackerSpriteService.LoadSprites();
     }
 
+    public async Task<string?> InstallWindowsUpdate(string url)
+    {
+        var filename = Path.GetFileName(new Uri(url).AbsolutePath);
+        var localPath = Path.Combine(Path.GetTempPath(), filename);
+
+        logger.LogInformation("Downloading {Url} to {LocalPath}", url, localPath);
+
+        var response = await DownloadFileAsyncAttempt(url, localPath);
+
+        if (!response.Item1)
+        {
+            logger.LogInformation("Download failed: {Error}", response.Item2);
+            return response.Item2;
+        }
+
+        try
+        {
+            logger.LogInformation("Launching setup file");
+
+            var psi = new ProcessStartInfo
+            {
+                FileName = localPath,
+                UseShellExecute = true,
+                RedirectStandardOutput = false,
+                RedirectStandardError = false,
+                RedirectStandardInput = false,
+                CreateNoWindow = true
+            };
+
+            Process.Start(psi);
+            return null;
+        }
+        catch (Exception e)
+        {
+            return "Failed to start setup file";
+        }
+    }
+
+    private static async Task<(bool, string?)> DownloadFileAsyncAttempt(string url, string target, int attemptNumber = 0, int totalAttempts = 3)
+    {
+
+        using var httpClient = new HttpClient();
+
+        try
+        {
+            await using var downloadStream = await httpClient.GetStreamAsync(url);
+            await using var fileStream = new FileStream(target, FileMode.Create);
+            await downloadStream.CopyToAsync(fileStream);
+            return (true, null);
+        }
+        catch (Exception ex)
+        {
+            if (attemptNumber < totalAttempts)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(attemptNumber));
+                return await DownloadFileAsyncAttempt(url, target, attemptNumber + 1, totalAttempts);
+            }
+            else
+            {
+                return (false, $"Download failed: {ex.Message}");
+            }
+        }
+    }
+
     private async Task CheckForUpdates()
     {
         if (!_options.GeneralOptions.CheckForUpdatesOnStartup)
@@ -233,6 +299,12 @@ public class MainWindowService(
                 {
                     _model.NewVersionDownloadUrl = gitHubRelease.Asset
                         .FirstOrDefault(x => x.Url.ToLower().EndsWith(".appimage"))?.Url;
+                    _model.DisplayDownloadLink = !string.IsNullOrEmpty(_model.NewVersionDownloadUrl);
+                }
+                else if (OperatingSystem.IsWindows())
+                {
+                    _model.NewVersionDownloadUrl = gitHubRelease.Asset
+                        .FirstOrDefault(x => x.Url.ToLower().EndsWith(".exe"))?.Url;
                     _model.DisplayDownloadLink = !string.IsNullOrEmpty(_model.NewVersionDownloadUrl);
                 }
             }
