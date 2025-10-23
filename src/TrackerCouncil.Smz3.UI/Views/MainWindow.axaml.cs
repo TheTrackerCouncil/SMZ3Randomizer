@@ -137,7 +137,7 @@ public partial class MainWindow : RestorableWindow
     {
         try
         {
-            if (string.IsNullOrEmpty(_model.NewVersionDownloadUrl))
+            if (string.IsNullOrEmpty(_model.NewVersionDownloadUrl) || _service == null)
             {
                 return;
             }
@@ -162,11 +162,22 @@ public partial class MainWindow : RestorableWindow
                     await MessageWindow.ShowErrorDialog("Failed downloading AppImage");
                 }
             }
+            else
+            {
+                var result = await _service.InstallWindowsUpdate(_model.NewVersionDownloadUrl);
+                if (!string.IsNullOrEmpty(result))
+                {
+                    await MessageWindow.ShowErrorDialog(result);
+                }
+                else
+                {
+                    Close();
+                }
+            }
         }
-        catch (Exception exception)
+        catch
         {
-            Console.WriteLine(exception);
-            throw;
+            await MessageWindow.ShowErrorDialog("Failed downloading update");
         }
     }
 }
