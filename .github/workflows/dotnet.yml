@@ -2,7 +2,7 @@ name: .NET Build + Test + Publish
 
 on:
   push:
-    branches: [main]
+    branches: [main, dotnet-10]
   pull_request:
     branches: [main]
 
@@ -46,7 +46,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
@@ -63,7 +63,7 @@ jobs:
         if: ${{ github.event_name != 'pull_request' }}
         id: version
         run: |
-          $version = (Get-Item "src\TrackerCouncil.Smz3.UI\bin\Release\net8.0\win-x86\publish\SMZ3CasRandomizer.exe").VersionInfo.ProductVersion
+          $version = (Get-Item "src\TrackerCouncil.Smz3.UI\bin\Release\net10.0\win-x86\publish\SMZ3CasRandomizer.exe").VersionInfo.ProductVersion
           $version = $version -replace "\+.*", ""
           Write-Output "number=$version" >> $env:GITHUB_OUTPUT
         shell: pwsh
@@ -130,7 +130,7 @@ jobs:
         uses: actions/setup-dotnet@v4
         if: ${{ github.event_name != 'pull_request' }}
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
       - name: Update VersionOverride in source file
         if: ${{ github.event_name != 'pull_request' }}
         run: |
@@ -203,7 +203,7 @@ jobs:
         uses: actions/setup-dotnet@v4
         if: ${{ github.event_name != 'pull_request' }}
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
       - name: Restore dependencies
         run: dotnet restore src/TrackerCouncil.Smz3.UI/TrackerCouncil.Smz3.UI.csproj
         if: ${{ github.event_name != 'pull_request' }}
@@ -217,7 +217,7 @@ jobs:
         id: version
         if: ${{ github.event_name != 'pull_request' }}
         run: |
-          $version = (Get-Item "src\TrackerCouncil.Smz3.UI\bin\Release\net8.0\osx-arm64\publish\SMZ3CasRandomizer.dll").VersionInfo.ProductVersion
+          $version = (Get-Item "src\TrackerCouncil.Smz3.UI\bin\Release\net10.0\osx-arm64\publish\SMZ3CasRandomizer.dll").VersionInfo.ProductVersion
           $version = $version -replace "\+.*", ""
           $versionShort = $version -replace "\-.*", ""
           (Get-Content setup/Info.plist).Replace('%FULL_VERSION%', $version).Replace('%SHORT_VERSION%', $versionShort) | Set-Content setup/Info.plist

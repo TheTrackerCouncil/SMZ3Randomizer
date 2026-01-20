@@ -192,9 +192,9 @@ public abstract class DataBlock : IBlockType
     {
         get
         {
-            return Manifest.Sum(field =>
+            return Manifest.Sum(f =>
             {
-                var (_, length, offsets) = field;
+                var (_, length, offsets) = f;
                 return length * offsets.Count();
             });
         }

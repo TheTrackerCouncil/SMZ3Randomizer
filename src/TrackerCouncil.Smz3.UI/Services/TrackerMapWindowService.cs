@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Avalonia;
-using AvaloniaControls.ControlServices;
 using AvaloniaControls.Services;
 using TrackerCouncil.Smz3.Abstractions;
-using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
-using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Data.WorldData.Regions.SuperMetroid.Crateria;
@@ -19,7 +16,6 @@ using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Tracking.Services;
 using TrackerCouncil.Smz3.UI.ViewModels;
-using EnumExtensions = AvaloniaControls.EnumExtensions;
 
 namespace TrackerCouncil.Smz3.UI.Services;
 

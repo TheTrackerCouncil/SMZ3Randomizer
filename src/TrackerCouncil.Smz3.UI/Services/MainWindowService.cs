@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using AppImageManager;
 using Avalonia.Threading;
 using AvaloniaControls.Controls;
-using AvaloniaControls.ControlServices;
 using AvaloniaControls.Models;
 using AvaloniaControls.Services;
 using GitHubReleaseChecker;

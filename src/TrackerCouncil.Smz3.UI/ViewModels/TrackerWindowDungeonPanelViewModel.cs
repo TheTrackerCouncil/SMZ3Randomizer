@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Shared;
@@ -15,7 +15,7 @@ public class DungeonSetRewardEventArgs : EventArgs
     public required RewardType RewardType { get; init; }
 }
 
-public class TrackerWindowDungeonPanelViewModel : TrackerWindowPanelViewModel
+public partial class TrackerWindowDungeonPanelViewModel : TrackerWindowPanelViewModel
 {
     public Region? Region { get; set; }
     public IHasTreasure? TreasureRegion => Region as IHasTreasure;
@@ -23,9 +23,9 @@ public class TrackerWindowDungeonPanelViewModel : TrackerWindowPanelViewModel
     public IHasPrerequisite? PrereqRegion => Region as IHasPrerequisite;
     public IHasBoss? BossRegion => Region as IHasBoss;
     public string? DungeonImage { get; set; } = "";
-    [Reactive] public string? RewardImage { get; set; }
-    [Reactive] public bool DungeonCleared { get; set; }
-    [Reactive] public int DungeonTreasure { get; set; }
+    [Reactive] public partial string? RewardImage { get; set; }
+    [Reactive] public partial bool DungeonCleared { get; set; }
+    [Reactive] public partial int DungeonTreasure { get; set; }
     public event EventHandler? ResetCleared;
     public event EventHandler? TreasureCleared;
     public event EventHandler<DungeonSetRewardEventArgs>? RewardSet;

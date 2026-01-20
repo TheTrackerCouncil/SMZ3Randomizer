@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Media;
 using AvaloniaControls;
-using AvaloniaControls.ControlServices;
+using AvaloniaControls.Services;
 using Material.Icons;
 using SnesConnectorLibrary;
 using SnesConnectorLibrary.Requests;

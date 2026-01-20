@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using AvaloniaControls.Controls;
-using AvaloniaControls.ControlServices;
 using AvaloniaControls.Models;
 using AvaloniaControls.Services;
 using TrackerCouncil.Smz3.Data.Interfaces;

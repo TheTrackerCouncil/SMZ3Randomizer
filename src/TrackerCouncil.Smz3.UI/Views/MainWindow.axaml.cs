@@ -34,7 +34,17 @@ public partial class MainWindow : RestorableWindow
         _service = service;
         _serviceProvider = serviceProvider;
         GlobalScaleFactor = Math.Clamp(options.Create().GeneralOptions.UIScaleFactor, 1, 3);
-        InitializeComponent();
+
+        try
+        {
+            InitializeComponent();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+
         DataContext = _model = _service.InitializeModel(this);
 
         _service.SpriteDownloadStart += (_, _) =>
@@ -97,6 +107,22 @@ public partial class MainWindow : RestorableWindow
         }
     }
 
+    private void OpenOptionsWindow()
+    {
+        var scope = _serviceProvider?.CreateScope();
+        if (scope == null)
+        {
+            return;
+        }
+
+        var window = scope.ServiceProvider.GetRequiredService<OptionsWindow>();
+        window.Closed += (_, _) =>
+        {
+            scope.Dispose();
+        };
+        window.ShowDialog(this);
+    }
+
     private async Task OpenStartingWindows()
     {
         await Task.Delay(TimeSpan.FromSeconds(0.5));
@@ -106,7 +132,7 @@ public partial class MainWindow : RestorableWindow
                 .ShowDialog<SetupWindowCloseBehavior>(this, SetupWindowStep.Roms);
             if (result == SetupWindowCloseBehavior.OpenSettingsWindow)
             {
-                _serviceProvider?.GetRequiredService<OptionsWindow>().ShowDialog(this);
+                OpenOptionsWindow();
             }
             else if (result == SetupWindowCloseBehavior.OpenGenerationWindow)
             {
@@ -125,7 +151,7 @@ public partial class MainWindow : RestorableWindow
 
     private void OptionsMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
-        _serviceProvider?.GetRequiredService<OptionsWindow>().ShowDialog(this);
+        OpenOptionsWindow();
     }
 
     private void AboutButton_OnClick(object? sender, RoutedEventArgs e)

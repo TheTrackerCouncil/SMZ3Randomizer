@@ -4,16 +4,16 @@ using System.Linq;
 using Avalonia.Media;
 using AvaloniaControls.Models;
 using Material.Icons;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 using SnesConnectorLibrary;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.UI.ViewModels;
 
-public class TrackerWindowViewModel : ViewModelBase
+public partial class TrackerWindowViewModel : ViewModelBase
 {
-    [Reactive] public List<TrackerWindowPanelViewModel> Panels { get; set; } = [];
+    [Reactive] public partial List<TrackerWindowPanelViewModel> Panels { get; set; } = [];
 
     public string LayoutName { get; set; } = "";
 
@@ -32,36 +32,36 @@ public class TrackerWindowViewModel : ViewModelBase
     public bool PegWorldMode { get; set; }
     public bool ShaktoolMode { get; set; }
 
-    [Reactive] public string TimeString { get; set; } = "00:00";
+    [Reactive] public partial string TimeString { get; set; } = "00:00";
 
     [Reactive]
     [ReactiveLinkedProperties(nameof(ConnectedIcon), nameof(ConnectedColor))]
-    public bool AutoTrackerEnabled { get; set; }
+    public partial bool AutoTrackerEnabled { get; set; }
 
     [Reactive]
     [ReactiveLinkedProperties(nameof(ConnectedColor))]
-    public bool AutoTrackerConnected { get; set; }
+    public partial bool AutoTrackerConnected { get; set; }
 
-    [Reactive] public SnesConnectorType ConnectorType { get; set; }
+    [Reactive] public partial SnesConnectorType ConnectorType { get; set; }
 
     [Reactive]
     [ReactiveLinkedProperties(nameof(StatusBarBackground), nameof(StatusBarBorder))]
-    public bool IsInGoMode { get; set; }
+    public partial bool IsInGoMode { get; set; }
 
     public bool ShowSpeechRecognition => !OperatingSystem.IsMacOS();
 
-    [Reactive] public string SpeechConfidence { get; set; } = "Voice Disabled";
+    [Reactive] public partial string SpeechConfidence { get; set; } = "Voice Disabled";
 
-    [Reactive] public string SpeechPhrase { get; set; } = "";
+    [Reactive] public partial string SpeechPhrase { get; set; } = "";
 
     [Reactive]
     [ReactiveLinkedProperties(nameof(SpeechToolTip), nameof(SpeechIcon))]
-    public bool VoiceEnabled { get; set; }
+    public partial bool VoiceEnabled { get; set; }
     public bool DisplayTimer { get; set; }
 
     public int IdealWindowWidth => Panels.Max(x => x.Column) * 34 + 10;
     public int IdealWindowHeight => Panels.Max(x => x.Row) * 34 + 10 + 50;
-    [Reactive] public bool ShowResizeButton { get; set; }
+    [Reactive] public partial bool ShowResizeButton { get; set; }
 
     public string SpeechToolTip => VoiceEnabled ? "Confidence of last recognized voice command. Double click to disable voice recognition." : "Voice recognition disabled. Double click to attempt to enable voice recognition.";
 
@@ -69,9 +69,9 @@ public class TrackerWindowViewModel : ViewModelBase
 
     [Reactive]
     [ReactiveLinkedProperties(nameof(IsDisabledConnector), nameof(IsSniConnector), nameof(IsUsb2SnesConnector), nameof(IsLuaConnector), nameof(IsLuaCrowdControlConnector), nameof(IsLuaEmoTrackerConnector))]
-    public SnesConnectorType SnesConnectorType { get; set; } = SnesConnectorType.None;
+    public partial SnesConnectorType SnesConnectorType { get; set; } = SnesConnectorType.None;
 
-    [Reactive] public bool AreCheatsEnabled { get; set; }
+    [Reactive] public partial bool AreCheatsEnabled { get; set; }
 
     public bool IsDisabledConnector => SnesConnectorType == SnesConnectorType.None;
     public bool IsSniConnector => SnesConnectorType == SnesConnectorType.Sni;

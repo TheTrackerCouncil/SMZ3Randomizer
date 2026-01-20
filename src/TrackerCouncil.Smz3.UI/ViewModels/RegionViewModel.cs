@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AvaloniaControls.Models;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.UI.ViewModels;
 
-public class RegionViewModel : ViewModelBase
+public partial class RegionViewModel : ViewModelBase
 {
     public RegionViewModel(string regionName, List<string> locationNames)
     {
@@ -54,21 +54,21 @@ public class RegionViewModel : ViewModelBase
     public Region? Region { get; set; }
     public static string? ChestImage { get; set; }
     public string RegionName { get; set; }
-    [Reactive] public string LocationCount { get; set; } = "";
+    [Reactive] public partial string LocationCount { get; set; } = "";
     public int InLogicLocationCount => Locations.Count(x => x.InLogic || x.InLogicWithKeys);
     public int SortOrder { get; set; }
     public bool ShowOutOfLogic { get; set; }
     public bool IsVisible => VisibleLocations > 0 && MatchesFilter;
-    [Reactive] public List<LocationViewModel> Locations { get; set; }
+    [Reactive] public partial List<LocationViewModel> Locations { get; set; }
     public Dictionary<LocationId, LocationViewModel> AllLocations { get; set; } = [];
 
     [Reactive]
     [ReactiveLinkedProperties(nameof(IsVisible))]
-    public bool MatchesFilter { get; set; }
+    public partial bool MatchesFilter { get; set; }
 
     [Reactive]
     [ReactiveLinkedProperties(nameof(IsVisible))]
-    public int VisibleLocations { get; set; }
+    public partial int VisibleLocations { get; set; }
 
     public event EventHandler? RegionUpdated;
 

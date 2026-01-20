@@ -2,7 +2,7 @@
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Threading;
-using AvaloniaControls.ControlServices;
+using AvaloniaControls.Services;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Tracking.Services;

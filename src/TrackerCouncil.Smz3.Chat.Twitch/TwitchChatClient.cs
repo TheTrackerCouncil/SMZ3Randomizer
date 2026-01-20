@@ -26,7 +26,7 @@ public class TwitchChatClient : IChatClient
     {
         Logger = logger;
 
-        _twitchClient = new TwitchClient(TwitchWebSocketClient, logger: loggerFactory.CreateLogger<TwitchClient>());
+        _twitchClient = new TwitchClient(TwitchWebSocketClient, loggerFactory: loggerFactory);
 
         _twitchClient.OnConnected += _twitchClient_OnConnected;
         _twitchClient.OnDisconnected += _twitchClient_OnDisconnected;
@@ -58,7 +58,7 @@ public class TwitchChatClient : IChatClient
 
     protected ILogger<TwitchChatClient> Logger { get; }
 
-    public void Connect(string userName, string oauthToken, string channel, string id)
+    public async Task ConnectAsync(string userName, string oauthToken, string channel, string id)
     {
         if (string.IsNullOrEmpty(_twitchClient.ConnectionCredentials?.TwitchUsername))
         {
@@ -66,52 +66,48 @@ public class TwitchChatClient : IChatClient
             _twitchClient.Initialize(credentials, channel);
         }
 
-        _twitchClient.Connect();
+        await _twitchClient.ConnectAsync();
         ConnectedAs = userName;
         Channel = channel;
         Id = userName.Equals(channel, StringComparison.OrdinalIgnoreCase) ? id : null;
         _chatApi.SetAccessToken(oauthToken);
     }
 
-    public void Disconnect()
+    public async Task DisconnectAsync()
     {
         if (_twitchClient.IsInitialized)
         {
             IsConnected = false;
-            _twitchClient.Disconnect();
+            await _twitchClient.DisconnectAsync();
         }
     }
 
-    public void Dispose()
-    {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
-    }
-
-    public Task SendMessageAsync(string message, bool announce = false)
+    public async Task SendMessageAsync(string message, bool announce = false)
     {
         if (announce)
         {
-            return SendAnnouncementAsync(message);
+            await SendAnnouncementAsync(message);
         }
 
         try
         {
-            _twitchClient.SendMessage(Channel, message);
+            if (!string.IsNullOrEmpty(Channel))
+            {
+                await _twitchClient.SendMessageAsync(Channel, message);
+            }
         }
         catch (BadStateException e)
         {
             Logger.LogError(e, "Error in sending chat message");
             SendMessageFailure?.Invoke(this, new());
         }
-
-        return Task.CompletedTask;
     }
 
     public async Task SendAnnouncementAsync(string message)
     {
         var announcement = new TwitchAnnouncement() { BroadcasterId = Id, ModeratorId = Id, Message = message };
-        await _chatApi.MakeApiCallAsync<TwitchAnnouncement, TwitchAnnouncement>("chat/announcements", announcement, HttpMethod.Post, default);
+        await _chatApi.MakeApiCallAsync<TwitchAnnouncement, TwitchAnnouncement>("chat/announcements", announcement,
+            HttpMethod.Post, default);
     }
 
     protected virtual void OnConnected()
@@ -135,46 +131,75 @@ public class TwitchChatClient : IChatClient
         MessageReceived?.Invoke(this, e);
     }
 
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+
     protected virtual void Dispose(bool disposing)
     {
         if (disposing)
         {
-            Disconnect();
+            _ = DisconnectAsync().ContinueWith(_ =>
+            {
+                TwitchWebSocketClient.Dispose();
+            });
+        }
+    }
+
+public async ValueTask DisposeAsync()
+    {
+        await DisposeAsync(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual async Task DisposeAsync(bool disposing)
+    {
+        if (disposing)
+        {
+            await DisconnectAsync();
             TwitchWebSocketClient.Dispose();
         }
     }
 
-    private void _twitchClient_OnConnected(object? sender, TwitchLib.Client.Events.OnConnectedArgs e)
+    private Task _twitchClient_OnConnected(object? sender, OnConnectedEventArgs e)
     {
         IsConnected = true;
+        return Task.CompletedTask;
     }
 
-    private void _twitchClient_OnDisconnected(object? sender, TwitchLib.Communication.Events.OnDisconnectedEventArgs e)
+    private Task _twitchClient_OnDisconnected(object? sender, OnDisconnectedArgs e)
     {
         if (IsConnected)
         {
             OnDisconnected();
         }
         IsConnected = false;
+        return Task.CompletedTask;
     }
 
-    private void _twitchClient_OnMessageReceived(object? sender, TwitchLib.Client.Events.OnMessageReceivedArgs e)
+    private Task _twitchClient_OnMessageReceived(object? sender, TwitchLib.Client.Events.OnMessageReceivedArgs e)
     {
         OnMessageReceived(new MessageReceivedEventArgs(new TwitchChatMessage(e.ChatMessage)));
+        return Task.CompletedTask;
     }
 
-    private void _twitchClient_OnReconnected(object? sender, TwitchLib.Communication.Events.OnReconnectedEventArgs e)
+    private async Task _twitchClient_OnReconnected(object? sender, OnConnectedEventArgs e)
     {
         // Unfortunately this fires before reconnecting is genuinely finished, so we have to wait before
         // rejoining the original channel
-        Task.Run(async () =>
+        await Task.Run(async () =>
         {
             await Task.Delay(TimeSpan.FromSeconds(3));
-            _twitchClient.JoinChannel(Channel);
+            if (!string.IsNullOrEmpty(Channel))
+            {
+                await _twitchClient.JoinChannelAsync(Channel);
+            }
         });
     }
 
-    private void _twitchClient_OnJoinedChannel(object? sender, OnJoinedChannelArgs e)
+    private Task _twitchClient_OnJoinedChannel(object? sender, OnJoinedChannelArgs e)
     {
         if (_firstConnection)
         {
@@ -185,6 +210,8 @@ public class TwitchChatClient : IChatClient
         {
             OnReconnected();
         }
+
+        return Task.CompletedTask;
     }
 
     public async Task<string?> CreatePollAsync(string title, ICollection<string> options, int duration)
@@ -229,5 +256,6 @@ public class TwitchChatClient : IChatClient
             WinningChoice = pollApiResponse.WinningChoice?.Title
         };
     }
+
 
 }

@@ -9,8 +9,7 @@ namespace TrackerCouncil.Smz3.Shared.Models;
 
 public sealed class RandomizerContext : DbContext
 {
-
-    public RandomizerContext() : base()
+    public void Migrate()
     {
         Database.Migrate();
     }

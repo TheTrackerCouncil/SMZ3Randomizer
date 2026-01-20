@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
@@ -28,7 +28,7 @@ public enum ItemDungeonRequirement
     Both
 }
 
-public class TrackerWindowItemPanelViewModel : TrackerWindowPanelViewModel
+public partial class TrackerWindowItemPanelViewModel : TrackerWindowPanelViewModel
 {
     public static Dictionary<ItemDungeonRequirement, string> RequirementImages = new();
 
@@ -38,15 +38,15 @@ public class TrackerWindowItemPanelViewModel : TrackerWindowPanelViewModel
 
     public List<Item>? ConnectedItems { get; set; }
 
-    [Reactive] public int ItemCount { get; set; }
+    [Reactive] public partial int ItemCount { get; set; }
 
-    [Reactive] public int RetrievedItemCount { get; set; }
+    [Reactive] public partial int RetrievedItemCount { get; set; }
 
-    [Reactive] public int Stage { get; set; }
+    [Reactive] public partial int Stage { get; set; }
 
-    [Reactive] public bool IsMMRequirement { get; set; }
+    [Reactive] public partial bool IsMMRequirement { get; set; }
 
-    [Reactive] public bool IsTRRequirement { get; set; }
+    [Reactive] public partial bool IsTRRequirement { get; set; }
 
     public bool IsMedallion { get; set; }
 

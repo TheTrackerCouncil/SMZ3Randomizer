@@ -1,10 +1,10 @@
 ﻿using AvaloniaControls.Extensions;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace TrackerCouncil.Smz3.UI.ViewModels;
 
-public class ViewModelBase : ReactiveObject
+public partial class ViewModelBase : ReactiveObject
 {
     public ViewModelBase()
     {
@@ -19,5 +19,5 @@ public class ViewModelBase : ReactiveObject
         };
     }
 
-    [Reactive] public bool HasBeenModified { get; set; }
+    [Reactive] public partial bool HasBeenModified { get; set; }
 }

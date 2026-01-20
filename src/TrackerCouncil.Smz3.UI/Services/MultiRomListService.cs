@@ -2,7 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using AvaloniaControls.Controls;
-using AvaloniaControls.ControlServices;
+using AvaloniaControls.Services;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.UI.ViewModels;

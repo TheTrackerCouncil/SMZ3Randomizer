@@ -3,7 +3,7 @@ using System.Threading;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 using TrackerCouncil.Smz3.UI.ViewModels;
 
 namespace TrackerCouncil.Smz3.UI.Views;
@@ -63,12 +63,12 @@ public partial class ProgressWindow : Window
     }
 }
 
-public class ProgressWindowViewModel(string mainText) : ViewModelBase
+public partial class ProgressWindowViewModel(string mainText) : ViewModelBase
 {
     public string MainText => mainText;
 
-    [Reactive] public string Elapsed { get; set; } = "0:00";
+    [Reactive] public partial string Elapsed { get; set; } = "0:00";
 
-    [Reactive] public double Percentage { get; set; }
+    [Reactive] public partial double Percentage { get; set; }
 }
 

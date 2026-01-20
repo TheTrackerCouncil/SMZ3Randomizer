@@ -1,10 +1,8 @@
 using System;
-using System.Diagnostics;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using AvaloniaControls.Controls;
-using AvaloniaControls.ControlServices;
 using AvaloniaControls.Models;
+using AvaloniaControls.Services;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Multiplayer.Client;

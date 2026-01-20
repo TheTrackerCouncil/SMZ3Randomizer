@@ -1,11 +1,12 @@
 using AvaloniaControls;
 using AvaloniaControls.Models;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
+using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Multiplayer;
 
 namespace TrackerCouncil.Smz3.UI.ViewModels;
 
-public class MultiplayerPlayerStateViewModel(
+public partial class MultiplayerPlayerStateViewModel(
     MultiplayerPlayerState state,
     bool isLocalPlayer,
     bool isLocalPlayerAdmin,
@@ -15,7 +16,7 @@ public class MultiplayerPlayerStateViewModel(
 {
     [Reactive]
     [ReactiveLinkedProperties(nameof(StatusLabel), nameof(ForfeitVisiblity))]
-    public MultiplayerPlayerState State { get; private set; } = state;
+    public partial MultiplayerPlayerState State { get; private set; } = state;
 
     public string PlayerGuid { get; } = state.Guid;
     public string PlayerName { get; } = state.PlayerName;
@@ -25,9 +26,9 @@ public class MultiplayerPlayerStateViewModel(
 
     [Reactive]
     [ReactiveLinkedProperties(nameof(EditConfigVisibility), nameof(ForfeitVisiblity))]
-    public MultiplayerGameStatus GameStatus { get; set; } = gameStatus;
+    public partial MultiplayerGameStatus GameStatus { get; set; } = gameStatus;
 
-    [Reactive] public bool IsConnectedToServer { get; set; } = isConnectedToServer;
+    [Reactive] public partial bool IsConnectedToServer { get; set; } = isConnectedToServer;
 
     public string Status
     {
