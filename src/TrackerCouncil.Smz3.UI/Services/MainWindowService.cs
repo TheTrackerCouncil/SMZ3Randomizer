@@ -247,6 +247,7 @@ public class MainWindowService(
         }
         catch (Exception e)
         {
+            logger.LogError(e, "Failed to start setup file");
             return "Failed to start setup file";
         }
     }

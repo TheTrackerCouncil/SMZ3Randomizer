@@ -16,7 +16,7 @@ public static class Rom
         pos = 0;
         for (var i = 0; i < 0x40; i++)
         {
-            smRom.Read(combined, pos + 0x8000, 0x8000);
+            smRom.ReadExactly(combined, pos + 0x8000, 0x8000);
             pos += 0x10000;
         }
 
@@ -24,7 +24,7 @@ public static class Rom
         pos = 0;
         for (var i = 0; i < 0x40; i++)
         {
-            smRom.Read(combined, pos, 0x8000);
+            smRom.ReadExactly(combined, pos, 0x8000);
             pos += 0x10000;
         }
 
@@ -32,7 +32,7 @@ public static class Rom
         pos = 0x400000;
         for (var i = 0; i < 0x20; i++)
         {
-            z3Rom.Read(combined, pos + 0x8000, 0x8000);
+            z3Rom.ReadExactly(combined, pos + 0x8000, 0x8000);
             pos += 0x10000;
         }
 
@@ -42,7 +42,7 @@ public static class Rom
     public static byte[] ExpandRom(Stream rom, int size)
     {
         var expanded = new byte[size];
-        rom.Read(expanded, 0, size);
+        rom.ReadExactly(expanded, 0, size);
         return expanded;
     }
 
@@ -56,7 +56,7 @@ public static class Rom
     public static int TranslateSuperMetroidOffset(int offset)
     {
         if (offset >= 0x00300000)
-            throw new ArgumentOutOfRangeException(nameof(offset), offset, "Super Metroid offset must be below 0x00300000"); ;
+            throw new ArgumentOutOfRangeException(nameof(offset), offset, "Super Metroid offset must be below 0x00300000");
 
         var isHiBank = offset < 0x200000;
         var baseOffset = isHiBank ? offset : offset - 0x200000;
@@ -83,7 +83,7 @@ public static class Rom
             var size = (ips.ReadByte() << 8) | ips.ReadByte();
             if (size > 0)
             {
-                ips.Read(rom, translateOffset(offset), size);
+                ips.ReadExactly(rom, translateOffset(offset), size);
             }
             else
             {

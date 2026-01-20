@@ -50,7 +50,7 @@ public class MultiplayerPlayerGenerationData(
         memoryStream.Position = 0;
 
         var compressedData = new byte[memoryStream.Length];
-        memoryStream.Read(compressedData, 0, compressedData.Length);
+        memoryStream.ReadExactly(compressedData, 0, compressedData.Length);
 
         var gZipBuffer = new byte[compressedData.Length + 4];
         Buffer.BlockCopy(compressedData, 0, gZipBuffer, 4, compressedData.Length);
@@ -75,7 +75,7 @@ public class MultiplayerPlayerGenerationData(
         memoryStream.Position = 0;
         using (var gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress))
         {
-            gZipStream.Read(buffer, 0, buffer.Length);
+            gZipStream.ReadExactly(buffer, 0, buffer.Length);
         }
 
         var json = Encoding.UTF8.GetString(buffer);

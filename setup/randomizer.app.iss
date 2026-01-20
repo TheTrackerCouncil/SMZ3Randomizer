@@ -35,8 +35,8 @@ OutputBaseFilename=SMZ3CasRandomizerSetupWin_{#MyAppVersion}
 [Code]
 function InitializeSetup: Boolean;
 begin
-  Dependency_AddDotNet80Desktop;
-  Dependency_AddDotNet80Asp;
+  Dependency_AddDotNet100Desktop;
+  Dependency_AddDotNet100Asp;
   Result := True;
 end;
 
