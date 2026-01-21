@@ -313,7 +313,7 @@ public class SharedCrossplatformService(
     {
         LookupMsus();
 
-        var scope = serviceProvider.CreateScope();
+        using var scope = serviceProvider.CreateScope();
 
         var window = scope.ServiceProvider.GetRequiredService<GenerationSettingsWindow>();
 
@@ -337,8 +337,6 @@ public class SharedCrossplatformService(
         {
             return Options;
         }
-
-        scope.Dispose();
 
         return null;
     }

@@ -107,20 +107,16 @@ public partial class MainWindow : RestorableWindow
         }
     }
 
-    private void OpenOptionsWindow()
+    private async Task OpenOptionsWindow()
     {
-        var scope = _serviceProvider?.CreateScope();
+        using var scope = _serviceProvider?.CreateScope();
         if (scope == null)
         {
             return;
         }
 
         var window = scope.ServiceProvider.GetRequiredService<OptionsWindow>();
-        window.Closed += (_, _) =>
-        {
-            scope.Dispose();
-        };
-        window.ShowDialog(this);
+        await window.ShowDialog(this);
     }
 
     private async Task OpenStartingWindows()
@@ -132,7 +128,7 @@ public partial class MainWindow : RestorableWindow
                 .ShowDialog<SetupWindowCloseBehavior>(this, SetupWindowStep.Roms);
             if (result == SetupWindowCloseBehavior.OpenSettingsWindow)
             {
-                OpenOptionsWindow();
+                _ = OpenOptionsWindow();
             }
             else if (result == SetupWindowCloseBehavior.OpenGenerationWindow)
             {
@@ -151,7 +147,7 @@ public partial class MainWindow : RestorableWindow
 
     private void OptionsMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
-        OpenOptionsWindow();
+        _ = OpenOptionsWindow();
     }
 
     private void AboutButton_OnClick(object? sender, RoutedEventArgs e)
