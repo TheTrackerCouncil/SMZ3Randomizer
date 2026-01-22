@@ -1,16 +1,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using AvaloniaControls.Models;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.UI.ViewModels;
 
-public class MultiRomListViewModel : ViewModelBase
+public partial class MultiRomListViewModel : ViewModelBase
 {
     [Reactive]
     [ReactiveLinkedProperties(nameof(IsListVisible))]
-    public List<MultiplayerRomViewModel> Games { get; set; } = [];
+    public partial List<MultiplayerRomViewModel> Games { get; set; } = [];
 
     public bool IsListVisible => Games.Count > 0;
 

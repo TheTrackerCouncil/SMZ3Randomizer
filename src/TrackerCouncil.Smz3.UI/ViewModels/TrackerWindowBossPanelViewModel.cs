@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Shared;
@@ -10,13 +10,13 @@ using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.UI.ViewModels;
 
-public class TrackerWindowBossPanelViewModel : TrackerWindowPanelViewModel
+public partial class TrackerWindowBossPanelViewModel : TrackerWindowPanelViewModel
 {
     public Boss? Boss { get; set; }
     public string BossImage { get; set; } = "";
     public IHasReward? RewardRegion { get; set; }
-    [Reactive] public string? RewardImage { get; set; }
-    [Reactive] public bool BossDefeated { get; set; }
+    [Reactive] public partial string? RewardImage { get; set; }
+    [Reactive] public partial bool BossDefeated { get; set; }
     public event EventHandler? BossRevived;
     public event EventHandler<DungeonSetRewardEventArgs>? RewardSet;
 

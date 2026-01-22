@@ -48,10 +48,19 @@ public partial class App : Application
                 _hookRunner = _hook.RunAsync();
             }
 
-            var mainWindow = Program.MainHost.Services.GetService<MainWindow>();
-            MessageWindow.GlobalParentWindow = mainWindow;
-            desktop.MainWindow = mainWindow;
-            desktop.Exit += DesktopOnExit;
+            try
+            {
+                var mainWindow = Program.MainHost.Services.GetService<MainWindow>();
+                MessageWindow.GlobalParentWindow = mainWindow;
+                desktop.MainWindow = mainWindow;
+                desktop.Exit += DesktopOnExit;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
         }
 
         base.OnFrameworkInitializationCompleted();

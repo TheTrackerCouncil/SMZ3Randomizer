@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Avalonia;
 using AvaloniaControls.Models;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 
 namespace TrackerCouncil.Smz3.UI.ViewModels;
 
-public class TrackerMapLocationViewModel : ViewModelBase
+public partial class TrackerMapLocationViewModel : ViewModelBase
 {
     private readonly int _baseX;
     private readonly int _baseY;
@@ -56,9 +56,9 @@ public class TrackerMapLocationViewModel : ViewModelBase
     }
 
     public TrackerMapLocation.MapLocationType Type { get; }
-    [Reactive] public string ImagePath { get; set; } = "";
-    [Reactive] public string? NumberImagePath { get; set; }
-    [Reactive] public string? MarkedImagePath { get; set; }
+    [Reactive] public partial string ImagePath { get; set; } = "";
+    [Reactive] public partial string? NumberImagePath { get; set; }
+    [Reactive] public partial string? MarkedImagePath { get; set; }
     public string RegionName { get; set; }
     public Region Region { get; set; }
     public IHasReward? RewardRegion { get; set; }
@@ -66,8 +66,8 @@ public class TrackerMapLocationViewModel : ViewModelBase
     public string Name { get; set; }
     public List<TrackerMapSubLocationViewModel>? Locations { get; set; }
     public bool IconVisibility => HasImage && (IsInLogic || ShowOutOfLogic);
-    [Reactive] public bool MarkedVisibility { get; set; } = true;
-    [Reactive] public bool NumberVisibility { get; set; } = true;
+    [Reactive] public partial bool MarkedVisibility { get; set; } = true;
+    [Reactive] public partial bool NumberVisibility { get; set; } = true;
     public int Size { get; set; } = 36;
     public double X => _baseX * Ratio - Size / 2.0 + Offset.Width;
     public double Y => _baseY * Ratio - Size / 2.0 + Offset.Height + _yOffset;
@@ -75,21 +75,21 @@ public class TrackerMapLocationViewModel : ViewModelBase
 
     [Reactive]
     [ReactiveLinkedProperties(nameof(X), nameof(Y))]
-    public double Ratio { get; set; }
+    public partial double Ratio { get; set; }
 
     [Reactive]
     [ReactiveLinkedProperties(nameof(X), nameof(Y))]
-    public Size Offset { get; set; }
+    public partial Size Offset { get; set; }
 
     [Reactive]
     [ReactiveLinkedProperties(nameof(IconVisibility))]
-    public bool HasImage { get; set; }
+    public partial bool HasImage { get; set; }
 
     [Reactive]
     [ReactiveLinkedProperties(nameof(IconVisibility))]
-    public bool IsInLogic { get; set; } = true;
+    public partial bool IsInLogic { get; set; } = true;
 
     [Reactive]
     [ReactiveLinkedProperties(nameof(IconVisibility))]
-    public bool ShowOutOfLogic { get; set; }
+    public partial bool ShowOutOfLogic { get; set; }
 }

@@ -49,7 +49,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IChatAuthenticationService, TwitchAuthenticationService>();
 
         // MSU Randomizer
-        services.AddMsuRandomizerAppServices();
+        services.AddMsuRandomizerUiServices();
 
         // Misc
         services.AddGitHubReleaseCheckerServices();
@@ -59,6 +59,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IGitHubFileSynchronizerService, GitHubFileSynchronizerService>();
         services.AddSingleton<OptionsFactory>();
 
+        services.AddControlServices<MSURandomizer.App>();
         services.AddAvaloniaControlServices<Program>();
         services.AddWindows<Program>();
         services.AddTransient<OptionsWindowService>();

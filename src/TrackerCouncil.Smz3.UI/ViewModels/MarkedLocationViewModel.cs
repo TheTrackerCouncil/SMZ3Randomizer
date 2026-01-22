@@ -1,18 +1,18 @@
 using System;
 using AvaloniaControls.Models;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.UI.ViewModels;
 
-public class MarkedLocationViewModel(Location location, Item? itemData, string? itemSprite) : ViewModelBase
+public partial class MarkedLocationViewModel(Location location, Item? itemData, string? itemSprite) : ViewModelBase
 {
     public Location Location => location;
     public string? ItemSprite { get; init; } = itemSprite;
 
     [Reactive, ReactiveLinkedProperties(nameof(Opacity))]
-    public bool IsAvailable { get; set; } = location.Accessibility is Accessibility.Available or Accessibility.AvailableWithKeys;
+    public partial bool IsAvailable { get; set; } = location.Accessibility is Accessibility.Available or Accessibility.AvailableWithKeys;
 
     public bool ShowOutOfLogic { get; set; }
     public double Opacity => ShowOutOfLogic || IsAvailable ? 1.0 : 0.33;

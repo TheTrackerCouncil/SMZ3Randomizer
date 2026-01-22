@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.UI.ViewModels;
 
-public class HintTileViewModel : ViewModelBase
+public partial class HintTileViewModel : ViewModelBase
 {
     private List<Location> _locations;
 
@@ -44,6 +44,6 @@ public class HintTileViewModel : ViewModelBase
     public PlayerHintTile PlayerHintTile { get; }
     public string Name => PlayerHintTile.LocationKey;
     public string Quality => PlayerHintTile.Usefulness.ToString() ?? "";
-    [Reactive] public bool IsVisible { get; set; }
-    [Reactive] public double Opacity { get; set; }
+    [Reactive] public partial bool IsVisible { get; set; }
+    [Reactive] public partial double Opacity { get; set; }
 }

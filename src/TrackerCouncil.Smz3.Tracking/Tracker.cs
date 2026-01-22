@@ -341,13 +341,13 @@ public sealed class Tracker : TrackerBase, IDisposable
     /// <param name="id">
     /// The is for <paramref name="userName"/>.
     /// </param>
-    public override void ConnectToChat(string? userName, string? oauthToken, string? channel, string? id)
+    public override async Task ConnectToChatAsync(string? userName, string? oauthToken, string? channel, string? id)
     {
         if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(oauthToken))
         {
             try
             {
-                _chatClient.Connect(userName, oauthToken, channel ?? userName, id ?? "");
+                await _chatClient.ConnectAsync(userName, oauthToken, channel ?? userName, id ?? "");
             }
             catch (AggregateException e)
             {
@@ -428,7 +428,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     {
         DisableVoiceRecognition();
         _communicator.Abort();
-        _chatClient.Disconnect();
+        _ = _chatClient.DisconnectAsync();
         Say(response: ModeTracker.GoMode ? Responses.StoppedTrackingPostGoMode : Responses.StoppedTracking, wait: true);
 
         foreach (var timer in _idleTimers.Values)

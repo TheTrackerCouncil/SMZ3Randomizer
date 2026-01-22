@@ -1,3 +1,4 @@
+using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using AvaloniaControls.Services;
@@ -19,7 +20,16 @@ public partial class MultiRomListPanel : UserControl
         }
         else
         {
-            _service = IControlServiceFactory.GetControlService<MultiRomListService>();
+            try
+            {
+                _service = IControlServiceFactory.GetControlService<MultiRomListService>();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
             _model = _service?.GetViewModel(this) ?? new MultiRomListViewModel();
         }
 

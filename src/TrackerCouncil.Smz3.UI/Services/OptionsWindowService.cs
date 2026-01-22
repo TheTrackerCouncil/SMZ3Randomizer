@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using AvaloniaControls.ControlServices;
+using AvaloniaControls.Services;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Chat.Integration;
 using TrackerCouncil.Smz3.Data.Options;

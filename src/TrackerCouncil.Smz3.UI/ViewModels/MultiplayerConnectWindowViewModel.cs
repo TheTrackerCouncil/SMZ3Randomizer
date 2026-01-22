@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using AvaloniaControls.Models;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Multiplayer;
 
 namespace TrackerCouncil.Smz3.UI.ViewModels;
 
-public class MultiplayerConnectWindowViewModel : ViewModelBase
+public partial class MultiplayerConnectWindowViewModel : ViewModelBase
 {
     public readonly List<string> DefaultServers = new()
     {
@@ -21,25 +21,25 @@ public class MultiplayerConnectWindowViewModel : ViewModelBase
 
     [Reactive]
     [ReactiveLinkedProperties(nameof(CanPressButton))]
-    public string Url { get; set; } = "";
+    public partial string Url { get; set; } = "";
 
     [Reactive]
     [ReactiveLinkedProperties(nameof(CanPressButton))]
-    public string DisplayName { get; set; } = "";
+    public partial string DisplayName { get; set; } = "";
 
-    [Reactive] public string PhoneticName { get; set; } = "";
+    [Reactive] public partial string PhoneticName { get; set; } = "";
 
-    [Reactive] public MultiplayerGameType MultiplayerGameType { get; set; }
+    [Reactive] public partial MultiplayerGameType MultiplayerGameType { get; set; }
 
     [Reactive]
     [ReactiveLinkedProperties(nameof(CanEnterInput), nameof(StatusText), nameof(CanPressButton))]
-    public bool IsConnecting { get; set; }
+    public partial bool IsConnecting { get; set; }
 
-    [Reactive] public bool AsyncGame { get; set; }
+    [Reactive] public partial bool AsyncGame { get; set; }
 
-    [Reactive] public bool DeathLink { get; set; }
+    [Reactive] public partial bool DeathLink { get; set; }
 
-    [Reactive] public bool SendItemsOnComplete { get; set; }
+    [Reactive] public partial bool SendItemsOnComplete { get; set; }
 
     public string StatusText => IsConnecting ? "Connecting..." : "";
     public bool CanEnterInput => !IsConnecting;

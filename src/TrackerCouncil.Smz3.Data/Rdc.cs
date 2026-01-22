@@ -192,9 +192,9 @@ public abstract class DataBlock : IBlockType
     {
         get
         {
-            return Manifest.Sum(field =>
+            return Manifest.Sum(f =>
             {
-                var (_, length, offsets) = field;
+                var (_, length, offsets) = f;
                 return length * offsets.Count();
             });
         }
@@ -206,7 +206,7 @@ public abstract class DataBlock : IBlockType
         foreach (var (_, length, offsets) in Manifest)
         {
             var count = offsets.Count();
-            stream.Read(slice = new byte[count * length]);
+            stream.ReadExactly(slice = new byte[count * length]);
             Content.Add(slice);
         }
     }

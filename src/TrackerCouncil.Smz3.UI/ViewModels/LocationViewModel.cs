@@ -1,11 +1,11 @@
 using AvaloniaControls.Models;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.UI.ViewModels;
 
-public class LocationViewModel : ViewModelBase
+public partial class LocationViewModel : ViewModelBase
 {
     public LocationViewModel(string name, string area)
     {
@@ -30,15 +30,15 @@ public class LocationViewModel : ViewModelBase
 
     [Reactive]
     [ReactiveLinkedProperties(nameof(IsVisible))]
-    public bool ShowOutOfLogic { get; set; }
+    public partial bool ShowOutOfLogic { get; set; }
 
     [Reactive]
     [ReactiveLinkedProperties(nameof(Opacity), nameof(ShowKeyIcon))]
-    public bool InLogic { get; set; }
+    public partial bool InLogic { get; set; }
 
     [Reactive]
     [ReactiveLinkedProperties(nameof(Opacity), nameof(ShowKeyIcon), nameof(IsVisible))]
-    public bool InLogicWithKeys { get; set; }
+    public partial bool InLogicWithKeys { get; set; }
 
     public bool Cleared { get; set; }
 

@@ -1,16 +1,16 @@
-﻿using ReactiveUI.Fody.Helpers;
+﻿using ReactiveUI.SourceGenerators;
 
 namespace TrackerCouncil.Smz3.UI.ViewModels;
 
-public class MainWindowViewModel : ViewModelBase
+public partial class MainWindowViewModel : ViewModelBase
 {
     public MainWindowViewModel()
     {
 
     }
 
-    [Reactive] public bool DisplayNewVersionBanner { get; set; }
-    [Reactive] public bool DisplayDownloadLink { get; set; }
+    [Reactive] public partial bool DisplayNewVersionBanner { get; set; }
+    [Reactive] public partial bool DisplayDownloadLink { get; set; }
 
     public string NewVersionGitHubUrl { get; set; } = "";
     public string? NewVersionDownloadUrl { get; set; }

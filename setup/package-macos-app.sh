@@ -1,7 +1,7 @@
 # Define variables
 APP_NAME="SMZ3CasRandomizer.app"
 ZIP_FILE="SMZ3CasRandomizerMacOS_$1.zip"
-PUBLISH_OUTPUT_DIRECTORY="src/TrackerCouncil.Smz3.UI/bin/Release/net8.0/osx-arm64/publish"
+PUBLISH_OUTPUT_DIRECTORY="src/TrackerCouncil.Smz3.UI/bin/Release/net10.0/osx-arm64/publish"
 INFO_PLIST="Info.plist"
 ICON_FILE="SMZ3.icns"
 

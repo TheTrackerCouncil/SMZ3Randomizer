@@ -203,7 +203,7 @@ public abstract class TrackerBase : IDisposable
     /// <param name="id">
     /// The is for <paramref name="userName"/>.
     /// </param>
-    public abstract void ConnectToChat(string? userName, string? oauthToken, string? channel, string? id);
+    public abstract Task ConnectToChatAsync(string? userName, string? oauthToken, string? channel, string? id);
 
     /// <summary>
     /// Sets the start time of the timer

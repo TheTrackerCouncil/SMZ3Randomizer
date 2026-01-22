@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 // ReSharper disable once RedundantUsingDirective
@@ -7,17 +8,22 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
-using Avalonia.ReactiveUI;
 using Avalonia.Threading;
 using AvaloniaControls.Controls;
 using AvaloniaControls.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MSURandomizer.Services;
 using MSURandomizerLibrary.Models;
 using MSURandomizerLibrary.Services;
+using ReactiveUI;
+using ReactiveUI.Avalonia;
+using ReactiveUI.SourceGenerators;
 using Serilog;
 using TrackerCouncil.Smz3.Shared;
+using TrackerCouncil.Smz3.Shared.Models;
+using TrackerCouncil.Smz3.UI.Services;
 
 namespace TrackerCouncil.Smz3.UI;
 
@@ -50,6 +56,10 @@ sealed class Program
 #endif
             .CreateLogger();
 
+#if DEBUG
+        CheckReactiveProperties();
+#endif
+
         Log.Information("Starting SMZ3 Cas' Randomizer {Version}", App.Version);
         Log.Information("Config Path: {Directory}", Directories.ConfigPath);
         Log.Information("Sprite Path: {Directory}", Directories.SpritePath);
@@ -70,6 +80,7 @@ sealed class Program
             .Build();
 
         MainHost.Services.GetRequiredService<ITaskService>();
+        MainHost.Services.GetRequiredService<RandomizerContext>().Migrate();
         MainHost.Services.GetRequiredService<IControlServiceFactory>();
         MainHost.Services.GetRequiredService<AppInitializationService>().IsEnabled = false;
 
@@ -205,5 +216,44 @@ sealed class Program
             var newDestinationDir = Path.Combine(destination, subDirectory.Name);
             CopyDirectory(subDirectory.FullName, newDestinationDir);
         }
+    }
+
+    private static void CheckReactiveProperties()
+    {
+        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+        foreach (var asm in assemblies)
+        {
+            foreach (var type in asm.GetTypes())
+            {
+                if (!InheritsFromType<ReactiveObject>(type))
+                {
+                    continue;
+                }
+
+                var props = type.GetProperties(
+                        BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                    .Select(x => (Property: x, Attributes: x.GetCustomAttributes(true)))
+                    .Where(x => x.Attributes.Any(a => a is ReactiveAttribute) && !x.Attributes.Any(a => a is GeneratedCodeAttribute))
+                    .ToList();
+
+                foreach (var prop in props)
+                {
+                    Log.Logger.Warning("Class {Class} property {Property} has ReactiveAttribute but is missing partial", type.FullName, prop.Property.Name);
+                }
+            }
+        }
+    }
+
+    static bool InheritsFromType<T>(Type type)
+    {
+        var checkType = type;
+        while (checkType != null && checkType != typeof(object))
+        {
+            if (checkType == typeof(T))
+                return true;
+            checkType = checkType.BaseType;
+        }
+        return false;
     }
 }

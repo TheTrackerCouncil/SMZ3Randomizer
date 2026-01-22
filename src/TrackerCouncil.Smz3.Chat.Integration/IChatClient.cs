@@ -5,7 +5,7 @@ using TrackerCouncil.Smz3.Chat.Integration.Models;
 
 namespace TrackerCouncil.Smz3.Chat.Integration;
 
-public interface IChatClient : IDisposable
+public interface IChatClient : IAsyncDisposable, IDisposable
 {
     event EventHandler? Connected;
 
@@ -21,9 +21,9 @@ public interface IChatClient : IDisposable
     string? ConnectedAs { get; }
     string? Channel { get; }
 
-    void Connect(string userName, string oauthToken, string channel, string id);
+    Task ConnectAsync(string userName, string oauthToken, string channel, string id);
 
-    void Disconnect();
+    Task DisconnectAsync();
 
     Task SendMessageAsync(string message, bool announce = false);
 

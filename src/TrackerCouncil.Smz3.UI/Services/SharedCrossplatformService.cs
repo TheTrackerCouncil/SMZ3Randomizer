@@ -313,7 +313,9 @@ public class SharedCrossplatformService(
     {
         LookupMsus();
 
-        var window = serviceProvider.GetRequiredService<GenerationSettingsWindow>();
+        using var scope = serviceProvider.CreateScope();
+
+        var window = scope.ServiceProvider.GetRequiredService<GenerationSettingsWindow>();
 
         if (plandoConfig != null && !window.LoadPlando(plandoConfig, out var error))
         {

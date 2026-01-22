@@ -1,11 +1,11 @@
 using System;
 using System.Globalization;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.UI.ViewModels;
 
-public class GeneratedRomViewModel(GeneratedRom rom) : ViewModelBase
+public partial class GeneratedRomViewModel(GeneratedRom rom) : ViewModelBase
 {
     public GeneratedRom Rom { get; } = rom;
 
@@ -24,7 +24,7 @@ public class GeneratedRomViewModel(GeneratedRom rom) : ViewModelBase
 
     public bool IsProgressionLogVisible => Rom.TrackerState?.History.Count > 0;
 
-    [Reactive] public bool IsEditTextBoxVisible { get; set; }
+    [Reactive] public partial bool IsEditTextBoxVisible { get; set; }
 
     public string TimeLabel
     {

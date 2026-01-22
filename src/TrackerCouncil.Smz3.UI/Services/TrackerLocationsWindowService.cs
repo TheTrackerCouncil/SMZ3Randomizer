@@ -1,9 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Avalonia.Threading;
-using AvaloniaControls.ControlServices;
 using AvaloniaControls.Services;
-using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Shared.Enums;

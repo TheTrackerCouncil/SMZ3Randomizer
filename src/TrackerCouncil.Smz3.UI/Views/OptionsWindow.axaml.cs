@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using AvaloniaControls.Controls;
 using AvaloniaControls.Models;
 using TrackerCouncil.Smz3.Data.Services;
@@ -47,14 +48,17 @@ public partial class OptionsWindow : ScalableWindow
 
         service.TwitchError += (sender, handler) =>
         {
-            var messageWindow = new MessageWindow(new MessageWindowRequest()
+            Dispatcher.UIThread.Invoke(() =>
             {
-                Message = handler.Error,
-                Buttons = MessageWindowButtons.OK,
-                Icon = MessageWindowIcon.Error,
-                Title = "SMZ3 Cas’ Randomizer"
+                var messageWindow = new MessageWindow(new MessageWindowRequest()
+                {
+                    Message = handler.Error,
+                    Buttons = MessageWindowButtons.OK,
+                    Icon = MessageWindowIcon.Error,
+                    Title = "SMZ3 Cas’ Randomizer"
+                });
+                messageWindow.ShowDialog(this);
             });
-            messageWindow.ShowDialog(this);
         };
     }
 

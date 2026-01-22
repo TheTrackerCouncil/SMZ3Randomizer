@@ -3,11 +3,11 @@ using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using AvaloniaControls.Models;
 using Material.Icons;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace TrackerCouncil.Smz3.UI.ViewModels;
 
-public class SetupWindowViewModel : ViewModelBase
+public partial class SetupWindowViewModel : ViewModelBase
 {
 
     [Reactive,
@@ -16,7 +16,7 @@ public class SetupWindowViewModel : ViewModelBase
          nameof(Step4ButtonOpacity), nameof(DisplayPage1), nameof(DisplayPage2), nameof(DisplayPage3),
          nameof(DisplayPage4), nameof(PreviousButtonEnabled), nameof(SkipStepVisible), nameof(NextButtonText),
          nameof(NextButtonEnabled))]
-    public int StepNumber { get; set; } = 2;
+    public partial int StepNumber { get; set; } = 2;
 
     public float Step1ButtonOpacity => StepNumber == 1 ? 1f : 0.2f;
     public float Step2ButtonOpacity => StepNumber == 2 ? 1f : 0.2f;
@@ -37,34 +37,34 @@ public class SetupWindowViewModel : ViewModelBase
     public bool DisplayPage1 => StepNumber == 1;
 
     [Reactive, ReactiveLinkedProperties(nameof(ZeldaRomIconOpacity), nameof(ZeldaRomBrush), nameof(ZeldaRomIconKind), nameof(NextButtonEnabled))]
-    public bool IsValidZeldaRom { get; set; }
+    public partial bool IsValidZeldaRom { get; set; }
     public float ZeldaRomIconOpacity => IsValidZeldaRom ? 1f : 0.2f;
     public IBrush ZeldaRomBrush => IsValidZeldaRom ? Brushes.LimeGreen : Brushes.White;
     public MaterialIconKind ZeldaRomIconKind => IsValidZeldaRom ? MaterialIconKind.CheckCircleOutline : MaterialIconKind.CircleOutline;
-    [Reactive] public string ZeldaRomPath { get; set; } = "Not Selected";
+    [Reactive] public partial string ZeldaRomPath { get; set; } = "Not Selected";
 
     [Reactive, ReactiveLinkedProperties(nameof(MetroidRomIconOpacity), nameof(MetroidRomBrush), nameof(MetroidRomIconKind), nameof(NextButtonEnabled))]
-    public bool IsValidMetroidRom { get; set; }
+    public partial bool IsValidMetroidRom { get; set; }
     public float MetroidRomIconOpacity => IsValidMetroidRom ? 1f : 0.2f;
     public IBrush MetroidRomBrush => IsValidMetroidRom ? Brushes.LimeGreen : Brushes.White;
     public MaterialIconKind MetroidRomIconKind => IsValidMetroidRom ? MaterialIconKind.CheckCircleOutline : MaterialIconKind.CircleOutline;
-    [Reactive] public string MetroidRomPath { get; set; } = "Not Selected";
+    [Reactive] public partial string MetroidRomPath { get; set; } = "Not Selected";
 
     // Page 2 Properties
     public bool DisplayPage2 => StepNumber == 2;
-    [Reactive, ReactiveLinkedProperties(nameof(TestAutoTrackerEnabled))] public bool AutoTrackingDisable { get; set; } = true;
+    [Reactive, ReactiveLinkedProperties(nameof(TestAutoTrackerEnabled))] public partial bool AutoTrackingDisable { get; set; } = true;
     public bool AutoTrackingLua { get; set; }
     public bool AutoTrackingEmoTracker { get; set; }
-    [Reactive, ReactiveLinkedProperties(nameof(ConnectorIpAddressTextBoxEnabled))] public bool AutoTrackingUsb2Snes { get; set; }
-    [Reactive, ReactiveLinkedProperties(nameof(ConnectorIpAddressTextBoxEnabled))] public bool AutoTrackingSni { get; set; }
+    [Reactive, ReactiveLinkedProperties(nameof(ConnectorIpAddressTextBoxEnabled))] public partial bool AutoTrackingUsb2Snes { get; set; }
+    [Reactive, ReactiveLinkedProperties(nameof(ConnectorIpAddressTextBoxEnabled))] public partial bool AutoTrackingSni { get; set; }
     public string ConnectorIpAddress { get; set; } = "";
     public bool ConnectorIpAddressTextBoxEnabled => AutoTrackingUsb2Snes || AutoTrackingSni;
     public bool TestAutoTrackerEnabled => !AutoTrackingDisable && !IsConnecting;
-    [Reactive] public IBrush AutoTrackerBrush { get; set; } = Brushes.White;
-    [Reactive] public MaterialIconKind AutoTrackerIconKind { get; set; } = MaterialIconKind.CircleOutline;
-    [Reactive] public float AutoTrackerOpacity { get; set; } = 0.2f;
-    [Reactive] public string AutoTrackerMessage { get; set; } = "";
-    [Reactive, ReactiveLinkedProperties(nameof(TestAutoTrackerEnabled))] public bool IsConnecting { get; set; }
+    [Reactive] public partial IBrush AutoTrackerBrush { get; set; } = Brushes.White;
+    [Reactive] public partial MaterialIconKind AutoTrackerIconKind { get; set; } = MaterialIconKind.CircleOutline;
+    [Reactive] public partial float AutoTrackerOpacity { get; set; } = 0.2f;
+    [Reactive] public partial string AutoTrackerMessage { get; set; } = "";
+    [Reactive, ReactiveLinkedProperties(nameof(TestAutoTrackerEnabled))] public partial bool IsConnecting { get; set; }
 
     // Page 3 Properties
     public bool DisplayPage3 => StepNumber == 3;

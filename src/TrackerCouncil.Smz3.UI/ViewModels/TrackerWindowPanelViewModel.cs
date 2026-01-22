@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Avalonia.Controls;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 using TrackerCouncil.Smz3.Shared;
 
 namespace TrackerCouncil.Smz3.UI.ViewModels;
 
-public class TrackerWindowPanelViewModel : ViewModelBase
+public partial class TrackerWindowPanelViewModel : ViewModelBase
 {
     public static Dictionary<int, string> NumberImagePaths = new();
 
-    [Reactive] public bool IsLabelActive { get; set; }
+    [Reactive] public partial bool IsLabelActive { get; set; }
     public string? LabelImage { get; set; }
     public int Column { get; set; }
     public int Row { get; set; }
     public bool AddShadows { get; set; }
-    [Reactive] public bool CheatsEnabled { get; set; }
+    [Reactive] public partial bool CheatsEnabled { get; set; }
 
-    [Reactive] public List<TrackerWindowPanelImage?> Images { get; set; } = [];
-    [Reactive] public List<TrackerWindowPanelImage?> OverlayImages { get; set; } = [];
+    [Reactive] public partial List<TrackerWindowPanelImage?> Images { get; set; } = [];
+    [Reactive] public partial List<TrackerWindowPanelImage?> OverlayImages { get; set; } = [];
 
     public virtual List<TrackerWindowPanelImage> GetMainImages()
     {
@@ -96,9 +96,9 @@ public class TrackerWindowPanelViewModel : ViewModelBase
     }
 }
 
-public class TrackerWindowPanelImage : ViewModelBase
+public partial class TrackerWindowPanelImage : ViewModelBase
 {
-    [Reactive] public string ImagePath { get; set; } = "";
+    [Reactive] public partial string ImagePath { get; set; } = "";
     public bool IsActive { get; set; }
     public int Width { get; set; } = 32;
     public int Height { get; set; } = 32;

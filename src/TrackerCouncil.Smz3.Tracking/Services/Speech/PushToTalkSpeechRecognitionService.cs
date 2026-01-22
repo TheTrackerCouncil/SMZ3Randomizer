@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using NAudio.Wave;
 using PySpeechService.Recognition;
 using SharpHook;
+using SharpHook.Data;
 using SharpHook.Native;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;

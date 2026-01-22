@@ -7,14 +7,12 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using AvaloniaControls;
 using AvaloniaControls.Controls;
-using AvaloniaControls.ControlServices;
 using AvaloniaControls.Models;
 using AvaloniaControls.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SnesConnectorLibrary;
 using TrackerCouncil.Smz3.Abstractions;
-using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData;
@@ -214,7 +212,7 @@ public class TrackerWindowService(
             return;
         }
 
-        tracker.ConnectToChat(Options.GeneralOptions.TwitchUserName, Options.GeneralOptions.TwitchOAuthToken,
+        _ = tracker.ConnectToChatAsync(Options.GeneralOptions.TwitchUserName, Options.GeneralOptions.TwitchOAuthToken,
             Options.GeneralOptions.TwitchChannel, Options.GeneralOptions.TwitchId);
 
         _model.AutoTrackerConnected = tracker.AutoTracker.IsConnected;
