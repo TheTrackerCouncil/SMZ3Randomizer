@@ -16,7 +16,7 @@ public static class Rom
         pos = 0;
         for (var i = 0; i < 0x40; i++)
         {
-            smRom.ReadExactly(combined, pos + 0x8000, 0x8000);
+            _ = smRom.Read(combined, pos + 0x8000, 0x8000);
             pos += 0x10000;
         }
 
@@ -24,7 +24,7 @@ public static class Rom
         pos = 0;
         for (var i = 0; i < 0x40; i++)
         {
-            smRom.ReadExactly(combined, pos, 0x8000);
+            _ = smRom.Read(combined, pos, 0x8000);
             pos += 0x10000;
         }
 
@@ -32,7 +32,7 @@ public static class Rom
         pos = 0x400000;
         for (var i = 0; i < 0x20; i++)
         {
-            z3Rom.ReadExactly(combined, pos + 0x8000, 0x8000);
+            _ = z3Rom.Read(combined, pos + 0x8000, 0x8000);
             pos += 0x10000;
         }
 
@@ -42,7 +42,7 @@ public static class Rom
     public static byte[] ExpandRom(Stream rom, int size)
     {
         var expanded = new byte[size];
-        rom.ReadExactly(expanded, 0, size);
+        _ = rom.Read(expanded, 0, size);
         return expanded;
     }
 
@@ -83,7 +83,7 @@ public static class Rom
             var size = (ips.ReadByte() << 8) | ips.ReadByte();
             if (size > 0)
             {
-                ips.ReadExactly(rom, translateOffset(offset), size);
+                _ = ips.Read(rom, translateOffset(offset), size);
             }
             else
             {
