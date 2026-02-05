@@ -21,11 +21,15 @@ public class GenerationWindowGameSettingsViewModel : ViewModelBase
         {
             SetField(ref _keysanityMode, value);
             OnPropertyChanged(nameof(IsMetroidKeysanity));
+            OnPropertyChanged(nameof(IsZeldaKeysanity));
         }
     }
 
     [DynamicFormFieldCheckBox("Require Crateria Boss Keycard for Tourian", groupName: "Game Settings Top", visibleWhenTrue: nameof(IsMetroidKeysanity))]
     public bool RequireBossKeycardForTourian { get; set; }
+
+    [DynamicFormFieldCheckBox("Place GT Big Key in Ganon's Tower", groupName: "Game Settings Top", visibleWhenTrue: nameof(IsZeldaKeysanity))]
+    public bool PlaceGTBigKeyInGT { get; set; }
 
     [DynamicFormFieldSlider(0, 7, 0, 1, label: "Crystals needed for GT:", groupName: "Game Settings Top")]
     public int CrystalsNeededForGT { get; set; }
@@ -55,6 +59,8 @@ public class GenerationWindowGameSettingsViewModel : ViewModelBase
     public bool DisableCheats { get; set; }
 
     public bool IsMetroidKeysanity => KeysanityMode is KeysanityMode.Both or KeysanityMode.SuperMetroid;
+
+    public bool IsZeldaKeysanity => KeysanityMode is KeysanityMode.Both or KeysanityMode.Zelda;
 
     public bool IsMultiplayer
     {

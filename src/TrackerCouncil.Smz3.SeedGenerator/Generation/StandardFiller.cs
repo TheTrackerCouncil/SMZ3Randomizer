@@ -84,7 +84,17 @@ public class StandardFiller : IFiller
             {
                 _logger.LogDebug("Distributing dungeon items according to logic");
                 var worldLocations = world.Locations.Empty().Shuffle(Random);
-                AssumedFill(dungeon, progression.Concat(world.ItemPools.Keycards).Concat(assumedInventory).Concat(preferenceItems).ToList(), worldLocations, new[] { world }, cancellationToken);
+                AssumedFill(dungeon, progression.Concat(world.ItemPools.Keycards).Concat(assumedInventory).Concat(preferenceItems).ToList(), worldLocations,
+                    [world], cancellationToken);
+            }
+            else if (worldConfig.PlaceGTBigKeyInGT)
+            {
+                _logger.LogDebug("Placing GT Big Key in GT");
+                var worldLocations = world.Locations.Empty().Shuffle(Random);
+                var gtKey = dungeon.First(x => x.Type == ItemType.BigKeyGT);
+                dungeon.Remove(gtKey);
+                AssumedFill([gtKey], progression.Concat(world.ItemPools.Keycards).Concat(assumedInventory).Concat(preferenceItems).Concat(dungeon).ToList(), worldLocations,
+                    [world], cancellationToken);
             }
 
             if (worldConfig.MetroidKeysanity)

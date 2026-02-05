@@ -264,6 +264,7 @@ public class Config
     public bool OpenPyramid { get; set; }
     public int TourianBossCount { get; set; }  = 4;
     public bool SkipTourianBossDoor { get; set; }
+    public bool PlaceGTBigKeyInGT { get; set; }
     public IDictionary<string, int> ItemOptions { get; set; } = new Dictionary<string, int>();
     public string? RandomizerVersion { get; set; }
     [System.Text.Json.Serialization.JsonIgnore, JsonIgnore]

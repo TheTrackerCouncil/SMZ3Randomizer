@@ -211,7 +211,7 @@ public class AutoTracker : AutoTrackerBase
 
     public override void IncrementGTItems(Location location)
     {
-        if (_foundGTKey || _config.Config.ZeldaKeysanity) return;
+        if (_foundGTKey || _config.Config is { ZeldaKeysanity: true, PlaceGTBigKeyInGT: false }) return;
 
         var chatIntegrationModule = _trackerModuleFactory.GetModule<ChatIntegrationModule>();
         _numGTItems++;
