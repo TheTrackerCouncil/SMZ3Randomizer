@@ -15,6 +15,7 @@ config_sm_sprite:    ; $F47004
 
 
 ; Enables keysanity specific code sections.
+; Currently only used for drawing Metroid keycards
 config_keysanity:    ; $F47006
     dw #$0000
 
