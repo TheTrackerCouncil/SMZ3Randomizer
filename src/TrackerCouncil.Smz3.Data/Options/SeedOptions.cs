@@ -30,6 +30,7 @@ public class SeedOptions
     public int? UniqueHintCount { get; set; }
 
     public bool SkipTourianBossDoor { get; set; }
+    public bool PlaceGTBigKeyInGT { get; set; }
     public int GanonsTowerCrystalCount { get; set; } = 7;
     public int GanonCrystalCount { get; set; } = 7;
     public bool OpenPyramid { get; set; } = false;

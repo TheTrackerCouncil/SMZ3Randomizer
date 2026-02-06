@@ -43,6 +43,8 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
 
         _model.GameSettings.KeysanityMode = _options.SeedOptions.KeysanityMode;
         _model.GameSettings.RequireBossKeycardForTourian = !_options.SeedOptions.SkipTourianBossDoor;
+        _model.GameSettings.PlaceGTBigKeyInGT = _options.SeedOptions.PlaceGTBigKeyInGT;
+
         _model.GameSettings.CrystalsNeededForGT = _options.SeedOptions.GanonsTowerCrystalCount;
         _model.GameSettings.CrystalsNeededForGanon = _options.SeedOptions.GanonCrystalCount;
         _model.GameSettings.BossesNeededForTourian = _options.SeedOptions.TourianBossCount;
@@ -120,6 +122,7 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
 
         _model.GameSettings.KeysanityMode = config.KeysanityMode;
         _model.GameSettings.RequireBossKeycardForTourian = !config.SkipTourianBossDoor;
+        _model.GameSettings.PlaceGTBigKeyInGT = config.PlaceGTBigKeyInGT;
         _model.GameSettings.CrystalsNeededForGT = config.GanonsTowerCrystalCount;
         _model.GameSettings.CrystalsNeededForGanon = config.GanonCrystalCount;
         _model.GameSettings.BossesNeededForTourian = config.TourianBossCount;
@@ -185,8 +188,8 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         _options.SeedOptions.Seed = _model.Basic.Seed;
         _options.SeedOptions.KeysanityMode = _model.GameSettings.KeysanityMode;
         _options.SeedOptions.SkipTourianBossDoor = !_model.GameSettings.RequireBossKeycardForTourian;
+        _options.SeedOptions.PlaceGTBigKeyInGT = _model.GameSettings.PlaceGTBigKeyInGT;
         _options.SeedOptions.GanonsTowerCrystalCount = _model.GameSettings.CrystalsNeededForGT;
-        _options.SeedOptions.SkipTourianBossDoor = !_model.GameSettings.RequireBossKeycardForTourian;
         _options.SeedOptions.GanonCrystalCount = _model.GameSettings.CrystalsNeededForGanon;
         _options.SeedOptions.TourianBossCount = _model.GameSettings.BossesNeededForTourian;
         _options.SeedOptions.OpenPyramid = _model.GameSettings.OpenPyramid;

@@ -187,11 +187,13 @@ public class GanonsTower : Z3Region, IHasTreasure, IHasBoss
     {
         if (Config.MultiWorld)
         {
+            // In multiworld games, prevent other player items or progression in GT
             if (item.World != World || item.Progression)
             {
                 return false;
             }
 
+            // In multiworld keysanity games, prevent non GT keys and keycards in GT
             if (Config.ZeldaKeysanity
                 && !((item.Type == ItemType.BigKeyGT || item.Type == ItemType.KeyGT) && item.World == World)
                 && (item.IsKey || item.IsBigKey || item.IsKeycard))

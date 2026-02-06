@@ -391,6 +391,9 @@ public class Location
         // shield for yourself, then you get a free shield. As a work around, player shields must be in their own world
         if (World.Config.MultiWorld && item.Type == ItemType.ProgressiveShield && item.World != World)
             fillable = false;
+        // If the user wants the GT key in GT for the guessing game while playing Keysanity
+        else if (item is { Type: ItemType.BigKeyGT, World.Config.ZeldaKeysanity: true, World.Config.PlaceGTBigKeyInGT: true })
+            fillable = Region is GanonsTower;
 
         Item = oldItem;
         return fillable;

@@ -206,6 +206,7 @@ public class RandomizerOptions : INotifyPropertyChanged
             GameMode = GameMode.Normal,
             KeysanityMode = SeedOptions.KeysanityMode,
             SkipTourianBossDoor = SeedOptions.SkipTourianBossDoor,
+            PlaceGTBigKeyInGT = SeedOptions.PlaceGTBigKeyInGT,
             Race = SeedOptions.Race,
             ItemPlacementRule = SeedOptions.ItemPlacementRule,
             DisableSpoilerLog = SeedOptions.DisableSpoilerLog,
