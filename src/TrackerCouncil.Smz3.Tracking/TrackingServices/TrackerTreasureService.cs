@@ -168,6 +168,8 @@ internal class TrackerTreasureService(ILogger<TrackerTreasureService> logger, IP
             return;
         }
 
+        var inaccessibleLocations = locations.Where(x => x.Accessibility is not (Accessibility.Available or Accessibility.AvailableWithKeys)).ToList();
+
         foreach (var location in locations)
         {
             Tracker.LocationTracker.Clear(location, confidence, false, false, false);
@@ -176,7 +178,6 @@ internal class TrackerTreasureService(ILogger<TrackerTreasureService> logger, IP
 
         Tracker.Say(x => x.DungeonCleared, args: [treasureRegion.Metadata.Name]);
 
-        var inaccessibleLocations = locations.Where(x => x.Accessibility is not (Accessibility.Available or Accessibility.AvailableWithKeys)).ToList();
         if (inaccessibleLocations.Count > 0 && confidence >= Options.MinimumSassConfidence)
         {
             var anyMissedLocation = inaccessibleLocations.Random(Random) ?? inaccessibleLocations.First();
