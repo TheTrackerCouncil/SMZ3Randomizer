@@ -131,8 +131,8 @@ public class MetadataPatch : RomPatch
         /* Common Combo Configuration flags at [asm]/config.asm */
         // Enable multiworld (for cheats)
         yield return new GeneratedPatch(s_addrMultiworldFlag, UshortBytes(0x0001));
-        // Enable keysanity if applicable
-        if (_data.World.Config.Keysanity)
+        // Enable keysanity if applicable (currently only used for metroid keycards)
+        if (_data.World.Config.MetroidKeysanity)
             yield return new GeneratedPatch(s_addrKeysanityFlag, UshortBytes(0x0001));
     }
 }
