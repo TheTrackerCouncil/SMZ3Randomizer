@@ -18,7 +18,7 @@ public partial class LocationViewModel : ViewModelBase
         Name = location.Metadata.Name?[0] ?? location.Name;
         Area = location.Region.Metadata.Name?[0] ?? location.Region.Name;
         InLogic = location.Accessibility == Accessibility.Available;
-        InLogicWithKeys = location.Accessibility == Accessibility.AvailableWithKeys;
+        InLogicWithKeys = !location.Region.Config.ZeldaKeysanity && location.Accessibility == Accessibility.AvailableWithKeys;
         Location = location;
     }
 
