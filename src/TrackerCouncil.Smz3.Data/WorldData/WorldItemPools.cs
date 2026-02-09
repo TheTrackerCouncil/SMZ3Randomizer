@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.Data.WorldData;
+
+public class SwapItemPoolRequest
+{
+    public ItemType FromItemType { get; set; }
+    public ItemType ToItemType { get; set; }
+    public bool IsProgression { get; set; }
+    public bool IsNiceToHave { get; set; }
+}
 
 /// <summary>
 /// Class for creating and housing the various different item pools which will be used to populate a world
@@ -53,12 +60,48 @@ public class WorldItemPools
         Keycards = keycards;
     }
 
-    public IReadOnlyCollection<Item> Progression { get; set; }
-    public IReadOnlyCollection<Item> Nice { get; }
-    public IReadOnlyCollection<Item> Junk { get; }
+    public IReadOnlyCollection<Item> Progression { get; private set; }
+    public IReadOnlyCollection<Item> Nice { get; private set; }
+    public IReadOnlyCollection<Item> Junk { get; private set; }
     public IReadOnlyCollection<Item> Dungeon { get; set; }
     public IReadOnlyCollection<Item> Keycards { get; set; }
     public IEnumerable<Item> AllItems => Progression.Concat(Nice).Concat(Junk).Concat(Dungeon).Concat(Keycards);
+
+    public void SwapItems(List<SwapItemPoolRequest> swaps)
+    {
+        var world = AllItems.First().World;
+
+        var progression = Progression.ToList();
+        var nice = Nice.ToList();
+        var junk = Junk.ToList();
+
+        foreach (var swapData in swaps)
+        {
+            if (!progression.Remove(progression.FirstOrDefault(x => x.Type == swapData.FromItemType)) && !nice.Remove(nice.FirstOrDefault(x => x.Type == swapData.FromItemType)) && !junk.Remove(junk.FirstOrDefault(x => x.Type == swapData.FromItemType)))
+            {
+                throw new InvalidOperationException("Unable to find old item to swap");
+            }
+
+            var newItem = new Item(swapData.ToItemType, world);
+            if (swapData.IsProgression)
+            {
+                progression.Add(newItem);
+            }
+            else if (swapData.IsNiceToHave)
+            {
+                nice.Add(newItem);
+            }
+            else
+            {
+                junk.Add(newItem);
+            }
+        }
+
+        Progression = progression;
+        Nice = nice;
+        Junk = junk;
+
+    }
 
     /// <summary>
     /// Returns a list of items that are nice to have but are not required

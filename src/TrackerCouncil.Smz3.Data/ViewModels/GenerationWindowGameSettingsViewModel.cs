@@ -7,6 +7,7 @@ namespace TrackerCouncil.Smz3.Data.ViewModels;
 [DynamicFormGroupGroupBox(DynamicFormLayout.Vertical, "Game Settings")]
 [DynamicFormGroupBasic(DynamicFormLayout.SideBySide, "Game Settings Top", parentGroup: "Game Settings")]
 [DynamicFormGroupBasic(DynamicFormLayout.TwoColumns, "Game Settings Bottom", parentGroup: "Game Settings")]
+[DynamicFormGroupGroupBox(DynamicFormLayout.SideBySide, "Alternative Game Mode")]
 [DynamicFormGroupGroupBox(DynamicFormLayout.TwoColumns, "Race Settings", visibleWhenTrue: nameof(IsSingleplayer))]
 public class GenerationWindowGameSettingsViewModel : ViewModelBase
 {
@@ -27,17 +28,20 @@ public class GenerationWindowGameSettingsViewModel : ViewModelBase
     [DynamicFormFieldCheckBox("Require Crateria Boss Keycard for Tourian", groupName: "Game Settings Top", visibleWhenTrue: nameof(IsMetroidKeysanity))]
     public bool RequireBossKeycardForTourian { get; set; }
 
+    [DynamicFormFieldSlider(0, 4, 0, 1, label: "Bosses needed for Tourian:", groupName: "Game Settings Top")]
+    public int BossesNeededForTourian { get; set; }
+
     [DynamicFormFieldSlider(0, 7, 0, 1, label: "Crystals needed for GT:", groupName: "Game Settings Top")]
     public int CrystalsNeededForGT { get; set; }
 
     [DynamicFormFieldSlider(0, 7, 0, 1, label: "Crystals needed for Ganon:", groupName: "Game Settings Top")]
     public int CrystalsNeededForGanon { get; set; }
 
-    [DynamicFormFieldSlider(0, 4, 0, 1, label: "Bosses needed for Tourian:", groupName: "Game Settings Top")]
-    public int BossesNeededForTourian { get; set; }
-
     [DynamicFormFieldCheckBox("Open Ganon's pyramid by default", groupName: "Game Settings Bottom")]
     public bool OpenPyramid { get; set; }
+
+    [DynamicFormObject(groupName: "Alternative Game Mode")]
+    public GenerationWindowGameModeOptionsViewModel GameModeOptions { get; set; } = new();
 
     [DynamicFormFieldCheckBox("Generate race seed", groupName: "Race Settings")]
     public bool Race { get; set; }

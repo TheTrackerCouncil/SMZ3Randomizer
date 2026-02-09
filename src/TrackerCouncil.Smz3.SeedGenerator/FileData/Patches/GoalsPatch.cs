@@ -10,7 +10,7 @@ public class GoalsPatch : RomPatch
     public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
     {
         // Mark Ganon invincible flag (if needed)
-        yield return new GeneratedPatch(Snes(0x30803E), new byte[] { 0x03 });
+        yield return new GeneratedPatch(Snes(0x30803E), new byte[] { 0x05 });
 
         // Open pyramid
         if (data.Config.OpenPyramid)
@@ -30,6 +30,8 @@ public class GoalsPatch : RomPatch
         var numBosses = data.Config.TourianBossCount;
         yield return new GeneratedPatch(Snes(0xF47008), [(byte)numBosses, 0x00]);
         yield return new GeneratedPatch(Snes(0xF4700B), numBosses == 0 ? [0x00, 0x04] : [0x00, 0x01]);
+
+        yield return new GeneratedPatch(Snes(0xF4700E), UshortBytes(0x0001));
     }
 
     public static int GetGanonsTowerCrystalCountFromRom(byte[] rom)

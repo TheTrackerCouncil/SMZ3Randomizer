@@ -47,6 +47,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     private readonly ITrackerTimerService _timerService;
     private readonly ISpeechRecognitionService _recognizer;
     private readonly HashSet<SchrodingersString> _saidLines = new();
+    private readonly List<TrackerService> _trackerServices = [];
 
     private bool _disposed;
     private string? _lastSpokenText;
@@ -145,6 +146,11 @@ public sealed class Tracker : TrackerBase, IDisposable
         Options = _trackerOptions.Options;
 
         Mood = metadata.Mood;
+
+        foreach (var service in _trackerServices)
+        {
+            service.PostInitialize();
+        }
     }
 
     ~Tracker()
@@ -233,6 +239,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         {
             service.Tracker = this;
             service.Initialize();
+            _trackerServices.Add(service);
             var serviceInterface = service.GetType().GetInterfaces()
                 .FirstOrDefault(x => x.Namespace == interfaceNamespace);
             if (serviceInterface != null && properties.TryGetValue(serviceInterface, out var property))
@@ -624,6 +631,7 @@ public sealed class Tracker : TrackerBase, IDisposable
     /// </summary>
     public override void Dispose()
     {
+        _trackerServices.Clear();
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }

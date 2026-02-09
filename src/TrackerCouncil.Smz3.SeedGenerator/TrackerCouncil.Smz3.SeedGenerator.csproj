@@ -56,6 +56,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TrackerCouncil.Smz3.Abstractions\TrackerCouncil.Smz3.Abstractions.csproj" />
     <ProjectReference Include="..\TrackerCouncil.Smz3.Data\TrackerCouncil.Smz3.Data.csproj" />
     <ProjectReference Include="..\TrackerCouncil.Smz3.Shared\TrackerCouncil.Smz3.Shared.csproj" />
   </ItemGroup>

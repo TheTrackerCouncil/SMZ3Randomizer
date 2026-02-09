@@ -31,7 +31,7 @@ public class RomLauncherService
         {
             launchApplication = romPath;
         }
-        else
+        else if (string.IsNullOrEmpty(launchArguments))
         {
             if (string.IsNullOrEmpty(_options.GeneralOptions.LaunchArguments))
             {
@@ -45,6 +45,10 @@ public class RomLauncherService
             {
                 launchArguments = $"{_options.GeneralOptions.LaunchArguments} \"{romPath}\"";
             }
+        }
+        else if (launchArguments.Contains("%rom%"))
+        {
+            launchArguments = launchArguments.Replace("%rom%", $"{romPath}");
         }
 
         return Process.Start(new ProcessStartInfo

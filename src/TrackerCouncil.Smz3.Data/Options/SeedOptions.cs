@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
 using YamlDotNet.Serialization;
 
@@ -34,6 +33,7 @@ public class SeedOptions
     public int GanonCrystalCount { get; set; } = 7;
     public bool OpenPyramid { get; set; } = false;
     public int TourianBossCount { get; set; } = 4;
+    public GameModeOptions GameModeOptions { get; set; } = new();
 
     public IDictionary<LocationId, int> LocationItems { get; set; } = new Dictionary<LocationId, int>();
 

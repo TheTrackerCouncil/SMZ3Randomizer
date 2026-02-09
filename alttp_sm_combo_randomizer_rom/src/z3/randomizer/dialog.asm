@@ -345,25 +345,97 @@ RTL
 ; 	JSL.l Messaging_Text
 ; RTL
 ; ;--------------------------------------------------------------------------------
-; DialogGanon1:
-; 	JSL.l CheckGanonVulnerability : BCS +
-; 		%LoadDialogAddress(GanonText1Alternate)
-; 		BRA ++
-; 	+
-; 		%LoadDialogAddress(GanonText1)
-; 	++
-; 	JSL.l Sprite_ShowMessageMinimal
-; RTL
-; ;--------------------------------------------------------------------------------
-; DialogGanon2:
-; 	JSL.l CheckGanonVulnerability : BCS +
-; 		%LoadDialogAddress(GanonText2Alternate)
-; 		BRA ++
-; 	+
-; 		%LoadDialogAddress(GanonText2)
-; 	++
-; 	JSL.l Sprite_ShowMessageMinimal
-; RTL
+DialogGanon1:
+	JSL.l CheckGanonVulnerability : BCS +
+		%LoadDialogAddress(GanonText1Alternate)
+		BRA ++
+	+
+		%LoadDialogAddress(GanonText1)
+	++
+	JSL.l Sprite_ShowMessageMinimal
+RTL
+;--------------------------------------------------------------------------------
+DialogGanon2:
+	JSL.l CheckGanonVulnerability : BCS +
+		%LoadDialogAddress(GanonText2Alternate)
+		BRA ++
+	+
+		%LoadDialogAddress(GanonText2)
+	++
+	JSL.l Sprite_ShowMessageMinimal
+RTL
+
+Main_ShowTextMessage_Alt:
+	; Are we in text mode? If so then end the routine.
+	LDA $10 : CMP.b #$0E : BEQ .already_in_text_mode
+Sprite_ShowMessageMinimal_Alt:
+	STZ $11
+
+	PHX : PHY
+	PEI ($00)
+	LDA.b $02 : PHA
+
+	LDA.b #$1C : STA.b $02
+	REP #$30
+		LDA.w $1CF0 : ASL : TAX
+		LDA.l $7F71C0, X
+		STA.b $00
+	SEP #$30
+
+	LDY.b #$00
+	      LDA [$00], Y : CMP.b #$FE : BNE +
+	INY : LDA [$00], Y : CMP.b #$6E : BNE +
+	INY : LDA [$00], Y :            : BNE +
+	INY : LDA [$00], Y : CMP.b #$FE : BNE +
+	INY : LDA [$00], Y : CMP.b #$6B : BNE +
+	INY : LDA [$00], Y : CMP.b #$04 : BNE +
+		STZ $1CE8
+		JMP .end
+	+
+
+	STZ $0223   ; Otherwise set it so we are in text mode.
+	STZ $1CD8   ; Initialize the step in the submodule
+
+	; Go to text display mode (as opposed to maps, etc)
+	LDA.b #$02 : STA $11
+
+	; Store the current module in the temporary location.
+	LDA $10 : STA $010C
+
+	; Switch the main module ($10) to text mode.
+	LDA.b #$0E : STA $10
+	.end
+	PLA : STA.b $02
+	PLA : STA.b $01
+	PLA : STA.b $00
+	PLY : PLX
+
+Main_ShowTextMessage_Alt_already_in_text_mode:
+RTL
+
+CalculateSignIndex:
+  ; for the big 1024x1024 screens we are calculating link's effective
+  ; screen area, as though the screen was 4 different 512x512 screens.
+  ; And we do this in a way that will likely give the right value even 
+  ; with major glitches.
+
+  LDA $8A : ASL A : TAY ;what we wrote over
+
+  LDA $0712 : BEQ .done ; If a small map, we can skip these calculations.
+
+  LDA $21 : AND.w #$0002 : ASL #2 : EOR $8A : AND.w #$0008 : BEQ +
+  	TYA : !ADD.w #$0010 : TAY  ;add 16 if we are in lower half of big screen.
+  + 
+
+  LDA $23 : AND.w #$0002 : LSR : EOR $8A : AND.w #$0001 : BEQ +
+  TYA : INC #2 : TAY  ;add 16 if we are in lower half of big screen.
+  +
+  ; ensure even if things go horribly wrong, we don't read the sign out of bounds and crash:
+  TYA : AND.w #$00FF : TAY 
+
+.done
+RTL
+
 ; ;--------------------------------------------------------------------------------
 ; DialogPedestal:
 ; 	PHA

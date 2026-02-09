@@ -50,6 +50,7 @@ public class PlandoConfig // TODO: Consider using this instead of SeedData?
         Medallions = world.Regions.Where(x => x is IHasPrerequisite)
             .ToDictionary(x => x.ToString(), x => ((IHasPrerequisite)x).RequiredItem);
         Logic = world.Config.LogicConfig.Clone();
+        GameModeOptions = world.Config.GameModeOptions;
         StartingInventory = world.Config.ItemOptions;
         var prizes = DropPrizes.GetPool(world.Config.CasPatches.ZeldaDrops).ToList();
         ZeldaPrizes.EnemyDrops = prizes.Take(56).ToList();
@@ -105,6 +106,9 @@ public class PlandoConfig // TODO: Consider using this instead of SeedData?
     /// If in Metroid keysanity Tourian requires the Crateria Boss Keycard item
     /// </summary>
     public bool SkipTourianBossDoor { get; set; }
+
+
+    public GameModeOptions GameModeOptions { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the logic options that apply to the plando.

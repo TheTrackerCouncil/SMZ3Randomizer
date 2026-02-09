@@ -4,6 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SnesConnectorLibrary;
+using SnesConnectorLibrary.Requests;
+using SNI;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Tracking;
 using TrackerCouncil.Smz3.Data.WorldData;
@@ -63,6 +65,20 @@ public class AutoTracker : AutoTrackerBase
 
         snesConnectorService.Connected += SnesConnectorServiceOnConnected;
         snesConnectorService.Disconnected += SnesConnectorServiceOnDisconnected;
+
+        _snesConnectorService.AddRecurringMemoryRequest(new SnesRecurringMemoryRequest()
+        {
+            MemoryRequestType = SnesMemoryRequestType.RetrieveMemory,
+            SnesMemoryDomain = SnesMemoryDomain.CartridgeSave,
+            AddressFormat = AddressFormat.Snes9x,
+            SniMemoryMapping = MemoryMapping.ExHiRom,
+            Address = 0xa176f0,
+            Length = 4,
+            OnResponse = (data, snesData) =>
+            {
+                _logger.LogInformation("Test data: {A},{B} | {C},{D}", data.Raw[0].ToString("X2"), data.Raw[1].ToString("X2"), data.Raw[2].ToString("X2"), data.Raw[3].ToString("X2"));
+            }
+        });
     }
 
     private async void SnesConnectorServiceOnConnected(object? sender, EventArgs e)
@@ -151,6 +167,19 @@ public class AutoTracker : AutoTrackerBase
         {
             _snesConnectorService.Connect(snesConnectorSettings);
         }
+    }
+
+    public override void RunTest()
+    {
+        _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
+        {
+            MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+            SnesMemoryDomain = SnesMemoryDomain.CartridgeSave,
+            AddressFormat = AddressFormat.Snes9x,
+            SniMemoryMapping = MemoryMapping.ExHiRom,
+            Address = 0xa176f0,
+            Data = [0x01]
+        });
     }
 
     /// <summary>

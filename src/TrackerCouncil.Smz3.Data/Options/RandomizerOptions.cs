@@ -231,6 +231,7 @@ public class RandomizerOptions : INotifyPropertyChanged
             TourianBossCount = SeedOptions.TourianBossCount,
             MetroidControls = PatchOptions.MetroidControls.Clone(),
             ItemOptions = SeedOptions.ItemOptions,
+            GameModeOptions = SeedOptions.GameModeOptions,
         };
     }
 

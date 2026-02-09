@@ -37,6 +37,8 @@
 ; !SRAM_MW_WPTR = $a176f0
 ; !SRAM_MW_RPTR = $a176f2
 
+!SRAM_GOAL_MET = $a176f0
+
 ; New multiworld communication stuff
 !SRAM_MW_ITEMS_RECV = $a26000
 !SRAM_MW_ITEMS_RECV_RPTR = $a26600

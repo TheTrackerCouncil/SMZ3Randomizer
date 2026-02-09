@@ -76,9 +76,11 @@ CheckGanonVulnerability:
 		LDA $7EF2DB : AND.b #$20 : CMP #$20 : BNE .fail ; require aga2 defeated (pyramid hole open)
 		BRA .success
 	+ : CMP #$05 : BNE +
-		;#$05 = Require Goal Items
-		LDA.l !GOAL_COUNTER : CMP GoalItemRequirement : !BLT .fail ; require specified number of goal items
-		BRA .success
+		;#$05 = Require Goal Flag to be Set
+		LDA.l !SRAM_GOAL_MET 
+		CMP #$01
+		BCS .success
+		BRA .fail
 	+ 
 .fail : CLC : RTL
 .success : SEC : RTL

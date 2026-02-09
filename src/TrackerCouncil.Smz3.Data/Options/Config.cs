@@ -8,7 +8,6 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using Newtonsoft.Json;
-using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Logic;
 using TrackerCouncil.Smz3.Data.ParsedRom;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
@@ -270,6 +269,8 @@ public class Config
     public bool IsLocalConfig { get; set; } = true;
     [System.Text.Json.Serialization.JsonIgnore, JsonIgnore]
     public ParsedRomDetails? ParsedRomDetails { get; set; }
+
+    public GameModeOptions GameModeOptions { get; set; } = new();
 
     public Config SeedOnly()
     {

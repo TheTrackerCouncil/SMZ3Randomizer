@@ -31,3 +31,6 @@ config_events:       ; F4700A
 
 config_autosave:
     dw #$0000       ; F4700C
+
+config_other_goal:
+    dw #$0000       ; F4700E

@@ -48,6 +48,7 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         _model.GameSettings.BossesNeededForTourian = _options.SeedOptions.TourianBossCount;
         _model.GameSettings.OpenPyramid = _options.SeedOptions.OpenPyramid;
         _model.GameSettings.Race = _options.SeedOptions.Race;
+        _model.GameSettings.GameModeOptions.FromGameModeOptions(_options.SeedOptions.GameModeOptions);
         _model.GameSettings.DisableSpoilerLog = _options.SeedOptions.DisableSpoilerLog;
         _model.GameSettings.DisableTrackerHints = _options.SeedOptions.DisableTrackerHints;
         _model.GameSettings.DisableTrackerSpoilers = _options.SeedOptions.DisableTrackerSpoilers;
@@ -124,6 +125,7 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         _model.GameSettings.CrystalsNeededForGanon = config.GanonCrystalCount;
         _model.GameSettings.BossesNeededForTourian = config.TourianBossCount;
         _model.GameSettings.OpenPyramid = config.OpenPyramid;
+        _model.GameSettings.GameModeOptions.FromGameModeOptions(config.GameModeOptions);
         _model.GameSettings.Race = config.Race;
         _model.GameSettings.DisableSpoilerLog = config.DisableSpoilerLog;
         _model.GameSettings.DisableTrackerHints = config.DisableTrackerHints;
@@ -190,6 +192,7 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         _options.SeedOptions.GanonCrystalCount = _model.GameSettings.CrystalsNeededForGanon;
         _options.SeedOptions.TourianBossCount = _model.GameSettings.BossesNeededForTourian;
         _options.SeedOptions.OpenPyramid = _model.GameSettings.OpenPyramid;
+        _options.SeedOptions.GameModeOptions = _model.GameSettings.GameModeOptions.ToGameModeOptions();
         _options.SeedOptions.Race = _model.GameSettings.Race;
         _options.SeedOptions.DisableSpoilerLog = _model.GameSettings.DisableSpoilerLog;
         _options.SeedOptions.DisableTrackerHints = _model.GameSettings.DisableTrackerHints;
@@ -255,6 +258,7 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         _model.GameSettings.CrystalsNeededForGanon = _model.PlandoConfig.GanonCrystalCount;
         _model.GameSettings.OpenPyramid = _model.PlandoConfig.OpenPyramid;
         _model.GameSettings.BossesNeededForTourian = _model.PlandoConfig.TourianBossCount;
+        _model.GameSettings.GameModeOptions.FromGameModeOptions(_model.PlandoConfig.GameModeOptions);
 
         _model.Logic.LogicConfig.Copy(_model.PlandoConfig.Logic);
     }

@@ -28,6 +28,7 @@ var serviceProvider = new ServiceCollection()
     .AddRandomizerServices()
     .AddTransient<PatchBuilderService>()
     .AddTransient<RomLauncherService>()
+    .AddSingleton<TrackerSpriteService>()
     .BuildServiceProvider();
 
 var logger = serviceProvider.GetRequiredService<ILogger<Program>>();

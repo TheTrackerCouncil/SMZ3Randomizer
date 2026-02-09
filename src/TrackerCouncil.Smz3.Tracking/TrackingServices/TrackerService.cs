@@ -29,6 +29,7 @@ internal abstract class TrackerService
     }
 
     public virtual void Initialize() {}
+    public virtual void PostInitialize() {}
     public void RestartIdleTimers() => Tracker.RestartIdleTimers();
     internal void AddUndo(Action undo) => Tracker.AddUndo(undo);
     internal void AddUndo(bool autoTracked, Action undo)

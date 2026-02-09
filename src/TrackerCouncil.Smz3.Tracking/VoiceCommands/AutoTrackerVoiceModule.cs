@@ -38,6 +38,12 @@ public class AutoTrackerVoiceModule : TrackerModule, IDisposable
             .Optional("shit", "crap");
     }
 
+    private SpeechRecognitionGrammarBuilder GetTestRule()
+    {
+        return new SpeechRecognitionGrammarBuilder()
+            .Append("Hey tracker, run a test");
+    }
+
     private void LookAtGame()
     {
         if (_autoTrackerBase.LatestViewAction == null || _autoTrackerBase.LatestViewAction.Invoke() == false)
@@ -59,6 +65,11 @@ public class AutoTrackerVoiceModule : TrackerModule, IDisposable
         AddCommand("Look at this", GetLookAtGameRule(), (result) =>
         {
             LookAtGame();
+        });
+
+        AddCommand("Test goal", GetTestRule(), (result) =>
+        {
+            TrackerBase.AutoTracker?.RunTest();
         });
     }
 }

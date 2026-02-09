@@ -32,6 +32,13 @@ public class GameLinesConfig : IMergeable<GameLinesConfig>, IConfigFile<GameLine
     public SchrodingersString? TriforceRoom { get; init; }
 
     /// <summary>
+    /// Gets the phrases for the won game screen in Zelda
+    /// </summary>
+    public SchrodingersString? GanonsTowerGoalSign { get; init; }
+
+    public SchrodingersString? GanonGoalSign { get; init; }
+
+    /// <summary>
     /// Hints for stating that a location is mandatory for completing
     /// the game
     /// </summary>

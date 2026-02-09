@@ -11,33 +11,25 @@ using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
 using TrackerCouncil.Smz3.SeedGenerator.FileData;
+using TrackerCouncil.Smz3.SeedGenerator.GameModes;
 using TrackerCouncil.Smz3.SeedGenerator.Infrastructure;
 using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.Generation;
 
-public class Smz3Randomizer : ISeededRandomizer
+public class Smz3Randomizer(
+    IFiller filler,
+    IWorldAccessor worldAccessor,
+    IGameHintService gameHintGenerator,
+    ILogger<Smz3Randomizer> logger,
+    IPatcherService patcherService,
+    PlaythroughService playthroughService,
+    GameModeWorldService gameModeWorldService)
+    : ISeededRandomizer
 {
-    private readonly IWorldAccessor _worldAccessor;
-    private readonly ILogger<Smz3Randomizer> _logger;
-    private readonly IGameHintService _hintService;
-    private readonly IPatcherService _patcherService;
-    private readonly PlaythroughService _playthroughService;
-
-    public Smz3Randomizer(IFiller filler, IWorldAccessor worldAccessor, IGameHintService gameHintGenerator,
-        ILogger<Smz3Randomizer> logger, IPatcherService patcherService, PlaythroughService playthroughService)
-    {
-        Filler = filler;
-        _worldAccessor = worldAccessor;
-        _logger = logger;
-        _patcherService = patcherService;
-        _playthroughService = playthroughService;
-        _hintService = gameHintGenerator;
-    }
-
     public static string Name => "Super Metroid & A Link to the Past Cas’ Randomizer";
 
-    protected IFiller Filler { get; }
+    protected IFiller Filler { get; } = filler;
 
     public SeedData GenerateSeed(Config config, CancellationToken cancellationToken = default)
         => GenerateSeed(new List<Config> { config }, "", cancellationToken);
@@ -53,8 +45,8 @@ public class Smz3Randomizer : ISeededRandomizer
         var rng = new Random(seedNumber);
         primaryConfig.Seed = seedNumber.ToString();
 
-        _logger.LogInformation("Attempting to generate seed {SeedNumber}", seedNumber);
-        _logger.LogInformation("Configs: {ConfigString}", Config.ToConfigString(configs));
+        logger.LogInformation("Attempting to generate seed {SeedNumber}", seedNumber);
+        logger.LogInformation("Configs: {ConfigString}", Config.ToConfigString(configs));
 
         if (primaryConfig.Race)
             rng = new Random(rng.Next());
@@ -62,16 +54,17 @@ public class Smz3Randomizer : ISeededRandomizer
         var worlds = new List<World>();
         if (primaryConfig.SingleWorld)
         {
-            worlds.Add(new World(primaryConfig, "Player", 0, Guid.NewGuid().ToString("N")));
-            _logger.LogDebug(
+            worlds.Add(gameModeWorldService.UpdateWorld(new World(primaryConfig, "Player", 0,
+                Guid.NewGuid().ToString("N")), seedNumber));
+            logger.LogDebug(
                 "Seed: {SeedNumber} | Race: {PrimaryConfigRace} | Keysanity: {PrimaryConfigKeysanityMode} | Item placement: {PrimaryConfigItemPlacementRule}",
                 seedNumber, primaryConfig.Race, primaryConfig.KeysanityMode, primaryConfig.ItemPlacementRule);
         }
         else
         {
             worlds.AddRange(configs.OrderBy(x => x.Id).Select(config =>
-                new World(config, config.PlayerName, config.Id, config.PlayerGuid, config.IsLocalConfig)));
-            _logger.LogDebug(
+                gameModeWorldService.UpdateWorld(new World(config, config.PlayerName, config.Id, config.PlayerGuid, config.IsLocalConfig), seedNumber)));
+            logger.LogDebug(
                 "Seed: {SeedNumber} | Race: {PrimaryConfigRace} | World Count: {Count}",
                 seedNumber, primaryConfig.Race, configs.Count);
         }
@@ -79,7 +72,7 @@ public class Smz3Randomizer : ISeededRandomizer
         Filler.SetRandom(rng);
         Filler.Fill(worlds, primaryConfig, cancellationToken);
 
-        var playthrough = _playthroughService.Generate(worlds, primaryConfig);
+        var playthrough = playthroughService.Generate(worlds, primaryConfig);
         var seedData = new SeedData
         (
             guid: Guid.NewGuid().ToString("N"),
@@ -102,8 +95,8 @@ public class Smz3Randomizer : ISeededRandomizer
         var patchSeed = rng.Next();
         foreach (var world in worlds)
         {
-            _hintService.GetInGameHints(world, worlds, playthrough, rng.Next());
-            var patches = _patcherService.GetPatches(new GetPatchesRequest()
+            gameHintGenerator.GetInGameHints(world, worlds, playthrough, rng.Next());
+            var patches = patcherService.GetPatches(new GetPatchesRequest()
             {
                 World = world,
                 Worlds = worlds,
@@ -112,7 +105,7 @@ public class Smz3Randomizer : ISeededRandomizer
                 Random = new Random(patchSeed).Sanitize()
             });
             var worldGenerationData = new WorldGenerationData(world, patches);
-            _logger.LogInformation("Patch created for world {WorldId}", world.Id);
+            logger.LogInformation("Patch created for world {WorldId}", world.Id);
             seedData.WorldGenerationData.Add(worldGenerationData);
         }
 
@@ -126,9 +119,9 @@ public class Smz3Randomizer : ISeededRandomizer
         }
 
         Debug.WriteLine("Generated seed on randomizer instance " + GetHashCode());
-        _logger.LogInformation("Generated seed successfully");
-        _worldAccessor.World = worlds.First(x => x.IsLocalWorld);
-        _worldAccessor.Worlds = worlds;
+        logger.LogInformation("Generated seed successfully");
+        worldAccessor.World = worlds.First(x => x.IsLocalWorld);
+        worldAccessor.Worlds = worlds;
         return seedData;
     }
 
@@ -153,7 +146,7 @@ public class Smz3Randomizer : ISeededRandomizer
                     var itemPool = (ItemPool)value;
                     if ((itemPool == ItemPool.Progression && !location.Item.Progression) || (itemPool == ItemPool.Junk && !location.Item.Type.IsInCategory(ItemCategory.Junk)))
                     {
-                        _logger.LogInformation(
+                        logger.LogInformation(
                             "Location {LocationName} did not have the correct ItemType of {ItemPool}. Actual item: {ItemName}",
                             location.Name, itemPool, location.Item.Name);
                         return false;
@@ -164,7 +157,7 @@ public class Smz3Randomizer : ISeededRandomizer
                     var itemType = (ItemType)value;
                     if (location.Item.Type != itemType)
                     {
-                        _logger.LogInformation(
+                        logger.LogInformation(
                             "Location {LocationName} did not have the correct Item of {ItemType}. Actual item: {ItemName}",
                             location.Name, itemType, location.Item.Name);
                         return false;
@@ -178,7 +171,7 @@ public class Smz3Randomizer : ISeededRandomizer
                 var sphereIndex = seedData.Playthrough.Spheres.IndexOf(x => x.Items.Any(y => y.Progression && y.Type == itemType));
                 if (sphereIndex > 2)
                 {
-                    _logger.LogInformation("Item {ItemType} did not show up early as expected. Sphere: {SphereIndex}", itemType, sphereIndex);
+                    logger.LogInformation("Item {ItemType} did not show up early as expected. Sphere: {SphereIndex}", itemType, sphereIndex);
                     return false;
                 }
             }

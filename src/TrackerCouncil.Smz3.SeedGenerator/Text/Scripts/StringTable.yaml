@@ -427,4 +427,6 @@
 # $190
 - sign_east_death_mountain_bridge: "How did you get up here?"
 - fish_money: "It's a secret to everyone."
+- sign_ganons_tower: "You need all 7 crystals to enter."
+- sign_ganon: "You need all 7 crystals to beat Ganon."
 - end_pad_data: ""

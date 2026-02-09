@@ -39,6 +39,8 @@ public abstract class AutoTrackerBase : IDisposable
 
     public abstract void SetConnector(SnesConnectorSettings snesConnectorSettings, SnesConnectorType? connectorTypeOverride = null);
 
+    public abstract void RunTest();
+
     /// <summary>
     /// Occurs when the tracker's auto tracker is enabled
     /// </summary>

@@ -31,7 +31,7 @@ public class MetroidStateChecks(TrackerBase tracker, ISnesConnectorService snesC
     {
         var prevState = AutoTracker.MetroidState;
         var MetroidState = AutoTracker.MetroidState = new AutoTrackerMetroidState(data);
-        Logger.LogDebug("{StateDetails}", MetroidState.ToString());
+        // Logger.LogDebug("{StateDetails}", MetroidState.ToString());
         if (prevState == null) return;
 
         // If the game hasn't booted up, wait until we find valid data in the Metroid state before we start

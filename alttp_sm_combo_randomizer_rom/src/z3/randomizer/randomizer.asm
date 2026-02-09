@@ -111,6 +111,7 @@ incsrc textskip_functions.asm
 incsrc itemtext.asm
 incsrc textrenderer.asm
 incsrc quickswap.asm
+incsrc overworld.asm
 incsrc msu.asm
 warnpc $b8ffff
 

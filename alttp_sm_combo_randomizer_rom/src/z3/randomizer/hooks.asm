@@ -1394,11 +1394,11 @@ NOP #3
 ; org $02A005 ; <- 12005 - Bank02.asm:5667 (JSL Main_ShowTextMessage)
 ; JSL.l DialogTriforce : NOP #4
 ; ;--------------------------------------------------------------------------------
-; org $1D92EC ; <- E92EC - sprite_ganon.asm:947 (JSL Sprite_ShowMessageMinimal)
-; JSL.l DialogGanon1
+org $1D92EC ; <- E92EC - sprite_ganon.asm:947 (JSL Sprite_ShowMessageMinimal)
+JSL.l DialogGanon1
 ; ;--------------------------------------------------------------------------------
-; org $1D9078 ; <- E9078 - sprite_ganon.asm:552 (LDA.b #$70 : STA $1CF0)
-; JSL.l DialogGanon2 : RTS
+org $1D9078 ; <- E9078 - sprite_ganon.asm:552 (LDA.b #$70 : STA $1CF0)
+JSL.l DialogGanon2 : RTS
 ; ;--------------------------------------------------------------------------------
 ; org $1DA4EC ; <- EA4EC - sprite_blind_entities.asm:845 (JSL Sprite_ShowMessageMinimal)
 ; JSL.l DialogBlind
@@ -2534,6 +2534,21 @@ dw $1BD8, $16FC, $0001, $0122, $00F0 ; Blind (maiden) "don't take me outside!"
 dw $1520, $167C, $0001, $0122, $00F0 ; Blind (maiden) "don't take me outside!"
 dw $05AC, $04FC, $0001, $0027, $00F0 ; Zelda in the water room
 
+;================================================================================
+;Inverted mode tile map update (executed right after the original tile load)
+;--------------------------------------------------------------------------------
+org $02ED51 ; <- 16D51
+JSL.l Overworld_LoadNewTiles
+NOP #$02
+;--------------------------------------------------------------------------------
+;Same as above
+org $02EC2E ;<- 016C2E
+JSL.l Overworld_LoadNewTiles
+NOP #$02
+
+;-- New Sign table offet calculation
+org $07b4fe ; <- 3b4fe - bank07.asm : 8454 (LDA $8A : ASL A : TAY)
+JSL CalculateSignIndex
 
 ;=====================================================
 ;-- Multiworld dialog override hook for item pickups

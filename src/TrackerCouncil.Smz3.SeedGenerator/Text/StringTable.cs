@@ -36,6 +36,8 @@ public class StringTable
     public const string HintTileIceStalfosKnightsRoom = "telepathic_tile_ice_stalfos_knights_room";
     public const string HintTileTowerOfHeraEntrance = "telepathic_tile_tower_of_hera_entrance";
     public const string HintTileSouthEastDarkworldCave = "telepathic_tile_south_east_darkworld_cave";
+    public const string GanonsTowerGoalSign = "sign_ganons_tower";
+    public const string GanonGoalSign = "sign_ganon";
 
     private static readonly List<string> s_unwantedText = new()
     {
