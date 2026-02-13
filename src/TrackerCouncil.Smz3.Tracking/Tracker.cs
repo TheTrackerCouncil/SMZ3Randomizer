@@ -99,6 +99,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         _stateService = stateService;
         _timerService = timerService;
         _isAltMode = metadata.IsAltTrackerPack;
+        Options = _trackerOptions.Options;
 
         // Initialize the tracker configuration
         _communicator.UseAlternateVoice(metadata.TrackerSpriteProfile?.UseAltVoice ?? false);
@@ -142,7 +143,6 @@ public sealed class Tracker : TrackerBase, IDisposable
         _recognizer.SpeechRecognized += Recognizer_SpeechRecognized;
         InitializeMicrophone();
         World = _worldAccessor.World;
-        Options = _trackerOptions.Options;
 
         Mood = metadata.Mood;
     }

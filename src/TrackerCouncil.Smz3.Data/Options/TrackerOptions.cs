@@ -160,4 +160,9 @@ public record TrackerOptions
     /// Whether the timer should be displayed and timer voice lines should be enabled
     /// </summary>
     public bool TrackerTimerEnabled { get; set; } = true;
+
+    /// <summary>
+    /// How auto tracking of items should be handled
+    /// </summary>
+    public AutoTrackingMode AutoTrackingMode { get; set; }
 }

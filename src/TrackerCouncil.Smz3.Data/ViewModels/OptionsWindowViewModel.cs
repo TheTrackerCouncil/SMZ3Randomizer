@@ -61,6 +61,7 @@ public class OptionsWindowViewModel
         TrackerOptions.TrackDisplayFormat = options.TrackDisplayFormat;
         TrackerOptions.MsuTrackOutputPath = options.MsuTrackOutputPath;
         TrackerOptions.AutoMapUpdateBehavior = options.AutoMapUpdateBehavior ?? AutoMapUpdateBehavior.Disabled;
+        TrackerOptions.AutoTrackingMode = options.AutoTrackingMode;
         TrackerOptions.AutoSaveLookAtEvents = options.AutoSaveLookAtEvents;
         TrackerOptions.TrackerHintsEnabled = options.TrackerHintsEnabled;
         TrackerOptions.TrackerSpoilersEnabled = options.TrackerSpoilersEnabled;
@@ -124,6 +125,7 @@ public class OptionsWindowViewModel
         options.TrackDisplayFormat = TrackerOptions.TrackDisplayFormat;
         options.MsuTrackOutputPath = TrackerOptions.MsuTrackOutputPath;
         options.AutoMapUpdateBehavior = TrackerOptions.AutoMapUpdateBehavior;
+        options.AutoTrackingMode = TrackerOptions.AutoTrackingMode;
         options.AutoSaveLookAtEvents = TrackerOptions.AutoSaveLookAtEvents;
         options.TrackerHintsEnabled = TrackerOptions.TrackerHintsEnabled;
         options.TrackerSpoilersEnabled = TrackerOptions.TrackerSpoilersEnabled;

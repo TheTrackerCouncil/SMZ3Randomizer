@@ -75,6 +75,7 @@ public class GeneralOptions : INotifyPropertyChanged
 
     public bool TrackerSpoilersEnabled { get; set; }
     public bool TrackerTimerEnabled { get; set; } = true;
+    public AutoTrackingMode AutoTrackingMode { get; set; }
 
     public EmulatorConnectorType AutoTrackerDefaultConnectionType { get; set; }
 
@@ -280,7 +281,8 @@ public class GeneralOptions : INotifyPropertyChanged
         PushToTalkKey = PushToTalkKey,
         PushToTalkDevice = PushToTalkDevice,
         TrackerTimerEnabled = TrackerTimerEnabled,
-        MsuMessageReceiverEnabled = MsuMessageReceiverEnabled
+        MsuMessageReceiverEnabled = MsuMessageReceiverEnabled,
+        AutoTrackingMode = AutoTrackingMode,
     };
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)

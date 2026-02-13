@@ -33,7 +33,7 @@ public class ZeldaLocations(TrackerBase tracker, ISnesConnectorService snesConne
             SniMemoryMapping = MemoryMapping.ExHiRom,
             Address = 0x7ef000,
             Length = 0x250,
-            FrequencySeconds = 1,
+            FrequencySeconds = Tracker.Options.AutoTrackingMode == AutoTrackingMode.Locations ? 1 : 2,
             OnResponse = CheckZeldaRoomsAndDungeons,
             Filter = () => IsInZelda
         });

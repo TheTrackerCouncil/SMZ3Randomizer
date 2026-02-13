@@ -8,6 +8,7 @@ using SnesConnectorLibrary.Responses;
 using SNI;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.WorldData;
+using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Tracking.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.AutoTracking.AutoTrackerModules;
@@ -28,7 +29,7 @@ public class MetroidLocations(TrackerBase tracker, ISnesConnectorService snesCon
             SniMemoryMapping = MemoryMapping.ExHiRom,
             Address = 0x7ed870,
             Length = 0x20,
-            FrequencySeconds = 1,
+            FrequencySeconds = Tracker.Options.AutoTrackingMode == AutoTrackingMode.Locations ? 1 : 2,
             OnResponse = CheckLocations,
             Filter = () => IsInMetroid
         });

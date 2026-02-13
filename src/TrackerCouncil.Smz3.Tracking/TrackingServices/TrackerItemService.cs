@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using SnesConnectorLibrary.Responses;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
@@ -358,7 +359,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
         });
     }
 
-    public void TrackItemAmount(Item item, int count, float confidence, bool force = false)
+    public void TrackItemAmount(Item item, int count, float confidence, bool force = false, bool silent = false)
     {
         if (Tracker.AutoTracker?.IsConnected == true && !force && item.Type != ItemType.Nothing)
         {
@@ -428,7 +429,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
         RestartIdleTimers();
     }
 
-    public void UntrackItem(Item item, float? confidence = null, bool force = false)
+    public void UntrackItem(Item item, float? confidence = null, bool force = false, bool silent = false)
     {
         if (Tracker.AutoTracker?.IsConnected == true && !force && item.Type != ItemType.Nothing)
         {
@@ -475,6 +476,80 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
             playerProgressionService.ResetProgression();
             UpdateAllAccessibility(false, item);
         });
+    }
+
+    public void UpdateItemFromSnesMemory(ItemType itemType, ItemSnesMemoryType memoryType, SnesData currentData, SnesData previousData, int memoryOffset, int flagPosition = 0)
+    {
+        var currentValue = GetValueFromSnesData(memoryType, currentData, memoryOffset, flagPosition);
+        var previousValue = GetValueFromSnesData(memoryType, previousData, memoryOffset, flagPosition);
+
+        if (currentValue != previousValue || (memoryType == ItemSnesMemoryType.ByteSingleItem1 && currentValue > 1))
+        {
+            return;
+        }
+        else if (memoryType == ItemSnesMemoryType.ByteSingleItem12 && currentValue > 0)
+        {
+            if (currentValue > 2)
+            {
+                return;
+            }
+
+            currentValue = 1;
+        }
+        else if (memoryType == ItemSnesMemoryType.ByteSingleItemPositive && currentValue > 1)
+        {
+            currentValue = 1;
+        }
+
+        var item = worldQueryService.FirstOrDefault(itemType);
+
+        if (item == null)
+        {
+            return;
+        }
+
+        var silent = itemType is ItemType.HeartContainer or ItemType.HeartPiece or ItemType.ThreeHundredRupees;
+
+        if (silent)
+        {
+            logger.LogInformation("{ItemType}: {Value}", itemType, currentValue);
+        }
+
+        if (currentValue == item.TrackingState + 1)
+        {
+            TrackItem(item, autoTracked: true, tryClear: false, force: true, silent: silent);
+        }
+        else if (currentValue == item.TrackingState - 1)
+        {
+            UntrackItem(item, force: true, silent: silent);
+        }
+        else if (currentValue != item.TrackingState)
+        {
+            TrackItemAmount(item, currentValue, 0, force: true, silent: silent);
+        }
+    }
+
+    private int GetValueFromSnesData(ItemSnesMemoryType memoryType, SnesData currentData, int memoryOffset, int flagPosition)
+    {
+        return memoryType switch
+        {
+            ItemSnesMemoryType.Byte => currentData.ReadUInt8(memoryOffset) ?? 0,
+            ItemSnesMemoryType.ByteSingleItem1 => currentData.ReadUInt8(memoryOffset) ?? 0,
+            ItemSnesMemoryType.ByteSingleItem12 => currentData.ReadUInt8(memoryOffset) ?? 0,
+            ItemSnesMemoryType.ByteSingleItemPositive => currentData.ReadUInt8(memoryOffset) ?? 0,
+            ItemSnesMemoryType.WordEnergy => ((currentData.ReadUInt16(memoryOffset) ?? 0) - 99) / 100,
+            ItemSnesMemoryType.WordReserves => (currentData.ReadUInt16(memoryOffset) ?? 0) / 100,
+            ItemSnesMemoryType.WordAmmo => (currentData.ReadUInt16(memoryOffset) ?? 0) / 5,
+            ItemSnesMemoryType.ByteFlag => currentData.CheckUInt8Flag(memoryOffset, flagPosition) ? 1 : 0,
+            ItemSnesMemoryType.WordFlag => currentData.CheckInt16Flag(memoryOffset, flagPosition) ? 1 : 0,
+            ItemSnesMemoryType.Bottle => (currentData.ReadUInt8(memoryOffset) > 0 ? 1 : 0) + (currentData.ReadUInt8(memoryOffset + 1) > 0 ? 1 : 0) + (currentData.ReadUInt8(memoryOffset + 2) > 0 ? 1 : 0) + (currentData.ReadUInt8(memoryOffset + 3) > 0 ? 1 : 0),
+            ItemSnesMemoryType.Flute => currentData.CheckUInt8Flag(memoryOffset, 0x1) || currentData.CheckUInt8Flag(memoryOffset, 0x2) ? 1 : 0,
+            ItemSnesMemoryType.Sum2Bytes => (currentData.ReadUInt8(memoryOffset) ?? 0) + (currentData.ReadUInt8(memoryOffset + 1) ?? 0),
+            ItemSnesMemoryType.HyruleCastleMap => currentData.CheckUInt8Flag(memoryOffset, 0x40) || currentData.CheckUInt8Flag(memoryOffset, 0x80) ? 1 : 0,
+            ItemSnesMemoryType.HeartContainers => (currentData.ReadUInt8(memoryOffset) ?? 0) / 0x08 - 3,
+            ItemSnesMemoryType.Rupees => (currentData.ReadUInt16(memoryOffset) ?? 0) / 250,
+            _ => throw new ArgumentOutOfRangeException(nameof(memoryType), memoryType, null)
+        };
     }
 
     private void CommunicatorOnSpeakCompleted(object? sender, SpeakCompletedEventArgs e)

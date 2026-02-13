@@ -74,6 +74,9 @@ public class OptionsWindowTrackerOptions
     [DynamicFormFieldTextBox(label: "SNI IP address:")]
     public string SniAddress { get; set; } = "";
 
+    [DynamicFormFieldComboBox(label: "Auto tracking mode")]
+    public AutoTrackingMode AutoTrackingMode { get; set; }
+
     [DynamicFormFieldComboBox(label: "Current song display style:")]
     public TrackDisplayFormat TrackDisplayFormat { get; set; } = TrackDisplayFormat.Vertical;
 

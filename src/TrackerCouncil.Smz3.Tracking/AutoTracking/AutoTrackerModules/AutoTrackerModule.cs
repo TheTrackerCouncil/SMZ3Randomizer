@@ -30,9 +30,15 @@ public abstract class AutoTrackerModule(TrackerBase tracker, ISnesConnectorServi
     {
         var item = location.Item;
         location.Autotracked = true;
-        if (Tracker.ItemTracker.TrackItem(item: item, trackedAs: null, confidence: null, tryClear: true,
+        if (Tracker.Options.AutoTrackingMode == AutoTrackingMode.Locations && Tracker.ItemTracker.TrackItem(item: item, trackedAs: null, confidence: null, tryClear: true,
                 autoTracked: true, location: location))
         {
+            Logger.LogInformation("Auto tracked {ItemName} from {RegionName} - {LocationName}", location.Item.Name,location.Region.Name, location.Name);
+        }
+        else if (Tracker.Options.AutoTrackingMode == AutoTrackingMode.Inventory)
+        {
+            Tracker.LocationTracker.Clear(location, autoTracked: true, stateResponse: true, updateTreasureCount: true,
+                stateTreasureResponse: false);
             Logger.LogInformation("Auto tracked {ItemName} from {RegionName} - {LocationName}", location.Item.Name,location.Region.Name, location.Name);
         }
         else
