@@ -1,6 +1,8 @@
+using SnesConnectorLibrary.Responses;
 using TrackerCouncil.Smz3.Data.Tracking;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
+using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.Abstractions;
 
@@ -66,7 +68,8 @@ public interface ITrackerItemService
     /// </param>
     /// <param name="confidence">The speech recognition confidence.</param>
     /// <param name="force">If the item should be forced to be tracked while auto tracking</param>
-    void TrackItemAmount(Item item, int count, float confidence, bool force = false);
+    /// <param name="silent">If the item should be announced</param>
+    void TrackItemAmount(Item item, int count, float confidence, bool autoTracked = false, bool force = false, bool silent = false);
 
     /// <summary>
     /// Tracks multiple items at the same time
@@ -82,5 +85,18 @@ public interface ITrackerItemService
     /// <param name="item">The item to untrack.</param>
     /// <param name="confidence">The speech recognition confidence.</param>
     /// <param name="force">If the item should be forced to be untracked while auto tracking</param>
-    void UntrackItem(Item item, float? confidence = null, bool force = false);
+    /// <param name="silent">If the untracking of the item should be announced</param>
+    void UntrackItem(Item item, float? confidence = null, bool autoTracked = false, bool force = false, bool silent = false);
+
+    /// <summary>
+    /// Updates the item tracking status based on memory from the SNES
+    /// </summary>
+    /// <param name="itemType">The item type being tracked</param>
+    /// <param name="memoryType">How the memory should be read</param>
+    /// <param name="currentData">The current memory values</param>
+    /// <param name="previousData">The previous memory values</param>
+    /// <param name="memoryOffset">The offset from the beginning of the current data</param>
+    /// <param name="flagPosition">The flag position of the byte to be checked</param>
+    void UpdateItemFromSnesMemory(ItemType itemType, ItemSnesMemoryType memoryType, SnesData currentData, SnesData previousData, int memoryOffset, int flagPosition = 0);
 }
+

@@ -8,6 +8,7 @@ using SnesConnectorLibrary.Responses;
 using SNI;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.WorldData;
+using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Tracking.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.AutoTracking.AutoTrackerModules;
@@ -28,15 +29,31 @@ public class MetroidLocations(TrackerBase tracker, ISnesConnectorService snesCon
             SniMemoryMapping = MemoryMapping.ExHiRom,
             Address = 0x7ed870,
             Length = 0x20,
-            FrequencySeconds = 1,
+            FrequencySeconds = Tracker.Options.AutoTrackingMode == AutoTrackingMode.Inventory ? 2 : 1,
             OnResponse = CheckLocations,
             Filter = () => IsInMetroid
         });
+
+        if (Tracker.Options.AutoTrackingMode is AutoTrackingMode.Inventory)
+        {
+            SnesConnector.AddRecurringMemoryRequest(new SnesRecurringMemoryRequest()
+            {
+                MemoryRequestType = SnesMemoryRequestType.RetrieveMemory,
+                SnesMemoryDomain = SnesMemoryDomain.CartridgeSave,
+                AddressFormat = AddressFormat.Snes9x,
+                SniMemoryMapping = MemoryMapping.ExHiRom,
+                Address = 0xa16010 + 0xb0,
+                Length = 0x20,
+                FrequencySeconds = Tracker.Options.AutoTrackingMode == AutoTrackingMode.Inventory ? 4 : 2,
+                OnResponse = CheckLocations,
+                Filter = () => IsInZelda
+            });
+        }
     }
 
     private void CheckLocations(SnesData data, SnesData? prevData)
     {
-        if (prevData == null)
+        if (prevData == null || !HasValidState)
         {
             return;
         }
@@ -49,7 +66,7 @@ public class MetroidLocations(TrackerBase tracker, ISnesConnectorService snesCon
                 var flag = location.MemoryFlag ?? 0;
                 var currentCleared = data.CheckUInt8Flag(loc, flag);
                 var prevCleared = prevData.CheckUInt8Flag(loc, flag);
-                if (location.Autotracked == false && currentCleared && prevCleared)
+                if (!location.Autotracked && currentCleared && prevCleared)
                 {
                     TrackLocation(location);
                 }

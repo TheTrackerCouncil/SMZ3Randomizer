@@ -295,7 +295,7 @@ public class ItemTrackingModule : TrackerModule
             var item = GetItemFromResult(TrackerBase, result, out _);
             var count = int.Parse(result.Semantics[ItemCountKey].Value);
             var force = result.Text.ContainsAny(ForceCommandIdentifiers);
-            TrackerBase.ItemTracker.TrackItemAmount(item, count, result.Confidence, force: force);
+            TrackerBase.ItemTracker.TrackItemAmount(item, count, result.Confidence, autoTracked: false, force: force);
         });
     }
 }

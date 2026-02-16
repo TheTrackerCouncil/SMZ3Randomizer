@@ -33,15 +33,31 @@ public class ZeldaLocations(TrackerBase tracker, ISnesConnectorService snesConne
             SniMemoryMapping = MemoryMapping.ExHiRom,
             Address = 0x7ef000,
             Length = 0x250,
-            FrequencySeconds = 1,
+            FrequencySeconds = Tracker.Options.AutoTrackingMode == AutoTrackingMode.Inventory ? 2 : 1,
             OnResponse = CheckZeldaRoomsAndDungeons,
             Filter = () => IsInZelda
         });
+
+        if (Tracker.Options.AutoTrackingMode is AutoTrackingMode.Inventory)
+        {
+            SnesConnector.AddRecurringMemoryRequest(new SnesRecurringMemoryRequest()
+            {
+                MemoryRequestType = SnesMemoryRequestType.RetrieveMemory,
+                SnesMemoryDomain = SnesMemoryDomain.CartridgeSave,
+                AddressFormat = AddressFormat.Snes9x,
+                SniMemoryMapping = MemoryMapping.ExHiRom,
+                Address = 0xa06000,
+                Length = 0x250,
+                FrequencySeconds = Tracker.Options.AutoTrackingMode == AutoTrackingMode.Inventory ? 4 : 2,
+                OnResponse = CheckZeldaRoomsAndDungeons,
+                Filter = () => IsInMetroid
+            });
+        }
     }
 
     private void CheckZeldaRoomsAndDungeons(SnesData data, SnesData? prevData)
     {
-        if (prevData == null)
+        if (prevData == null || !AutoTracker.HasValidState)
         {
             return;
         }

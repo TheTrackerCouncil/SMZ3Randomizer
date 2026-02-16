@@ -22,7 +22,7 @@ public class GiftedItemSync(
 
     public override void Initialize()
     {
-        if (Tracker.World.Config.RomGenerator == RomGenerator.Cas)
+        if (Tracker.World.Config.RomGenerator == RomGenerator.Cas || Tracker.Options.AutoTrackingMode == AutoTrackingMode.Inventory)
         {
             return;
         }
