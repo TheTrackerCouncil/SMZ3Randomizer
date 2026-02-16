@@ -2,7 +2,7 @@ name: .NET Build + Test + Publish
 
 on:
   push:
-    branches: [main]
+    branches: [main, 9.9.10-beta.2]
   pull_request:
     branches: [main]
 
