@@ -11,14 +11,22 @@ using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.Infrastructure;
 
-public class PlaythroughService
+public class PlaythroughService(ILogger<PlaythroughService> logger)
 {
-    private ILogger<PlaythroughService> _logger;
+    private readonly HashSet<LocationId> _verifyLocationIds =
+    [
+        LocationId.GanonsTowerMoldormChest,
+        LocationId.KraidsLairVariaSuit,
+        LocationId.WreckedShipEastSuper,
+        LocationId.InnerMaridiaSpaceJump,
+        LocationId.LowerNorfairRidleyTank
+    ];
 
-    public PlaythroughService(ILogger<PlaythroughService> logger)
-    {
-        _logger = logger;
-    }
+    private readonly HashSet<ItemType> _verifyItemTypes =
+    [
+        ItemType.SilverArrows,
+        ItemType.CardCrateriaBoss
+    ];
 
     /// <summary>
     /// Simulates a rough playthrough and returns a value indicating whether
@@ -109,6 +117,11 @@ public class PlaythroughService
         {
             var sphere = new Playthrough.Sphere();
 
+            if (spheres.Count == 0)
+            {
+                sphere.StartingItems.AddRange(items);
+            }
+
             var tempProgression = new Progression(items, new List<Reward>(), new List<Boss>());
             rewards = rewardRegions.Where(x => x.CanRetrieveReward(tempProgression, false))
                 .Select(x => x.Reward)
@@ -125,16 +138,16 @@ public class PlaythroughService
             locations.AddRange(newLocations);
             items.AddRange(newItems);
 
-            _logger.LogDebug("Sphere {Number}: {ItemCount} new items | {RewardCount} new rewards", spheres.Count + 1, newItems.Count, rewards.Count - prevRewardCount);
-            _logger.LogDebug("Sphere {Number} Items:{Items}", spheres.Count + 1, string.Join("", newLocations.Select(x => $"\r\n\t{x.RandomName} - {x.Item.Name}")));
-            _logger.LogDebug("Sphere {Number} Rewards:{Rewards}", spheres.Count + 1, string.Join("", rewards.Select(x => $"\r\n\t{x.Type}")));
+            logger.LogDebug("Sphere {Number}: {ItemCount} new items | {RewardCount} new rewards", spheres.Count + 1, newItems.Count, rewards.Count - prevRewardCount);
+            logger.LogDebug("Sphere {Number} Items:{Items}", spheres.Count + 1, string.Join("", newLocations.Select(x => $"\r\n\t{x.RandomName} - {x.Item.Name}")));
+            logger.LogDebug("Sphere {Number} Rewards:{Rewards}", spheres.Count + 1, string.Join("", rewards.Select(x => $"\r\n\t{x.Type}")));
 
             if (!newItems.Any() && prevRewardCount == rewards.Count)
             {
                 /* With no new items added we might have a problem, so list inaccessable items */
                 var inaccessibleLocations = allLocationsList.Where(l => !locations.Contains(l)).ToList();
 
-                _logger.LogDebug("Inaccesible locations: {}", string.Join(", ", inaccessibleLocations.Select(x => x.Id.ToString())));
+                logger.LogDebug("Inaccesible locations: {}", string.Join(", ", inaccessibleLocations.Select(x => x.Id.ToString())));
 
                 // If there are a large number of inaccessible locations, throw an error if we can't beat the game
                 // We determine this on if all players can beat all 4 golden bosses, access the
@@ -162,5 +175,34 @@ public class PlaythroughService
         }
 
         return spheres;
+    }
+
+    public bool ValidatePlaythrough(Playthrough playthrough, List<World> worlds)
+    {
+        List<Location> allLocations = [];
+        List<Item> allItems = [];
+        foreach (var sphere in playthrough.Spheres)
+        {
+            allLocations.AddRange(sphere.Locations.Where(x => _verifyLocationIds.Contains(x.Id)));
+            allItems.AddRange(sphere.Items.Concat(sphere.StartingItems).Where(x => _verifyItemTypes.Contains(x.Type)));
+        }
+
+        if (allLocations.Count < worlds.Count * 5)
+        {
+            var inaccessibleLocations = worlds.SelectMany(w => w.Locations)
+                .Where(l => _verifyLocationIds.Contains(l.Id) && !allLocations.Contains(l))
+                .Select(x => $"Player {x.World.Id} {x}");
+            logger.LogError("The following critical location(s) cannot be accessed: {Locations}", string.Join(",", inaccessibleLocations));
+            return false;
+        }
+
+        var expectedKeycards = worlds.Count(x => x.Config.MetroidKeysanity);
+        if (allItems.Count < worlds.Count + expectedKeycards)
+        {
+            logger.LogError("At least one player cannot obtain the silver arrows or get to mother brain");
+            return false;
+        }
+
+        return true;
     }
 }
