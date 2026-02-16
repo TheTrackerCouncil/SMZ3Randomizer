@@ -135,9 +135,9 @@ public class MetroidStateChecks(TrackerBase tracker, ISnesConnectorService snesC
         UpdateItem(ItemType.Charge, ItemSnesMemoryType.ByteFlag, 0x7E09A9, 0x10);
 
         UpdateItem(ItemType.ETank, ItemSnesMemoryType.WordEnergy, 0x7e09c4);
-        UpdateItem(ItemType.Missile, ItemSnesMemoryType.WordAmmo, 0x7e09c8);
-        UpdateItem(ItemType.Super, ItemSnesMemoryType.WordAmmo, 0x7e09cc);
-        UpdateItem(ItemType.PowerBomb, ItemSnesMemoryType.WordAmmo, 0x7e09d0);
+        UpdateItem(ItemType.Missile, ItemSnesMemoryType.WordMetroidAmmo, 0x7e09c8);
+        UpdateItem(ItemType.Super, ItemSnesMemoryType.WordMetroidAmmo, 0x7e09cc);
+        UpdateItem(ItemType.PowerBomb, ItemSnesMemoryType.WordMetroidAmmo, 0x7e09d0);
         UpdateItem(ItemType.ReserveTank, ItemSnesMemoryType.WordReserves, 0x7E09D4);
 
         return;
