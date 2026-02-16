@@ -80,6 +80,12 @@ public class Smz3Randomizer : ISeededRandomizer
         Filler.Fill(worlds, primaryConfig, cancellationToken);
 
         var playthrough = _playthroughService.Generate(worlds, primaryConfig);
+
+        if (!_playthroughService.ValidatePlaythrough(playthrough, worlds))
+        {
+            throw new RandomizerGenerationException("Unable to validate that the seed is completable.");
+        }
+
         var seedData = new SeedData
         (
             guid: Guid.NewGuid().ToString("N"),

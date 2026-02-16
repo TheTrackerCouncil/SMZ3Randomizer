@@ -46,10 +46,12 @@ public class Playthrough
 
     public class Sphere
     {
-        public List<Location> Locations { get; } = new();
+        public List<Location> Locations { get; } = [];
 
-        public List<Item> Items { get; } = new();
+        public List<Item> Items { get; } = [];
 
-        public List<Location> InaccessibleLocations { get; } = new();
+        public List<Location> InaccessibleLocations { get; } = [];
+
+        public List<Item> StartingItems { get; } = [];
     }
 }
