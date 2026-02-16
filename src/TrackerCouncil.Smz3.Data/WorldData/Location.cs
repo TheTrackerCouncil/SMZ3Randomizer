@@ -393,7 +393,7 @@ public class Location
             fillable = false;
         // If the user wants the GT key in GT for the guessing game while playing Keysanity
         else if (item is { Type: ItemType.BigKeyGT, World.Config.ZeldaKeysanity: true, World.Config.PlaceGTBigKeyInGT: true })
-            fillable = Region is GanonsTower;
+            fillable = fillable && Region is GanonsTower;
 
         Item = oldItem;
         return fillable;
