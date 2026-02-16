@@ -1,11 +1,12 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using SnesConnectorLibrary.Responses;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Options;
-using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.Tracking;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
@@ -18,7 +19,8 @@ namespace TrackerCouncil.Smz3.Tracking.TrackingServices;
 
 internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlayerProgressionService playerProgressionService, ICommunicator communicator, IWorldQueryService worldQueryService) : TrackerService, ITrackerItemService
 {
-    private List<Item> _pendingSpeechItems = [];
+    private readonly List<Item> _pendingSpeechItems = [];
+    private readonly ConcurrentDictionary<ItemType, int> _maxItemCounts = [];
 
     public override void Initialize()
     {
@@ -358,9 +360,9 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
         });
     }
 
-    public void TrackItemAmount(Item item, int count, float confidence, bool force = false)
+    public void TrackItemAmount(Item item, int count, float confidence, bool autoTracked = false, bool force = false, bool silent = false)
     {
-        if (Tracker.AutoTracker?.IsConnected == true && !force && item.Type != ItemType.Nothing)
+        if (Tracker.AutoTracker?.IsConnected == true && !force && !autoTracked && item.Type != ItemType.Nothing)
         {
             Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, would you please track {count} {item.Metadata.Plural}"]);
             return;
@@ -374,22 +376,22 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
         }
 
         var oldItemCount = item.TrackingState;
-        if (newItemCount == oldItemCount)
+        if (newItemCount == oldItemCount && !silent)
         {
             Tracker.Say(response: Responses.TrackedExactAmountDuplicate, args: [item.Metadata.Plural, count]);
             return;
         }
 
         item.TrackingState = newItemCount;
-        if (item.TryGetTrackingResponse(out var response))
+        if (item.TryGetTrackingResponse(out var response) && !silent)
         {
             Tracker.Say(response: response, args: [item.Counter]);
         }
-        else if (newItemCount > oldItemCount)
+        else if (newItemCount > oldItemCount && !silent)
         {
             Tracker.Say(text: Responses.TrackedItemMultiple?.Format(item.Metadata.Plural ?? $"{item.Name}s", item.Counter, item.Name));
         }
-        else
+        else if (!silent)
         {
             Tracker.Say(text: Responses.UntrackedItemMultiple?.Format(item.Metadata.Plural ?? $"{item.Name}s", item.Metadata.Plural ?? $"{item.Name}s"));
         }
@@ -398,7 +400,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
         ItemTracked?.Invoke(this, new ItemTrackedEventArgs(item, null, confidence, false));
         UpdateAllAccessibility(false, item);
 
-        AddUndo(() =>
+        AddUndo(autoTracked, () =>
         {
             item.TrackingState = oldItemCount;
             ItemTracked?.Invoke(this, new ItemTrackedEventArgs(item, null, confidence, false));
@@ -428,9 +430,9 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
         RestartIdleTimers();
     }
 
-    public void UntrackItem(Item item, float? confidence = null, bool force = false)
+    public void UntrackItem(Item item, float? confidence = null, bool autoTracked = false, bool force = false, bool silent = false)
     {
-        if (Tracker.AutoTracker?.IsConnected == true && !force && item.Type != ItemType.Nothing)
+        if (Tracker.AutoTracker?.IsConnected == true && !force && !autoTracked && item.Type != ItemType.Nothing)
         {
             Tracker.Say(response: Responses.AutoTrackingEnabledSass, args: [$"Hey tracker, would you please untrack {item.RandomName}"]);
             return;
@@ -439,17 +441,17 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
         var originalTrackingState = item.TrackingState;
         playerProgressionService.ResetProgression();
 
-        if (!item.Untrack())
+        if (!item.Untrack() && !silent)
         {
             Tracker.Say(response: Responses.UntrackedNothing, args: [item.Name, item.Metadata.NameWithArticle]);
             return;
         }
 
-        if (item.Metadata.HasStages)
+        if (item.Metadata.HasStages && !silent)
         {
             Tracker.Say(response: Responses.UntrackedProgressiveItem, args: [item.Name, item.Metadata.NameWithArticle]);
         }
-        else if (item.Metadata.Multiple)
+        else if (item.Metadata.Multiple && !silent)
         {
             if (item.TrackingState > 0)
             {
@@ -461,7 +463,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
             else
                 Tracker.Say(response: Responses.UntrackedItemMultipleLast, args: [item.Name, item.Metadata.NameWithArticle]);
         }
-        else
+        else if(!silent)
         {
             Tracker.Say(response: Responses.UntrackedItem, args: [item.Name, item.Metadata.NameWithArticle]);
         }
@@ -469,12 +471,89 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
         UpdateAllAccessibility(true, item);
         IsDirty = true;
 
-        AddUndo(() =>
+        AddUndo(autoTracked, () =>
         {
             item.TrackingState = originalTrackingState;
             playerProgressionService.ResetProgression();
             UpdateAllAccessibility(false, item);
         });
+    }
+
+    public void UpdateItemFromSnesMemory(ItemType itemType, ItemSnesMemoryType memoryType, SnesData currentData, SnesData previousData, int memoryOffset, int flagPosition = 0)
+    {
+        var currentValue = GetValueFromSnesData(memoryType, currentData, memoryOffset, flagPosition);
+        var previousValue = GetValueFromSnesData(memoryType, previousData, memoryOffset, flagPosition);
+
+        if (currentValue != previousValue || (memoryType == ItemSnesMemoryType.ByteSingleItem1 && currentValue > 1))
+        {
+            return;
+        }
+        else if (memoryType == ItemSnesMemoryType.ByteSingleItem12 && currentValue > 0)
+        {
+            if (currentValue > 2)
+            {
+                return;
+            }
+
+            currentValue = 1;
+        }
+        else if (memoryType == ItemSnesMemoryType.ByteSingleItemPositive && currentValue > 1)
+        {
+            currentValue = 1;
+        }
+
+        var item = worldQueryService.FirstOrDefault(itemType);
+
+        if (item == null)
+        {
+            return;
+        }
+
+        if (!_maxItemCounts.TryGetValue(itemType, out var previousMaxValue))
+        {
+            _maxItemCounts.TryAdd(itemType, 0);
+        }
+        else
+        {
+            _maxItemCounts[itemType] = currentValue;
+        }
+
+        var silent = itemType is ItemType.HeartContainer or ItemType.HeartPiece or ItemType.ThreeHundredRupees || currentValue <= previousMaxValue;
+
+        if (currentValue == item.TrackingState + 1)
+        {
+            TrackItem(item, autoTracked: true, tryClear: false, force: true, silent: silent);
+        }
+        else if (currentValue == item.TrackingState - 1)
+        {
+            UntrackItem(item, autoTracked: false, force: true, silent: silent);
+        }
+        else if (currentValue != item.TrackingState)
+        {
+            TrackItemAmount(item, currentValue, 0, true, force: true, silent: silent);
+        }
+    }
+
+    private int GetValueFromSnesData(ItemSnesMemoryType memoryType, SnesData currentData, int memoryOffset, int flagPosition)
+    {
+        return memoryType switch
+        {
+            ItemSnesMemoryType.Byte => currentData.ReadUInt8(memoryOffset) ?? 0,
+            ItemSnesMemoryType.ByteSingleItem1 => currentData.ReadUInt8(memoryOffset) ?? 0,
+            ItemSnesMemoryType.ByteSingleItem12 => currentData.ReadUInt8(memoryOffset) ?? 0,
+            ItemSnesMemoryType.ByteSingleItemPositive => currentData.ReadUInt8(memoryOffset) ?? 0,
+            ItemSnesMemoryType.WordEnergy => ((currentData.ReadUInt16(memoryOffset) ?? 0) - 99) / 100,
+            ItemSnesMemoryType.WordReserves => (currentData.ReadUInt16(memoryOffset) ?? 0) / 100,
+            ItemSnesMemoryType.WordMetroidAmmo => (currentData.ReadUInt16(memoryOffset) ?? 0) / 5,
+            ItemSnesMemoryType.ByteFlag => currentData.CheckUInt8Flag(memoryOffset, flagPosition) ? 1 : 0,
+            ItemSnesMemoryType.Bottle => (currentData.ReadUInt8(memoryOffset) > 0 ? 1 : 0) + (currentData.ReadUInt8(memoryOffset + 1) > 0 ? 1 : 0) + (currentData.ReadUInt8(memoryOffset + 2) > 0 ? 1 : 0) + (currentData.ReadUInt8(memoryOffset + 3) > 0 ? 1 : 0),
+            ItemSnesMemoryType.Flute => currentData.CheckUInt8Flag(memoryOffset, 0x1) || currentData.CheckUInt8Flag(memoryOffset, 0x2) ? 1 : 0,
+            ItemSnesMemoryType.Sum2Bytes => (currentData.ReadUInt8(memoryOffset) ?? 0) + (currentData.ReadUInt8(memoryOffset + 1) ?? 0),
+            ItemSnesMemoryType.HyruleCastleMap => currentData.CheckUInt8Flag(memoryOffset, 0x40) || currentData.CheckUInt8Flag(memoryOffset, 0x80) ? 1 : 0,
+            ItemSnesMemoryType.HeartContainers => (currentData.ReadUInt8(memoryOffset) ?? 0) / 0x08 - 3,
+            ItemSnesMemoryType.Rupees => (currentData.ReadUInt16(memoryOffset) ?? 0) / 250,
+            _ => throw new ArgumentOutOfRangeException(nameof(memoryType), memoryType, null)
+        };
     }
 
     private void CommunicatorOnSpeakCompleted(object? sender, SpeakCompletedEventArgs e)

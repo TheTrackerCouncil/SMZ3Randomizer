@@ -108,7 +108,10 @@ public class GameService : TrackerModule, IGameService
             return false;
         }
 
-        TrackerBase.ItemTracker.TrackItems(items, true, true);
+        if (TrackerBase.Options.AutoTrackingMode != AutoTrackingMode.Inventory)
+        {
+            TrackerBase.ItemTracker.TrackItems(items, true, true);
+        }
 
         return await TryGiveItemTypesAsync(items.Select(x => (x.Type, fromPlayerId)).ToList());
     }
