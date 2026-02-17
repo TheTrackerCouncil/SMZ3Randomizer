@@ -111,6 +111,12 @@ public class ChatIntegrationModule : TrackerModule, IDisposable
         _trackerGuess = s_random.Next(1, 23);
         TrackerBase.Say(x => x.Chat.StartedGuessingGame);
 
+        var chatMessage = TrackerBase.Responses.Chat.StartedGuessingGameChatAnnouncement?.ToString();
+        if (chatMessage != null)
+        {
+            await ChatClient.SendMessageAsync(chatMessage, announce: true);
+        }
+
         await Task.Delay(s_random.Next(100, 900));
         TrackerBase.Say(x => x.Chat.TrackerGuess, args: [_trackerGuess]);
 
