@@ -81,31 +81,30 @@ public class MainWindowService(
         }
     }
 
-    public async Task ValidateTwitchToken()
+    public async Task<bool> ValidateTwitchToken()
     {
-        if (string.IsNullOrEmpty(_options.GeneralOptions.TwitchUserName))
+        if (string.IsNullOrEmpty(_options.GeneralOptions.TwitchOAuthToken))
         {
-            return;
+            return true;
         }
 
-        var isTokenValid = !string.IsNullOrEmpty(_options.GeneralOptions.TwitchOAuthToken) && await chatAuthenticationService.ValidateTokenAsync(_options.GeneralOptions.TwitchOAuthToken, default);
+        var isTokenValid = await chatAuthenticationService.ValidateTokenAsync(_options.GeneralOptions.TwitchOAuthToken, default);
 
         if (!isTokenValid)
         {
             _options.GeneralOptions.TwitchOAuthToken = string.Empty;
-            Dispatcher.UIThread.Invoke(() =>
+            var messageWindow = new MessageWindow(new MessageWindowRequest()
             {
-                var messageWindow = new MessageWindow(new MessageWindowRequest()
-                {
-                    Message =
-                        "Your Twitch login has expired. Please go to Options and log in with Twitch again to re-enable chat integration features.",
-                    Title = "SMZ3 Cas’ Randomizer",
-                    Buttons = MessageWindowButtons.OK,
-                    Icon = MessageWindowIcon.Warning
-                });
-                messageWindow.ShowDialog();
+                Message = "Your Twitch login has expired. Please go to Options and log in with Twitch again to re-enable chat integration features.",
+                Title = "SMZ3 Cas’ Randomizer",
+                Buttons = MessageWindowButtons.OK,
+                Icon = MessageWindowIcon.Warning
             });
+            messageWindow.ShowDialog();
+            return false;
         }
+
+        return true;
     }
 
     public event EventHandler? SpriteDownloadStart;

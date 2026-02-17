@@ -87,7 +87,6 @@ public class TwitchChatClient : IChatClient
         if (announce)
         {
             await SendAnnouncementAsync(message);
-            return;
         }
 
         try

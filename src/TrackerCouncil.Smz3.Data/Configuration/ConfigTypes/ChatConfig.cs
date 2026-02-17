@@ -62,12 +62,6 @@ public class ChatConfig : IMergeable<ChatConfig>
     public SchrodingersString? StartedGuessingGame { get; init; }
 
     /// <summary>
-    /// Gets the phrases to respond to chat with when starting the GT big key
-    /// guessing game.
-    /// </summary>
-    public SchrodingersString? StartedGuessingGameChatAnnouncement { get; init; }
-
-    /// <summary>
     /// Gets the phrases to respond with when closing guesses for the GT big
     /// key guessing game.
     /// </summary>
