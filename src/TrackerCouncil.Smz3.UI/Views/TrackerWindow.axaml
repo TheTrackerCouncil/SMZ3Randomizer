@@ -121,7 +121,7 @@
                       <avalonia:MaterialIcon Width="16" Height="16" Kind="Check" IsVisible="{Binding IsLuaCrowdControlConnector}" />
                     </MenuItem.Icon>
                   </MenuItem>
-                  <MenuItem Header="Lua Auto Tracker (EmoTracker Script)" Name="EmoTrackerMenuItem" Click="EmoTrackerMenuItem_OnClick">
+                  <MenuItem Header="Lua Auto Tracker (EmoTracker / ALttPO ConnectorLib)" Name="EmoTrackerMenuItem" Click="EmoTrackerMenuItem_OnClick">
                     <MenuItem.Icon>
                       <avalonia:MaterialIcon Width="16" Height="16" Kind="Check" IsVisible="{Binding IsLuaEmoTrackerConnector}" />
                     </MenuItem.Icon>
