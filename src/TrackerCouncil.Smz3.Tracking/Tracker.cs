@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using BunLabs;
@@ -31,7 +33,7 @@ namespace TrackerCouncil.Smz3.Tracking;
 /// Tracks items and locations in a playthrough by listening for voice
 /// commands and responding with text-to-speech.
 /// </summary>
-public sealed class Tracker : TrackerBase, IDisposable
+public sealed partial class Tracker : TrackerBase, IDisposable
 {
     private static readonly Random s_random = new();
 
@@ -84,8 +86,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         IServiceProvider serviceProvider,
         IMetadataService metadata)
     {
-        if (trackerOptions.Options == null)
-            throw new InvalidOperationException("Tracker options have not yet been activated.");
+        Options = trackerOptions.Options ?? throw new InvalidOperationException("Tracker options have not yet been activated.");
 
         LoadServices(serviceProvider);
 
@@ -99,7 +100,6 @@ public sealed class Tracker : TrackerBase, IDisposable
         _stateService = stateService;
         _timerService = timerService;
         _isAltMode = metadata.IsAltTrackerPack;
-        Options = _trackerOptions.Options;
 
         // Initialize the tracker configuration
         _communicator.UseAlternateVoice(metadata.TrackerSpriteProfile?.UseAltVoice ?? false);
@@ -465,8 +465,53 @@ public sealed class Tracker : TrackerBase, IDisposable
         }
     }
 
+    public override bool IsSpeechAvailable => _communicator.IsEnabled;
+
     /// <inheritdoc/>
     public override bool Say(
+        Func<ResponseConfig, SchrodingersString?>? selectResponse = null,
+        Func<ResponseConfig, Dictionary<int, SchrodingersString>?>? selectResponses = null,
+        SchrodingersString? response = null,
+        Dictionary<int, SchrodingersString>? responses = null,
+        TrackerResponseDetails? preGeneratedDetails = null,
+        int? key = null,
+        int? tieredKey = null,
+        object?[]? args = null,
+        string? text = null,
+        bool once = false,
+        bool wait = false)
+    {
+
+        var details = preGeneratedDetails ?? GetTrackerResponses(selectResponse, selectResponses, response, responses, key, tieredKey, args, text, once);
+
+        if (!details.Successful)
+        {
+            return false;
+        }
+        else if (details.Responses == null || details.Responses.Count == 0)
+        {
+            return true;
+        }
+
+        var speechRequests =
+            details.Responses.Select(x => new SpeechRequest(x.SpeechText, x.TrackerImage, wait)).ToList();
+
+        for (var i = 0; i < speechRequests.Count; i++)
+        {
+            if (i < speechRequests.Count - 1)
+            {
+                speechRequests[i].FollowedByBlankImage = "blank".Equals(speechRequests[i + 1].TrackerImage,
+                    StringComparison.OrdinalIgnoreCase);
+            }
+            _communicator.Say(speechRequests[i]);
+        }
+
+        _lastSpokenText = details.Responses[0].SpeechText;
+        return true;
+    }
+
+    /// <inheritdoc/>
+    public override TrackerResponseDetails GetTrackerResponses(
         Func<ResponseConfig, SchrodingersString?>? selectResponse = null,
         Func<ResponseConfig, Dictionary<int, SchrodingersString>?>? selectResponses = null,
         SchrodingersString? response = null,
@@ -475,8 +520,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         int? tieredKey = null,
         object?[]? args = null,
         string? text = null,
-        bool once = false,
-        bool wait = false)
+        bool once = false)
     {
         SchrodingersString? selectedResponse = null;
         string? trackerImage = null;
@@ -513,7 +557,10 @@ public sealed class Tracker : TrackerBase, IDisposable
         if (once && selectedResponse != null && !_saidLines.Add(selectedResponse))
         {
             // True because we did successfully select a response, even though it was already said before
-            return true;
+            return new TrackerResponseDetails
+            {
+                Successful = true
+            };
         }
 
         if (text == null)
@@ -521,7 +568,10 @@ public sealed class Tracker : TrackerBase, IDisposable
             var trackerSpeechDetails = selectedResponse?.GetSpeechDetails(args ?? []);
             if (trackerSpeechDetails?.SpeechText == null)
             {
-                return false;
+                return new TrackerResponseDetails
+                {
+                    Successful = false
+                };
             }
 
             text = trackerSpeechDetails.Value.SpeechText;
@@ -529,30 +579,35 @@ public sealed class Tracker : TrackerBase, IDisposable
             additionalLines = trackerSpeechDetails.Value.AdditionalLines;
         }
 
-        var speechRequests = new List<SpeechRequest>();
-
-        var formattedText = FormatPlaceholders(text);
-        speechRequests.Add(new SpeechRequest(formattedText, trackerImage, wait));
-
+        List<TrackerResponseLine> formattedLines = [GetResponseLine(text, trackerImage)];
         if (additionalLines?.Count > 0)
         {
-            speechRequests.AddRange(additionalLines.Select(x =>
-                new SpeechRequest(FormatPlaceholders(x.Text), x.TrackerImage, wait)));
+            formattedLines.AddRange(additionalLines.Select(x => GetResponseLine(x.Text, x.TrackerImage)));
         }
 
-        for (var i = 0; i < speechRequests.Count; i++)
+        return new TrackerResponseDetails()
         {
-            if (i < speechRequests.Count - 1)
-            {
-                speechRequests[i].FollowedByBlankImage = "blank".Equals(speechRequests[i + 1].TrackerImage,
-                    StringComparison.OrdinalIgnoreCase);
-            }
-            _communicator.Say(speechRequests[i]);
-        }
+            Successful = true,
+            Responses = formattedLines
+        };
+    }
 
-        _lastSpokenText = formattedText;
+    private string SpeechTextToDisplayText(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            return input;
+        var noTags = XmlSpeechTags().Replace(input, " ");
+        return char.ToUpper(noTags[0], CultureInfo.CurrentCulture) + noTags[1..];
+    }
 
-        return true;
+    private TrackerResponseLine GetResponseLine(string text, string? trackerImage)
+    {
+        var baseText = FormatPlaceholders(text);
+
+        return new TrackerResponseLine()
+        {
+            SpeechText = baseText, DisplayText = SpeechTextToDisplayText(baseText), TrackerImage = trackerImage,
+        };
     }
 
     /// <summary>
@@ -711,4 +766,7 @@ public sealed class Tracker : TrackerBase, IDisposable
         RestartIdleTimers();
         OnSpeechRecognized(new(e.Result.Confidence, e.Result.Text));
     }
+
+    [GeneratedRegex(@"\s?<.*?>\s?")]
+    private static partial Regex XmlSpeechTags();
 }

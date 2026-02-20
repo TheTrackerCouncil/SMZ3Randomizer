@@ -334,5 +334,15 @@ public partial class TrackerWindow : RestorableWindow
     {
         _service?.ToggleCheats();
     }
+
+    private void TrackerEnableHintsMenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        _service?.ToggleHints();
+    }
+
+    private void TrackerEnableSpoilersMenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        _service?.ToggleSpoilers();
+    }
 }
 

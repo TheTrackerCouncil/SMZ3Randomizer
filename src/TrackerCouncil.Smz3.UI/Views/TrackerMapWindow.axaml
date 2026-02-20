@@ -47,6 +47,7 @@
                   <ContextMenu.Styles>
                     <Style x:DataType="viewModels:TrackerMapSubLocationViewModel" Selector="ContextMenu > MenuItem">
                       <Setter Property="Tag" Value="{Binding Location}"/>
+                      <Setter Property="IsVisible" Value="{Binding IsVisible}"/>
                     </Style>
                   </ContextMenu.Styles>
                   <ContextMenu.ItemTemplate>

@@ -58,6 +58,10 @@ public partial class TrackerWindowItemPanelViewModel : TrackerWindowPanelViewMod
 
     public event EventHandler<ItemChangedEventArgs>? CheatItemRequested;
 
+    public event EventHandler<ItemChangedEventArgs>? HintItemRequested;
+
+    public event EventHandler<ItemChangedEventArgs>? SpoilerItemRequested;
+
     public void UpdateItem(Item? item, string? path)
     {
         if (Items != null && item != null && !string.IsNullOrEmpty(path))
@@ -213,6 +217,26 @@ public partial class TrackerWindowItemPanelViewModel : TrackerWindowPanelViewMod
             {
                 var menuItem = new MenuItem { Header = $"Cheat: Give {item.Name}" };
                 menuItem.Click += (_, _) => CheatItemRequested?.Invoke(this, new ItemChangedEventArgs { Item = item });
+                menuItems.Add(menuItem);
+            }
+        }
+
+        if (HintsEnabled)
+        {
+            foreach (var item in Items.Keys)
+            {
+                var menuItem = new MenuItem { Header = $"Hint: {item.Name}" };
+                menuItem.Click += (_, _) => HintItemRequested?.Invoke(this, new ItemChangedEventArgs { Item = item });
+                menuItems.Add(menuItem);
+            }
+        }
+
+        if (SpoilersEnabled)
+        {
+            foreach (var item in Items.Keys)
+            {
+                var menuItem = new MenuItem { Header = $"Spoiler: {item.Name}" };
+                menuItem.Click += (_, _) => SpoilerItemRequested?.Invoke(this, new ItemChangedEventArgs { Item = item });
                 menuItems.Add(menuItem);
             }
         }

@@ -50,13 +50,10 @@
                       Name="LayoutMenu">
             </MenuItem>
             <MenuItem Header="_Commands">
-              <MenuItem Header="Enable _Cheats"
-                        x:Name="TrackerEnableCheatsMenuItem"
-                        Click="TrackerEnableCheatsMenuItem_OnClick">
-                <MenuItem.Icon>
-                  <avalonia:MaterialIcon Width="16" Height="16" Kind="Check" IsVisible="{Binding AreCheatsEnabled}" />
-                </MenuItem.Icon>
-              </MenuItem>
+              <controls:CheckedMenuItem Header="Enable _Cheats" Click="TrackerEnableCheatsMenuItem_OnClick" IsChecked="{Binding AreCheatsEnabled}" />
+              <Separator></Separator>
+              <controls:CheckedMenuItem Header="Enable _Hints" Click="TrackerEnableHintsMenuItem_OnClick" IsChecked="{Binding AreHintsEnabled}"/>
+              <controls:CheckedMenuItem Header="Enable _Spoilers" Click="TrackerEnableSpoilersMenuItem_OnClick" IsChecked="{Binding AreSpoilersEnabled}"/>
             </MenuItem>
           </Menu>
           <StackPanel Grid.Column="1" Orientation="Horizontal">

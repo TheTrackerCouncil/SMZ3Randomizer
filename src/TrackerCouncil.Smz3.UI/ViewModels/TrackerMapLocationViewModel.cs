@@ -26,6 +26,63 @@ public partial class TrackerMapLocationViewModel : ViewModelBase
         RegionName = mapRegion.Name;
         Region = region;
         Locations = locations.Select(x => new TrackerMapSubLocationViewModel { Name = $"Clear {x}", Location = x}).ToList();
+        var location = locations.First();
+        if (locations.Count > 1 && location.Room != null)
+        {
+            var room = location.Room;
+            Locations.Add(new TrackerMapSubLocationViewModel()
+            {
+                Name = $"Hint {room}",
+                Location = location,
+                Room = room,
+                IsHint = true,
+                IsVisible = false,
+            });
+            Locations.Add(new TrackerMapSubLocationViewModel()
+            {
+                Name = $"Spoil {room}",
+                Location = location,
+                Room = room,
+                IsSpoiler = true,
+                IsVisible = false,
+            });
+        }
+        else if (locations.Count > 1)
+        {
+            Locations.Add(new TrackerMapSubLocationViewModel()
+            {
+                Name = $"Hint {region}",
+                Location = location,
+                Region = region,
+                IsHint = true,
+                IsVisible = false,
+            });
+            Locations.Add(new TrackerMapSubLocationViewModel()
+            {
+                Name = $"Spoil {region}",
+                Location = location,
+                Region = region,
+                IsSpoiler = true,
+                IsVisible = false,
+            });
+        }
+        else
+        {
+            Locations.Add(new TrackerMapSubLocationViewModel()
+            {
+                Name = $"Hint {location}",
+                Location = location,
+                IsHint = true,
+                IsVisible = false,
+            });
+            Locations.Add(new TrackerMapSubLocationViewModel()
+            {
+                Name = $"Spoil {location}",
+                Location = location,
+                IsSpoiler = true,
+                IsVisible = false,
+            });
+        }
     }
 
     public TrackerMapLocationViewModel(TrackerMapRegion mapRegion, TrackerMapLocation mapLocation, Region region)
