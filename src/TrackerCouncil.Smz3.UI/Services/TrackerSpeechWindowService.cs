@@ -50,6 +50,7 @@ public class TrackerSpeechWindowService(ICommunicator communicator, OptionsFacto
         }
 
         _model.TrackerImage = _currentSpeechImages.IdleImage;
+        _model.IsTrackerImageVisible = true;
 
         if (_enableBounce)
         {
