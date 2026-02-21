@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Avalonia;
+using Avalonia.Threading;
+using AvaloniaControls.Controls;
 using AvaloniaControls.Services;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
+using TrackerCouncil.Smz3.Data.Tracking;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Data.WorldData.Regions.SuperMetroid.Crateria;
@@ -16,6 +19,7 @@ using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Tracking.Services;
 using TrackerCouncil.Smz3.UI.ViewModels;
+using TrackerCouncil.Smz3.UI.Views;
 
 namespace TrackerCouncil.Smz3.UI.Services;
 
@@ -27,11 +31,14 @@ public class TrackerMapWindowService(
 {
     private readonly TrackerMapWindowViewModel _model = new();
     private readonly Dictionary<TrackerMap, List<TrackerMapLocationViewModel>> _mapLocations = new();
+    private readonly List<TrackerMapLocationViewModel> _itemLocations = [];
     private string _markedImageGoodPath = "";
     private string _markedImageUselessPath = "";
+    private TrackerMapWindow _window = null!;
 
-    public TrackerMapWindowViewModel GetViewModel()
+    public TrackerMapWindowViewModel GetViewModel(TrackerMapWindow window)
     {
+        _window = window;
         _model.Maps = trackerMapConfig.Maps.ToList();
 
         // The map initializes really slowly, so actually initialize the data in a separate thread
@@ -60,7 +67,9 @@ public class TrackerMapWindowService(
 
                 if (mapLocation.Type == TrackerMapLocation.MapLocationType.Item)
                 {
-                    locationModels.AddRange(GetItemLocationModels(mapRegion, mapLocation, allLocations));
+                    var models = GetItemLocationModels(mapRegion, mapLocation, allLocations);
+                    _itemLocations.AddRange(models);
+                    locationModels.AddRange(models);
                 }
 
                 if (mapRegion is { BossX: not null, BossY: not null })
@@ -78,11 +87,35 @@ public class TrackerMapWindowService(
         }
 
         tracker.GameStateTracker.MapUpdated += TrackerOnMapUpdated;
+        tracker.SpoilerService.HintsToggled += SpoilerServiceOnHintsToggled;
+        tracker.SpoilerService.SpoilersToggled += SpoilerServiceOnSpoilersToggled;
 
         _model.SelectedMap = _model.Maps.Last();
         UpdateMap();
 
         _model.FinishedLoading = true;
+    }
+
+    private void SpoilerServiceOnSpoilersToggled(object? sender, TrackerEventArgs e)
+    {
+        foreach (var model in _itemLocations.SelectMany(x => x.Locations ?? []))
+        {
+            if (model.IsSpoiler)
+            {
+                model.IsVisible = tracker.SpoilersEnabled;
+            }
+        }
+    }
+
+    private void SpoilerServiceOnHintsToggled(object? sender, TrackerEventArgs e)
+    {
+        foreach (var model in _itemLocations.SelectMany(x => x.Locations ?? []))
+        {
+            if (model.IsHint)
+            {
+                model.IsVisible = tracker.HintsEnabled;
+            }
+        }
     }
 
     private List<TrackerMapLocationViewModel> GetItemLocationModels(TrackerMapRegion mapRegion, TrackerMapLocation mapLocation, List<Location> allLocations)
@@ -411,8 +444,61 @@ public class TrackerMapWindowService(
         }
     }
 
-    public void Clear(TrackerMapSubLocationViewModel model)
+    public void OnMenuItemClick(TrackerMapSubLocationViewModel model)
     {
-        tracker.LocationTracker.Clear(model.Location);
+        if (model.IsHint || model.IsSpoiler)
+        {
+            TrackerResponseDetails? responseDetails = null;
+
+            if (model.Room != null)
+            {
+                if (tracker.IsSpeechAvailable)
+                {
+                    tracker.SpoilerService.GiveAreaHint(model.Room, model.IsSpoiler);
+                }
+                else
+                {
+                    responseDetails = tracker.SpoilerService.GetAreaHintResponse(model.Room, model.IsSpoiler);
+                }
+            }
+            else if (model.Region != null)
+            {
+                if (tracker.IsSpeechAvailable)
+                {
+                    tracker.SpoilerService.GiveAreaHint(model.Region, model.IsSpoiler);
+                }
+                else
+                {
+                    responseDetails = tracker.SpoilerService.GetAreaHintResponse(model.Region, model.IsSpoiler);
+                }
+            }
+            else
+            {
+                if (tracker.IsSpeechAvailable)
+                {
+                    tracker.SpoilerService.RevealLocationItem(model.Location, model.IsSpoiler);
+                }
+                else
+                {
+                    responseDetails = tracker.SpoilerService.GetLocationItemHintResponse(model.Location, model.IsSpoiler);
+                }
+            }
+
+            if (responseDetails is { Successful: true, Responses.Count: > 0 })
+            {
+                Dispatcher.UIThread.Invoke(() =>
+                {
+                    MessageWindow.ShowInfoDialog(responseDetails.Responses[0].DisplayText, parentWindow: _window);
+                });
+            }
+        }
+        else if (model.IsSpoiler)
+        {
+
+        }
+        else
+        {
+            tracker.LocationTracker.Clear(model.Location);
+        }
     }
 }

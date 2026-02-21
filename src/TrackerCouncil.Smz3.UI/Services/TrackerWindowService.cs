@@ -60,6 +60,8 @@ public class TrackerWindowService(
         _model.OpenSpeechWindow = Options.GeneralOptions.DisplayTrackerSpeechWindow;
         _model.AddShadows = Options.GeneralOptions.TrackerShadows;
         _model.DisplayTimer = Options.GeneralOptions.TrackerTimerEnabled;
+        _model.AreHintsEnabled = Options.GeneralOptions.TrackerHintsEnabled;
+        _model.AreSpoilersEnabled = Options.GeneralOptions.TrackerSpoilersEnabled;
 
         LocationViewModel.KeyImage = uiService.GetSpritePath("Items", "key.png", out _);
         RegionViewModel.ChestImage = uiService.GetSpritePath("Items", "chest.png", out _);
@@ -117,6 +119,16 @@ public class TrackerWindowService(
         tracker.ModeTracker.CheatsToggled += (sender, args) =>
         {
             UpdateCheatOptions(tracker.ModeTracker.CheatsEnabled);
+        };
+
+        tracker.SpoilerService.HintsToggled += (_, _) =>
+        {
+            UpdateHintOptions(tracker.HintsEnabled);
+        };
+
+        tracker.SpoilerService.SpoilersToggled += (_, _) =>
+        {
+            UpdateSpoilerOptions(tracker.SpoilersEnabled);
         };
 
         tracker.DisableVoiceRecognition();
@@ -565,7 +577,37 @@ public class TrackerWindowService(
             await tracker.GameService.TryGiveItemAsync(item, null);
         };
 
+        model.HintItemRequested += (_, args) =>
+        {
+            HintItem(args.Item, false);
+        };
+
+        model.SpoilerItemRequested += (_, args) =>
+        {
+            HintItem(args.Item, true);
+        };
+
         return model;
+    }
+
+    private void HintItem(Item item, bool isSpoiler)
+    {
+        if (tracker.IsSpeechAvailable)
+        {
+            tracker.SpoilerService.RevealItemLocation(item, isSpoiler);
+        }
+        else
+        {
+            var response = tracker.SpoilerService.GetItemLocationHintResponse(item, isSpoiler);
+
+            if (response.Responses?.Count > 0)
+            {
+                Dispatcher.UIThread.Invoke(() =>
+                {
+                    MessageWindow.ShowInfoDialog(response.Responses[0].DisplayText, parentWindow: _window);
+                });
+            }
+        }
     }
 
     private TrackerWindowPanelViewModel? GetDungeonPanelViewModel(UIGridLocation gridLocation)
@@ -793,6 +835,26 @@ public class TrackerWindowService(
         }
     }
 
+    private void UpdateHintOptions(bool hintsEnabled)
+    {
+        _model.AreHintsEnabled = hintsEnabled;
+
+        foreach (var panel in _model.Panels)
+        {
+            panel.HintsEnabled = hintsEnabled;
+        }
+    }
+
+    private void UpdateSpoilerOptions(bool spoilersEnabled)
+    {
+        _model.AreSpoilersEnabled = spoilersEnabled;
+
+        foreach (var panel in _model.Panels)
+        {
+            panel.SpoilersEnabled = spoilersEnabled;
+        }
+    }
+
     public void ToggleSpeechRecognition()
     {
         if (tracker.VoiceRecognitionEnabled)
@@ -815,5 +877,15 @@ public class TrackerWindowService(
         {
             tracker.ModeTracker.EnableCheats();
         }
+    }
+
+    public void ToggleHints()
+    {
+        tracker.SpoilerService.ToggleHints();
+    }
+
+    public void ToggleSpoilers()
+    {
+        tracker.SpoilerService.ToggleSpoilers();
     }
 }

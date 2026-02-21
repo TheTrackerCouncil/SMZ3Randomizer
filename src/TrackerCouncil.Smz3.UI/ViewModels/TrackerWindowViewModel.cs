@@ -72,6 +72,8 @@ public partial class TrackerWindowViewModel : ViewModelBase
     public partial SnesConnectorType SnesConnectorType { get; set; } = SnesConnectorType.None;
 
     [Reactive] public partial bool AreCheatsEnabled { get; set; }
+    [Reactive] public partial bool AreHintsEnabled { get; set; }
+    [Reactive] public partial bool AreSpoilersEnabled { get; set; }
 
     public bool IsDisabledConnector => SnesConnectorType == SnesConnectorType.None;
     public bool IsSniConnector => SnesConnectorType == SnesConnectorType.Sni;

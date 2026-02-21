@@ -52,6 +52,8 @@ public abstract class TrackerBase : IDisposable
 
     public ITrackerGameStateService GameStateTracker { get; protected set; } = null!;
 
+    public ITrackerSpoilerService SpoilerService { get; protected set; } = null!;
+
     /// <summary>
     /// Gets the world for the currently tracked playthrough.
     /// </summary>
@@ -242,6 +244,11 @@ public abstract class TrackerBase : IDisposable
     public abstract void DisableVoiceRecognition();
 
     /// <summary>
+    /// If tracker speaking is available
+    /// </summary>
+    public abstract bool IsSpeechAvailable { get; }
+
+    /// <summary>
     /// Speak a sentence using text-to-speech.
     /// </summary>
     /// <param name="selectResponse">Selects the response to use.</param>
@@ -252,6 +259,7 @@ public abstract class TrackerBase : IDisposable
     /// <param name="responses">
     /// The dictionary of responses that <c>key</c> or <c>tieredKey</c> will pull a response from.
     /// </param>
+    /// <param name="preGeneratedDetails">Pre-generated lines for tracker to say</param>
     /// <param name="key">
     /// The exact key of the response that should be pulled from the dictionary of <c>responses</c>.
     /// </param>
@@ -282,12 +290,57 @@ public abstract class TrackerBase : IDisposable
         Func<ResponseConfig, Dictionary<int, SchrodingersString>?>? selectResponses = null,
         SchrodingersString? response = null,
         Dictionary<int, SchrodingersString>? responses = null,
+        TrackerResponseDetails? preGeneratedDetails = null,
         int? key = null,
         int? tieredKey = null,
         object?[]? args = null,
         string? text = null,
         bool once = false,
         bool wait = false);
+
+    /// <summary>
+    /// Speak a sentence using text-to-speech.
+    /// </summary>
+    /// <param name="formattedLines">The lines of text for tracker to respond with</param>
+    /// <param name="selectResponse">Selects the response to use.</param>
+    /// <param name="selectResponses">
+    /// Selects the dictionary of responses that <c>key</c> or <c>tieredKey</c> will pull a response from.
+    /// </param>
+    /// <param name="response">The response to use.</param>
+    /// <param name="responses">
+    /// The dictionary of responses that <c>key</c> or <c>tieredKey</c> will pull a response from.
+    /// </param>
+    /// <param name="key">
+    /// The exact key of the response that should be pulled from the dictionary of <c>responses</c>.
+    /// </param>
+    /// <param name="tieredKey">
+    /// The "tiered" key of the response that should be pulled from the dictionary of <c>responses</c>.
+    /// The closest key in the dictionary that is less than or equal to this value will be used.
+    /// </param>
+    /// <param name="args">
+    /// The arguments used to format the selected response.
+    /// This paremeter is ignored when the <c>text</c> parameter is specified.
+    /// </param>
+    /// <param name="text">The specific sentence that should be spoken, which may include placeholders.</param>
+    /// <param name="once">
+    /// <c>true</c> to speak the selected response only once or
+    /// <c>false</c> to speak it as many times as requested. The default is <c>false</c>.
+    /// This parameter is ignored when the <c>text</c> parameter is specified.
+    /// </param>
+    /// <returns>
+    /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
+    /// response was <c>null</c>.
+    /// </returns>
+    public abstract TrackerResponseDetails GetTrackerResponses(
+        Func<ResponseConfig, SchrodingersString?>? selectResponse = null,
+        Func<ResponseConfig, Dictionary<int, SchrodingersString>?>? selectResponses = null,
+        SchrodingersString? response = null,
+        Dictionary<int, SchrodingersString>? responses = null,
+        int? key = null,
+        int? tieredKey = null,
+        object?[]? args = null,
+        string? text = null,
+        bool once = false);
 
     /// <summary>
     /// Repeats the most recently spoken sentence using text-to-speech at a

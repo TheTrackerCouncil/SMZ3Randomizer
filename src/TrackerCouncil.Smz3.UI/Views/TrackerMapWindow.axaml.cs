@@ -24,7 +24,7 @@ public partial class TrackerMapWindow : RestorableWindow
     {
         _service = service;
         InitializeComponent();
-        DataContext = _model = _service.GetViewModel();
+        DataContext = _model = _service.GetViewModel(this);
     }
 
     public void UpdateShowOutOfLogic(bool value)
@@ -76,7 +76,7 @@ public partial class TrackerMapWindow : RestorableWindow
             return;
         }
 
-        _service?.Clear(model);
+        _service?.OnMenuItemClick(model);
     }
 }
 
