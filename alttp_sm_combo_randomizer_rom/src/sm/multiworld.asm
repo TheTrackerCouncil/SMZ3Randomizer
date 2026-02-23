@@ -4,9 +4,9 @@
 
 ; Implement auto-saving on death as a temporary measure to prevent lost items
 ; Game state 15h (Samus ran out of health, black out surroundings) ;;;
-;JSL $9BB3A7;[$9B:B3A7]
-org $C2DD7E ; $82DD7E
-   jsl sm_mw_autosave
+; JSL $9BB3A7[$9B:B3A7]
+; org $C2DD7E ; $82DD7E
+;    jsl sm_mw_autosave
 
 org $C28BB3
     jsl sm_mw_hook_main_game
@@ -131,9 +131,6 @@ sm_mw_hook_main_game:
     rtl
 
 sm_mw_autosave:
-    lda.l config_autosave
-    beq ++
-
     lda.l $a16168 : pha             ; Backup save station variables
     lda.l $a16166 : pha             ; so the autosave saves to the last savestation
 
@@ -148,7 +145,6 @@ sm_mw_autosave:
     pla : sta.l $a16168             ; Set these values to 0 to force load from the ship if samus dies
     jsl sm_fix_checksum             ; Fix SRAM checksum (otherwise SM deletes the file on load)
     jsl $9BB3A7
-++
     rtl
 
 sm_mw_check_softreset:

@@ -59,6 +59,7 @@ incsrc sharedplayerpalettefix.asm
 incsrc fairyfountainrooms.asm
 incsrc spc.asm
 
+
 org $cae980             ; Free space in SM bank 8a
 base $8ae980
 incsrc newitems.asm
@@ -110,7 +111,9 @@ incsrc stats.asm
 incsrc textskip_functions.asm
 incsrc itemtext.asm
 incsrc textrenderer.asm
+incsrc dungeonrewards.asm
 incsrc quickswap.asm
+incsrc overworld.asm
 incsrc msu.asm
 warnpc $b8ffff
 
@@ -141,6 +144,14 @@ warnpc $504000
 org $504000
 GFX_SM_Items:
 incbin data/newitems_sm.gfx
+
+org $506000
+GFX_SM_Items_2:
+incbin data/newitems_sm_2.gfx
+
+; Uncompressed 3BPP sprite data used for extra map icons
+GFX_Map_ExtSprites:
+incbin data/newitems_sm_2.bin
 warnpc $508000
 
 
@@ -336,6 +347,9 @@ Dungeon_SaveRoomQuadrantData:
 org $02FD8A ; 17D8A - Bank07.asm: 3732 Note: Different bank
 LoadGearPalettes_bunny:
 
+org $02FD95 ; 17D95 - Bank0E.asm: 3742 Note: Different bank
+LoadGearPalettes_variable:
+
 org $05A51D
 Sprite_SpawnFallingItem:
 
@@ -420,6 +434,9 @@ AddPendantOrCrystal:
 org $0993DF
 AddDashTremor:
 
+org $099D04
+AddAncillaLong:
+
 org $09AE64
 Sprite_SetSpawnedCoords:
 
@@ -466,6 +483,9 @@ BottleMenu_movingOn:
 org $0DE346
 RestoreNormalMenu:
 
+org $0DE395
+Equipment_SearchForEquippedItemLong:
+
 org $0DE9C8
 DrawProgressIcons: ; this returns short
 
@@ -477,6 +497,9 @@ HUD_RebuildLong:
 
 org $0DFA88
 HUD_RebuildIndoor_Palace:
+
+org $0DFA88
+HUD_RebuildLong2:
 
 org $0EEE10
 Messaging_Text:

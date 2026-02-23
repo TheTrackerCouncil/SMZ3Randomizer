@@ -68,3 +68,38 @@ NewLNRefillDoorData:
 ; Repoint screw attack door into the new room
 org $c39a7a
 	dw NewLNRefillRoom
+
+
+; During horizontal door transitions, the "ready for NMI" flag is set by IRQ at the bottom of the door as an optimisation,
+; but the PLM drawing routine hasn't necessarily finished processing yet.
+; The Kraid quick kill vomit happens because NMI actually interrupts the PLM drawing routine for the PLM that clears the spike floor,
+; *whilst* it's in the middle of writing entries to the $D0 table, which the NMI processes.
+
+; This fix simply clears this NMI-ready flag for the duration of the PLM drawing routine.
+; Place this into the freespace after the free space used by items.asm
+org $c4fe00
+base $84fe00
+
+drawPlmSafe:
+{
+lda.w $05B4 : pha ; Back up NMI ready flag
+stz.w $05B4 ; Not ready for NMI
+jsr $8DAA   ; Draw PLM
+pla : sta.w $05B4 ; Restore NMI ready flag
+rts
+
+warnpc $858000
+}
+
+; Patch calls to draw PLM
+org $c4861a ; End of PLM processing. Probably the only particularly important one to patch
+base $84861a
+jsr drawPlmSafe
+
+; org $c48b50 ; End of block respawn instruction. Shouldn't need patching
+; base $848b50
+; jsr drawPlmSafe
+
+org $c4e094 ; End of animated PLM drawing instruction. Could theoretically happen...
+base $84e094
+jsr drawPlmSafe

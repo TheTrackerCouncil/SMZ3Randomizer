@@ -27,6 +27,11 @@ OnPlayerDead:
 RTL
 ;--------------------------------------------------------------------------------
 OnDungeonExit:
+	PHA : PHP
+		SEP #$20 ; set 8-bit accumulator
+		JSL.l SQEGFix
+	PLP : PLA
+
 	STA $040C : STZ $04AC ; thing we wrote over
 	
 	PHA : PHP
@@ -34,6 +39,12 @@ OnDungeonExit:
 		JSL.l FloodGateResetInner
 		JSL.l SetSilverBowMode
 	PLP : PLA
+RTL
+;--------------------------------------------------------------------------------
+OnQuit:
+	JSL.l SQEGFix
+	LDA.b #$00 : STA $7F5035 ; bandaid patch bug with mirroring away from text
+	LDA.b #$10 : STA $1C ; thing we wrote over
 RTL
 ;--------------------------------------------------------------------------------
 OnUncleItemGet:
@@ -59,17 +70,24 @@ RTL
 ;--------------------------------------------------------------------------------
 OnAga2Defeated:
 	JSL.l Dungeon_SaveRoomData_justKeys ; thing we wrote over, make sure this is first
-	LDA.b #$01 : STA.l Aga2Duck
 	;JSL.l IncrementAgahnim2Sword
 RTL
 ;--------------------------------------------------------------------------------
 !RNG_ITEM_LOCK_IN = "$7F5090"
 OnFileLoad:
-	LDA !FRESH_FILE_MARKER : BNE +
-		JSL.l OnNewFile
-		LDA.b #$FF : STA !FRESH_FILE_MARKER
+	REP #$10 ; set 16 bit index registers
+	JSL.l EnableForceBlank ; what we wrote over
+
+	LDA.b #$07 : STA $210C ; Restore screen 3 to normal tile area
+
+	; LDA !FRESH_FILE_MARKER : BNE +
+	; 	JSL.l OnNewFile
+	; 	LDA.b #$FF : STA !FRESH_FILE_MARKER
+	; +
+	LDA.w $010A : BNE + ; don't adjust the worlds for "continue" or "save-continue"
+	LDA.l $7EC011 : BNE + ; don't adjust worlds if mosiac is enabled (Read: mirroring in dungeon)
+		JSL.l DoWorldFix
 	+
-	JSL.l DoWorldFix
 	JSL.l MasterSwordFollowerClear
 	JSL.l InitOpenMode
 	LDA #$FF : STA !RNG_ITEM_LOCK_IN ; reset rng item lock-in
@@ -77,41 +95,43 @@ OnFileLoad:
 	LDA.l GenericKeys : BEQ +
 		LDA $7EF38B : STA $7EF36F ; copy generic keys to key counter
 	+
-	
+
 	JSL.l SetSilverBowMode
 	JSL.l RefreshRainAmmo
 	JSL.l SetEscapeAssist
 	JSL.l mw_load_sram
+
+	SEP #$10 ; restore 8 bit index registers
 	STZ !MULTIWORLD_PICKUP
 RTL
 ;--------------------------------------------------------------------------------
 !RNG_ITEM_LOCK_IN = "$7F5090"
 OnNewFile:
-;	PHX : PHP
-;		REP #$20 ; set 16-bit accumulator
-;		LDA.l LinkStartingRupees : STA $7EF362 : STA $7EF360
-;		LDA.l StartingTime : STA $7EF454
-;		LDA.l StartingTime+2 : STA $7EF454+2
+	PHX : PHP
+		REP #$20 ; set 16-bit accumulator		
+		LDA.l LinkStartingRupees : STA !SRAM_ALTTP_START+$362 : STA !SRAM_ALTTP_START+$360
+		LDA.l StartingTime : STA !SRAM_ALTTP_START+$454
+		LDA.l StartingTime+2 : STA !SRAM_ALTTP_START+$454+2
 
-;		LDX.w #$00 : - ; copy over starting equipment
-;			LDA StartingEquipment, X : STA $7EF340, X
-;			INX : INX
-;		CPX.w #$004F : !BLT -
+		LDX.b #$00 : - ; copy over starting equipment
+			LDA.l StartingEquipment, X : STA.l !SRAM_ALTTP_START+$340, X
+			INX : INX
+		CPX.b #$4F : !BLT -
 
-;		SEP #$20 ; set 8-bit accumulator
+		SEP #$20 ; set 8-bit accumulator
 		;LDA #$FF : STA !RNG_ITEM_LOCK_IN ; reset rng item lock-in
 		LDA.l PreopenCurtains : BEQ +
-			LDA.b #$80 : STA $7EF061 ; open aga tower curtain
-			LDA.b #$80 : STA $7EF093 ; open skull woods curtain
+			LDA.b #$80 : STA !SRAM_ALTTP_START+$061 ; open aga tower curtain
+			LDA.b #$80 : STA !SRAM_ALTTP_START+$093 ; open skull woods curtain
 		+
-		LDA.l PreopenPyramidHole : BEQ +
-			LDA.b #$20 : STA $7EF2DB ; pyramid hole already open
+		LDA.l PreopenPyramid : BEQ +
+			LDA.b #$20 : STA !SRAM_ALTTP_START+$2DB ; pyramid hole already open
 		+
 		LDA.l PreopenGanonsTower : BEQ +
-			LDA.b #$20 : STA $7EF2C3 ; Ganons Tower already open
+			LDA.b #$20 : STA !SRAM_ALTTP_START+$2C3 ; Ganons Tower already open
 		+
-;		LDA StartingSword : STA $7EF359 ; set starting sword type
-;	PLP : PLX
+		LDA.l StartingSword : STA !SRAM_ALTTP_START+$359 ; set starting sword type
+	PLP : PLX
 RTL
 ;--------------------------------------------------------------------------------
 OnInitFileSelect:
@@ -226,7 +246,3 @@ OnBeginSaveAndQuit:
 	LDA.b #$17 : STA $10 ; thing we wrote over. Go to save and quit module
 RTL
 ;--------------------------------------------------------------------------------
-OnEnterAga:
-	LDA $7EF2DB : AND #$DF : STA $7EF2DB
-	LDA $7EF2DB
-RTL

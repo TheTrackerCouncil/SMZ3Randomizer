@@ -15,6 +15,10 @@ alttp_multiworld_replace_item:
 	CMP.b #$37 : BEQ .exit                ; Pendant
 	CMP.b #$38 : BEQ .exit                ; Pendant
 	CMP.b #$39 : BEQ .exit                ; Pendant
+    CMP.b #$C5 : BEQ .exit                ; Kraid Boss Token
+    CMP.b #$C6 : BEQ .exit                ; Phantoon Boss Token
+    CMP.b #$C7 : BEQ .exit                ; Draygon Boss Token
+    CMP.b #$C8 : BEQ .exit                ; Ridley Boss Token
     bra .next
 .exit
     jmp .end
@@ -378,10 +382,10 @@ alttp_mw_item_names:
     db "                   ", $00  ;17
     db "                   ", $00  ;18
     db "                   ", $00  ;19
-    db "                   ", $00  ;1A
-    db "                   ", $00  ;1B
-    db "                   ", $00  ;1C
-    db "                   ", $00  ;1D
+    db "    Brinstar Map   ", $00  ;1A
+    db "  Wrecked Ship Map ", $00  ;1B
+    db "    Maridia Map    ", $00  ;1C
+    db " Lower Norfair Map ", $00  ;1D
     db "                   ", $00  ;1E
     db "                   ", $00  ;1F
  
@@ -616,12 +620,6 @@ alttp_mw_check_softreset:
     rtl
 
 alttp_mw_softreset:
-
-    lda $000202
-    sta !SRAM_ALTTP_EQUIPMENT_1
-    lda $000303
-    sta !SRAM_ALTTP_EQUIPMENT_2
-
     sei                         ; Disable IRQ's
     
     %i16()

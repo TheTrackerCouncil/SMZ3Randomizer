@@ -23,7 +23,7 @@
 ; -
 ; -
 ; -
-; -
+; o = quickswap locked
 ;--------------------------------------------------------------------------------
 ; ProcessMenuButtons:
 ; out:	Carry - 0 = No Button, 1 = Yes Button
@@ -124,7 +124,6 @@ RTL
 ;ProcessBottleMenu:
 ;--------------------------------------------------------------------------------
 ProcessBottleMenu:
-;	LDA $F4 : AND #$40 : BEQ .y_not_pressed ; skip if Y is not down
 	LDA $7EF34F ; check bottle state
 	BEQ .no_bottles ; skip if we have no bottles
 	PHX
@@ -137,9 +136,6 @@ ProcessBottleMenu:
 	.no_bottles
 	LDA #$00 ; pretend like the controller state was 0 from the overridden load
 RTL
-;	.y_not_pressed
-;	LDA $F4 : AND.b #$0C ; thing we wrote over - load controller state
-;RTL
 ;--------------------------------------------------------------------------------
 
 ;--------------------------------------------------------------------------------
@@ -178,17 +174,6 @@ RTL
 ;--------------------------------------------------------------------------------
 !LOCK_STATS = "$7EF443"
 
-macro TopHalf(address)
-	LDA <address> : !ADD #$10 : STA <address>
-endmacro
-
-macro BottomHalf(address)
-	PHA : PHX
-		LDA <address> : INC : AND #$0F : TAX
-		LDA <address> : AND #$F0 : STA <address>
-		TXA : ORA <address> : STA <address>
-	PLX : PLA
-endmacro
 ;--------------------------------------------------------------------------------
 ;FullInventoryExternal:
 ;	LDA !LOCK_STATS : BEQ + : RTL : +
@@ -297,56 +282,26 @@ AddInventory:
 	;+
 	SEP #$20 ; Set 8-bit Accumulator
 
-	LDA $040C ; get dungeon id
+	; Do not increment chest counts if we're receiving a MW item from another player.
+	; ie. config_multiworld = 1 and !MULTIWORLD_PICKUP = 2
+	LDA.l config_multiworld
+	BEQ +
+	LDA !MULTIWORLD_PICKUP
+	CMP #$02
+	BNE +
+	BRL .fullItemCounts
+	+
+
+	; Increment dungeon chest counter and check GT tower pre-big key.
+	JSL DungeonChestCounterIncrement
 
 	CMP.b #$00 : BNE + ; Sewers (Escape)
 		BRA ++
 	+ CMP.b #$02 : BNE + ; Hyrule Castle (Escape)
 		++
 		CPY.b #$32 : BNE ++ : BRL .itemCounts : ++ ; Ball & Chain Guard's Big Key
-		%TopHalf($7EF434)
-		BRL .fullItemCounts
-	+ CMP.b #$04 : BNE + ; Eastern Palace
-		LDA $7EF436 : INC : AND #$07 : TAX
-		LDA $7EF436 : AND #$F8 : STA $7EF436
-		TXA : ORA $7EF436 : STA $7EF436
-		BRL .fullItemCounts
-	+ CMP.b #$06 : BNE + ; Desert Palace
-		LDA $7EF435 : !ADD #$20 : STA $7EF435
-		BRL .fullItemCounts
-	+ CMP.b #$08 : BNE + ; Agahnim's Tower
-		LDA $7EF435 : INC : AND #$03 : TAX
-		LDA $7EF435 : AND #$FC : STA $7EF435
-		TXA : ORA $7EF435 : STA $7EF435
-		BRL .fullItemCounts
-	+ CMP.b #$0A : BNE + ; Swamp Palace
-		%BottomHalf($7EF439)
-		BRL .fullItemCounts
-	+ CMP.b #$0C : BNE + ; Palace of Darkness
-		%BottomHalf($7EF434)
-		BRL .fullItemCounts
-	+ CMP.b #$0E : BNE + ; Misery Mire
-		%BottomHalf($7EF438)
-		BRL .fullItemCounts
-	+ CMP.b #$10 : BNE + ; Skull Woods
-		%TopHalf($7EF437)
-		BRL .fullItemCounts
-	+ CMP.b #$12 : BNE + ; Ice Palace
-		%TopHalf($7EF438)
-		BRL .fullItemCounts
-	+ CMP.b #$14 : BNE + ; Tower of Hera
-		LDA $7EF435 : !ADD #$04 : AND #$1C : TAX
-		LDA $7EF435 : AND #$E3 : STA $7EF435
-		TXA : ORA $7EF435 : STA $7EF435
-		BRL .fullItemCounts
-	+ CMP.b #$16 : BNE + ; Thieves' Town
-		%BottomHalf($7EF437)
-		BRL .fullItemCounts
-	+ CMP.b #$18 : BNE + ; Turtle Rock
-		%TopHalf($7EF439)
 		BRL .fullItemCounts
 	+ CMP.b #$1A : BNE + ; Ganon's Tower
-		LDA $7EF436 : !ADD #$08 : STA $7EF436
 		LDA $7EF366 : AND #$04 : BNE ++
 			JSR .incrementGTowerPreBigKey
 		++

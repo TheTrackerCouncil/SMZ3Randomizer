@@ -7,3 +7,4 @@ incsrc patches.asm
 incsrc tracking.asm
 incsrc seed_display.asm
 incsrc bomb_torizo.asm
+incsrc aim_any_button.asm

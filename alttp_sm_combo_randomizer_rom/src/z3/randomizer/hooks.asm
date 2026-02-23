@@ -56,6 +56,13 @@ JSL.l OnDungeonExit : NOP #2
 ;--------------------------------------------------------------------------------
 
 ;================================================================================
+; Quit Hook (for both types of save and quit)
+;--------------------------------------------------------------------------------
+org $09F60B ; <- 4F60B - module_death.asm : 530 (LDA.b #$10 : STA $1C)
+JSL.l OnQuit
+;--------------------------------------------------------------------------------
+
+;================================================================================
 ; Infinite Bombs / Arrows / Magic
 ;--------------------------------------------------------------------------------
 ; org $08A17A ; <- 4217A - ancilla_arrow.asm : 42 (AND.b #$04 : BEQ .dont_spawn_sparkle)
@@ -1100,6 +1107,7 @@ JSL.l GetMagicBatItem
 org $0080D7 ; <- D7 - Bank00.asm:172 (SEP #$30)
 JML MSUMain : NOP
 SPCContinue:
+
 org $028B7A ; <- C220 A5A0 - Bank02.asm:2225 (REP #$20 : LDA $A0)
 JSL SpiralStairsPreCheck
 
@@ -1229,12 +1237,25 @@ JSL.l DrawKeyIcon : NOP #8
 ;--------------------------------------------------------------------------------
 
 ;================================================================================
+; Wallmaster camera fix
+;--------------------------------------------------------------------------------
+org $1EAF77 ; <- F2F77 sprite_wallmaster.asm : 141 (LDA.b #$2A : JSL Sound_SetSfx3PanLong)
+JSL.l WallmasterCameraFix
+
+;================================================================================
 ; Pendant / Crystal Fixes
 ;--------------------------------------------------------------------------------
 ;org $0DE9C8 ; <- 6E9C8 - original check for agahnim 1 being defeated
 ;;LDA $7EF3CA : CMP.b #$40 ; check for dark world instead
 ;JSL.l CheckPendantHUD
 ;NOP #2
+;================================================================================
+;================================================================================
+org $098BB0 ; <- 048BB0 - ancilla_init.asm:1663 - (STX $02D8 : JSR AddAncilla)
+JSL.l TryToSpawnCrystalUntilSuccess
+NOP
+org $01C74B ; <- 00C74B - bank01.asm:10368 - (STZ $AE, X)
+NOP #2 ; this STZ is what makes the crystal never spawn if it fails to spawn on the first try
 ;================================================================================
 org $0DE9C8 ; <- 6E9C8 - equipment.asm:1623 - (LDA $7EF3C5 : CMP.b #$03 : BCC .beforeAgahnim)
 JSL.l DrawPendantCrystalDiagram : RTS
@@ -1271,13 +1292,27 @@ NOP #2
 ;================================================================================
 ;Clear level to open doors
 org $01C50D ; 0xC50D - Bank01.asm:10032 - (LDA $7EF3CA : BNE .inDarkWorld)
-LDA CrystalPendantFlags_2, X
+JML.l RoomTag_RoomTrigger_KillDoor_ExtendedItems
 ;================================================================================
 ;Kill enemy to clear level
 org $01C715 ; <- C715 - Bank01.asm:10358 - (LDA $7EF3CA : BNE .inDarkWorld)
-LDA CrystalPendantFlags_2, X
-;JSL.l GetPendantCrystalWorld
+JML.l RoomTag_KillRoomForPrize_ExtendedItems
 ;================================================================================
+org $098BBC ; #_098BBC: LDA.w .receipt_ids,Y (AncillaAdd_FallingPrize)
+JSL AncillaAdd_FallingPrize_ExtendedItems
+NOP #2
+
+org $08CAD6; #_08CAD6: LDA.w $0C5E,X (Ancilla29_MilestoneItemGet)
+JSL Ancilla29_MilestoneItemGet_ExtendedItems
+NOP #2
+
+org $00E4A2
+JML Graphics_LoadChrHalfSlot_ExtendedItems
+NOP #3
+
+org $0ABAB9
+JML WorldMap_LoadSpriteGFX_ExtendedItems
+
 ;org $0AC5C3 ; <- 545C3 - Bank0A.asm:1859 - (LDA $7EF374 : AND $0AC5A6, X : BEQ .fail)
 ;NOP #10
 ;CLC
@@ -1394,11 +1429,11 @@ NOP #3
 ; org $02A005 ; <- 12005 - Bank02.asm:5667 (JSL Main_ShowTextMessage)
 ; JSL.l DialogTriforce : NOP #4
 ; ;--------------------------------------------------------------------------------
-; org $1D92EC ; <- E92EC - sprite_ganon.asm:947 (JSL Sprite_ShowMessageMinimal)
-; JSL.l DialogGanon1
+org $1D92EC ; <- E92EC - sprite_ganon.asm:947 (JSL Sprite_ShowMessageMinimal)
+JSL.l DialogGanon1
 ; ;--------------------------------------------------------------------------------
-; org $1D9078 ; <- E9078 - sprite_ganon.asm:552 (LDA.b #$70 : STA $1CF0)
-; JSL.l DialogGanon2 : RTS
+org $1D9078 ; <- E9078 - sprite_ganon.asm:552 (LDA.b #$70 : STA $1CF0)
+JSL.l DialogGanon2 : RTS
 ; ;--------------------------------------------------------------------------------
 ; org $1DA4EC ; <- EA4EC - sprite_blind_entities.asm:845 (JSL Sprite_ShowMessageMinimal)
 ; JSL.l DialogBlind
@@ -1565,8 +1600,8 @@ org $1DE112 ; <- EE112 sprite_great_catfish.asm : 341 (JSL Sprite_ShowMessageMin
 NOP #4
 ;----------------------------------------------------
 ;-- King Zora
-;org $059A7D ; <- 29A7D sprite_zora_king.asm : 223 - (JSL Sprite_ShowMessageMinimal)
-;STZ $1CE8 : NOP
+org $059A7D ; <- 29A7D sprite_zora_king.asm : 223 - (JSL Sprite_ShowMessageMinimal)
+STZ $1CE8 : NOP
 ;----------------------------------------------------
 ;-- Before Agah 1 fight
 org $1DD299 ; <- ED299 sprite_chatty_agahnim.asm : 111 (JSL Sprite_ShowMessageMinimal)
@@ -2120,6 +2155,31 @@ JSL.l SetOverlayIfLamp
 ; ;================================================================================
 
 ;================================================================================
+; Hole fixes
+;--------------------------------------------------------------------------------
+org $1BB88E ; <- DB88E - Bank1B.asm:59 (LDX.w #$0024)
+JML.l CheckHole
+org $1BB8A4 ; <- DB8A4 - Bank1B.asm:78 (LDX.w #$0026)
+Overworld_Hole_GotoHoulihan:
+org $1BB8AF ; <- DB8AF - Bank1B.asm:85 (.matchedHole)
+Overworld_Hole_matchedHole:
+org $1BB8BD ; <- DB8BD - Bank1B.asm:85 (PLB)
+Overworld_Hole_End:
+
+;--------------------------------------------------------------------------------
+
+;================================================================================
+; Disable pyramid hole check for killing aga2
+;
+; this check is intended to prevent getting fluted out a second time if you 
+; return to his room after already killing him once. But with a pre-opened 
+; pyramid hole, it can cause you to get stuck there on killing him the first 
+; time. So we change it, and accept the flute out if you return. 
+;---------------------------------------------------------------------------------
+org $01C753 ; 0C753 = Bank01:10398 (LDA $7EF2DB : AND.b #$20 : BNE .return)
+db $00 ; (originally $20)
+
+;================================================================================
 ; Music fixes
 ;--------------------------------------------------------------------------------
 org $0282F4 ; <- Bank02.asm:654 (LDY.b #$58 ...)
@@ -2367,8 +2427,8 @@ org $1DE112 ; <- EE112 sprite_great_catfish.asm : 341 (JSL Sprite_ShowMessageMin
 NOP #4
 ;----------------------------------------------------
 ;-- King Zora
-;org $059A7D ; <- 29A7D sprite_zora_king.asm : 223 - (JSL Sprite_ShowMessageMinimal)
-;STZ $1CE8 : NOP
+org $059A7D ; <- 29A7D sprite_zora_king.asm : 223 - (JSL Sprite_ShowMessageMinimal)
+STZ $1CE8 : NOP
 ;----------------------------------------------------
 ;-- Before Agah 1 fight
 org $1DD299 ; <- ED299 sprite_chatty_agahnim.asm : 111 (JSL Sprite_ShowMessageMinimal)
@@ -2480,10 +2540,10 @@ org $05F8F5 ; <- 2F8F5 sprite_potion_shop.asm : 620 - (JSL Sprite_ShowSolicitedM
 JSL Sprite_ShowSolicitedMessageIfPlayerFacing_Edit
 ;----------------------------------------------------------
 ;-- Bottle Vendor
-; org $05EAE3 ; <- 2EAE3 sprite_bottle_vendor.asm : 104 - (JSL Sprite_ShowSolicitedMessageIfPlayerFacing : BCC .didnt_converse)
-; JSL Sprite_ShowSolicitedMessageIfPlayerFacing_Edit
-; org $05EB03 ; <- 2EB03 sprite_bottle_vendor.asm : 129 - (JSL Sprite_ShowMessageUnconditional)
-; NOP #4
+org $05EAE3 ; <- 2EAE3 sprite_bottle_vendor.asm : 104 - (JSL Sprite_ShowSolicitedMessageIfPlayerFacing : BCC .didnt_converse)
+JSL Sprite_ShowSolicitedMessageIfPlayerFacing_Edit
+org $05EB03 ; <- 2EB03 sprite_bottle_vendor.asm : 129 - (JSL Sprite_ShowMessageUnconditional)
+NOP #4
 ;----------------------------------------------------------
 ;-- Digging Game Guy
 org $1DFC76 ; <- EFC76 sprite_digging_game_guy.asm : 46 (JSL Sprite_ShowSolicitedMessageIfPlayerFacing : BCC .return)
@@ -2535,6 +2595,85 @@ dw $1520, $167C, $0001, $0122, $00F0 ; Blind (maiden) "don't take me outside!"
 dw $05AC, $04FC, $0001, $0027, $00F0 ; Zelda in the water room
 
 
+org $1BBD05 ; <- bank1B.asm : 261 (TYA : STA $00) ; hook starts at the STA
+JML.l PreventEnterOnBonk
+NOP
+PreventEnterOnBonk_return:
+org $1BBD77 ; <- bank1B.asm : 308 (SEP #$30)
+PreventEnterOnBonk_BRANCH_IX:
+;--------------------------------------------------------------------------------
+
+;--------------------------------------------------------------------------------
+org $028496 ; <- 15496 - Bank02.asm : 959  (LDA $7EF3C8 : PHA)
+JML.l AllowStartFromExit
+AllowStartFromExitReturn:
+
+;================================================================================
+;Inverted mode tile map update (executed right after the original tile load)
+;--------------------------------------------------------------------------------
+org $02ED51 ; <- 16D51
+JSL.l Overworld_LoadNewTiles
+NOP #$02
+;--------------------------------------------------------------------------------
+;Same as above
+org $02EC2E ;<- 016C2E
+JSL.l Overworld_LoadNewTiles
+NOP #$02
+
+
+;-- New Sign table offet calculation
+org $07b4fe ; <- 3b4fe - bank07.asm : 8454 (LDA $8A : ASL A : TAY)
+JSL CalculateSignIndex
+
+;================================================================================
+; Player Sprite Fixes
+;--------------------------------------------------------------------------------
+org $0DA9C8 ; <- 06A9C8 - player_oam.asm: 1663 (AND.w #$00FF : CMP.w #$00F8 : BCC BRANCH_MARLE)
+; We are converting this branching code that basically puts the carry from the
+; CMP into $02 into constant time code, so that player sprite head-bobbing can
+; be removed by sprites while remaining race legal (cycle-for-cycle identical
+; to the link sprite).
+LDA $02 ; always zero! (this replaces the BCC)
+ADC.w #0000 ; put the carry bit into the accumulator instead of a hardcoded 1.
+;-------------------------------------------------------------------------------
+org $02FD6F ; <- 017d6f - bank0E.asm: 3694 (LoadActualGearPalettes:) Note: Overflow of bank02 moved to 0e in US Rom
+JSL LoadActualGearPalettesWithGloves
+RTL
+;--------------------------------------------------------------------------------
+; Bunny Palette/Overworld Map Bugfix
+;--------------------------------------------------------------------------------
+org $02FDF0 ; <- 017df0 - bank0E (LDA [$00] : STA $7EC300, X : STA $7EC500, X)
+JSL LoadGearPalette_safe_for_bunny
+RTS
+;================================================================================
+
+;--------------------------------------------------------------------------------
+; Allow Bunny Link to Read Signposts
+;--------------------------------------------------------------------------------
+org $07839E ; bunny BAGE check
+BunnyRead:
+	JSR.w $07B5A9 ; check A button
+	BCC .noA
+	JSR.w CheckIfReading
+	BNE .noread
+	JSR.w $07B4DB
+	NOP
+.noread
+.noA
+
+org $07FFF4
+CheckIfReading:
+	JSR.w $07D36C ; check action
+	LDA #$80 : TRB $3B
+	CPX #$04
+	RTS
+
+org $01C4B8 : JSL FixJingleGlitch
+org $01C536 : JSL FixJingleGlitch
+org $01C592 : JSL FixJingleGlitch
+org $01C65F : JSL FixJingleGlitch
+
+
 ;=====================================================
 ;-- Multiworld dialog override hook for item pickups
 ;=====================================================
@@ -2564,13 +2703,10 @@ org $08C531
 org $00fa2b ; Bank00.asm : 8724 (LDA.b #$17 : STA $10)
     jsl OnBeginSaveAndQuit
 
+;=====================================================
+;-- Hijack the point where brightness is enabled during save & quit
+;=====================================================
 
-;================================================================================
-; Replace pyramid hole check for killing aga2
-;
-; This check originally intended to prevent getting fluted out a second time if you 
-; return to his room after already killing him once. Overwrite to flute out if Aga2
-; has been defeated
-;---------------------------------------------------------------------------------
-org $01C74E ; 00C74E - bank_01.asm:13281 - (LDA.l $7EF2DB : AND.b #$20)
-LDA.l Aga2Duck : NOP #2
+org $028109 ; <- 10109
+JSL.l EnableBrightnessSlow
+NOP

@@ -51,6 +51,7 @@
 !MSU_AUDIO_TRACK_HI = $2005
 !MSU_AUDIO_VOLUME = $2006
 !MSU_AUDIO_CONTROL = $2007
+!CURRENT_MSU_TRACK = $0332
 
 ;;; SPC communication ports
 !SPC_COMM_0 = $2140
@@ -65,26 +66,10 @@
 !RequestedMusic = $063D
 !CurrentMusic = $064C
 !MusicBank = $07F3
-!CURRENT_MSU_TRACK = $0332
-!CURRENT_MSU_VOLUME = $0336
-!RESUME_MSU_TRACK = $0338
-!NO_RESUME_AFTER_LO = $033A
-!NO_RESUME_AFTER_HI = $033C
 
-;; MIN_VOLUME must equal a multiple of FADE_PER_FRAME, minus 1, or we'll never hit FULL_VOLUME
 !FULL_VOLUME = $FF
-!MIN_VOLUME = $0F
-!FADE_PER_FRAME = $10   ; 15 frames of fade-in
-
-!SM_FRAME_COUNT_LO = $7E05B8
-!SM_FRAME_COUNT_HI = $7E05BA
-;; The maximum number of frames a different track can play before resuming the original track
-;; Here we're using 30 seconds, to match the Z3 side
-!MAX_RESUME_FRAMES = $708
 
 !TRACK_OFFSET = 100
-!TRACK_SAMUS_FANFARE = 101  ; 1 + TRACK_OFFSET
-!TRACK_ITEM_ROOM = 103      ; 3 + TRACK_OFFSET
 
 !VAL_COMMAND_MUTE_SPC = $FA
 !VAL_COMMAND_UNMUTE_SPC = $FB
@@ -108,11 +93,6 @@ endmacro
 org $C08462
 base $808462
     jml debug_reset_mute_msu
-
-
-; Hijack the jump to the second-to-last routine in the main gameplay loop
-org $C28BAF
-    jsl msu_fade_in
 
 ; Init MSU and check for missing tracks
 org $C08564
@@ -349,8 +329,6 @@ SM_MSU_Main:
     tay
     clc : adc.b #!TRACK_OFFSET
 
-    jsr ComputeResumeAndVolume
-
     sta.w !CURRENT_MSU_TRACK
     sta.w !MSU_AUDIO_TRACK_LO
     stz.w !MSU_AUDIO_TRACK_HI
@@ -364,7 +342,7 @@ SM_MSU_Main:
     sta.w !MSU_AUDIO_CONTROL
     
     ;; Set volume
-    lda.w !CURRENT_MSU_VOLUME
+    lda.b #!FULL_VOLUME
     sta.w !MSU_AUDIO_VOLUME
     
     ;; Mute SPC music
@@ -431,7 +409,7 @@ bank_00: ;; Opening
 bank_03: ;; Opening
     db 04,05
 bank_06: ;; Crateria (First Landing)
-    db 06,06,07
+    db 06,00,07
 bank_09: ;; Crateria
     db 08,09
 bank_0C: ;; Samus's Ship
@@ -502,75 +480,6 @@ TrackNeedLooping:
 NoLooping:
     lda.b #$01
     rts
-
-;; Accumulator has the number of the requested track, CPU is in 8-bit mode
-ComputeResumeAndVolume:
-    pha
-    ;; If the incoming track is Item/Elevator Room, tell MSU chip to store the resume point
-    CMP #!TRACK_ITEM_ROOM : BNE .CheckResume
-.SetResume
-    lda.w !CURRENT_MSU_TRACK
-    sta.w !RESUME_MSU_TRACK
-    lda.b #$04
-    sta.w !MSU_AUDIO_CONTROL
-    rep #$20                    ; Switch to 16-bit mode
-    lda.w !SM_FRAME_COUNT_LO
-    adc.w #!MAX_RESUME_FRAMES
-    sta.w !NO_RESUME_AFTER_LO
-    lda.w #$00
-    adc.w !SM_FRAME_COUNT_HI
-    sta.w !NO_RESUME_AFTER_HI
-    sep #$20                    ; Return to 8-bit mode
-    bra .NoFade
-.CheckResume
-    lda.w !CURRENT_MSU_TRACK
-    ;; If the outgoing track is Samus Fanfare, never resume
-    CMP #!TRACK_SAMUS_FANFARE : BEQ .ResetResume
-    ;; If the outgoing track is Item/Elevator Room, we might fade in
-    CMP #!TRACK_ITEM_ROOM : BNE .NoFade
-    ;; Check if the incoming track is the one we set to resume above and we haven't timed out
-    pla     ; Load the incoming track back into the accumulator...
-    pha     ; ...but keep it on the stack because we need it again at the end of the block.
-    CMP !RESUME_MSU_TRACK : BNE .NoFade
-    rep #$20                    ; Switch to 16-bit mode
-    lda.w !SM_FRAME_COUNT_HI
-    cmp.w !NO_RESUME_AFTER_HI : BNE + ; Low word rolled over and changed high word
-    lda.w !SM_FRAME_COUNT_LO
-    cmp.w !NO_RESUME_AFTER_LO
-+
-    sep #$20                    ; Return to 8-bit mode
-    bcs .ResetResume            ; Greater than or equal to means we timed out
-.SetFade
-    lda.b #!MIN_VOLUME
-    bra .FadeDone
-.ResetResume
-    pla     ; Load the incoming track back into the accumulator...
-    pha     ; ...but keep it on the stack because we need it again at the end of the block.
-    sta.w !MSU_AUDIO_TRACK_LO   ; Select the requested track...
-    stz.w !MSU_AUDIO_TRACK_HI
-    lda.b #$01
-    sta.w !MSU_AUDIO_CONTROL    ; ...play it, so the resume point is cleared...
-    lda.b #$00
-    sta.w !MSU_AUDIO_CONTROL    ; ...then immediately stop it so we don't actually hear it.
-.NoFade
-    lda.b #!FULL_VOLUME
-.FadeDone
-    sta.w !CURRENT_MSU_VOLUME
-    pla
-    rts
-
-msu_fade_in:
-    jsl $A08687                 ; Do the jump we hijacked
-    lda.w !CURRENT_MSU_VOLUME
-    beq +                       ; Volume is zero, so MSU chip is muted
-    cmp.w #!FULL_VOLUME : beq + ; Already full volume
-    adc.w #!FADE_PER_FRAME
-    sta.w !CURRENT_MSU_VOLUME
-    sep #$20                    ; Switch to 8-bit mode so we don't also write the CONTROL byte
-    sta.w !MSU_AUDIO_VOLUME
-    rep #$20                    ; Return to 16-bit mode
-+
-    rtl
 
 debug_reset_mute_msu:
     sep #$30

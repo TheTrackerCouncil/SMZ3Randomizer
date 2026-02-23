@@ -35,9 +35,10 @@ incsrc "sm/titlescreen.asm"                 ; Super Metroid Upload New Title Scr
 incsrc "sm/keycards.asm"                    ; Super Metroid Keycard system
 incsrc "sm/plminject.asm"                   ; Super Metroid PLM Injection
 incsrc "sm/messagebox.asm"                  ; Super Metroid Messagebox improvements
+incsrc "sm/rewards.asm"                     ; Super Metroid Custom Boss Rewards
+incsrc "sm/tables.asm"                      ; Super Metroid Data Tables
 incsrc "sm/spc.asm"                         ; Super Metroid MSU-1 SPC patches
 incsrc "sm/msu.asm"                         ; Super Metroid MSU-1 patches (also inits MSU-1 tracklist)
-incsrc "sm/counthyperbeam.asm"              ; Super Metroid Helper for counting Hyper Beam shots
 
 ; --- ALTTP code ---
 incsrc "z3/hirom.asm"	                    ; ALTTP ExHiROM patch

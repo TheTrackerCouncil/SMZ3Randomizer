@@ -1,7 +1,13 @@
 ; General Super Metroid randomizer configuration flags
 
-; Used for the SM Hold Fire Toggle between 
-; Fusion Style (Super Missiles and Power Bombs Only) 
-; Zero Mission Style (Can switch between Missiles and Supers)
-org $90FF50
-DW #$0000
+org $F47200
+; Number of SM bosses to defeat
+config_sm_bosses:
+    dw #$0004
+
+; starting events
+; 0001 is zebes awake (default)
+; 0400 is Tourian open (AKA Fast MB)
+; 03C0 is G4 statues already grey (no animation)
+config_events:       ; F47202
+    dw #$0001

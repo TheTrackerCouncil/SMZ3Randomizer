@@ -181,8 +181,8 @@ FreeDungeonItemNotice:
 		%CopyDialog(Notice_BigKeyOf)
 		REP #$20 : LDA !OFFSET_RETURN : DEC #2 : STA !OFFSET_POINTER : SEP #$20
 		%CopyDialog(Notice_Self)
-		BRL .done
-	+
+		BRL .done	
+	+	
 	AND.b #$F0 ; looking at high bits only
 	CMP.b #$70 : BNE + ; map of...
 		%CopyDialog(Notice_MapOf)
@@ -199,6 +199,10 @@ FreeDungeonItemNotice:
 		PLA : AND.b #$0F : STA $7F5020 : LDA.b #$0F : !SUB $7F5020 : PHA
 		LDA #$01 : STA $7F5010 ; set up a flip for small keys
 		BRL .dungeon
+	+ : CMP.b #$C0 : BNE + ; SM Map for ... ?`
+		LDA !ITEM_TEMPORARY : CMP.b #$CA : BCS ++ : BRL .skip : ++
+		%CopyDialog(Notice_SmMapOf)
+		BRL .sm_area
 	+ : CMP.b #$D0 : BNE + ; keycard for ...
 		%CopyDialog(Notice_KeycardFor)
 		BRL .region
@@ -287,7 +291,19 @@ FreeDungeonItemNotice:
 		%CopyDialog(Notice_LowerNorfairBoss)
 	+ BRL .done
 
-
+	.sm_area
+	REP #$20 : LDA !OFFSET_RETURN : DEC #2 : STA !OFFSET_POINTER : SEP #$20
+	LDA !ITEM_TEMPORARY
+	AND.b #$0F ; looking at low bits only
+	SEC : SBC #$0A	; Remove offset of $0A
+	CMP.b #$00 : BNE + ; ...brinstar
+		%CopyDialog(Notice_Brinstar) : BRL .done
+	+ : CMP.b #$01 : BNE + ; ...wrecked ship
+		%CopyDialog(Notice_WreckedShip) : BRL .done
+	+ : CMP.b #$02 : BNE + ; ...maridia
+		%CopyDialog(Notice_Maridia) : BRL .done
+	+ : CMP.b #$03 : BNE + ; ...lower norfair
+		%CopyDialog(Notice_LowerNorfair) : BRL .done		
 	.done
 
 	STZ $1CF0 : STZ $1CF1 ; reset decompression buffer
@@ -447,6 +463,118 @@ RTL
 ; 	%LoadDialogAddress(BombShopGuyText)
 ; 	JSL.l Sprite_ShowMessageUnconditional
 ; RTL
+
+
+DialogGanon1:
+	JSL.l CheckGanonVulnerability
+	REP #$20
+	LDA.w #$018C
+	BCC +
+	LDA.w #$016D
++	STA $1CF0
+	SEP #$20
+	JSL.l Sprite_ShowMessageMinimal_Alt
+RTL
+
+DialogGanon2:
+    JSL.l CheckGanonVulnerability
+	
+	REP #$20
+	BCS +
+        LDA.w #$018D : BRA ++
+    +
+		LDA.l $7EF38E
+
+        BIT.w #$0080 : BNE + ; branch if bow
+        LDA.w #$0192 : BRA ++
+    +
+        BIT.w #$0040 : BEQ + ; branch if no silvers
+        LDA.w #$0195 : BRA ++
+    +
+        BIT.w #$0020 : BNE + ; branch if p bow
+        LDA.w #$0194 : BRA ++
+    +
+        BIT.w #$0080 : BEQ + ; branch if no bow
+        LDA.w #$0193 : BRA ++
+    +
+        LDA.w #$016E
+    ++
+	STA $1CF0
+	SEP #$20
+    JSL.l Sprite_ShowMessageMinimal_Alt
+RTL
+
+Main_ShowTextMessage_Alt:
+	; Are we in text mode? If so then end the routine.
+	LDA $10 : CMP.b #$0E : BEQ .already_in_text_mode
+Sprite_ShowMessageMinimal_Alt:
+	STZ $11
+
+	PHX : PHY
+	PEI ($00)
+	LDA.b $02 : PHA
+
+	LDA.b #$1C : STA.b $02
+	REP #$30
+		LDA.w $1CF0 : ASL : TAX
+		LDA.l $7F71C0, X
+		STA.b $00
+	SEP #$30
+
+	LDY.b #$00
+	      LDA [$00], Y : CMP.b #$FE : BNE +
+	INY : LDA [$00], Y : CMP.b #$6E : BNE +
+	INY : LDA [$00], Y :            : BNE +
+	INY : LDA [$00], Y : CMP.b #$FE : BNE +
+	INY : LDA [$00], Y : CMP.b #$6B : BNE +
+	INY : LDA [$00], Y : CMP.b #$04 : BNE +
+		STZ $1CE8
+		JMP .end
+	+
+
+	STZ $0223   ; Otherwise set it so we are in text mode.
+	STZ $1CD8   ; Initialize the step in the submodule
+
+	; Go to text display mode (as opposed to maps, etc)
+	LDA.b #$02 : STA $11
+
+	; Store the current module in the temporary location.
+	LDA $10 : STA $010C
+
+	; Switch the main module ($10) to text mode.
+	LDA.b #$0E : STA $10
+	.end
+	PLA : STA.b $02
+	PLA : STA.b $01
+	PLA : STA.b $00
+	PLY : PLX
+
+Main_ShowTextMessage_Alt_already_in_text_mode:
+RTL
+
+CalculateSignIndex:
+  ; for the big 1024x1024 screens we are calculating link's effective
+  ; screen area, as though the screen was 4 different 512x512 screens.
+  ; And we do this in a way that will likely give the right value even 
+  ; with major glitches.
+
+  LDA $8A : ASL A : TAY ;what we wrote over
+
+  LDA $0712 : BEQ .done ; If a small map, we can skip these calculations.
+
+  LDA $21 : AND.w #$0002 : ASL #2 : EOR $8A : AND.w #$0008 : BEQ +
+  	TYA : !ADD.w #$0010 : TAY  ;add 16 if we are in lower half of big screen.
+  + 
+
+  LDA $23 : AND.w #$0002 : LSR : EOR $8A : AND.w #$0001 : BEQ +
+  TYA : INC #2 : TAY  ;add 16 if we are in lower half of big screen.
+  +
+  ; ensure even if things go horribly wrong, we don't read the sign out of bounds and crash:
+  TYA : AND.w #$00FF : TAY 
+
+.done
+RTL
+
 ;--------------------------------------------------------------------------------
 ; A0 - A9 - 0 - 9
 ; AA - C3 - A - Z

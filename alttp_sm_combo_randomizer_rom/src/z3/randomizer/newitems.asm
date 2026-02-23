@@ -74,8 +74,14 @@ GetAnimatedSpriteGfxFile:
     CMP.b #$39 : !BGE +
 		LDY.b #$5D : JML GetAnimatedSpriteGfxFile_return
 	+
-	CMP.b #$50 : !BLT +
+	CMP.b #$50 : !BGE +
+		LDY.b #$32 : JML GetAnimatedSpriteGfxFile_return
+	+
+	CMP.b #$70 : !BGE +
 		LDY.b #$F0 : JML GetAnimatedSpriteGfxFile_return
+	+
+	CMP.b #$80 : !BGE +
+		LDY.b #$F1 : JML GetAnimatedSpriteGfxFile_return
 	+
 		LDY.b #$32
 JML GetAnimatedSpriteGfxFile_return
@@ -115,6 +121,13 @@ dw $0600, $0630, $0660, $0690, $06C0, $06F0, $0720, $0750
 dw $0900, $0930, $0960, $0990, $09C0, $09F0, $0A20, $0A50
 dw $0C00, $0C30, $0C60, $0C90, $0CC0, $0CF0, $0D20, $0D50
 
+;#$68-6F - Unused
+dw $0600, $0600, $0600, $0600, $0600, $0600, $0600, $0600
+
+;#$70 - Super Metroid Item Graphics #2
+dw $0600, $0630, $0660, $0690, $06C0, $06F0, $0720, $0750
+dw $0900, $0930, $0960, $0990, $09C0, $09F0, $0A20, $0A50
+dw $0C00, $0C30, $0C60, $0C90, $0CC0, $0CF0, $0D20, $0D50
 
 GetAnimatedSpriteBufferPointer:
 	;PHB : PHK : PLB
@@ -184,6 +197,79 @@ endmacro
 ; 	PLA : STA $00
 ; RTS
 ;--------------------------------------------------------------------------------
+macro TopHalf(address)
+	LDA <address> : !ADD #$10 : STA <address>
+endmacro
+
+macro BottomHalf(address)
+	PHA : PHX
+		LDA <address> : INC : AND #$0F : TAX
+		LDA <address> : AND #$F0 : STA <address>
+		TXA : ORA <address> : STA <address>
+	PLX : PLA
+endmacro
+
+; Subroutine to increment dungeon chest counters.
+DungeonChestCounterIncrement:
+	JSR DungeonChestCounterIncrementMain
+RTL
+
+DungeonChestCounterIncrementMain:
+	LDA $040C ; get dungeon id
+
+	CMP.b #$00 : BNE + ; Sewers (Escape)
+		BRA ++
+	+ CMP.b #$02 : BNE + ; Hyrule Castle (Escape)
+		++
+		CPY.b #$32 : BNE ++ : BRL .end : ++ ; Prison guard big key doesn't count for dungeon chest counts.
+		%TopHalf($7EF434)
+		BRL .end
+	+ CMP.b #$04 : BNE + ; Eastern Palace
+		LDA $7EF436 : INC : AND #$07 : TAX
+		LDA $7EF436 : AND #$F8 : STA $7EF436
+		TXA : ORA $7EF436 : STA $7EF436
+		BRL .end
+	+ CMP.b #$06 : BNE + ; Desert Palace
+		LDA $7EF435 : !ADD #$20 : STA $7EF435
+		BRL .end
+	+ CMP.b #$08 : BNE + ; Agahnim's Tower
+		LDA $7EF435 : INC : AND #$03 : TAX
+		LDA $7EF435 : AND #$FC : STA $7EF435
+		TXA : ORA $7EF435 : STA $7EF435
+		BRL .end
+	+ CMP.b #$0A : BNE + ; Swamp Palace
+		%BottomHalf($7EF439)
+		BRL .end
+	+ CMP.b #$0C : BNE + ; Palace of Darkness
+		%BottomHalf($7EF434)
+		BRL .end
+	+ CMP.b #$0E : BNE + ; Misery Mire
+		%BottomHalf($7EF438)
+		BRL .end
+	+ CMP.b #$10 : BNE + ; Skull Woods
+		%TopHalf($7EF437)
+		BRL .end
+	+ CMP.b #$12 : BNE + ; Ice Palace
+		%TopHalf($7EF438)
+		BRL .end
+	+ CMP.b #$14 : BNE + ; Tower of Hera
+		LDA $7EF435 : !ADD #$04 : AND #$1C : TAX
+		LDA $7EF435 : AND #$E3 : STA $7EF435
+		TXA : ORA $7EF435 : STA $7EF435
+		BRL .end
+	+ CMP.b #$16 : BNE + ; Thieves' Town
+		%BottomHalf($7EF437)
+		BRL .end
+	+ CMP.b #$18 : BNE + ; Turtle Rock
+		%TopHalf($7EF439)
+		BRL .end
+	+ CMP.b #$1A : BNE + ; Ganon's Tower
+		LDA $7EF436 : !ADD #$08 : STA $7EF436
+		;BRL .end
+	+
+	.end
+RTS
+
 AddReceivedItemExpandedGetItem:
 	PHX
 	
@@ -196,13 +282,20 @@ AddReceivedItemExpandedGetItem:
 	;STA $FFFFFF
 
 	lda.l config_multiworld
-	beq +
+	beq .ownItem
 
 	; If this is a multiworld item for someone else, skip picking the item up and just play
 	; the animation, also, write this item to the outgoing queue
 	lda !MULTIWORLD_PICKUP
 	cmp #$01
-	bne +
+	bne .ownItem
+
+	; Check if we're indoors and increment the dungeon chest counter if so.
+	; Increment it here because the normal item get routine will be skipped.
+	LDA $1b : BEQ +
+	JSR DungeonChestCounterIncrementMain
++
+
 	plx
 
 	pla : pla : pla ; Align the stack by popping the return value off it (so we can JML instead of RTL)
@@ -225,7 +318,7 @@ AddReceivedItemExpandedGetItem:
 
 	phx
 	jml $098763		; Skip all code that gives Link the item and just show the graphics
-+
+.ownItem
 
 	LDA $02D8 ; check inventory
 	JSL.l FreeDungeonItemNotice
@@ -360,6 +453,10 @@ AddReceivedItemExpandedGetItem:
 
 		; Check if we got a key for the dungeon we're currently in, and increment the dungeon key count
 		LDA $40C : CMP #$FF : BEQ .done
+		CMP #$02 : BNE +
+		CPX #$00 : BNE +
+		LDX #$01 ; If we got a sewer key in hyrule castle, swap it for a HC key
+	+
 		TXA : ASL : CMP $40C : BNE .done
 		LDA.l $7EF36F : INC : STA.l $7EF36F
 
@@ -610,7 +707,12 @@ AddReceivedItemExpanded:
 	db $50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $5A, $5B, $5C, $5D, $5E, $5F ; Super Metroid
 	
 	; #$C0 - SM Items
-	db $60, $61, $62, $63, $64, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49 ; Super Metroid
+	db $60, $61, $62, $63, $64
+	
+	db $70, $71, $72, $73 ; Boss Tokens	
+	db $49 ; Super Metroid - Unused
+	db $77, $77, $77, $77 ; Super Metroid - Map Station Items
+	db $49, $49 ; Super Metroid - Unused
 	
 	; #$D0 - SM Items (Keycards)
 	db $65, $66, $67, $65, $66, $67, $65, $66, $67, $65, $66, $67, $65, $67, $65, $67 ; Super Metroid
@@ -694,7 +796,17 @@ AddReceivedItemExpanded:
 	
 	; #$B0 - SM Items
 	db  1, 5, 1, 2, 2, 4, 2, 2, 2, 1, 4, 1, 2, 2, 2, 4 ; SM Items #1
-	db  1, 1, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 ; SM Items #2
+	
+	; #$C0 - SM Items Continued
+	db  1, 1, 2, 4, 4
+	
+	; #$C5 ... - SM Boss Reward tokens
+	db  4, 2, 2, 1
+	
+	db  4
+	
+	; #$CA ...  - SM Map stations
+	db  4, 4, 4, 4, 4, 4
 	db  2, 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 2, 2, 2, 2 ; Keycards
 	db  4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 ; Unused
 	db  4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 ; Unused
@@ -1152,7 +1264,6 @@ CountBottlesLong:
 ;    STZ $B0
 ;JML.l StatsFinalPrep
 ;--------------------------------------------------------------------------------
-
 Decomp_spr_high_extended:
 	cpy #$f0
 	bcs .extended
@@ -1174,8 +1285,8 @@ Decomp_spr_high_extended:
 	jml Decomp_spr_high_extended_return
 
 .bank
-	db GFX_SM_Items>>16, $00, $00, $00, $00, $00, $00, $00
+	db GFX_SM_Items>>16, GFX_SM_Items_2>>16, $00, $00, $00, $00, $00, $00
 .high
-	db GFX_SM_Items>>8, $00, $00, $00, $00, $00, $00, $00
+	db GFX_SM_Items>>8, GFX_SM_Items_2>>8, $00, $00, $00, $00, $00, $00
 .low
-	db GFX_SM_Items, $00, $00, $00, $00, $00, $00, $00
+	db GFX_SM_Items, GFX_SM_Items_2, $00, $00, $00, $00, $00, $00
