@@ -115,3 +115,106 @@ FixFrogSmith:
 	.done
 RTS
 ;--------------------------------------------------------------------------------
+
+;--------------------------------------------------------------------------------
+; Fix for SQ jumping causing accidental Exploration Glitch
+SQEGFix:
+	LDA.l Bugfix_PodEG : BEQ ++
+	STZ.w $047A ; disarm exploration glitch
+++	RTL
+
+;--------------------------------------------------------------------------------
+; Fix crystal not spawning when using somaria vs boss
+TryToSpawnCrystalUntilSuccess:
+	STX $02D8 ; what we overwrote
+	JSL AddAncillaLong : BCS .failed ; a clear carry flag indicates success
+.spawned
+	STZ $AE ; the "trying to spawn crystal" flag
+	STZ $AF ; the "trying to spawn pendant" flag
+.failed
+RTL
+
+;--------------------------------------------------------------------------------
+; Fix crystal not spawning when using somaria vs boss
+WallmasterCameraFix:
+	STZ $A7    ; disable vertical camera scrolling for current room
+	REP #$20
+	STZ $0618  ; something about scrolling, setting these to 0 tricks the game 
+	STZ $061A  ; into thinking we're at the edge of the room so it doesn't scroll.
+	SEP #$20
+	JML Sound_SetSfx3PanLong ; what we wrote over, also this will RTL
+
+;--------------------------------------------------------------------------------
+; Fix losing glove colors
+LoadActualGearPalettesWithGloves:
+REP #$20
+LDA $7EF359 : STA $0C
+LDA $7EF35B : AND.w #$00FF
+JSL LoadGearPalettes_variable
+JSL SpriteSwap_Palette_ArmorAndGloves_part_two
+RTL
+
+;--------------------------------------------------------------------------------
+; Fix Bunny Palette Map Bug
+LoadGearPalette_safe_for_bunny:
+LDA $10 
+CMP.w #$030E : BEQ .new ; opening dungeon map
+CMP.w #$070E : BEQ .new ; opening overworld map
+.original
+-
+	LDA [$00]
+	STA $7EC300, X
+	STA $7EC500, X
+	INC $00 : INC $00
+	INX #2
+	DEY
+	BPL -
+RTL
+.new
+-
+	LDA [$00]
+	STA $7EC500, X
+	INC $00 : INC $00
+	INX #2
+	DEY
+	BPL -
+RTL
+
+;--------------------------------------------------------------------------------
+; Fix pedestal pull overlay
+PedestalPullOverlayFix:
+LDA.b #$09 : STA $039F, X	; the thing we wrote over
+LDA $1B : BNE +
+	LDA $8A : CMP.b #$80 : BNE +
+		LDA $8C : CMP.b #$97
++
+RTL
+
+;--------------------------------------------------------------------------------
+FixJingleGlitch:
+	LDA.b $11
+	BEQ .set_doors
+
+	LDA.l AllowAccidentalMajorGlitch
+	BEQ .exit
+
+.set_doors
+	LDA.b #$05
+	STA.b $11
+
+.exit
+	RTL
+
+;--------------------------------------------------------------------------------
+; Fix green flash that occurs during save & quit,
+; which happens due to brightness being enabled just before NMI is executed,
+; which itself happens just before the frame's processing has finished,
+; causing a lag frame to happen with brightness enabled, but before the new palettes have been loaded
+EnableBrightnessSlow:
+; Wait for NMI so that we enable brightness with plenty of processing time left before next NMI
+STZ.b $12 : - : LDA.b $12 : BEQ -
+
+; Enable brightness
+LDA.b #$0F : STA.b $13
+
+RTL

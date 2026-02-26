@@ -65,52 +65,64 @@ public class MetroidKeysanityPatch : RomPatch
 
     public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
     {
+        // Remove entirely once we add randomized boss counts
         if (!data.World.Config.MetroidKeysanity)
             yield break;
-
-        ushort plaquePLm = 0xd410;
-        ushort doorId = 0x0000;
+        ushort plaquePlm = 0xd410;
         var plmTablePos = 0xf800;
-        foreach (var door in s_doorList)
+
+        if (data.World.Config.MetroidKeysanity)
         {
-            if (door[0] == 0x99BD && data.World.Config.SkipTourianBossDoor)
-            {
-                continue;
-            }
+            ushort doorId = 0x0000;
 
-            var doorArgs = door[4] != KeycardPlaque.None ? doorId | door[3] : door[3];
-            if (door[6] == 0)
+            foreach (var door in s_doorList)
             {
-                // Write dynamic door
-                var doorData = door[0..3].SelectMany(x => UshortBytes(x)).Concat(UshortBytes(doorArgs)).ToArray();
-                yield return new GeneratedPatch(Snes(0x8f0000 + plmTablePos), doorData);
-                plmTablePos += 0x08;
-            }
-            else
-            {
-                // Overwrite existing door
-                var doorData = door[1..3].SelectMany(x => UshortBytes(x)).Concat(UshortBytes(doorArgs)).ToArray();
-                yield return new GeneratedPatch(Snes(0x8f0000 + door[6]), doorData);
-                if ((door[3] == KeycardEvents.BrinstarBoss && door[0] != 0x9D9C)
-                    || door[3] == KeycardEvents.LowerNorfairBoss
-                    || door[3] == KeycardEvents.MaridiaBoss
-                    || door[3] == KeycardEvents.WreckedShipBoss)
-                    // Overwrite the extra parts of the Gadora with a PLM
-                    // that just deletes itself
-                    yield return new GeneratedPatch(Snes(0x8f0000 + door[6] + 0x06), new byte[] { 0x2F, 0xB6, 0x00, 0x00, 0x00, 0x00, 0x2F, 0xB6, 0x00, 0x00, 0x00, 0x00 });
-            }
+                if (door[0] == 0x99BD && data.World.Config.SkipTourianBossDoor)
+                {
+                    continue;
+                }
 
-            // Plaque data
-            if (door[4] != KeycardPlaque.None)
-            {
-                var plaqueData = UshortBytes(door[0]).Concat(UshortBytes(plaquePLm)).Concat(UshortBytes(door[5])).Concat(UshortBytes(door[4])).ToArray();
-                yield return new GeneratedPatch(Snes(0x8f0000 + plmTablePos), plaqueData);
-                plmTablePos += 0x08;
+                var doorArgs = door[4] != KeycardPlaque.None ? doorId | door[3] : door[3];
+                if (door[6] == 0)
+                {
+                    // Write dynamic door
+                    var doorData = door[0..3].SelectMany(x => UshortBytes(x)).Concat(UshortBytes(doorArgs)).ToArray();
+                    yield return new GeneratedPatch(Snes(0x8f0000 + plmTablePos), doorData);
+                    plmTablePos += 0x08;
+                }
+                else
+                {
+                    // Overwrite existing door
+                    var doorData = door[1..3].SelectMany(x => UshortBytes(x)).Concat(UshortBytes(doorArgs)).ToArray();
+                    yield return new GeneratedPatch(Snes(0x8f0000 + door[6]), doorData);
+                    if ((door[3] == KeycardEvents.BrinstarBoss && door[0] != 0x9D9C)
+                        || door[3] == KeycardEvents.LowerNorfairBoss
+                        || door[3] == KeycardEvents.MaridiaBoss
+                        || door[3] == KeycardEvents.WreckedShipBoss)
+                        // Overwrite the extra parts of the Gadora with a PLM
+                        // that just deletes itself
+                        yield return new GeneratedPatch(Snes(0x8f0000 + door[6] + 0x06), new byte[] { 0x2F, 0xB6, 0x00, 0x00, 0x00, 0x00, 0x2F, 0xB6, 0x00, 0x00, 0x00, 0x00 });
+                }
+
+                // Plaque data
+                if (door[4] != KeycardPlaque.None)
+                {
+                    var plaqueData = UshortBytes(door[0]).Concat(UshortBytes(plaquePlm)).Concat(UshortBytes(door[5])).Concat(UshortBytes(door[4])).ToArray();
+                    yield return new GeneratedPatch(Snes(0x8f0000 + plmTablePos), plaqueData);
+                    plmTablePos += 0x08;
+                }
+                doorId += 1;
             }
-            doorId += 1;
         }
 
-        yield return new GeneratedPatch(Snes(0x8f0000 + plmTablePos), new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+        // Uncomment when we add randomized boss counts
+        // if (data.World.Config.TourianBossCount != 4) {
+        //     var plaqueData = UshortBytes(0xA5ED).Concat(UshortBytes(plaquePlm)).Concat(UshortBytes(0x044F)).Concat(UshortBytes(KeycardPlaque.Zero + data.World.Config.TourianBossCount)).ToArray();
+        //     yield return new GeneratedPatch(Snes(0x8f0000 + plmTablePos), plaqueData);
+        //     plmTablePos += 0x08;
+        // }
+
+        yield return new GeneratedPatch(Snes(0x8f0000 + plmTablePos), [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 ]);
     }
 
     public static bool GetIsMetroidKeysanity(byte[] rom, out bool skippedTourianBossDoor)

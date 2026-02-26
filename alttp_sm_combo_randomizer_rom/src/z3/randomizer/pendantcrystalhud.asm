@@ -89,7 +89,8 @@ OverworldMap_CheckObject:
 RTL
 ++
 		LDA.l CrystalPendantFlags_2, X
-		AND.b #$40 : BNE .checkCrystal
+		BMI .checkSMToken
+		AND.b #$40 : BNE .checkCrystal		
 		
 		.checkPendant
 		LDA $7EF374 : AND.l CrystalPendantFlags, X : BNE .fail
@@ -97,6 +98,10 @@ RTL
 	
 		.checkCrystal
 		LDA $7EF37A : AND.l CrystalPendantFlags, X : BNE .fail
+		CLC : BRA .done
+
+		.checkSMToken
+		LDA !SRAM_SM_ITEM_BUF+$72 : AND.l CrystalPendantFlags, X : BNE .fail
 		CLC : BRA .done
 	
 		.fail
@@ -573,58 +578,92 @@ DrawPendantCrystalDiagram:
 		
 		;pendants
 		LDA $7EF374 : AND.w #$0004 : BEQ + ; pendant of courage (green)
-			LDA.w #$3D2B : STA $1332
-			LDA.w #$3D2C : STA $1334
-			LDA.w #$3D2D : STA $1372
-			LDA.w #$3D2E : STA $1374
+			LDA.w #$3D2B : STA $132C
+			LDA.w #$3D2C : STA $132E
+			LDA.w #$3D2D : STA $136C
+			LDA.w #$3D2E : STA $136E
 		+ LDA $7EF374 : AND.w #$0002 : BEQ + ; pendant of power (blue)
-			LDA.w #$2D2B : STA $13AE
-			LDA.w #$2D2C : STA $13B0
-			LDA.w #$2D2D : STA $13EE
-			LDA.w #$2D2E : STA $13F0
+			LDA.w #$2D2B : STA $1332
+			LDA.w #$2D2C : STA $1334
+			LDA.w #$2D2D : STA $1372
+			LDA.w #$2D2E : STA $1374
 		+ LDA $7EF374 : AND.w #$0001 : BEQ + ; pendant of wisdom (red)
-			LDA.w #$252B : STA $13B6
-			LDA.w #$252C : STA $13B8
-			LDA.w #$252D : STA $13F6
-			LDA.w #$252E : STA $13F8
+			LDA.w #$252B : STA $1338
+			LDA.w #$252C : STA $133A
+			LDA.w #$252D : STA $1378
+			LDA.w #$252E : STA $137A
 		+
 		
 		;crystals
 		LDA $7EF37A : AND.w #$0002 : BEQ + ; crystal 1
-			LDA.w #$2D44 : STA $14AC
-			LDA.w #$2D45 : STA $14AE
+			LDA.w #$2D44 : STA $142C
+			LDA.w #$2D45 : STA $142E
 		+ LDA $7EF37A : AND.w #$0010 : BEQ + ; crystal 2
-			LDA.w #$2D44 : STA $146E
-			LDA.w #$2D45 : STA $1470
+			LDA.w #$2D44 : STA $13EE
+			LDA.w #$2D45 : STA $13F0
 		+ LDA $7EF37A : AND.w #$0040 : BEQ + ; crystal 3
-			LDA.w #$2D44 : STA $14B0
-			LDA.w #$2D45 : STA $14B2
+			LDA.w #$2D44 : STA $1430
+			LDA.w #$2D45 : STA $1432
 		+ LDA $7EF37A : AND.w #$0020 : BEQ + ; crystal 4
-			LDA.w #$2D44 : STA $1472
-			LDA.w #$2D45 : STA $1474
+			LDA.w #$2D44 : STA $13F2
+			LDA.w #$2D45 : STA $13F4
 		+ LDA $7EF37A : AND.w #$0004 : BEQ + ; crystal 5
-			LDA.w #$2544 : STA $14B4
-			LDA.w #$2545 : STA $14B6
+			LDA.w #$2544 : STA $1434
+			LDA.w #$2545 : STA $1436
 		+ LDA $7EF37A : AND.w #$0001 : BEQ + ; crystal 6
-			LDA.w #$2544 : STA $1476
-			LDA.w #$2545 : STA $1478
+			LDA.w #$2544 : STA $13F6
+			LDA.w #$2545 : STA $13F8
 		+ LDA $7EF37A : AND.w #$0008 : BEQ + ; crystal 7
-			LDA.w #$2D44 : STA $14B8
-			LDA.w #$2D45 : STA $14BA
+			LDA.w #$2D44 : STA $1438
+			LDA.w #$2D45 : STA $143A
 		+ 
+
+		; SM boss rewards
+		LDA !SRAM_SM_ITEM_BUF+$72 : AND.w #$0001 : BEQ + ; kraid
+			LDA.w #$3D60 : STA $146C
+			LDA.w #$3D61 : STA $146E
+			LDA.w #$3D70 : STA $14AC
+			LDA.w #$3D71 : STA $14AE
+		+
+		LDA !SRAM_SM_ITEM_BUF+$72 : AND.w #$0002 : BEQ + ; phantoon
+			LDA.w #$2962 : STA $1470
+			LDA.w #$2963 : STA $1472
+			LDA.w #$2972 : STA $14B0
+			LDA.w #$2973 : STA $14B2
+		+
+		LDA !SRAM_SM_ITEM_BUF+$72 : AND.w #$0004 : BEQ + ; draygon
+			LDA.w #$2D64 : STA $1474
+			LDA.w #$2D65 : STA $1476
+			LDA.w #$2D74 : STA $14B4
+			LDA.w #$2D75 : STA $14B6
+		+
+		LDA !SRAM_SM_ITEM_BUF+$72 : AND.w #$0008 : BEQ + ; ridley
+			LDA.w #$2566 : STA $1478
+			LDA.w #$2567 : STA $147A
+			LDA.w #$2576 : STA $14B8
+			LDA.w #$2577 : STA $14BA
+		+
+
 	PLB : PLP
 RTL
 ;================================================================================
 .row0 dw $28FB, $28F9, $28F9, $28F9, $28F9, $28F9, $28F9, $28F9, $28F9, $68FB
-.row1 dw $28FC, $24F5, $24F5, $24F5, $312B, $312C, $24F5, $24F5, $24F5, $68FC
-.row2 dw $28FC, $24F5, $24F5, $24F5, $313D, $312E, $24F5, $24F5, $24F5, $68FC
-.row3 dw $28FC, $24F5, $312B, $312C, $24F5, $24F5, $312B, $312C, $24F5, $68FC
-.row4 dw $28FC, $24F5, $313D, $312E, $24F5, $24F5, $313D, $312E, $24F5, $68FC
-.row5 dw $28FC, $24F5, $24F5, $24F5, $24F5, $24F5, $24F5, $24F5, $24F5, $68FC
-.row6 dw $28FC, $24F5, $3146, $3147, $3146, $3147, $3146, $3147, $24F5, $68FC
-.row7 dw $28FC, $3146, $3147, $3146, $3147, $3146, $3147, $3146, $3147, $68FC
+.row1 dw $28FC, $312B, $312C, $24F5, $312B, $312C, $24F5, $312B, $312C, $68FC
+.row2 dw $28FC, $313D, $312E, $24F5, $313D, $312E, $24F5, $313D, $312E, $68FC
+.row3 dw $28FC, $24F5, $24F5, $24F5, $24F5, $24F5, $24F5, $24F5, $24F5, $68FC
+.row4 dw $28FC, $24F5, $3146, $3147, $3146, $3147, $3146, $3147, $24F5, $68FC
+.row5 dw $28FC, $3146, $3147, $3146, $3147, $3146, $3147, $3146, $3147, $68FC
+.row6 dw $28FC, $3160, $3161, $3162, $3163, $3164, $3165, $3166, $3167, $68FC
+.row7 dw $28FC, $3170, $3171, $3172, $3173, $3174, $3175, $3176, $3177, $68FC
 .row8 dw $A8FB, $A8F9, $A8F9, $A8F9, $A8F9, $A8F9, $A8F9, $A8F9, $A8F9, $E8FB
 ;================================================================================
+
+
+
+
+
+
+
 ;Crystal 1: $02
 ;Crystal 2: $10
 ;Crystal 3: $40

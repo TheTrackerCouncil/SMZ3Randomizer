@@ -30,6 +30,10 @@ public class GoalsPatch : RomPatch
         var numBosses = data.Config.TourianBossCount;
         yield return new GeneratedPatch(Snes(0xF47008), [(byte)numBosses, 0x00]);
         yield return new GeneratedPatch(Snes(0xF4700B), numBosses == 0 ? [0x00, 0x04] : [0x00, 0x01]);
+
+        // Randomized boss rewards
+        var hasRandomizedBossRewards = false;
+        yield return new GeneratedPatch(Snes(0xF4700E), hasRandomizedBossRewards ? UshortBytes(0x0001) : UshortBytes(0x0000));
     }
 
     public static int GetGanonsTowerCrystalCountFromRom(byte[] rom)

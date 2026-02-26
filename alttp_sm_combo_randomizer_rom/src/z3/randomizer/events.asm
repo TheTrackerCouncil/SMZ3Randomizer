@@ -27,6 +27,11 @@ OnPlayerDead:
 RTL
 ;--------------------------------------------------------------------------------
 OnDungeonExit:
+	PHA : PHP
+		SEP #$20 ; set 8-bit accumulator
+		JSL.l SQEGFix
+	PLP : PLA
+
 	STA $040C : STZ $04AC ; thing we wrote over
 	
 	PHA : PHP
@@ -34,6 +39,12 @@ OnDungeonExit:
 		JSL.l FloodGateResetInner
 		JSL.l SetSilverBowMode
 	PLP : PLA
+RTL
+;--------------------------------------------------------------------------------
+OnQuit:
+	JSL.l SQEGFix
+	LDA.b #$00 : STA $7F5035 ; bandaid patch bug with mirroring away from text
+	LDA.b #$10 : STA $1C ; thing we wrote over
 RTL
 ;--------------------------------------------------------------------------------
 OnUncleItemGet:
@@ -65,11 +76,19 @@ RTL
 ;--------------------------------------------------------------------------------
 !RNG_ITEM_LOCK_IN = "$7F5090"
 OnFileLoad:
-	LDA !FRESH_FILE_MARKER : BNE +
-		JSL.l OnNewFile
-		LDA.b #$FF : STA !FRESH_FILE_MARKER
+	REP #$10 ; set 16 bit index registers
+	JSL.l EnableForceBlank ; what we wrote over
+
+	LDA.b #$07 : STA $210C ; Restore screen 3 to normal tile area
+
+	; LDA !FRESH_FILE_MARKER : BNE +
+	; 	JSL.l OnNewFile
+	; 	LDA.b #$FF : STA !FRESH_FILE_MARKER
+	; +
+	LDA.w $010A : BNE + ; don't adjust the worlds for "continue" or "save-continue"
+	LDA.l $7EC011 : BNE + ; don't adjust worlds if mosiac is enabled (Read: mirroring in dungeon)
+		JSL.l DoWorldFix
 	+
-	JSL.l DoWorldFix
 	JSL.l MasterSwordFollowerClear
 	JSL.l InitOpenMode
 	LDA #$FF : STA !RNG_ITEM_LOCK_IN ; reset rng item lock-in
@@ -77,11 +96,13 @@ OnFileLoad:
 	LDA.l GenericKeys : BEQ +
 		LDA $7EF38B : STA $7EF36F ; copy generic keys to key counter
 	+
-	
+
 	JSL.l SetSilverBowMode
 	JSL.l RefreshRainAmmo
 	JSL.l SetEscapeAssist
 	JSL.l mw_load_sram
+
+	SEP #$10 ; restore 8 bit index registers
 	STZ !MULTIWORLD_PICKUP
 RTL
 ;--------------------------------------------------------------------------------
@@ -104,7 +125,7 @@ OnNewFile:
 			LDA.b #$80 : STA $7EF061 ; open aga tower curtain
 			LDA.b #$80 : STA $7EF093 ; open skull woods curtain
 		+
-		LDA.l PreopenPyramidHole : BEQ +
+		LDA.l PreopenPyramid : BEQ +
 			LDA.b #$20 : STA $7EF2DB ; pyramid hole already open
 		+
 		LDA.l PreopenGanonsTower : BEQ +

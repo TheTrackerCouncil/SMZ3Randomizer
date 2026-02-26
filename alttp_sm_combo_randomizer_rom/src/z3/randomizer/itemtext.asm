@@ -21,6 +21,11 @@ Notice_SmallKeyOf:
 	db $75 : dw "It'll open locks in"
 	dw #$7F7F
 
+Notice_SmMapOf:
+	db $74 : dw "Some kind of alien "
+	db $75 : dw "map device marked  "
+	dw #$7F7F
+
 ; light world
 Notice_LightWorld:
 	db $76 : dw "  the Light World  "
@@ -165,5 +170,19 @@ Notice_LowerNorfairL1:
 Notice_LowerNorfairBoss:
     db $76 : dw "Lower Norfair Boss "
     dw #$7F7F
+
+Notice_Brinstar:
+    db $76 : dw "     Brinstar      "
+    dw #$7F7F
+Notice_WreckedShip:
+    db $76 : dw "   Wrecked Ship    "
+    dw #$7F7F
+Notice_Maridia:
+    db $76 : dw "     Maridia       "
+    dw #$7F7F
+Notice_LowerNorfair:
+    db $76 : dw "   Lower Norfair   "
+    dw #$7F7F
+
 
 cleartable

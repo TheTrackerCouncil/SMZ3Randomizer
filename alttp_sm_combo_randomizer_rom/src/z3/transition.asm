@@ -100,6 +100,7 @@ transition_to_zelda:
     jsl $0dfa78                 ; Redraw HUD
     jsl $00fc41
     %ai8()
+    jsl $00e310                 ; Load default graphics
     jsl $09c499                 ; Load all overworld sprites
     plp
 
@@ -219,10 +220,10 @@ zelda_spc_reset:
     lda #$ff                    ; Send N-SPC into "upload mode"
     sta $2140
 
-    lda #$00
-    STA $2007
-    STA $2006
-
+    lda.b #$00
+    sta.w $2007
+    sta.w $2006                 ; Kill MSU-1 music if it's playing
+    
     rep #$30
     lda #$0000
     sta $12

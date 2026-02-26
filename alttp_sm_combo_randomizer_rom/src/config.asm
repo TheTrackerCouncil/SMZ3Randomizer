@@ -13,7 +13,6 @@ config_alttp_sprite: ; $F47002
 config_sm_sprite:    ; $F47004
     dw #$0000
 
-
 ; Enables keysanity specific code sections.
 ; Currently only used for drawing Metroid keycards
 config_keysanity:    ; $F47006
@@ -32,3 +31,6 @@ config_events:       ; F4700A
 
 config_autosave:
     dw #$0000       ; F4700C
+
+config_random_sm_boss_rewards:
+    dw #$0000       ; F4700E

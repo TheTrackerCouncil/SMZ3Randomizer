@@ -30,6 +30,7 @@ alttp_new_game:
     CPX #$4F : BNE -
     REP #$30
 
+    %ai16()
     jsl zelda_fix_checksum
     
     plp

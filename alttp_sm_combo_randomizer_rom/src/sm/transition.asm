@@ -139,10 +139,10 @@ sm_spc_reset:
     lda #$ff                    ; Send N-SPC into "upload mode"
     sta $2140
 
-    lda #$00
-    sta $2007
-    sta $2006
-
+    lda.b #$00
+    sta.w $2007
+    sta.w $2006                 ; Kill MSU-1 music if it's playing
+    
     lda.b #sm_spc_data            ; Store the location of our "exploit data"
     sta $00                     ; so that the ALTTP music upload routine
     lda.b #sm_spc_data>>8         ; uses it.

@@ -109,7 +109,6 @@ org $C08462
 base $808462
     jml debug_reset_mute_msu
 
-
 ; Hijack the jump to the second-to-last routine in the main gameplay loop
 org $C28BAF
     jsl msu_fade_in

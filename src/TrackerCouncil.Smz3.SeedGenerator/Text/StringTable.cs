@@ -14,7 +14,13 @@ public class StringTable
     public const string BlindIntro = "blind_by_the_light";
     public const string TavernMan = "kakariko_tavern_fisherman";
     public const string GanonIntro = "ganon_fall_in";
+    public const string GanonIntroAlt = "ganon_fall_in_alt";
     public const string GanonPhaseThreeText = "ganon_phase_3";
+    public const string GanonPhaseThreeTextAlt = "ganon_phase_3_alt";
+    public const string GanonPhaseThreeTextHasSilvers = "ganon_phase_3_silvers";
+    public const string GanonPhaseThreeTextNoSilvers = "ganon_phase_3_no_silvers";
+    public const string GanonPhaseThreeTextNoSilversAlt = "ganon_phase_3_no_silvers_alt";
+    public const string GanonPhaseThreeTextNoBow = "ganon_phase_3_no_bow";
     public const string TriforceRoom = "end_triforce";
     public const string BottleMerchant = "bottle_vendor_choice";
     public const string KingZora = "zora_tells_cost";
@@ -36,6 +42,8 @@ public class StringTable
     public const string HintTileIceStalfosKnightsRoom = "telepathic_tile_ice_stalfos_knights_room";
     public const string HintTileTowerOfHeraEntrance = "telepathic_tile_tower_of_hera_entrance";
     public const string HintTileSouthEastDarkworldCave = "telepathic_tile_south_east_darkworld_cave";
+    public const string GanonsTowerGoalSign = "sign_ganons_tower";
+    public const string GanonGoalSign = "sign_ganon";
 
     private static readonly List<string> s_unwantedText = new()
     {

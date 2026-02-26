@@ -454,3 +454,4 @@ credits_sm_spc_data:
     db $8f, $80, $f1 ; Enable IPL ROM
     db $5f, $c0, $ff ; jmp $ffc0
     dw $0000, $1500
+    

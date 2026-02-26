@@ -64,7 +64,20 @@ introskip_doorflags:
     jsl alttp_new_game      ; Setup new game for ALTTP
     jsl sm_copy_alttp_items ; Copy alttp items into temporary SRAM buffer
     jsl zelda_fix_checksum  ; Fix alttp checksum    
-    
+
+    ; Clear multiworld seed data and reinitialize on new game.
+    lda config_multiworld
+    beq +
+    lda #$0000
+    ldx #$0000
+-
+    sta.l !SRAM_MW_SEED_DATA, x
+    inx : inx
+    cpx #$0050
+    bne -
+    jsl mw_init
++
+
     ; begin Leno edits here!
     LDA #$FFFF  ; decrement the accumulator by 1, making it #$FFFF
     sta.l $7ED908  ; activate Crateria and Brinstar maps

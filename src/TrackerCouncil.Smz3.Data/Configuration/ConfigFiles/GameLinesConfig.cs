@@ -22,6 +22,11 @@ public class GameLinesConfig : IMergeable<GameLinesConfig>, IConfigFile<GameLine
     public SchrodingersString? GanonIntro { get; init; }
 
     /// <summary>
+    /// Gets the phrases for first dropping down into Ganon's room when you have not met your objective
+    /// </summary>
+    public SchrodingersString? GanonIntroGoalsNotMet { get; init; }
+
+    /// <summary>
     /// Gets the phrases for blind
     /// </summary>
     public SchrodingersString? BlindIntro { get; init; }
@@ -30,6 +35,16 @@ public class GameLinesConfig : IMergeable<GameLinesConfig>, IConfigFile<GameLine
     /// Gets the phrases for the won game screen in Zelda
     /// </summary>
     public SchrodingersString? TriforceRoom { get; init; }
+
+    /// <summary>
+    /// Gets the phrases for the sign in front of Ganon's Tower with the required crystal count to enter
+    /// </summary>
+    public SchrodingersString? GanonsTowerGoalSign { get; init; }
+
+    /// <summary>
+    /// Gets the phrases for the sign on the pyramid with the required crystal count to defeat Ganon
+    /// </summary>
+    public SchrodingersString? GanonGoalSign { get; init; }
 
     /// <summary>
     /// Hints for stating that a location is mandatory for completing
