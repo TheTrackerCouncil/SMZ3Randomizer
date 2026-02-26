@@ -18,7 +18,7 @@
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <viewModels:MainWindowViewModel DisplayNewVersionBanner="True" DisplayDownloadLink="True" />
+        <viewModels:MainWindowViewModel DisplayNewVersionBanner="True" DisplayDownloadLink="True" IsLoadingSprites="True" />
     </Design.DataContext>
 
   <LayoutTransformControl x:Name="MainLayout">
@@ -57,7 +57,11 @@
         </StackPanel>
 
       </controls:HeaderFooter>
-      <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+      <StackPanel Grid.Row="1" Margin="10" VerticalAlignment="Center" IsVisible="{Binding IsLoadingSprites}">
+        <TextBlock>Loading...</TextBlock>
+        <ProgressBar IsIndeterminate="True"></ProgressBar>
+      </StackPanel>
+      <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" IsVisible="{Binding !IsLoadingSprites}">
         <Button Margin="0 5 5 0" Name="MenuButton" Click="OptionsMenuItem_OnClick">
           <Button.Styles>
             <Style Selector="Button">
@@ -85,7 +89,7 @@
           <avalonia:MaterialIcon Kind="AboutCircle" Width="25" Height="25"/>
         </Button>
       </StackPanel>
-      <TabControl Grid.Row="1">
+      <TabControl Grid.Row="1" IsVisible="{Binding !IsLoadingSprites}">
         <TabItem Header="Singleplayer">
           <views:SoloRomListPanel Name="SoloRomListPanel"></views:SoloRomListPanel>
         </TabItem>

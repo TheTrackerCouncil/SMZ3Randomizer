@@ -11,6 +11,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [Reactive] public partial bool DisplayNewVersionBanner { get; set; }
     [Reactive] public partial bool DisplayDownloadLink { get; set; }
+    [Reactive] public partial bool IsLoadingSprites { get; set; } = true;
 
     public string NewVersionGitHubUrl { get; set; } = "";
     public string? NewVersionDownloadUrl { get; set; }
