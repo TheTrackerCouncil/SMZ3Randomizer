@@ -94,8 +94,6 @@ introskip_doorflags:
     sta $0789  ; this is used for the minimap, so blue tiles can show up on it. this also lets the main map scroll
     %a16()
 
-    jsr init_sm_equipment
-
     ; Call the save code to create a new file
     lda $7e0952
     jsl $818000
@@ -104,14 +102,37 @@ introskip_doorflags:
     lda #$0000
     rtl
 
-org $c0f800
-base $80f800
-init_sm_equipment:
-    lda.l starting_equipment : sta $09a2 : sta $09a4 ; Equipment
-    lda.l starting_equipment+$2 : sta $09a6 : sta $09a8 ; Beams
-    lda.l starting_equipment+$4 : sta $09c2 : sta $09c4 ; Energy
-    lda.l starting_equipment+$6 : sta $09c6 : sta $09c8 ; Missiles
-    lda.l starting_equipment+$8 : sta $09ca : sta $09cc ; Supers
-    lda.l starting_equipment+$a : sta $09ce : sta $09d0 ; Power Bombs
-    rts
+; Setup moonwalk code
+org $81b35d
+JSR init_moonwalk
 
+ORG $81EE00
+init_moonwalk:
+    LDA moonwalk_setting : STA $09e4
+    RTS
+
+org $81EE80
+moonwalk_setting:
+    dw $0000
+
+; Setup SM starting equipment
+org $81B306
+JSR init_sm_equipment
+
+org $81EF20
+init_sm_equipment:
+    LDX #$0000 : LDA.w starting_sm_equipment, X : STA $09A2 : STA $09A4 ; Equipment
+    LDX #$0002 : LDA.w starting_sm_equipment, X : STA $09A6 : STA $09A8 ; Beams
+    AND #$000C : CMP #$000C : BNE +
+        LDA $09A6 : AND #$000B : STA $09A6 ; If both plasma and spazer are given, unequip spazer
+    +
+    LDX #$0004 : LDA.w starting_sm_equipment, X : STA $09C2 : STA $09C4 ; Energy
+    LDX #$0006 : LDA.w starting_sm_equipment, X : STA $09C6 : STA $09C8 ; Missiles
+    LDX #$0008 : LDA.w starting_sm_equipment, X : STA $09CA : STA $09CC ; Supers
+    LDX #$000A : LDA.w starting_sm_equipment, X : STA $09CE : STA $09D0 ; Power Bombs
+    RTS
+
+org $81EF90
+starting_sm_equipment:
+DW #$0000,#$0000,#$0063 ; Equipment, Beams, Energy
+DW #$0000,#$0000,#$0000 ; Missiles, Supers, Power Bombs

@@ -115,6 +115,14 @@ public class ZeldaTextsPatch(IMetadataService metadataService, IGameHintService 
         yield return SetText(0x308400, StringTable.TriforceRoom,
             GameLines.TriforceRoom, _plandoText.TriforceRoom, true);
 
+        var gtCrystalCount = data.World.Config.GanonsTowerCrystalCount;
+        SetText(StringTable.GanonsTowerGoalSign,
+            GameLines.GanonsTowerGoalSign, _plandoText.GanonsTowerGoalSign, false, gtCrystalCount == 1 ? "1 crystal" : $"{gtCrystalCount} crystals");
+
+        var ganonCrystalCount = data.World.Config.GanonCrystalCount;
+        SetText(StringTable.GanonGoalSign,
+            GameLines.GanonGoalSign, _plandoText.GanonGoalSign, false, ganonCrystalCount == 1 ? "1 crystal" : $"{ganonCrystalCount} crystals");
+
         if (data.World.HintTiles.Any() || _plandoText.HasHintTileText)
         {
             SetHintText();
@@ -165,6 +173,29 @@ public class ZeldaTextsPatch(IMetadataService metadataService, IGameHintService 
         return new GeneratedPatch(Snes(address), Dialog.Simple(formattedText));
     }
 
+
+    private void SetText(string? textKey, SchrodingersString? defaultText, string? overrideText, bool hideBorder = false, params object[] formatData)
+    {
+        SetText(textKey, defaultText?.ToString(), overrideText, hideBorder, formatData);
+    }
+
+    private void SetText(string? textKey, string? defaultText, string? overrideText, bool hideBorder = false,
+        params object[] formatData)
+    {
+        var text = string.IsNullOrEmpty(overrideText) ? defaultText : overrideText;
+        if (string.IsNullOrEmpty(text))
+            text = "{NOTEXT}";
+
+        var formattedText =
+            Dialog.GetGameSafeString(string.Format(text, formatData));
+
+        if (!string.IsNullOrEmpty(textKey))
+        {
+            var stringFlag = hideBorder ? "{NOBORDER}\n" : "";
+            _stringTable.SetText(textKey, $"{stringFlag}{formattedText}");
+        }
+    }
+
     private void SetChoiceText(string textKey, SchrodingersString? defaultText, string? overrideText, string item)
     {
         var text = string.IsNullOrEmpty(overrideText) ? defaultText?.ToString() : overrideText;
@@ -183,15 +214,8 @@ public class ZeldaTextsPatch(IMetadataService metadataService, IGameHintService 
         yield return SetText(0x308600, StringTable.GanonIntro,
             GameLines.GanonIntro, _plandoText.GanonIntro);
 
-        // Todo: Verify these two are correct if ganon invincible patch is
-        // ever added ganon_fall_in_alt in v30
-        var ganonFirstPhaseInvincible = "You think you\nare ready to\nface me?\n\nI will not die\n\nunless you\ncomplete your\ngoals. Dingus!";
-        yield return new GeneratedPatch(Snes(0x309100), Dialog.Simple(ganonFirstPhaseInvincible));
-
-        // ganon_phase_3_alt in v30
-        var ganonThirdPhaseInvincible = "Got wax in\nyour ears?\nI cannot die!";
-        yield return new GeneratedPatch(Snes(0x309200), Dialog.Simple(ganonThirdPhaseInvincible));
-        // ---
+        yield return SetText(0x309100, StringTable.GanonIntroAlt,
+            GameLines.GanonIntroGoalsNotMet, _plandoText.GanonIntroGoalsNotMet);
 
         var silversLocation = data.Worlds.SelectMany(world => world.Locations)
             .FirstOrDefault(l => l.ItemIs(ItemType.SilverArrows, data.World));
@@ -201,8 +225,31 @@ public class ZeldaTextsPatch(IMetadataService metadataService, IGameHintService 
         var silverLocationPlayer = data.Config.MultiWorld && silversLocation?.World != data.World
             ? silversLocation?.World.Player
             : "you";
+
+        // Currently the assembly doesn't properly check for bow + silvers for SMZ3, so just set all secondary text
+        // to the silvers hint text. Update these if we fix dialog.asm DialogGanon2.
         yield return SetText(0x308700, StringTable.GanonPhaseThreeText,
             silversText, _plandoText.GanonSilversHint, false,
+            silverLocationPlayer ?? "", silversLocation?.Region.Area ?? "");
+
+        yield return SetText(0x309200, StringTable.GanonPhaseThreeTextAlt,
+            silversText, _plandoText.GanonSilversHint, false,
+            silverLocationPlayer ?? "", silversLocation?.Region.Area ?? "");
+
+        SetText(StringTable.GanonPhaseThreeTextHasSilvers,
+            silversText, _plandoText.GanonSilversHint, false,
+            silverLocationPlayer ?? "", silversLocation?.Region.Area ?? "");
+
+        SetText(StringTable.GanonPhaseThreeTextNoBow,
+            silversText, _plandoText.GanonSilversHint, false,
+            silverLocationPlayer ?? "", silversLocation?.Region.Area ?? "");
+
+        SetText(StringTable.GanonPhaseThreeTextNoSilvers,
+            silversText,  _plandoText.GanonSilversHint, false,
+            silverLocationPlayer ?? "", silversLocation?.Region.Area ?? "");
+
+        SetText(StringTable.GanonPhaseThreeTextNoSilversAlt,
+            silversText,  _plandoText.GanonSilversHint, false,
             silverLocationPlayer ?? "", silversLocation?.Region.Area ?? "");
     }
 

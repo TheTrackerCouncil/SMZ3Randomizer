@@ -82,9 +82,11 @@ boss_death_reward:
 
     %ai16()
 
-    ; Show message box
-    lda #$0063
-    jsl $858080
+    lda.l config_random_sm_boss_rewards : beq +
+        ; Show message box
+        lda #$0063
+        jsl $858080
+    +
 
     plp : plx
     rts

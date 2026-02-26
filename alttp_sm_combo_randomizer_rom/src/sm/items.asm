@@ -933,6 +933,8 @@ alttp_item_pickup:
     cmp #$0011
     beq .dungeon_key_jmp
     jmp .end
+    cmp #$0012
+    beq .half_magic_jmp
 
 .normal_item_jmp
     jmp .normal_item
@@ -954,6 +956,8 @@ alttp_item_pickup:
     jmp .dungeon
 .dungeon_key_jmp
     jmp .dungeon_key
+.half_magic_jmp
+    jmp .half_magic
 
 .normal_item
     lda.l alttp_item_table+2,x               ; Get Item value
@@ -1169,6 +1173,13 @@ alttp_item_pickup:
     sta.l !SRAM_ALTTP_ITEM_BUF+$76      ;$a06376               ; Give upgrade only silver arrows
     %a16()
     jmp .end
+
+.half_magic
+    %a8()
+    lda #$80
+    sta.l !SRAM_ALTTP_ITEM_BUF+$73           ; Refill Link's magic
+    %a16()
+    jmp .normal_item
 
 .end
     ;lda #$0168
@@ -1403,8 +1414,8 @@ namespace "alttp_item_"
     dw $0055, $0001, $0005, $003D       ; 4B Boots                      
     dw $0000, $0000, $0000, $0000       ; 4C Dummy - 50+bombs
     dw $0000, $0000, $0000, $0000       ; 4D Dummy - 70+arrows
-    dw $007B, $0001, $0000, $0055       ; 4E Half Magic
-    dw $007B, $0002, $0000, $0056       ; 4F Quarter Magic              
+    dw $007B, $0001, $0112, $0055       ; 4E Half Magic
+    dw $007B, $0002, $0012, $0056       ; 4F Quarter Magic              
     
     dw $0059, $0002, $0100, $0040       ; 50 Master Sword
     dw $0070, $0005, $0001, $0057       ; 51 +5 Bombs

@@ -476,6 +476,8 @@ DialogGanon1:
 	JSL.l Sprite_ShowMessageMinimal_Alt
 RTL
 
+; Note that this does not properly check for bow/silvers due
+; to differences between ALttPR and SMZ3
 DialogGanon2:
     JSL.l CheckGanonVulnerability
 	

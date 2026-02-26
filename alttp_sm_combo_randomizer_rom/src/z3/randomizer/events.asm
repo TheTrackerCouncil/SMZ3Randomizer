@@ -70,6 +70,7 @@ RTL
 ;--------------------------------------------------------------------------------
 OnAga2Defeated:
 	JSL.l Dungeon_SaveRoomData_justKeys ; thing we wrote over, make sure this is first
+	LDA.b #$01 : STA.l Aga2Duck
 	;JSL.l IncrementAgahnim2Sword
 RTL
 ;--------------------------------------------------------------------------------
@@ -107,31 +108,31 @@ RTL
 ;--------------------------------------------------------------------------------
 !RNG_ITEM_LOCK_IN = "$7F5090"
 OnNewFile:
-	PHX : PHP
-		REP #$20 ; set 16-bit accumulator		
-		LDA.l LinkStartingRupees : STA !SRAM_ALTTP_START+$362 : STA !SRAM_ALTTP_START+$360
-		LDA.l StartingTime : STA !SRAM_ALTTP_START+$454
-		LDA.l StartingTime+2 : STA !SRAM_ALTTP_START+$454+2
+;	PHX : PHP
+;		REP #$20 ; set 16-bit accumulator
+;		LDA.l LinkStartingRupees : STA $7EF362 : STA $7EF360
+;		LDA.l StartingTime : STA $7EF454
+;		LDA.l StartingTime+2 : STA $7EF454+2
 
-		LDX.b #$00 : - ; copy over starting equipment
-			LDA.l StartingEquipment, X : STA.l !SRAM_ALTTP_START+$340, X
-			INX : INX
-		CPX.b #$4F : !BLT -
+;		LDX.w #$00 : - ; copy over starting equipment
+;			LDA StartingEquipment, X : STA $7EF340, X
+;			INX : INX
+;		CPX.w #$004F : !BLT -
 
-		SEP #$20 ; set 8-bit accumulator
+;		SEP #$20 ; set 8-bit accumulator
 		;LDA #$FF : STA !RNG_ITEM_LOCK_IN ; reset rng item lock-in
 		LDA.l PreopenCurtains : BEQ +
-			LDA.b #$80 : STA !SRAM_ALTTP_START+$061 ; open aga tower curtain
-			LDA.b #$80 : STA !SRAM_ALTTP_START+$093 ; open skull woods curtain
+			LDA.b #$80 : STA $7EF061 ; open aga tower curtain
+			LDA.b #$80 : STA $7EF093 ; open skull woods curtain
 		+
 		LDA.l PreopenPyramid : BEQ +
-			LDA.b #$20 : STA !SRAM_ALTTP_START+$2DB ; pyramid hole already open
+			LDA.b #$20 : STA $7EF2DB ; pyramid hole already open
 		+
 		LDA.l PreopenGanonsTower : BEQ +
-			LDA.b #$20 : STA !SRAM_ALTTP_START+$2C3 ; Ganons Tower already open
+			LDA.b #$20 : STA $7EF2C3 ; Ganons Tower already open
 		+
-		LDA.l StartingSword : STA !SRAM_ALTTP_START+$359 ; set starting sword type
-	PLP : PLX
+;		LDA StartingSword : STA $7EF359 ; set starting sword type
+;	PLP : PLX
 RTL
 ;--------------------------------------------------------------------------------
 OnInitFileSelect:
@@ -246,3 +247,7 @@ OnBeginSaveAndQuit:
 	LDA.b #$17 : STA $10 ; thing we wrote over. Go to save and quit module
 RTL
 ;--------------------------------------------------------------------------------
+OnEnterAga:
+	LDA $7EF2DB : AND #$DF : STA $7EF2DB
+	LDA $7EF2DB
+RTL

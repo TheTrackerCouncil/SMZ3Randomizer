@@ -5,17 +5,22 @@ namespace TrackerCouncil.Smz3.Data.Options;
 public class PlandoTextConfig
 {
     /// <summary>
-    /// Gets the phrases for first dropping down into Ganon's room.
+    /// Text for first dropping down into Ganon's room.
     /// </summary>
     public string? GanonIntro { get; init; }
 
     /// <summary>
-    /// Gets the phrases for blind
+    /// Text for first dropping down into Ganon's room when you have not met your objective
+    /// </summary>
+    public string? GanonIntroGoalsNotMet { get; init; }
+
+    /// <summary>
+    /// Test for blind
     /// </summary>
     public string? BlindIntro { get; init; }
 
     /// <summary>
-    /// Gets the phrases for the won game screen in Zelda
+    /// Text for the won game screen in Zelda
     /// </summary>
     public string? TriforceRoom { get; init; }
 
@@ -33,6 +38,16 @@ public class PlandoTextConfig
     /// Text for Ganon giving a hint to the silvers location
     /// </summary>
     public string? GanonSilversHint { get; init; }
+
+    /// <summary>
+    /// Text for the sign in front of Ganon's Tower with the required crystal count to enter
+    /// </summary>
+    public string? GanonsTowerGoalSign { get; init; }
+
+    /// <summary>
+    /// Text for the sign on the pyramid with the required crystal count to defeat Ganon
+    /// </summary>
+    public string? GanonGoalSign { get; init; }
 
     /// <summary>
     /// Text for Sahasrahla's green pendant dungeon reveal text
