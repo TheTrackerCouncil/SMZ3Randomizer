@@ -164,6 +164,7 @@ public class MainWindowService(
         {
             await spriteService.LoadSpritesAsync();
             trackerSpriteService.LoadSprites();
+            _model.IsLoadingSprites = false;
             return;
         }
 
@@ -212,6 +213,7 @@ public class MainWindowService(
 
         await spriteService.LoadSpritesAsync();
         trackerSpriteService.LoadSprites();
+        _model.IsLoadingSprites = false;
     }
 
     public async Task<string?> InstallWindowsUpdate(string url)
