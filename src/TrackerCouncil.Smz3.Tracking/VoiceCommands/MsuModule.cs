@@ -35,6 +35,7 @@ public class MsuModule : TrackerModule, IDisposable
     private Track? _currentTrack;
     private readonly bool _isSetup;
     private readonly bool _isLocal;
+    private MsuSelectorRequest _msuShuffleRequest = new();
 
     /// <summary>
     /// Constructor
@@ -127,17 +128,19 @@ public class MsuModule : TrackerModule, IDisposable
         _msuUserOptionsService.MsuUserOptions.MsuShuffleStyle =
             TrackerBase.Rom!.MsuShuffleStyle ?? MsuShuffleStyle.StandardShuffle;
 
+        var inputMsus = TrackerBase.Rom!.MsuPaths?.Split("|");
+        _msuShuffleRequest = new MsuSelectorRequest
+        {
+            MsuPaths = inputMsus,
+            OutputMsuType = msuType,
+            OutputPath = msuPath,
+            PrevMsu = _currentMsu,
+            ShuffleStyle = _msuUserOptionsService.MsuUserOptions.MsuShuffleStyle
+        };
+
         if (TrackerBase.Rom!.MsuRandomizationStyle == MsuRandomizationStyle.Continuous)
         {
-            var inputMsus = TrackerBase.Rom!.MsuPaths?.Split("|");
-            _msuMonitorService.StartShuffle(new MsuSelectorRequest()
-            {
-                MsuPaths = inputMsus,
-                OutputMsuType = msuType,
-                OutputPath = msuPath,
-                PrevMsu = _currentMsu,
-                ShuffleStyle = _msuUserOptionsService.MsuUserOptions.MsuShuffleStyle
-            });
+            _msuMonitorService.StartShuffle(_msuShuffleRequest);
         }
         else
         {
@@ -288,6 +291,14 @@ public class MsuModule : TrackerModule, IDisposable
             .OneOf("the current song from", "the current track from", "the current theme from");
     }
 
+    private SpeechRecognitionGrammarBuilder GetShuffleMsuRules()
+    {
+        return new SpeechRecognitionGrammarBuilder()
+            .Append("Hey tracker,")
+            .OneOf("shuffle", "randomize")
+            .OneOf("the msu", "the msu tracks", "the music", "the songs");
+    }
+
     public void Dispose()
     {
         _msuMessageReceiver.TrackChanged -= MsuMonitorServiceOnMsuTrackChanged;
@@ -365,6 +376,19 @@ public class MsuModule : TrackerModule, IDisposable
                 return;
             }
             TrackerBase.Say(response: _msuConfig.CurrentMsu, args: [_currentTrack.GetMsuName()]);
+        });
+
+        AddCommand("shuffle msu", GetShuffleMsuRules(), async (_) =>
+        {
+            if (TrackerBase.Rom?.MsuRandomizationStyle != MsuRandomizationStyle.Single && _msuShuffleRequest.MsuPaths?.Count > 0)
+            {
+                await _msuMonitorService.ManualShuffle(_msuShuffleRequest);
+                TrackerBase.Say(response: _msuConfig.ManuallyShuffledMusic);
+            }
+            else
+            {
+                TrackerBase.Say(response: _msuConfig.CannotManuallyShuffleMusic);
+            }
         });
     }
 }
