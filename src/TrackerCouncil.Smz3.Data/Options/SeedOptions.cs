@@ -31,10 +31,17 @@ public class SeedOptions
 
     public bool SkipTourianBossDoor { get; set; }
     public bool PlaceGTBigKeyInGT { get; set; }
+    public bool RandomizeCrystalBossCounts { get; set; }
     public int GanonsTowerCrystalCount { get; set; } = 7;
+    public int MinGanonsTowerCrystalCount { get; set; } = 7;
+    public int MaxGanonsTowerCrystalCount { get; set; } = 7;
     public int GanonCrystalCount { get; set; } = 7;
+    public int MinGanonCrystalCount { get; set; } = 7;
+    public int MaxGanonCrystalCount { get; set; } = 7;
     public bool OpenPyramid { get; set; } = false;
     public int TourianBossCount { get; set; } = 4;
+    public int MinTourianBossCount { get; set; } = 4;
+    public int MaxTourianBossCount { get; set; } = 4;
 
     public IDictionary<LocationId, int> LocationItems { get; set; } = new Dictionary<LocationId, int>();
 

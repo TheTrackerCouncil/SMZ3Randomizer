@@ -259,10 +259,17 @@ public class Config
     public bool ZeldaKeysanity => KeysanityMode == KeysanityMode.Both || KeysanityMode == KeysanityMode.Zelda;
     public bool MetroidKeysanity => KeysanityMode == KeysanityMode.Both || KeysanityMode == KeysanityMode.SuperMetroid;
     public bool KeysanityForRegion(Region region) => KeysanityMode == KeysanityMode.Both || (region is Z3Region && ZeldaKeysanity) || (region is SMRegion && MetroidKeysanity);
+    public bool RandomizeCrystalBossCounts { get; set; }
     public int GanonsTowerCrystalCount { get; set; } = 7;
+    public int MinGanonsTowerCrystalCount { get; set; } = 7;
+    public int MaxGanonsTowerCrystalCount { get; set; } = 7;
     public int GanonCrystalCount { get; set; } = 7;
+    public int MinGanonCrystalCount { get; set; } = 7;
+    public int MaxGanonCrystalCount { get; set; } = 7;
     public bool OpenPyramid { get; set; }
     public int TourianBossCount { get; set; }  = 4;
+    public int MinTourianBossCount { get; set; }  = 4;
+    public int MaxTourianBossCount { get; set; }  = 4;
     public bool SkipTourianBossDoor { get; set; }
     public bool PlaceGTBigKeyInGT { get; set; }
     public IDictionary<string, int> ItemOptions { get; set; } = new Dictionary<string, int>();
