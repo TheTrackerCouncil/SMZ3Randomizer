@@ -33,6 +33,16 @@ public class MsuConfig : IMergeable<MsuConfig>, IConfigFile<MsuConfig>
     public SchrodingersString? UnknownSong { get; init; }
 
     /// <summary>
+    /// Gets the phrases for reshuffling the music
+    /// </summary>
+    public SchrodingersString? ManuallyShuffledMusic { get; init; }
+
+    /// <summary>
+    /// Gets the phrases for requesting reshuffling the music when shuffling was not enabled originally
+    /// </summary>
+    public SchrodingersString? CannotManuallyShuffleMusic { get; init; }
+
+    /// <summary>
     /// Responses to songs, either by song number, msu name, or song name
     /// </summary>
     public Dictionary<string, SchrodingersString?>? SongResponses { get; init; }
