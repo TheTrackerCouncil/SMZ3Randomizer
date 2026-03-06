@@ -107,6 +107,11 @@ public class PlandoConfig // TODO: Consider using this instead of SeedData?
     public bool SkipTourianBossDoor { get; set; }
 
     /// <summary>
+    /// If the GT/Ganon/Tourian requirements should be hidden from the plando summary in the generation window
+    /// </summary>
+    public bool HideCrystalBossCount { get; set; }
+
+    /// <summary>
     /// Gets or sets the logic options that apply to the plando.
     /// </summary>
     public LogicConfig Logic { get; set; } = new();

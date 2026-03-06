@@ -65,9 +65,6 @@ public class MetroidKeysanityPatch : RomPatch
 
     public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
     {
-        // Remove entirely once we add randomized boss counts
-        if (!data.World.Config.MetroidKeysanity)
-            yield break;
         ushort plaquePlm = 0xd410;
         var plmTablePos = 0xf800;
 
@@ -115,12 +112,12 @@ public class MetroidKeysanityPatch : RomPatch
             }
         }
 
-        // Uncomment when we add randomized boss counts
-        // if (data.World.Config.TourianBossCount != 4) {
-        //     var plaqueData = UshortBytes(0xA5ED).Concat(UshortBytes(plaquePlm)).Concat(UshortBytes(0x044F)).Concat(UshortBytes(KeycardPlaque.Zero + data.World.Config.TourianBossCount)).ToArray();
-        //     yield return new GeneratedPatch(Snes(0x8f0000 + plmTablePos), plaqueData);
-        //     plmTablePos += 0x08;
-        // }
+        // Display plaque above golden bosses room with the number of bosses needed to enter Tourian
+        if (data.World.Config.RandomizeCrystalBossCounts || data.World.Config.PlandoConfig != null) {
+            var plaqueData = UshortBytes(0xA5ED).Concat(UshortBytes(plaquePlm)).Concat(UshortBytes(0x044F)).Concat(UshortBytes(KeycardPlaque.Zero + data.World.Config.TourianBossCount)).ToArray();
+            yield return new GeneratedPatch(Snes(0x8f0000 + plmTablePos), plaqueData);
+            plmTablePos += 0x08;
+        }
 
         yield return new GeneratedPatch(Snes(0x8f0000 + plmTablePos), [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 ]);
     }

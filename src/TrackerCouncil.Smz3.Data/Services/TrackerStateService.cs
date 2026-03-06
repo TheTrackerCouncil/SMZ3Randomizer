@@ -161,6 +161,34 @@ public class TrackerStateService : ITrackerStateService
 
         var localWorld = worlds.First(x => x.IsLocalWorld);
 
+        int? markedGanonsTowerCrystalCount = null;
+        int? markedGanonCrystalCount = null;
+        int? markedTourianBossCount = null;
+        if (localWorld.LegacyWorld == null)
+        {
+            if (localWorld.Config.RandomizeCrystalBossCounts)
+            {
+                markedGanonsTowerCrystalCount =
+                    localWorld.Config.MinGanonsTowerCrystalCount == localWorld.Config.MaxGanonsTowerCrystalCount
+                        ? localWorld.Config.MinGanonsTowerCrystalCount
+                        : null;
+                markedGanonCrystalCount =
+                    localWorld.Config.MinGanonCrystalCount == localWorld.Config.MaxGanonCrystalCount
+                        ? localWorld.Config.MinGanonCrystalCount
+                        : null;
+                markedTourianBossCount =
+                    localWorld.Config.MinTourianBossCount == localWorld.Config.MaxTourianBossCount
+                        ? localWorld.Config.MinTourianBossCount
+                        : null;
+            }
+            else
+            {
+                markedGanonsTowerCrystalCount = localWorld.Config.GanonsTowerCrystalCount;
+                markedGanonCrystalCount = localWorld.Config.GanonCrystalCount;
+                markedTourianBossCount = localWorld.Config.TourianBossCount;
+            }
+        }
+
         return new TrackerState()
         {
             LocationStates = locationStates,
@@ -174,11 +202,11 @@ public class TrackerStateService : ITrackerStateService
             StartDateTime = DateTimeOffset.Now,
             UpdatedDateTime = DateTimeOffset.Now,
             GanonsTowerCrystalCount = localWorld.Config.GanonsTowerCrystalCount,
-            MarkedGanonsTowerCrystalCount = localWorld.LegacyWorld == null ? localWorld.Config.GanonsTowerCrystalCount : null,
+            MarkedGanonsTowerCrystalCount = markedGanonsTowerCrystalCount,
             GanonCrystalCount = localWorld.Config.GanonCrystalCount,
-            MarkedGanonCrystalCount = localWorld.LegacyWorld == null ? localWorld.Config.GanonCrystalCount : null,
+            MarkedGanonCrystalCount = markedGanonCrystalCount,
             TourianBossCount = localWorld.Config.TourianBossCount,
-            MarkedTourianBossCount = localWorld.LegacyWorld == null ? localWorld.Config.TourianBossCount : null,
+            MarkedTourianBossCount = markedTourianBossCount,
         };
     }
 
