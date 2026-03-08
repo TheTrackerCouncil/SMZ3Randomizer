@@ -40,14 +40,23 @@
     - RedBoomerang
   - Display: Start with Blue Boomerang
     MemoryValues:
-      1: 2
+      1: 1
+      76: 128
     MatchingItemTypes:
     - BlueBoomerang
   - Display: Start with Red Boomerang
     MemoryValues:
       1: 2
+      76: 64
     MatchingItemTypes:
     - RedBoomerang
+  - Display: Start with Both Boomerangs
+    MemoryValues:
+      1: 2
+      76: 192
+    MatchingItemTypes:
+      - RedBoomerang
+      - BlueBoomerang
 - Item: Hookshot
   IsMetroid: false
   Options:
@@ -107,11 +116,25 @@
     MemoryValues:
     MatchingItemTypes:
     - Powder
+  - Display: Start with Mushroom
+    MemoryValues:
+      4: 1
+      76: 32
+    MatchingItemTypes:
+    - Mushroom
   - Display: Start with Magic Powder
     MemoryValues:
       4: 2
+      76: 16
     MatchingItemTypes:
     - Powder
+  - Display: Start with Magic Powder & Mushroom
+    MemoryValues:
+      4: 2
+      76: 48
+    MatchingItemTypes:
+    - Powder
+    - Mushroom
 - Item: Medallions
   IsMetroid: false
   Options:
@@ -190,7 +213,7 @@
       11: 1
     MatchingItemTypes:
     - Hammer
-- Item: Flute
+- Item: Flute & Shovel
   IsMetroid: false
   Options:
   - Display: Randomized
@@ -199,12 +222,29 @@
   - Display: Early Flute
     MemoryValues:
     MatchingItemTypes:
-    - Flute
+      - Flute
+  - Display: Early Shovel
+    MemoryValues:
+    MatchingItemTypes:
+      - Shovel
   - Display: Start with Flute
     MemoryValues:
-      12: 2
+      12: 3
+      76: 1
     MatchingItemTypes:
-    - Flute
+      - Flute
+  - Display: Start with Shovel
+    MemoryValues:
+      12: 1
+      76: 4
+    MatchingItemTypes:
+      - Shovel
+  - Display: Start with Flute & Shovel
+    MemoryValues:
+      12: 3
+      76: 5
+    MatchingItemTypes:
+      - Flute
 - Item: Bug Net
   IsMetroid: false
   Options:

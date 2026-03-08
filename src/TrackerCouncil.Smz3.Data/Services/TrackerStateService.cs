@@ -94,6 +94,12 @@ public class TrackerStateService : ITrackerStateService
                 _logger.LogInformation("Adding Starting Inventory Item {ItemName} to Tracker State", itemType.GetDescription());
                 var addedItem = worldItemStateMap[itemType];
                 addedItem.TrackingState = startingInventory.Count(x => x == itemType);
+
+                if (itemType == ItemType.Flute)
+                {
+                    var itemState = itemStates.First(x => x.ItemName == "Duck");
+                    itemState.TrackingState = 1;
+                }
             }
         }
 
