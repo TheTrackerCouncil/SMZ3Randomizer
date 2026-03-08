@@ -42,7 +42,7 @@ public class KraidsLair : SMRegion, IHasBoss, IHasReward
 
     public TrackerRewardState RewardState { get; set; } = null!;
 
-    public bool IsShuffledReward => false;
+    public bool IsShuffledReward => Config.InterGameRewards;
 
     public WarehouseEnergyTankRoom WarehouseEnergyTank { get; }
 

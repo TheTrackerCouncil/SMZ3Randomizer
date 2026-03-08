@@ -31,6 +31,9 @@ public class GenerationWindowGameSettingsViewModel : ViewModelBase
     [DynamicFormFieldCheckBox("Place GT Big Key in Ganon's Tower", groupName: "Game Settings Top", visibleWhenTrue: nameof(IsZeldaKeysanity))]
     public bool PlaceGTBigKeyInGT { get; set; }
 
+    [DynamicFormFieldComboBox(comboBoxOptionsProperty: nameof(CrystalBossCountOptions), label: "Shuffle boss tokens with dungeon rewards:", groupName: "Game Settings Top")]
+    public string InterGameRewards { get; set; }
+
     [DynamicFormFieldComboBox(comboBoxOptionsProperty: nameof(CrystalBossCountOptions), label: "Randomize needed crystal/boss counts:", groupName: "Game Settings Top")]
     public string CrystalBossCountStyle
     {

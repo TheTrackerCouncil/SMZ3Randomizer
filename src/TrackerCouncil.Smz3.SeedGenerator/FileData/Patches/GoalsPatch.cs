@@ -32,7 +32,7 @@ public class GoalsPatch : RomPatch
         yield return new GeneratedPatch(Snes(0xF4700B), numBosses == 0 ? [0x00, 0x04] : [0x00, 0x01]);
 
         // Randomized boss rewards
-        var hasRandomizedBossRewards = false;
+        var hasRandomizedBossRewards = data.Config.InterGameRewards;
         yield return new GeneratedPatch(Snes(0xF4700E), hasRandomizedBossRewards ? UshortBytes(0x0001) : UshortBytes(0x0000));
     }
 

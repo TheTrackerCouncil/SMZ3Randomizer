@@ -74,17 +74,17 @@ public class StandardFiller : IFiller
             var dungeon = world.ItemPools.Dungeon.ToList();
             var progression = world.ItemPools.Progression.ToList();
 
-            var keycards = worldConfig.MetroidKeysanity ? world.ItemPools.Keycards.ToList() : [];
+            var keycards = worldConfig.MetroidKeysanity ? world.ItemPools.MetroidKeysanityItems.ToList() : [];
 
             var preferenceItems = ApplyItemPoolPreferences(startingInventory, progression, niceItems, junkItems, keycards, world);
 
             InitialFillInOwnWorld(dungeon, progression, world, startingInventory);
 
-            if (worldConfig.ZeldaKeysanity == false)
+            if (!worldConfig.ZeldaKeysanity)
             {
                 _logger.LogDebug("Distributing dungeon items according to logic");
                 var worldLocations = world.Locations.Empty().Shuffle(Random);
-                AssumedFill(dungeon, progression.Concat(world.ItemPools.Keycards).Concat(assumedInventory).Concat(preferenceItems).ToList(), worldLocations,
+                AssumedFill(dungeon, progression.Concat(world.ItemPools.MetroidKeysanityItems).Concat(assumedInventory).Concat(preferenceItems).ToList(), worldLocations,
                     [world], cancellationToken);
             }
             else if (worldConfig.PlaceGTBigKeyInGT)
@@ -93,7 +93,7 @@ public class StandardFiller : IFiller
                 var worldLocations = world.Locations.Empty().Shuffle(Random);
                 var gtKey = dungeon.First(x => x.Type == ItemType.BigKeyGT);
                 dungeon.Remove(gtKey);
-                AssumedFill([gtKey], progression.Concat(world.ItemPools.Keycards).Concat(assumedInventory).Concat(preferenceItems).Concat(dungeon).ToList(), worldLocations,
+                AssumedFill([gtKey], progression.Concat(world.ItemPools.MetroidKeysanityItems).Concat(assumedInventory).Concat(preferenceItems).Concat(dungeon).ToList(), worldLocations,
                     [world], cancellationToken);
             }
 
@@ -103,7 +103,7 @@ public class StandardFiller : IFiller
             }
             else
             {
-                assumedInventory = assumedInventory.Concat(world.ItemPools.Keycards).ToList();
+                assumedInventory = assumedInventory.Concat(world.ItemPools.MetroidKeysanityItems).ToList();
             }
 
             progressionItems.AddRange(dungeon);

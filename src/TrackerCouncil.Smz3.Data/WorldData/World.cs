@@ -296,7 +296,7 @@ public class World
 
     private void SetRewards(Random rnd)
     {
-        var rewards = Rewards.Where(x => x.Type.IsInCategory(RewardCategory.Zelda) && !x.Type.IsInCategory(RewardCategory.NonRandomized)).Shuffle(rnd);
+        var rewards = Rewards.Where(x => (Config.InterGameRewards || x.Type.IsInCategory(RewardCategory.Zelda)) && !x.Type.IsInCategory(RewardCategory.NonRandomized)).Shuffle(rnd);
         foreach (var region in RewardRegions.Where(x => x.IsShuffledReward))
         {
             region.SetReward(rewards.First());

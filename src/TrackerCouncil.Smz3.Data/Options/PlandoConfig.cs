@@ -45,7 +45,7 @@ public class PlandoConfig // TODO: Consider using this instead of SeedData?
         TourianBossCount = world.Config.TourianBossCount;
         Items = world.Locations
             .ToDictionary(x => x.ToString(), x => x.Item.Type);
-        Rewards = world.Regions.Where(x => x is IHasReward r && !r.RewardType.IsInCategory(RewardCategory.NonRandomized) && r.RewardType.IsInCategory(RewardCategory.Zelda))
+        Rewards = world.Regions.Where(x => x is IHasReward r && !r.RewardType.IsInCategory(RewardCategory.NonRandomized))
             .ToDictionary(x => x.ToString(), x => ((IHasReward)x).RewardType);
         Medallions = world.Regions.Where(x => x is IHasPrerequisite)
             .ToDictionary(x => x.ToString(), x => ((IHasPrerequisite)x).RequiredItem);

@@ -132,7 +132,11 @@ public class WestCrateria : SMRegion
                                       (!World.Config.MetroidKeysanity || World.Config.SkipTourianBossDoor ||
                                        progression.CardCrateriaBoss);
 
-            var canEnterTourian = World.GoldenBosses.Count(x => x.Defeated) >= tourianBossRequirement;
+            var rewardCount = World.Config.InterGameRewards
+                ? World.Rewards.Count(x => x.Type is RewardType.KraidToken or RewardType.DraygonToken or RewardType.RidleyToken or RewardType.PhantoonToken && x.HasReceivedReward)
+                : World.GoldenBosses.Count(x => x.Defeated);
+
+            var canEnterTourian = rewardCount >= World.Config.TourianBossCount;
 
             NewAccessibility = canAccessStatueRoom && canEnterTourian
                 ? Accessibility.Available

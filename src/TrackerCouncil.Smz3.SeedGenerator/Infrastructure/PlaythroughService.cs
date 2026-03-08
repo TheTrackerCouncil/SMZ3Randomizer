@@ -103,7 +103,7 @@ public class PlaythroughService(ILogger<PlaythroughService> logger)
         {
             if (!world.Config.MetroidKeysanity)
             {
-                var keycards = world.ItemPools.Keycards;
+                var keycards = world.ItemPools.MetroidKeysanityItems;
                 items.AddRange(keycards);
             }
 

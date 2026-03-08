@@ -57,7 +57,7 @@ public class LocationLogicTests
     [Fact]
     public void LocationWithTwoMissingItemsReturnsTwoMissingItems()
     {
-        var emptyProgression = new Progression(World.ItemPools.Keycards, new List<Reward>(), new List<Boss>());
+        var emptyProgression = new Progression(World.ItemPools.MetroidKeysanityItems, new List<Reward>(), new List<Boss>());
         var missingItems = Logic.GetMissingRequiredItems(World.FindLocation(LocationId.GreenBrinstarMainShaft), emptyProgression, out _);
         missingItems.Should().ContainEquivalentOf(new[] { ItemType.Morph, ItemType.PowerBomb });
     }
@@ -65,7 +65,7 @@ public class LocationLogicTests
     [Fact]
     public void LocationWithMultipleOptionsReturnsAllOptions()
     {
-        var emptyProgression = new Progression(World.ItemPools.Keycards, new List<Reward>(), new List<Boss>());
+        var emptyProgression = new Progression(World.ItemPools.MetroidKeysanityItems, new List<Reward>(), new List<Boss>());
         var missingItems = Logic.GetMissingRequiredItems(World.FindLocation(LocationId.BlueBrinstarEnergyTankCeiling), emptyProgression, out _);
         missingItems.Should().ContainEquivalentOf(new[] { ItemType.SpaceJump })
             .And.ContainEquivalentOf(new[] { ItemType.HiJump })
@@ -76,7 +76,7 @@ public class LocationLogicTests
     [Fact]
     public void LocationWithThreeMissingItemsReturnsThreeMissingItems()
     {
-        var emptyProgression = new Progression(World.ItemPools.Keycards, new List<Reward>(), new List<Boss>());
+        var emptyProgression = new Progression(World.ItemPools.MetroidKeysanityItems, new List<Reward>(), new List<Boss>());
         var missingItems = Logic.GetMissingRequiredItems(World.FindLocation(LocationId.CrateriaBombTorizo), emptyProgression, out _);
         missingItems.Should().ContainEquivalentOf(new[] { ItemType.Morph, ItemType.Super, ItemType.PowerBomb });
     }

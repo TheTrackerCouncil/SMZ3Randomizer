@@ -195,7 +195,7 @@ public class Logic : ILogic
         var totalMissing = new List<ItemType>();
         var itemPool = location.World.ItemPools.Progression
             .Concat(location.World.ItemPools.Dungeon)
-            .Concat(location.World.ItemPools.Keycards)
+            .Concat(location.World.ItemPools.MetroidKeysanityItems)
             .Select(x => x.Type)
             .ToList();
         foreach (var ownedItem in items)
