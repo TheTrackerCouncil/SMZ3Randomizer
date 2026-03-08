@@ -53,7 +53,7 @@ internal class PlayerProgressionService (IWorldAccessor world) : IPlayerProgress
 
         if (!_world.World.Config.MetroidKeysanity || assumeKeys)
         {
-            progression.AddRange(_world.World.ItemPools.Keycards);
+            progression.AddRange(_world.World.ItemPools.MetroidKeysanityItems);
             if (assumeKeys)
                 progression.AddRange(_world.World.ItemPools.Dungeon);
         }

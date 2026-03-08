@@ -18,7 +18,7 @@ public class WorldItemPools
         var progression = CreateProgressionPool(world);
         var nice = CreateNicePool(world);
         var dungeon = CreateDungeonPool(world);
-        var keycards = CreateKeycards(world);
+        var keycards = CreateMetroidKeysanityItems(world);
         var junk = CreateJunkPool(world);
 
         // Remove starting inventory items
@@ -50,15 +50,15 @@ public class WorldItemPools
         Nice = nice;
         Junk = junk;
         Dungeon = dungeon;
-        Keycards = keycards;
+        MetroidKeysanityItems = keycards;
     }
 
     public IReadOnlyCollection<Item> Progression { get; set; }
     public IReadOnlyCollection<Item> Nice { get; }
     public IReadOnlyCollection<Item> Junk { get; }
     public IReadOnlyCollection<Item> Dungeon { get; set; }
-    public IReadOnlyCollection<Item> Keycards { get; set; }
-    public IEnumerable<Item> AllItems => Progression.Concat(Nice).Concat(Junk).Concat(Dungeon).Concat(Keycards);
+    public IReadOnlyCollection<Item> MetroidKeysanityItems { get; set; }
+    public IEnumerable<Item> AllItems => Progression.Concat(Nice).Concat(Junk).Concat(Dungeon).Concat(MetroidKeysanityItems);
 
     /// <summary>
     /// Returns a list of items that are nice to have but are not required
@@ -282,9 +282,9 @@ public class WorldItemPools
     /// </summary>
     /// <param name="world">The world to assign to the items.</param>
     /// <returns>A new collection of items.</returns>
-    public static List<Item> CreateKeycards(World world)
+    public static List<Item> CreateMetroidKeysanityItems(World world)
     {
-        return new List<Item> {
+        var toReturn = new List<Item> {
             new Item(ItemType.CardCrateriaL1, world),
             new Item(ItemType.CardCrateriaL2, world),
             new Item(ItemType.CardCrateriaBoss, world),
@@ -302,6 +302,18 @@ public class WorldItemPools
             new Item(ItemType.CardLowerNorfairL1, world),
             new Item(ItemType.CardLowerNorfairBoss, world),
         };
+
+        if (world.Config.InterGameRewards)
+        {
+            toReturn.AddRange([
+                new Item(ItemType.SmMapBrinstar, world),
+                new Item(ItemType.SmMapWreckedShip, world),
+                new Item(ItemType.SmMapMaridia, world),
+                new Item(ItemType.SmMapLowerNorfair, world),
+            ]);
+        }
+
+        return toReturn;
     }
 
     private static List<Item> Copies(int nr, Func<Item> template)

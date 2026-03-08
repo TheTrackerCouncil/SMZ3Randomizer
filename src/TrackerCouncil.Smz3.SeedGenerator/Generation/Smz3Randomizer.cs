@@ -124,7 +124,7 @@ public class Smz3Randomizer : ISeededRandomizer
 
         // Mark Agahnim and the Golden Four Metroid bosses as known
         var bossRewardRegions = worlds.SelectMany(x => x.BossRegions)
-            .Where(x => x.BossType is BossType.Agahnim || x.BossType.IsInCategory(BossCategory.GoldenFour))
+            .Where(x => x.BossType is BossType.Agahnim || (!x.World.Config.InterGameRewards && x.BossType.IsInCategory(BossCategory.GoldenFour)))
             .OfType<IHasReward>();
         foreach (var region in bossRewardRegions)
         {

@@ -49,7 +49,7 @@ public class InnerMaridia : SMRegion, IHasBoss, IHasReward
 
     public TrackerRewardState RewardState { get; set; } = null!;
 
-    public bool IsShuffledReward => false;
+    public bool IsShuffledReward => Config.InterGameRewards;
 
     public WateringHoleRoom WateringHole { get; }
 

@@ -13,6 +13,7 @@ using TrackerCouncil.Smz3.Data.GeneratedData;
 using TrackerCouncil.Smz3.Data.Interfaces;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.ViewModels;
+using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
 using YamlDotNet.Serialization;
@@ -20,7 +21,7 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace TrackerCouncil.Smz3.Data.Services;
 
-public class GenerationSettingsWindowService(SpriteService spriteService, OptionsFactory optionsFactory, IRomGenerationService romGenerator, LocationConfig locations, ILogger<GenerationSettingsWindowService> logger, IMsuLookupService msuLookupService, IMetadataService metadataService)
+public class GenerationSettingsWindowService(SpriteService spriteService, OptionsFactory optionsFactory, IRomGenerationService romGenerator, LocationConfig locations, ILogger<GenerationSettingsWindowService> logger, IMsuLookupService msuLookupService, IMetadataService metadataService, RegionConfig regions)
 {
     private RandomizerOptions _options = null!;
     private GenerationWindowViewModel _model = null!;
@@ -44,6 +45,10 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         _model.GameSettings.KeysanityMode = _options.SeedOptions.KeysanityMode;
         _model.GameSettings.RequireBossKeycardForTourian = !_options.SeedOptions.SkipTourianBossDoor;
         _model.GameSettings.PlaceGTBigKeyInGT = _options.SeedOptions.PlaceGTBigKeyInGT;
+
+        _model.GameSettings.InterGameRewards = _options.SeedOptions.InterGameRewards
+            ? GenerationWindowGameSettingsViewModel.RandomizedRewardsText
+            : GenerationWindowGameSettingsViewModel.StaticRewardsText;
 
         _model.GameSettings.CrystalBossCountStyle = _options.SeedOptions.RandomizeCrystalBossCounts
             ? GenerationWindowGameSettingsViewModel.RandomizedRewardsText
@@ -132,6 +137,9 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         _model.GameSettings.KeysanityMode = config.KeysanityMode;
         _model.GameSettings.RequireBossKeycardForTourian = !config.SkipTourianBossDoor;
         _model.GameSettings.PlaceGTBigKeyInGT = config.PlaceGTBigKeyInGT;
+        _model.GameSettings.InterGameRewards = config.InterGameRewards
+            ? GenerationWindowGameSettingsViewModel.RandomizedRewardsText
+            : GenerationWindowGameSettingsViewModel.StaticRewardsText;
         _model.GameSettings.CrystalBossCountStyle = config.RandomizeCrystalBossCounts
             ? GenerationWindowGameSettingsViewModel.RandomizedRewardsText
             : GenerationWindowGameSettingsViewModel.StaticRewardsText;
@@ -207,6 +215,7 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         _options.SeedOptions.KeysanityMode = _model.GameSettings.KeysanityMode;
         _options.SeedOptions.SkipTourianBossDoor = !_model.GameSettings.RequireBossKeycardForTourian;
         _options.SeedOptions.PlaceGTBigKeyInGT = _model.GameSettings.PlaceGTBigKeyInGT;
+        _options.SeedOptions.InterGameRewards = _model.GameSettings.InterGameRewards == GenerationWindowGameSettingsViewModel.RandomizedRewardsText;
         _options.SeedOptions.RandomizeCrystalBossCounts = _model.GameSettings.RandomizedCrystalBossCounts;
         _options.SeedOptions.GanonsTowerCrystalCount = _model.GameSettings.CrystalsNeededForGT;
         _options.SeedOptions.MinGanonsTowerCrystalCount = _model.GameSettings.CrystalsNeededForGTMin;
@@ -284,6 +293,21 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         _model.GameSettings.CrystalsNeededForGanon = _model.PlandoConfig.GanonCrystalCount;
         _model.GameSettings.OpenPyramid = _model.PlandoConfig.OpenPyramid;
         _model.GameSettings.BossesNeededForTourian = _model.PlandoConfig.TourianBossCount;
+
+        var hasInterGameRewards = false;
+        foreach (var reward in _model.PlandoConfig.Rewards)
+        {
+            var isZ3Region = regions.First(x => x.Region == reward.Key).Type?.IsSubclassOf(typeof(Z3Region)) == true;
+            var isZeldaReward = reward.Value.IsInCategory(RewardCategory.Zelda);
+            if (isZ3Region != isZeldaReward)
+            {
+                hasInterGameRewards = true;
+            }
+        }
+
+        _model.GameSettings.InterGameRewards = hasInterGameRewards
+            ? GenerationWindowGameSettingsViewModel.RandomizedRewardsText
+            : GenerationWindowGameSettingsViewModel.StaticRewardsText;
 
         _model.Logic.LogicConfig.Copy(_model.PlandoConfig.Logic);
     }

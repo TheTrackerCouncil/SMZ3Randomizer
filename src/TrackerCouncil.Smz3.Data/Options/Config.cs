@@ -270,6 +270,7 @@ public class Config
     public int TourianBossCount { get; set; }  = 4;
     public int MinTourianBossCount { get; set; }  = 4;
     public int MaxTourianBossCount { get; set; }  = 4;
+    public bool InterGameRewards { get; set; }
     public bool SkipTourianBossDoor { get; set; }
     public bool PlaceGTBigKeyInGT { get; set; }
     public IDictionary<string, int> ItemOptions { get; set; } = new Dictionary<string, int>();
