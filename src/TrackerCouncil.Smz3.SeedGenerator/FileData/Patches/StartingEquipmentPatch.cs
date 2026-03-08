@@ -175,7 +175,7 @@ public class StartingEquipmentPatch : RomPatch
             {
                 foreach (var patchData in selectedOption.MemoryValues)
                 {
-                    zeldaData[patchData.Key] = (byte)patchData.Value;
+                    zeldaData[patchData.Key] = (byte)(zeldaData[patchData.Key] + patchData.Value);
                 }
 
             }
