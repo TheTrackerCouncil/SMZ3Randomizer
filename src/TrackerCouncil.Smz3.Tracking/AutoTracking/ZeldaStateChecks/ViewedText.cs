@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
@@ -26,8 +25,6 @@ public class ViewedText : IZeldaStateCheck
     private HashSet<int> _viewedHintTileRooms = new();
     private HintTile? _lastHintTile;
     private Dictionary<PlayerHintTile, List<Location>> _pendingHintTiles = [];
-    private bool _talkingToBottleMerchant;
-    private DateTime? _stoppedTalkingToBottleMerchantTime;
 
     public ViewedText(IWorldAccessor worldAccessor, TrackerBase tracker, HintTileConfig hintTileConfig)
     {
