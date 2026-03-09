@@ -34,6 +34,10 @@ public interface ITrackerGameStateService
     /// </summary>
     public int CurrentTrackNumber { get; }
 
+    public bool IsTalkingToBottleMerchant { get; }
+
+    public bool IsTalkingToZora { get; }
+
     /// <summary>
     /// Occurs when the map has been updated
     /// </summary>
@@ -115,4 +119,8 @@ public interface ITrackerGameStateService
     public void UpdateGanonRequirement(int crystalAmount, bool autoTracked);
 
     public void UpdateTourianRequirement(int bossAmount, bool autoTracked);
+
+    public void UpdateTalkingToBottleMerchant(bool isTalking, AutoTrackerZeldaState? zeldaState);
+
+    public void UpdateTalkingToZora(bool isTalking, AutoTrackerZeldaState? zeldaState);
 }

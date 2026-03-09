@@ -263,6 +263,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, IP
         }
         else if (location.MarkedItem != null)
         {
+            logger.LogInformation("Marked {Item} at {Region} - {Location}", item.GetDescription(), location.Region.Name, location.Name);
             var oldType = location.MarkedItem;
             location.MarkedItem = item;
             Tracker.Say(x => x.LocationMarkedAgain, args: [locationName, metadata?.Name ?? item.GetDescription(), oldType.GetDescription()]);
@@ -275,6 +276,7 @@ internal class TrackerLocationService(ILogger<TrackerTreasureService> logger, IP
         }
         else
         {
+            logger.LogInformation("Marked {Item} at {Region} - {Location}", item.GetDescription(), location.Region.Name, location.Name);
             location.MarkedItem = item;
             Tracker.Say(x => x.LocationMarked, args: [locationName, metadata?.Name ?? item.GetDescription()]);
             LocationMarked?.Invoke(this, new LocationClearedEventArgs(location, confidence, autoTracked));
