@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
@@ -25,6 +26,8 @@ public class ViewedText : IZeldaStateCheck
     private HashSet<int> _viewedHintTileRooms = new();
     private HintTile? _lastHintTile;
     private Dictionary<PlayerHintTile, List<Location>> _pendingHintTiles = [];
+    private bool _talkingToBottleMerchant;
+    private DateTime? _stoppedTalkingToBottleMerchantTime;
 
     public ViewedText(IWorldAccessor worldAccessor, TrackerBase tracker, HintTileConfig hintTileConfig)
     {
@@ -45,7 +48,19 @@ public class ViewedText : IZeldaStateCheck
     /// <returns>True if the check was identified, false otherwise</returns>
     public bool ExecuteCheck(TrackerBase tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
     {
-        if (tracker.AutoTracker == null || currentState.State != 14 || currentState.Substate != 2 || currentState.CurrentRoom == null) return false;
+        if (tracker.AutoTracker == null || currentState.State != 14 || currentState.Substate != 2 ||
+            currentState.CurrentRoom == null)
+        {
+            if (tracker.GameStateTracker.IsTalkingToBottleMerchant)
+            {
+                tracker.GameStateTracker.UpdateTalkingToBottleMerchant(false, currentState);
+            }
+            if (tracker.GameStateTracker.IsTalkingToZora)
+            {
+                tracker.GameStateTracker.UpdateTalkingToZora(false, currentState);
+            }
+            return false;
+        }
 
         if (currentState.CurrentRoom == 261 && !_greenPendantUpdated && currentState.IsWithinRegion(2650, 8543, 2692, 8594))
         {
@@ -69,6 +84,56 @@ public class ViewedText : IZeldaStateCheck
         else if (currentState.OverworldScreen == 91 && currentState.IsWithinRegion(1961, 1784, 1976, 1785) && World.State?.GanonCrystalCount != World.State?.MarkedGanonCrystalCount)
         {
             tracker.GameStateTracker.UpdateGanonRequirement(World.State?.GanonCrystalCount ?? World.Config.GanonCrystalCount, true);
+        }
+        // Viewed Bombos tablet text
+        else if (currentState is { OverworldScreen: 48, LinkState: 0 } &&
+                 currentState.IsWithinRegion(872, 3770, 905, 3776))
+        {
+            var location = World.FindLocation(LocationId.BombosTablet);
+
+            if (location is { Cleared: false, HasMarkedCorrectItem: false })
+            {
+                tracker.LocationTracker.MarkLocation(location, location.ItemType.GetGenericType(), autoTracked: true);
+                tracker.GameStateTracker.UpdateLastMarkedLocations([]);
+            }
+        }
+        // Viewed Ether Tablet text
+        else if (currentState is { OverworldScreen: 3, LinkState: 0 } &&
+                 currentState.IsWithinRegion(1697, 74, 1729, 80))
+        {
+            var location = World.FindLocation(LocationId.EtherTablet);
+
+            if (location is { Cleared: false, HasMarkedCorrectItem: false })
+            {
+                tracker.LocationTracker.MarkLocation(location, location.ItemType.GetGenericType(), autoTracked: true);
+                tracker.GameStateTracker.UpdateLastMarkedLocations([]);
+            }
+        }
+        // Viewed Ped text
+        else if (currentState is { OverworldScreen: 128, LinkState: 0 } &&
+                 currentState.IsWithinRegion(101,160,123,167))
+        {
+            var location = World.FindLocation(LocationId.MasterSwordPedestal);
+
+            if (location is { Cleared: false, HasMarkedCorrectItem: false })
+            {
+                tracker.LocationTracker.MarkLocation(location, location.ItemType.GetGenericType(), autoTracked: true);
+                tracker.GameStateTracker.UpdateLastMarkedLocations([]);
+            }
+        }
+        // Talked to Bottle merchant
+        else if (currentState is { OverworldScreen: 24 } &&
+                 currentState.IsWithinRegion(368,1864,404,1912) &&
+                 World.Config.CasPatches.PreventScams)
+        {
+            tracker.GameStateTracker.UpdateTalkingToBottleMerchant(true, currentState);
+        }
+        // Talked to Zora
+        else if (currentState is { OverworldScreen: 129 } &&
+                 currentState.IsWithinRegion(1440, 88, 1472, 114) &&
+                 World.Config.CasPatches.PreventScams)
+        {
+            tracker.GameStateTracker.UpdateTalkingToZora(true, currentState);
         }
 
         return false;

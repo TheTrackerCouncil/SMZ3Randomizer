@@ -75,6 +75,15 @@ public class MetroidStateChecks(TrackerBase tracker, ISnesConnectorService snesC
             }
         }
 
+        if (Tracker.GameStateTracker.IsTalkingToBottleMerchant)
+        {
+            Tracker.GameStateTracker.UpdateTalkingToBottleMerchant(false, null);
+        }
+        else if (Tracker.GameStateTracker.IsTalkingToZora)
+        {
+            Tracker.GameStateTracker.UpdateTalkingToZora(false, null);
+        }
+
         if (!MetroidState.IsValid) return;
 
         foreach (var check in metroidStateChecks)

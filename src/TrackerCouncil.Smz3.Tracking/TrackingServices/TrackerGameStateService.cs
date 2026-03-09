@@ -20,6 +20,8 @@ internal class TrackerGameStateService(IMetadataService metadataService) : Track
     public Region? CurrentRegion { get; protected set; }
     public string CurrentMap { get; protected set; } = "";
     public int CurrentTrackNumber { get; protected set; }
+    public bool IsTalkingToBottleMerchant { get; private set; }
+    public bool IsTalkingToZora { get; private set; }
 
     public event EventHandler? MapUpdated;
     public event EventHandler<TrackerEventArgs>? BeatGame;
@@ -27,6 +29,8 @@ internal class TrackerGameStateService(IMetadataService metadataService) : Track
     public event EventHandler<HintTileUpdatedEventArgs>? HintTileUpdated;
     public event EventHandler<TrackNumberEventArgs>? TrackNumberUpdated;
     public event EventHandler<TrackChangedEventArgs>? TrackChanged;
+
+    private DateTime NpcTalkTime = DateTime.MinValue;
 
     /// <summary>
     /// Updates the region that the player is in
@@ -345,5 +349,51 @@ internal class TrackerGameStateService(IMetadataService metadataService) : Track
             World.State.MarkedTourianBossCount = previousAmount;
             World.UpdateLegacyWorld(World.State);
         });
+    }
+
+    public void UpdateTalkingToBottleMerchant(bool isTalking, AutoTrackerZeldaState? zeldaState)
+    {
+        if (isTalking)
+        {
+            IsTalkingToBottleMerchant = true;
+            NpcTalkTime = DateTime.Now;
+        }
+        // If at least 10 seconds have passed, the player is in Metroid, is holding up an item, or has left, then check if we should mark the item
+        else if ((DateTime.Now - NpcTalkTime).TotalSeconds > 10 || zeldaState == null || zeldaState.LinkState == 21 || !zeldaState.IsWithinRegion(368,1864,404,1912))
+        {
+            var location = World.FindLocation(LocationId.BottleMerchant);
+
+            // If the location is not marked and the player is not holding up an item, mark the location
+            if (location is { Cleared: false, HasMarkedCorrectItem: false } && zeldaState?.LinkState != 21)
+            {
+                Tracker.LocationTracker.MarkLocation(location, location.ItemType.GetGenericType(), autoTracked: true);
+                UpdateLastMarkedLocations([location]);
+            }
+
+            IsTalkingToBottleMerchant = false;
+        }
+    }
+
+    public void UpdateTalkingToZora(bool isTalking, AutoTrackerZeldaState? zeldaState)
+    {
+        if (isTalking)
+        {
+            IsTalkingToZora = true;
+            NpcTalkTime = DateTime.Now;
+        }
+        // If at least 10 seconds have passed, the player is in Metroid, is holding up an item, or has left, then check if we should mark the item
+        else if ((DateTime.Now - NpcTalkTime).TotalSeconds > 10 || zeldaState == null || zeldaState.LinkState == 21 || !zeldaState.IsWithinRegion(1440, 88, 1472, 120)  )
+        {
+            var location = World.FindLocation(LocationId.KingZora);
+
+            // If the location is not marked and the player is not holding up an item, mark the location
+            if (location is { Cleared: false, HasMarkedCorrectItem: false } && zeldaState?.LinkState != 21)
+            {
+                Tracker.LocationTracker.MarkLocation(location, location.ItemType.GetGenericType(), autoTracked: true);
+                UpdateLastMarkedLocations([location]);
+            }
+
+            IsTalkingToZora = false;
+        }
     }
 }
