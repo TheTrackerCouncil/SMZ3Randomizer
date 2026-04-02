@@ -53,6 +53,8 @@ public abstract class TrackerBase : IDisposable
     public ITrackerGameStateService GameStateTracker { get; protected set; } = null!;
 
     public ITrackerSpoilerService SpoilerService { get; protected set; } = null!;
+    
+    public ITrackerAltGameModeService AltGameModeService { get; protected set; } = null!;
 
     /// <summary>
     /// Gets the world for the currently tracked playthrough.

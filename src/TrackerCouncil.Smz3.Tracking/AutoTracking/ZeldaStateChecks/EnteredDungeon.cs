@@ -65,7 +65,7 @@ public class EnteredDungeon : IZeldaStateCheck
             var clearedCrystalDungeonCount = trackerBase.World.RewardRegions
                 .Count(x => x.RewardState.HasReceivedReward && x.RewardType is RewardType.CrystalBlue or RewardType.CrystalRed);
 
-            if (clearedCrystalDungeonCount < trackerBase.World.Config.GanonsTowerCrystalCount)
+            if (clearedCrystalDungeonCount < trackerBase.World.Config.GameModeOptions.GanonsTowerCrystalCount)
             {
                 trackerBase.Say(x => x.AutoTracker.EnteredGTEarly, args: [clearedCrystalDungeonCount], once: true);
             }

@@ -4,10 +4,12 @@ using System.Linq;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
+using TrackerCouncil.Smz3.Data.GeneratedData;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
+using TrackerCouncil.Smz3.SeedGenerator.AltGameModes;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
 using TrackerCouncil.Smz3.SeedGenerator.Text;
 using TrackerCouncil.Smz3.Shared.Enums;
@@ -16,7 +18,7 @@ using TrackerCouncil.Smz3.Shared.Models;
 namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
 
 [Order(-5)]
-public class ZeldaTextsPatch(IMetadataService metadataService, IGameHintService gameHintService) : RomPatch
+public class ZeldaTextsPatch(IMetadataService metadataService, IGameHintService gameHintService, AltGameModeFactory altGameModeFactory) : RomPatch
 {
     private StringTable _stringTable = null!;
     private PlandoTextConfig _plandoText = null!;
@@ -72,6 +74,8 @@ public class ZeldaTextsPatch(IMetadataService metadataService, IGameHintService 
     {
         var regions = data.World.Regions.OfType<IHasReward>().ToList();
 
+        var altGameModeText = altGameModeFactory.GetInGameText(data.World);
+
         var greenPendantDungeon = regions
             .Where(x => x.RewardType == RewardType.PendantGreen)
             .Select(x => GetRegionName((Region)x))
@@ -96,7 +100,7 @@ public class ZeldaTextsPatch(IMetadataService metadataService, IGameHintService 
         yield return SetText(0x308C00, StringTable.TavernMan,
             GameLines.TavernMan, _plandoText.TavernMan);
 
-        foreach (var text in GanonText(data))
+        foreach (var text in GanonText(data, altGameModeText))
         {
             yield return text;
         }
@@ -115,13 +119,13 @@ public class ZeldaTextsPatch(IMetadataService metadataService, IGameHintService 
         yield return SetText(0x308400, StringTable.TriforceRoom,
             GameLines.TriforceRoom, _plandoText.TriforceRoom, true);
 
-        var gtCrystalCount = data.World.Config.GanonsTowerCrystalCount;
+        var gtCrystalCount = data.World.Config.GameModeOptions.GanonsTowerCrystalCount;
         SetText(StringTable.GanonsTowerGoalSign,
             GameLines.GanonsTowerGoalSign, _plandoText.GanonsTowerGoalSign, false, gtCrystalCount == 1 ? "1 crystal" : $"{gtCrystalCount} crystals");
 
-        var ganonCrystalCount = data.World.Config.GanonCrystalCount;
+        var ganonCrystalCount = data.World.Config.GameModeOptions.GanonCrystalCount;
         SetText(StringTable.GanonGoalSign,
-            GameLines.GanonGoalSign, _plandoText.GanonGoalSign, false, ganonCrystalCount == 1 ? "1 crystal" : $"{ganonCrystalCount} crystals");
+            GameLines.GanonGoalSign, _plandoText.GanonGoalSign ?? altGameModeText?.GanonGoalSign, false, ganonCrystalCount == 1 ? "1 crystal" : $"{ganonCrystalCount} crystals");
 
         if (data.World.HintTiles.Any() || _plandoText.HasHintTileText)
         {
@@ -209,13 +213,13 @@ public class ZeldaTextsPatch(IMetadataService metadataService, IGameHintService 
 
     }
 
-    private IEnumerable<GeneratedPatch> GanonText(GetPatchesRequest data)
+    private IEnumerable<GeneratedPatch> GanonText(GetPatchesRequest data, AltGameModeInGameText? altGameModeInGameText)
     {
         yield return SetText(0x308600, StringTable.GanonIntro,
-            GameLines.GanonIntro, _plandoText.GanonIntro);
+            GameLines.GanonIntro, _plandoText.GanonIntro ?? altGameModeInGameText?.GanonIntro);
 
         yield return SetText(0x309100, StringTable.GanonIntroAlt,
-            GameLines.GanonIntroGoalsNotMet, _plandoText.GanonIntroGoalsNotMet);
+            GameLines.GanonIntroGoalsNotMet, _plandoText.GanonIntroGoalsNotMet ?? altGameModeInGameText?.GanonIntroGoalsNotMet);
 
         var silversLocation = data.Worlds.SelectMany(world => world.Locations)
             .FirstOrDefault(l => l.ItemIs(ItemType.SilverArrows, data.World));

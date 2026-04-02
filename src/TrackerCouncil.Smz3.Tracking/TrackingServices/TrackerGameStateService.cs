@@ -8,14 +8,16 @@ using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.Tracking;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
+using TrackerCouncil.Smz3.SeedGenerator.Contracts;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Tracking.TrackingServices;
 
-internal class TrackerGameStateService(IMetadataService metadataService) : TrackerService, ITrackerGameStateService
+internal class TrackerGameStateService(IMetadataService metadataService, IWorldAccessor worldAccessor) : TrackerService, ITrackerGameStateService
 {
     public bool HasBeatenGame { get; protected set; }
+    public bool HasFinishedGoal { get; set; }
     public ViewedObject? LastViewedObject { get; set; }
     public Region? CurrentRegion { get; protected set; }
     public string CurrentMap { get; protected set; } = "";
@@ -394,6 +396,20 @@ internal class TrackerGameStateService(IMetadataService metadataService) : Track
             }
 
             IsTalkingToZora = false;
+        }
+    }
+
+    public override void PostInitialize()
+    {
+        base.PostInitialize();
+        if (worldAccessor.World.Config.GameModeOptions.SelectedGameModeType == GameModeType.Vanilla)
+        {
+            var progression = Tracker.PlayerProgressionService.GetProgression(true);
+            if (progression.CrystalCount >= Tracker.LocalConfig?.GameModeOptions.GanonCrystalCount &&
+                progression.MetroidBossCount >= Tracker.LocalConfig?.GameModeOptions.TourianBossCount)
+            {
+                Tracker.GameStateTracker.HasFinishedGoal = true;
+            }
         }
     }
 }

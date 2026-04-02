@@ -14,19 +14,12 @@ using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.Data.Services;
 
-public class TrackerStateService : ITrackerStateService
+public class TrackerStateService(
+    RandomizerContext dbContext,
+    ILogger<TrackerStateService> logger,
+    IMetadataService metadata)
+    : ITrackerStateService
 {
-    private readonly RandomizerContext _randomizerContext;
-    private readonly ILogger<TrackerStateService> _logger;
-    private readonly IMetadataService _metadata;
-
-    public TrackerStateService(RandomizerContext dbContext, ILogger<TrackerStateService> logger, IMetadataService metadata)
-    {
-        _randomizerContext = dbContext;
-        _logger = logger;
-        _metadata = metadata;
-    }
-
     public async Task CreateStateAsync(IEnumerable<World> worlds, GeneratedRom generatedRom)
     {
         var worldList = worlds.ToList();
@@ -39,7 +32,7 @@ public class TrackerStateService : ITrackerStateService
         }
 
         generatedRom.TrackerState = state;
-        await _randomizerContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync();
     }
 
     public TrackerState CreateTrackerState(List<World> worlds)
@@ -61,7 +54,7 @@ public class TrackerStateService : ITrackerStateService
 
         var itemStates = new List<TrackerItemState>();
 
-        var configItems = _metadata.Items;
+        var configItems = metadata.Items;
         var enumItems = Enum.GetValues(typeof(ItemType)).Cast<ItemType>().Where(it => it != ItemType.Nothing && configItems.All(ci => ci.InternalItemType != it))
             .Select(x => new ItemData(x));
         var itemData = configItems.Concat(enumItems).ToList();
@@ -91,7 +84,7 @@ public class TrackerStateService : ITrackerStateService
             var startingInventory = ItemSettingOptions.GetStartingItemTypes(world.Config).ToList();
             foreach (var itemType in startingInventory.Distinct())
             {
-                _logger.LogInformation("Adding Starting Inventory Item {ItemName} to Tracker State", itemType.GetDescription());
+                logger.LogInformation("Adding Starting Inventory Item {ItemName} to Tracker State", itemType.GetDescription());
                 var addedItem = worldItemStateMap[itemType];
                 addedItem.TrackingState = startingInventory.Count(x => x == itemType);
 
@@ -172,26 +165,26 @@ public class TrackerStateService : ITrackerStateService
         int? markedTourianBossCount = null;
         if (localWorld.LegacyWorld == null)
         {
-            if (localWorld.Config.RandomizeCrystalBossCounts)
+            if (localWorld.Config.GameModeOptions.RandomizeGoalCounts)
             {
                 markedGanonsTowerCrystalCount =
-                    localWorld.Config.MinGanonsTowerCrystalCount == localWorld.Config.MaxGanonsTowerCrystalCount
-                        ? localWorld.Config.MinGanonsTowerCrystalCount
+                    localWorld.Config.GameModeOptions.MinGanonsTowerCrystalCount == localWorld.Config.GameModeOptions.MaxGanonsTowerCrystalCount
+                        ? localWorld.Config.GameModeOptions.MinGanonsTowerCrystalCount
                         : null;
                 markedGanonCrystalCount =
-                    localWorld.Config.MinGanonCrystalCount == localWorld.Config.MaxGanonCrystalCount
-                        ? localWorld.Config.MinGanonCrystalCount
+                    localWorld.Config.GameModeOptions.MinGanonCrystalCount == localWorld.Config.GameModeOptions.MaxGanonCrystalCount
+                        ? localWorld.Config.GameModeOptions.MinGanonCrystalCount
                         : null;
                 markedTourianBossCount =
-                    localWorld.Config.MinTourianBossCount == localWorld.Config.MaxTourianBossCount
-                        ? localWorld.Config.MinTourianBossCount
+                    localWorld.Config.GameModeOptions.MinTourianBossCount == localWorld.Config.GameModeOptions.MaxTourianBossCount
+                        ? localWorld.Config.GameModeOptions.MinTourianBossCount
                         : null;
             }
             else
             {
-                markedGanonsTowerCrystalCount = localWorld.Config.GanonsTowerCrystalCount;
-                markedGanonCrystalCount = localWorld.Config.GanonCrystalCount;
-                markedTourianBossCount = localWorld.Config.TourianBossCount;
+                markedGanonsTowerCrystalCount = localWorld.Config.GameModeOptions.GanonsTowerCrystalCount;
+                markedGanonCrystalCount = localWorld.Config.GameModeOptions.GanonCrystalCount;
+                markedTourianBossCount = localWorld.Config.GameModeOptions.TourianBossCount;
             }
         }
 
@@ -207,11 +200,11 @@ public class TrackerStateService : ITrackerStateService
             Hints = hintStates,
             StartDateTime = DateTimeOffset.Now,
             UpdatedDateTime = DateTimeOffset.Now,
-            GanonsTowerCrystalCount = localWorld.Config.GanonsTowerCrystalCount,
+            GanonsTowerCrystalCount = localWorld.Config.GameModeOptions.GanonsTowerCrystalCount,
             MarkedGanonsTowerCrystalCount = markedGanonsTowerCrystalCount,
-            GanonCrystalCount = localWorld.Config.GanonCrystalCount,
+            GanonCrystalCount = localWorld.Config.GameModeOptions.GanonCrystalCount,
             MarkedGanonCrystalCount = markedGanonCrystalCount,
-            TourianBossCount = localWorld.Config.TourianBossCount,
+            TourianBossCount = localWorld.Config.GameModeOptions.TourianBossCount,
             MarkedTourianBossCount = markedTourianBossCount,
         };
     }
@@ -269,7 +262,7 @@ public class TrackerStateService : ITrackerStateService
         trackerState.UpdatedDateTime = DateTimeOffset.Now;
         trackerState.SecondsElapsed = secondsElapsed;
 
-        await _randomizerContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync();
     }
 
     private void SaveLocationStates(List<World> worlds, TrackerState trackerState)

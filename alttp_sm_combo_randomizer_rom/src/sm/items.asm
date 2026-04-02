@@ -932,9 +932,9 @@ alttp_item_pickup:
     beq .dungeon_jmp
     cmp #$0011
     beq .dungeon_key_jmp
-    jmp .end
     cmp #$0012
     beq .half_magic_jmp
+    jmp .end
 
 .normal_item_jmp
     jmp .normal_item
@@ -2641,3 +2641,18 @@ namespace off
 ; 	dw $efe0	;Energy Tank (Botwoon)
 ; org $CFC7A7
 ; 	dw $efe4	;Space Jump
+
+; After picking up a beam, check if the player has both spazer
+; and plasma equipped. If so, unequip spazer.
+org $c488C2
+base $8488C2
+    LDA $09A6 
+    AND #$000C 
+    CMP #$000C
+    BNE .done
+    LDA #$0004
+    TRB $09A6
+    NOP
+    NOP
+    NOP
+.done

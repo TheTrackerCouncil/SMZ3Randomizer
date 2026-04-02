@@ -197,10 +197,10 @@ public class RomTextService(ILogger<RomTextService> logger, IGameHintService gam
                 log.AppendLine("Keysanity: " + world.Config.KeysanityMode);
             }
 
-            var gtCrystals = world.Config.GanonsTowerCrystalCount;
-            var ganonCrystals = world.Config.GanonCrystalCount;
+            var gtCrystals = world.Config.GameModeOptions.GanonsTowerCrystalCount;
+            var ganonCrystals = world.Config.GameModeOptions.GanonCrystalCount;
+            var tourianBosses = world.Config.GameModeOptions.TourianBossCount;
             var pyramid = world.Config.OpenPyramid ? "Open" : "Closed";
-            var tourianBosses = world.Config.TourianBossCount;
             log.AppendLine($"Win Conditions: GT = {gtCrystals} Crystals, Ganon = {ganonCrystals} Crystals, Pyramid = {pyramid}, Tourian = {tourianBosses} Bosses");
 
             log.AppendLine();

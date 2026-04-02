@@ -10,6 +10,7 @@ using TrackerCouncil.Smz3.Data.Interfaces;
 using TrackerCouncil.Smz3.Data.ParsedRom;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.ViewModels;
+using TrackerCouncil.Smz3.SeedGenerator.AltGameModes;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Models;
 using Dispatcher = Avalonia.Threading.Dispatcher;
@@ -28,12 +29,19 @@ public partial class GenerationSettingsWindow : ScalableWindow
         DataContext = new GenerationWindowViewModel();
     }
 
-    public GenerationSettingsWindow(GenerationSettingsWindowService generationSettingsWindowService, IServiceProvider serviceProvider)
+    public GenerationSettingsWindow(GenerationSettingsWindowService generationSettingsWindowService, IServiceProvider serviceProvider, AltGameModeFactory altGameModeFactory)
     {
         _generationSettingsWindowService = generationSettingsWindowService;
         _serviceProvider = serviceProvider;
         InitializeComponent();
-        DataContext = BasicPanel.Data = _model = _generationSettingsWindowService.GetViewModel();
+        try
+        {
+            DataContext = BasicPanel.Data = _model = _generationSettingsWindowService.GetViewModel(altGameModeFactory.GetGameModeDescriptions());
+        }
+        catch (Exception)
+        {
+            MessageWindow.ShowErrorDialog("Error opening generation settings", "Error", this);
+        }
         BasicPanel.SetServices(serviceProvider, generationSettingsWindowService);
     }
 

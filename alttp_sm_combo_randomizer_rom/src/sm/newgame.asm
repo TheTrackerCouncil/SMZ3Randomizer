@@ -59,6 +59,7 @@ introskip_doorflags:
     sta.l !region_timer_tmp
     sta.l !region_tmp
     sta.l !transition_tmp
+    sta.l !SRAM_GOAL_MET
     
     jsl stats_clear_values  ; Clear SM stats
     jsl alttp_new_game      ; Setup new game for ALTTP

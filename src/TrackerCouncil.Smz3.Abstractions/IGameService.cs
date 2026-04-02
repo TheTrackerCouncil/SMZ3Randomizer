@@ -114,4 +114,9 @@ public interface IGameService
     /// </summary>
     public bool PlayerRecentlyKilled { get; }
 
+    /// <summary>
+    /// Updates the flag to mark the game mode as complete
+    /// </summary>
+    public void TrySetGameModeComplete();
+
 }

@@ -15,6 +15,11 @@ public interface ITrackerGameStateService
     public bool HasBeatenGame { get; }
 
     /// <summary>
+    /// Gets if the local player has finished the goal
+    /// </summary>
+    public bool HasFinishedGoal { get; set;  }
+
+    /// <summary>
     /// The last viewed hint tile or set of locations
     /// </summary>
     public ViewedObject? LastViewedObject { get; }

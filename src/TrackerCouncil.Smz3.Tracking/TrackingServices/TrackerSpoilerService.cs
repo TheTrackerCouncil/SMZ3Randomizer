@@ -657,8 +657,6 @@ internal class TrackerSpoilerService(IWorldQueryService worldQueryService, IGame
         if (item.Metadata == null)
             throw new InvalidOperationException($"No metadata for item '{item.Name}'");
 
-        List<TrackerResponseLine>? lines = null;
-
         var reachableLocation = worldQueryService.Locations(itemFilter: item.Type, keysanityByRegion: true, checkAllWorlds: true)
             .Random();
         if (reachableLocation != null)
@@ -741,7 +739,7 @@ internal class TrackerSpoilerService(IWorldQueryService worldQueryService, IGame
         return new TrackerResponseDetails { Successful = false };
     }
 
-    private TrackerResponseDetails GiveItemLocationHint(Item item)
+    private TrackerResponseDetails? GiveItemLocationHint(Item item)
     {
         var itemLocations = worldQueryService.Locations(outOfLogic: true, itemFilter: item.Type, checkAllWorlds: true).ToList();
 

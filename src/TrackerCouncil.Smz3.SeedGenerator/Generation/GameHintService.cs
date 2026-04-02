@@ -10,6 +10,10 @@ using TrackerCouncil.Smz3.Data.GeneratedData;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
+using TrackerCouncil.Smz3.Data.WorldData.Regions.SuperMetroid;
+using TrackerCouncil.Smz3.Data.WorldData.Regions.SuperMetroid.Brinstar;
+using TrackerCouncil.Smz3.Data.WorldData.Regions.SuperMetroid.Maridia;
+using TrackerCouncil.Smz3.Data.WorldData.Regions.SuperMetroid.Norfair;
 using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
 using TrackerCouncil.Smz3.SeedGenerator.Infrastructure;
@@ -56,6 +60,10 @@ public class GameHintService : IGameHintService
         { typeof(IcePalace), LocationId.IcePalaceKholdstare },
         { typeof(MiseryMire), LocationId.MiseryMireVitreous },
         { typeof(TurtleRock), LocationId.TurtleRockTrinexx },
+        { typeof(KraidsLair), LocationId.KraidsLairVariaSuit },
+        { typeof(WreckedShip), LocationId.WreckedShipWestSuper },
+        { typeof(InnerMaridia), LocationId.InnerMaridiaSpaceJump },
+        { typeof(LowerNorfairEast), LocationId.LowerNorfairRidleyTank }
     };
 
     private readonly ILogger<GameHintService> _logger;
@@ -477,10 +485,10 @@ public class GameHintService : IGameHintService
             // Make sure the required amount of crystal dungeons are beatable
             foreach (var world in allWorlds)
             {
-                var numCrystalsNeeded = world.Config.GanonCrystalCount;
-                if (!world.Config.OpenPyramid && world.Config.GanonsTowerCrystalCount > numCrystalsNeeded)
+                var numCrystalsNeeded = world.Config.GameModeOptions.GanonCrystalCount;
+                if (!world.Config.OpenPyramid && world.Config.GameModeOptions.GanonsTowerCrystalCount > numCrystalsNeeded)
                 {
-                    numCrystalsNeeded = world.Config.GanonsTowerCrystalCount;
+                    numCrystalsNeeded = world.Config.GameModeOptions.GanonsTowerCrystalCount;
                 }
 
                 var possibleCrystalRewards = world.RewardRegions.Where(d =>

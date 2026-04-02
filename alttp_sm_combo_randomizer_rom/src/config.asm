@@ -34,3 +34,9 @@ config_autosave:
 
 config_random_sm_boss_rewards:
     dw #$0000       ; F4700E
+
+config_other_goal:
+    dw #$0000       ; F47010
+
+config_ganon_crystals:
+    dw #$0007       ; F47012

@@ -49,6 +49,7 @@ public sealed partial class Tracker : TrackerBase, IDisposable
     private readonly ITrackerTimerService _timerService;
     private readonly ISpeechRecognitionService _recognizer;
     private readonly HashSet<SchrodingersString> _saidLines = new();
+    private readonly List<TrackerService> _trackerServices = [];
 
     private bool _disposed;
     private string? _lastSpokenText;
@@ -145,6 +146,11 @@ public sealed partial class Tracker : TrackerBase, IDisposable
         World = _worldAccessor.World;
 
         Mood = metadata.Mood;
+
+        foreach (var service in _trackerServices)
+        {
+            service.PostInitialize();
+        }
     }
 
     ~Tracker()
@@ -233,6 +239,7 @@ public sealed partial class Tracker : TrackerBase, IDisposable
         {
             service.Tracker = this;
             service.Initialize();
+            _trackerServices.Add(service);
             var serviceInterface = service.GetType().GetInterfaces()
                 .FirstOrDefault(x => x.Namespace == interfaceNamespace);
             if (serviceInterface != null && properties.TryGetValue(serviceInterface, out var property))
@@ -679,6 +686,7 @@ public sealed partial class Tracker : TrackerBase, IDisposable
     /// </summary>
     public override void Dispose()
     {
+        _trackerServices.Clear();
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }
@@ -724,8 +732,11 @@ public sealed partial class Tracker : TrackerBase, IDisposable
         var actualProgression = PlayerProgressionService.GetProgression(false);
         var assumedKeysProgression = PlayerProgressionService.GetProgression(true);
 
-        World.DarkWorldNorthEast.UpdateGanonAccessibility(actualProgression, assumedKeysProgression);
-        World.WestCrateria.UpdateMotherBrainAccessibility(actualProgression);
+        var hasAltGameMode = AltGameModeService.HasAltGameMode;
+        var isAltGameModeComplete = hasAltGameMode && AltGameModeService.IsAltGameModeKnowinglyComplete();
+
+        World.DarkWorldNorthEast.UpdateGanonAccessibility(actualProgression, assumedKeysProgression, hasAltGameMode, isAltGameModeComplete);
+        World.WestCrateria.UpdateMotherBrainAccessibility(actualProgression, hasAltGameMode, isAltGameModeComplete);
         LocationTracker.UpdateAccessibility(!forceRefreshAll, actualProgression, assumedKeysProgression);
         RewardTracker.UpdateAccessibility(actualProgression, assumedKeysProgression);
         BossTracker.UpdateAccessibility(actualProgression, assumedKeysProgression);

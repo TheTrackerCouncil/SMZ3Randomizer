@@ -23,6 +23,8 @@ public class TrackerState
     public int? MarkedGanonCrystalCount { get; set; }
     public int? TourianBossCount { get; set; }
     public int? MarkedTourianBossCount { get; set; }
+    [MaxLength(200)]
+    public string? AltGameModeState { get; set; }
     public ICollection<TrackerItemState> ItemStates { get; set; } = new List<TrackerItemState>();
     public ICollection<TrackerLocationState> LocationStates { get; set; } = new List<TrackerLocationState>();
     public ICollection<TrackerRewardState> RewardStates { get; set; } = new List<TrackerRewardState>();

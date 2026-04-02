@@ -166,9 +166,9 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
         config.RomGenerator = parsedRomDetails.RomGenerator;
         config.KeysanityMode = parsedRomDetails.KeysanityMode;
         config.Seed = parsedRomDetails.Seed.ToString();
-        config.GanonsTowerCrystalCount = parsedRomDetails.GanonsTowerCrystalCount;
-        config.GanonCrystalCount = parsedRomDetails.GanonCrystalCount;
-        config.TourianBossCount = parsedRomDetails.TourianBossCount;
+        config.GameModeOptions.GanonsTowerCrystalCount = parsedRomDetails.GanonsTowerCrystalCount;
+        config.GameModeOptions.GanonCrystalCount = parsedRomDetails.GanonCrystalCount;
+        config.GameModeOptions.TourianBossCount = parsedRomDetails.TourianBossCount;
         config.OpenPyramid = parsedRomDetails.OpenPyarmid;
         config.SkipTourianBossDoor = parsedRomDetails.SkipTourianBossDoor;
         config.LocationItems.Clear();

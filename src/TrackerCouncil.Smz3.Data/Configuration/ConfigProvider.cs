@@ -292,6 +292,15 @@ public partial class ConfigProvider
         LoadYamlConfigs<MetadataConfig, MetadataConfig>("metadata.yml", profiles, mood);
 
     /// <summary>
+    /// Returns the configs with alt game mode text
+    /// </summary>
+    /// <param name="profiles">The selected tracker profile(s) to load</param>
+    /// <param name="mood">The current tracker mood to pick the specific mood file</param>
+    /// <returns></returns>
+    public virtual AltGameModesConfig GetAltGameModesConfig(IReadOnlyCollection<string> profiles, string? mood) =>
+        LoadYamlConfigs<AltGameModesConfig, AltGameModesConfig>("alt_game_modes.yml", profiles, mood);
+
+    /// <summary>
     /// Returns a collection of all possible config profiles to
     /// select from
     /// </summary>

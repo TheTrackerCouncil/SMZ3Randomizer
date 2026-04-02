@@ -15,6 +15,12 @@ public class LocationInfo : IMergeable<LocationInfo>
     /// </summary>
     public LocationInfo() { }
 
+    public LocationInfo(LocationId id)
+    {
+        LocationId = id;
+        LocationNumber = (int)id;
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="LocationInfo"/> class
     /// with the specified info.

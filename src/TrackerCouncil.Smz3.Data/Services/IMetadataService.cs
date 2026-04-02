@@ -81,6 +81,11 @@ public interface IMetadataService
     public UIConfig UILayouts { get; }
 
     /// <summary>
+    /// Lines for alt game modes
+    /// </summary>
+    public AltGameModesConfig AltGameModes { get; }
+
+    /// <summary>
     /// The current selected mood
     /// </summary>
     public string Mood { get; }

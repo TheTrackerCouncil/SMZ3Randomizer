@@ -10,12 +10,13 @@ using SnesConnectorLibrary.Responses;
 using SNI;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Tracking;
+using TrackerCouncil.Smz3.SeedGenerator.AltGameModes;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Tracking.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.AutoTracking.AutoTrackerModules;
 
-public class GameMonitor(TrackerBase tracker, ISnesConnectorService snesConnector, ILogger<GameMonitor> logger, IWorldQueryService worldQueryService) : AutoTrackerModule(tracker, snesConnector, logger)
+public class GameMonitor(TrackerBase tracker, ISnesConnectorService snesConnector, ILogger<GameMonitor> logger, IWorldQueryService worldQueryService, AltGameModeFactory altGameModeFactory) : AutoTrackerModule(tracker, snesConnector, logger)
 {
     private bool bIsCheckingGameStart;
 
@@ -49,6 +50,23 @@ public class GameMonitor(TrackerBase tracker, ISnesConnectorService snesConnecto
             OnResponse = CheckGame,
             Filter = () => HasStartedGame
         });
+
+        // If the player is using an alt game mode, make sure the flag is set
+        if (worldQueryService.World.Config.GameModeOptions.SelectedGameModeType != GameModeType.Vanilla)
+        {
+            SnesConnector.AddRecurringMemoryRequest(new SnesRecurringMemoryRequest()
+            {
+                MemoryRequestType = SnesMemoryRequestType.RetrieveMemory,
+                SnesMemoryDomain = SnesMemoryDomain.CartridgeSave,
+                AddressFormat = AddressFormat.Snes9x,
+                SniMemoryMapping = MemoryMapping.ExHiRom,
+                Address = 0xa176f0,
+                Length = 1,
+                OnResponse = CheckAltGameModeFlag,
+                FrequencySeconds = 15,
+                Filter = () => HasValidState && Tracker.AltGameModeService.IsAltGameModeComplete
+            });
+        }
     }
 
     private void GameStart(SnesData data, SnesData? prevData)
@@ -147,7 +165,12 @@ public class GameMonitor(TrackerBase tracker, ISnesConnectorService snesConnecto
 
         if (bIsFirstStart)
         {
-            if (Tracker.World.Config.RomGenerator != RomGenerator.Cas)
+            var gameModeString = altGameModeFactory.GetGameStartText(Tracker.World);
+            if (!string.IsNullOrEmpty(gameModeString))
+            {
+                Tracker.Say(text: gameModeString);
+            }
+            else if (Tracker.World.Config.RomGenerator != RomGenerator.Cas)
             {
                 Tracker.Say(x => x.AutoTracker.GameStartedNonCas);
             }
@@ -186,5 +209,13 @@ public class GameMonitor(TrackerBase tracker, ISnesConnectorService snesConnecto
             0x11 => Game.Credits,
             _ => Game.Neither
         };
+    }
+
+    private void CheckAltGameModeFlag(SnesData data, SnesData? prevData)
+    {
+        if (data.ReadUInt8(0) == 0)
+        {
+            Tracker.GameService?.TrySetGameModeComplete();
+        }
     }
 }

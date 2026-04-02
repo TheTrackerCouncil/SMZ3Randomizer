@@ -153,6 +153,20 @@ public class RandomizerOptions : INotifyPropertyChanged
                 settingsUpdated = true;
             }
 
+            // Update to game mode options
+#pragma warning disable CS0618 // Type or member is obsolete
+            if (options.SeedOptions.GanonCrystalCount != null)
+            {
+                options.SeedOptions.GameModeOptions.GanonCrystalCount = options.SeedOptions.GanonCrystalCount.Value;
+                options.SeedOptions.GameModeOptions.GanonsTowerCrystalCount = options.SeedOptions.GanonsTowerCrystalCount!.Value;
+                options.SeedOptions.GameModeOptions.TourianBossCount = options.SeedOptions.TourianBossCount!.Value;
+                options.SeedOptions.GanonCrystalCount = null;
+                options.SeedOptions.GanonsTowerCrystalCount = null;
+                options.SeedOptions.TourianBossCount = null;
+                settingsUpdated = true;
+            }
+#pragma warning restore CS0618 // Type or member is obsolete
+
             if (settingsUpdated)
             {
                 options.Save();
@@ -225,19 +239,10 @@ public class RandomizerOptions : INotifyPropertyChanged
             LocationItems = SeedOptions.LocationItems,
             LogicConfig = LogicConfig.Clone(),
             CasPatches = PatchOptions.CasPatches.Clone(),
+            GameModeOptions = SeedOptions.GameModeOptions.Clone(),
             CopySeedAndRaceSettings = true,
             Seed = SeedOptions.Seed,
-            RandomizeCrystalBossCounts = SeedOptions.RandomizeCrystalBossCounts,
-            GanonsTowerCrystalCount = SeedOptions.GanonsTowerCrystalCount,
-            MinGanonsTowerCrystalCount = SeedOptions.MinGanonsTowerCrystalCount,
-            MaxGanonsTowerCrystalCount = SeedOptions.MaxGanonsTowerCrystalCount,
-            GanonCrystalCount = SeedOptions.GanonCrystalCount,
-            MinGanonCrystalCount = SeedOptions.MinGanonCrystalCount,
-            MaxGanonCrystalCount =  SeedOptions.MaxGanonCrystalCount,
             OpenPyramid = SeedOptions.OpenPyramid,
-            TourianBossCount = SeedOptions.TourianBossCount,
-            MinTourianBossCount = SeedOptions.MinTourianBossCount,
-            MaxTourianBossCount = SeedOptions.MaxTourianBossCount,
             MetroidControls = PatchOptions.MetroidControls.Clone(),
             ItemOptions = SeedOptions.ItemOptions,
         };

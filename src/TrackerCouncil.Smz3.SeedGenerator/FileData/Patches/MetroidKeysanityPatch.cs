@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
 
@@ -113,8 +114,8 @@ public class MetroidKeysanityPatch : RomPatch
         }
 
         // Display plaque above golden bosses room with the number of bosses needed to enter Tourian
-        if (data.World.Config.RandomizeCrystalBossCounts || data.World.Config.PlandoConfig != null) {
-            var plaqueData = UshortBytes(0xA5ED).Concat(UshortBytes(plaquePlm)).Concat(UshortBytes(0x044F)).Concat(UshortBytes(KeycardPlaque.Zero + data.World.Config.TourianBossCount)).ToArray();
+        if (data.World.Config.GameModeOptions.SelectedGameModeType == GameModeType.Vanilla && (data.World.Config.GameModeOptions.RandomizeGoalCounts || data.World.Config.PlandoConfig != null)) {
+            var plaqueData = UshortBytes(0xA5ED).Concat(UshortBytes(plaquePlm)).Concat(UshortBytes(0x044F)).Concat(UshortBytes(KeycardPlaque.Zero + data.World.Config.GameModeOptions.TourianBossCount)).ToArray();
             yield return new GeneratedPatch(Snes(0x8f0000 + plmTablePos), plaqueData);
             plmTablePos += 0x08;
         }

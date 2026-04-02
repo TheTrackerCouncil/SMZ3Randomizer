@@ -15,6 +15,7 @@ using TrackerCouncil.Smz3.Data.Interfaces;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.ParsedRom;
 using TrackerCouncil.Smz3.Data.Services;
+using TrackerCouncil.Smz3.SeedGenerator.AltGameModes;
 using TrackerCouncil.Smz3.SeedGenerator.FileData;
 using TrackerCouncil.Smz3.SeedGenerator.FileData.IpsPatches;
 using TrackerCouncil.Smz3.Shared.Enums;
@@ -33,7 +34,8 @@ public class RomGenerationService(
     IMsuLookupService? msuLookupService,
     IMsuSelectorService? msuSelectorService,
     IMsuTypeService? msuTypeService,
-    RomTextService romTextService)
+    RomTextService romTextService,
+    AltGameModeFactory altGameModeFactory)
     : IRomGenerationService
 {
     private readonly ILogger<RomGenerationService> _logger = logger;
@@ -46,12 +48,18 @@ public class RomGenerationService(
         config.ItemOptions = new Dictionary<string, int>();
         config.LocationItems = new Dictionary<LocationId, int>();
         config.PlandoConfig = plandoConfig;
+
+        config.GameModeOptions.SelectedGameModeType = plandoConfig.GameModeType;
+        config.GameModeOptions.GanonsTowerCrystalCount = plandoConfig.GanonsTowerCrystalCount;
+        config.GameModeOptions.GanonCrystalCount = plandoConfig.GanonCrystalCount;
+        config.GameModeOptions.TourianBossCount = plandoConfig.TourianBossCount;
+        config.GameModeOptions.SpazersRequired = plandoConfig.SpazersRequired;
+        config.GameModeOptions.LiftOffOnGoalCompletion = plandoConfig.LiftOffOnGoalCompletion;
+
         config.KeysanityMode = plandoConfig.KeysanityMode;
-        config.GanonsTowerCrystalCount = plandoConfig.GanonsTowerCrystalCount;
-        config.GanonCrystalCount = plandoConfig.GanonCrystalCount;
-        config.OpenPyramid = plandoConfig.OpenPyramid;
-        config.TourianBossCount = plandoConfig.TourianBossCount;
         config.SkipTourianBossDoor = plandoConfig.SkipTourianBossDoor;
+        config.OpenPyramid = plandoConfig.OpenPyramid;
+
         config.LogicConfig = plandoConfig.Logic.Clone();
         return plandomizer.GenerateSeed(config, CancellationToken.None);
     }
@@ -163,6 +171,14 @@ public class RomGenerationService(
         }
 
         ApplyCasPatches(rom, options.PatchOptions);
+
+        if (seed is { PrimaryConfig.GameModeOptions.LiftOffOnGoalCompletion: true })
+        {
+            using var goalPatch = seed.PrimaryConfig.GameModeOptions.SelectedGameModeType == GameModeType.Vanilla
+                ? IpsPatch.LiftOffOnGoalCompletionPrimary()
+                : IpsPatch.LiftOffOnGoalCompletionAlt();
+            Rom.ApplySuperMetroidIps(rom, goalPatch);
+        }
 
         Rom.UpdateChecksum(rom);
 
@@ -426,6 +442,13 @@ public class RomGenerationService(
         }
 
         await stateService.CreateStateAsync(seed.WorldGenerationData.Worlds, rom);
+
+        if (rom.TrackerState != null)
+        {
+            altGameModeFactory.UpdateInitialTrackerState(seed.PrimaryConfig.GameModeOptions, rom.TrackerState);
+            await stateService.SaveStateAsync(seed.WorldGenerationData.Worlds, rom, 0);
+        }
+
         return rom;
     }
 
