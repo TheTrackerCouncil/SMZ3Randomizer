@@ -296,12 +296,51 @@ public class World
 
     private void SetRewards(Random rnd)
     {
-        var rewards = Rewards.Where(x => (Config.InterGameRewards || x.Type.IsInCategory(RewardCategory.Zelda)) && !x.Type.IsInCategory(RewardCategory.NonRandomized)).Shuffle(rnd);
-        foreach (var region in RewardRegions.Where(x => x.IsShuffledReward))
+        if (Config.InterGameRewards)
         {
-            region.SetReward(rewards.First());
-            rewards.Remove(region.Reward);
+            var rewards = Rewards.Where(x => !x.Type.IsInCategory(RewardCategory.NonRandomized)).ToList().Shuffle(rnd);
+
+            var smRewards = new List<Reward>();
+
+            // Make it so that Metroid regions are rarely pendants
+            foreach (var reward in rewards)
+            {
+                if (reward.Type.IsInCategory(RewardCategory.Pendant))
+                {
+                    smRewards.Add(reward);
+                }
+                else
+                {
+                    smRewards.AddRange(Enumerable.Range(1, 3).Select(i => reward));
+                }
+            }
+
+            smRewards = smRewards.Shuffle().ToList();
+
+            foreach (var region in RewardRegions.Where(x => x.IsShuffledReward && x is SMRegion))
+            {
+                var reward = smRewards.First();
+                region.SetReward(reward);
+                rewards.Remove(reward);
+                smRewards.RemoveAll(x => x == reward);
+            }
+
+            foreach (var region in RewardRegions.Where(x => x.IsShuffledReward && x is Z3Region))
+            {
+                region.SetReward(rewards.First());
+                rewards.Remove(region.Reward);
+            }
         }
+        else
+        {
+            var rewards = Rewards.Where(x => x.Type.IsInCategory(RewardCategory.Zelda) && !x.Type.IsInCategory(RewardCategory.NonRandomized)).Shuffle(rnd);
+            foreach (var region in RewardRegions.Where(x => x.IsShuffledReward))
+            {
+                region.SetReward(rewards.First());
+                rewards.Remove(region.Reward);
+            }
+        }
+
     }
 
     private void SetBottles(Random rnd)
