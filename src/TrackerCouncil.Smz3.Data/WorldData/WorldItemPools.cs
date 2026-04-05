@@ -98,7 +98,7 @@ public class WorldItemPools
                 throw new InvalidOperationException("Unable to find old item to swap");
             }
 
-            var newItem = new Item(swapData.ToItemType, world);
+            var newItem = new Item(swapData.ToItemType, world, isProgression: swapData.IsProgression);
             if (swapData.IsProgression)
             {
                 progression.Add(newItem);

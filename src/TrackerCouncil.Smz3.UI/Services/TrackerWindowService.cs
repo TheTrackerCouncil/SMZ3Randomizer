@@ -798,6 +798,11 @@ public class TrackerWindowService(
 
     private async Task<MessageWindowResult?> OpenMessageWindow(string message, MessageWindowIcon icon = MessageWindowIcon.Error, MessageWindowButtons buttons = MessageWindowButtons.OK)
     {
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            return await Dispatcher.UIThread.InvokeAsync(async () => await OpenMessageWindow(message, icon, buttons));
+        }
+
         var window = new MessageWindow(new MessageWindowRequest()
         {
             Message = message,

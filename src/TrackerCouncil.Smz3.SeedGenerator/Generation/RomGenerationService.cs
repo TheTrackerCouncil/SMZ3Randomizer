@@ -446,7 +446,7 @@ public class RomGenerationService(
         if (rom.TrackerState != null)
         {
             altGameModeFactory.UpdateInitialTrackerState(seed.PrimaryConfig.GameModeOptions, rom.TrackerState);
-            await stateService.SaveStateAsync(seed.WorldGenerationData.Worlds, rom, 0);
+            await dbContext.SaveChangesAsync();
         }
 
         return rom;
