@@ -634,9 +634,8 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
                     hiddenProperties.Add("MaxTourianBossCount");
                 }
 
-                if (!_model.GameSettings.GoalSettings.IsSpazerHunt || true) // TODO: remove true
+                if (!_model.GameSettings.GoalSettings.IsSpazerHunt)
                 {
-                    hiddenProperties.Add("SelectedGameModeType"); // TODO: remove this
                     hiddenProperties.Add("SpazersInPool");
                     hiddenProperties.Add("MinSpazersInPool");
                     hiddenProperties.Add("MaxSpazersInPool");

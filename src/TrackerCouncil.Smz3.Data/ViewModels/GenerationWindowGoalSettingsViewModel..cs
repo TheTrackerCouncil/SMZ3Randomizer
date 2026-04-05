@@ -27,7 +27,7 @@ public class GenerationWindowGoalSettingsViewModel : ViewModelBase
     [DynamicFormFieldText]
     public string Description { get; set; } = "";
 
-    [DynamicFormFieldComboBox(label: "Randomize goal values:", visibleWhenTrue: nameof(AlwaysHidden))] // TODO: remove always hidden
+    [DynamicFormFieldComboBox(label: "Randomize goal values:")]
     public YesNoEnum RandomizeGoalCounts
     {
         get;
@@ -258,7 +258,7 @@ public class GenerationWindowGoalSettingsViewModel : ViewModelBase
     public bool RandomizedGoalCounts => RandomizeGoalCounts == YesNoEnum.Yes;
     public bool IsDefaultGameMode => SelectedGameModeType == GameModeType.Vanilla;
     public bool IsAltGameMode => SelectedGameModeType != GameModeType.Vanilla;
-    public bool IsSpazerHunt => false && SelectedGameModeType == GameModeType.SpazerHunt; // TODO: Remove false
+    public bool IsSpazerHunt => SelectedGameModeType == GameModeType.SpazerHunt;
     public Dictionary<GameModeType, string> GameModeTypeDescriptions = new();
 
     public void UpdateViewModel(GameModeOptions config)

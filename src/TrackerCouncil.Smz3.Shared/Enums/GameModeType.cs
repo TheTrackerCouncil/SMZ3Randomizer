@@ -7,7 +7,6 @@ public enum GameModeType
     [Description("Vanilla")]
     Vanilla,
 
-    // TODO: Revert to old name
-    [Description("April Fools Event")]
+    [Description("Spazer Hunt")]
     SpazerHunt
 }

@@ -15,9 +15,7 @@ using TrackerCouncil.Smz3.Shared.Models;
 namespace TrackerCouncil.Smz3.SeedGenerator.AltGameModes;
 
 [GameModeType(GameModeType.SpazerHunt)]
-// TODO: Revert to old description
-// [Description("You thought they were worthless, but Samus needs to collect all of the spazers and use them to save the day. After all, who needs a Triforce when you have lots of firepower? Requires auto tracking.")]
-[Description("What's this game mode? It's a mystery! You can climb the Pyramid of Power to fully know what you'll need to do! Auto tracking required.")]
+[Description("You thought they were worthless, but Samus needs to collect all of the spazers and use them to save the day. After all, who needs a Triforce when you have lots of firepower? Requires auto tracking.")]
 public class SpazerHuntAltGameMode(IMetadataService metadata) : AltGameModeBase
 {
     private TrackerBase _tracker = null!;
