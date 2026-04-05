@@ -63,7 +63,7 @@ public class SpazerHuntAltGameMode(IMetadataService metadata) : AltGameModeBase
                 rng.Next(gameModeOptions.MinSpazersRequired, Math.Min(spazersInPool, gameModeOptions.MaxSpazersRequired));
         }
 
-        var spazersToSpawn = spazersInPool;
+        var spazersToSpawn = spazersInPool - world.ItemPools.AllItems.Count(x => x.Type == ItemType.Spazer);
 
         // First try to remove really useless items people won't miss for spazers
         List<ItemType> junkItemTypes = [ItemType.TwentyRupees, ItemType.TwentyRupees2, ItemType.Arrow, ItemType.TenArrows, ItemType.FiveRupees, ItemType.OneRupee];
