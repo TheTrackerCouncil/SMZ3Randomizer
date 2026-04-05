@@ -1,5 +1,8 @@
+using System;
+using System.Collections.Generic;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Services;
+using TrackerCouncil.Smz3.Data.ViewModels;
 using TrackerCouncil.Smz3.SeedGenerator.AltGameModes;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
 using TrackerCouncil.Smz3.Shared.Enums;
@@ -14,6 +17,7 @@ internal class TrackerAltGameModeService(AltGameModeFactory altGameModeFactory, 
     public GameModeType GameModeType => _gameModeType;
     public bool HasAltGameMode => _gameModeType != GameModeType.Vanilla;
     public bool IsAltGameModeComplete { get; private set; }
+    public event EventHandler? GoalStateChanged;
 
     public void MarkAltGameModeAsComplete()
     {
@@ -40,6 +44,31 @@ internal class TrackerAltGameModeService(AltGameModeFactory altGameModeFactory, 
             _ = Tracker.SaveAsync();
             Tracker.UpdateAllAccessibility(false);
         }
+    }
+
+    public void NotifyOfGoalStateChange()
+    {
+        GoalStateChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    public List<GoalUiDetails> GetGoalUiDetails()
+    {
+        var state = _gameMode?.GetGoalUiDetails(Tracker.World);
+        if (state?.Count > 0) return state;
+        var progression = Tracker.PlayerProgressionService.GetProgression(false);
+        var crystals = progression.CrystalCount;
+        var bosses = progression.MetroidBossCount;
+        var crystalsRequired = Tracker.World.State?.MarkedGanonCrystalCount != null
+            ? $"{Tracker.World.State?.MarkedGanonCrystalCount}"
+            : "?";
+        var bossesRequired = Tracker.World.State?.MarkedTourianBossCount != null
+            ? $"{Tracker.World.State?.MarkedTourianBossCount}"
+            : "?";
+        return
+        [
+            new GoalUiDetails { IconCategory = "Dungeons", Icon = "crystal.png", Text = $"{crystals}/{crystalsRequired}" },
+            new GoalUiDetails { IconCategory = "Dungeons", Icon = "metroid boss token.png", Text = $"{bosses}/{bossesRequired}" }
+        ];
     }
 
     public override void PostInitialize()

@@ -14,7 +14,7 @@
         Resized="WindowBase_OnResized"
         Icon="/Assets/smz3.ico">
   <LayoutTransformControl x:Name="MainLayout">
-    <Grid RowDefinitions="Auto, *, Auto">
+    <Grid RowDefinitions="Auto, *, Auto, Auto">
       <controls:HeaderFooter Grid.Row="0" BorderSize="0 0 0 2">
         <Grid ColumnDefinitions="*,Auto">
           <Menu Grid.Column="0" FontSize="12">
@@ -55,11 +55,28 @@
               <controls:CheckedMenuItem Header="Enable _Hints" Click="TrackerEnableHintsMenuItem_OnClick" IsChecked="{Binding AreHintsEnabled}"/>
               <controls:CheckedMenuItem Header="Enable _Spoilers" Click="TrackerEnableSpoilersMenuItem_OnClick" IsChecked="{Binding AreSpoilersEnabled}"/>
             </MenuItem>
+            <MenuItem>
+              <MenuItem.Header>
+                <StackPanel Orientation="Horizontal">
+                  <TextBlock>Auto Tracking</TextBlock>
+                  <avalonia:MaterialIcon Kind="{Binding ConnectedIcon}" Height="16" Background="Transparent" Foreground="{Binding ConnectedColor}" Margin="3 0 0 0"/>
+                </StackPanel>
+              </MenuItem.Header>
+
+              <controls:CheckedMenuItem Header="Disabled" IsChecked="{Binding IsDisabledConnector}" Click="DisableAutoTrackerMenuItem_OnClick"></controls:CheckedMenuItem>
+              <controls:CheckedMenuItem Header="SNI Connector" IsChecked="{Binding IsSniConnector}" Click="SniMenuItem_OnClick"></controls:CheckedMenuItem>
+              <controls:CheckedMenuItem Header="USB2SNES Connector" IsChecked="{Binding IsUsb2SnesConnector}" Click="Usb2SnesMenuItem_OnClick"></controls:CheckedMenuItem>
+              <controls:CheckedMenuItem Header="Lua Connector" IsChecked="{Binding IsLuaConnector}" Click="LuaMenuItem_OnClick"></controls:CheckedMenuItem>
+              <controls:CheckedMenuItem Header="Crowd Control Lua Connector" IsChecked="{Binding IsLuaCrowdControlConnector}" Click="CrowdControlMenuItem_OnClick"></controls:CheckedMenuItem>
+              <controls:CheckedMenuItem Header="Emo Tracker Lua / ALttPO ConnectorLib Connector" IsChecked="{Binding IsLuaEmoTrackerConnector}" Click="EmoTrackerMenuItem_OnClick"></controls:CheckedMenuItem>
+              <MenuItem Header="Show Auto Tracker Scripts Folder" Click="OpenFolderMenuItem_OnClick"></MenuItem>
+              <MenuItem Header="Show Auto Tracker Help" Click="AutoTrackerMenuItem_OnClick"></MenuItem>
+            </MenuItem>
           </Menu>
           <StackPanel Grid.Column="1" Orientation="Horizontal">
             <controls:ImageButton Cursor="Hand" Background="Transparent" Click="ResizeWindowButton_OnClick" IsVisible="{Binding ShowResizeButton}">
               <StackPanel Orientation="Horizontal" Background="Transparent">
-                <TextBlock Margin="0 0 5 0">Resize to Fit</TextBlock>
+                <TextBlock Margin="5 0 5 0">Resize to Fit</TextBlock>
                 <avalonia:MaterialIcon Kind="Resize" Margin="0 0 5 0"></avalonia:MaterialIcon>
               </StackPanel>
             </controls:ImageButton>
@@ -69,88 +86,63 @@
       <DockPanel Grid.Row="1" Background="{Binding Background}">
         <Panel Name="MainPanel" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5"></Panel>
       </DockPanel>
-      <controls:HeaderFooter Grid.Row="2" Background="{Binding StatusBarBackground}" BorderSize="0">
-        <Border BorderThickness="0 2 0 0" BorderBrush="{Binding StatusBarBorder}">
-          <StackPanel Orientation="Horizontal" Margin="5">
+      <controls:HeaderFooter Grid.Row="3" Background="{Binding StatusBarBackground}" BorderSize="0 2 0 0" Padding="5">
+        <Grid ColumnDefinitions="Auto, *, Auto">
 
-            <StackPanel Orientation="Horizontal"
-                        PointerPressed="TimeTextBlock_OnPointerPressed"
-                        ToolTip.Tip="Elapsed time. Right click to pause/resume. Double click to reset."
-                        Background="Transparent"
-                        Margin="0 0 10 0"
-                        IsVisible="{Binding DisplayTimer}"
-            >
-              <avalonia:MaterialIcon Kind="Clock" Height="16"/>
-              <TextBlock Name="TimeTextBlock"
-                         Text="{Binding TimeString}"
-                         Margin="3 3 0 0"
-                         FontFamily="Consolas,Monospace,Courier"
-                         VerticalAlignment="Bottom"
-                         Background="Transparent"
-              ></TextBlock>
-            </StackPanel>
-
-            <controls:ImageButton Cursor="Hand" Background="Transparent">
-              <controls:ImageButton.ContextMenu>
-                <ContextMenu>
-                  <MenuItem Header="Disable Auto Tracker" Name="DisableAutoTrackerMenuItem" Click="DisableAutoTrackerMenuItem_OnClick">
-                    <MenuItem.Icon>
-                      <avalonia:MaterialIcon Width="16" Height="16" Kind="Check" IsVisible="{Binding IsDisabledConnector}" />
-                    </MenuItem.Icon>
-                  </MenuItem>
-                  <MenuItem Header="SNI Auto Tracker" Name="SniMenuItem" Click="SniMenuItem_OnClick">
-                    <MenuItem.Icon>
-                      <avalonia:MaterialIcon Width="16" Height="16" Kind="Check" IsVisible="{Binding IsSniConnector}" />
-                    </MenuItem.Icon>
-                  </MenuItem>
-                  <MenuItem Header="USB2SNES Auto Tracker" Name="Usb2SnesMenuItem" Click="Usb2SnesMenuItem_OnClick">
-                    <MenuItem.Icon>
-                      <avalonia:MaterialIcon Width="16" Height="16" Kind="Check" IsVisible="{Binding IsUsb2SnesConnector}" />
-                    </MenuItem.Icon>
-                  </MenuItem>
-                  <MenuItem Header="Lua Auto Tracker" Name="LuaMenuItem" Click="LuaMenuItem_OnClick">
-                    <MenuItem.Icon>
-                      <avalonia:MaterialIcon Width="16" Height="16" Kind="Check" IsVisible="{Binding IsLuaConnector}" />
-                    </MenuItem.Icon>
-                  </MenuItem>
-                  <MenuItem Header="Lua Auto Tracker (Crowd Control Script)" Name="CrowdControlMenuItem" Click="CrowdControlMenuItem_OnClick">
-                    <MenuItem.Icon>
-                      <avalonia:MaterialIcon Width="16" Height="16" Kind="Check" IsVisible="{Binding IsLuaCrowdControlConnector}" />
-                    </MenuItem.Icon>
-                  </MenuItem>
-                  <MenuItem Header="Lua Auto Tracker (EmoTracker / ALttPO ConnectorLib)" Name="EmoTrackerMenuItem" Click="EmoTrackerMenuItem_OnClick">
-                    <MenuItem.Icon>
-                      <avalonia:MaterialIcon Width="16" Height="16" Kind="Check" IsVisible="{Binding IsLuaEmoTrackerConnector}" />
-                    </MenuItem.Icon>
-                  </MenuItem>
-                  <MenuItem Header="Show Auto Tracker Scripts Folder" Name="OpenFolderMenuItem" Click="OpenFolderMenuItem_OnClick"></MenuItem>
-                  <MenuItem Header="Show Auto Tracker Help" Name="AutoTrackerHelp" Click="AutoTrackerMenuItem_OnClick"></MenuItem>
-                </ContextMenu>
-              </controls:ImageButton.ContextMenu>
-              <avalonia:MaterialIcon Kind="{Binding ConnectedIcon}" Height="16" Background="Transparent" Foreground="{Binding ConnectedColor}"/>
-            </controls:ImageButton>
-
-            <StackPanel Orientation="Horizontal" Margin="10 0 0 0"
-                        IsVisible="{Binding IsInGoMode}"
-            >
-              <avalonia:MaterialIcon Kind="PlayCircle"></avalonia:MaterialIcon>
-              <TextBlock FontWeight="Bold" Margin="3 0 0 0">GO MODE</TextBlock>
-            </StackPanel>
-
-            <StackPanel IsVisible="{Binding ShowSpeechRecognition}"
-                        Margin="10 0 0 0"
-                        Orientation="Horizontal"
-                        Background="Transparent"
-                        ToolTip.Tip="{Binding SpeechToolTip}"
-                        PointerPressed="SpeechRecognition_OnPointerPressed"
-            >
-              <avalonia:MaterialIcon Background="Transparent" Kind="{Binding SpeechIcon}"></avalonia:MaterialIcon>
-              <TextBlock Text="{Binding SpeechConfidence}" Background="Transparent" Margin="0 0 10 0"></TextBlock>
-              <TextBlock Text="{Binding SpeechPhrase}" Background="Transparent"></TextBlock>
-            </StackPanel>
-
+          <StackPanel Orientation="Horizontal"
+                      PointerPressed="TimeTextBlock_OnPointerPressed"
+                      ToolTip.Tip="Elapsed time. Right click to pause/resume. Double click to reset."
+                      Background="Transparent"
+                      Margin="0 0 10 0"
+                      IsVisible="{Binding DisplayTimer}"
+                      Grid.Column="0"
+          >
+            <avalonia:MaterialIcon Kind="Clock" Height="15"/>
+            <TextBlock Name="TimeTextBlock"
+                       Text="{Binding TimeString}"
+                       Margin="3 -1 0 0"
+                       FontFamily="Consolas,Monospace,Courier"
+                       FontSize="12"
+                       VerticalAlignment="Center"
+                       Background="Transparent"
+            ></TextBlock>
           </StackPanel>
-        </Border>
+
+          <Grid Grid.Column="1" IsVisible="{Binding ShowSpeechRecognition}"
+                ColumnDefinitions="Auto, Auto, *"
+                Background="Transparent"
+          >
+            <avalonia:MaterialIcon Grid.Column="0" Background="Transparent" Kind="{Binding SpeechIcon}" PointerPressed="SpeechRecognition_OnPointerPressed" ToolTip.Tip="{Binding SpeechToolTip}"></avalonia:MaterialIcon>
+            <TextBlock Grid.Column="1" Text="{Binding SpeechConfidence}" Background="Transparent" Margin="0 0 5 0" PointerPressed="SpeechRecognition_OnPointerPressed" ToolTip.Tip="{Binding SpeechToolTip}"></TextBlock>
+            <TextBlock Grid.Column="2" Text="{Binding SpeechPhrase}" Background="Transparent" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding SpeechPhrase}"></TextBlock>
+          </Grid>
+
+          <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="10 0 0 0"
+                      IsVisible="{Binding IsInGoMode}"
+          >
+            <avalonia:MaterialIcon Kind="PlayCircle"></avalonia:MaterialIcon>
+            <TextBlock FontWeight="Bold" Margin="3 0 0 0">GO MODE</TextBlock>
+          </StackPanel>
+
+          <StackPanel Grid.Column="2" Orientation="Horizontal" IsVisible="{Binding !IsInGoMode}">
+            <ItemsControl ItemsSource="{Binding Goals}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <StackPanel Orientation="Horizontal" Margin="10 0 0 0">
+                    <Image Source="{Binding Icon, Converter={StaticResource StringToImageConverter}}" Height="16" Margin="0 0 1 0" />
+                    <TextBlock Text="{Binding Text}" VerticalAlignment="Center"></TextBlock>
+                  </StackPanel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+
+        </Grid>
       </controls:HeaderFooter>
     </Grid>
   </LayoutTransformControl>

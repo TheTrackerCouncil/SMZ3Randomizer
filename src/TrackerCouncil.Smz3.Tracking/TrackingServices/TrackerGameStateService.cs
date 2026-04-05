@@ -323,12 +323,14 @@ internal class TrackerGameStateService(IMetadataService metadataService, IWorldA
         World.State.MarkedGanonCrystalCount = crystalAmount;
         World.UpdateLegacyWorld(World.State);
         UpdateAllAccessibility(true);
+        Tracker.AltGameModeService.NotifyOfGoalStateChange();
         Tracker.Say(x => x.UpdatedGanonCrystalRequirement, args: [crystalAmount]);
 
         AddUndo(autoTracked, () =>
         {
             World.State.MarkedGanonCrystalCount = previousAmount;
             World.UpdateLegacyWorld(World.State);
+            Tracker.AltGameModeService.NotifyOfGoalStateChange();
         });
     }
 
@@ -343,6 +345,7 @@ internal class TrackerGameStateService(IMetadataService metadataService, IWorldA
 
         World.State.MarkedTourianBossCount = bossAmount;
         World.UpdateLegacyWorld(World.State);
+        Tracker.AltGameModeService.NotifyOfGoalStateChange();
         UpdateAllAccessibility(true);
         Tracker.Say(x => x.UpdatedTourianBossRequirement, args: [bossAmount]);
 
@@ -350,6 +353,7 @@ internal class TrackerGameStateService(IMetadataService metadataService, IWorldA
         {
             World.State.MarkedTourianBossCount = previousAmount;
             World.UpdateLegacyWorld(World.State);
+            Tracker.AltGameModeService.NotifyOfGoalStateChange();
         });
     }
 

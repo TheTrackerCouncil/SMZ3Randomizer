@@ -7,6 +7,7 @@ using Material.Icons;
 using ReactiveUI.SourceGenerators;
 using SnesConnectorLibrary;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
+using TrackerCouncil.Smz3.Data.ViewModels;
 using TrackerCouncil.Smz3.Shared.Models;
 
 namespace TrackerCouncil.Smz3.UI.ViewModels;
@@ -22,7 +23,9 @@ public partial class TrackerWindowViewModel : ViewModelBase
     public MaterialIconKind ConnectedIcon => AutoTrackerEnabled ? MaterialIconKind.Link : MaterialIconKind.LinkOff;
 
     public IBrush? ConnectedColor =>
-        AutoTrackerConnected ? Brushes.LimeGreen : AutoTrackerEnabled ? Brushes.White : Brushes.Firebrick;
+        AutoTrackerEnabled && AutoTrackerConnected ? Brushes.LimeGreen : AutoTrackerEnabled ? Brushes.White : Brushes.Firebrick;
+
+    public string ConnectedText => AutoTrackerEnabled && AutoTrackerConnected ? "Connected" : AutoTrackerEnabled ? "Connecting..." : "Disabled";
 
     public IBrush StatusBarBackground => IsInGoMode ? Brushes.Green : new SolidColorBrush(new Color(255, 45, 45, 45));
 
@@ -35,11 +38,11 @@ public partial class TrackerWindowViewModel : ViewModelBase
     [Reactive] public partial string TimeString { get; set; } = "00:00";
 
     [Reactive]
-    [ReactiveLinkedProperties(nameof(ConnectedIcon), nameof(ConnectedColor))]
+    [ReactiveLinkedProperties(nameof(ConnectedIcon), nameof(ConnectedColor), nameof(ConnectedText))]
     public partial bool AutoTrackerEnabled { get; set; }
 
     [Reactive]
-    [ReactiveLinkedProperties(nameof(ConnectedColor))]
+    [ReactiveLinkedProperties(nameof(ConnectedColor), nameof(ConnectedText))]
     public partial bool AutoTrackerConnected { get; set; }
 
     [Reactive] public partial SnesConnectorType ConnectorType { get; set; }
@@ -52,12 +55,14 @@ public partial class TrackerWindowViewModel : ViewModelBase
 
     [Reactive] public partial string SpeechConfidence { get; set; } = "Voice Disabled";
 
-    [Reactive] public partial string SpeechPhrase { get; set; } = "";
+    [Reactive]
+    public partial string SpeechPhrase { get; set; } = string.Empty;
 
     [Reactive]
     [ReactiveLinkedProperties(nameof(SpeechToolTip), nameof(SpeechIcon))]
     public partial bool VoiceEnabled { get; set; }
-    public bool DisplayTimer { get; set; }
+
+    public bool DisplayTimer { get; set; } = true;
 
     public int IdealWindowWidth => Panels.Max(x => x.Column) * 34 + 10;
     public int IdealWindowHeight => Panels.Max(x => x.Row) * 34 + 10 + 50;
@@ -74,6 +79,7 @@ public partial class TrackerWindowViewModel : ViewModelBase
     [Reactive] public partial bool AreCheatsEnabled { get; set; }
     [Reactive] public partial bool AreHintsEnabled { get; set; }
     [Reactive] public partial bool AreSpoilersEnabled { get; set; }
+    [Reactive] public partial List<GoalUiDetails> Goals { get; set; } = [];
 
     public bool IsDisabledConnector => SnesConnectorType == SnesConnectorType.None;
     public bool IsSniConnector => SnesConnectorType == SnesConnectorType.Sni;
@@ -93,4 +99,10 @@ public partial class TrackerWindowViewModel : ViewModelBase
     public UILayout? PrevLayout { get; set; }
 
     public UILayout? CurrentLayout { get; set; }
+}
+
+public class GoalDetails
+{
+    public string GoalIcon { get; set; } = string.Empty;
+    public string GoalText { get; set; } = string.Empty;
 }

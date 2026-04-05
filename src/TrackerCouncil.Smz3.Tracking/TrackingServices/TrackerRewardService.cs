@@ -73,6 +73,7 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlaye
         }
 
         UpdateAllAccessibility(false);
+        Tracker.AltGameModeService.NotifyOfGoalStateChange();
 
         // Check if the player has defeated all bosses and gotten all crystals
         if (config.GameModeOptions.SelectedGameModeType == GameModeType.Vanilla)
@@ -92,6 +93,7 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlaye
             rewardRegion.HasReceivedReward = false;
             rewardRegion.MarkedReward = previousMarkedReward;
             UpdateAllAccessibility(true);
+            Tracker.AltGameModeService.NotifyOfGoalStateChange();
         });
     }
 

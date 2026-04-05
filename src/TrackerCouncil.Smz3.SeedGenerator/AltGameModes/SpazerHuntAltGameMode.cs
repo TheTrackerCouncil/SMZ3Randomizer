@@ -7,6 +7,7 @@ using TrackerCouncil.Smz3.Data.GeneratedData;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.Tracking;
+using TrackerCouncil.Smz3.Data.ViewModels;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
@@ -211,6 +212,23 @@ public class SpazerHuntAltGameMode(IMetadataService metadata) : AltGameModeBase
         return world.Locations.Where(x => x.ItemType is ItemType.Spazer).ToList();
     }
 
+    public override List<GoalUiDetails>? GetGoalUiDetails(World world)
+    {
+        if (world.State == null)
+        {
+            return null;
+        }
+
+        var allSpazerLocations = world.State.LocationStates
+            .Where(x => x.ItemWorldId == world.Id && x.Item == ItemType.Spazer).ToList();
+        var spazerCount = allSpazerLocations.Count(x => x.Cleared);
+        var spazersNeeded = string.IsNullOrEmpty(world.State?.AltGameModeState) ? "?" : world.State.AltGameModeState;
+        return
+        [
+            new GoalUiDetails { IconCategory = "Items", Icon = "spazer.png", Text = $"{spazerCount}/{spazersNeeded}" }
+        ];
+    }
+
     private void LocationTrackerOnLocationCleared(object? sender, LocationClearedEventArgs e)
     {
         if (!e.AutoTracked || e.Location.ItemType != ItemType.Spazer)
@@ -222,6 +240,8 @@ public class SpazerHuntAltGameMode(IMetadataService metadata) : AltGameModeBase
         {
             _tracker.AltGameModeService.MarkAltGameModeAsComplete();
         }
+
+        _tracker.AltGameModeService.NotifyOfGoalStateChange();
     }
 
     private void ItemTrackerOnItemTracked(object? sender, ItemTrackedEventArgs e)
@@ -235,5 +255,7 @@ public class SpazerHuntAltGameMode(IMetadataService metadata) : AltGameModeBase
         {
             _tracker.AltGameModeService.MarkAltGameModeAsComplete();
         }
+
+        _tracker.AltGameModeService.NotifyOfGoalStateChange();
     }
 }

@@ -1,5 +1,6 @@
 using TrackerCouncil.Smz3.Data.GeneratedData;
 using TrackerCouncil.Smz3.Data.Options;
+using TrackerCouncil.Smz3.Data.ViewModels;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Models;
@@ -37,6 +38,11 @@ public abstract class AltGameModeBase
     }
 
     public virtual List<Location>? GetGameModeLocations(World world)
+    {
+        return null;
+    }
+
+    public virtual List<GoalUiDetails>? GetGoalUiDetails(World world)
     {
         return null;
     }
