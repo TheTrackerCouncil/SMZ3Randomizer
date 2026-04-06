@@ -77,6 +77,10 @@ internal class TrackerBossService(IPlayerProgressionService playerProgressionSer
 
         AddUndo(autoTracked, () =>
         {
+            if (region is IHasReward rewardRegion)
+            {
+                Tracker.RewardTracker.RemoveAreaReward(rewardRegion, true);
+            }
             playerProgressionService.ResetProgression();
             region.BossDefeated = false;
             BossUpdated?.Invoke(this, new BossTrackedEventArgs(region.Boss, null, false));

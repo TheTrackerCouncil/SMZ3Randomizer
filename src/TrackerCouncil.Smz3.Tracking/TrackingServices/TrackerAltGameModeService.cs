@@ -43,6 +43,7 @@ internal class TrackerAltGameModeService(AltGameModeFactory altGameModeFactory, 
         {
             _ = Tracker.SaveAsync();
             Tracker.UpdateAllAccessibility(false);
+            Tracker.AltGameModeService.NotifyOfGoalStateChange();
         }
     }
 

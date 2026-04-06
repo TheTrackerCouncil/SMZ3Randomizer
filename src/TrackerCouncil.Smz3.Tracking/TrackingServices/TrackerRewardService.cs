@@ -41,11 +41,13 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlaye
         }
 
         UpdateAllAccessibility(false);
+        Tracker.AltGameModeService.NotifyOfGoalStateChange();
 
         AddUndo(autoTracked, () =>
         {
             rewardRegion.MarkedReward = originalReward;
             UpdateAllAccessibility(false);
+            Tracker.AltGameModeService.NotifyOfGoalStateChange();
         });
     }
 
@@ -107,6 +109,7 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlaye
         rewardRegion.HasReceivedReward = false;
 
         UpdateAllAccessibility(true);
+        Tracker.AltGameModeService.NotifyOfGoalStateChange();
 
         // TODO: Add a response
 
@@ -114,6 +117,7 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlaye
         {
             rewardRegion.HasReceivedReward = false;
             UpdateAllAccessibility(false);
+            Tracker.AltGameModeService.NotifyOfGoalStateChange();
         });
     }
 
