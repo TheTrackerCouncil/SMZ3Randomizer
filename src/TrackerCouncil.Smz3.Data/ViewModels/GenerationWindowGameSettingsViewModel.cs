@@ -4,39 +4,30 @@ using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.Data.ViewModels;
 
-[DynamicFormGroupGroupBox(DynamicFormLayout.Vertical, "Goal")]
+[DynamicFormGroupBasic(DynamicFormLayout.Vertical, "Random")]
+[DynamicFormGroupGroupBox(DynamicFormLayout.Vertical, "Game Mode")]
 [DynamicFormGroupGroupBox(DynamicFormLayout.Vertical, "Additional Settings")]
-[DynamicFormGroupBasic(DynamicFormLayout.SideBySide, "Additional Settings Top", parentGroup: "Additional Settings")]
-[DynamicFormGroupBasic(DynamicFormLayout.TwoColumns, "Additional Settings Bottom", parentGroup: "Additional Settings")]
 [DynamicFormGroupGroupBox(DynamicFormLayout.TwoColumns, "Race Settings", visibleWhenTrue: nameof(IsSingleplayer))]
 public class GenerationWindowGameSettingsViewModel : ViewModelBase
 {
-    [DynamicFormObject(groupName: "Goal to defeat Ganon/Mother Brain:")]
-    public GenerationWindowGoalSettingsViewModel GoalSettings { get; set; } = new();
-
-    [DynamicFormFieldComboBox(label: "Keysanity:", groupName: "Additional Settings Top")]
-    public KeysanityMode KeysanityMode
+    [DynamicFormFieldCheckBox(checkBoxText: "Randomize numeric values", groupName: "Random",
+        alignment: DynamicFormAlignment.Center)]
+    public bool RandomizeNumericValues
     {
         get;
         set
         {
             SetField(ref field, value);
-            OnPropertyChanged(nameof(IsMetroidKeysanity));
-            OnPropertyChanged(nameof(IsZeldaKeysanity));
+            GoalSettings.RandomizeGoalCounts = value;
+            AdditionalSettings.RandomizeGoalCounts = value;
         }
     }
 
-    [DynamicFormFieldCheckBox("Require Crateria Boss Keycard for Tourian", groupName: "Additional Settings Top", visibleWhenTrue: nameof(IsMetroidKeysanity))]
-    public bool RequireBossKeycardForTourian { get; set; }
+    [DynamicFormObject(groupName: "Game Mode")]
+    public GenerationWindowGoalSettingsViewModel GoalSettings { get; set; } = new();
 
-    [DynamicFormFieldCheckBox("Place GT Big Key in Ganon's Tower", groupName: "Additional Settings Top", visibleWhenTrue: nameof(IsZeldaKeysanity))]
-    public bool PlaceGTBigKeyInGT { get; set; }
-
-    [DynamicFormFieldComboBox(label: "Shuffle boss tokens with dungeon rewards:", groupName: "Additional Settings Top")]
-    public YesNoEnum InterGameRewards { get; set; }
-
-    [DynamicFormFieldCheckBox("Open Ganon's pyramid by default", groupName: "Additional Settings Bottom")]
-    public bool OpenPyramid { get; set; }
+    [DynamicFormObject(groupName: "Additional Settings")]
+    public GenerationWindowAdditionalSettingsViewModel AdditionalSettings { get; set; } = new();
 
     [DynamicFormFieldCheckBox("Generate race seed", groupName: "Race Settings")]
     public bool Race { get; set; }
@@ -52,10 +43,6 @@ public class GenerationWindowGameSettingsViewModel : ViewModelBase
 
     [DynamicFormFieldCheckBox("Disable cheats", groupName: "Race Settings")]
     public bool DisableCheats { get; set; }
-
-    public bool IsMetroidKeysanity => KeysanityMode is KeysanityMode.Both or KeysanityMode.SuperMetroid;
-
-    public bool IsZeldaKeysanity => KeysanityMode is KeysanityMode.Both or KeysanityMode.Zelda;
 
     public bool IsMultiplayer
     {

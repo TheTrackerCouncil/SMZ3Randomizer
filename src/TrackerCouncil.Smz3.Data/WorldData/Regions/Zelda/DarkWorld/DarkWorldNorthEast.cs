@@ -90,7 +90,7 @@ public class DarkWorldNorthEast : Z3Region
                               World.GanonsTower.Locations.All(x => x.IsAvailable(assumedKeyProgression)) &&
                               World.GanonsTower.CanBeatBoss(assumedKeyProgression, true));
 
-            var isPyramidOpen = World.Config.OpenPyramid || canClimbGt;
+            var isPyramidOpen = World.Config.GameModeOptions.OpenPyramid || canClimbGt;
             var hasMetGoal = hasAltGameMode
                 ? isAltGameModeComplete
                 : numAcquiredCrystals >= ganonCrystalRequirement;
@@ -112,7 +112,7 @@ public class DarkWorldNorthEast : Z3Region
                                                            World.LegacyWorld.IsLocationAccessible((int)x.Id,
                                                                assumedKeyProgression.LegacyProgression)));
 
-            var isPyramidOpen = World.Config.OpenPyramid || canClimbGt;
+            var isPyramidOpen = World.Config.GameModeOptions.OpenPyramid || canClimbGt;
             var canHurtGanon = numAcquiredCrystals >= ganonCrystalRequirement && progression.MasterSword &&
                                (progression.Lamp || progression.FireRod);
 

@@ -32,7 +32,7 @@ public class ViewedMetroidMap(ISnesConnectorService snesConnectorService, ILogge
     /// <returns>True if the check was identified, false otherwise</returns>
     public bool ExecuteCheck(TrackerBase tracker, AutoTrackerMetroidState currentState, AutoTrackerMetroidState prevState)
     {
-        if (tracker.World.Config is { RomGenerator: RomGenerator.Cas, InterGameRewards: false } || !currentState.IsLookingAtMap || _isMakingRequest || tracker.GameStateTracker.CurrentRegion is not SMRegion region || _viewedMaps.Contains(region))
+        if (tracker.World.Config is { RomGenerator: RomGenerator.Cas, GameModeOptions.ShuffleMetroidBossTokens: false } || !currentState.IsLookingAtMap || _isMakingRequest || tracker.GameStateTracker.CurrentRegion is not SMRegion region || _viewedMaps.Contains(region))
         {
             return false;
         }

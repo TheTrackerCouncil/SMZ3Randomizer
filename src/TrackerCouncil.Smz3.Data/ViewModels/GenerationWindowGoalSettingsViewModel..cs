@@ -11,7 +11,7 @@ namespace TrackerCouncil.Smz3.Data.ViewModels;
 [DynamicFormGroupBasic(DynamicFormLayout.SideBySide, "Main")]
 public class GenerationWindowGoalSettingsViewModel : ViewModelBase
 {
-    [DynamicFormFieldComboBox(label: "Game mode:")]
+    [DynamicFormFieldComboBox(label: "Goal:")]
     public GameModeType SelectedGameModeType
     {
         get;
@@ -27,50 +27,8 @@ public class GenerationWindowGoalSettingsViewModel : ViewModelBase
     [DynamicFormFieldText]
     public string Description { get; set; } = "";
 
-    [DynamicFormFieldComboBox(label: "Randomize goal values:")]
-    public YesNoEnum RandomizeGoalCounts
-    {
-        get;
-        set
-        {
-            SetField(ref field, value);
-            UpdateBoolProperties();
-        }
-    }
-
     [DynamicFormFieldCheckBox("Ganon/GT/Tourian requirements hidden", visibleWhenTrue: nameof(AlwaysHidden))]
     public bool HideCrystalBossCount { get; set; }
-
-    [DynamicFormFieldSlider(0, 7, 0, 1, label: "Crystals needed for GT:", visibleWhenTrue: nameof(StaticGoalCounts))]
-    public int GanonsTowerCrystalCount { get; set; }
-
-    [DynamicFormFieldSlider(0, 7, 0, 1, label: "Minimum crystals needed for GT:", visibleWhenTrue: nameof(RandomizedGoalCounts))]
-    public int MinGanonsTowerCrystalCount
-    {
-        get;
-        set
-        {
-            SetField(ref field, value);
-            if (value > MaxGanonsTowerCrystalCount)
-            {
-                MaxGanonsTowerCrystalCount = value;
-            }
-        }
-    }
-
-    [DynamicFormFieldSlider(0, 7, 0, 1, label: "Maximum crystals needed for GT:", visibleWhenTrue: nameof(RandomizedGoalCounts))]
-    public int MaxGanonsTowerCrystalCount
-    {
-        get;
-        set
-        {
-            SetField(ref field, value);
-            if (value < MinGanonsTowerCrystalCount)
-            {
-                MinGanonsTowerCrystalCount = value;
-            }
-        }
-    }
 
     [DynamicFormFieldSlider(0, 7, 0, 1, label: "Crystals needed for Ganon:", visibleWhenTrue: nameof(ShowStaticCrystalBossCounts))]
     public int GanonCrystalCount { get; set; }
@@ -238,8 +196,8 @@ public class GenerationWindowGoalSettingsViewModel : ViewModelBase
         }
     }
 
-    [DynamicFormFieldComboBox(label: "Skip Ganon/Tourian by lifting off:")]
-    public YesNoEnum LiftOffOnGoalCompletion
+    [DynamicFormFieldBoolComboBox(label: "Game completion:", falseText: "Defeat Mother Brain and Ganon", trueText: "Enter ship after obtaining goal", trueFirst: false)]
+    public bool LiftOffOnGoalCompletion
     {
         get;
         set
@@ -250,12 +208,20 @@ public class GenerationWindowGoalSettingsViewModel : ViewModelBase
     }
 
     public bool AlwaysHidden => false;
+    public bool RandomizeGoalCounts
+    {
+        get;
+        set
+        {
+            SetField(ref field, value);
+            UpdateBoolProperties();
+        }
+    }
     public bool ShowStaticCrystalBossCounts => StaticGoalCounts && IsDefaultGameMode;
-    public bool ShowRandomizedCrystalBossCounts => RandomizedGoalCounts && IsDefaultGameMode;
+    public bool ShowRandomizedCrystalBossCounts => RandomizeGoalCounts && IsDefaultGameMode;
     public bool ShowStaticSpazerCounts => StaticGoalCounts && IsSpazerHunt;
-    public bool ShowRandomizedSpazerCounts => RandomizedGoalCounts && IsSpazerHunt;
-    public bool StaticGoalCounts => RandomizeGoalCounts == YesNoEnum.No;
-    public bool RandomizedGoalCounts => RandomizeGoalCounts == YesNoEnum.Yes;
+    public bool ShowRandomizedSpazerCounts => RandomizeGoalCounts && IsSpazerHunt;
+    public bool StaticGoalCounts => !RandomizeGoalCounts;
     public bool IsDefaultGameMode => SelectedGameModeType == GameModeType.Vanilla;
     public bool IsAltGameMode => SelectedGameModeType != GameModeType.Vanilla;
     public bool IsSpazerHunt => SelectedGameModeType == GameModeType.SpazerHunt;
@@ -268,19 +234,10 @@ public class GenerationWindowGoalSettingsViewModel : ViewModelBase
 
         foreach (var configProperty in configProperties)
         {
-            if (viewModelProperties.TryGetValue(configProperty.Name, out var viewModelProperty))
+            if (viewModelProperties.TryGetValue(configProperty.Name, out var viewModelProperty) && viewModelProperty.CanWrite)
             {
                 var newValue = configProperty.GetValue(config);
-                if (configProperty.PropertyType == typeof(bool))
-                {
-                    newValue = newValue as bool? == true ? YesNoEnum.Yes : YesNoEnum.No;
-                }
                 viewModelProperty.SetValue(this, newValue);
-            }
-            else
-            {
-                throw new InvalidOperationException(
-                    $"Config property {configProperty.Name} does not exist in view model");
             }
         }
     }
@@ -292,19 +249,10 @@ public class GenerationWindowGoalSettingsViewModel : ViewModelBase
 
         foreach (var configProperty in configProperties)
         {
-            if (viewModelProperties.TryGetValue(configProperty.Name, out var viewModelProperty))
+            if (viewModelProperties.TryGetValue(configProperty.Name, out var viewModelProperty) && viewModelProperty.CanWrite)
             {
                 var newValue = viewModelProperty.GetValue(this);
-                if (configProperty.PropertyType == typeof(bool))
-                {
-                    newValue = newValue as YesNoEnum? == YesNoEnum.Yes;
-                }
                 configProperty.SetValue(config, newValue);
-            }
-            else
-            {
-                throw new InvalidOperationException(
-                    $"Config property {configProperty.Name} does not exist in view model");
             }
         }
     }

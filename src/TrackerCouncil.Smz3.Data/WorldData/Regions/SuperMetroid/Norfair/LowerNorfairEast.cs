@@ -44,7 +44,7 @@ public class LowerNorfairEast : SMRegion, IHasBoss, IHasReward
 
     public TrackerRewardState RewardState { get; set; } = null!;
 
-    public bool IsShuffledReward => Config.InterGameRewards;
+    public bool IsShuffledReward => Config.GameModeOptions.ShuffleMetroidBossTokens;
 
     public SpringBallMazeRoom SpringBallMaze { get; }
 

@@ -34,14 +34,7 @@ public partial class GenerationSettingsWindow : ScalableWindow
         _generationSettingsWindowService = generationSettingsWindowService;
         _serviceProvider = serviceProvider;
         InitializeComponent();
-        try
-        {
-            DataContext = BasicPanel.Data = _model = _generationSettingsWindowService.GetViewModel(altGameModeFactory.GetGameModeDescriptions());
-        }
-        catch (Exception)
-        {
-            MessageWindow.ShowErrorDialog("Error opening generation settings", "Error", this);
-        }
+        DataContext = BasicPanel.Data = _model = _generationSettingsWindowService.GetViewModel(altGameModeFactory.GetGameModeDescriptions());
         BasicPanel.SetServices(serviceProvider, generationSettingsWindowService);
     }
 

@@ -46,9 +46,9 @@ public class PlandoConfig // TODO: Consider using this instead of SeedData?
         SpazersRequired = world.Config.GameModeOptions.SpazersRequired;
         LiftOffOnGoalCompletion = world.Config.GameModeOptions.LiftOffOnGoalCompletion;
 
-        KeysanityMode = world.Config.KeysanityMode;
-        SkipTourianBossDoor = world.Config.SkipTourianBossDoor;
-        OpenPyramid = world.Config.OpenPyramid;
+        KeysanityMode = world.Config.GameModeOptions.KeysanityMode;
+        SkipTourianBossDoor = world.Config.GameModeOptions.SkipTourianBossDoor;
+        OpenPyramid = world.Config.GameModeOptions.OpenPyramid;
 
         Items = world.Locations
             .ToDictionary(x => x.ToString(), x => x.Item.Type);

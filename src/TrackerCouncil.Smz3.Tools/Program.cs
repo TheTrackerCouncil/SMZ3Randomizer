@@ -237,7 +237,7 @@ public static class Program
 
         var sb = new StringBuilder();
         sb.AppendLine("");
-        sb.AppendLine("Keysanity: " + config.KeysanityMode + " | Item placement: " + config.ItemPlacementRule);
+        sb.AppendLine("Keysanity: " + config.GameModeOptions.KeysanityMode + " | Item placement: " + config.ItemPlacementRule);
         sb.AppendLine("----------------------------------------------------------------------------------------");
         sb.AppendLine($"Num succeeded: {stats.Count} ({stats.Count * 1f / count * 100f}%)");
         sb.AppendLine("Average spheres: " + stats.Sum(x => x.NumSpheres) * 1f / stats.Count() * 1f);

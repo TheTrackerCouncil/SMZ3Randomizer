@@ -56,9 +56,9 @@ public class RomGenerationService(
         config.GameModeOptions.SpazersRequired = plandoConfig.SpazersRequired;
         config.GameModeOptions.LiftOffOnGoalCompletion = plandoConfig.LiftOffOnGoalCompletion;
 
-        config.KeysanityMode = plandoConfig.KeysanityMode;
-        config.SkipTourianBossDoor = plandoConfig.SkipTourianBossDoor;
-        config.OpenPyramid = plandoConfig.OpenPyramid;
+        config.GameModeOptions.KeysanityMode = plandoConfig.KeysanityMode;
+        config.GameModeOptions.SkipTourianBossDoor = plandoConfig.SkipTourianBossDoor;
+        config.GameModeOptions.OpenPyramid = plandoConfig.OpenPyramid;
 
         config.LogicConfig = plandoConfig.Logic.Clone();
         return plandomizer.GenerateSeed(config, CancellationToken.None);

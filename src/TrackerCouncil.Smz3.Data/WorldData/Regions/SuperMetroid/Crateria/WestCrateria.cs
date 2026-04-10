@@ -129,10 +129,10 @@ public class WestCrateria : SMRegion
         else if (World.LegacyWorld == null)
         {
             var canAccessStatueRoom = Terminator.Locations.First().IsAvailable(progression) &&
-                                      (!World.Config.MetroidKeysanity || World.Config.SkipTourianBossDoor ||
+                                      (!World.Config.MetroidKeysanity || World.Config.GameModeOptions.SkipTourianBossDoor ||
                                        progression.CardCrateriaBoss);
 
-            var rewardCount = World.Config.InterGameRewards
+            var rewardCount = World.Config.GameModeOptions.ShuffleMetroidBossTokens
                 ? World.Rewards.Count(x => x.Type is RewardType.KraidToken or RewardType.DraygonToken or RewardType.RidleyToken or RewardType.PhantoonToken && x.HasReceivedReward)
                 : World.GoldenBosses.Count(x => x.Defeated);
 
@@ -147,7 +147,7 @@ public class WestCrateria : SMRegion
         else
         {
             var canAccessStatueRoom = World.LegacyWorld.IsLocationAccessible((int)LocationId.CrateriaTerminator, progression.LegacyProgression) &&
-                                      (!World.Config.MetroidKeysanity || World.Config.SkipTourianBossDoor ||
+                                      (!World.Config.MetroidKeysanity || World.Config.GameModeOptions.SkipTourianBossDoor ||
                                        progression.CardCrateriaBoss);
 
             var canEnterTourian = World.Rewards.Count(x => x.MarkedReward?.IsInCategory(RewardCategory.Metroid) == true && x.HasReceivedReward) >= tourianBossRequirement;

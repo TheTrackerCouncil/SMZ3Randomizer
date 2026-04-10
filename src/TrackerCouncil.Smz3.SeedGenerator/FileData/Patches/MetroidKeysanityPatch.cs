@@ -75,7 +75,7 @@ public class MetroidKeysanityPatch : RomPatch
 
             foreach (var door in s_doorList)
             {
-                if (door[0] == 0x99BD && data.World.Config.SkipTourianBossDoor)
+                if (door[0] == 0x99BD && data.World.Config.GameModeOptions.SkipTourianBossDoor)
                 {
                     continue;
                 }
@@ -114,7 +114,7 @@ public class MetroidKeysanityPatch : RomPatch
         }
 
         // Display plaque above golden bosses room with the number of bosses needed to enter Tourian
-        if (data.World.Config.GameModeOptions.SelectedGameModeType == GameModeType.Vanilla && (data.World.Config.GameModeOptions.RandomizeGoalCounts || data.World.Config.PlandoConfig != null)) {
+        if (data.World.Config.GameModeOptions.SelectedGameModeType == GameModeType.Vanilla && (data.World.Config.GameModeOptions.RandomizeNumericAmounts || data.World.Config.PlandoConfig != null)) {
             var plaqueData = UshortBytes(0xA5ED).Concat(UshortBytes(plaquePlm)).Concat(UshortBytes(0x044F)).Concat(UshortBytes(KeycardPlaque.Zero + data.World.Config.GameModeOptions.TourianBossCount)).ToArray();
             yield return new GeneratedPatch(Snes(0x8f0000 + plmTablePos), plaqueData);
             plmTablePos += 0x08;

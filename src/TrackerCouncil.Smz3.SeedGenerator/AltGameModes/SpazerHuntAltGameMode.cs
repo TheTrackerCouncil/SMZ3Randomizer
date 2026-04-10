@@ -16,7 +16,7 @@ using TrackerCouncil.Smz3.Shared.Models;
 namespace TrackerCouncil.Smz3.SeedGenerator.AltGameModes;
 
 [GameModeType(GameModeType.SpazerHunt)]
-[Description("You thought they were worthless, but Samus needs to collect all of the spazers and use them to save the day. After all, who needs a Triforce when you have lots of firepower? Requires auto tracking.")]
+[Description("You thought they were worthless, but Samus needs to collect all of the spazers and use them to save the day. After all, who needs a Triforce when you have lots of firepower?")]
 public class SpazerHuntAltGameMode(IMetadataService metadata) : AltGameModeBase
 {
     private TrackerBase _tracker = null!;
@@ -36,7 +36,7 @@ public class SpazerHuntAltGameMode(IMetadataService metadata) : AltGameModeBase
 
     public override void UpdateInitialTrackerState(GameModeOptions gameModeOptions, TrackerState trackerState)
     {
-        if (gameModeOptions.RandomizeGoalCounts)
+        if (gameModeOptions.RandomizeNumericAmounts)
         {
             trackerState.AltGameModeState = "";
         }
@@ -54,7 +54,7 @@ public class SpazerHuntAltGameMode(IMetadataService metadata) : AltGameModeBase
         var swaps = new List<SwapItemPoolRequest>();
 
         var spazersInPool = gameModeOptions.SpazersInPool;
-        if (gameModeOptions.RandomizeGoalCounts)
+        if (gameModeOptions.RandomizeNumericAmounts)
         {
             spazersInPool = rng.Next(gameModeOptions.MinSpazersInPool, gameModeOptions.MaxSpazersInPool + 1);
             gameModeOptions.SpazersInPool = spazersInPool;
@@ -227,6 +227,12 @@ public class SpazerHuntAltGameMode(IMetadataService metadata) : AltGameModeBase
         [
             new GoalUiDetails { IconCategory = "Items", Icon = "spazer.png", Text = $"{spazerCount}/{spazersNeeded}" }
         ];
+    }
+
+    public override string GetSpoilerText(GameModeOptions gameModeOptions)
+    {
+        return
+            $"SpazersRequired = {gameModeOptions.SpazersRequired}, SpazersInPool = {gameModeOptions.SpazersInPool}";
     }
 
     private void LocationTrackerOnLocationCleared(object? sender, LocationClearedEventArgs e)

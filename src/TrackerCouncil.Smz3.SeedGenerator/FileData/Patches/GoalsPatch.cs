@@ -10,13 +10,10 @@ public class GoalsPatch : RomPatch
 {
     public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
     {
-        // Mark Ganon invincible flag (if needed)
-        yield return new GeneratedPatch(Snes(0x30803E), new byte[] { 0x05 });
-
         // Open pyramid
-        if (data.Config.OpenPyramid)
+        if (data.Config.GameModeOptions.OpenPyramid)
         {
-            yield return new GeneratedPatch(0x40008B, new byte[] { 0x01 });
+            yield return new GeneratedPatch(0x40008B, [0x01]);
         }
 
         // Set number of crystals to enter GT
@@ -34,12 +31,17 @@ public class GoalsPatch : RomPatch
         yield return new GeneratedPatch(Snes(0xF4700B), numBosses == 0 ? [0x00, 0x04] : [0x00, 0x01]);
 
         // Randomized boss rewards
-        var hasRandomizedBossRewards = data.Config.InterGameRewards;
+        var hasRandomizedBossRewards = data.Config.GameModeOptions.ShuffleMetroidBossTokens;
         yield return new GeneratedPatch(Snes(0xF4700E), hasRandomizedBossRewards ? UshortBytes(0x0001) : UshortBytes(0x0000));
 
-        // Has alt goal
-        if (data.Config.GameModeOptions.SelectedGameModeType != GameModeType.Vanilla)
+        // Goal specific flags
+        if (data.Config.GameModeOptions.SelectedGameModeType == GameModeType.Vanilla)
         {
+            yield return new GeneratedPatch(Snes(0x30803E), [0x03]);
+        }
+        else
+        {
+            yield return new GeneratedPatch(Snes(0x30803E), [0x05]);
             yield return new GeneratedPatch(Snes(0xF47010), UshortBytes(0x0001));
         }
     }

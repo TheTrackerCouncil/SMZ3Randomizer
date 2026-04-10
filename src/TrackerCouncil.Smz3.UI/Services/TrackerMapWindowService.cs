@@ -289,7 +289,7 @@ public class TrackerMapWindowService(
 
         foreach (var door in doors)
         {
-            if (door.SkippableOnFastTourian && worldRegion.Config.SkipTourianBossDoor)
+            if (door.SkippableOnFastTourian && worldRegion.Config.GameModeOptions.SkipTourianBossDoor)
             {
                 continue;
             }

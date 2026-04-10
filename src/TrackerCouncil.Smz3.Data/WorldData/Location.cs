@@ -392,7 +392,7 @@ public class Location
         if (World.Config.MultiWorld && item.Type == ItemType.ProgressiveShield && item.World != World)
             fillable = false;
         // If the user wants the GT key in GT for the guessing game while playing Keysanity
-        else if (item is { Type: ItemType.BigKeyGT, World.Config.ZeldaKeysanity: true, World.Config.PlaceGTBigKeyInGT: true })
+        else if (item is { Type: ItemType.BigKeyGT, World.Config.ZeldaKeysanity: true, World.Config.GameModeOptions.PlaceGTBigKeyInGT: true })
             fillable = fillable && Region is GanonsTower;
 
         Item = oldItem;
@@ -406,7 +406,7 @@ public class Location
     /// <returns></returns>
     public bool IsPotentiallyImportant(KeysanityMode? keysanity = null)
     {
-        keysanity ??= Item.World.Config.KeysanityMode;
+        keysanity ??= Item.World.Config.GameModeOptions.KeysanityMode;
         return Item.Progression || Item.Type == ItemType.OtherGameProgressionItem
                || (Item.IsDungeonItem && keysanity is KeysanityMode.Both or KeysanityMode.Zelda)
                || (Item.IsKeycard && keysanity is KeysanityMode.Both or KeysanityMode.SuperMetroid);

@@ -28,7 +28,7 @@ public class SeedOptions
     public bool DisableCheats { get; set; }
 
     public int? UniqueHintCount { get; set; }
-    public bool InterGameRewards { get; set; }
+    public bool ShuffleMetroidBossTokens { get; set; }
     public bool SkipTourianBossDoor { get; set; }
     public bool PlaceGTBigKeyInGT { get; set; }
     public bool OpenPyramid { get; set; } = false;

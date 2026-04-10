@@ -58,7 +58,7 @@ public class Smz3Randomizer(
                 Guid.NewGuid().ToString("N")), seedNumber));
             logger.LogDebug(
                 "Seed: {SeedNumber} | Race: {PrimaryConfigRace} | Keysanity: {PrimaryConfigKeysanityMode} | Item placement: {PrimaryConfigItemPlacementRule}",
-                seedNumber, primaryConfig.Race, primaryConfig.KeysanityMode, primaryConfig.ItemPlacementRule);
+                seedNumber, primaryConfig.Race, primaryConfig.GameModeOptions.KeysanityMode, primaryConfig.ItemPlacementRule);
         }
         else
         {
@@ -117,7 +117,7 @@ public class Smz3Randomizer(
 
         // Mark Agahnim and the Golden Four Metroid bosses as known
         var bossRewardRegions = worlds.SelectMany(x => x.BossRegions)
-            .Where(x => x.BossType is BossType.Agahnim || (!x.World.Config.InterGameRewards && x.BossType.IsInCategory(BossCategory.GoldenFour)))
+            .Where(x => x.BossType is BossType.Agahnim || (!x.World.Config.GameModeOptions.ShuffleMetroidBossTokens && x.BossType.IsInCategory(BossCategory.GoldenFour)))
             .OfType<IHasReward>();
         foreach (var region in bossRewardRegions)
         {

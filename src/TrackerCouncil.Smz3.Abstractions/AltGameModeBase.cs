@@ -46,4 +46,9 @@ public abstract class AltGameModeBase
     {
         return null;
     }
+
+    public virtual string GetSpoilerText(GameModeOptions gameModeOptions)
+    {
+        return string.Empty;
+    }
 }

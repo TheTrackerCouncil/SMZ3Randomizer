@@ -273,7 +273,7 @@ public class World
 
     public void Setup(Random rnd)
     {
-        RandomizeRewards(rnd);
+        Config.GameModeOptions.Randomize(rnd);
         SetMedallions(rnd);
         SetRewards(rnd);
         SetBottles(rnd);
@@ -296,7 +296,7 @@ public class World
 
     private void SetRewards(Random rnd)
     {
-        if (Config.InterGameRewards)
+        if (Config.GameModeOptions.ShuffleMetroidBossTokens)
         {
             var rewards = Rewards.Where(x => !x.Type.IsInCategory(RewardCategory.NonRandomized)).ToList().Shuffle(rnd);
 
@@ -446,43 +446,5 @@ public class World
         return RewardRegions
             .Where(x => rewards.Contains(x.MarkedReward))
             .Count(x => x.HasReceivedReward);
-    }
-
-    private void RandomizeRewards(Random rnd)
-    {
-        if (!Config.GameModeOptions.RandomizeGoalCounts)
-        {
-            return;
-        }
-
-        if (Config.GameModeOptions.MaxGanonsTowerCrystalCount > Config.GameModeOptions.MinGanonsTowerCrystalCount)
-        {
-            Config.GameModeOptions.GanonsTowerCrystalCount = rnd.Next(Config.GameModeOptions.MinGanonsTowerCrystalCount,
-                Config.GameModeOptions.MaxGanonsTowerCrystalCount + 1);
-        }
-        else
-        {
-            Config.GameModeOptions.GanonsTowerCrystalCount = Config.GameModeOptions.MinGanonsTowerCrystalCount;
-        }
-
-        if (Config.GameModeOptions.MaxGanonCrystalCount > Config.GameModeOptions.MinGanonCrystalCount)
-        {
-            Config.GameModeOptions.GanonCrystalCount = rnd.Next(Config.GameModeOptions.MinGanonCrystalCount,
-                Config.GameModeOptions.MaxGanonCrystalCount + 1);
-        }
-        else
-        {
-            Config.GameModeOptions.GanonCrystalCount = Config.GameModeOptions.MinGanonCrystalCount;
-        }
-
-        if (Config.GameModeOptions.MaxTourianBossCount > Config.GameModeOptions.MinTourianBossCount)
-        {
-            Config.GameModeOptions.TourianBossCount = rnd.Next(Config.GameModeOptions.MinTourianBossCount,
-                Config.GameModeOptions.MaxTourianBossCount + 1);
-        }
-        else
-        {
-            Config.GameModeOptions.TourianBossCount = Config.GameModeOptions.MinTourianBossCount;
-        }
     }
 }

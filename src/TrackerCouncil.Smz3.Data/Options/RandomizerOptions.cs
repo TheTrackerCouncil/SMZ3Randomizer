@@ -218,10 +218,6 @@ public class RandomizerOptions : INotifyPropertyChanged
         return new Config()
         {
             GameMode = GameMode.Normal,
-            KeysanityMode = SeedOptions.KeysanityMode,
-            InterGameRewards = SeedOptions.InterGameRewards,
-            SkipTourianBossDoor = SeedOptions.SkipTourianBossDoor,
-            PlaceGTBigKeyInGT = SeedOptions.PlaceGTBigKeyInGT,
             Race = SeedOptions.Race,
             ItemPlacementRule = SeedOptions.ItemPlacementRule,
             DisableSpoilerLog = SeedOptions.DisableSpoilerLog,
@@ -242,7 +238,6 @@ public class RandomizerOptions : INotifyPropertyChanged
             GameModeOptions = SeedOptions.GameModeOptions.Clone(),
             CopySeedAndRaceSettings = true,
             Seed = SeedOptions.Seed,
-            OpenPyramid = SeedOptions.OpenPyramid,
             MetroidControls = PatchOptions.MetroidControls.Clone(),
             ItemOptions = SeedOptions.ItemOptions,
         };

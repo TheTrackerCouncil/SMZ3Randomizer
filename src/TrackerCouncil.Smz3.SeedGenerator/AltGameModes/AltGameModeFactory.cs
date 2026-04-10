@@ -106,6 +106,26 @@ public class AltGameModeFactory(IServiceProvider serviceProvider)
         gameMode.UpdateInitialTrackerState(gameModeOptions, trackerState);
     }
 
+    public string GetSpoilerText(GameModeOptions gameModeOptions)
+    {
+
+        string goalText;
+
+        if (gameModeOptions.SelectedGameModeType == GameModeType.Vanilla)
+        {
+            goalText =
+                $"GanonCrystalCount = {gameModeOptions.GanonCrystalCount}, TourianBossCount = {gameModeOptions.TourianBossCount}";
+        }
+        else
+        {
+            var gameMode = GetGameMode(gameModeOptions.SelectedGameModeType);
+            goalText = gameMode.GetSpoilerText(gameModeOptions);
+        }
+
+        return
+            $"Goal: {gameModeOptions.SelectedGameModeType} | {goalText}, LiftOffOnGoalCompletion =  {gameModeOptions.LiftOffOnGoalCompletion}";
+    }
+
     public List<Location>? GetGameModeLocations(World world)
     {
         if (world.Config.GameModeOptions.SelectedGameModeType == GameModeType.Vanilla)

@@ -486,7 +486,7 @@ public class GameHintService : IGameHintService
             foreach (var world in allWorlds)
             {
                 var numCrystalsNeeded = world.Config.GameModeOptions.GanonCrystalCount;
-                if (!world.Config.OpenPyramid && world.Config.GameModeOptions.GanonsTowerCrystalCount > numCrystalsNeeded)
+                if (!world.Config.GameModeOptions.OpenPyramid && world.Config.GameModeOptions.GanonsTowerCrystalCount > numCrystalsNeeded)
                 {
                     numCrystalsNeeded = world.Config.GameModeOptions.GanonsTowerCrystalCount;
                 }

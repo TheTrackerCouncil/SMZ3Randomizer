@@ -361,7 +361,7 @@ public class WorldItemPools
             new Item(ItemType.CardLowerNorfairBoss, world),
         };
 
-        if (world.Config.InterGameRewards)
+        if (world.Config.GameModeOptions.ShuffleMetroidBossTokens)
         {
             toReturn.AddRange([
                 new Item(ItemType.SmMapBrinstar, world),

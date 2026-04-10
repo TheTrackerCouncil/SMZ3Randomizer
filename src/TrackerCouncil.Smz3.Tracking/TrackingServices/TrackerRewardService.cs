@@ -66,7 +66,7 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlaye
         {
             rewardRegion.MarkedReward = rewardRegion.RewardType;
 
-            if (rewardRegion is not SMRegion || config.RomGenerator != RomGenerator.Cas || config.InterGameRewards)
+            if (rewardRegion is not SMRegion || config.RomGenerator != RomGenerator.Cas || config.GameModeOptions.ShuffleMetroidBossTokens)
             {
                 var rewardObj = rewardRegion.Reward;
                 Tracker.Say(response: Responses.DungeonRewardMarked, args: [rewardRegion.Metadata.Name, rewardObj.Metadata.Name ?? rewardObj.Type.GetDescription()]);

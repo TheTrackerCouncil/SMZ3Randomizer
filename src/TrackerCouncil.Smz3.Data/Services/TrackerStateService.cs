@@ -165,7 +165,7 @@ public class TrackerStateService(
         int? markedTourianBossCount = null;
         if (localWorld.LegacyWorld == null)
         {
-            if (localWorld.Config.GameModeOptions.RandomizeGoalCounts)
+            if (localWorld.Config.GameModeOptions.RandomizeNumericAmounts)
             {
                 markedGanonsTowerCrystalCount =
                     localWorld.Config.GameModeOptions.MinGanonsTowerCrystalCount == localWorld.Config.GameModeOptions.MaxGanonsTowerCrystalCount

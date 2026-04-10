@@ -32,7 +32,7 @@ public class Playthrough
                     text.Add($"Inaccessible Item: {location}", $"{location.Item.Name}");
             }
 
-            foreach (var location in x.Locations.Where(l => l.IsPotentiallyImportant(Config.KeysanityMode)))
+            foreach (var location in x.Locations.Where(l => l.IsPotentiallyImportant(Config.GameModeOptions.KeysanityMode)))
             {
                 if (Config.MultiWorld)
                     text.Add($"{location} ({location.Region.World.Player})", $"{location.Item.Name} ({location.Item.World.Player})");

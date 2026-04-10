@@ -700,7 +700,7 @@ public class TrackerWindowService(
         string? rewardImage = null;
 
         // If this is a parsed AP/Mainline rom, also show the reward for the boss
-        if (world.World.Config.RomGenerator != RomGenerator.Cas || world.World.Config.InterGameRewards)
+        if (world.World.Config.RomGenerator != RomGenerator.Cas || world.World.Config.GameModeOptions.ShuffleMetroidBossTokens)
         {
             rewardRegion = boss.Region as IHasReward;
             rewardImage = rewardRegion?.RewardType.GetCategories().Length > 0

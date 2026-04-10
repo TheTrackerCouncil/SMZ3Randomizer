@@ -4,9 +4,9 @@ namespace TrackerCouncil.Smz3.Shared.Enums;
 
 public enum GameModeType
 {
-    [Description("Vanilla")]
+    [Description("Collect crystals and defeat Metroid bosses")]
     Vanilla,
 
-    [Description("Spazer Hunt")]
+    [Description("Spazer Hunt (auto tracking required)")]
     SpazerHunt
 }

@@ -84,7 +84,7 @@ public partial class TrackerWindowDungeonPanelViewModel : TrackerWindowPanelView
         }
 
         // For parsed AP/Mainline roms, show the Metroid boss rewards
-        if ((Region?.World.Config.RomGenerator != RomGenerator.Cas || Region?.World.Config.InterGameRewards == true) && RewardRegion?.RewardType.IsInCategory(RewardCategory.NonRandomized) != true)
+        if ((Region?.World.Config.RomGenerator != RomGenerator.Cas || Region?.World.Config.GameModeOptions.ShuffleMetroidBossTokens == true) && RewardRegion?.RewardType.IsInCategory(RewardCategory.NonRandomized) != true)
         {
             AddRewardMenuItem(menuItems, RewardType.KraidToken);
             AddRewardMenuItem(menuItems, RewardType.PhantoonToken);
