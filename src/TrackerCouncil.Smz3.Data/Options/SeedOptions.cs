@@ -13,8 +13,6 @@ public class SeedOptions
     [YamlIgnore]
     public string Seed { get; set; } = "";
 
-    public KeysanityMode KeysanityMode { get; set; } = KeysanityMode.None;
-
     public ItemPlacementRule ItemPlacementRule { get; set; } = ItemPlacementRule.Anywhere;
 
     public bool Race { get; set; }
@@ -28,10 +26,6 @@ public class SeedOptions
     public bool DisableCheats { get; set; }
 
     public int? UniqueHintCount { get; set; }
-    public bool ShuffleMetroidBossTokens { get; set; }
-    public bool SkipTourianBossDoor { get; set; }
-    public bool PlaceGTBigKeyInGT { get; set; }
-    public bool OpenPyramid { get; set; } = false;
 
     public GameModeOptions GameModeOptions { get; set; } = new();
 
@@ -42,4 +36,8 @@ public class SeedOptions
     [Obsolete("Use GameModeOptions")] public int? GanonsTowerCrystalCount { get; set; }
     [Obsolete("Use GameModeOptions")] public int? GanonCrystalCount { get; set; }
     [Obsolete("Use GameModeOptions")] public int? TourianBossCount { get; set; }
+    [Obsolete("Use GameModeOptions")] public bool? SkipTourianBossDoor { get; set; }
+    [Obsolete("Use GameModeOptions")] public bool? PlaceGTBigKeyInGT { get; set; }
+    [Obsolete("Use GameModeOptions")] public bool? OpenPyramid { get; set; }
+    [Obsolete("Use GameModeOptions")] public KeysanityMode? KeysanityMode { get; set; }
 }

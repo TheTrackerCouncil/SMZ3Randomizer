@@ -160,9 +160,17 @@ public class RandomizerOptions : INotifyPropertyChanged
                 options.SeedOptions.GameModeOptions.GanonCrystalCount = options.SeedOptions.GanonCrystalCount.Value;
                 options.SeedOptions.GameModeOptions.GanonsTowerCrystalCount = options.SeedOptions.GanonsTowerCrystalCount!.Value;
                 options.SeedOptions.GameModeOptions.TourianBossCount = options.SeedOptions.TourianBossCount!.Value;
+                options.SeedOptions.GameModeOptions.SkipTourianBossDoor = options.SeedOptions.SkipTourianBossDoor!.Value;
+                options.SeedOptions.GameModeOptions.KeysanityMode = options.SeedOptions.KeysanityMode!.Value;
+                options.SeedOptions.GameModeOptions.PlaceGTBigKeyInGT = options.SeedOptions.PlaceGTBigKeyInGT!.Value;
+                options.SeedOptions.GameModeOptions.OpenPyramid = options.SeedOptions.OpenPyramid!.Value;
                 options.SeedOptions.GanonCrystalCount = null;
                 options.SeedOptions.GanonsTowerCrystalCount = null;
                 options.SeedOptions.TourianBossCount = null;
+                options.SeedOptions.SkipTourianBossDoor = null;
+                options.SeedOptions.KeysanityMode = null;
+                options.SeedOptions.PlaceGTBigKeyInGT = null;
+                options.SeedOptions.OpenPyramid = null;
                 settingsUpdated = true;
             }
 #pragma warning restore CS0618 // Type or member is obsolete

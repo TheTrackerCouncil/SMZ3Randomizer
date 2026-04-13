@@ -275,7 +275,6 @@ public class Config
     [Obsolete("Use GameModeOptions")] public bool SkipTourianBossDoor { get; set; }
     [Obsolete("Use GameModeOptions")] public bool PlaceGTBigKeyInGT { get; set; }
     [Obsolete("Use GameModeOptions")] public bool ShuffleMetroidBossTokens { get; set; }
-
     [Obsolete("Use GameModeOptions")] public bool OpenPyramid { get; set; }
 
     public Config SeedOnly()

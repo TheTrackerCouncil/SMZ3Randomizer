@@ -59,7 +59,7 @@ public class GenerationWindowAdditionalSettingsViewModel : ViewModelBase
         }
     }
 
-    [DynamicFormFieldBoolComboBox("Metroid statue room access:", falseText: "Open by default", trueText: "Require Crateria boss keycard", visibleWhenTrue: nameof(IsMetroidKeysanity))]
+    [DynamicFormFieldBoolComboBox("Metroid statue room access:", falseText: "Require Crateria boss keycard", trueText: "Open by default", visibleWhenTrue: nameof(IsMetroidKeysanity))]
     public bool SkipTourianBossDoor { get; set; }
 
     [DynamicFormFieldBoolComboBox("Ganon's Tower big key location:", falseText: "Fully randomized", trueText: "In Ganon's Tower", trueFirst: false, visibleWhenTrue: nameof(IsZeldaKeysanity))]
