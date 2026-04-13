@@ -207,9 +207,9 @@ public class SpazerHuntAltGameMode(IMetadataService metadata) : AltGameModeBase
         return false;
     }
 
-    public override List<Location>? GetGameModeLocations(World world)
+    public override List<Location>? GetGameModeLocations(World world, List<World> allWorlds)
     {
-        return world.Locations.Where(x => x.ItemType is ItemType.Spazer).ToList();
+        return allWorlds.SelectMany(w => w.Locations).Where(l => l.ItemType is ItemType.Spazer && l.Item.World.Id == world.Id).ToList();
     }
 
     public override List<GoalUiDetails>? GetGoalUiDetails(World world)

@@ -37,7 +37,7 @@ public abstract class AltGameModeBase
         return false;
     }
 
-    public virtual List<Location>? GetGameModeLocations(World world)
+    public virtual List<Location>? GetGameModeLocations(World world, List<World> allWorlds)
     {
         return null;
     }

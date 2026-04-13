@@ -111,6 +111,7 @@ public class LowerNorfairWest : SMRegion
             {
                 new Location(this, LocationId.LowerNorfairScrewAttack, 0x8F9110, LocationType.Chozo,
                     name: "Screw Attack",
+                    vanillaItem: ItemType.ScrewAttack,
                     access: items => (Logic.CanDestroyBombWalls(items) || items.ScrewAttack) && (items.SpaceJump && Logic.CanUsePowerBombs(items) || Logic.CanAccessNorfairLowerPortal(items)),
                     memoryAddress: 0x9,
                     memoryFlag: 0x80,

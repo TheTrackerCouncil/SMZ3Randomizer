@@ -74,6 +74,11 @@ public class GameLinesConfig : IMergeable<GameLinesConfig>, IConfigFile<GameLine
     public SchrodingersString? HintLocationHasSword { get; init; }
 
     /// <summary>
+    /// Hints for stating that a location is required for a goal
+    /// </summary>
+    public SchrodingersString? HintLocationAltGoal { get; init; }
+
+    /// <summary>
     /// Hints for stating that a location has no useful items
     /// </summary>
     public SchrodingersString? HintLocationEmpty { get; init; }

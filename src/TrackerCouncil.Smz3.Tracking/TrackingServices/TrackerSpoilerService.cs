@@ -155,7 +155,7 @@ internal class TrackerSpoilerService(IWorldQueryService worldQueryService, IGame
 
         var locations = worldQueryService.Locations(keysanityByRegion: true).ToList();
 
-        var result = gameHintService.FindMostValueableLocation(worldQueryService.Worlds, locations);
+        var result = gameHintService.FindMostValueableLocation(worldQueryService.Worlds, locations, null);
 
         if (result is not { Usefulness: LocationUsefulness.Mandatory or LocationUsefulness.Key})
         {

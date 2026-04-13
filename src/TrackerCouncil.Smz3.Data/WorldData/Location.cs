@@ -86,6 +86,27 @@ public class Location
         Item = new Item(ItemType.Nothing, region.World);
     }
 
+    public Location(Location location, ItemType newItem)
+    {
+        Region = location.Region;
+        Id = location.Id;
+        Name = location.Name;
+        Type = location.Type;
+        RomAddress = location.RomAddress;
+        VanillaItem = location.VanillaItem;
+        _canAccess = location._canAccess;
+        _alwaysAllow = location._alwaysAllow;
+        _allow = location._allow;
+        MemoryAddress = location.MemoryAddress;
+        MemoryFlag = location.MemoryFlag;
+        MemoryType = location.MemoryType;
+        _relevanceRequirement = location._relevanceRequirement;
+        _trackerLogic = location._trackerLogic;
+        Metadata = location.Metadata;
+        State = location.State;
+        Item = new Item(newItem, location.World);
+    }
+
     /// <summary>
     /// Gets the internal identifier of the location.
     /// </summary>

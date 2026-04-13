@@ -126,7 +126,7 @@ public class AltGameModeFactory(IServiceProvider serviceProvider)
             $"Goal: {gameModeOptions.SelectedGameModeType} | {goalText}, LiftOffOnGoalCompletion =  {gameModeOptions.LiftOffOnGoalCompletion}";
     }
 
-    public List<Location>? GetGameModeLocations(World world)
+    public List<Location>? GetGameModeLocations(World world, List<World> allWorlds)
     {
         if (world.Config.GameModeOptions.SelectedGameModeType == GameModeType.Vanilla)
         {
@@ -134,6 +134,6 @@ public class AltGameModeFactory(IServiceProvider serviceProvider)
         }
 
         var gameMode = GetGameMode(world.Config.GameModeOptions.SelectedGameModeType);
-        return gameMode.GetGameModeLocations(world);
+        return gameMode.GetGameModeLocations(world, allWorlds);
     }
 }

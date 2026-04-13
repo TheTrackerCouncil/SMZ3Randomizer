@@ -6,5 +6,6 @@ public enum LocationUsefulness
     NiceToHave,
     Sword,
     Mandatory,
-    Key
+    Key,
+    Goal
 }

@@ -53,5 +53,7 @@ public class Playthrough
         public List<Location> InaccessibleLocations { get; } = [];
 
         public List<Item> StartingItems { get; } = [];
+        public List<Reward> Rewards { get; } = [];
+        public List<Boss> Bosses { get; } = [];
     }
 }

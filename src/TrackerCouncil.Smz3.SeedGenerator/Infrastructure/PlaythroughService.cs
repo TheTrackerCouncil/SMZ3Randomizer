@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.Extensions.Logging;
@@ -67,7 +68,7 @@ public class PlaythroughService(ILogger<PlaythroughService> logger)
     /// </exception>
     public Playthrough Generate(IReadOnlyCollection<World> worlds, Config config)
     {
-        var spheres = GenerateSpheres(worlds.SelectMany(x => x.Locations));
+        var spheres = GenerateSpheres(worlds.SelectMany(x => x.Locations), out _);
         return new Playthrough(config, spheres);
     }
 
@@ -79,7 +80,7 @@ public class PlaythroughService(ILogger<PlaythroughService> logger)
     /// <param name="defaultItems"></param>
     /// <returns>A list of the spheres</returns>
     /// <exception cref="RandomizerGenerationException">When not all locations are </exception>
-    public IEnumerable<Playthrough.Sphere> GenerateSpheres(IEnumerable<Location> allLocations, Reward? defaultReward = null, List<Item>? defaultItems = null)
+    public IEnumerable<Playthrough.Sphere> GenerateSpheres(IEnumerable<Location> allLocations, out Playthrough.Sphere fullyCollected, Reward? defaultReward = null, List<Item>? defaultItems = null, bool skipLogging = false)
     {
         var allLocationsList = allLocations.ToList();
         var worlds = allLocationsList.Select(x => x.Region.World).Distinct().ToList();
@@ -95,9 +96,11 @@ public class PlaythroughService(ILogger<PlaythroughService> logger)
 
         var rewardRegions = worlds.SelectMany(x => x.RewardRegions).ToList();
         List<Reward> rewards;
+        List<Reward> allCollectedRewards = [];
 
         var bossRegions = worlds.SelectMany(x => x.BossRegions).ToList();
         List<Boss> bosses;
+        List<Boss> allCollectedBosses = [];
 
         foreach (var world in worlds)
         {
@@ -122,40 +125,92 @@ public class PlaythroughService(ILogger<PlaythroughService> logger)
                 sphere.StartingItems.AddRange(items);
             }
 
-            var tempProgression = new Progression(items, new List<Reward>(), new List<Boss>());
-            rewards = rewardRegions.Where(x => x.CanRetrieveReward(tempProgression, false))
+            var worldProgressions = worlds.ToDictionary(w => w.Id,
+                w => new Progression(items.Where(i => i.World == w), [], []));
+
+            rewards = rewardRegions.Where(x => x.CanRetrieveReward(worldProgressions[x.World.Id], false))
                 .Select(x => x.Reward)
                 .Concat(defaultRewards).ToList();
-            bosses = bossRegions.Where(x => x.CanBeatBoss(tempProgression, false))
+            bosses = bossRegions.Where(x => x.CanBeatBoss(worldProgressions[x.World.Id], false))
                 .Select(x => x.Boss).ToList();
+            var newRewards = rewards.Where(x => !allCollectedRewards.Contains(x)).ToList();
+            var newBosses = bosses.Where(x => !allCollectedBosses.Contains(x)).ToList();
+            allCollectedRewards = rewards;
+            allCollectedBosses = bosses;
+
+            worldProgressions = worlds.ToDictionary(w => w.Id,
+                w => new Progression(items.Where(i => i.World == w), rewards.Where(r => r.World == w),
+                    bosses.Where(b => b.World == w)));
 
             var accessibleLocations = allLocationsList.Where(l =>
-                l.IsAvailable(new Progression(items.Where(i => i.World == l.World),
-                    rewards.Where(r => r.World == l.World), bosses.Where(b => b.World == l.World)))).ToList();
+                l.IsAvailable(worldProgressions[l.World.Id])).ToList();
             var newLocations = accessibleLocations.Except(locations).ToList();
             var newItems = newLocations.Select(l => l.Item).ToList();
+
+            if (newRewards.Any(x => x.Type == RewardType.RidleyToken && x.World.Id == 2))
+            {
+                var a = "1";
+            }
 
             locations.AddRange(newLocations);
             items.AddRange(newItems);
 
-            logger.LogDebug("Sphere {Number}: {ItemCount} new items | {RewardCount} new rewards", spheres.Count + 1, newItems.Count, rewards.Count - prevRewardCount);
-            logger.LogDebug("Sphere {Number} Items:{Items}", spheres.Count + 1, string.Join("", newLocations.Select(x => $"\r\n\t{x.RandomName} - {x.Item.Name}")));
-            logger.LogDebug("Sphere {Number} Rewards:{Rewards}", spheres.Count + 1, string.Join("", rewards.Select(x => $"\r\n\t{x.Type}")));
+            if (!skipLogging)
+            {
+                logger.LogDebug("Sphere {Number}: {ItemCount} new items | {RewardCount} new rewards", spheres.Count + 1, newItems.Count, rewards.Count - prevRewardCount);
+                logger.LogDebug("Sphere {Number} Items:{Items}", spheres.Count + 1, string.Join("", newLocations.Select(x => $"\r\n\t{x.RandomName} - {x.Item.Name}")));
+                logger.LogDebug("Sphere {Number} Rewards:{Rewards}", spheres.Count + 1, string.Join("", newRewards.Select(x => $"\r\n\t{x.Type}")));
+            }
 
             if (!newItems.Any() && prevRewardCount == rewards.Count)
             {
                 /* With no new items added we might have a problem, so list inaccessable items */
                 var inaccessibleLocations = allLocationsList.Where(l => !locations.Contains(l)).ToList();
 
-                logger.LogDebug("Inaccesible locations: {}", string.Join(", ", inaccessibleLocations.Select(x => x.Id.ToString())));
+                logger.LogDebug("Inaccesible locations: {Locations}", string.Join(", ", inaccessibleLocations.Select(x => x.Id.ToString())));
 
                 // If there are a large number of inaccessible locations, throw an error if we can't beat the game
                 // We determine this on if all players can beat all 4 golden bosses, access the
                 if (inaccessibleLocations.Select(l => l.Item).Count() >= (15 * worlds.Count()))
                 {
-                    var vitalLocations = allLocationsList.Where(x => x.Id is LocationId.GanonsTowerMoldormChest or LocationId.KraidsLairVariaSuit or LocationId.WreckedShipEastSuper or LocationId.InnerMaridiaSpaceJump or LocationId.LowerNorfairRidleyTank).ToList();
-                    var crateriaBossKeys = items.Count(x => x.Type == ItemType.CardCrateriaBoss);
-                    if (accessibleLocations.Count(x => vitalLocations.Contains(x)) != vitalLocations.Count() || crateriaBossKeys != worlds.Count())
+                    var anyUnbeatableWorld = false;
+
+                    foreach (var world in worlds)
+                    {
+                        if (world.Config is { MetroidKeysanity: true, GameModeOptions.SkipTourianBossDoor: false } && !items.Any(x => x.Type == ItemType.CardCrateriaBoss && x.World == world))
+                        {
+                            anyUnbeatableWorld = true;
+                            break;
+                        }
+
+                        var crystalCountRequired = world.Config.GameModeOptions.OpenPyramid
+                            ? world.Config.GameModeOptions.GanonCrystalCount
+                            : Math.Max(world.Config.GameModeOptions.GanonCrystalCount,
+                                world.Config.GameModeOptions.GanonsTowerCrystalCount);
+
+                        if (rewards.Count(x => x.World == world && x.Type.IsInCategory(RewardCategory.Crystal)) <
+                            crystalCountRequired)
+                        {
+                            anyUnbeatableWorld = true;
+                            break;
+                        }
+
+                        if (rewards.Count(x => x.World == world && x.Type.IsInCategory(RewardCategory.Metroid)) <
+                            world.Config.GameModeOptions.TourianBossCount)
+                        {
+                            anyUnbeatableWorld = true;
+                            break;
+                        }
+
+                        if (!world.Config.GameModeOptions.LiftOffOnGoalCompletion &&
+                            items.Count(x => x.Type == ItemType.ProgressiveSword && x.World == world) < 2 &&
+                            !items.Any(x => x.Type == ItemType.SilverArrows && x.World == world))
+                        {
+                            anyUnbeatableWorld = true;
+                            break;
+                        }
+                    }
+                    if (anyUnbeatableWorld)
                     {
                         throw new RandomizerGenerationException("Too many inaccessible items, seed likely impossible.");
                     }
@@ -167,12 +222,21 @@ public class PlaythroughService(ILogger<PlaythroughService> logger)
 
             sphere.Locations.AddRange(newLocations);
             sphere.Items.AddRange(newItems);
+            sphere.Rewards.AddRange(newRewards);
+            sphere.Bosses.AddRange(newBosses);
             spheres.Add(sphere);
             prevRewardCount = rewards.Count;
 
             if (spheres.Count > 100)
                 throw new RandomizerGenerationException("Too many spheres, seed likely impossible.");
         }
+
+        var total = new Playthrough.Sphere();
+        total.Locations.AddRange(locations);
+        total.Items.AddRange(items);
+        total.Bosses.AddRange(allCollectedBosses);
+        total.Rewards.AddRange(allCollectedRewards);
+        fullyCollected = total;
 
         return spheres;
     }

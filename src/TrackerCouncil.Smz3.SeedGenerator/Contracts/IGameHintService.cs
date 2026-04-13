@@ -38,7 +38,7 @@ public interface IGameHintService
     /// <param name="allWorlds">All worlds that are a part of the seed</param>
     /// <param name="ignoredReward">Dungeon reward to ignore</param>
     /// <returns>How useful the locations are</returns>
-    LocationUsefulness GetUsefulness(List<Location> locations, List<World> allWorlds, Reward? ignoredReward);
+    LocationUsefulness GetUsefulness(List<Location> locations, List<World> allWorlds, Reward? ignoredReward, List<Location>? goalLocations = null);
 
     /// <summary>
     /// Retrieves the text that could be displayed on one of the hint tiles in a player's
@@ -57,5 +57,5 @@ public interface IGameHintService
     /// <param name="locationsToCheck">The locations to check</param>
     /// <returns>The most useful location and its usefulness</returns>
     public (Location Location, LocationUsefulness Usefulness)? FindMostValueableLocation(List<World> allWorlds,
-        List<Location> locationsToCheck);
+        List<Location> locationsToCheck, List<Location>? goalLocations);
 }
