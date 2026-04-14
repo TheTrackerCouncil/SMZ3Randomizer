@@ -147,11 +147,6 @@ public class PlaythroughService(ILogger<PlaythroughService> logger)
             var newLocations = accessibleLocations.Except(locations).ToList();
             var newItems = newLocations.Select(l => l.Item).ToList();
 
-            if (newRewards.Any(x => x.Type == RewardType.RidleyToken && x.World.Id == 2))
-            {
-                var a = "1";
-            }
-
             locations.AddRange(newLocations);
             items.AddRange(newItems);
 

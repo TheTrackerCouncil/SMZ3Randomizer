@@ -56,8 +56,6 @@ public class MultiplayerModule : TrackerModule
         Logger.LogInformation("Multiplayer module initialized");
     }
 
-    public event EventHandler? OnMultiplayerSync;
-
     private void AutoTrackerOnAutoTrackerConnected(object? sender, EventArgs e)
     {
         if (waitingForConnectivity)
