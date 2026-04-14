@@ -63,6 +63,16 @@ public class GenerationWindowViewModel : ViewModelBase
         }
     }
 
+    public bool SpinJumpAnimations
+    {
+        get => field;
+        set
+        {
+            field = value;
+            Logic.SpinJumpAnimations = value;
+        }
+    }
+
     public bool CanSetSeed => !IsPlando && !IsMultiplayer && !IsImportMode;
     public bool CanSetPresets => !IsPlando && !IsImportMode;
     public bool IsPlando => PlandoConfig != null;

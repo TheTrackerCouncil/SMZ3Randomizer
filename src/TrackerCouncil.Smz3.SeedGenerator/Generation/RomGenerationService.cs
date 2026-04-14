@@ -170,7 +170,7 @@ public class RomGenerationService(
             localConfig.LinkName = linkSpriteName;
         }
 
-        ApplyCasPatches(rom, options.PatchOptions);
+        ApplyCasPatches(rom, options.PatchOptions, parsedRomDetails);
 
         if (seed is { WorldGenerationData.LocalWorld.Config.GameModeOptions.LiftOffOnGoalCompletion: true })
         {
@@ -185,7 +185,7 @@ public class RomGenerationService(
         return rom;
     }
 
-    public void ApplyCasPatches(byte[] rom, PatchOptions options)
+    public void ApplyCasPatches(byte[] rom, PatchOptions options, ParsedRomDetails? parsedRomDetails)
     {
         if (options.CasPatches.Respin)
         {
@@ -241,7 +241,7 @@ public class RomGenerationService(
             Rom.ApplySuperMetroidIps(rom, patch);
         }
 
-        if (options.CasPatches.EasierWallJumps)
+        if (options.CasPatches.EasierWallJumps && parsedRomDetails?.SpinJumpAnimations != true)
         {
             using var patch = IpsPatch.EasierWallJumps();
             Rom.ApplySuperMetroidIps(rom, patch);

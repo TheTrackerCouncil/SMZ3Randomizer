@@ -122,6 +122,8 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
             var tourianBossCount = GoalsPatch.GetTourianBossCountFromRom(rom, romGenerator == RomGenerator.Cas);
             var openPyramid = GoalsPatch.GetOpenPyramid(rom);
             var text = ZeldaTextsPatch.ParseRomText(rom);
+            var spinJumpAnimations =
+                romGenerator != RomGenerator.Cas && MetadataPatch.GetSpinJumpAnimationsFromRom(rom);
 
             logger.LogInformation("Imported {Title} (Seed {SeedNumber})", romTitle, seedNumber);
 
@@ -146,7 +148,8 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
                 Bosses = bosses,
                 Prerequisites = prerequisites,
                 StartingItems = startingItems,
-                ParsedText = text
+                ParsedText = text,
+                SpinJumpAnimations = spinJumpAnimations
             };
         }
         catch (Exception e)

@@ -57,7 +57,7 @@ public class CasPatches : ViewModelBase
     [DynamicFormFieldCheckBox(checkBoxText: "Refill at Save Stations", toolTipText: "Save stations will refill your ammo.\nPatch developed by Adam.", groupName: "Middle")]
     public bool RefillAtSaveStation { get; set; } = true;
 
-    [DynamicFormFieldCheckBox(checkBoxText: "Easier Wall Jumps", toolTipText: "Makes the timing of wall jumps more leniant.\nPatch developed by Benox50.", groupName: "Middle")]
+    [DynamicFormFieldCheckBox(checkBoxText: "Easier Wall Jumps", toolTipText: "Makes the timing of wall jumps more lenient. Disabled for imported roms where spin jump animations are enabled.\nPatch developed by Benox50.", groupName: "Middle", editableWhenTrue: nameof(SpinJumpAnimationsDisabled))]
     public bool EasierWallJumps { get; set; } = true;
 
     [DynamicFormFieldCheckBox(checkBoxText: "Snap Morph to Holes", toolTipText: "Makes it easier to get into morph ball holes and allows you to morph over some 1 tile wide pits.\nPatch developed by Benox50.", groupName: "Middle")]
@@ -82,6 +82,8 @@ public class CasPatches : ViewModelBase
     public int HintTiles { get; set; } = 15;
 
     [YamlIgnore] public bool CanSetHintTiles { get; set; } = true;
+
+    [YamlIgnore] public bool SpinJumpAnimationsDisabled { get; set; } = true;
 
     public CasPatches Clone()
     {

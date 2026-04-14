@@ -9,8 +9,6 @@ namespace TrackerCouncil.Smz3.Data.ViewModels;
 [DynamicFormGroupBasic(DynamicFormLayout.Vertical, "All")]
 public class GenerationWindowLogicViewModel : ViewModelBase
 {
-    private bool _isPlando = true;
-
     [DynamicFormObject(groupName: "Can Change Settings")]
     public LogicConfig LogicConfig { get; set; } = new();
 
@@ -21,11 +19,21 @@ public class GenerationWindowLogicViewModel : ViewModelBase
 
     public bool IsPlando
     {
-        get => _isPlando;
+        get;
         set
         {
-            _isPlando = value;
+            field = value;
             CasPatches.CanSetHintTiles = !value;
         }
-    }
+    } = true;
+
+    public bool SpinJumpAnimations
+    {
+        get;
+        set
+        {
+            field = value;
+            CasPatches.SpinJumpAnimationsDisabled = !value;
+        }
+    } = false;
 }

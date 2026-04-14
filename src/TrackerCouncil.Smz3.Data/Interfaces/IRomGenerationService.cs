@@ -16,5 +16,5 @@ public interface IRomGenerationService
     public Task<GeneratedRomResult> GeneratePreSeededRomAsync(RandomizerOptions options, SeedData seed,
         MultiplayerGameDetails multiplayerGameDetails);
 
-    public void ApplyCasPatches(byte[] rom, PatchOptions options);
+    public void ApplyCasPatches(byte[] rom, PatchOptions options, ParsedRomDetails? parsedRomDetails);
 }
