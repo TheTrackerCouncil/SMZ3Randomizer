@@ -50,6 +50,7 @@ public class GameModeOptions
             GanonsTowerCrystalCount = MinGanonsTowerCrystalCount;
         }
 
+        // Only randomize vanilla crystals as alt game modes should do their own randomization
         if (SelectedGameModeType == GameModeType.Vanilla)
         {
             if (MaxGanonCrystalCount > MinGanonCrystalCount)
@@ -68,26 +69,6 @@ public class GameModeOptions
             else
             {
                 TourianBossCount = MinTourianBossCount;
-            }
-        }
-        else if (SelectedGameModeType == GameModeType.SpazerHunt)
-        {
-            if (MaxSpazersRequired > MinSpazersRequired)
-            {
-                SpazersRequired = rnd.Next(MinSpazersRequired, MaxSpazersRequired + 1);
-            }
-            else
-            {
-                SpazersRequired = MinSpazersRequired;
-            }
-
-            if (MaxSpazersInPool > MinSpazersInPool)
-            {
-                SpazersInPool = rnd.Next(MinSpazersInPool, MaxSpazersInPool + 1);
-            }
-            else
-            {
-                SpazersInPool = MinSpazersInPool;
             }
         }
     }

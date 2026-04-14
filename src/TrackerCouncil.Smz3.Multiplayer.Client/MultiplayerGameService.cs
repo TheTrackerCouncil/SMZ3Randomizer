@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.GeneratedData;
+using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Multiplayer.Client.EventHandlers;
@@ -95,12 +96,13 @@ public class MultiplayerGameService : IDisposable
         var playerList = players.ToList();
         foreach (var player in playerList)
         {
-            var world = _currentGameService.GetPlayerDefaultState(
-                seedData.WorldGenerationData.GetWorld(player.Guid).World, seedData.WorldGenerationData.Worlds);
+            var worldGenerationData = seedData.WorldGenerationData.GetWorld(player.Guid);
+            var world = worldGenerationData.World;
+            var worldState = _currentGameService.GetPlayerDefaultState(world, seedData.WorldGenerationData.Worlds);
             _logger.LogInformation("Pushing state");
-            await _client.UpdatePlayerWorld(player, world, false);
-            await _client.SubmitPlayerGenerationData(player.Guid,
-                seedData.WorldGenerationData.GetWorld(player.Guid).GetPlayerGenerationData());
+            await _client.SubmitConfig(Config.ToConfigString(world.Config), player);
+            await _client.UpdatePlayerWorld(player, worldState, false);
+            await _client.SubmitPlayerGenerationData(player.Guid, worldGenerationData.GetPlayerGenerationData());
         }
 
         await _client.StartGame(hash);
@@ -197,15 +199,25 @@ public class MultiplayerGameService : IDisposable
     {
         if (!_client.IsConnected)
         {
+            _logger.LogWarning("Not connected to multiworld server. Reconnecting.");
             await _client.Reconnect();
             return;
         }
-        if (_client.Players == null) return;
-        foreach (var playerState in _client.Players.Where(x => x != _client.LocalPlayer))
+
+        if (_client.Players == null)
         {
-            var args = _currentGameService.PlayerSyncReceived(playerState, null, false);
-            if (args != null) PlayerSyncReceived?.Invoke(args);
+            _logger.LogWarning("No players currently found.");
         }
+        else
+        {
+            foreach (var playerState in _client.Players.Where(x => x != _client.LocalPlayer))
+            {
+                var args = _currentGameService.PlayerSyncReceived(playerState, null, false);
+                if (args != null) PlayerSyncReceived?.Invoke(args);
+            }
+        }
+
+        _logger.LogInformation("Starting sync");
         _currentGameService.OnAutoTrackerConnected();
     }
 

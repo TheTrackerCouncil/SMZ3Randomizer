@@ -267,15 +267,18 @@ public class MultiplayerClientService
     /// Submits the provided config string to the server for the local player
     /// </summary>
     /// <param name="config">The compressed config string</param>
-    public async Task SubmitConfig(string config)
+    /// <param name="player">The player to update. If not provided, the local player is used.</param>
+    public async Task SubmitConfig(string config, MultiplayerPlayerState? player = null)
     {
-        if (LocalPlayer == null)
+        player ??= LocalPlayer;
+
+        if (player == null)
         {
-            Error?.Invoke($"There is no active local player");
+            Error?.Invoke("There is no active local player");
             return;
         }
 
-        await MakeRequest("UpdatePlayerConfig", new UpdatePlayerConfigRequest(LocalPlayer.Guid, config), true);
+        await MakeRequest("UpdatePlayerConfig", new UpdatePlayerConfigRequest(player.Guid, config), true);
     }
 
     /// <summary>

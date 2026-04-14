@@ -28,10 +28,7 @@ public class SpazerHuntAltGameMode(IMetadataService metadata) : AltGameModeBase
             return false;
         }
 
-        var allSpazerLocations = world.State.LocationStates
-            .Where(x => x.ItemWorldId == world.Id && x.Item == ItemType.Spazer).ToList();
-        var spazerCount = allSpazerLocations.Count(x => x.Cleared);
-        return spazerCount >= world.Config.GameModeOptions.SpazersRequired;
+        return GetCurrentCount(world) >= world.Config.GameModeOptions.SpazersRequired;
     }
 
     public override void UpdateInitialTrackerState(GameModeOptions gameModeOptions, TrackerState trackerState)
@@ -171,6 +168,10 @@ public class SpazerHuntAltGameMode(IMetadataService metadata) : AltGameModeBase
 
         _tracker.LocationTracker.LocationCleared += LocationTrackerOnLocationCleared;
         _tracker.ItemTracker.ItemTracked += ItemTrackerOnItemTracked;
+
+        if (_tracker.Rom is { MultiplayerGameDetails: null }) return;
+
+        _tracker.ModeTracker.MultiplayerSyncReceived += ModeTrackerOnMultiplayerSyncReceived;
     }
 
     public override AltGameModeInGameText? GetInGameText(World world)
@@ -219,9 +220,7 @@ public class SpazerHuntAltGameMode(IMetadataService metadata) : AltGameModeBase
             return null;
         }
 
-        var allSpazerLocations = world.State.LocationStates
-            .Where(x => x.ItemWorldId == world.Id && x.Item == ItemType.Spazer).ToList();
-        var spazerCount = allSpazerLocations.Count(x => x.Cleared);
+        var spazerCount = GetCurrentCount(world);
         var spazersNeeded = string.IsNullOrEmpty(world.State?.AltGameModeState) ? "?" : world.State.AltGameModeState;
         return
         [
@@ -233,6 +232,13 @@ public class SpazerHuntAltGameMode(IMetadataService metadata) : AltGameModeBase
     {
         return
             $"SpazersRequired = {gameModeOptions.SpazersRequired}, SpazersInPool = {gameModeOptions.SpazersInPool}";
+    }
+
+    private int GetCurrentCount(World world)
+    {
+        var allSpazerLocations = world.State?.LocationStates
+            .Where(x => x.ItemWorldId == world.Id && x.Item == ItemType.Spazer).ToList() ?? [];
+        return allSpazerLocations.Count(x => x.Autotracked);
     }
 
     private void LocationTrackerOnLocationCleared(object? sender, LocationClearedEventArgs e)
@@ -257,6 +263,16 @@ public class SpazerHuntAltGameMode(IMetadataService metadata) : AltGameModeBase
             return;
         }
 
+        if (IsComplete(_tracker.World))
+        {
+            _tracker.AltGameModeService.MarkAltGameModeAsComplete();
+        }
+
+        _tracker.AltGameModeService.NotifyOfGoalStateChange();
+    }
+
+    private void ModeTrackerOnMultiplayerSyncReceived(object? sender, EventArgs e)
+    {
         if (IsComplete(_tracker.World))
         {
             _tracker.AltGameModeService.MarkAltGameModeAsComplete();

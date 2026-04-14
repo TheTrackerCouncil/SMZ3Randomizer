@@ -158,6 +158,8 @@ public sealed partial class Tracker : TrackerBase, IDisposable
         Dispose();
     }
 
+    public override Config? LocalConfig => World.Config;
+
     /// <summary>
     /// Attempts to replace a username with a pronunciation-corrected
     /// version of it.
@@ -205,9 +207,6 @@ public sealed partial class Tracker : TrackerBase, IDisposable
         Rom = rom;
         RomPath = romPath;
         var trackerState = _stateService.LoadState(_worldAccessor.Worlds, rom);
-
-        var configs = Config.FromConfigString(rom.Settings);
-        LocalConfig = configs.First(x => x.IsLocalConfig);
 
         if (trackerState != null)
         {

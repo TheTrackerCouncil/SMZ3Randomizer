@@ -720,6 +720,7 @@ public class GameService : TrackerModule, IGameService
     /// <inheritdoc />
     public void TrySetGameModeComplete()
     {
+        _logger.LogInformation("Marking alt game mode as complete");
         _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
         {
             MemoryRequestType = SnesMemoryRequestType.UpdateMemory,

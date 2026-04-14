@@ -172,9 +172,9 @@ public class RomGenerationService(
 
         ApplyCasPatches(rom, options.PatchOptions);
 
-        if (seed is { PrimaryConfig.GameModeOptions.LiftOffOnGoalCompletion: true })
+        if (seed is { WorldGenerationData.LocalWorld.Config.GameModeOptions.LiftOffOnGoalCompletion: true })
         {
-            using var goalPatch = seed.PrimaryConfig.GameModeOptions.SelectedGameModeType == GameModeType.Vanilla
+            using var goalPatch = seed.WorldGenerationData.LocalWorld.Config.GameModeOptions.SelectedGameModeType == GameModeType.Vanilla
                 ? IpsPatch.LiftOffOnGoalCompletionPrimary()
                 : IpsPatch.LiftOffOnGoalCompletionAlt();
             Rom.ApplySuperMetroidIps(rom, goalPatch);
@@ -445,7 +445,7 @@ public class RomGenerationService(
 
         if (rom.TrackerState != null)
         {
-            altGameModeFactory.UpdateInitialTrackerState(seed.PrimaryConfig.GameModeOptions, rom.TrackerState);
+            altGameModeFactory.UpdateInitialTrackerState(seed.WorldGenerationData.LocalWorld.Config.GameModeOptions, rom.TrackerState);
             await dbContext.SaveChangesAsync();
         }
 
