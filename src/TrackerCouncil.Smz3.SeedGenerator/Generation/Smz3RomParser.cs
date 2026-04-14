@@ -164,13 +164,14 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
         config.GameMode = parsedRomDetails.IsMultiworld ? GameMode.Multiworld : GameMode.Normal;
         config.LegacyMetroidLogic = parsedRomDetails.IsHardLogic ? SMLogic.Hard : SMLogic.Normal;
         config.RomGenerator = parsedRomDetails.RomGenerator;
-        config.KeysanityMode = parsedRomDetails.KeysanityMode;
+        config.GameModeOptions.KeysanityMode = parsedRomDetails.KeysanityMode;
         config.Seed = parsedRomDetails.Seed.ToString();
-        config.GanonsTowerCrystalCount = parsedRomDetails.GanonsTowerCrystalCount;
-        config.GanonCrystalCount = parsedRomDetails.GanonCrystalCount;
-        config.TourianBossCount = parsedRomDetails.TourianBossCount;
-        config.OpenPyramid = parsedRomDetails.OpenPyarmid;
-        config.SkipTourianBossDoor = parsedRomDetails.SkipTourianBossDoor;
+        config.GameModeOptions.GanonsTowerCrystalCount = parsedRomDetails.GanonsTowerCrystalCount;
+        config.GameModeOptions.GanonCrystalCount = parsedRomDetails.GanonCrystalCount;
+        config.GameModeOptions.TourianBossCount = parsedRomDetails.TourianBossCount;
+        config.GameModeOptions.OpenPyramid = parsedRomDetails.OpenPyarmid;
+        config.GameModeOptions.SkipTourianBossDoor = parsedRomDetails.SkipTourianBossDoor;
+        config.GameModeOptions.ShuffleMetroidBossTokens = true;
         config.LocationItems.Clear();
         config.ItemOptions = parsedRomDetails.StartingItems.ToDictionary(x => $"ItemType:{x.Key}", x => x.Value);
         config.LogicConfig = new LogicConfig()

@@ -85,7 +85,8 @@ public class CastleTower : Z3Region, IHasReward, IHasTreasure, IHasBoss
                     memoryAddress: 0xE0,
                     memoryFlag: 0x4,
                     metadata: metadata,
-                    trackerState: trackerState)
+                    trackerState: trackerState,
+                    vanillaItem: ItemType.KeyCT)
             };
         }
     }
@@ -103,7 +104,8 @@ public class CastleTower : Z3Region, IHasReward, IHasTreasure, IHasBoss
                     memoryAddress: 0xD0,
                     memoryFlag: 0x4,
                     metadata: metadata,
-                    trackerState: trackerState)
+                    trackerState: trackerState,
+                    vanillaItem: ItemType.KeyCT)
             };
         }
     }

@@ -86,6 +86,27 @@ public class Location
         Item = new Item(ItemType.Nothing, region.World);
     }
 
+    public Location(Location location, ItemType newItem)
+    {
+        Region = location.Region;
+        Id = location.Id;
+        Name = location.Name;
+        Type = location.Type;
+        RomAddress = location.RomAddress;
+        VanillaItem = location.VanillaItem;
+        _canAccess = location._canAccess;
+        _alwaysAllow = location._alwaysAllow;
+        _allow = location._allow;
+        MemoryAddress = location.MemoryAddress;
+        MemoryFlag = location.MemoryFlag;
+        MemoryType = location.MemoryType;
+        _relevanceRequirement = location._relevanceRequirement;
+        _trackerLogic = location._trackerLogic;
+        Metadata = location.Metadata;
+        State = location.State;
+        Item = new Item(newItem, location.World);
+    }
+
     /// <summary>
     /// Gets the internal identifier of the location.
     /// </summary>
@@ -392,7 +413,7 @@ public class Location
         if (World.Config.MultiWorld && item.Type == ItemType.ProgressiveShield && item.World != World)
             fillable = false;
         // If the user wants the GT key in GT for the guessing game while playing Keysanity
-        else if (item is { Type: ItemType.BigKeyGT, World.Config.ZeldaKeysanity: true, World.Config.PlaceGTBigKeyInGT: true })
+        else if (item is { Type: ItemType.BigKeyGT, World.Config.ZeldaKeysanity: true, World.Config.GameModeOptions.PlaceGTBigKeyInGT: true })
             fillable = fillable && Region is GanonsTower;
 
         Item = oldItem;
@@ -406,7 +427,7 @@ public class Location
     /// <returns></returns>
     public bool IsPotentiallyImportant(KeysanityMode? keysanity = null)
     {
-        keysanity ??= Item.World.Config.KeysanityMode;
+        keysanity ??= Item.World.Config.GameModeOptions.KeysanityMode;
         return Item.Progression || Item.Type == ItemType.OtherGameProgressionItem
                || (Item.IsDungeonItem && keysanity is KeysanityMode.Both or KeysanityMode.Zelda)
                || (Item.IsKeycard && keysanity is KeysanityMode.Both or KeysanityMode.SuperMetroid);

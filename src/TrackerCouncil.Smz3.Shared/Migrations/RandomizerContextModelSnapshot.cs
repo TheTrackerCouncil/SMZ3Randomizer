@@ -15,7 +15,7 @@ namespace TrackerCouncil.Smz3.Shared.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
+            modelBuilder.HasAnnotation("ProductVersion", "10.0.2");
 
             modelBuilder.Entity("TrackerCouncil.Smz3.Shared.Models.GeneratedRom", b =>
                 {
@@ -496,6 +496,10 @@ namespace TrackerCouncil.Smz3.Shared.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("AltGameModeState")
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("GanonCrystalCount")
                         .HasColumnType("INTEGER");

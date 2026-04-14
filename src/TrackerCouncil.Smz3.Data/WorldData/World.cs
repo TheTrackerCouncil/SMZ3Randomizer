@@ -273,7 +273,7 @@ public class World
 
     public void Setup(Random rnd)
     {
-        RandomizeRewards(rnd);
+        Config.GameModeOptions.Randomize(rnd);
         SetMedallions(rnd);
         SetRewards(rnd);
         SetBottles(rnd);
@@ -296,7 +296,7 @@ public class World
 
     private void SetRewards(Random rnd)
     {
-        if (Config.InterGameRewards)
+        if (Config.GameModeOptions.ShuffleMetroidBossTokens)
         {
             var rewards = Rewards.Where(x => !x.Type.IsInCategory(RewardCategory.NonRandomized)).ToList().Shuffle(rnd);
 
@@ -446,43 +446,5 @@ public class World
         return RewardRegions
             .Where(x => rewards.Contains(x.MarkedReward))
             .Count(x => x.HasReceivedReward);
-    }
-
-    private void RandomizeRewards(Random rnd)
-    {
-        if (!Config.RandomizeCrystalBossCounts)
-        {
-            return;
-        }
-
-        if (Config.MaxGanonsTowerCrystalCount > Config.MinGanonsTowerCrystalCount)
-        {
-            Config.GanonsTowerCrystalCount = rnd.Next(Config.MinGanonsTowerCrystalCount,
-                Config.MaxGanonsTowerCrystalCount + 1);
-        }
-        else
-        {
-            Config.GanonsTowerCrystalCount = Config.MinGanonsTowerCrystalCount;
-        }
-
-        if (Config.MaxGanonCrystalCount > Config.MinGanonCrystalCount)
-        {
-            Config.GanonCrystalCount = rnd.Next(Config.MinGanonCrystalCount,
-                Config.MaxGanonCrystalCount + 1);
-        }
-        else
-        {
-            Config.GanonCrystalCount = Config.MinGanonCrystalCount;
-        }
-
-        if (Config.MaxTourianBossCount > Config.MinTourianBossCount)
-        {
-            Config.TourianBossCount = rnd.Next(Config.MinTourianBossCount,
-                Config.MaxTourianBossCount + 1);
-        }
-        else
-        {
-            Config.TourianBossCount = Config.MinTourianBossCount;
-        }
     }
 }

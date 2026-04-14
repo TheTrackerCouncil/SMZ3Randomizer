@@ -10,13 +10,14 @@ using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Data.GeneratedData;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
+using TrackerCouncil.Smz3.SeedGenerator.AltGameModes;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.Generation;
 
-public class RomTextService(ILogger<RomTextService> logger, IGameHintService gameHintService, ISnesConnectorService snesConnectorService)
+public class RomTextService(ILogger<RomTextService> logger, IGameHintService gameHintService, ISnesConnectorService snesConnectorService, AltGameModeFactory altGameModeFactory)
 {
     private static readonly string s_plandoSchemaPath = @"https://raw.githubusercontent.com/TheTrackerCouncil/SMZ3CasConfigs/refs/heads/main/Schemas/plando.json";
 
@@ -192,16 +193,35 @@ public class RomTextService(ILogger<RomTextService> logger, IGameHintService gam
                 log.AppendLine($"Logic Options: {logicOptions}");
             }
 
-            if (world.Config.Keysanity)
+            var gameModeOptions = world.Config.GameModeOptions;
+
+            if (!isParsedRom)
             {
-                log.AppendLine("Keysanity: " + world.Config.KeysanityMode);
+                log.AppendLine(altGameModeFactory.GetSpoilerText(gameModeOptions));
             }
 
-            var gtCrystals = world.Config.GanonsTowerCrystalCount;
-            var ganonCrystals = world.Config.GanonCrystalCount;
-            var pyramid = world.Config.OpenPyramid ? "Open" : "Closed";
-            var tourianBosses = world.Config.TourianBossCount;
-            log.AppendLine($"Win Conditions: GT = {gtCrystals} Crystals, Ganon = {ganonCrystals} Crystals, Pyramid = {pyramid}, Tourian = {tourianBosses} Bosses");
+            string keysanityOptions;
+            if (world.Config.Keysanity)
+            {
+                keysanityOptions = $"Keysanity = {gameModeOptions.KeysanityMode}";
+
+                if (world.Config.MetroidKeysanity)
+                {
+                    keysanityOptions += $", SkipTourianBossDoor = {gameModeOptions.SkipTourianBossDoor}";
+                }
+
+                if (world.Config.ZeldaKeysanity)
+                {
+                    keysanityOptions += $", PlaceGTBigKeyInGT = {gameModeOptions.PlaceGTBigKeyInGT}";
+                }
+            }
+            else
+            {
+                keysanityOptions = "Keysanity: Disabled";
+            }
+
+            log.AppendLine(
+                $"Additional Settings: GanonsTowerCrystalCount = {gameModeOptions.GanonsTowerCrystalCount}, OpenPyramid = {gameModeOptions.OpenPyramid}, ShuffleMetroidBossTokens = {gameModeOptions.ShuffleMetroidBossTokens}, {keysanityOptions}");
 
             log.AppendLine();
         }

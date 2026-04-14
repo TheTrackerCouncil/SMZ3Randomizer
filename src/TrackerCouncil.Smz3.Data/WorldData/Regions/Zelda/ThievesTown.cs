@@ -55,7 +55,8 @@ public class ThievesTown : Z3Region, IHasReward, IHasTreasure, IHasBoss
             trackerState: trackerState);
 
         Attic = new Location(this, LocationId.ThievesTownAttic, 0x1EA0D, LocationType.Regular,
-            name: "Attic", // ??? Vanilla item ???
+            name: "Attic",
+            vanillaItem: ItemType.ThreeBombs,
             access: items => items.BigKeyTT && items.KeyTT,
             memoryAddress: 0x65,
             memoryFlag: 0x4,

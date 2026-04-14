@@ -27,85 +27,69 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
     private GenerationWindowViewModel _model = null!;
     private static readonly char[] s_invalidFileNameChars = Path.GetInvalidFileNameChars();
 
-    public GenerationWindowViewModel GetViewModel()
+    public GenerationWindowViewModel GetViewModel(Dictionary<GameModeType, string> gameModeDescriptions)
     {
         MigrateOldPresets();
 
-        _options = optionsFactory.Create();
+            _options = optionsFactory.Create();
 
-        metadataService.ReloadConfigs();
+            metadataService.ReloadConfigs();
 
-        _model = new GenerationWindowViewModel();
+            _model = new GenerationWindowViewModel();
 
-        _model.Basic.Presets = GetPresets();
-        _model.Basic.SelectedPreset = _model.Basic.Presets.First();
-        _model.Basic.MsuShuffleStyle = _options.PatchOptions.MsuShuffleStyle;
-        _model.Basic.MsuRandomizationStyle = _options.PatchOptions.MsuRandomizationStyle;
+            _model.Basic.Presets = GetPresets();
+            _model.Basic.SelectedPreset = _model.Basic.Presets.First();
+            _model.Basic.MsuShuffleStyle = _options.PatchOptions.MsuShuffleStyle;
+            _model.Basic.MsuRandomizationStyle = _options.PatchOptions.MsuRandomizationStyle;
 
-        _model.GameSettings.KeysanityMode = _options.SeedOptions.KeysanityMode;
-        _model.GameSettings.RequireBossKeycardForTourian = !_options.SeedOptions.SkipTourianBossDoor;
-        _model.GameSettings.PlaceGTBigKeyInGT = _options.SeedOptions.PlaceGTBigKeyInGT;
+            _model.GameSettings.RandomizeNumericValues = _options.SeedOptions.GameModeOptions.RandomizeNumericAmounts;
+            _model.GameSettings.GoalSettings.GameModeTypeDescriptions = gameModeDescriptions;
+            _model.GameSettings.GoalSettings.UpdateViewModel(_options.SeedOptions.GameModeOptions);
+            _model.GameSettings.AdditionalSettings.UpdateViewModel(_options.SeedOptions.GameModeOptions);
 
-        _model.GameSettings.InterGameRewards = _options.SeedOptions.InterGameRewards
-            ? GenerationWindowGameSettingsViewModel.RandomizedRewardsText
-            : GenerationWindowGameSettingsViewModel.StaticRewardsText;
+            _model.GameSettings.Race = _options.SeedOptions.Race;
+            _model.GameSettings.DisableSpoilerLog = _options.SeedOptions.DisableSpoilerLog;
+            _model.GameSettings.DisableTrackerHints = _options.SeedOptions.DisableTrackerHints;
+            _model.GameSettings.DisableTrackerSpoilers = _options.SeedOptions.DisableTrackerSpoilers;
+            _model.GameSettings.DisableCheats = _options.SeedOptions.DisableCheats;
 
-        _model.GameSettings.CrystalBossCountStyle = _options.SeedOptions.RandomizeCrystalBossCounts
-            ? GenerationWindowGameSettingsViewModel.RandomizedRewardsText
-            : GenerationWindowGameSettingsViewModel.StaticRewardsText;
-        _model.GameSettings.CrystalsNeededForGT = _options.SeedOptions.GanonsTowerCrystalCount;
-        _model.GameSettings.CrystalsNeededForGTMin = _options.SeedOptions.MinGanonsTowerCrystalCount;
-        _model.GameSettings.CrystalsNeededForGTMax = _options.SeedOptions.MaxGanonsTowerCrystalCount;
-        _model.GameSettings.CrystalsNeededForGanon = _options.SeedOptions.GanonCrystalCount;
-        _model.GameSettings.CrystalsNeededForGanonMin = _options.SeedOptions.MinGanonCrystalCount;
-        _model.GameSettings.CrystalsNeededForGanonMax = _options.SeedOptions.MaxGanonCrystalCount;
-        _model.GameSettings.BossesNeededForTourian = _options.SeedOptions.TourianBossCount;
-        _model.GameSettings.BossesNeededForTourianMin = _options.SeedOptions.MinTourianBossCount;
-        _model.GameSettings.BossesNeededForTourianMax = _options.SeedOptions.MaxTourianBossCount;
-        _model.GameSettings.OpenPyramid = _options.SeedOptions.OpenPyramid;
-        _model.GameSettings.Race = _options.SeedOptions.Race;
-        _model.GameSettings.DisableSpoilerLog = _options.SeedOptions.DisableSpoilerLog;
-        _model.GameSettings.DisableTrackerHints = _options.SeedOptions.DisableTrackerHints;
-        _model.GameSettings.DisableTrackerSpoilers = _options.SeedOptions.DisableTrackerSpoilers;
-        _model.GameSettings.DisableCheats = _options.SeedOptions.DisableCheats;
+            _model.Logic.LogicConfig = _options.LogicConfig.Clone();
+            _model.Logic.CasPatches = _options.PatchOptions.CasPatches.Clone();
 
-        _model.Logic.LogicConfig = _options.LogicConfig.Clone();
-        _model.Logic.CasPatches = _options.PatchOptions.CasPatches.Clone();
+            if (_options.PatchOptions.ZeldaDrops != null)
+            {
+                _model.Logic.CasPatches.ZeldaDrops = _options.PatchOptions.ZeldaDrops.Value;
+                _options.PatchOptions.ZeldaDrops = null;
+            }
 
-        if (_options.PatchOptions.ZeldaDrops != null)
-        {
-            _model.Logic.CasPatches.ZeldaDrops = _options.PatchOptions.ZeldaDrops.Value;
-            _options.PatchOptions.ZeldaDrops = null;
-        }
+            if (_options.SeedOptions.UniqueHintCount != null)
+            {
+                _model.Logic.CasPatches.HintTiles = _options.SeedOptions.UniqueHintCount.Value;
+                _options.SeedOptions.UniqueHintCount = null;
+            }
 
-        if (_options.SeedOptions.UniqueHintCount != null)
-        {
-            _model.Logic.CasPatches.HintTiles = _options.SeedOptions.UniqueHintCount.Value;
-            _options.SeedOptions.UniqueHintCount = null;
-        }
+            _model.Items.Init(_options, locations);
 
-        _model.Items.Init(_options, locations);
+            _model.Customizations.HeartColor = _options.PatchOptions.HeartColor;
+            _model.Customizations.MenuSpeed = _options.PatchOptions.MenuSpeed;
+            _model.Customizations.EtecoonsJingle = _options.PatchOptions.EtecoonsJingle;
+            _model.Customizations.LowHealthBeepSpeed = _options.PatchOptions.LowHealthBeepSpeed;
+            _model.Customizations.DisableLowEnergyBeep = _options.PatchOptions.DisableLowEnergyBeep;
+            _model.Customizations.RunButtonBehavior = _options.PatchOptions.MetroidControls.RunButtonBehavior;
+            _model.Customizations.ItemCancelBehavior = _options.PatchOptions.MetroidControls.ItemCancelBehavior;
+            _model.Customizations.AimButtonBehavior = _options.PatchOptions.MetroidControls.AimButtonBehavior;
+            _model.Customizations.MoonWalk = _options.PatchOptions.MetroidControls.MoonWalk;
+            _model.Customizations.ShootButton = _options.PatchOptions.MetroidControls.Shoot;
+            _model.Customizations.JumpButton = _options.PatchOptions.MetroidControls.Jump;
+            _model.Customizations.DashButton = _options.PatchOptions.MetroidControls.Dash;
+            _model.Customizations.ItemSelectButton = _options.PatchOptions.MetroidControls.ItemSelect;
+            _model.Customizations.ItemCancelButton = _options.PatchOptions.MetroidControls.ItemCancel;
+            _model.Customizations.AimUpButton = _options.PatchOptions.MetroidControls.AimUp;
+            _model.Customizations.AimDownButton = _options.PatchOptions.MetroidControls.AimDown;
 
-        _model.Customizations.HeartColor = _options.PatchOptions.HeartColor;
-        _model.Customizations.MenuSpeed = _options.PatchOptions.MenuSpeed;
-        _model.Customizations.EtecoonsJingle = _options.PatchOptions.EtecoonsJingle;
-        _model.Customizations.LowHealthBeepSpeed = _options.PatchOptions.LowHealthBeepSpeed;
-        _model.Customizations.DisableLowEnergyBeep = _options.PatchOptions.DisableLowEnergyBeep;
-        _model.Customizations.RunButtonBehavior = _options.PatchOptions.MetroidControls.RunButtonBehavior;
-        _model.Customizations.ItemCancelBehavior = _options.PatchOptions.MetroidControls.ItemCancelBehavior;
-        _model.Customizations.AimButtonBehavior = _options.PatchOptions.MetroidControls.AimButtonBehavior;
-        _model.Customizations.MoonWalk = _options.PatchOptions.MetroidControls.MoonWalk;
-        _model.Customizations.ShootButton = _options.PatchOptions.MetroidControls.Shoot;
-        _model.Customizations.JumpButton = _options.PatchOptions.MetroidControls.Jump;
-        _model.Customizations.DashButton = _options.PatchOptions.MetroidControls.Dash;
-        _model.Customizations.ItemSelectButton = _options.PatchOptions.MetroidControls.ItemSelect;
-        _model.Customizations.ItemCancelButton = _options.PatchOptions.MetroidControls.ItemCancel;
-        _model.Customizations.AimUpButton = _options.PatchOptions.MetroidControls.AimUp;
-        _model.Customizations.AimDownButton = _options.PatchOptions.MetroidControls.AimDown;
-
-        UpdateMsuText();
-        _ = LoadSprites();
-        return _model;
+            UpdateMsuText();
+            _ = LoadSprites();
+            return _model;
     }
 
     public void ApplyConfig(string config, bool copySeed)
@@ -134,25 +118,10 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
             _model.Basic.Seed = config.Seed;
         }
 
-        _model.GameSettings.KeysanityMode = config.KeysanityMode;
-        _model.GameSettings.RequireBossKeycardForTourian = !config.SkipTourianBossDoor;
-        _model.GameSettings.PlaceGTBigKeyInGT = config.PlaceGTBigKeyInGT;
-        _model.GameSettings.InterGameRewards = config.InterGameRewards
-            ? GenerationWindowGameSettingsViewModel.RandomizedRewardsText
-            : GenerationWindowGameSettingsViewModel.StaticRewardsText;
-        _model.GameSettings.CrystalBossCountStyle = config.RandomizeCrystalBossCounts
-            ? GenerationWindowGameSettingsViewModel.RandomizedRewardsText
-            : GenerationWindowGameSettingsViewModel.StaticRewardsText;
-        _model.GameSettings.CrystalsNeededForGT = config.GanonsTowerCrystalCount;
-        _model.GameSettings.CrystalsNeededForGTMin = config.MinGanonsTowerCrystalCount;
-        _model.GameSettings.CrystalsNeededForGTMax = config.MaxGanonsTowerCrystalCount;
-        _model.GameSettings.CrystalsNeededForGanon = config.GanonCrystalCount;
-        _model.GameSettings.CrystalsNeededForGanonMin = config.MinGanonCrystalCount;
-        _model.GameSettings.CrystalsNeededForGanonMax = config.MaxGanonCrystalCount;
-        _model.GameSettings.BossesNeededForTourian = config.TourianBossCount;
-        _model.GameSettings.BossesNeededForTourianMin = config.MinTourianBossCount;
-        _model.GameSettings.BossesNeededForTourianMax = config.MaxTourianBossCount;
-        _model.GameSettings.OpenPyramid = config.OpenPyramid;
+        _model.GameSettings.RandomizeNumericValues = config.GameModeOptions.RandomizeNumericAmounts;
+        _model.GameSettings.GoalSettings.UpdateViewModel(config.GameModeOptions);
+        _model.GameSettings.AdditionalSettings.UpdateViewModel(config.GameModeOptions);
+
         _model.GameSettings.Race = config.Race;
         _model.GameSettings.DisableSpoilerLog = config.DisableSpoilerLog;
         _model.GameSettings.DisableTrackerHints = config.DisableTrackerHints;
@@ -212,21 +181,11 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
     public void SaveSettings()
     {
         _options.SeedOptions.Seed = _model.Basic.Seed;
-        _options.SeedOptions.KeysanityMode = _model.GameSettings.KeysanityMode;
-        _options.SeedOptions.SkipTourianBossDoor = !_model.GameSettings.RequireBossKeycardForTourian;
-        _options.SeedOptions.PlaceGTBigKeyInGT = _model.GameSettings.PlaceGTBigKeyInGT;
-        _options.SeedOptions.InterGameRewards = _model.GameSettings.InterGameRewards == GenerationWindowGameSettingsViewModel.RandomizedRewardsText;
-        _options.SeedOptions.RandomizeCrystalBossCounts = _model.GameSettings.RandomizedCrystalBossCounts;
-        _options.SeedOptions.GanonsTowerCrystalCount = _model.GameSettings.CrystalsNeededForGT;
-        _options.SeedOptions.MinGanonsTowerCrystalCount = _model.GameSettings.CrystalsNeededForGTMin;
-        _options.SeedOptions.MaxGanonsTowerCrystalCount = _model.GameSettings.CrystalsNeededForGTMax;
-        _options.SeedOptions.GanonCrystalCount = _model.GameSettings.CrystalsNeededForGanon;
-        _options.SeedOptions.MinGanonCrystalCount = _model.GameSettings.CrystalsNeededForGanonMin;
-        _options.SeedOptions.MaxGanonCrystalCount = _model.GameSettings.CrystalsNeededForGanonMax;
-        _options.SeedOptions.TourianBossCount = _model.GameSettings.BossesNeededForTourian;
-        _options.SeedOptions.MinTourianBossCount = _model.GameSettings.BossesNeededForTourianMin;
-        _options.SeedOptions.MaxTourianBossCount = _model.GameSettings.BossesNeededForTourianMax;
-        _options.SeedOptions.OpenPyramid = _model.GameSettings.OpenPyramid;
+
+        _options.SeedOptions.GameModeOptions.RandomizeNumericAmounts = _model.GameSettings.RandomizeNumericValues;
+        _model.GameSettings.GoalSettings.UpdateConfig(_options.SeedOptions.GameModeOptions);
+        _model.GameSettings.AdditionalSettings.UpdateConfig(_options.SeedOptions.GameModeOptions);
+
         _options.SeedOptions.Race = _model.GameSettings.Race;
         _options.SeedOptions.DisableSpoilerLog = _model.GameSettings.DisableSpoilerLog;
         _options.SeedOptions.DisableTrackerHints = _model.GameSettings.DisableTrackerHints;
@@ -286,28 +245,30 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
     {
         _model.PlandoConfig = config;
 
-        _model.GameSettings.KeysanityMode = _model.PlandoConfig.KeysanityMode;
-        _model.GameSettings.RequireBossKeycardForTourian = !_model.PlandoConfig.SkipTourianBossDoor;
-        _model.GameSettings.CrystalBossCountStyle = GenerationWindowGameSettingsViewModel.StaticRewardsText;
-        _model.GameSettings.CrystalsNeededForGT = _model.PlandoConfig.GanonsTowerCrystalCount;
-        _model.GameSettings.CrystalsNeededForGanon = _model.PlandoConfig.GanonCrystalCount;
-        _model.GameSettings.OpenPyramid = _model.PlandoConfig.OpenPyramid;
-        _model.GameSettings.BossesNeededForTourian = _model.PlandoConfig.TourianBossCount;
+        _model.GameSettings.GoalSettings.SelectedGameModeType = _model.PlandoConfig.GameModeType;
+        _model.GameSettings.GoalSettings.RandomizeGoalCounts = false;
+        _model.GameSettings.GoalSettings.GanonCrystalCount = _model.PlandoConfig.GanonCrystalCount;
+        _model.GameSettings.GoalSettings.TourianBossCount = _model.PlandoConfig.TourianBossCount;
+        _model.GameSettings.GoalSettings.SpazersRequired = _model.PlandoConfig.SpazersRequired;
+        _model.GameSettings.GoalSettings.LiftOffOnGoalCompletion = _model.PlandoConfig.LiftOffOnGoalCompletion;
 
-        var hasInterGameRewards = false;
+        _model.GameSettings.AdditionalSettings.GanonsTowerCrystalCount = _model.PlandoConfig.GanonsTowerCrystalCount;
+        _model.GameSettings.AdditionalSettings.KeysanityMode = _model.PlandoConfig.KeysanityMode;
+        _model.GameSettings.AdditionalSettings.SkipTourianBossDoor = _model.PlandoConfig.SkipTourianBossDoor;
+        _model.GameSettings.AdditionalSettings.OpenPyramid = _model.PlandoConfig.OpenPyramid;
+
+        var hasShuffleMetroidBossTokens = false;
         foreach (var reward in _model.PlandoConfig.Rewards)
         {
             var isZ3Region = regions.First(x => x.Region == reward.Key).Type?.IsSubclassOf(typeof(Z3Region)) == true;
             var isZeldaReward = reward.Value.IsInCategory(RewardCategory.Zelda);
             if (isZ3Region != isZeldaReward)
             {
-                hasInterGameRewards = true;
+                hasShuffleMetroidBossTokens = true;
             }
         }
 
-        _model.GameSettings.InterGameRewards = hasInterGameRewards
-            ? GenerationWindowGameSettingsViewModel.RandomizedRewardsText
-            : GenerationWindowGameSettingsViewModel.StaticRewardsText;
+        _model.GameSettings.AdditionalSettings.ShuffleMetroidBossTokens = hasShuffleMetroidBossTokens;
 
         _model.Logic.LogicConfig.Copy(_model.PlandoConfig.Logic);
     }
@@ -581,53 +542,115 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         }
         else
         {
-            HashSet<string> hiddenProperties = [];
+            HashSet<string> hiddenProperties = ["Description", "RandomizeNumericValues"];
             if (_model.IsPlando)
             {
-                _model.GameSettings.HideCrystalBossCount = _model.PlandoConfig?.HideCrystalBossCount == true;
-                hiddenProperties.Add("PlaceGTBigKeyInGT");
-                hiddenProperties.Add("CrystalBossCountStyle");
-                hiddenProperties.Add("CrystalsNeededForGTMin");
-                hiddenProperties.Add("CrystalsNeededForGTMax");
-                hiddenProperties.Add("CrystalsNeededForGanonMin");
-                hiddenProperties.Add("CrystalsNeededForGanonMax");
-                hiddenProperties.Add("BossesNeededForTourianMin");
-                hiddenProperties.Add("BossesNeededForTourianMax");
+                _model.GameSettings.GoalSettings.HideCrystalBossCount = _model.PlandoConfig?.HideGoalCount == true;
+                hiddenProperties.Add("PlaceGTBigKeyInGT");;
+                hiddenProperties.Add("MinGanonsTowerCrystalCount");
+                hiddenProperties.Add("MaxGanonsTowerCrystalCount");
+                hiddenProperties.Add("MinGanonCrystalCount");
+                hiddenProperties.Add("MaxGanonCrystalCount");
+                hiddenProperties.Add("MinTourianBossCount");
+                hiddenProperties.Add("MaxTourianBossCount");
+                hiddenProperties.Add("SpazersInPool");
+                hiddenProperties.Add("MinSpazersInPool");
+                hiddenProperties.Add("MaxSpazersInPool");
+                hiddenProperties.Add("MinSpazersRequired");
+                hiddenProperties.Add("MaxSpazersRequired");
                 hiddenProperties.Add("Race");
                 hiddenProperties.Add("DisableSpoilerLog");
                 hiddenProperties.Add("DisableTrackerHints");
                 hiddenProperties.Add("DisableTrackerSpoilers");
                 hiddenProperties.Add("DisableCheats");
 
-                if (_model.GameSettings.HideCrystalBossCount)
+                if (_model.GameSettings.GoalSettings.HideCrystalBossCount)
                 {
-                    hiddenProperties.Add("CrystalsNeededForGT");
-                    hiddenProperties.Add("CrystalsNeededForGanon");
-                    hiddenProperties.Add("BossesNeededForTourian");
+                    hiddenProperties.Add("GanonsTowerCrystalCount");
+                    hiddenProperties.Add("GanonCrystalCount");
+                    hiddenProperties.Add("TourianBossCount");
+                    hiddenProperties.Add("SpazersRequired");
                 }
+                else
+                {
+                    if (!_model.GameSettings.GoalSettings.IsDefaultGameMode)
+                    {
+                        hiddenProperties.Add("GanonCrystalCount");
+                        hiddenProperties.Add("TourianBossCount");
+                    }
+                    if (!_model.GameSettings.GoalSettings.IsSpazerHunt)
+                    {
+                        hiddenProperties.Add("SpazersRequired");
+                    }
+                }
+
             }
             else
             {
                 hiddenProperties.Add("HideCrystalBossCount");
 
-                if (_model.GameSettings.RandomizedCrystalBossCounts)
+                if (_model.GameSettings.GoalSettings.RandomizeGoalCounts)
                 {
-                    hiddenProperties.Add("CrystalsNeededForGT");
-                    hiddenProperties.Add("CrystalsNeededForGanon");
-                    hiddenProperties.Add("BossesNeededForTourian");
+                    hiddenProperties.Add("GanonsTowerCrystalCount");
+                    hiddenProperties.Add("GanonCrystalCount");
+                    hiddenProperties.Add("TourianBossCount");
+                    hiddenProperties.Add("SpazersInPool");
+                    hiddenProperties.Add("SpazersRequired");
                 }
                 else
                 {
-                    hiddenProperties.Add("CrystalsNeededForGTMin");
-                    hiddenProperties.Add("CrystalsNeededForGTMax");
-                    hiddenProperties.Add("CrystalsNeededForGanonMin");
-                    hiddenProperties.Add("CrystalsNeededForGanonMax");
-                    hiddenProperties.Add("BossesNeededForTourianMin");
-                    hiddenProperties.Add("BossesNeededForTourianMax");
+                    hiddenProperties.Add("MinGanonsTowerCrystalCount");
+                    hiddenProperties.Add("MaxGanonsTowerCrystalCount");
+                    hiddenProperties.Add("MinGanonCrystalCount");
+                    hiddenProperties.Add("MaxGanonCrystalCount");
+                    hiddenProperties.Add("MinTourianBossCount");
+                    hiddenProperties.Add("MaxTourianBossCount");
+                    hiddenProperties.Add("MinSpazersInPool");
+                    hiddenProperties.Add("MaxSpazersInPool");
+                    hiddenProperties.Add("MinSpazersRequired");
+                    hiddenProperties.Add("MaxSpazersRequired");
+                }
+
+                if (!_model.GameSettings.GoalSettings.IsDefaultGameMode)
+                {
+                    hiddenProperties.Add("GanonCrystalCount");
+                    hiddenProperties.Add("MinGanonCrystalCount");
+                    hiddenProperties.Add("MaxGanonCrystalCount");
+                    hiddenProperties.Add("TourianBossCount");
+                    hiddenProperties.Add("MinTourianBossCount");
+                    hiddenProperties.Add("MaxTourianBossCount");
+                }
+
+                if (!_model.GameSettings.GoalSettings.IsSpazerHunt)
+                {
+                    hiddenProperties.Add("SpazersInPool");
+                    hiddenProperties.Add("MinSpazersInPool");
+                    hiddenProperties.Add("MaxSpazersInPool");
+                    hiddenProperties.Add("SpazersRequired");
+                    hiddenProperties.Add("MinSpazersRequired");
+                    hiddenProperties.Add("MaxSpazersRequired");
                 }
             }
 
-            sb.AppendLine("Game Settings");
+            if (_model.GameSettings.AdditionalSettings.KeysanityMode is KeysanityMode.None
+                or KeysanityMode.Zelda)
+            {
+                hiddenProperties.Add("SkipTourianBossDoor");
+            }
+
+            if (_model.GameSettings.AdditionalSettings.KeysanityMode is KeysanityMode.None
+                or KeysanityMode.SuperMetroid)
+            {
+                hiddenProperties.Add("PlaceGTBigKeyInGT");
+            }
+
+            sb.AppendLine("Game Mode");
+            sb.AppendLine(GetObjectSummary(_model.GameSettings.GoalSettings, "  - ", Environment.NewLine, hiddenProperties));
+
+            sb.AppendLine("Additional Settings");
+            sb.AppendLine(GetObjectSummary(_model.GameSettings.AdditionalSettings, "  - ", Environment.NewLine, hiddenProperties));
+
+            sb.AppendLine("Race Settings");
             sb.AppendLine(GetObjectSummary(_model.GameSettings, "  - ", Environment.NewLine, hiddenProperties));
 
             sb.AppendLine("Logic");
@@ -688,6 +711,11 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
             {
                 var valueText = (bool?)value == true ? "Yes" : "No";
                 results.Add($"{prefix}{checkBoxAttribute.CheckBoxText} = {valueText}");
+            }
+            else if (property.Attributes is DynamicFormFieldBoolComboBoxAttribute boolComboBoxAttribute)
+            {
+                var valueText = boolComboBoxAttribute.GetSelectedOption(value as bool?);
+                results.Add($"{prefix}{boolComboBoxAttribute.Label} = {valueText}");
             }
             else
             {

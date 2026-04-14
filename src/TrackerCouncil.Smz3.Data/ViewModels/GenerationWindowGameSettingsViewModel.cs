@@ -4,146 +4,30 @@ using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.Data.ViewModels;
 
-[DynamicFormGroupGroupBox(DynamicFormLayout.Vertical, "Game Settings")]
-[DynamicFormGroupBasic(DynamicFormLayout.SideBySide, "Game Settings Top", parentGroup: "Game Settings")]
-[DynamicFormGroupBasic(DynamicFormLayout.TwoColumns, "Game Settings Bottom", parentGroup: "Game Settings")]
+[DynamicFormGroupBasic(DynamicFormLayout.Vertical, "Random")]
+[DynamicFormGroupGroupBox(DynamicFormLayout.Vertical, "Game Mode")]
+[DynamicFormGroupGroupBox(DynamicFormLayout.Vertical, "Additional Settings")]
 [DynamicFormGroupGroupBox(DynamicFormLayout.TwoColumns, "Race Settings", visibleWhenTrue: nameof(IsSingleplayer))]
 public class GenerationWindowGameSettingsViewModel : ViewModelBase
 {
-    public const string StaticRewardsText = "No";
-    public const string RandomizedRewardsText = "Yes";
-
-    [DynamicFormFieldComboBox(label: "Keysanity:", groupName: "Game Settings Top")]
-    public KeysanityMode KeysanityMode
+    [DynamicFormFieldCheckBox(checkBoxText: "Randomize numeric values", groupName: "Random",
+        alignment: DynamicFormAlignment.Center)]
+    public bool RandomizeNumericValues
     {
         get;
         set
         {
             SetField(ref field, value);
-            OnPropertyChanged(nameof(IsMetroidKeysanity));
-            OnPropertyChanged(nameof(IsZeldaKeysanity));
+            GoalSettings.RandomizeGoalCounts = value;
+            AdditionalSettings.RandomizeGoalCounts = value;
         }
     }
 
-    [DynamicFormFieldCheckBox("Require Crateria Boss Keycard for Tourian", groupName: "Game Settings Top", visibleWhenTrue: nameof(IsMetroidKeysanity))]
-    public bool RequireBossKeycardForTourian { get; set; }
+    [DynamicFormObject(groupName: "Game Mode")]
+    public GenerationWindowGoalSettingsViewModel GoalSettings { get; set; } = new();
 
-    [DynamicFormFieldCheckBox("Place GT Big Key in Ganon's Tower", groupName: "Game Settings Top", visibleWhenTrue: nameof(IsZeldaKeysanity))]
-    public bool PlaceGTBigKeyInGT { get; set; }
-
-    [DynamicFormFieldComboBox(comboBoxOptionsProperty: nameof(CrystalBossCountOptions), label: "Shuffle boss tokens with dungeon rewards:", groupName: "Game Settings Top")]
-    public string InterGameRewards { get; set; }
-
-    [DynamicFormFieldComboBox(comboBoxOptionsProperty: nameof(CrystalBossCountOptions), label: "Randomize needed crystal/boss counts:", groupName: "Game Settings Top")]
-    public string CrystalBossCountStyle
-    {
-        get;
-        set
-        {
-            SetField(ref field, value);
-            OnPropertyChanged(nameof(StaticCrystalBossCounts));
-            OnPropertyChanged(nameof(RandomizedCrystalBossCounts));
-        }
-    } = "";
-
-    [DynamicFormFieldCheckBox("Ganon/GT/Tourian requirements hidden", groupName: "Game Settings Top", visibleWhenTrue: nameof(AlwaysHidden))]
-    public bool HideCrystalBossCount { get; set; }
-
-    [DynamicFormFieldSlider(0, 7, 0, 1, label: "Crystals needed for GT:", groupName: "Game Settings Top", visibleWhenTrue: nameof(StaticCrystalBossCounts))]
-    public int CrystalsNeededForGT { get; set; }
-
-    [DynamicFormFieldSlider(0, 7, 0, 1, label: "Minimum crystals needed for GT:", groupName: "Game Settings Top", visibleWhenTrue: nameof(RandomizedCrystalBossCounts))]
-    public int CrystalsNeededForGTMin
-    {
-        get;
-        set
-        {
-            SetField(ref field, value);
-            if (value > CrystalsNeededForGTMax)
-            {
-                CrystalsNeededForGTMax = value;
-            }
-        }
-    }
-
-    [DynamicFormFieldSlider(0, 7, 0, 1, label: "Maximum crystals needed for GT:", groupName: "Game Settings Top", visibleWhenTrue: nameof(RandomizedCrystalBossCounts))]
-    public int CrystalsNeededForGTMax
-    {
-        get;
-        set
-        {
-            SetField(ref field, value);
-            if (value < CrystalsNeededForGTMin)
-            {
-                CrystalsNeededForGTMin = value;
-            }
-        }
-    }
-
-    [DynamicFormFieldSlider(0, 7, 0, 1, label: "Crystals needed for Ganon:", groupName: "Game Settings Top", visibleWhenTrue: nameof(StaticCrystalBossCounts))]
-    public int CrystalsNeededForGanon { get; set; }
-
-    [DynamicFormFieldSlider(0, 7, 0, 1, label: "Minimum crystals needed for Ganon:", groupName: "Game Settings Top", visibleWhenTrue: nameof(RandomizedCrystalBossCounts))]
-    public int CrystalsNeededForGanonMin
-    {
-        get;
-        set
-        {
-            SetField(ref field, value);
-            if (value > CrystalsNeededForGanonMax)
-            {
-                CrystalsNeededForGanonMax = value;
-            }
-        }
-    }
-
-    [DynamicFormFieldSlider(0, 7, 0, 1, label: "Maximum crystals needed for Ganon:", groupName: "Game Settings Top", visibleWhenTrue: nameof(RandomizedCrystalBossCounts))]
-    public int CrystalsNeededForGanonMax
-    {
-        get;
-        set
-        {
-            SetField(ref field, value);
-            if (value < CrystalsNeededForGanonMin)
-            {
-                CrystalsNeededForGanonMin = value;
-            }
-        }
-    }
-
-    [DynamicFormFieldSlider(0, 4, 0, 1, label: "Bosses needed for Tourian:", groupName: "Game Settings Top", visibleWhenTrue: nameof(StaticCrystalBossCounts))]
-    public int BossesNeededForTourian { get; set; }
-
-    [DynamicFormFieldSlider(0, 4, 0, 1, label: "Minimum bosses needed for Tourian:", groupName: "Game Settings Top", visibleWhenTrue: nameof(RandomizedCrystalBossCounts))]
-    public int BossesNeededForTourianMin
-    {
-        get;
-        set
-        {
-            SetField(ref field, value);
-            if (value > BossesNeededForTourianMax)
-            {
-                BossesNeededForTourianMax = value;
-            }
-        }
-    }
-
-    [DynamicFormFieldSlider(0, 4, 0, 1, label: "Maximum bosses needed for Tourian:", groupName: "Game Settings Top", visibleWhenTrue: nameof(RandomizedCrystalBossCounts))]
-    public int BossesNeededForTourianMax
-    {
-        get;
-        set
-        {
-            SetField(ref field, value);
-            if (value < BossesNeededForTourianMin)
-            {
-                BossesNeededForTourianMin = value;
-            }
-        }
-    }
-
-    [DynamicFormFieldCheckBox("Open Ganon's pyramid by default", groupName: "Game Settings Bottom")]
-    public bool OpenPyramid { get; set; }
+    [DynamicFormObject(groupName: "Additional Settings")]
+    public GenerationWindowAdditionalSettingsViewModel AdditionalSettings { get; set; } = new();
 
     [DynamicFormFieldCheckBox("Generate race seed", groupName: "Race Settings")]
     public bool Race { get; set; }
@@ -159,15 +43,6 @@ public class GenerationWindowGameSettingsViewModel : ViewModelBase
 
     [DynamicFormFieldCheckBox("Disable cheats", groupName: "Race Settings")]
     public bool DisableCheats { get; set; }
-
-    public bool IsMetroidKeysanity => KeysanityMode is KeysanityMode.Both or KeysanityMode.SuperMetroid;
-
-    public bool IsZeldaKeysanity => KeysanityMode is KeysanityMode.Both or KeysanityMode.Zelda;
-    public bool AlwaysHidden => false;
-
-    public bool StaticCrystalBossCounts => CrystalBossCountStyle == StaticRewardsText;
-    public bool RandomizedCrystalBossCounts => CrystalBossCountStyle == RandomizedRewardsText;
-    public string[] CrystalBossCountOptions => [StaticRewardsText, RandomizedRewardsText];
 
     public bool IsMultiplayer
     {

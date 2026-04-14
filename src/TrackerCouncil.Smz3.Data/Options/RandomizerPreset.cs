@@ -58,10 +58,13 @@ public class RandomizerPreset
                 Order = 1,
                 Config = new Config()
                 {
-                    GanonCrystalCount = 0,
-                    GanonsTowerCrystalCount = 0,
-                    TourianBossCount = 0,
-                    OpenPyramid = true
+                    GameModeOptions =  new GameModeOptions()
+                    {
+                        GanonCrystalCount = 0,
+                        GanonsTowerCrystalCount = 0,
+                        TourianBossCount = 0,
+                        OpenPyramid = true
+                    },
                 }
             },
             new RandomizerPreset()

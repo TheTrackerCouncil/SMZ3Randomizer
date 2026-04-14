@@ -36,6 +36,7 @@ public static class Program
         (typeof(RoomConfig), "rooms.json"),
         (typeof(UIConfig), "ui.json"),
         (typeof(MetadataConfig), "metadata.json"),
+        (typeof(AltGameModesConfig), "alt_game_modes.json"),
     };
 
     private static IServiceProvider? _services;
@@ -219,6 +220,12 @@ public static class Program
         PopulateExample(templateResponseConfig, true);
         var exampleMetadataConfig = MetadataConfig.Example();
         WriteTemplate(templatePath, "metadata", templateMetadataConfig, exampleMetadataConfig);
+
+        // Alt Game Modes Template
+        var altGameModeConfig = new AltGameModesConfig();
+        PopulateExample(altGameModeConfig, true);
+        var exampleAltGameModeConfig = AltGameModesConfig.Example();
+        WriteTemplate(templatePath, "alt_game_modes", altGameModeConfig, exampleAltGameModeConfig);
     }
 
     private static void WriteTemplate(string templatePath, string type, object data, object? example)

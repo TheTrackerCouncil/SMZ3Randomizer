@@ -717,6 +717,21 @@ public class GameService : TrackerModule, IGameService
     /// </summary>
     public bool PlayerRecentlyKilled { get; private set; }
 
+    /// <inheritdoc />
+    public void TrySetGameModeComplete()
+    {
+        _logger.LogInformation("Marking alt game mode as complete");
+        _snesConnectorService.MakeMemoryRequest(new SnesSingleMemoryRequest()
+        {
+            MemoryRequestType = SnesMemoryRequestType.UpdateMemory,
+            SnesMemoryDomain = SnesMemoryDomain.CartridgeSave,
+            AddressFormat = AddressFormat.Snes9x,
+            SniMemoryMapping = MemoryMapping.ExHiRom,
+            Address = 0xa176f0,
+            Data = [0x01]
+        });
+    }
+
     private async void MarkRecentlyKilled()
     {
         PlayerRecentlyKilled = true;

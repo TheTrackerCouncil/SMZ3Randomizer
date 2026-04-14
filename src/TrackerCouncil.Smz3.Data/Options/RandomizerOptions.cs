@@ -153,6 +153,28 @@ public class RandomizerOptions : INotifyPropertyChanged
                 settingsUpdated = true;
             }
 
+            // Update to game mode options
+#pragma warning disable CS0618 // Type or member is obsolete
+            if (options.SeedOptions.GanonCrystalCount != null)
+            {
+                options.SeedOptions.GameModeOptions.GanonCrystalCount = options.SeedOptions.GanonCrystalCount.Value;
+                options.SeedOptions.GameModeOptions.GanonsTowerCrystalCount = options.SeedOptions.GanonsTowerCrystalCount!.Value;
+                options.SeedOptions.GameModeOptions.TourianBossCount = options.SeedOptions.TourianBossCount!.Value;
+                options.SeedOptions.GameModeOptions.SkipTourianBossDoor = options.SeedOptions.SkipTourianBossDoor!.Value;
+                options.SeedOptions.GameModeOptions.KeysanityMode = options.SeedOptions.KeysanityMode!.Value;
+                options.SeedOptions.GameModeOptions.PlaceGTBigKeyInGT = options.SeedOptions.PlaceGTBigKeyInGT!.Value;
+                options.SeedOptions.GameModeOptions.OpenPyramid = options.SeedOptions.OpenPyramid!.Value;
+                options.SeedOptions.GanonCrystalCount = null;
+                options.SeedOptions.GanonsTowerCrystalCount = null;
+                options.SeedOptions.TourianBossCount = null;
+                options.SeedOptions.SkipTourianBossDoor = null;
+                options.SeedOptions.KeysanityMode = null;
+                options.SeedOptions.PlaceGTBigKeyInGT = null;
+                options.SeedOptions.OpenPyramid = null;
+                settingsUpdated = true;
+            }
+#pragma warning restore CS0618 // Type or member is obsolete
+
             if (settingsUpdated)
             {
                 options.Save();
@@ -204,10 +226,6 @@ public class RandomizerOptions : INotifyPropertyChanged
         return new Config()
         {
             GameMode = GameMode.Normal,
-            KeysanityMode = SeedOptions.KeysanityMode,
-            InterGameRewards = SeedOptions.InterGameRewards,
-            SkipTourianBossDoor = SeedOptions.SkipTourianBossDoor,
-            PlaceGTBigKeyInGT = SeedOptions.PlaceGTBigKeyInGT,
             Race = SeedOptions.Race,
             ItemPlacementRule = SeedOptions.ItemPlacementRule,
             DisableSpoilerLog = SeedOptions.DisableSpoilerLog,
@@ -225,19 +243,9 @@ public class RandomizerOptions : INotifyPropertyChanged
             LocationItems = SeedOptions.LocationItems,
             LogicConfig = LogicConfig.Clone(),
             CasPatches = PatchOptions.CasPatches.Clone(),
+            GameModeOptions = SeedOptions.GameModeOptions.Clone(),
             CopySeedAndRaceSettings = true,
             Seed = SeedOptions.Seed,
-            RandomizeCrystalBossCounts = SeedOptions.RandomizeCrystalBossCounts,
-            GanonsTowerCrystalCount = SeedOptions.GanonsTowerCrystalCount,
-            MinGanonsTowerCrystalCount = SeedOptions.MinGanonsTowerCrystalCount,
-            MaxGanonsTowerCrystalCount = SeedOptions.MaxGanonsTowerCrystalCount,
-            GanonCrystalCount = SeedOptions.GanonCrystalCount,
-            MinGanonCrystalCount = SeedOptions.MinGanonCrystalCount,
-            MaxGanonCrystalCount =  SeedOptions.MaxGanonCrystalCount,
-            OpenPyramid = SeedOptions.OpenPyramid,
-            TourianBossCount = SeedOptions.TourianBossCount,
-            MinTourianBossCount = SeedOptions.MinTourianBossCount,
-            MaxTourianBossCount = SeedOptions.MaxTourianBossCount,
             MetroidControls = PatchOptions.MetroidControls.Clone(),
             ItemOptions = SeedOptions.ItemOptions,
         };

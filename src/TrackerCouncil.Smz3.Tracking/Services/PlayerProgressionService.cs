@@ -102,7 +102,7 @@ internal class PlayerProgressionService (IWorldAccessor world) : IPlayerProgress
             case Room { Region: SMRegion }:
                 return GetProgression(assumeKeys: !_world.World.Config.MetroidKeysanity);
             default:
-                return GetProgression(assumeKeys: _world.World.Config.KeysanityMode == KeysanityMode.None);
+                return GetProgression(assumeKeys: _world.World.Config.GameModeOptions.KeysanityMode == KeysanityMode.None);
         }
     }
 

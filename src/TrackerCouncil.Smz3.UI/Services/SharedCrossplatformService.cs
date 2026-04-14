@@ -311,31 +311,40 @@ public class SharedCrossplatformService(
 
     public async Task<RandomizerOptions?> OpenGenerationWindow(string? plandoConfig = null, bool isMultiplayer = false, ParsedRomDetails? importDetails = null)
     {
-        LookupMsus();
-
-        using var scope = serviceProvider.CreateScope();
-
-        var window = scope.ServiceProvider.GetRequiredService<GenerationSettingsWindow>();
-
-        if (plandoConfig != null && !window.LoadPlando(plandoConfig, out var error))
+        try
         {
-            DisplayError(error ?? "Could not load plando file");
+            LookupMsus();
+
+            using var scope = serviceProvider.CreateScope();
+
+            var window = scope.ServiceProvider.GetRequiredService<GenerationSettingsWindow>();
+
+            if (plandoConfig != null && !window.LoadPlando(plandoConfig, out var error))
+            {
+                DisplayError(error ?? "Could not load plando file");
+                return null;
+            }
+            else if (isMultiplayer)
+            {
+                window.EnableMultiplayerMode();
+            }
+            else if (importDetails != null)
+            {
+                window.EnableImportMode(importDetails);
+            }
+
+            await window.ShowDialog(ParentWindow);
+
+            if (window.DialogResult)
+            {
+                return Options;
+            }
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "An unhandled exception occurred when opening generation window");
+            DisplayError("Could not open generation window");
             return null;
-        }
-        else if (isMultiplayer)
-        {
-            window.EnableMultiplayerMode();
-        }
-        else if (importDetails != null)
-        {
-            window.EnableImportMode(importDetails);
-        }
-
-        await window.ShowDialog(ParentWindow);
-
-        if (window.DialogResult)
-        {
-            return Options;
         }
 
         return null;

@@ -8,7 +8,6 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using Newtonsoft.Json;
-using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Data.Logic;
 using TrackerCouncil.Smz3.Data.ParsedRom;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
@@ -214,7 +213,7 @@ public class Config
     };
 
     public GameMode GameMode { get; set; } = GameMode.Normal;
-    public KeysanityMode KeysanityMode { get; set; } = KeysanityMode.None;
+
     public SMLogic LegacyMetroidLogic { get; set; } = SMLogic.Normal;
     public bool Race { get; set; } = false;
     public bool DisableSpoilerLog { get; set; } = false;
@@ -240,7 +239,7 @@ public class Config
 
     public bool SingleWorld => GameMode == GameMode.Normal;
     public bool MultiWorld => GameMode == GameMode.Multiworld && RomGenerator == RomGenerator.Cas;
-    public bool Keysanity => KeysanityMode != KeysanityMode.None;
+    public bool Keysanity => GameModeOptions.KeysanityMode != KeysanityMode.None;
     public int Id { get; set; }
     public string PlayerName { get; set; } = "";
     public string PhoneticName { get; set; } = "";
@@ -256,29 +255,27 @@ public class Config
     public MultiplayerPlayerGenerationData? MultiplayerPlayerGenerationData { get; set; }
     public ItemPlacementRule ItemPlacementRule { get; set; }
     public int? UniqueHintCount { get; set; }
-    public bool ZeldaKeysanity => KeysanityMode == KeysanityMode.Both || KeysanityMode == KeysanityMode.Zelda;
-    public bool MetroidKeysanity => KeysanityMode == KeysanityMode.Both || KeysanityMode == KeysanityMode.SuperMetroid;
-    public bool KeysanityForRegion(Region region) => KeysanityMode == KeysanityMode.Both || (region is Z3Region && ZeldaKeysanity) || (region is SMRegion && MetroidKeysanity);
-    public bool RandomizeCrystalBossCounts { get; set; }
-    public int GanonsTowerCrystalCount { get; set; } = 7;
-    public int MinGanonsTowerCrystalCount { get; set; } = 7;
-    public int MaxGanonsTowerCrystalCount { get; set; } = 7;
-    public int GanonCrystalCount { get; set; } = 7;
-    public int MinGanonCrystalCount { get; set; } = 7;
-    public int MaxGanonCrystalCount { get; set; } = 7;
-    public bool OpenPyramid { get; set; }
-    public int TourianBossCount { get; set; }  = 4;
-    public int MinTourianBossCount { get; set; }  = 4;
-    public int MaxTourianBossCount { get; set; }  = 4;
-    public bool InterGameRewards { get; set; }
-    public bool SkipTourianBossDoor { get; set; }
-    public bool PlaceGTBigKeyInGT { get; set; }
+    public bool ZeldaKeysanity => GameModeOptions.KeysanityMode is KeysanityMode.Both or KeysanityMode.Zelda;
+    public bool MetroidKeysanity => GameModeOptions.KeysanityMode is KeysanityMode.Both or KeysanityMode.SuperMetroid;
+    public bool KeysanityForRegion(Region region) => GameModeOptions.KeysanityMode == KeysanityMode.Both || (region is Z3Region && ZeldaKeysanity) || (region is SMRegion && MetroidKeysanity);
+
     public IDictionary<string, int> ItemOptions { get; set; } = new Dictionary<string, int>();
     public string? RandomizerVersion { get; set; }
     [System.Text.Json.Serialization.JsonIgnore, JsonIgnore]
     public bool IsLocalConfig { get; set; } = true;
     [System.Text.Json.Serialization.JsonIgnore, JsonIgnore]
     public ParsedRomDetails? ParsedRomDetails { get; set; }
+
+    public GameModeOptions GameModeOptions { get; set; } = new();
+
+    [Obsolete("Use GameModeOptions")] public int? GanonsTowerCrystalCount { get; set; }
+    [Obsolete("Use GameModeOptions")] public int? GanonCrystalCount { get; set; }
+    [Obsolete("Use GameModeOptions")] public int? TourianBossCount { get; set; }
+    [Obsolete("Use GameModeOptions")] public KeysanityMode KeysanityMode { get; set; } = KeysanityMode.None;
+    [Obsolete("Use GameModeOptions")] public bool SkipTourianBossDoor { get; set; }
+    [Obsolete("Use GameModeOptions")] public bool PlaceGTBigKeyInGT { get; set; }
+    [Obsolete("Use GameModeOptions")] public bool ShuffleMetroidBossTokens { get; set; }
+    [Obsolete("Use GameModeOptions")] public bool OpenPyramid { get; set; }
 
     public Config SeedOnly()
     {

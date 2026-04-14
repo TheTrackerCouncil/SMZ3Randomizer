@@ -38,11 +38,18 @@ public class PlandoConfig // TODO: Consider using this instead of SeedData?
     public PlandoConfig(World world)
     {
         Seed = world.Config.Seed;
-        KeysanityMode = world.Config.KeysanityMode;
-        GanonsTowerCrystalCount = world.Config.GanonCrystalCount;
-        GanonCrystalCount = world.Config.GanonCrystalCount;
-        OpenPyramid = world.Config.OpenPyramid;
-        TourianBossCount = world.Config.TourianBossCount;
+
+        GameModeType = world.Config.GameModeOptions.SelectedGameModeType;
+        GanonsTowerCrystalCount = world.Config.GameModeOptions.GanonCrystalCount;
+        GanonCrystalCount = world.Config.GameModeOptions.GanonCrystalCount;
+        TourianBossCount = world.Config.GameModeOptions.TourianBossCount;
+        SpazersRequired = world.Config.GameModeOptions.SpazersRequired;
+        LiftOffOnGoalCompletion = world.Config.GameModeOptions.LiftOffOnGoalCompletion;
+
+        KeysanityMode = world.Config.GameModeOptions.KeysanityMode;
+        SkipTourianBossDoor = world.Config.GameModeOptions.SkipTourianBossDoor;
+        OpenPyramid = world.Config.GameModeOptions.OpenPyramid;
+
         Items = world.Locations
             .ToDictionary(x => x.ToString(), x => x.Item.Type);
         Rewards = world.Regions.Where(x => x is IHasReward r && !r.RewardType.IsInCategory(RewardCategory.NonRandomized))
@@ -77,9 +84,9 @@ public class PlandoConfig // TODO: Consider using this instead of SeedData?
     public string Seed { get; set; } = "";
 
     /// <summary>
-    /// Gets or sets a value indicating whether Keysanity should be enabled.
+    /// The selected game mode type
     /// </summary>
-    public KeysanityMode KeysanityMode { get; set; }
+    public GameModeType GameModeType { get; set; }
 
     /// <summary>
     /// Gets or sets the number of crystals for entering GT
@@ -92,14 +99,29 @@ public class PlandoConfig // TODO: Consider using this instead of SeedData?
     public int GanonCrystalCount { get; set; } = 7;
 
     /// <summary>
-    /// Gets or sets if the pyramid should be open by default
-    /// </summary>
-    public bool OpenPyramid { get; set; } = false;
-
-    /// <summary>
     /// Gets or sets the number of SM Golden Bosses need to be defeated to enter Tourian
     /// </summary>
     public int TourianBossCount { get; set; } = 4;
+
+    /// <summary>
+    /// The number of spazers needed to finish the game in Spazer Hunt
+    /// </summary>
+    public int SpazersRequired { get; set; }
+
+    /// <summary>
+    /// If you can immediately lift off after finishing the goal
+    /// </summary>
+    public bool LiftOffOnGoalCompletion { get; set; }
+
+    /// <summary>
+    /// If the GT/Ganon/Tourian requirements should be hidden from the plando summary in the generation window
+    /// </summary>
+    public bool HideGoalCount { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether Keysanity should be enabled.
+    /// </summary>
+    public KeysanityMode KeysanityMode { get; set; }
 
     /// <summary>
     /// If in Metroid keysanity Tourian requires the Crateria Boss Keycard item
@@ -107,9 +129,9 @@ public class PlandoConfig // TODO: Consider using this instead of SeedData?
     public bool SkipTourianBossDoor { get; set; }
 
     /// <summary>
-    /// If the GT/Ganon/Tourian requirements should be hidden from the plando summary in the generation window
+    /// Gets or sets if the pyramid should be open by default
     /// </summary>
-    public bool HideCrystalBossCount { get; set; }
+    public bool OpenPyramid { get; set; } = false;
 
     /// <summary>
     /// Gets or sets the logic options that apply to the plando.

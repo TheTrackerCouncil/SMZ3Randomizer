@@ -66,12 +66,12 @@ public class DarkWorldNorthEast : Z3Region
                );
     }
 
-    public void UpdateGanonAccessibility(Progression progression, Progression assumedKeyProgression)
+    public void UpdateGanonAccessibility(Progression progression, Progression assumedKeyProgression, bool hasAltGameMode, bool isAltGameModeComplete)
     {
         Accessibility NewAccessibility;
 
         var ganonCrystalRequirement = World.State?.GanonCrystalCount == null
-            ? Config.GanonCrystalCount
+            ? Config.GameModeOptions.GanonCrystalCount
             : World.State?.MarkedGanonCrystalCount ?? 7;
 
         var numAcquiredCrystals = World.Rewards.Count(x =>
@@ -90,8 +90,11 @@ public class DarkWorldNorthEast : Z3Region
                               World.GanonsTower.Locations.All(x => x.IsAvailable(assumedKeyProgression)) &&
                               World.GanonsTower.CanBeatBoss(assumedKeyProgression, true));
 
-            var isPyramidOpen = World.Config.OpenPyramid || canClimbGt;
-            var canHurtGanon = numAcquiredCrystals >= ganonCrystalRequirement && progression.MasterSword &&
+            var isPyramidOpen = World.Config.GameModeOptions.OpenPyramid || canClimbGt;
+            var hasMetGoal = hasAltGameMode
+                ? isAltGameModeComplete
+                : numAcquiredCrystals >= ganonCrystalRequirement;
+            var canHurtGanon = hasMetGoal && progression.MasterSword &&
                                (progression.Lamp || progression.FireRod);
 
             NewAccessibility = canAccessPyramid && isPyramidOpen && canHurtGanon
@@ -109,7 +112,7 @@ public class DarkWorldNorthEast : Z3Region
                                                            World.LegacyWorld.IsLocationAccessible((int)x.Id,
                                                                assumedKeyProgression.LegacyProgression)));
 
-            var isPyramidOpen = World.Config.OpenPyramid || canClimbGt;
+            var isPyramidOpen = World.Config.GameModeOptions.OpenPyramid || canClimbGt;
             var canHurtGanon = numAcquiredCrystals >= ganonCrystalRequirement && progression.MasterSword &&
                                (progression.Lamp || progression.FireRod);
 

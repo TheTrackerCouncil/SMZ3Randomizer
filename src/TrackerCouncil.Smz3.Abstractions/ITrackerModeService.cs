@@ -60,6 +60,11 @@ public interface ITrackerModeService
     public event EventHandler<TrackerEventArgs>? CheatsToggled;
 
     /// <summary>
+    /// Occurs when a multiplayer sync is received
+    /// </summary>
+    public event EventHandler? MultiplayerSyncReceived;
+
+    /// <summary>
     /// Toggles Go Mode on.
     /// </summary>
     /// <param name="confidence">The speech recognition confidence.</param>
@@ -113,4 +118,9 @@ public interface ITrackerModeService
     /// </summary>
     /// <param name="confidence">The speech recognition confidence.</param>
     public void DisableCheats(float? confidence = null);
+
+    /// <summary>
+    /// Notifies of multiplayer syncs from players
+    /// </summary>
+    public void OnMultiplayerSync();
 }

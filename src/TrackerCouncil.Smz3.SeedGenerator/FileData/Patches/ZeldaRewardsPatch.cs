@@ -40,7 +40,7 @@ public class ZeldaRewardsPatch : RomPatch
             yield return patch;
         }
 
-        if (data.Config.InterGameRewards)
+        if (data.Config.GameModeOptions.ShuffleMetroidBossTokens)
         {
             var bossRegions = regions.Where(x => x.RewardType.IsInCategory(RewardCategory.Metroid)).OrderBy(x => x.RewardType);
             foreach (var patch in RewardPatches(bossRegions, [1, 2, 3, 4], BossTokenValues))

@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using TrackerCouncil.Smz3.Shared;
+﻿using System;
+using System.Collections.Generic;
 using TrackerCouncil.Smz3.Shared.Enums;
 using YamlDotNet.Serialization;
 
@@ -12,8 +12,6 @@ public class SeedOptions
 {
     [YamlIgnore]
     public string Seed { get; set; } = "";
-
-    public KeysanityMode KeysanityMode { get; set; } = KeysanityMode.None;
 
     public ItemPlacementRule ItemPlacementRule { get; set; } = ItemPlacementRule.Anywhere;
 
@@ -28,22 +26,18 @@ public class SeedOptions
     public bool DisableCheats { get; set; }
 
     public int? UniqueHintCount { get; set; }
-    public bool InterGameRewards { get; set; }
-    public bool SkipTourianBossDoor { get; set; }
-    public bool PlaceGTBigKeyInGT { get; set; }
-    public bool RandomizeCrystalBossCounts { get; set; }
-    public int GanonsTowerCrystalCount { get; set; } = 7;
-    public int MinGanonsTowerCrystalCount { get; set; } = 7;
-    public int MaxGanonsTowerCrystalCount { get; set; } = 7;
-    public int GanonCrystalCount { get; set; } = 7;
-    public int MinGanonCrystalCount { get; set; } = 7;
-    public int MaxGanonCrystalCount { get; set; } = 7;
-    public bool OpenPyramid { get; set; } = false;
-    public int TourianBossCount { get; set; } = 4;
-    public int MinTourianBossCount { get; set; } = 4;
-    public int MaxTourianBossCount { get; set; } = 4;
+
+    public GameModeOptions GameModeOptions { get; set; } = new();
 
     public IDictionary<LocationId, int> LocationItems { get; set; } = new Dictionary<LocationId, int>();
 
     public IDictionary<string, int> ItemOptions { get; set; } = new Dictionary<string, int>();
+
+    [Obsolete("Use GameModeOptions")] public int? GanonsTowerCrystalCount { get; set; }
+    [Obsolete("Use GameModeOptions")] public int? GanonCrystalCount { get; set; }
+    [Obsolete("Use GameModeOptions")] public int? TourianBossCount { get; set; }
+    [Obsolete("Use GameModeOptions")] public bool? SkipTourianBossDoor { get; set; }
+    [Obsolete("Use GameModeOptions")] public bool? PlaceGTBigKeyInGT { get; set; }
+    [Obsolete("Use GameModeOptions")] public bool? OpenPyramid { get; set; }
+    [Obsolete("Use GameModeOptions")] public KeysanityMode? KeysanityMode { get; set; }
 }

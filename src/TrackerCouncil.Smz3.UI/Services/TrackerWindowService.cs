@@ -15,6 +15,7 @@ using SnesConnectorLibrary;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigTypes;
 using TrackerCouncil.Smz3.Data.Options;
+using TrackerCouncil.Smz3.Data.ViewModels;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
@@ -82,8 +83,8 @@ public class TrackerWindowService(
 
         tracker.SpeechRecognized += (sender, args) =>
         {
-            _model.SpeechConfidence = $"{args.Confidence:P2}";
-            _model.SpeechPhrase = $"“{args.Phrase}”";
+            _model.SpeechConfidence = $"{args.Confidence:P0}";
+            _model.SpeechPhrase = args.Phrase?.Trim() ?? "";
         };
 
         tracker.VoiceRecognitionEnabledChanged += (sender, args) =>
@@ -96,7 +97,7 @@ public class TrackerWindowService(
             }
             else
             {
-                _model.SpeechConfidence = "";
+                _model.SpeechConfidence = "Voice Enabled";
                 _model.SpeechPhrase = "";
             }
         };
@@ -229,14 +230,30 @@ public class TrackerWindowService(
 
         _model.AutoTrackerConnected = tracker.AutoTracker.IsConnected;
         _model.AutoTrackerEnabled = tracker.AutoTracker.IsEnabled;
+        UpdateGoals();
 
         tracker.AutoTracker.AutoTrackerEnabled += AutoTrackerOnAutoTrackerEnabled;
         tracker.AutoTracker.AutoTrackerDisabled += AutoTrackerOnAutoTrackerEnabled;
         tracker.AutoTracker.AutoTrackerConnected += AutoTrackerOnAutoTrackerEnabled;
         tracker.AutoTracker.AutoTrackerDisconnected += AutoTrackerOnAutoTrackerEnabled;
         tracker.AutoTracker.AutoTrackerConnectorChanged += AutoTrackerOnAutoTrackerConnectorChanged;
+        tracker.AltGameModeService.GoalStateChanged += AltGameModeServiceOnGoalStateChanged;
 
         tracker.AutoTracker.SetConnector(Options.GeneralOptions.SnesConnectorSettings);
+    }
+
+    private void AltGameModeServiceOnGoalStateChanged(object? sender, EventArgs e)
+    {
+        UpdateGoals();
+    }
+
+    private void UpdateGoals()
+    {
+        _model.Goals = tracker.AltGameModeService.GetGoalUiDetails().Select(x => new GoalUiDetails
+        {
+            Icon = uiService.GetSpritePath(x.IconCategory, x.Icon, out _) ?? "",
+            Text = x.Text
+        }).ToList();
     }
 
     private void AutoTrackerOnAutoTrackerConnectorChanged(object? sender, EventArgs e)
@@ -683,7 +700,7 @@ public class TrackerWindowService(
         string? rewardImage = null;
 
         // If this is a parsed AP/Mainline rom, also show the reward for the boss
-        if (world.World.Config.RomGenerator != RomGenerator.Cas || world.World.Config.InterGameRewards)
+        if (world.World.Config.RomGenerator != RomGenerator.Cas || world.World.Config.GameModeOptions.ShuffleMetroidBossTokens)
         {
             rewardRegion = boss.Region as IHasReward;
             rewardImage = rewardRegion?.RewardType.GetCategories().Length > 0
@@ -798,6 +815,11 @@ public class TrackerWindowService(
 
     private async Task<MessageWindowResult?> OpenMessageWindow(string message, MessageWindowIcon icon = MessageWindowIcon.Error, MessageWindowButtons buttons = MessageWindowButtons.OK)
     {
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            return await Dispatcher.UIThread.InvokeAsync(async () => await OpenMessageWindow(message, icon, buttons));
+        }
+
         var window = new MessageWindow(new MessageWindowRequest()
         {
             Message = message,

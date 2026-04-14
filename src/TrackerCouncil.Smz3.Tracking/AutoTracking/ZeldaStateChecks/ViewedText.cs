@@ -76,11 +76,19 @@ public class ViewedText : IZeldaStateCheck
         }
         else if (currentState.OverworldScreen == 67 && currentState.IsWithinRegion(2169, 168, 2184, 169) && World.State?.GanonsTowerCrystalCount != World.State?.MarkedGanonsTowerCrystalCount)
         {
-            tracker.GameStateTracker.UpdateGanonsTowerRequirement(World.State?.GanonsTowerCrystalCount ?? World.Config.GanonsTowerCrystalCount, true);
+            tracker.GameStateTracker.UpdateGanonsTowerRequirement(World.State?.GanonsTowerCrystalCount ?? World.Config.GameModeOptions.GanonsTowerCrystalCount, true);
         }
-        else if (currentState.OverworldScreen == 91 && currentState.IsWithinRegion(1961, 1784, 1976, 1785) && World.State?.GanonCrystalCount != World.State?.MarkedGanonCrystalCount)
+        else if (currentState.OverworldScreen == 91 && currentState.IsWithinRegion(1961, 1784, 1976, 1785))
         {
-            tracker.GameStateTracker.UpdateGanonRequirement(World.State?.GanonCrystalCount ?? World.Config.GanonCrystalCount, true);
+            if (tracker.LocalConfig?.GameModeOptions.SelectedGameModeType == GameModeType.Vanilla &&
+                World.State?.GanonCrystalCount != World.State?.MarkedGanonCrystalCount)
+            {
+                tracker.GameStateTracker.UpdateGanonRequirement(World.State?.GanonCrystalCount ?? World.Config.GameModeOptions.GanonCrystalCount, true);
+            }
+            else if (tracker.AltGameModeService.HasAltGameMode)
+            {
+                tracker.AltGameModeService.OnViewingPyramidText();
+            }
         }
         // Viewed Bombos tablet text
         else if (currentState is { OverworldScreen: 48, LinkState: 0 } &&

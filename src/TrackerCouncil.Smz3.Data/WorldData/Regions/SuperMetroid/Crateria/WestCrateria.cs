@@ -114,12 +114,12 @@ public class WestCrateria : SMRegion
         }
     }
 
-    public void UpdateMotherBrainAccessibility(Progression progression)
+    public void UpdateMotherBrainAccessibility(Progression progression, bool hasAltGameMode, bool isAltGameModeComplete)
     {
         Accessibility NewAccessibility;
 
         var tourianBossRequirement = World.State?.TourianBossCount == null
-            ? Config.TourianBossCount
+            ? Config.GameModeOptions.TourianBossCount
             : World.State?.MarkedTourianBossCount ?? 4;
 
         if (World.Bosses.First(x => x.Type == BossType.MotherBrain).Defeated)
@@ -129,14 +129,16 @@ public class WestCrateria : SMRegion
         else if (World.LegacyWorld == null)
         {
             var canAccessStatueRoom = Terminator.Locations.First().IsAvailable(progression) &&
-                                      (!World.Config.MetroidKeysanity || World.Config.SkipTourianBossDoor ||
+                                      (!World.Config.MetroidKeysanity || World.Config.GameModeOptions.SkipTourianBossDoor ||
                                        progression.CardCrateriaBoss);
 
-            var rewardCount = World.Config.InterGameRewards
+            var rewardCount = World.Config.GameModeOptions.ShuffleMetroidBossTokens
                 ? World.Rewards.Count(x => x.Type is RewardType.KraidToken or RewardType.DraygonToken or RewardType.RidleyToken or RewardType.PhantoonToken && x.HasReceivedReward)
                 : World.GoldenBosses.Count(x => x.Defeated);
 
-            var canEnterTourian = rewardCount >= World.Config.TourianBossCount;
+            var canEnterTourian = hasAltGameMode
+                ? isAltGameModeComplete
+                : rewardCount >= World.Config.GameModeOptions.TourianBossCount;
 
             NewAccessibility = canAccessStatueRoom && canEnterTourian
                 ? Accessibility.Available
@@ -145,7 +147,7 @@ public class WestCrateria : SMRegion
         else
         {
             var canAccessStatueRoom = World.LegacyWorld.IsLocationAccessible((int)LocationId.CrateriaTerminator, progression.LegacyProgression) &&
-                                      (!World.Config.MetroidKeysanity || World.Config.SkipTourianBossDoor ||
+                                      (!World.Config.MetroidKeysanity || World.Config.GameModeOptions.SkipTourianBossDoor ||
                                        progression.CardCrateriaBoss);
 
             var canEnterTourian = World.Rewards.Count(x => x.MarkedReward?.IsInCategory(RewardCategory.Metroid) == true && x.HasReceivedReward) >= tourianBossRequirement;

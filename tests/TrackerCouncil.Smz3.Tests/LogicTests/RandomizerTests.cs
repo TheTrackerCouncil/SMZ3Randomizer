@@ -11,6 +11,7 @@ using TrackerCouncil.Smz3.Data.Logic;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.WorldData;
+using TrackerCouncil.Smz3.SeedGenerator.AltGameModes;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
 using TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
 using TrackerCouncil.Smz3.SeedGenerator.Generation;
@@ -24,7 +25,7 @@ public class RandomizerTests
 {
     // If this test breaks, update Smz3Randomizer.Version
     [Theory]
-    [InlineData("test", -75398755)] // Smz3Randomizer v8
+    [InlineData("test", -1883616081)] // Smz3Randomizer v9
     public void StandardFillerWithSameSeedGeneratesSameWorld(string seed, int expectedHash)
     {
         var filler = new StandardFiller(GetLogger<StandardFiller>());
@@ -174,6 +175,7 @@ public class RandomizerTests
             .AddSingleton<IPatcherService, PatcherService>()
             .AddSingleton<TrackerOptionsAccessor>()
             .AddSingleton<TrackerSpriteService>()
+            .AddTransient<AltGameModeFactory>()
             .AddTransient<PlaythroughService>()
             .AddConfigs()
             .BuildServiceProvider();
@@ -183,6 +185,7 @@ public class RandomizerTests
             serviceProvider.GetRequiredService<IGameHintService>(),
             GetLogger<Smz3Randomizer>(),
             serviceProvider.GetRequiredService<IPatcherService>(),
-            serviceProvider.GetRequiredService<PlaythroughService>());
+            serviceProvider.GetRequiredService<PlaythroughService>(),
+            serviceProvider.GetRequiredService<AltGameModeFactory>());
     }
 }

@@ -16,6 +16,7 @@ namespace TrackerCouncil.Smz3.Tracking.VoiceCommands;
 public class MultiplayerModule : TrackerModule
 {
     private readonly MultiplayerGameService _multiplayerGameService;
+    private bool waitingForConnectivity = false;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MultiplayerModule"/>
@@ -57,6 +58,11 @@ public class MultiplayerModule : TrackerModule
 
     private void AutoTrackerOnAutoTrackerConnected(object? sender, EventArgs e)
     {
+        if (waitingForConnectivity)
+        {
+            return;
+        }
+
         Logger.LogInformation("AutoTracker Connected");
 
         // Unfortunately sending items immediately after auto tracker has connected seems to cause the items to get
@@ -65,12 +71,15 @@ public class MultiplayerModule : TrackerModule
         {
             try
             {
+                waitingForConnectivity = true;
+
                 do
                 {
                     await Task.Delay(TimeSpan.FromSeconds(5));
                 } while (TrackerBase.AutoTracker?.HasValidState != true || TrackerBase.AutoTracker!.CurrentGame == Game.Neither);
 
-                Logger.LogInformation("Requesting player sync");
+                Logger.LogInformation("Attempting to sync saved world");
+                waitingForConnectivity = false;
                 await _multiplayerGameService.OnAutoTrackingConnected();
             }
             catch (Exception e)
@@ -111,6 +120,8 @@ public class MultiplayerModule : TrackerModule
             bossState.Defeated = true;
             bossState.AutoTracked = true;
         }
+
+        TrackerBase.ModeTracker.OnMultiplayerSync();
     }
 
     private void PlayerEndedGame(PlayerEndedGameEventHandlerArgs args)
@@ -164,6 +175,7 @@ public class MultiplayerModule : TrackerModule
         }
         args.LocationState.Cleared = true;
         args.LocationState.Autotracked = true;
+        TrackerBase.ModeTracker.OnMultiplayerSync();
     }
 
     private void PlayerTrackedBoss(PlayerTrackedBossEventHandlerArgs args)

@@ -6,7 +6,7 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-    <Version>9.9.11</Version>
+    <Version>10.0.0-beta.1</Version>
     <AssemblyName>SMZ3CasRandomizer</AssemblyName>
     <ApplicationIcon>Assets\smz3.ico</ApplicationIcon>
     <RootNamespace>$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
@@ -24,7 +24,7 @@
     <PackageReference Include="Avalonia_Gif" Version="1.0.0" />
     <PackageReference Include="MattEqualsCoder.AppImageManager" Version="0.1.3" />
     <PackageReference Include="MattEqualsCoder.AvaloniaControls" Version="2.0.1" />
-    <PackageReference Include="MattEqualsCoder.DynamicForms.Avalonia" Version="1.3.0" />
+    <PackageReference Include="MattEqualsCoder.DynamicForms.Avalonia" Version="1.5.0" />
     <PackageReference Include="MattEqualsCoder.MSURandomizer.Avalonia" Version="3.2.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.2" />
     <PackageReference Include="ReactiveUI.SourceGenerators" Version="2.6.1">

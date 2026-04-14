@@ -19,6 +19,7 @@ internal class TrackerModeService() : TrackerService, ITrackerModeService
     public event EventHandler<TrackerEventArgs>? GoModeToggledOn;
     public event EventHandler<TrackerEventArgs>? GoModeToggledOff;
     public event EventHandler<TrackerEventArgs>? CheatsToggled;
+    public event EventHandler? MultiplayerSyncReceived;
 
     public void ToggleGoMode(float? confidence = null)
     {
@@ -182,5 +183,10 @@ internal class TrackerModeService() : TrackerService, ITrackerModeService
         {
             Tracker.Say(x => x.Cheats.AlreadyDisabledCheats);
         }
+    }
+
+    public void OnMultiplayerSync()
+    {
+        MultiplayerSyncReceived?.Invoke(this, EventArgs.Empty);
     }
 }

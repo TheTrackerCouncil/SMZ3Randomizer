@@ -87,7 +87,7 @@ public class StandardFiller : IFiller
                 AssumedFill(dungeon, progression.Concat(world.ItemPools.MetroidKeysanityItems).Concat(assumedInventory).Concat(preferenceItems).ToList(), worldLocations,
                     [world], cancellationToken);
             }
-            else if (worldConfig.PlaceGTBigKeyInGT)
+            else if (worldConfig.GameModeOptions.PlaceGTBigKeyInGT)
             {
                 _logger.LogDebug("Placing GT Big Key in GT");
                 var worldLocations = world.Locations.Empty().Shuffle(Random);
@@ -402,7 +402,7 @@ public class StandardFiller : IFiller
                 .Where(x => x.Region is Data.WorldData.Regions.Zelda.GanonsTower)
                 .Empty()
                 .Shuffle(Random);
-            var numLocations = (int)Math.Floor(15.0 * world.Config.GanonsTowerCrystalCount / 7);
+            var numLocations = (int)Math.Floor(15.0 * world.Config.GameModeOptions.GanonsTowerCrystalCount / 7);
             FastFill(itemPool, locations.Take(numLocations));
         }
     }

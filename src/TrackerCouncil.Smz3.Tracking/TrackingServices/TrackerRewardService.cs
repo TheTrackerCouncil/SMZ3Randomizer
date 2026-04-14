@@ -41,11 +41,13 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlaye
         }
 
         UpdateAllAccessibility(false);
+        Tracker.AltGameModeService.NotifyOfGoalStateChange();
 
         AddUndo(autoTracked, () =>
         {
             rewardRegion.MarkedReward = originalReward;
             UpdateAllAccessibility(false);
+            Tracker.AltGameModeService.NotifyOfGoalStateChange();
         });
     }
 
@@ -58,12 +60,13 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlaye
 
         var previousMarkedReward = rewardRegion.MarkedReward;
         rewardRegion.HasReceivedReward = true;
+        var config = rewardRegion.World.Config;
 
         if (isAutoTracked && !rewardRegion.HasCorrectlyMarkedReward)
         {
             rewardRegion.MarkedReward = rewardRegion.RewardType;
 
-            if (rewardRegion is not SMRegion || rewardRegion.World.Config.RomGenerator != RomGenerator.Cas)
+            if (rewardRegion is not SMRegion || config.RomGenerator != RomGenerator.Cas || config.GameModeOptions.ShuffleMetroidBossTokens)
             {
                 var rewardObj = rewardRegion.Reward;
                 Tracker.Say(response: Responses.DungeonRewardMarked, args: [rewardRegion.Metadata.Name, rewardObj.Metadata.Name ?? rewardObj.Type.GetDescription()]);
@@ -72,6 +75,18 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlaye
         }
 
         UpdateAllAccessibility(false);
+        Tracker.AltGameModeService.NotifyOfGoalStateChange();
+
+        // Check if the player has defeated all bosses and gotten all crystals
+        if (config.GameModeOptions.SelectedGameModeType == GameModeType.Vanilla)
+        {
+            var progression = Tracker.PlayerProgressionService.GetProgression(true);
+            if (progression.CrystalCount >= config.GameModeOptions.GanonCrystalCount &&
+                progression.MetroidBossCount >= config.GameModeOptions.TourianBossCount)
+            {
+                Tracker.GameStateTracker.HasFinishedGoal = true;
+            }
+        }
 
         // TODO: Add a response
 
@@ -80,6 +95,7 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlaye
             rewardRegion.HasReceivedReward = false;
             rewardRegion.MarkedReward = previousMarkedReward;
             UpdateAllAccessibility(true);
+            Tracker.AltGameModeService.NotifyOfGoalStateChange();
         });
     }
 
@@ -93,6 +109,7 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlaye
         rewardRegion.HasReceivedReward = false;
 
         UpdateAllAccessibility(true);
+        Tracker.AltGameModeService.NotifyOfGoalStateChange();
 
         // TODO: Add a response
 
@@ -100,6 +117,7 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlaye
         {
             rewardRegion.HasReceivedReward = false;
             UpdateAllAccessibility(false);
+            Tracker.AltGameModeService.NotifyOfGoalStateChange();
         });
     }
 

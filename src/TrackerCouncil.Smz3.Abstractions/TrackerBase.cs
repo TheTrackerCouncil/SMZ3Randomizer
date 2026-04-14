@@ -54,6 +54,8 @@ public abstract class TrackerBase : IDisposable
 
     public ITrackerSpoilerService SpoilerService { get; protected set; } = null!;
 
+    public ITrackerAltGameModeService AltGameModeService { get; protected set; } = null!;
+
     /// <summary>
     /// Gets the world for the currently tracked playthrough.
     /// </summary>
@@ -113,7 +115,7 @@ public abstract class TrackerBase : IDisposable
     /// <summary>
     /// Gets the config used to generate the local seed.
     /// </summary>
-    public Config? LocalConfig { get; protected set; }
+    public abstract Config? LocalConfig { get; }
 
     /// <summary>
     /// Get if the Tracker has been updated since it was last saved

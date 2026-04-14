@@ -225,7 +225,8 @@ public class PatchBuilderService
             return;
         }
 
-        _romLauncherService.LaunchRom(romPath, config.EnvironmentSettings.LaunchApplication,
+        var process = _romLauncherService.LaunchRom(romPath, config.EnvironmentSettings.LaunchApplication,
             config.EnvironmentSettings.LaunchArguments);
+        process?.WaitForExit();
     }
 }
