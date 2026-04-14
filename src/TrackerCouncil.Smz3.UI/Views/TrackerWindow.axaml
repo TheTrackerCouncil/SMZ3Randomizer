@@ -14,7 +14,7 @@
         Resized="WindowBase_OnResized"
         Icon="/Assets/smz3.ico">
   <LayoutTransformControl x:Name="MainLayout">
-    <Grid RowDefinitions="Auto, *, Auto, Auto">
+    <Grid RowDefinitions="Auto, *, Auto">
       <controls:HeaderFooter Grid.Row="0" BorderSize="0 0 0 2">
         <Grid ColumnDefinitions="*,Auto">
           <Menu Grid.Column="0" FontSize="12">
@@ -86,7 +86,7 @@
       <DockPanel Grid.Row="1" Background="{Binding Background}">
         <Panel Name="MainPanel" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5"></Panel>
       </DockPanel>
-      <controls:HeaderFooter Grid.Row="3" Background="{Binding StatusBarBackground}" BorderSize="0 2 0 0" Padding="5">
+      <controls:HeaderFooter Grid.Row="2" Background="{Binding StatusBarBackground}" BorderSize="0 2 0 0" Padding="5">
         <Grid ColumnDefinitions="Auto, *, Auto">
 
           <StackPanel Orientation="Horizontal"
