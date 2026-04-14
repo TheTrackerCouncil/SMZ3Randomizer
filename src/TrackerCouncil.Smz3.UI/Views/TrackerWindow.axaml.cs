@@ -344,5 +344,25 @@ public partial class TrackerWindow : RestorableWindow
     {
         _service?.ToggleSpoilers();
     }
+
+    private void LaunchRomMenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        _service?.LaunchRom();
+    }
+
+    private void OpenRomFolderMenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        _service?.OpenRomFolder();
+    }
+
+    private void OpenSpoilerLogMenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        _service?.OpenSpoilerLog();
+    }
+
+    private void ExitMenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        Close();
+    }
 }
 
