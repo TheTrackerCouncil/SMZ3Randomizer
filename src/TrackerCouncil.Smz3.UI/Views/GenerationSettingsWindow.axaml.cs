@@ -60,6 +60,7 @@ public partial class GenerationSettingsWindow : ScalableWindow
 
         _model.IsImportMode = true;
         _model.ImportDetails = importDetails;
+        _model.SpinJumpAnimations = importDetails.SpinJumpAnimations;
     }
 
     public bool LoadPlando(string file, out string? error)

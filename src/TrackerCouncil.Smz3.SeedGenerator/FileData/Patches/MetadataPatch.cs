@@ -73,6 +73,12 @@ public class MetadataPatch : RomPatch
         return BitConverter.ToInt16(rom, s_addrPlayerIndex);
     }
 
+    public static bool GetSpinJumpAnimationsFromRom(byte[] rom)
+    {
+        var val = rom[Snes(0x9B93FE)];
+        return val == 0x01;
+    }
+
     private IEnumerable<GeneratedPatch> WriteRngBlock()
     {
         // RNG Block

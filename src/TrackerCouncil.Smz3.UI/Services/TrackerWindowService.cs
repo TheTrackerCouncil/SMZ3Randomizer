@@ -37,7 +37,8 @@ public class TrackerWindowService(
     ITrackerTimerService trackerTimerService,
     IServiceProvider serviceProvider,
     IWorldQueryService worldQueryService,
-    ILogger<TrackerWindowService> logger) : ControlService
+    ILogger<TrackerWindowService> logger,
+    SharedCrossplatformService sharedCrossplatformService) : ControlService
 {
     private RandomizerOptions? _options;
     private TrackerWindow _window = null!;
@@ -909,5 +910,41 @@ public class TrackerWindowService(
     public void ToggleSpoilers()
     {
         tracker.SpoilerService.ToggleSpoilers();
+    }
+
+    public void LaunchRom()
+    {
+        try
+        {
+            sharedCrossplatformService.PlayRom(tracker.Rom);
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Could not launch rom");
+        }
+    }
+
+    public void OpenRomFolder()
+    {
+        try
+        {
+            sharedCrossplatformService.OpenFolder(tracker.Rom);
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Could not open folder");
+        }
+    }
+
+    public void OpenSpoilerLog()
+    {
+        try
+        {
+            sharedCrossplatformService.OpenSpoilerLog(tracker.Rom);
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Could not open spoiler log");
+        }
     }
 }

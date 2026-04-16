@@ -25,6 +25,16 @@
               <MenuItem Header="_Save state..."
                         x:Name="SaveStateMenuItem"
                         Click="SaveStateMenuItem_OnClick" />
+              <Separator></Separator>
+              <MenuItem Header="_Launch rom"
+                        Click="LaunchRomMenuItem_OnClick" />
+              <MenuItem Header="_Open rom folder"
+                        Click="OpenRomFolderMenuItem_OnClick"></MenuItem>
+              <MenuItem Header="O_pen spoiler log"
+                        Click="OpenSpoilerLogMenuItem_OnClick"></MenuItem>
+              <Separator></Separator>
+              <MenuItem Header="E_xit"
+                        Click="ExitMenuItem_OnClick"></MenuItem>
             </MenuItem>
             <MenuItem Header="_View">
               <MenuItem Header="_Locations"
