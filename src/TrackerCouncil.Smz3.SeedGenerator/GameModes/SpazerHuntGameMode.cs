@@ -1,23 +1,25 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.GeneratedData;
 using TrackerCouncil.Smz3.Data.Options;
+using TrackerCouncil.Smz3.Data.ParsedRom;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.Tracking;
 using TrackerCouncil.Smz3.Data.ViewModels;
 using TrackerCouncil.Smz3.Data.WorldData;
-using TrackerCouncil.Smz3.Shared;
+using TrackerCouncil.Smz3.SeedGenerator.FileData.IpsPatches;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Models;
 
-namespace TrackerCouncil.Smz3.SeedGenerator.AltGameModes;
+namespace TrackerCouncil.Smz3.SeedGenerator.GameModes;
 
 [GameModeType(GameModeType.SpazerHunt)]
 [Description("You thought they were worthless, but Samus needs to collect all of the spazers and use them to save the day. After all, who needs a Triforce when you have lots of firepower?")]
-public class SpazerHuntAltGameMode(IMetadataService metadata) : AltGameModeBase
+public class SpazerHuntGameMode(IMetadataService metadata) : GameModeBase
 {
     private TrackerBase _tracker = null!;
 
@@ -31,7 +33,7 @@ public class SpazerHuntAltGameMode(IMetadataService metadata) : AltGameModeBase
         return GetCurrentCount(world) >= world.Config.GameModeOptions.SpazersRequired;
     }
 
-    public override void UpdateInitialTrackerState(GameModeOptions gameModeOptions, TrackerState trackerState)
+    public override void UpdateInitialTrackerState(GameModeOptions gameModeOptions, TrackerState trackerState, ParsedRomDetails? parsedRomDetails)
     {
         if (gameModeOptions.RandomizeNumericAmounts)
         {
@@ -43,14 +45,15 @@ public class SpazerHuntAltGameMode(IMetadataService metadata) : AltGameModeBase
         }
     }
 
-    public override void UpdateWorld(World world, int seed, GameModeOptions gameModeOptions)
+    public override void UpdateWorld(World world, Random rng, GameModeOptions gameModeOptions)
     {
-        var rng = new Random(seed);
-        rng.Sanitize();
-
         var swaps = new List<SwapItemPoolRequest>();
 
         var spazersInPool = gameModeOptions.SpazersInPool;
+
+        gameModeOptions.GanonCrystalCount = 7;
+        gameModeOptions.TourianBossCount = 4;
+
         if (gameModeOptions.RandomizeNumericAmounts)
         {
             spazersInPool = rng.Next(gameModeOptions.MinSpazersInPool, gameModeOptions.MaxSpazersInPool + 1);
@@ -174,22 +177,22 @@ public class SpazerHuntAltGameMode(IMetadataService metadata) : AltGameModeBase
         _tracker.ModeTracker.MultiplayerSyncReceived += ModeTrackerOnMultiplayerSyncReceived;
     }
 
-    public override AltGameModeInGameText? GetInGameText(World world)
+    public override GameModeInGameText GetInGameText(World world)
     {
         var spazersRequired = world.Config.GameModeOptions.SpazersRequired;
         var spazersInPool = world.Config.GameModeOptions.SpazersInPool;
-        return new AltGameModeInGameText
+        return new GameModeInGameText
         {
-            GanonIntro = metadata.AltGameModes.SpazerHuntGanonIntro?.Format(spazersRequired, spazersInPool),
+            GanonIntro = metadata.GameModes.SpazerHuntGanonIntro,
             GanonIntroGoalsNotMet =
-                metadata.AltGameModes.SpazerHuntGanonIntroGoalsNotMet?.Format(spazersRequired, spazersInPool),
-            GanonGoalSign = metadata.AltGameModes.SpazerHuntGanonGoalSign?.Format(spazersRequired, spazersInPool),
+                metadata.GameModes.SpazerHuntGanonIntroGoalsNotMet?.Format(spazersRequired, spazersInPool),
+            GanonGoalSign = metadata.GameModes.SpazerHuntGanonGoalSign?.Format(spazersRequired, spazersInPool),
         };
     }
 
     public override string? GetGameStartText(World world)
     {
-        return metadata.AltGameModes.SpazerHuntGameStarted?.ToString();
+        return metadata.GameModes.SpazerHuntGameStarted?.ToString();
     }
 
     public override bool IsKnowinglyComplete(World world)
@@ -213,11 +216,11 @@ public class SpazerHuntAltGameMode(IMetadataService metadata) : AltGameModeBase
         return allWorlds.SelectMany(w => w.Locations).Where(l => l.ItemType is ItemType.Spazer && l.Item.World.Id == world.Id).ToList();
     }
 
-    public override List<GoalUiDetails>? GetGoalUiDetails(World world)
+    public override List<GoalUiDetails> GetGoalUiDetails(World world, Progression progression)
     {
         if (world.State == null)
         {
-            return null;
+            return [];
         }
 
         var spazerCount = GetCurrentCount(world);
@@ -232,6 +235,11 @@ public class SpazerHuntAltGameMode(IMetadataService metadata) : AltGameModeBase
     {
         return
             $"SpazersRequired = {gameModeOptions.SpazersRequired}, SpazersInPool = {gameModeOptions.SpazersInPool}";
+    }
+
+    public override Stream GetLiftOffOnGoalCompletionIpsPatch()
+    {
+        return IpsPatch.LiftOffOnGoalCompletionAlt();
     }
 
     private int GetCurrentCount(World world)
@@ -250,10 +258,10 @@ public class SpazerHuntAltGameMode(IMetadataService metadata) : AltGameModeBase
 
         if (IsComplete(_tracker.World))
         {
-            _tracker.AltGameModeService.MarkAltGameModeAsComplete();
+            _tracker.GameModeService.MarkGameModeAsComplete();
         }
 
-        _tracker.AltGameModeService.NotifyOfGoalStateChange();
+        _tracker.GameModeService.NotifyOfGoalStateChange();
     }
 
     private void ItemTrackerOnItemTracked(object? sender, ItemTrackedEventArgs e)
@@ -265,19 +273,19 @@ public class SpazerHuntAltGameMode(IMetadataService metadata) : AltGameModeBase
 
         if (IsComplete(_tracker.World))
         {
-            _tracker.AltGameModeService.MarkAltGameModeAsComplete();
+            _tracker.GameModeService.MarkGameModeAsComplete();
         }
 
-        _tracker.AltGameModeService.NotifyOfGoalStateChange();
+        _tracker.GameModeService.NotifyOfGoalStateChange();
     }
 
     private void ModeTrackerOnMultiplayerSyncReceived(object? sender, EventArgs e)
     {
         if (IsComplete(_tracker.World))
         {
-            _tracker.AltGameModeService.MarkAltGameModeAsComplete();
+            _tracker.GameModeService.MarkGameModeAsComplete();
         }
 
-        _tracker.AltGameModeService.NotifyOfGoalStateChange();
+        _tracker.GameModeService.NotifyOfGoalStateChange();
     }
 }

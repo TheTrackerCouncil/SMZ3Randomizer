@@ -70,6 +70,11 @@ public abstract class AutoTrackerBase : IDisposable
     public event EventHandler? GameChanged;
 
     /// <summary>
+    /// Occurs when the tracker detects that the pyramid has been opened
+    /// </summary>
+    public event EventHandler? OpenPyramidChanged;
+
+    /// <summary>
     /// The action to run when the player asks Tracker to look at the game
     /// </summary>
     public AutoTrackerViewedAction? LatestViewAction { get; set; }
@@ -98,6 +103,11 @@ public abstract class AutoTrackerBase : IDisposable
     /// If the player currently has a fairy
     /// </summary>
     public bool PlayerHasFairy { get; set; }
+
+    /// <summary>
+    /// If the pyramid has been opened
+    /// </summary>
+    public bool OpenPyramid { get; set; }
 
     /// <summary>
     /// If the user is activately in an SMZ3 rom
@@ -167,6 +177,14 @@ public abstract class AutoTrackerBase : IDisposable
     protected virtual void OnGameChanged()
     {
         GameChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>
+    /// Invokes the OpenPyramidChanged event
+    /// </summary>
+    public virtual void OnOpenPyramidChanged()
+    {
+        OpenPyramidChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public abstract void Dispose();

@@ -238,19 +238,19 @@ public class TrackerWindowService(
         tracker.AutoTracker.AutoTrackerConnected += AutoTrackerOnAutoTrackerEnabled;
         tracker.AutoTracker.AutoTrackerDisconnected += AutoTrackerOnAutoTrackerEnabled;
         tracker.AutoTracker.AutoTrackerConnectorChanged += AutoTrackerOnAutoTrackerConnectorChanged;
-        tracker.AltGameModeService.GoalStateChanged += AltGameModeServiceOnGoalStateChanged;
+        tracker.GameModeService.GoalStateChanged += GameModeServiceOnGoalStateChanged;
 
         tracker.AutoTracker.SetConnector(Options.GeneralOptions.SnesConnectorSettings);
     }
 
-    private void AltGameModeServiceOnGoalStateChanged(object? sender, EventArgs e)
+    private void GameModeServiceOnGoalStateChanged(object? sender, EventArgs e)
     {
         UpdateGoals();
     }
 
     private void UpdateGoals()
     {
-        _model.Goals = tracker.AltGameModeService.GetGoalUiDetails().Select(x => new GoalUiDetails
+        _model.Goals = tracker.GameModeService.GetGoalUiDetails().Select(x => new GoalUiDetails
         {
             Icon = uiService.GetSpritePath(x.IconCategory, x.Icon, out _) ?? "",
             Text = x.Text

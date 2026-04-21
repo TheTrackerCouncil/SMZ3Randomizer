@@ -20,7 +20,7 @@ public class PlayerEnteredShip(TrackerBase tracker, ISnesConnectorService snesCo
             Address = 0x7e0FB2,
             Length = 0x2,
             OnResponse = CheckShip,
-            Filter = () => IsInMetroid && (AutoTracker.HasDefeatedBothBosses || (Tracker.GameStateTracker.HasFinishedGoal && Tracker.LocalConfig?.GameModeOptions.LiftOffOnGoalCompletion == true))
+            Filter = () => IsInMetroid && (AutoTracker.HasDefeatedBothBosses || (Tracker.GameModeService.IsGameModeComplete && Tracker.LocalConfig?.GameModeOptions.LiftOffOnGoalCompletion == true))
         });
     }
 

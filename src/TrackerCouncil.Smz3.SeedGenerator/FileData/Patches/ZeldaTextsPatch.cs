@@ -9,8 +9,8 @@ using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
-using TrackerCouncil.Smz3.SeedGenerator.AltGameModes;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
+using TrackerCouncil.Smz3.SeedGenerator.GameModes;
 using TrackerCouncil.Smz3.SeedGenerator.Text;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Models;
@@ -18,7 +18,7 @@ using TrackerCouncil.Smz3.Shared.Models;
 namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
 
 [Order(-5)]
-public class ZeldaTextsPatch(IMetadataService metadataService, IGameHintService gameHintService, AltGameModeFactory altGameModeFactory) : RomPatch
+public class ZeldaTextsPatch(IMetadataService metadataService, IGameHintService gameHintService, GameModeFactory gameModeFactory) : RomPatch
 {
     private StringTable _stringTable = null!;
     private PlandoTextConfig _plandoText = null!;
@@ -74,7 +74,7 @@ public class ZeldaTextsPatch(IMetadataService metadataService, IGameHintService 
     {
         var regions = data.World.Regions.OfType<IHasReward>().ToList();
 
-        var altGameModeText = altGameModeFactory.GetInGameText(data.World);
+        var gameModeText = gameModeFactory.GetInGameText(data.World);
 
         var greenPendantDungeon = regions
             .Where(x => x.RewardType == RewardType.PendantGreen)
@@ -100,7 +100,7 @@ public class ZeldaTextsPatch(IMetadataService metadataService, IGameHintService 
         yield return SetText(0x308C00, StringTable.TavernMan,
             GameLines.TavernMan, _plandoText.TavernMan);
 
-        foreach (var text in GanonText(data, altGameModeText))
+        foreach (var text in GanonText(data, gameModeText))
         {
             yield return text;
         }
@@ -123,9 +123,7 @@ public class ZeldaTextsPatch(IMetadataService metadataService, IGameHintService 
         SetText(StringTable.GanonsTowerGoalSign,
             GameLines.GanonsTowerGoalSign, _plandoText.GanonsTowerGoalSign, false, gtCrystalCount == 1 ? "1 crystal" : $"{gtCrystalCount} crystals");
 
-        var ganonCrystalCount = data.World.Config.GameModeOptions.GanonCrystalCount;
-        SetText(StringTable.GanonGoalSign,
-            GameLines.GanonGoalSign, _plandoText.GanonGoalSign ?? altGameModeText?.GanonGoalSign, false, ganonCrystalCount == 1 ? "1 crystal" : $"{ganonCrystalCount} crystals");
+        SetText(StringTable.GanonGoalSign, null, _plandoText.GanonGoalSign ?? gameModeText?.GanonGoalSign);
 
         if (data.World.HintTiles.Any() || _plandoText.HasHintTileText)
         {
@@ -213,13 +211,10 @@ public class ZeldaTextsPatch(IMetadataService metadataService, IGameHintService 
 
     }
 
-    private IEnumerable<GeneratedPatch> GanonText(GetPatchesRequest data, AltGameModeInGameText? altGameModeInGameText)
+    private IEnumerable<GeneratedPatch> GanonText(GetPatchesRequest data, GameModeInGameText? gameModeInGameText)
     {
-        yield return SetText(0x308600, StringTable.GanonIntro,
-            GameLines.GanonIntro, _plandoText.GanonIntro ?? altGameModeInGameText?.GanonIntro);
-
-        yield return SetText(0x309100, StringTable.GanonIntroAlt,
-            GameLines.GanonIntroGoalsNotMet, _plandoText.GanonIntroGoalsNotMet ?? altGameModeInGameText?.GanonIntroGoalsNotMet);
+        yield return SetText(0x308600, StringTable.GanonIntro, null, _plandoText.GanonIntro ?? gameModeInGameText?.GanonIntro);
+        yield return SetText(0x309100, StringTable.GanonIntroAlt, null, _plandoText.GanonIntroGoalsNotMet ?? gameModeInGameText?.GanonIntroGoalsNotMet);
 
         var silversLocation = data.Worlds.SelectMany(world => world.Locations)
             .FirstOrDefault(l => l.ItemIs(ItemType.SilverArrows, data.World));

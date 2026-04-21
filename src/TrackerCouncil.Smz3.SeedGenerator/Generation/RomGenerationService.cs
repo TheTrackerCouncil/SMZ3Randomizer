@@ -15,9 +15,9 @@ using TrackerCouncil.Smz3.Data.Interfaces;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.ParsedRom;
 using TrackerCouncil.Smz3.Data.Services;
-using TrackerCouncil.Smz3.SeedGenerator.AltGameModes;
 using TrackerCouncil.Smz3.SeedGenerator.FileData;
 using TrackerCouncil.Smz3.SeedGenerator.FileData.IpsPatches;
+using TrackerCouncil.Smz3.SeedGenerator.GameModes;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Models;
 
@@ -35,7 +35,7 @@ public class RomGenerationService(
     IMsuSelectorService? msuSelectorService,
     IMsuTypeService? msuTypeService,
     RomTextService romTextService,
-    AltGameModeFactory altGameModeFactory)
+    GameModeFactory gameModeFactory)
     : IRomGenerationService
 {
     private readonly ILogger<RomGenerationService> _logger = logger;
@@ -174,9 +174,9 @@ public class RomGenerationService(
 
         if (seed is { WorldGenerationData.LocalWorld.Config.GameModeOptions.LiftOffOnGoalCompletion: true })
         {
-            using var goalPatch = seed.WorldGenerationData.LocalWorld.Config.GameModeOptions.SelectedGameModeType == GameModeType.Vanilla
-                ? IpsPatch.LiftOffOnGoalCompletionPrimary()
-                : IpsPatch.LiftOffOnGoalCompletionAlt();
+            using var goalPatch =
+                gameModeFactory.GetLiftOffOnGoalCompletionIpsPatch(seed.WorldGenerationData.LocalWorld.Config
+                    .GameModeOptions);
             Rom.ApplySuperMetroidIps(rom, goalPatch);
         }
 
@@ -392,7 +392,7 @@ public class RomGenerationService(
 
         romTextService.PrepareAutoTrackerFiles(options);
 
-        var rom = await SaveSeedToDatabaseAsync(options, seed, romPath, spoilerPath, multiplayerGameDetails);
+        var rom = await SaveSeedToDatabaseAsync(options, seed, romPath, spoilerPath, multiplayerGameDetails, parsedRomDetails);
 
         try
         {
@@ -415,7 +415,7 @@ public class RomGenerationService(
     /// <param name="spoilerPath">The path to the spoiler file</param>
     /// <param name="multiplayerGameDetails">Details of the connected multiplayer game</param>
     /// <returns>The db entry for the generated rom</returns>
-    private async Task<GeneratedRom> SaveSeedToDatabaseAsync(RandomizerOptions options, SeedData seed, string romPath, string spoilerPath, MultiplayerGameDetails? multiplayerGameDetails)
+    private async Task<GeneratedRom> SaveSeedToDatabaseAsync(RandomizerOptions options, SeedData seed, string romPath, string spoilerPath, MultiplayerGameDetails? multiplayerGameDetails, ParsedRomDetails? parsedRomDetails)
     {
         var settingsString = seed.Configs.Count() > 1
             ? Config.ToConfigString(seed.Configs)
@@ -445,7 +445,7 @@ public class RomGenerationService(
 
         if (rom.TrackerState != null)
         {
-            altGameModeFactory.UpdateInitialTrackerState(seed.WorldGenerationData.LocalWorld.Config.GameModeOptions, rom.TrackerState);
+            gameModeFactory.UpdateInitialTrackerState(seed.WorldGenerationData.LocalWorld.Config.GameModeOptions, rom.TrackerState, parsedRomDetails);
             await dbContext.SaveChangesAsync();
         }
 

@@ -49,6 +49,7 @@
     <EmbeddedResource Include="FileData\IpsPatches\ArchipelagoMSU.ips" />
     <EmbeddedResource Include="FileData\IpsPatches\LiftOffOnGoalCompletionPrimary.ips" />
     <EmbeddedResource Include="FileData\IpsPatches\LiftOffOnGoalCompletionAlt.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\LiftOffOnGoalCompletionAllDungeons.ips" />
   </ItemGroup>
 
   <ItemGroup>

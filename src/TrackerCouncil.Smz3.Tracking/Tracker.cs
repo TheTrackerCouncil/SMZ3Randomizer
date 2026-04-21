@@ -731,8 +731,8 @@ public sealed partial class Tracker : TrackerBase, IDisposable
         var actualProgression = PlayerProgressionService.GetProgression(false);
         var assumedKeysProgression = PlayerProgressionService.GetProgression(true);
 
-        var hasAltGameMode = AltGameModeService.HasAltGameMode;
-        var isAltGameModeComplete = hasAltGameMode && AltGameModeService.IsAltGameModeKnowinglyComplete();
+        var hasAltGameMode = GameModeService.HasAltGameMode;
+        var isAltGameModeComplete = hasAltGameMode && GameModeService.IsGameModeKnowinglyComplete();
 
         World.DarkWorldNorthEast.UpdateGanonAccessibility(actualProgression, assumedKeysProgression, hasAltGameMode, isAltGameModeComplete);
         World.WestCrateria.UpdateMotherBrainAccessibility(actualProgression, hasAltGameMode, isAltGameModeComplete);

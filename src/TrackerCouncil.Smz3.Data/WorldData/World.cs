@@ -273,7 +273,6 @@ public class World
 
     public void Setup(Random rnd)
     {
-        Config.GameModeOptions.Randomize(rnd);
         SetMedallions(rnd);
         SetRewards(rnd);
         SetBottles(rnd);

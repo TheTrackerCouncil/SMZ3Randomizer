@@ -3,18 +3,18 @@ using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Abstractions;
-using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
-using TrackerCouncil.Smz3.Tracking.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.TrackingServices;
 
 internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlayerProgressionService playerProgressionService, IMetadataService metadataService) : TrackerService, ITrackerRewardService
 {
+    public event EventHandler? RewardsChanged;
+
     public void SetAreaReward(IHasReward rewardRegion, RewardType? reward = null, float? confidence = null, bool autoTracked = false)
     {
         var originalReward = rewardRegion.MarkedReward;
@@ -41,13 +41,13 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlaye
         }
 
         UpdateAllAccessibility(false);
-        Tracker.AltGameModeService.NotifyOfGoalStateChange();
+        RewardsChanged?.Invoke(this, EventArgs.Empty);
 
         AddUndo(autoTracked, () =>
         {
             rewardRegion.MarkedReward = originalReward;
             UpdateAllAccessibility(false);
-            Tracker.AltGameModeService.NotifyOfGoalStateChange();
+            RewardsChanged?.Invoke(this, EventArgs.Empty);
         });
     }
 
@@ -75,18 +75,7 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlaye
         }
 
         UpdateAllAccessibility(false);
-        Tracker.AltGameModeService.NotifyOfGoalStateChange();
-
-        // Check if the player has defeated all bosses and gotten all crystals
-        if (config.GameModeOptions.SelectedGameModeType == GameModeType.Vanilla)
-        {
-            var progression = Tracker.PlayerProgressionService.GetProgression(true);
-            if (progression.CrystalCount >= config.GameModeOptions.GanonCrystalCount &&
-                progression.MetroidBossCount >= config.GameModeOptions.TourianBossCount)
-            {
-                Tracker.GameStateTracker.HasFinishedGoal = true;
-            }
-        }
+        RewardsChanged?.Invoke(this, EventArgs.Empty);
 
         // TODO: Add a response
 
@@ -95,7 +84,7 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlaye
             rewardRegion.HasReceivedReward = false;
             rewardRegion.MarkedReward = previousMarkedReward;
             UpdateAllAccessibility(true);
-            Tracker.AltGameModeService.NotifyOfGoalStateChange();
+            RewardsChanged?.Invoke(this, EventArgs.Empty);
         });
     }
 
@@ -109,7 +98,7 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlaye
         rewardRegion.HasReceivedReward = false;
 
         UpdateAllAccessibility(true);
-        Tracker.AltGameModeService.NotifyOfGoalStateChange();
+        RewardsChanged?.Invoke(this, EventArgs.Empty);
 
         // TODO: Add a response
 
@@ -117,7 +106,7 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlaye
         {
             rewardRegion.HasReceivedReward = false;
             UpdateAllAccessibility(false);
-            Tracker.AltGameModeService.NotifyOfGoalStateChange();
+            RewardsChanged?.Invoke(this, EventArgs.Empty);
         });
     }
 
@@ -131,9 +120,11 @@ internal class TrackerRewardService(ILogger<TrackerRewardService> logger, IPlaye
         {
             Tracker.Say(response: Responses.RemainingDungeonsMarked, args: [metadataService.GetName(reward)]);
             unmarkedRegions.ForEach(dungeon => dungeon.MarkedReward = reward);
+            RewardsChanged?.Invoke(this, EventArgs.Empty);
             AddUndo(() =>
             {
                 unmarkedRegions.ForEach(dungeon => dungeon.MarkedReward = RewardType.None);
+                RewardsChanged?.Invoke(this, EventArgs.Empty);
             });
         }
         else

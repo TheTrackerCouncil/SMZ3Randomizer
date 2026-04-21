@@ -120,6 +120,12 @@ public class GenerationWindowBasicViewModel : ViewModelBase
     public bool IsShuffleStyleVisible =>
         MsuRandomizationStyle is MSURandomizerLibrary.MsuRandomizationStyle.Continuous or MSURandomizerLibrary.MsuRandomizationStyle.Shuffled;
 
+    public bool LiftOffOnGoalCompletion
+    {
+        get;
+        set => SetField(ref field, value);
+    }
+
     public List<string> MsuPaths
     {
         get => _msuPaths;

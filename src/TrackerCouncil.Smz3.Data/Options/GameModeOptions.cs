@@ -34,47 +34,13 @@ public class GameModeOptions
     public bool ShuffleMetroidBossTokens { get; set; }
     public bool OpenPyramid { get; set; }
 
-    public void Randomize(Random rnd)
-    {
-        if (!RandomizeNumericAmounts)
-        {
-            return;
-        }
-
-        if (MaxGanonsTowerCrystalCount > MinGanonsTowerCrystalCount)
-        {
-            GanonsTowerCrystalCount = rnd.Next(MinGanonsTowerCrystalCount, MaxGanonsTowerCrystalCount + 1);
-        }
-        else
-        {
-            GanonsTowerCrystalCount = MinGanonsTowerCrystalCount;
-        }
-
-        // Only randomize vanilla crystals as alt game modes should do their own randomization
-        if (SelectedGameModeType == GameModeType.Vanilla)
-        {
-            if (MaxGanonCrystalCount > MinGanonCrystalCount)
-            {
-                GanonCrystalCount = rnd.Next(MinGanonCrystalCount, MaxGanonCrystalCount + 1);
-            }
-            else
-            {
-                GanonCrystalCount = MinGanonCrystalCount;
-            }
-
-            if (MaxTourianBossCount > MinTourianBossCount)
-            {
-                TourianBossCount = rnd.Next(MinTourianBossCount, MaxTourianBossCount + 1);
-            }
-            else
-            {
-                TourianBossCount = MinTourianBossCount;
-            }
-        }
-    }
-
     public GameModeOptions Clone()
     {
         return (GameModeOptions)MemberwiseClone();
+    }
+
+    public bool IsAltGameMode()
+    {
+        return SelectedGameModeType != GameModeType.Vanilla && SelectedGameModeType != GameModeType.AllDungeons;
     }
 }

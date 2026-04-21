@@ -30,7 +30,16 @@
         </TabItem>
         <TabItem Header="Logic/Patches">
           <ScrollViewer>
-            <avalonia:DynamicFormControl Data="{Binding Logic}" Grid.IsSharedSizeScope="True" Margin="0 0 5 5"></avalonia:DynamicFormControl>
+            <StackPanel Orientation="Vertical">
+              <avalonia:DynamicFormControl Data="{Binding Logic}" Grid.IsSharedSizeScope="True" Margin="0 0 5 5"></avalonia:DynamicFormControl>
+              <controls:CardControl HeaderText="Parsed Rom Patches" Margin="0 0 0 0" Padding="5" IsVisible="{Binding IsImportMode}">
+                <StackPanel Orientation="Vertical">
+                  <CheckBox IsChecked="{Binding Basic.LiftOffOnGoalCompletion}">
+                    Skip Ganon and Tourian by lifting off from the ship after completing the goal
+                  </CheckBox>
+                </StackPanel>
+              </controls:CardControl>
+            </StackPanel>
           </ScrollViewer>
         </TabItem>
         <TabItem Header="Items/Locations" IsVisible="{Binding CanChangeGameSettings}">

@@ -83,7 +83,7 @@ public interface IMetadataService
     /// <summary>
     /// Lines for alt game modes
     /// </summary>
-    public AltGameModesConfig AltGameModes { get; }
+    public GameModesConfig GameModes { get; }
 
     /// <summary>
     /// The current selected mood
