@@ -102,6 +102,13 @@ public class ZeldaMiscData(TrackerBase tracker, ISnesConnectorService snesConnec
 
         AutoTracker.PlayerHasFairy = hasFairy;
 
+        var openPyramid = data.CheckUInt8Flag(0x5B, 0x20);
+        if (openPyramid != AutoTracker.OpenPyramid)
+        {
+            AutoTracker.OpenPyramid = openPyramid;
+            AutoTracker.OnOpenPyramidChanged();
+        }
+
         // Activated flute
         if (data.CheckUInt8Flag(0x10C, 0x01) && !prevData.CheckUInt8Flag(0x10C, 0x01))
         {

@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:controls="clr-namespace:AvaloniaControls.Controls;assembly=AvaloniaControls"
              xmlns:viewModels1="clr-namespace:TrackerCouncil.Smz3.Data.ViewModels;assembly=TrackerCouncil.Smz3.Data"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="800"
              x:Class="TrackerCouncil.Smz3.UI.Views.GenerationSettingsBasicPanel"
              x:DataType="viewModels1:GenerationWindowViewModel"
              Loaded="Control_OnLoaded">
@@ -139,7 +139,6 @@
             IsVisible="{Binding Basic.IsShuffleStyleVisible}" />
           </StackPanel>
       </StackPanel>
-
     </controls:CardControl>
   </StackPanel>
 </UserControl>

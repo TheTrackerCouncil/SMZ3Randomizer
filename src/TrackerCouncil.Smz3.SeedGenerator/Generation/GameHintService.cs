@@ -10,8 +10,8 @@ using TrackerCouncil.Smz3.Data.GeneratedData;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
-using TrackerCouncil.Smz3.SeedGenerator.AltGameModes;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
+using TrackerCouncil.Smz3.SeedGenerator.GameModes;
 using TrackerCouncil.Smz3.SeedGenerator.Infrastructure;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Models;
@@ -27,7 +27,7 @@ public class GameHintService(
     IMetadataService metadataService,
     ILogger<GameHintService> logger,
     PlaythroughService playthroughService,
-    AltGameModeFactory altgameModeFactory)
+    GameModeFactory gameModeFactory)
     : IGameHintService
 {
     private readonly GameLinesConfig _gameLines = metadataService.GameLines;
@@ -66,7 +66,7 @@ public class GameHintService(
         }
         _random = new Random(seed).Sanitize();
 
-        var goalLocations = allWorlds.SelectMany(x => altgameModeFactory.GetGameModeLocations(x, allWorlds) ?? []).ToList();
+        var goalLocations = allWorlds.SelectMany(x => gameModeFactory.GetGameModeLocations(x, allWorlds) ?? []).ToList();
 
         var allHints = new List<Hint>();
 
@@ -131,7 +131,7 @@ public class GameHintService(
             return null;
         }
 
-        goalLocations ??= allWorlds.SelectMany(x => altgameModeFactory.GetGameModeLocations(x, allWorlds) ?? []).ToList();
+        goalLocations ??= allWorlds.SelectMany(x => gameModeFactory.GetGameModeLocations(x, allWorlds) ?? []).ToList();
 
         var locationUsefulness = new ConcurrentBag<(Location Location, LocationUsefulness Usefulness)>();
 
@@ -148,7 +148,7 @@ public class GameHintService(
 
     public LocationUsefulness GetUsefulness(List<Location> locations, List<World> allWorlds, Reward? ignoredReward, List<Location>? goalLocations = null)
     {
-        goalLocations ??= allWorlds.SelectMany(x => altgameModeFactory.GetGameModeLocations(x, allWorlds) ?? []).ToList();
+        goalLocations ??= allWorlds.SelectMany(x => gameModeFactory.GetGameModeLocations(x, allWorlds) ?? []).ToList();
         return CheckIfLocationsAreImportant(allWorlds, locations, goalLocations, ignoredReward);
     }
 
@@ -455,6 +455,11 @@ public class GameHintService(
         // If vanilla game mode, make sure the player can get the required crystal counts
         if (world.Config.GameModeOptions.SelectedGameModeType == GameModeType.Vanilla && (progression.CrystalCount < world.Config.GameModeOptions.GanonCrystalCount ||
                 progression.MetroidBossCount < world.Config.GameModeOptions.TourianBossCount))
+        {
+            return LocationUsefulness.Mandatory;
+        }
+        // If all dungeons game mode, make sure the player can get the required crystal counts
+        if (world.Config.GameModeOptions.SelectedGameModeType == GameModeType.AllDungeons && (!progression.AllCrystals || !progression.AllPendants || progression.MetroidBossCount < 4 || !worldLocations.ContainsKey(LocationId.GanonsTowerMoldormChest)))
         {
             return LocationUsefulness.Mandatory;
         }

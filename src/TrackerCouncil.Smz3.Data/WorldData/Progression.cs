@@ -122,7 +122,8 @@ public class Progression
     public int Rupees => GetRupeeCount();
     public bool Agahnim => Rewards.Contains(RewardType.Agahnim);
     public bool GreenPendant => Rewards.Contains(RewardType.PendantGreen);
-    public bool AllPendants => Rewards.Count(r => r is RewardType.PendantGreen or RewardType.PendantRed or RewardType.PendantBlue) >= 3;
+    public int PendantCount => Rewards.Count(r => r is RewardType.PendantGreen or RewardType.PendantRed or RewardType.PendantBlue);
+    public bool AllPendants => PendantCount >= 3;
     public bool BothRedCrystals => Rewards.Count(r => r == RewardType.CrystalRed) >= 2;
     public bool AllCrystals => CrystalCount >= 7;
     public bool Kraid => DefeatedBosses.Contains(BossType.Kraid);

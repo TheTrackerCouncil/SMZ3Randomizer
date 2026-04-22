@@ -1,27 +1,23 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Reflection;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.GeneratedData;
 using TrackerCouncil.Smz3.Data.Options;
+using TrackerCouncil.Smz3.Data.ParsedRom;
 using TrackerCouncil.Smz3.Data.WorldData;
+using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Shared.Models;
 
-namespace TrackerCouncil.Smz3.SeedGenerator.AltGameModes;
+namespace TrackerCouncil.Smz3.SeedGenerator.GameModes;
 
-public class AltGameModeFactory(IServiceProvider serviceProvider)
+public class GameModeFactory(IServiceProvider serviceProvider)
 {
     private static readonly Dictionary<GameModeType, Type> s_gameModeTypes = [];
-
-    private static readonly Dictionary<GameModeType, string> s_gameModeDescriptions = new()
-    {
-        {
-            GameModeType.Vanilla,
-            "Complete Zelda dungeons to obtain crystals to enter Ganon's Tower and defeat Ganon. Defeat bosses in Super Metroid to be able to enter Tourian and defeat Mother Brain."
-        }
-    };
+    private static readonly Dictionary<GameModeType, string> s_gameModeDescriptions = new();
 
     public static void AddGameModeClass(Type gameModeType)
     {
@@ -41,14 +37,14 @@ public class AltGameModeFactory(IServiceProvider serviceProvider)
         s_gameModeDescriptions.Add(gameModeTypeAttribute.GameModeType, descriptionAttribute.Description);
     }
 
-    public AltGameModeBase GetGameMode(GameModeType gameMode)
+    public GameModeBase GetGameMode(GameModeType gameMode)
     {
         if (!s_gameModeTypes.TryGetValue(gameMode, out var gameModeClassType))
         {
             throw new InvalidOperationException($"GameModeType {gameMode} does not have a matching GameMode class");
         }
 
-        return serviceProvider.GetService(gameModeClassType) as AltGameModeBase ??
+        return serviceProvider.GetService(gameModeClassType) as GameModeBase ??
                throw new InvalidOperationException($"GameModeType {gameMode} does not have a valid GameMode class");
     }
 
@@ -56,36 +52,31 @@ public class AltGameModeFactory(IServiceProvider serviceProvider)
     {
         var gameModeOptions = world.Config.GameModeOptions;
 
-        if (gameModeOptions.SelectedGameModeType == GameModeType.Vanilla)
-        {
-            return world;
-        }
+        var rng = new Random(seed);
+        rng.Sanitize();
 
         var gameMode = GetGameMode(gameModeOptions.SelectedGameModeType);
-        gameMode.UpdateWorld(world, seed, gameModeOptions);
+
+        gameMode.UpdateWorld(world, rng, gameModeOptions);
+
+        if (gameModeOptions.RandomizeNumericAmounts)
+        {
+            gameModeOptions.GanonCrystalCount = rng.Next(gameModeOptions.MinGanonCrystalCount, gameModeOptions.MaxGanonCrystalCount + 1);
+            gameModeOptions.TourianBossCount = rng.Next(gameModeOptions.MinTourianBossCount, gameModeOptions.MaxTourianBossCount + 1);
+        }
+
         return world;
     }
 
     public string? GetGameStartText(World world)
     {
         var gameModeOptions = world.Config.GameModeOptions;
-
-        if (gameModeOptions.SelectedGameModeType == GameModeType.Vanilla)
-        {
-            return null;
-        }
-
         var gameMode = GetGameMode(gameModeOptions.SelectedGameModeType);
         return gameMode.GetGameStartText(world);
     }
 
-    public AltGameModeInGameText? GetInGameText(World world)
+    public GameModeInGameText GetInGameText(World world)
     {
-        if (world.Config.GameModeOptions.SelectedGameModeType == GameModeType.Vanilla)
-        {
-            return null;
-        }
-
         var gameMode = GetGameMode(world.Config.GameModeOptions.SelectedGameModeType);
         return gameMode.GetInGameText(world);
     }
@@ -95,45 +86,47 @@ public class AltGameModeFactory(IServiceProvider serviceProvider)
         return s_gameModeDescriptions;
     }
 
-    public void UpdateInitialTrackerState(GameModeOptions gameModeOptions, TrackerState trackerState)
+    public void UpdateInitialTrackerState(GameModeOptions gameModeOptions, TrackerState trackerState, ParsedRomDetails? parsedRomDetails)
     {
-        if (gameModeOptions.SelectedGameModeType == GameModeType.Vanilla)
+        var gameMode = GetGameMode(gameModeOptions.SelectedGameModeType);
+        gameMode.UpdateInitialTrackerState(gameModeOptions, trackerState, parsedRomDetails);
+
+        int? markedGanonsTowerCrystalCount = null;
+
+        if (parsedRomDetails == null)
         {
-            return;
+            if (gameModeOptions.RandomizeNumericAmounts)
+            {
+                markedGanonsTowerCrystalCount =
+                    gameModeOptions.MinGanonsTowerCrystalCount == gameModeOptions.MaxGanonsTowerCrystalCount
+                        ? gameModeOptions.MinGanonsTowerCrystalCount
+                        : null;
+            }
+            else
+            {
+                markedGanonsTowerCrystalCount = gameModeOptions.GanonsTowerCrystalCount;
+            }
         }
 
-        var gameMode = GetGameMode(gameModeOptions.SelectedGameModeType);
-        gameMode.UpdateInitialTrackerState(gameModeOptions, trackerState);
+        trackerState.MarkedGanonsTowerCrystalCount = markedGanonsTowerCrystalCount;
     }
 
     public string GetSpoilerText(GameModeOptions gameModeOptions)
     {
-
-        string goalText;
-
-        if (gameModeOptions.SelectedGameModeType == GameModeType.Vanilla)
-        {
-            goalText =
-                $"GanonCrystalCount = {gameModeOptions.GanonCrystalCount}, TourianBossCount = {gameModeOptions.TourianBossCount}";
-        }
-        else
-        {
-            var gameMode = GetGameMode(gameModeOptions.SelectedGameModeType);
-            goalText = gameMode.GetSpoilerText(gameModeOptions);
-        }
-
-        return
-            $"Goal: {gameModeOptions.SelectedGameModeType} | {goalText}, LiftOffOnGoalCompletion =  {gameModeOptions.LiftOffOnGoalCompletion}";
+        var gameMode = GetGameMode(gameModeOptions.SelectedGameModeType);
+        var goalText = gameMode.GetSpoilerText(gameModeOptions);
+        return $"Goal: {gameModeOptions.SelectedGameModeType} | {goalText}, LiftOffOnGoalCompletion =  {gameModeOptions.LiftOffOnGoalCompletion}";
     }
 
     public List<Location>? GetGameModeLocations(World world, List<World> allWorlds)
     {
-        if (world.Config.GameModeOptions.SelectedGameModeType == GameModeType.Vanilla)
-        {
-            return null;
-        }
-
         var gameMode = GetGameMode(world.Config.GameModeOptions.SelectedGameModeType);
         return gameMode.GetGameModeLocations(world, allWorlds);
+    }
+
+    public Stream GetLiftOffOnGoalCompletionIpsPatch(GameModeOptions gameModeOptions)
+    {
+        var gameMode = GetGameMode(gameModeOptions.SelectedGameModeType);
+        return gameMode.GetLiftOffOnGoalCompletionIpsPatch();
     }
 }

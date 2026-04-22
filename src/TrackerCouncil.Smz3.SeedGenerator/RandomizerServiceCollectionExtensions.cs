@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Interfaces;
-using TrackerCouncil.Smz3.SeedGenerator.AltGameModes;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
 using TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
+using TrackerCouncil.Smz3.SeedGenerator.GameModes;
 using TrackerCouncil.Smz3.SeedGenerator.Generation;
 using TrackerCouncil.Smz3.SeedGenerator.Infrastructure;
 using TrackerCouncil.Smz3.Shared.Models;
@@ -17,7 +17,7 @@ public static class RandomizerServiceCollectionExtensions
     public static IServiceCollection AddRandomizerServices(this IServiceCollection services)
     {
         services.AddRomPatches<RomPatchFactory>();
-        services.AddGameModes<AltGameModeFactory>();
+        services.AddGameModes<GameModeFactory>();
         services.AddSingleton<RomPatchFactory>();
         services.AddGeneratedRomLoader();
         services.AddSmz3Randomizer();
@@ -88,15 +88,15 @@ public static class RandomizerServiceCollectionExtensions
     private static IServiceCollection AddGameModes<TAssembly>(this IServiceCollection services)
     {
         var moduleTypes = typeof(TAssembly).Assembly.GetTypes()
-            .Where(x => x.IsSubclassOf(typeof(AltGameModeBase)));
+            .Where(x => x.IsSubclassOf(typeof(GameModeBase)));
 
         foreach (var moduleType in moduleTypes)
         {
             services.TryAddScoped(moduleType);
-            AltGameModeFactory.AddGameModeClass(moduleType);
+            GameModeFactory.AddGameModeClass(moduleType);
         }
 
-        services.AddSingleton<AltGameModeFactory>();
+        services.AddSingleton<GameModeFactory>();
 
         return services;
     }

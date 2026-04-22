@@ -93,7 +93,9 @@ public class DarkWorldNorthEast : Z3Region
             var isPyramidOpen = World.Config.GameModeOptions.OpenPyramid || canClimbGt;
             var hasMetGoal = hasAltGameMode
                 ? isAltGameModeComplete
-                : numAcquiredCrystals >= ganonCrystalRequirement;
+                : World.Config.GameModeOptions.SelectedGameModeType == GameModeType.Vanilla
+                  ? numAcquiredCrystals >= ganonCrystalRequirement
+                  : progression is { AllCrystals: true, AllPendants: true, MetroidBossCount: >= 4, Agahnim: true };
             var canHurtGanon = hasMetGoal && progression.MasterSword &&
                                (progression.Lamp || progression.FireRod);
 
@@ -113,8 +115,11 @@ public class DarkWorldNorthEast : Z3Region
                                                                assumedKeyProgression.LegacyProgression)));
 
             var isPyramidOpen = World.Config.GameModeOptions.OpenPyramid || canClimbGt;
-            var canHurtGanon = numAcquiredCrystals >= ganonCrystalRequirement && progression.MasterSword &&
-                               (progression.Lamp || progression.FireRod);
+            var hasMetGoal = World.Config.GameModeOptions.SelectedGameModeType == GameModeType.Vanilla
+                ? numAcquiredCrystals >= ganonCrystalRequirement
+                : progression is { AllCrystals: true, AllPendants: true, MetroidBossCount: >= 4, Agahnim: true };
+
+            var canHurtGanon = hasMetGoal && progression.MasterSword && (progression.Lamp || progression.FireRod);
 
             NewAccessibility = canAccessPyramid && isPyramidOpen && canHurtGanon
                 ? Accessibility.Available

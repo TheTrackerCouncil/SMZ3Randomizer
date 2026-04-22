@@ -121,6 +121,7 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
             var ganonCrystalCount = GoalsPatch.GetGanonCrystalCountFromRom(rom);
             var tourianBossCount = GoalsPatch.GetTourianBossCountFromRom(rom, romGenerator == RomGenerator.Cas);
             var openPyramid = GoalsPatch.GetOpenPyramid(rom);
+            var gameModeType = GoalsPatch.GetGameModeType(rom);
             var text = ZeldaTextsPatch.ParseRomText(rom);
             var spinJumpAnimations =
                 romGenerator != RomGenerator.Cas && MetadataPatch.GetSpinJumpAnimationsFromRom(rom);
@@ -149,7 +150,8 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
                 Prerequisites = prerequisites,
                 StartingItems = startingItems,
                 ParsedText = text,
-                SpinJumpAnimations = spinJumpAnimations
+                SpinJumpAnimations = spinJumpAnimations,
+                GameModeType = gameModeType
             };
         }
         catch (Exception e)
@@ -174,6 +176,7 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
         config.GameModeOptions.TourianBossCount = parsedRomDetails.TourianBossCount;
         config.GameModeOptions.OpenPyramid = parsedRomDetails.OpenPyarmid;
         config.GameModeOptions.SkipTourianBossDoor = parsedRomDetails.SkipTourianBossDoor;
+        config.GameModeOptions.SelectedGameModeType = parsedRomDetails.GameModeType;
         config.GameModeOptions.ShuffleMetroidBossTokens = true;
         config.LocationItems.Clear();
         config.ItemOptions = parsedRomDetails.StartingItems.ToDictionary(x => $"ItemType:{x.Key}", x => x.Value);

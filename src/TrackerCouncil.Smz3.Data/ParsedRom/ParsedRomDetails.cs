@@ -19,6 +19,7 @@ public class ParsedRomDetails
     public required bool OpenPyarmid { get; set; }
     public required bool SkipTourianBossDoor { get; set; }
     public required bool SpinJumpAnimations { get; set; }
+    public required GameModeType GameModeType { get; set; }
     public required List<ParsedRomPlayer> Players { get; set; }
     public required List<ParsedRomLocationDetails> Locations { get; set; }
     public required List<ParsedRomBossDetails> Bosses { get; set; }

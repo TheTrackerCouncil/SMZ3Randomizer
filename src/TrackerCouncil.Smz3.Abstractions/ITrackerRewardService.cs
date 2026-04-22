@@ -7,6 +7,11 @@ namespace TrackerCouncil.Smz3.Abstractions;
 public interface ITrackerRewardService
 {
     /// <summary>
+    /// Event called when rewards have been added or removed
+    /// </summary>
+    public event EventHandler? RewardsChanged;
+
+    /// <summary>
     /// Sets the dungeon's reward to the specific pendant or crystal.
     /// </summary>
     /// <param name="rewardRegion">The dungeon to mark.</param>

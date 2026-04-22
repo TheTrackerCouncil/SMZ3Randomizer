@@ -10,14 +10,14 @@ using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Data.GeneratedData;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
-using TrackerCouncil.Smz3.SeedGenerator.AltGameModes;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
+using TrackerCouncil.Smz3.SeedGenerator.GameModes;
 using TrackerCouncil.Smz3.Shared;
 using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.Generation;
 
-public class RomTextService(ILogger<RomTextService> logger, IGameHintService gameHintService, ISnesConnectorService snesConnectorService, AltGameModeFactory altGameModeFactory)
+public class RomTextService(ILogger<RomTextService> logger, IGameHintService gameHintService, ISnesConnectorService snesConnectorService, GameModeFactory gameModeFactory)
 {
     private static readonly string s_plandoSchemaPath = @"https://raw.githubusercontent.com/TheTrackerCouncil/SMZ3CasConfigs/refs/heads/main/Schemas/plando.json";
 
@@ -197,7 +197,7 @@ public class RomTextService(ILogger<RomTextService> logger, IGameHintService gam
 
             if (!isParsedRom)
             {
-                log.AppendLine(altGameModeFactory.GetSpoilerText(gameModeOptions));
+                log.AppendLine(gameModeFactory.GetSpoilerText(gameModeOptions));
             }
 
             string keysanityOptions;

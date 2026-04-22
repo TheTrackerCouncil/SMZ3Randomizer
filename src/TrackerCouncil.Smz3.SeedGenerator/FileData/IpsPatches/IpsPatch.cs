@@ -224,5 +224,11 @@ public static class IpsPatch
     /// <returns>A new stream that contains the IPS patch.</returns>
     public static Stream LiftOffOnGoalCompletionAlt() => GetStream("LiftOffOnGoalCompletionAlt.ips");
 
+    /// <summary>
+    /// Gets a stream for the IPS patch to allow you to lift off from ship after completing goal
+    /// </summary>
+    /// <returns>A new stream that contains the IPS patch.</returns>
+    public static Stream LiftOffOnGoalCompletionAllDungeons() => GetStream("LiftOffOnGoalCompletionAllDungeons.ips");
+
 
 }

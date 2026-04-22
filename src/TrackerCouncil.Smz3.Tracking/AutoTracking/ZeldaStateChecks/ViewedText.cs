@@ -80,15 +80,7 @@ public class ViewedText : IZeldaStateCheck
         }
         else if (currentState.OverworldScreen == 91 && currentState.IsWithinRegion(1961, 1784, 1976, 1785))
         {
-            if (tracker.LocalConfig?.GameModeOptions.SelectedGameModeType == GameModeType.Vanilla &&
-                World.State?.GanonCrystalCount != World.State?.MarkedGanonCrystalCount)
-            {
-                tracker.GameStateTracker.UpdateGanonRequirement(World.State?.GanonCrystalCount ?? World.Config.GameModeOptions.GanonCrystalCount, true);
-            }
-            else if (tracker.AltGameModeService.HasAltGameMode)
-            {
-                tracker.AltGameModeService.OnViewingPyramidText();
-            }
+            tracker.GameModeService.OnViewingPyramidText();
         }
         // Viewed Bombos tablet text
         else if (currentState is { OverworldScreen: 48, LinkState: 0 } &&

@@ -61,7 +61,7 @@ internal class MetadataService : IMetadataService
 
     public UIConfig UILayouts { get; private set; } = null!;
 
-    public AltGameModesConfig AltGameModes { get; private set; } = null!;
+    public GameModesConfig GameModes { get; private set; } = null!;
 
     public string Mood { get; private set; } = null!;
 
@@ -111,7 +111,7 @@ internal class MetadataService : IMetadataService
             Rewards = _configProvider.GetRewardConfig(profiles, Mood);
             Rooms = _configProvider.GetRoomConfig(profiles, Mood);
             UILayouts = _configProvider.GetUIConfig(profiles, Mood);
-            AltGameModes = _configProvider.GetAltGameModesConfig(profiles, Mood);
+            GameModes = _configProvider.GetGameModesConfig(profiles, Mood);
         }
         else
         {
@@ -129,7 +129,7 @@ internal class MetadataService : IMetadataService
             Rewards = IMergeable<RewardInfo>.Combine(_configProvider.GetRewardConfig(profiles, Mood), TrackerSpriteProfile.RewardConfig);
             Rooms = IMergeable<RoomInfo>.Combine(_configProvider.GetRoomConfig(profiles, Mood), TrackerSpriteProfile.RoomConfig);
             UILayouts = _configProvider.GetUIConfig(profiles, Mood);
-            AltGameModes = _configProvider.GetAltGameModesConfig(profiles, Mood);
+            GameModes = _configProvider.GetGameModesConfig(profiles, Mood);
         }
     }
 

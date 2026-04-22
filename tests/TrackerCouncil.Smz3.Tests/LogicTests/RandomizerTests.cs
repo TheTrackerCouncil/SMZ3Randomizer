@@ -11,12 +11,13 @@ using TrackerCouncil.Smz3.Data.Logic;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.WorldData;
-using TrackerCouncil.Smz3.SeedGenerator.AltGameModes;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
 using TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
+using TrackerCouncil.Smz3.SeedGenerator.GameModes;
 using TrackerCouncil.Smz3.SeedGenerator.Generation;
 using TrackerCouncil.Smz3.SeedGenerator.Infrastructure;
 using TrackerCouncil.Smz3.Shared.Enums;
+using TrackerCouncil.Smz3.Tests.Text;
 using Xunit;
 
 namespace TrackerCouncil.Smz3.Tests.LogicTests;
@@ -175,8 +176,9 @@ public class RandomizerTests
             .AddSingleton<IPatcherService, PatcherService>()
             .AddSingleton<TrackerOptionsAccessor>()
             .AddSingleton<TrackerSpriteService>()
-            .AddTransient<AltGameModeFactory>()
+            .AddTransient<GameModeFactory>()
             .AddTransient<PlaythroughService>()
+            .AddGameModes<GameModeFactory>()
             .AddConfigs()
             .BuildServiceProvider();
 
@@ -186,6 +188,6 @@ public class RandomizerTests
             GetLogger<Smz3Randomizer>(),
             serviceProvider.GetRequiredService<IPatcherService>(),
             serviceProvider.GetRequiredService<PlaythroughService>(),
-            serviceProvider.GetRequiredService<AltGameModeFactory>());
+            serviceProvider.GetRequiredService<GameModeFactory>());
     }
 }

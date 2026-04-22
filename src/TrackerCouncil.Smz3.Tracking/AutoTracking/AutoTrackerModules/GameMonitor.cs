@@ -10,13 +10,13 @@ using SnesConnectorLibrary.Responses;
 using SNI;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Tracking;
-using TrackerCouncil.Smz3.SeedGenerator.AltGameModes;
+using TrackerCouncil.Smz3.SeedGenerator.GameModes;
 using TrackerCouncil.Smz3.Shared.Enums;
 using TrackerCouncil.Smz3.Tracking.Services;
 
 namespace TrackerCouncil.Smz3.Tracking.AutoTracking.AutoTrackerModules;
 
-public class GameMonitor(TrackerBase tracker, ISnesConnectorService snesConnector, ILogger<GameMonitor> logger, IWorldQueryService worldQueryService, AltGameModeFactory altGameModeFactory) : AutoTrackerModule(tracker, snesConnector, logger)
+public class GameMonitor(TrackerBase tracker, ISnesConnectorService snesConnector, ILogger<GameMonitor> logger, IWorldQueryService worldQueryService, GameModeFactory gameModeFactory) : AutoTrackerModule(tracker, snesConnector, logger)
 {
     private bool bIsCheckingGameStart;
 
@@ -52,7 +52,7 @@ public class GameMonitor(TrackerBase tracker, ISnesConnectorService snesConnecto
         });
 
         // If the player is using an alt game mode, make sure the flag is set
-        if (worldQueryService.World.Config.GameModeOptions.SelectedGameModeType != GameModeType.Vanilla)
+        if (worldQueryService.World.Config.GameModeOptions.IsAltGameMode())
         {
             SnesConnector.AddRecurringMemoryRequest(new SnesRecurringMemoryRequest()
             {
@@ -64,7 +64,7 @@ public class GameMonitor(TrackerBase tracker, ISnesConnectorService snesConnecto
                 Length = 1,
                 OnResponse = CheckAltGameModeFlag,
                 FrequencySeconds = 15,
-                Filter = () => HasValidState && Tracker.AltGameModeService.IsAltGameModeComplete
+                Filter = () => HasValidState && Tracker.GameModeService.IsGameModeComplete
             });
         }
     }
@@ -165,7 +165,7 @@ public class GameMonitor(TrackerBase tracker, ISnesConnectorService snesConnecto
 
         if (bIsFirstStart)
         {
-            var gameModeString = altGameModeFactory.GetGameStartText(Tracker.World);
+            var gameModeString = gameModeFactory.GetGameStartText(Tracker.World);
             if (!string.IsNullOrEmpty(gameModeString))
             {
                 Tracker.Say(text: gameModeString);

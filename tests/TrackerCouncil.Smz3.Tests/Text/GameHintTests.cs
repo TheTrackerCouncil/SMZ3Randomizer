@@ -14,9 +14,9 @@ using TrackerCouncil.Smz3.Data.WorldData.Regions;
 using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda;
 using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda.DarkWorld;
 using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda.LightWorld;
-using TrackerCouncil.Smz3.SeedGenerator.AltGameModes;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
 using TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
+using TrackerCouncil.Smz3.SeedGenerator.GameModes;
 using TrackerCouncil.Smz3.SeedGenerator.Generation;
 using TrackerCouncil.Smz3.SeedGenerator.Infrastructure;
 using TrackerCouncil.Smz3.Shared.Enums;
@@ -356,6 +356,26 @@ public class GameHintTests
         Assert.Equal(LocationUsefulness.Mandatory, hintService.GetUsefulness(worlds[0].Locations.Where(x => x.Room is LightWorldNorthWest.BlindsHideoutRoom).ToList(), worlds, null));
     }
 
+    [Fact]
+    void AllDungeonsHints()
+    {
+        var world = GetVanillaWorld(new GameModeOptions() { SelectedGameModeType = GameModeType.AllDungeons });
+        var hintService = GetGameHintService();
+
+        // Move the bow and boots out of eastern palace for testing
+        var bow = world.FindLocation(LocationId.EasternPalaceBigChest);
+        var bowOtherItem = world.Locations.First(x => x is { Room: LightWorldNorthWest.BlindsHideoutRoom, ItemType: ItemType.ThreeBombs });
+        SwapLocationItems(bow, bowOtherItem);
+        var boots = world.FindLocation(LocationId.Sahasrahla);
+        var bootsOtherItem = world.Locations.First(x => x is { Room: LightWorldNorthWest.BlindsHideoutRoom, ItemType: ItemType.ThreeBombs });
+        SwapLocationItems(boots, bootsOtherItem);
+
+        // Eastern palace should be mandatory for the all dungeons, but useless for vanilla
+        Assert.Equal(LocationUsefulness.Mandatory, hintService.GetUsefulness(world.Locations.Where(x => x.Region is EasternPalace).ToList(), [world], null));
+        world.Config.GameModeOptions.SelectedGameModeType = GameModeType.Vanilla;
+        Assert.Equal(LocationUsefulness.Useless, hintService.GetUsefulness(world.Locations.Where(x => x.Region is EasternPalace).ToList(), [world], null));
+    }
+
     #region Private methods
     private void SwapLocationItems(Location one, Location two)
     {
@@ -433,9 +453,9 @@ public class GameHintTests
             .AddSingleton<IPatcherService, PatcherService>()
             .AddSingleton<TrackerOptionsAccessor>()
             .AddSingleton<TrackerSpriteService>()
-            .AddTransient<AltGameModeFactory>()
+            .AddTransient<GameModeFactory>()
             .AddTransient<PlaythroughService>()
-            .AddGameModes<AltGameModeFactory>()
+            .AddGameModes<GameModeFactory>()
             .AddConfigs()
             .BuildServiceProvider();
 
@@ -454,7 +474,7 @@ internal static class ServiceCollectionExtensions
         lock (s_lockObject)
         {
             var moduleTypes = typeof(TAssembly).Assembly.GetTypes()
-                .Where(x => x.IsSubclassOf(typeof(AltGameModeBase)));
+                .Where(x => x.IsSubclassOf(typeof(GameModeBase)));
 
             foreach (var moduleType in moduleTypes)
             {
@@ -462,12 +482,13 @@ internal static class ServiceCollectionExtensions
 
                 if (!s_addedGameModes)
                 {
-                    AltGameModeFactory.AddGameModeClass(moduleType);
-                    s_addedGameModes = true;
+                    GameModeFactory.AddGameModeClass(moduleType);
                 }
             }
 
-            services.AddSingleton<AltGameModeFactory>();
+            s_addedGameModes = true;
+
+            services.AddSingleton<GameModeFactory>();
 
             return services;
         }

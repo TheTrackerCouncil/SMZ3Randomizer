@@ -111,6 +111,7 @@ internal class TrackerBossService(IPlayerProgressionService playerProgressionSer
         if (boss.Region != null)
         {
             MarkBossAsDefeated(boss.Region, confidence, autoTracked, admittedGuilt, force: force);
+            UpdateAllAccessibility(false);
             return;
         }
 

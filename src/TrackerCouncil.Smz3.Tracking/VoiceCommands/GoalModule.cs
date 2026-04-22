@@ -76,12 +76,14 @@ public class GoalModule : TrackerModule
         {
             var count = int.Parse(result.Semantics[ItemCountKey].Value);
             TrackerBase.GameStateTracker.UpdateGanonRequirement(count, false);
+            TrackerBase.GameModeService.NotifyOfGoalStateChange();
         });
 
         AddCommand("Tourian Boss Count", GetTourianBossCountRule(), (result) =>
         {
             var count = int.Parse(result.Semantics[ItemCountKey].Value);
             TrackerBase.GameStateTracker.UpdateTourianRequirement(count, false);
+            TrackerBase.GameModeService.NotifyOfGoalStateChange();
         });
     }
 }

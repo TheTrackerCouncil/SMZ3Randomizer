@@ -5,11 +5,17 @@ using TrackerCouncil.Smz3.Shared.Enums;
 
 namespace TrackerCouncil.Smz3.SeedGenerator.FileData.Patches;
 
-[SkipForParsedRoms]
 public class GoalsPatch : RomPatch
 {
     public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
     {
+        if (data.IsParsedRom && data.Config.ParsedRomDetails!.RomGenerator != RomGenerator.Cas)
+        {
+            yield return new GeneratedPatch(Snes(0xF47008), [(byte)data.Config.ParsedRomDetails.TourianBossCount, 0x00]);
+            yield return new GeneratedPatch(Snes(0xF47012), [(byte)data.Config.ParsedRomDetails.GanonCrystalCount, 0x00]);
+            yield break;
+        }
+
         // Open pyramid
         if (data.Config.GameModeOptions.OpenPyramid)
         {
@@ -22,11 +28,12 @@ public class GoalsPatch : RomPatch
         yield return new GeneratedPatch(0x40008C, gtCrystals == 0 ? [0x01] : [0x00]);
 
         // Crystals to damage Ganon
-        yield return new GeneratedPatch(0x40005F, [(byte)data.Config.GameModeOptions.GanonCrystalCount]);
+        var ganonCrystals = data.Config.GameModeOptions.SelectedGameModeType == GameModeType.AllDungeons ? 7 : data.Config.GameModeOptions.GanonCrystalCount;
+        yield return new GeneratedPatch(0x40005F, [(byte)ganonCrystals]);
         yield return new GeneratedPatch(Snes(0xF47012), [(byte)data.Config.GameModeOptions.GanonCrystalCount, 0x00]);
 
         // Bosses to enter Tourian
-        var numBosses = data.Config.GameModeOptions.TourianBossCount;
+        var numBosses = data.Config.GameModeOptions.SelectedGameModeType == GameModeType.AllDungeons ? 4 : data.Config.GameModeOptions.TourianBossCount;
         yield return new GeneratedPatch(Snes(0xF47008), [(byte)numBosses, 0x00]);
         yield return new GeneratedPatch(Snes(0xF4700B), numBosses == 0 ? [0x00, 0x04] : [0x00, 0x01]);
 
@@ -38,6 +45,10 @@ public class GoalsPatch : RomPatch
         if (data.Config.GameModeOptions.SelectedGameModeType == GameModeType.Vanilla)
         {
             yield return new GeneratedPatch(Snes(0x30803E), [0x03]);
+        }
+        else if (data.Config.GameModeOptions.SelectedGameModeType == GameModeType.AllDungeons)
+        {
+            yield return new GeneratedPatch(Snes(0x30803E), [0x02]);
         }
         else
         {
@@ -71,5 +82,18 @@ public class GoalsPatch : RomPatch
     public static bool GetOpenPyramid(byte[] rom)
     {
         return rom[Snes(0x30808B)] == 0x01;
+    }
+
+    public static GameModeType GetGameModeType(byte[] rom)
+    {
+        var val = rom[Snes(0x30803E)];
+        if (val == 0x02)
+        {
+            return GameModeType.AllDungeons;
+        }
+        else
+        {
+            return GameModeType.Vanilla;
+        }
     }
 }

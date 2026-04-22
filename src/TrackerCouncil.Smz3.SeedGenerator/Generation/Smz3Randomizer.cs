@@ -9,9 +9,9 @@ using TrackerCouncil.Smz3.Data.GeneratedData;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
-using TrackerCouncil.Smz3.SeedGenerator.AltGameModes;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
 using TrackerCouncil.Smz3.SeedGenerator.FileData;
+using TrackerCouncil.Smz3.SeedGenerator.GameModes;
 using TrackerCouncil.Smz3.SeedGenerator.Infrastructure;
 using TrackerCouncil.Smz3.Shared.Enums;
 
@@ -24,7 +24,7 @@ public class Smz3Randomizer(
     ILogger<Smz3Randomizer> logger,
     IPatcherService patcherService,
     PlaythroughService playthroughService,
-    AltGameModeFactory altGameModeFactory)
+    GameModeFactory gameModeFactory)
     : ISeededRandomizer
 {
     public static string Name => "Super Metroid & A Link to the Past Cas’ Randomizer";
@@ -54,7 +54,7 @@ public class Smz3Randomizer(
         var worlds = new List<World>();
         if (primaryConfig.SingleWorld)
         {
-            worlds.Add(altGameModeFactory.UpdateWorld(new World(primaryConfig, "Player", 0,
+            worlds.Add(gameModeFactory.UpdateWorld(new World(primaryConfig, "Player", 0,
                 Guid.NewGuid().ToString("N")), seedNumber));
             logger.LogDebug(
                 "Seed: {SeedNumber} | Race: {PrimaryConfigRace} | Keysanity: {PrimaryConfigKeysanityMode} | Item placement: {PrimaryConfigItemPlacementRule}",
@@ -63,7 +63,7 @@ public class Smz3Randomizer(
         else
         {
             worlds.AddRange(configs.OrderBy(x => x.Id).Select(config =>
-                altGameModeFactory.UpdateWorld(new World(config, config.PlayerName, config.Id, config.PlayerGuid, config.IsLocalConfig), rng.Next())));
+                gameModeFactory.UpdateWorld(new World(config, config.PlayerName, config.Id, config.PlayerGuid, config.IsLocalConfig), rng.Next())));
             logger.LogDebug(
                 "Seed: {SeedNumber} | Race: {PrimaryConfigRace} | World Count: {Count}",
                 seedNumber, primaryConfig.Race, configs.Count);

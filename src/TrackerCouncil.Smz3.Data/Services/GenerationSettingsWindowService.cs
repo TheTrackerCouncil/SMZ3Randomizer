@@ -41,6 +41,7 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
             _model.Basic.SelectedPreset = _model.Basic.Presets.First();
             _model.Basic.MsuShuffleStyle = _options.PatchOptions.MsuShuffleStyle;
             _model.Basic.MsuRandomizationStyle = _options.PatchOptions.MsuRandomizationStyle;
+            _model.Basic.LiftOffOnGoalCompletion = _options.SeedOptions.GameModeOptions.LiftOffOnGoalCompletion;
 
             _model.GameSettings.RandomizeNumericValues = _options.SeedOptions.GameModeOptions.RandomizeNumericAmounts;
             _model.GameSettings.GoalSettings.GameModeTypeDescriptions = gameModeDescriptions;
@@ -214,6 +215,11 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
         _options.PatchOptions.MetroidControls.ItemCancel = _model.Customizations.ItemCancelButton;
         _options.PatchOptions.MetroidControls.AimUp = _model.Customizations.AimUpButton;
         _options.PatchOptions.MetroidControls.AimDown = _model.Customizations.AimDownButton;
+
+        if (_model.IsImportMode)
+        {
+            _options.SeedOptions.GameModeOptions.LiftOffOnGoalCompletion = _model.Basic.LiftOffOnGoalCompletion;
+        }
 
         _options.Save();
     }

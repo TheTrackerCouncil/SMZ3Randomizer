@@ -223,7 +223,6 @@ public class GenerationWindowGoalSettingsViewModel : ViewModelBase
     public bool ShowRandomizedSpazerCounts => RandomizeGoalCounts && IsSpazerHunt;
     public bool StaticGoalCounts => !RandomizeGoalCounts;
     public bool IsDefaultGameMode => SelectedGameModeType == GameModeType.Vanilla;
-    public bool IsAltGameMode => SelectedGameModeType != GameModeType.Vanilla;
     public bool IsSpazerHunt => SelectedGameModeType == GameModeType.SpazerHunt;
     public Dictionary<GameModeType, string> GameModeTypeDescriptions = new();
 
