@@ -275,22 +275,22 @@ public class World
     {
         if (Config.GameModeOptions.KeysanityMode == KeysanityMode.Random)
         {
-            Config.GameModeOptions.KeysanityMode = (KeysanityMode)rnd.Next(0, 4);
+            Config.GameModeOptions.KeysanityMode = EnumUtils.RandomExcludingLast<KeysanityMode>(rnd);
         }
 
         if (Config.GameModeOptions.KeysanityGanonsTowerBigKeyLocation == KeysanityGanonsTowerBigKeyLocation.Random)
         {
-            Config.GameModeOptions.KeysanityGanonsTowerBigKeyLocation = (KeysanityGanonsTowerBigKeyLocation)rnd.Next(0, 2);
+            Config.GameModeOptions.KeysanityGanonsTowerBigKeyLocation = EnumUtils.RandomExcludingLast<KeysanityGanonsTowerBigKeyLocation>(rnd);
         }
 
         if (Config.GameModeOptions.PyramidHole == PyramidHole.Random)
         {
-            Config.GameModeOptions.PyramidHole = (PyramidHole)rnd.Next(0, 2);
+            Config.GameModeOptions.PyramidHole = EnumUtils.RandomExcludingLast<PyramidHole>(rnd);
         }
 
         if (Config.GameModeOptions.TourianBossDoor == TourianBossDoor.Random)
         {
-            Config.GameModeOptions.TourianBossDoor = (TourianBossDoor)rnd.Next(0, 2);
+            Config.GameModeOptions.TourianBossDoor = EnumUtils.RandomExcludingLast<TourianBossDoor>(rnd);
         }
 
         SetMedallions(rnd);
