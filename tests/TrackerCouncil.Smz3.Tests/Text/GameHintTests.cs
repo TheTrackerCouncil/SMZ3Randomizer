@@ -100,18 +100,18 @@ public class GameHintTests
 
         // If we set the ganon crystal requirement to 0, it should show up as useless
         world.Config.GameModeOptions.GanonCrystalCount = 0;
-        world.Config.GameModeOptions.OpenPyramid = true;
+        world.Config.GameModeOptions.PyramidHole = PyramidHole.Open;
         Assert.Equal(LocationUsefulness.Useless, hintService.GetUsefulness(locations, [world], null));
 
         // But if the player has to climb GT to access ganon, it should be mandatory
         world.Config.GameModeOptions.GanonCrystalCount = 0;
-        world.Config.GameModeOptions.OpenPyramid = false;
+        world.Config.GameModeOptions.PyramidHole = PyramidHole.Closed;
         Assert.Equal(LocationUsefulness.Mandatory, hintService.GetUsefulness(locations, [world], null));
 
         // Unless GT also requires 0 crystals
         world.Config.GameModeOptions.GanonCrystalCount = 0;
         world.Config.GameModeOptions.GanonsTowerCrystalCount = 0;
-        world.Config.GameModeOptions.OpenPyramid = false;
+        world.Config.GameModeOptions.PyramidHole = PyramidHole.Closed;
         Assert.Equal(LocationUsefulness.Useless, hintService.GetUsefulness(locations, [world], null));
     }
 
@@ -137,7 +137,7 @@ public class GameHintTests
         var world = GetVanillaWorld();
         world.Config.GameModeOptions.GanonCrystalCount = 0;
         world.Config.GameModeOptions.GanonsTowerCrystalCount = 0;
-        world.Config.GameModeOptions.OpenPyramid = true;
+        world.Config.GameModeOptions.PyramidHole = PyramidHole.Open;
         var hintService = GetGameHintService();
 
         // Move the bow and boots out of eastern palace for testing
@@ -217,7 +217,7 @@ public class GameHintTests
         Assert.Equal(LocationUsefulness.Key, hintService.GetUsefulness([crateriaBossKeycard], [world], null));
 
         // But if tourian boss door is disabled, then it should be marked as useless
-        world.Config.GameModeOptions.SkipTourianBossDoor = true;
+        world.Config.GameModeOptions.TourianBossDoor = TourianBossDoor.Open;
         Assert.Equal(LocationUsefulness.Useless, hintService.GetUsefulness([crateriaBossKeycard], [world], null));
 
         // Make sure the lower norfair boss keycard location shows up as a key initially

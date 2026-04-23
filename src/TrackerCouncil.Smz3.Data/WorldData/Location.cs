@@ -413,7 +413,7 @@ public class Location
         if (World.Config.MultiWorld && item.Type == ItemType.ProgressiveShield && item.World != World)
             fillable = false;
         // If the user wants the GT key in GT for the guessing game while playing Keysanity
-        else if (item is { Type: ItemType.BigKeyGT, World.Config.ZeldaKeysanity: true, World.Config.GameModeOptions.PlaceGTBigKeyInGT: true })
+        else if (item is { Type: ItemType.BigKeyGT, World.Config.ZeldaKeysanity: true, World.Config.GameModeOptions.KeysanityGanonsTowerBigKeyLocation: KeysanityGanonsTowerBigKeyLocation.GanonsTower })
             fillable = fillable && Region is GanonsTower;
 
         Item = oldItem;

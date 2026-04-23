@@ -273,6 +273,26 @@ public class World
 
     public void Setup(Random rnd)
     {
+        if (Config.GameModeOptions.KeysanityMode == KeysanityMode.Random)
+        {
+            Config.GameModeOptions.KeysanityMode = (KeysanityMode)rnd.Next(0, 4);
+        }
+
+        if (Config.GameModeOptions.KeysanityGanonsTowerBigKeyLocation == KeysanityGanonsTowerBigKeyLocation.Random)
+        {
+            Config.GameModeOptions.KeysanityGanonsTowerBigKeyLocation = (KeysanityGanonsTowerBigKeyLocation)rnd.Next(0, 2);
+        }
+
+        if (Config.GameModeOptions.PyramidHole == PyramidHole.Random)
+        {
+            Config.GameModeOptions.PyramidHole = (PyramidHole)rnd.Next(0, 2);
+        }
+
+        if (Config.GameModeOptions.TourianBossDoor == TourianBossDoor.Random)
+        {
+            Config.GameModeOptions.TourianBossDoor = (TourianBossDoor)rnd.Next(0, 2);
+        }
+
         SetMedallions(rnd);
         SetRewards(rnd);
         SetBottles(rnd);

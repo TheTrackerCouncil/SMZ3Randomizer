@@ -120,8 +120,15 @@ public class ZeldaTextsPatch(IMetadataService metadataService, IGameHintService 
             GameLines.TriforceRoom, _plandoText.TriforceRoom, true);
 
         var gtCrystalCount = data.World.Config.GameModeOptions.GanonsTowerCrystalCount;
-        SetText(StringTable.GanonsTowerGoalSign,
-            GameLines.GanonsTowerGoalSign, _plandoText.GanonsTowerGoalSign, false, gtCrystalCount == 1 ? "1 crystal" : $"{gtCrystalCount} crystals");
+        var gtCrystalCountText = gtCrystalCount == 1 ? "1 crystal" : $"{gtCrystalCount} crystals";
+        var gtKeyLocation = data.Worlds.SelectMany(world => world.Locations)
+            .FirstOrDefault(l => l.ItemIs(ItemType.BigKeyGT, data.World));
+        var gtKeyLocationPlayer = data.Config.MultiWorld && gtKeyLocation?.World != data.World
+            ? gtKeyLocation?.World.Player ?? "another player"
+            : "You";
+
+        SetText(StringTable.GanonsTowerGoalSign, GameLines.GanonsTowerGoalSign, _plandoText.GanonsTowerGoalSign, false,
+            gtCrystalCountText, gtKeyLocationPlayer, gtKeyLocation?.Region.Area ?? "unknown location");
 
         SetText(StringTable.GanonGoalSign, null, _plandoText.GanonGoalSign ?? gameModeText?.GanonGoalSign);
 

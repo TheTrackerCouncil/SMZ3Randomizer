@@ -207,12 +207,12 @@ public class RomTextService(ILogger<RomTextService> logger, IGameHintService gam
 
                 if (world.Config.MetroidKeysanity)
                 {
-                    keysanityOptions += $", SkipTourianBossDoor = {gameModeOptions.SkipTourianBossDoor}";
+                    keysanityOptions += $", TourianBossDoor = {gameModeOptions.TourianBossDoor}";
                 }
 
                 if (world.Config.ZeldaKeysanity)
                 {
-                    keysanityOptions += $", PlaceGTBigKeyInGT = {gameModeOptions.PlaceGTBigKeyInGT}";
+                    keysanityOptions += $", KeysanityGanonsTowerBigKeyLocation = {gameModeOptions.KeysanityGanonsTowerBigKeyLocation}";
                 }
             }
             else
@@ -221,7 +221,7 @@ public class RomTextService(ILogger<RomTextService> logger, IGameHintService gam
             }
 
             log.AppendLine(
-                $"Additional Settings: GanonsTowerCrystalCount = {gameModeOptions.GanonsTowerCrystalCount}, OpenPyramid = {gameModeOptions.OpenPyramid}, ShuffleMetroidBossTokens = {gameModeOptions.ShuffleMetroidBossTokens}, {keysanityOptions}");
+                $"Additional Settings: GanonsTowerCrystalCount = {gameModeOptions.GanonsTowerCrystalCount}, PyramidHole = {gameModeOptions.PyramidHole}, ShuffleMetroidBossTokens = {gameModeOptions.ShuffleMetroidBossTokens}, {keysanityOptions}");
 
             log.AppendLine();
         }

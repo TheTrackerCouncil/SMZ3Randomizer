@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using TrackerCouncil.Smz3.Shared;
 
 namespace TrackerCouncil.Smz3.Shared.Enums;
 
@@ -18,4 +17,7 @@ public enum KeysanityMode
 
     [Description("Metroid Only")]
     SuperMetroid,
+
+    [Description("Random")]
+    Random,
 }

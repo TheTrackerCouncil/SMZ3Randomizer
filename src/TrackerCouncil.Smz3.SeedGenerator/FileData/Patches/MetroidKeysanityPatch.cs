@@ -75,7 +75,7 @@ public class MetroidKeysanityPatch : RomPatch
 
             foreach (var door in s_doorList)
             {
-                if (door[0] == 0x99BD && data.World.Config.GameModeOptions.SkipTourianBossDoor)
+                if (door[0] == 0x99BD && data.World.Config.GameModeOptions.TourianBossDoor == TourianBossDoor.Open)
                 {
                     continue;
                 }

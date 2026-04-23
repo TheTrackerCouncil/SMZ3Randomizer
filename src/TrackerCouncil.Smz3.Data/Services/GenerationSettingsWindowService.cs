@@ -260,8 +260,8 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
 
         _model.GameSettings.AdditionalSettings.GanonsTowerCrystalCount = _model.PlandoConfig.GanonsTowerCrystalCount;
         _model.GameSettings.AdditionalSettings.KeysanityMode = _model.PlandoConfig.KeysanityMode;
-        _model.GameSettings.AdditionalSettings.SkipTourianBossDoor = _model.PlandoConfig.SkipTourianBossDoor;
-        _model.GameSettings.AdditionalSettings.OpenPyramid = _model.PlandoConfig.OpenPyramid;
+        _model.GameSettings.AdditionalSettings.TourianBossDoor = _model.PlandoConfig.SkipTourianBossDoor ? TourianBossDoor.Open : TourianBossDoor.Closed;
+        _model.GameSettings.AdditionalSettings.PyramidHole = _model.PlandoConfig.OpenPyramid ? PyramidHole.Open : PyramidHole.Closed;
 
         var hasShuffleMetroidBossTokens = false;
         foreach (var reward in _model.PlandoConfig.Rewards)
@@ -532,7 +532,7 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
                 sb.AppendLine($"  - GT Crystal Count: {details.GanonsTowerCrystalCount}");
                 sb.AppendLine($"  - Ganon Crystal Count: {details.GanonCrystalCount}");
                 sb.AppendLine($"  - Tourian Boss Count: {details.TourianBossCount}");
-                sb.AppendLine($"  - Open Pyramid: {details.OpenPyarmid}");
+                sb.AppendLine($"  - Open Pyramid: {details.OpenPyramid}");
             }
 
             sb.AppendLine($"  - IsMultiworld: {ynResponses[details.IsMultiworld]}");
@@ -552,7 +552,7 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
             if (_model.IsPlando)
             {
                 _model.GameSettings.GoalSettings.HideCrystalBossCount = _model.PlandoConfig?.HideGoalCount == true;
-                hiddenProperties.Add("PlaceGTBigKeyInGT");;
+                hiddenProperties.Add("KeysanityGanonsTowerBigKeyLocation");;
                 hiddenProperties.Add("MinGanonsTowerCrystalCount");
                 hiddenProperties.Add("MaxGanonsTowerCrystalCount");
                 hiddenProperties.Add("MinGanonCrystalCount");
@@ -647,7 +647,7 @@ public class GenerationSettingsWindowService(SpriteService spriteService, Option
             if (_model.GameSettings.AdditionalSettings.KeysanityMode is KeysanityMode.None
                 or KeysanityMode.SuperMetroid)
             {
-                hiddenProperties.Add("PlaceGTBigKeyInGT");
+                hiddenProperties.Add("KeysanityGanonsTowerBigKeyLocation");
             }
 
             sb.AppendLine("Game Mode");

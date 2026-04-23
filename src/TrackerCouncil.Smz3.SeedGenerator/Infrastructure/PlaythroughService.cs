@@ -172,13 +172,13 @@ public class PlaythroughService(ILogger<PlaythroughService> logger)
 
                     foreach (var world in worlds)
                     {
-                        if (world.Config is { MetroidKeysanity: true, GameModeOptions.SkipTourianBossDoor: false } && !items.Any(x => x.Type == ItemType.CardCrateriaBoss && x.World == world))
+                        if (world.Config is { MetroidKeysanity: true, GameModeOptions.TourianBossDoor: TourianBossDoor.Closed } && !items.Any(x => x.Type == ItemType.CardCrateriaBoss && x.World == world))
                         {
                             anyUnbeatableWorld = true;
                             break;
                         }
 
-                        var crystalCountRequired = world.Config.GameModeOptions.OpenPyramid
+                        var crystalCountRequired = world.Config.GameModeOptions.PyramidHole == PyramidHole.Open
                             ? world.Config.GameModeOptions.GanonCrystalCount
                             : Math.Max(world.Config.GameModeOptions.GanonCrystalCount,
                                 world.Config.GameModeOptions.GanonsTowerCrystalCount);

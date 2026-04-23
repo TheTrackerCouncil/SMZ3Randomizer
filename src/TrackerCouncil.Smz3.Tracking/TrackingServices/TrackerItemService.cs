@@ -42,7 +42,7 @@ internal class TrackerItemService(ILogger<TrackerTreasureService> logger, IPlaye
         var itemName = item.Name;
         var originalTrackingState = item.TrackingState;
 
-        var isGTPreBigKey = (!World.Config.ZeldaKeysanity || World.Config.GameModeOptions.PlaceGTBigKeyInGT)
+        var isGTPreBigKey = (!World.Config.ZeldaKeysanity || World.Config.GameModeOptions.KeysanityGanonsTowerBigKeyLocation == KeysanityGanonsTowerBigKeyLocation.GanonsTower)
                             && autoTracked
                             && location?.Region.GetType() == typeof(GanonsTower)
                             && !playerProgressionService.GetProgression(false).BigKeyGT;
