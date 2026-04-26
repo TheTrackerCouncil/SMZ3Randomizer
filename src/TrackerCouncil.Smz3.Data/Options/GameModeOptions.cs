@@ -29,10 +29,10 @@ public class GameModeOptions
     public int MinGanonsTowerCrystalCount { get; set; } = 7;
     public int MaxGanonsTowerCrystalCount { get; set; } = 7;
     public KeysanityMode KeysanityMode { get; set; }
-    public bool SkipTourianBossDoor { get; set; }
-    public bool PlaceGTBigKeyInGT { get; set; }
+    public TourianBossDoor TourianBossDoor { get; set; }
+    public KeysanityGanonsTowerBigKeyLocation KeysanityGanonsTowerBigKeyLocation { get; set; }
     public bool ShuffleMetroidBossTokens { get; set; }
-    public bool OpenPyramid { get; set; }
+    public PyramidHole PyramidHole { get; set; }
 
     public GameModeOptions Clone()
     {

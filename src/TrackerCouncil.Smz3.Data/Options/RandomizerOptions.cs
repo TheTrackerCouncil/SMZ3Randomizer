@@ -160,10 +160,16 @@ public class RandomizerOptions : INotifyPropertyChanged
                 options.SeedOptions.GameModeOptions.GanonCrystalCount = options.SeedOptions.GanonCrystalCount.Value;
                 options.SeedOptions.GameModeOptions.GanonsTowerCrystalCount = options.SeedOptions.GanonsTowerCrystalCount!.Value;
                 options.SeedOptions.GameModeOptions.TourianBossCount = options.SeedOptions.TourianBossCount!.Value;
-                options.SeedOptions.GameModeOptions.SkipTourianBossDoor = options.SeedOptions.SkipTourianBossDoor!.Value;
+                options.SeedOptions.GameModeOptions.TourianBossDoor = options.SeedOptions.SkipTourianBossDoor!.Value
+                    ? TourianBossDoor.Open
+                    : TourianBossDoor.Closed;
                 options.SeedOptions.GameModeOptions.KeysanityMode = options.SeedOptions.KeysanityMode!.Value;
-                options.SeedOptions.GameModeOptions.PlaceGTBigKeyInGT = options.SeedOptions.PlaceGTBigKeyInGT!.Value;
-                options.SeedOptions.GameModeOptions.OpenPyramid = options.SeedOptions.OpenPyramid!.Value;
+                options.SeedOptions.GameModeOptions.KeysanityGanonsTowerBigKeyLocation =
+                    options.SeedOptions.PlaceGTBigKeyInGT!.Value
+                        ? KeysanityGanonsTowerBigKeyLocation.GanonsTower
+                        : KeysanityGanonsTowerBigKeyLocation.Anywhere;
+                options.SeedOptions.GameModeOptions.PyramidHole =
+                    options.SeedOptions.OpenPyramid!.Value ? PyramidHole.Open : PyramidHole.Closed;
                 options.SeedOptions.GanonCrystalCount = null;
                 options.SeedOptions.GanonsTowerCrystalCount = null;
                 options.SeedOptions.TourianBossCount = null;

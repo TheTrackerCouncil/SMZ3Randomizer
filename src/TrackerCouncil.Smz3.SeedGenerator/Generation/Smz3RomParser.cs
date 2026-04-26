@@ -140,7 +140,7 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
                 GanonsTowerCrystalCount = gtCrystalCount,
                 GanonCrystalCount = ganonCrystalCount,
                 TourianBossCount = tourianBossCount,
-                OpenPyarmid = openPyramid,
+                OpenPyramid = openPyramid,
                 SkipTourianBossDoor = skippedTourianBossDoor,
                 RomGenerator = romGenerator.Value,
                 Players = players,
@@ -174,8 +174,8 @@ public partial class Smz3RomParser(ILogger<Smz3RomParser> logger, IWorldAccessor
         config.GameModeOptions.GanonsTowerCrystalCount = parsedRomDetails.GanonsTowerCrystalCount;
         config.GameModeOptions.GanonCrystalCount = parsedRomDetails.GanonCrystalCount;
         config.GameModeOptions.TourianBossCount = parsedRomDetails.TourianBossCount;
-        config.GameModeOptions.OpenPyramid = parsedRomDetails.OpenPyarmid;
-        config.GameModeOptions.SkipTourianBossDoor = parsedRomDetails.SkipTourianBossDoor;
+        config.GameModeOptions.PyramidHole = parsedRomDetails.OpenPyramid ? PyramidHole.Open : PyramidHole.Closed;
+        config.GameModeOptions.TourianBossDoor = parsedRomDetails.SkipTourianBossDoor ? TourianBossDoor.Open : TourianBossDoor.Closed;
         config.GameModeOptions.SelectedGameModeType = parsedRomDetails.GameModeType;
         config.GameModeOptions.ShuffleMetroidBossTokens = true;
         config.LocationItems.Clear();

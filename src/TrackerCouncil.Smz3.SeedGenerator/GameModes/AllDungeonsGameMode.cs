@@ -62,14 +62,14 @@ public class AllDungeonsGameMode(IMetadataService metadata) : GameModeBase
         return progression is { AllPendants: true, AllCrystals: true } &&
                progression.MetroidBossCount >= 4 &&
                world.AllBosses.First(x => x.Type == BossType.Agahnim).Defeated &&
-               (_tracker.AutoTracker?.OpenPyramid == true || world.AllBosses.First(x => x.Type == BossType.Ganon).Defeated || world.Config.GameModeOptions.OpenPyramid);
+               (_tracker.AutoTracker?.OpenPyramid == true || world.AllBosses.First(x => x.Type == BossType.Ganon).Defeated || world.Config.GameModeOptions.PyramidHole == PyramidHole.Open);
     }
 
     public override void UpdateWorld(World world, Random rng, GameModeOptions gameModeOptions)
     {
         gameModeOptions.GanonCrystalCount = 7;
         gameModeOptions.TourianBossCount = 4;
-        gameModeOptions.OpenPyramid = false;
+        gameModeOptions.PyramidHole = PyramidHole.Closed;
     }
 
     public override void UpdateInitialTrackerState(GameModeOptions gameModeOptions, TrackerState trackerState,
@@ -108,7 +108,7 @@ public class AllDungeonsGameMode(IMetadataService metadata) : GameModeBase
             dungeons++;
         }
 
-        if (_tracker.AutoTracker?.OpenPyramid == true || world.AllBosses.First(x => x.Type == BossType.Ganon).Defeated || world.Config.GameModeOptions.OpenPyramid)
+        if (_tracker.AutoTracker?.OpenPyramid == true || world.AllBosses.First(x => x.Type == BossType.Ganon).Defeated || world.Config.GameModeOptions.PyramidHole == PyramidHole.Open)
         {
             dungeons++;
         }

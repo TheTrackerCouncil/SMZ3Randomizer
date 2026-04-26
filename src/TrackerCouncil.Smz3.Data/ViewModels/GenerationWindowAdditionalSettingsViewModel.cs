@@ -41,8 +41,8 @@ public class GenerationWindowAdditionalSettingsViewModel : ViewModelBase
         }
     }
 
-    [DynamicFormFieldBoolComboBox("Pyramid access:", falseText: "Opens after Ganon's Tower is completed", trueText: "Open by default", trueFirst: false)]
-    public bool OpenPyramid { get; set; }
+    [DynamicFormFieldComboBox(label: "Pyramid access:")]
+    public PyramidHole PyramidHole { get; set; }
 
     [DynamicFormFieldBoolComboBox("Metroid boss tokens:", falseText: "Disabled", trueText: "Shuffled with dungeon rewards", trueFirst: false)]
     public bool ShuffleMetroidBossTokens { get; set; }
@@ -59,15 +59,15 @@ public class GenerationWindowAdditionalSettingsViewModel : ViewModelBase
         }
     }
 
-    [DynamicFormFieldBoolComboBox("Metroid statue room access:", falseText: "Require Crateria boss keycard", trueText: "Open by default", visibleWhenTrue: nameof(IsMetroidKeysanity))]
-    public bool SkipTourianBossDoor { get; set; }
+    [DynamicFormFieldComboBox(label: "Metroid statue room access:")]
+    public TourianBossDoor TourianBossDoor { get; set; }
 
-    [DynamicFormFieldBoolComboBox("Ganon's Tower big key location:", falseText: "Fully randomized", trueText: "In Ganon's Tower", trueFirst: false, visibleWhenTrue: nameof(IsZeldaKeysanity))]
-    public bool PlaceGTBigKeyInGT { get; set; }
+    [DynamicFormFieldComboBox(label: "Ganon's Tower big key location:", visibleWhenTrue: nameof(IsZeldaKeysanity))]
+    public KeysanityGanonsTowerBigKeyLocation KeysanityGanonsTowerBigKeyLocation { get; set; }
 
-    public bool IsMetroidKeysanity => KeysanityMode is KeysanityMode.Both or KeysanityMode.SuperMetroid;
+    public bool IsMetroidKeysanity => KeysanityMode is KeysanityMode.Both or KeysanityMode.SuperMetroid or KeysanityMode.Random;
 
-    public bool IsZeldaKeysanity => KeysanityMode is KeysanityMode.Both or KeysanityMode.Zelda;
+    public bool IsZeldaKeysanity => KeysanityMode is KeysanityMode.Both or KeysanityMode.Zelda or KeysanityMode.Random;
 
     public bool AlwaysHidden => false;
     public bool RandomizeGoalCounts

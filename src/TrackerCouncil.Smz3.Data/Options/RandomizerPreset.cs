@@ -63,7 +63,7 @@ public class RandomizerPreset
                         GanonCrystalCount = 0,
                         GanonsTowerCrystalCount = 0,
                         TourianBossCount = 0,
-                        OpenPyramid = true
+                        PyramidHole = PyramidHole.Open
                     },
                 }
             },

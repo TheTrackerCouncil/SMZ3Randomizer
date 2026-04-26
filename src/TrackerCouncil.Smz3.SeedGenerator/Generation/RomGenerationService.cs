@@ -57,8 +57,8 @@ public class RomGenerationService(
         config.GameModeOptions.LiftOffOnGoalCompletion = plandoConfig.LiftOffOnGoalCompletion;
 
         config.GameModeOptions.KeysanityMode = plandoConfig.KeysanityMode;
-        config.GameModeOptions.SkipTourianBossDoor = plandoConfig.SkipTourianBossDoor;
-        config.GameModeOptions.OpenPyramid = plandoConfig.OpenPyramid;
+        config.GameModeOptions.TourianBossDoor = plandoConfig.SkipTourianBossDoor ? TourianBossDoor.Open : TourianBossDoor.Closed;
+        config.GameModeOptions.PyramidHole = plandoConfig.OpenPyramid ? PyramidHole.Open : PyramidHole.Closed;
 
         config.LogicConfig = plandoConfig.Logic.Clone();
         return plandomizer.GenerateSeed(config, CancellationToken.None);

@@ -17,7 +17,7 @@ public class GoalsPatch : RomPatch
         }
 
         // Open pyramid
-        if (data.Config.GameModeOptions.OpenPyramid)
+        if (data.Config.GameModeOptions.PyramidHole == PyramidHole.Open)
         {
             yield return new GeneratedPatch(0x40008B, [0x01]);
         }

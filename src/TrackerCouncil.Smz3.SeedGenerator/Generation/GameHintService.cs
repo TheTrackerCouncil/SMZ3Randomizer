@@ -439,14 +439,14 @@ public class GameHintService(
             }
 
             // Make sure the player can access tourian
-            if (world.Config is { MetroidKeysanity: true, GameModeOptions.SkipTourianBossDoor: false } &&
+            if (world.Config is { MetroidKeysanity: true, GameModeOptions.TourianBossDoor: TourianBossDoor.Closed } &&
                 !progression.Contains(ItemType.CardCrateriaBoss))
             {
                 return LocationUsefulness.Mandatory;
             }
 
             // Make sure the player can access Ganon
-            if (!world.Config.GameModeOptions.OpenPyramid && !worldLocations.ContainsKey(LocationId.GanonsTowerMoldormChest))
+            if (world.Config.GameModeOptions.PyramidHole == PyramidHole.Closed && !worldLocations.ContainsKey(LocationId.GanonsTowerMoldormChest))
             {
                 return LocationUsefulness.Mandatory;
             }

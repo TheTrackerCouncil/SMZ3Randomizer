@@ -129,7 +129,7 @@ public class WestCrateria : SMRegion
         else if (World.LegacyWorld == null)
         {
             var canAccessStatueRoom = Terminator.Locations.First().IsAvailable(progression) &&
-                                      (!World.Config.MetroidKeysanity || World.Config.GameModeOptions.SkipTourianBossDoor ||
+                                      (!World.Config.MetroidKeysanity || World.Config.GameModeOptions.TourianBossDoor == TourianBossDoor.Open ||
                                        progression.CardCrateriaBoss);
 
             var rewardCount = World.Config.GameModeOptions.ShuffleMetroidBossTokens
@@ -147,7 +147,7 @@ public class WestCrateria : SMRegion
         else
         {
             var canAccessStatueRoom = World.LegacyWorld.IsLocationAccessible((int)LocationId.CrateriaTerminator, progression.LegacyProgression) &&
-                                      (!World.Config.MetroidKeysanity || World.Config.GameModeOptions.SkipTourianBossDoor ||
+                                      (!World.Config.MetroidKeysanity || World.Config.GameModeOptions.TourianBossDoor == TourianBossDoor.Open ||
                                        progression.CardCrateriaBoss);
 
             var canEnterTourian = World.Rewards.Count(x => x.MarkedReward?.IsInCategory(RewardCategory.Metroid) == true && x.HasReceivedReward) >= tourianBossRequirement;
