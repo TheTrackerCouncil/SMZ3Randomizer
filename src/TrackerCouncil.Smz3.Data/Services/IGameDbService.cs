@@ -13,8 +13,10 @@ public interface IGameDbService
     /// </summary>
     /// <param name="rom">The GeneratedRom to update</param>
     /// <param name="label">The value to update for the label</param>
+    /// <param name="hardwarePath">The path to the rom on hardware</param>
+    /// <param name="msuPath">The path to the msu for the rom</param>
     /// <returns>True if the GeneratedRom was updated</returns>
-    public bool UpdateGeneratedRom(GeneratedRom rom, string? label = null);
+    public bool UpdateGeneratedRom(GeneratedRom rom, string? label = null, string? hardwarePath = null, string? msuPath = null);
 
     /// <summary>
     /// Retrieves the list of roms from the database

@@ -21,6 +21,8 @@ public class GeneratedRom
     [ForeignKey("MultiplayerGameDetails")]
     public long? MultiplayerGameDetailsId { get; set; }
     public string? MsuPaths { get; set; }
+    [MaxLength(256)]
+    public string? HardwarePath { get; set; }
     public MsuRandomizationStyle? MsuRandomizationStyle { get; set; }
     public MsuShuffleStyle? MsuShuffleStyle { get; set; }
     public virtual MultiplayerGameDetails? MultiplayerGameDetails { get; set; }

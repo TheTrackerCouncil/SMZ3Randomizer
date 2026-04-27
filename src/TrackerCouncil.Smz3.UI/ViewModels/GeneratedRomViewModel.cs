@@ -26,6 +26,8 @@ public partial class GeneratedRomViewModel(GeneratedRom rom) : ViewModelBase
 
     [Reactive] public partial bool IsEditTextBoxVisible { get; set; }
 
+    [Reactive] public partial bool IsUploadedToHardware { get; set; } = !string.IsNullOrEmpty(rom.HardwarePath);
+
     public string TimeLabel
     {
         get

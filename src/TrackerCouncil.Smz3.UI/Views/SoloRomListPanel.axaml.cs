@@ -1,11 +1,15 @@
+using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
+using Avalonia.Threading;
 using AvaloniaControls.Controls;
 using AvaloniaControls.Services;
+using MSURandomizer.Views;
 using TrackerCouncil.Smz3.UI.Services;
 using TrackerCouncil.Smz3.UI.ViewModels;
 
@@ -229,6 +233,24 @@ public partial class SoloRomListPanel : UserControl
         catch
         {
             await MessageWindow.ShowErrorDialog("Invalid ROM file. Please select a valid generated SMZ3 rom.");
+        }
+    }
+
+    private async void HardwareMenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            if (!GetRomFromControl<MenuItem>(sender, out var rom, out _) || _service == null || !string.IsNullOrEmpty(rom!.Rom.HardwarePath))
+            {
+                return;
+            }
+
+            await _service.UploadRomToHardware(rom.Rom);
+            rom.IsUploadedToHardware = !string.IsNullOrEmpty(rom.Rom.HardwarePath);
+        }
+        catch (Exception ex)
+        {
+            _service?.LogException(ex, "Error uploading rom");
         }
     }
 }
