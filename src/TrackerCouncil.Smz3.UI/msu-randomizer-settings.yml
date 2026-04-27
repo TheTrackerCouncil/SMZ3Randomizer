@@ -7,6 +7,7 @@ MsuWindowDisplayShuffleButton: false
 MsuWindowDisplayContinuousButton: false
 MsuWindowDisplayOptionsButton: false
 MsuWindowDisplaySelectButton: true
+MsuWindowDisplayUploadButton: false
 DisableHardwareMode: true
 ForcedMsuType: "SMZ3 Combo Randomizer"
 MsuWindowTitle: SMZ3 Cas' Randomizer

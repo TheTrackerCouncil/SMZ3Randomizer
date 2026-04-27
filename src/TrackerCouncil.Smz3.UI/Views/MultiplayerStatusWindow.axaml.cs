@@ -115,5 +115,10 @@ public partial class MultiplayerStatusWindow : RestorableWindow
     {
         _service?.Dispose();
     }
+
+    private void UploadToHardwareMenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        _ = _service?.UploadRomToHardware();
+    }
 }
 

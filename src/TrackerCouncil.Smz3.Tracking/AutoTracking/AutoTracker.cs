@@ -70,10 +70,10 @@ public class AutoTracker : AutoTrackerBase
         try
         {
             _logger.LogInformation("Connector connected");
-            _validationCts = new CancellationTokenSource();
+            var cts = _validationCts = new CancellationTokenSource();
             await Task.Delay(TimeSpan.FromSeconds(2), _validationCts.Token);
 
-            if (!_validationCts.IsCancellationRequested)
+            if (!cts.IsCancellationRequested)
             {
                 _logger.LogInformation("Connection validated");
                 TrackerBase.Say(x => x.AutoTracker.WhenConnected);

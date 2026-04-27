@@ -139,6 +139,15 @@ public class MultiplayerStatusWindowService(MultiplayerClientService multiplayer
         FinalizeLaunch();
     }
 
+    public async Task UploadRomToHardware()
+    {
+        if (_model.GeneratedRom == null)
+        {
+            return;
+        }
+        await sharedCrossplatformService.UploadRomToHardware(_model.GeneratedRom, _window);
+    }
+
     private void FinalizeLaunch()
     {
         if (_trackerWindow != null)

@@ -12,13 +12,25 @@ public class GameDbService(RandomizerContext context, OptionsFactory optionsFact
 {
     private readonly RandomizerOptions _options = optionsFactory.Create();
 
-    public bool UpdateGeneratedRom(GeneratedRom rom, string? label = null)
+    public bool UpdateGeneratedRom(GeneratedRom rom, string? label = null, string? hardwarePath = null, string? msuPath = null)
     {
         var updated = false;
 
         if (label != null && label != rom.Label)
         {
             rom.Label = label;
+            updated = true;
+        }
+
+        if (hardwarePath != null && hardwarePath != rom.HardwarePath)
+        {
+            rom.HardwarePath = hardwarePath;
+            updated = true;
+        }
+
+        if (msuPath != null && msuPath != rom.MsuPaths)
+        {
+            rom.MsuPaths = msuPath;
             updated = true;
         }
 

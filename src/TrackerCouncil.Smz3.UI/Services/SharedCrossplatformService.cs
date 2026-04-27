@@ -5,14 +5,18 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Threading;
 using AvaloniaControls;
 using AvaloniaControls.Controls;
 using AvaloniaControls.Models;
 using AvaloniaControls.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MSURandomizer.Views;
 using MSURandomizerLibrary;
 using MSURandomizerLibrary.Services;
+using SnesConnectorLibrary;
+using SnesConnectorLibrary.Requests;
 using TrackerCouncil.Smz3.Data;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.ParsedRom;
@@ -20,6 +24,7 @@ using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.SeedGenerator.Generation;
 using TrackerCouncil.Smz3.SeedGenerator.Infrastructure;
 using TrackerCouncil.Smz3.Shared.Models;
+using TrackerCouncil.Smz3.Tracking;
 using TrackerCouncil.Smz3.Tracking.Services;
 using TrackerCouncil.Smz3.UI.Views;
 
@@ -34,6 +39,7 @@ public class SharedCrossplatformService(
     Smz3GeneratedRomLoader smz3GeneratedRomLoader,
     IMsuTypeService msuTypeService,
     IMetadataService metadataService,
+    ISnesConnectorService snesConnectorService,
     ILogger<SharedCrossplatformService> logger)
 {
     private static TrackerWindow? s_trackerWindow;
@@ -124,7 +130,7 @@ public class SharedCrossplatformService(
         }
     }
 
-    public void PlayRom(GeneratedRom? rom)
+    public void PlayRom(GeneratedRom? rom, Window? parentWindow = null)
     {
         if (rom == null)
         {
@@ -132,15 +138,59 @@ public class SharedCrossplatformService(
             return;
         }
 
-        try
+        if (string.IsNullOrEmpty(rom.HardwarePath))
         {
-            romLauncherService.LaunchRom(rom);
+            try
+            {
+                romLauncherService.LaunchRom(rom);
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "Could not launch rom");
+                DisplayError(
+                    "There was an issue launching the rom. Make sure the rom file still exists and that you have a valid application set to launch roms in either the randomizer options or your operating system.");
+            }
         }
-        catch (Exception e)
+        else
         {
-            logger.LogError(e, "Could not launch rom");
-            DisplayError(
-                "There was an issue launching the rom. Make sure the rom file still exists and that you have a valid application set to launch roms in either the randomizer options or your operating system.");
+            // If we're connected to a connector that supports file access, boot the rom immediately
+            if (snesConnectorService is { IsConnected: true, CurrentConnectorFunctionality.CanAccessFiles: true })
+            {
+                Task.Run(async () =>
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(2));
+                    snesConnectorService.BootRom(new SnesBootRomRequest { Path = rom.HardwarePath });
+                });
+            }
+            // Else open the connector window and wait to be connected
+            else
+            {
+                var connectorWindow = new ConnectorWindow();
+                connectorWindow.UpdateButtons("Continue");
+
+                // Detect if the connector connects while the window is open, close the window
+                var autoClosed = false;
+                snesConnectorService.Connected += (_, _) =>
+                {
+                    autoClosed = true;
+                    Dispatcher.UIThread.Invoke(connectorWindow.Close);
+                };
+
+                // When the window is closed, boot the rom
+                connectorWindow.Closed += (_, _) =>
+                {
+                    if (connectorWindow.ClickedPrimaryButton || autoClosed)
+                    {
+                        Task.Run(async () =>
+                        {
+                            await Task.Delay(TimeSpan.FromSeconds(2));
+                            snesConnectorService.BootRom(new SnesBootRomRequest { Path = rom.HardwarePath });
+                        });
+                    }
+                };
+
+                connectorWindow.ShowDialog(parentWindow ?? MessageWindow.GlobalParentWindow!);
+            }
         }
 
     }
@@ -366,6 +416,89 @@ public class SharedCrossplatformService(
                 { msuDirectory, smz3MsuType.DisplayName }
             });
         });
+    }
+
+    public async Task UploadRomToHardware(GeneratedRom rom, Window? parentWindow = null)
+    {
+        parentWindow ??= ParentWindow;
+
+        // Open the connector window and make sure the user is connected
+        var connectorWindow = new ConnectorWindow();
+        connectorWindow.UpdateButtons("Browse Hardware Folders", "Select Hardware MSU(s)");
+        if (!await connectorWindow.ShowDialog<bool>(parentWindow))
+        {
+            return;
+        }
+
+        string? hardwarePath = null;
+        string? msuPath = null;
+
+        // Have the user browse all folders to select the destination for the rom
+        if (!connectorWindow.ClickedSecondaryButton)
+        {
+            var hardwareWindow = new HardwareDirectoriesWindow([".msu", ".sfc"]) { KeepConnectionAlive = true };
+            var path = await hardwareWindow.ShowFileDialog(parentWindow);
+            if (!string.IsNullOrEmpty(path))
+            {
+                if (path.EndsWith('/'))
+                {
+                    var msu = hardwareWindow.AllPaths?.FirstOrDefault(x =>
+                        x.StartsWith(path) && x.EndsWith(".msu", StringComparison.InvariantCultureIgnoreCase));
+                    if (!string.IsNullOrEmpty(msu))
+                    {
+                        hardwarePath = path.Replace(".msu", ".sfc", StringComparison.OrdinalIgnoreCase);
+                    }
+                    else
+                    {
+                        hardwarePath = path + Path.GetFileName(rom.RomPath);
+                    }
+                }
+                else if (path.EndsWith(".sfc", StringComparison.OrdinalIgnoreCase))
+                {
+                    hardwarePath = path;
+                }
+                else if (path.EndsWith(".msu", StringComparison.OrdinalIgnoreCase))
+                {
+                    hardwarePath = path.Replace(".msu", ".sfc", StringComparison.OrdinalIgnoreCase);
+                }
+            }
+        }
+        // Open the MSU selection window in hardware mode to select the MSU(s) to use
+        else
+        {
+            var window = serviceProvider.GetRequiredService<MsuWindow>();
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            window.HardwareMode = true;
+            await window.ShowDialog(parentWindow, false, Options.GeneralOptions.MsuPath);
+
+            var selectedMsus = window.GetSelectedMsus().ToList();
+
+            if (selectedMsus.Count == 0)
+            {
+                return;
+            }
+
+            var msu = selectedMsus.Random();
+            hardwarePath = msu?.Replace(".msu", ".sfc", StringComparison.OrdinalIgnoreCase);
+
+            var msuDetails = window.GetSelectedMsusDetails().FirstOrDefault(x => x.Path == msu);
+            msuPath = msuDetails?.LocalMsuForHardwareMsu;
+        }
+
+        if (string.IsNullOrEmpty(hardwarePath))
+        {
+            return;
+        }
+
+        // Upload the rom to hardware and update the database entry
+        var uploadWindow = new UploadRomToHardwareWindow { WindowStartupLocation = WindowStartupLocation.CenterOwner };
+        var romPath = Path.Combine(Options.RomOutputPath, rom.RomPath);
+        await uploadWindow.ShowDialog(parentWindow ?? ParentWindow, romPath, hardwarePath);
+
+        if (uploadWindow.DidUploadSuccessfully)
+        {
+            gameDbService.UpdateGeneratedRom(rom, hardwarePath: hardwarePath, msuPath: msuPath);
+        }
     }
 
     private RandomizerOptions Options

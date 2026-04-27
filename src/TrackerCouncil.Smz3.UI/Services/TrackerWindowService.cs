@@ -916,7 +916,7 @@ public class TrackerWindowService(
     {
         try
         {
-            sharedCrossplatformService.PlayRom(tracker.Rom);
+            sharedCrossplatformService.PlayRom(tracker.Rom, _window);
         }
         catch (Exception e)
         {

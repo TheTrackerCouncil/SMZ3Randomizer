@@ -112,6 +112,11 @@
                             Name="ViewSpoilerLogMenuItem"
                             Click="ViewSpoilerLogMenuItem_OnClick"
                   ></MenuItem>
+                  <MenuItem Header="_Upload Rom to Hardware"
+                            Name="UploadToHardwareMenuItem"
+                            Click="UploadToHardwareMenuItem_OnClick"
+                            IsEnabled="{Binding PlayButtonsEnabled}"
+                  ></MenuItem>
                 </ContextMenu>
               </Button.ContextMenu>
             </Button>

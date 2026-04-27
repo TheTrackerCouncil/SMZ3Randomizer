@@ -1,0 +1,46 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:AvaloniaControls.Controls;assembly=AvaloniaControls"
+        xmlns:viewModels="clr-namespace:TrackerCouncil.Smz3.UI.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="145"
+        Width="500"
+        Height="145"
+        x:Class="TrackerCouncil.Smz3.UI.Views.UploadRomToHardwareWindow"
+        x:DataType="viewModels:UploadRomToHardwareWindowViewModel"
+        Icon="/Assets/smz3.ico"
+        Title="Upload Rom to Hardware — SMZ3 Cas' Randomizer">
+  <LayoutTransformControl Name="MainLayout">
+    <Grid RowDefinitions="Auto,*,Auto">
+
+      <TextBlock x:Name="MainInstructionText"
+                 FontSize="12"
+                 Margin="11 11 11 0"
+                 Text="{Binding MainText}"
+                 Grid.Row="0"></TextBlock>
+      <ProgressBar x:Name="MainProgressBar"
+                   Margin="11,0"
+                   VerticalAlignment="Center"
+                   Height="23"
+                   Minimum="0"
+                   Maximum="1"
+                   Value="1"
+                   IsIndeterminate="{Binding IsLoading}"
+                   Grid.Row="1" />
+      <controls:HeaderFooter
+        Padding="5"
+        Grid.Row="2">
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+          <Button x:Name="CancelButton"
+                  Click="CancelButton_OnClick"
+                  IsCancel="True"
+                  Content="{Binding ButtonText}"
+          />
+        </StackPanel>
+      </controls:HeaderFooter>
+    </Grid>
+  </LayoutTransformControl>
+</Window>
+

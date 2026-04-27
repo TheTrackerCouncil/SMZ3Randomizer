@@ -9,6 +9,7 @@ using MSURandomizerLibrary.Messenger;
 using MSURandomizerLibrary.Models;
 using MSURandomizerLibrary.Services;
 using PySpeechService.Recognition;
+using SnesConnectorLibrary.Responses;
 using TrackerCouncil.Smz3.Abstractions;
 using TrackerCouncil.Smz3.Data.Configuration;
 using TrackerCouncil.Smz3.Data.Configuration.ConfigFiles;
@@ -99,7 +100,24 @@ public class MsuModule : TrackerModule, IDisposable
             return;
         }
 
+        _msuUserOptionsService.MsuUserOptions.MsuCurrentSongOutputFilePath = TrackerBase.Options.MsuTrackOutputPath;
+        _msuUserOptionsService.MsuUserOptions.TrackDisplayFormat = TrackerBase.Options.TrackDisplayFormat;
+        _msuUserOptionsService.MsuUserOptions.MsuShuffleStyle =
+            TrackerBase.Rom!.MsuShuffleStyle ?? MsuShuffleStyle.StandardShuffle;
+
         var romFileInfo = new FileInfo(TrackerBase.RomPath);
+
+        if (!string.IsNullOrEmpty(TrackerBase.Rom?.HardwarePath) && !string.IsNullOrEmpty(TrackerBase.Rom?.MsuPaths))
+        {
+            _currentMsu = _msuLookupService.LoadMsu(TrackerBase.Rom!.MsuPaths, msuType, false, true, true);
+            if (_currentMsu != null)
+            {
+                _msuMonitorService.MsuTrackChanged += MsuMonitorServiceOnMsuTrackChanged;
+                _msuMonitorService.StartMonitor(_currentMsu, msuType);
+            }
+            return;
+        }
+
         var msuPath = romFileInfo.FullName.Replace(romFileInfo.Extension, ".msu");
 
         if (!File.Exists(msuPath))
@@ -122,11 +140,6 @@ public class MsuModule : TrackerModule, IDisposable
             Logger.LogWarning("MSU file found but unable to load MSU");
             return;
         }
-
-        _msuUserOptionsService.MsuUserOptions.MsuCurrentSongOutputFilePath = TrackerBase.Options.MsuTrackOutputPath;
-        _msuUserOptionsService.MsuUserOptions.TrackDisplayFormat = TrackerBase.Options.TrackDisplayFormat;
-        _msuUserOptionsService.MsuUserOptions.MsuShuffleStyle =
-            TrackerBase.Rom!.MsuShuffleStyle ?? MsuShuffleStyle.StandardShuffle;
 
         var inputMsus = TrackerBase.Rom!.MsuPaths?.Split("|");
         _msuShuffleRequest = new MsuSelectorRequest

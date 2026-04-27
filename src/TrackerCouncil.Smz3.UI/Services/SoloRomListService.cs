@@ -8,10 +8,12 @@ using AvaloniaControls;
 using AvaloniaControls.Controls;
 using AvaloniaControls.Models;
 using AvaloniaControls.Services;
+using Microsoft.Extensions.Logging;
 using TrackerCouncil.Smz3.Data.Interfaces;
 using TrackerCouncil.Smz3.Data.Options;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.SeedGenerator.Generation;
+using TrackerCouncil.Smz3.Shared.Models;
 using TrackerCouncil.Smz3.UI.ViewModels;
 using TrackerCouncil.Smz3.UI.Views;
 
@@ -21,6 +23,7 @@ public class SoloRomListService(IRomGenerationService romGenerationService,
     IGameDbService gameDbService,
     OptionsFactory optionsFactory,
     SharedCrossplatformService sharedCrossplatformService,
+    ILogger<SoloRomListService> logger,
     Smz3RomParser smz3RomParser) : ControlService
 {
     private SoloRomListViewModel _model = new();
@@ -187,6 +190,16 @@ public class SoloRomListService(IRomGenerationService romGenerationService,
         }
 
         return false;
+    }
+
+    public async Task UploadRomToHardware(GeneratedRom rom)
+    {
+        await sharedCrossplatformService.UploadRomToHardware(rom);
+    }
+
+    public void LogException(Exception e, string message)
+    {
+        logger.LogError(e, message);
     }
 
     private void OpenMessageWindow(string message, MessageWindowIcon icon = MessageWindowIcon.Error, MessageWindowButtons buttons = MessageWindowButtons.OK)
