@@ -19,6 +19,7 @@ public class ViewedTourianBossCount : IMetroidStateCheck
         if (currentState is { CurrentRegion: 0, CurrentRoomInRegion: 48, SamusX: > 1169 and < 1250 })
         {
             tracker.GameStateTracker.UpdateTourianRequirement(requiredBossCount, true);
+            tracker.GameModeService.NotifyOfGoalStateChange();
             return true;
         }
 
