@@ -530,8 +530,11 @@ public class TrackerWindowService(
         {
             item.UpdatedItemState += (sender, args) =>
             {
-                var sprite = uiService.GetSpritePath(item);
-                model.UpdateItem(item, sprite);
+                Dispatcher.UIThread.Post(() =>
+                {
+                    var sprite = uiService.GetSpritePath(item);
+                    model.UpdateItem(item, sprite);
+                });
             };
         }
 
@@ -541,14 +544,20 @@ public class TrackerWindowService(
             model.IsMMRequirement = miseryMire.PrerequisiteState.MarkedItem == items.Keys.First().Type;
             miseryMire.UpdatedPrerequisite += (_, _) =>
             {
-                model.IsMMRequirement = miseryMire.PrerequisiteState.MarkedItem == items.Keys.First().Type;
+                Dispatcher.UIThread.Post(() =>
+                {
+                    model.IsMMRequirement = miseryMire.PrerequisiteState.MarkedItem == items.Keys.First().Type;
+                });
             };
 
             var turtleRock = world.World.TurtleRock;
             model.IsTRRequirement = turtleRock.PrerequisiteState.MarkedItem == items.Keys.First().Type;
             turtleRock.UpdatedPrerequisite += (_, _) =>
             {
-                model.IsTRRequirement = turtleRock.PrerequisiteState.MarkedItem == items.Keys.First().Type;
+                Dispatcher.UIThread.Post(() =>
+                {
+                    model.IsTRRequirement = turtleRock.PrerequisiteState.MarkedItem == items.Keys.First().Type;
+                });
             };
         }
 
@@ -644,35 +653,50 @@ public class TrackerWindowService(
         var rewardImage = rewardRegion?.RewardType.GetCategories().Length > 0 ? uiService.GetSpritePath(rewardRegion.MarkedReward) : null;
 
         var model = new TrackerWindowDungeonPanelViewModel()
-            {
-                Region = dungeon as Region,
-                DungeonImage = dungeonImage,
-                RewardImage = rewardImage,
-                Row = gridLocation.Row,
-                Column = gridLocation.Column,
-                AddShadows = _model.AddShadows,
-                DungeonCleared = bossRegion?.BossDefeated == true,
-                DungeonTreasure = dungeon.RemainingTreasure,
-            };
+        {
+            Region = dungeon as Region,
+            DungeonImage = dungeonImage,
+            RewardImage = rewardImage,
+            Row = gridLocation.Row,
+            Column = gridLocation.Column,
+            AddShadows = _model.AddShadows,
+            DungeonCleared = bossRegion?.BossDefeated == true,
+            DungeonTreasure = dungeon.RemainingTreasure,
+        };
 
         if (bossRegion != null)
         {
-            bossRegion.Boss.UpdatedBossState += (_, _) => model.DungeonCleared = bossRegion.BossDefeated;
+            bossRegion.Boss.UpdatedBossState += (_, _) =>
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    model.DungeonCleared = bossRegion.BossDefeated;
+                });
+            };
             model.Clicked += (_, _) => tracker.BossTracker.MarkBossAsDefeated(bossRegion, force: true);
             model.ResetCleared += (_, _) => tracker.BossTracker.MarkBossAsNotDefeated(bossRegion, force: true);
         }
 
-        dungeon.UpdatedTreasure += (_, _) => model.DungeonTreasure = dungeon.RemainingTreasure;
+        dungeon.UpdatedTreasure += (_, _) =>
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                model.DungeonTreasure = dungeon.RemainingTreasure;
+            });
+        };
         model.TreasureCleared += (_, _) => tracker.TreasureTracker.ClearDungeon(dungeon);
 
         if (rewardRegion != null)
         {
             rewardRegion.Reward.UpdatedRewardState += (_, _) =>
             {
-                var newImage = rewardRegion.MarkedReward.GetCategories().Length > 0
-                    ? uiService.GetSpritePath(rewardRegion.MarkedReward)
-                    : null;
-                model.RewardImage = newImage;
+                Dispatcher.UIThread.Post(() =>
+                {
+                    var newImage = rewardRegion.MarkedReward.GetCategories().Length > 0
+                        ? uiService.GetSpritePath(rewardRegion.MarkedReward)
+                        : null;
+                    model.RewardImage = newImage;
+                });
             };
 
             model.RewardSet += (_, args) => tracker.RewardTracker.SetAreaReward(rewardRegion, args.RewardType);
@@ -723,7 +747,10 @@ public class TrackerWindowService(
 
         boss.UpdatedBossState += (_, _) =>
         {
-            model.BossDefeated = boss.Defeated;
+            Dispatcher.UIThread.Post(() =>
+            {
+                model.BossDefeated = boss.Defeated;
+            });
         };
 
         model.Clicked += (_, _) => tracker.BossTracker.MarkBossAsDefeated(boss, force: true);
@@ -733,9 +760,12 @@ public class TrackerWindowService(
         {
             rewardRegion.Reward.UpdatedRewardState += (_, _) =>
             {
-                model.RewardImage = rewardRegion?.RewardType.GetCategories().Length > 0
-                    ? uiService.GetBossRewardPath(rewardRegion.MarkedReward)
-                    : null;
+                Dispatcher.UIThread.Post(() =>
+                {
+                    model.RewardImage = rewardRegion?.RewardType.GetCategories().Length > 0
+                        ? uiService.GetBossRewardPath(rewardRegion.MarkedReward)
+                        : null;
+                });
             };
 
             model.RewardSet += (_, args) => tracker.RewardTracker.SetAreaReward(rewardRegion, args.RewardType);
