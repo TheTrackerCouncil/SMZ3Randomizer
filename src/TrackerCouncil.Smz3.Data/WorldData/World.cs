@@ -334,7 +334,7 @@ public class World
                 }
             }
 
-            smRewards = smRewards.Shuffle().ToList();
+            smRewards = smRewards.Shuffle(rnd).ToList();
 
             foreach (var region in RewardRegions.Where(x => x.IsShuffledReward && x is SMRegion))
             {
