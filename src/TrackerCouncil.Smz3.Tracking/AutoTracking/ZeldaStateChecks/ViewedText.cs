@@ -91,7 +91,7 @@ public class ViewedText : IZeldaStateCheck
             if (location is { Cleared: false, HasMarkedCorrectItem: false })
             {
                 tracker.LocationTracker.MarkLocation(location, location.ItemType.GetGenericType(), autoTracked: true);
-                tracker.GameStateTracker.UpdateLastMarkedLocations([]);
+                tracker.GameStateTracker.UpdateLastMarkedLocations([location]);
             }
         }
         // Viewed Ether Tablet text
@@ -103,7 +103,7 @@ public class ViewedText : IZeldaStateCheck
             if (location is { Cleared: false, HasMarkedCorrectItem: false })
             {
                 tracker.LocationTracker.MarkLocation(location, location.ItemType.GetGenericType(), autoTracked: true);
-                tracker.GameStateTracker.UpdateLastMarkedLocations([]);
+                tracker.GameStateTracker.UpdateLastMarkedLocations([location]);
             }
         }
         // Viewed Ped text
@@ -115,7 +115,7 @@ public class ViewedText : IZeldaStateCheck
             if (location is { Cleared: false, HasMarkedCorrectItem: false })
             {
                 tracker.LocationTracker.MarkLocation(location, location.ItemType.GetGenericType(), autoTracked: true);
-                tracker.GameStateTracker.UpdateLastMarkedLocations([]);
+                tracker.GameStateTracker.UpdateLastMarkedLocations([location]);
             }
         }
         // Talked to Bottle merchant
