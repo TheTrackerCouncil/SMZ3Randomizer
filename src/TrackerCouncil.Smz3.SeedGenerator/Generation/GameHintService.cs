@@ -10,6 +10,7 @@ using TrackerCouncil.Smz3.Data.GeneratedData;
 using TrackerCouncil.Smz3.Data.Services;
 using TrackerCouncil.Smz3.Data.WorldData;
 using TrackerCouncil.Smz3.Data.WorldData.Regions;
+using TrackerCouncil.Smz3.Data.WorldData.Regions.Zelda;
 using TrackerCouncil.Smz3.SeedGenerator.Contracts;
 using TrackerCouncil.Smz3.SeedGenerator.GameModes;
 using TrackerCouncil.Smz3.SeedGenerator.Infrastructure;
@@ -394,7 +395,7 @@ public class GameHintService(
     private LocationUsefulness CheckIfLocationsAreImportant(List<World> allWorlds, List<Location> locations, List<Location>? goalLocations, Reward? ignoredReward = null, List<Item>? defaultItems = null)
     {
         var worldLocations = allWorlds.SelectMany(x => x.Locations)
-            .Select(x => locations.Contains(x) ? new Location(x, ItemType.TwentyRupees) : x)
+            .Select(x => locations.Contains(x) && !(!x.World.Config.KeysanityForRegion(x.Region) && x.Region.IsRegionItem(x.Item) && x.Region is GanonsTower) ? new Location(x, ItemType.TwentyRupees) : x)
             .ToList();
 
         try
