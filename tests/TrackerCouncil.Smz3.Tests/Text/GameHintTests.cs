@@ -184,7 +184,7 @@ public class GameHintTests
     [Fact]
     void KeysanityHints()
     {
-        var world = GetVanillaWorld(new GameModeOptions() { KeysanityMode = KeysanityMode.Both } );
+        var world = GetVanillaWorld(new GameModeOptions() { KeysanityMode = KeysanityMode.Both });
         var hintService = GetGameHintService();
 
         world.FindLocation(LocationId.KakarikoTavern).Item = new Item(ItemType.ProgressiveSword, world);
@@ -295,7 +295,7 @@ public class GameHintTests
     [Fact]
     void MetroidBossTokensHints()
     {
-        var world = GetVanillaWorld(new GameModeOptions { ShuffleMetroidBossTokens = true } );
+        var world = GetVanillaWorld(new GameModeOptions { ShuffleMetroidBossTokens = true });
         var hintService = GetGameHintService();
 
         // Move the bow and boots out of eastern palace for testing
@@ -376,6 +376,67 @@ public class GameHintTests
         Assert.Equal(LocationUsefulness.Useless, hintService.GetUsefulness(world.Locations.Where(x => x.Region is EasternPalace).ToList(), [world], null));
     }
 
+
+    [Fact]
+    void GanonsTowerDefaultHints()
+    {
+        var world = GetVanillaWorld();
+        var hintService = GetGameHintService();
+
+        // GT should be nice to have by default due to the tunic
+        var ganonsTower = world.Locations.Where(x => x.Region is GanonsTower).ToList();
+        Assert.Equal(LocationUsefulness.NiceToHave, hintService.GetUsefulness(ganonsTower, [world], null));
+    }
+
+    [Fact]
+    void GanonsTowerSilverArrowsHints()
+    {
+        var world = GetVanillaWorld();
+        var hintService = GetGameHintService();
+
+        // Move SilverArrows from the PyramidFairy into GT
+        SwapLocationItems(world.FindLocation(LocationId.PyramidFairyRight), world.FindLocation(LocationId.GanonsTowerBigChest));
+
+        // GT should be mandatory due to the silver arrows
+        var ganonsTower = world.Locations.Where(x => x.Region is GanonsTower).ToList();
+        Assert.Equal(LocationUsefulness.Mandatory, hintService.GetUsefulness(ganonsTower, [world], null));
+    }
+
+    [Fact]
+    void GanonsTowerKeysanityHints()
+    {
+        var world = GetVanillaWorld(new GameModeOptions() { KeysanityMode = KeysanityMode.Both });
+        var hintService = GetGameHintService();
+
+        // GT shows up as Key in keysanity as it is mandatory but a key (obviously)
+        var ganonsTower = world.Locations.Where(x => x.Region is GanonsTower).ToList();
+        Assert.Equal(LocationUsefulness.Key, hintService.GetUsefulness(ganonsTower, [world], null));
+    }
+    [Fact]
+    void CrateriaBossKeycardKeysanityHints()
+    {
+        var world = GetVanillaWorld(new GameModeOptions() { KeysanityMode = KeysanityMode.Both });
+        var hintService = GetGameHintService();
+
+        var ganonsTower = world.Locations.Where(x => x.Region is GanonsTower).ToList();
+
+        // Move all keys out of GT
+        foreach (var location in ganonsTower.Where(x => x.ItemType is ItemType.KeyGT or ItemType.BigKeyGT))
+        {
+            var otherLocation = world.Locations.First(x => x.ItemType is ItemType.HeartPiece && x.Region is not GanonsTower);
+            SwapLocationItems(location, otherLocation);
+        }
+
+        // GT should be marked as nice to have due to the tunic and no keys
+        Assert.Equal(LocationUsefulness.NiceToHave, hintService.GetUsefulness(ganonsTower, [world], null));
+
+        // GT should show up as Key if the crateria boss keycard is in there
+        var crateriaBossKeycard = world.Locations.First(x => x.ItemType == ItemType.CardCrateriaBoss);
+        var gtBigChest = world.FindLocation(LocationId.GanonsTowerBigChest);
+        SwapLocationItems(crateriaBossKeycard, gtBigChest);
+        Assert.Equal(LocationUsefulness.Key, hintService.GetUsefulness(ganonsTower, [world], null));
+    }
+    
     #region Private methods
     private void SwapLocationItems(Location one, Location two)
     {
