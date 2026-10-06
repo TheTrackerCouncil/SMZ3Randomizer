@@ -353,6 +353,7 @@ public sealed partial class Tracker : TrackerBase, IDisposable
         {
             try
             {
+                _logger.LogInformation("Connecting to Twitch Chat");
                 await _chatClient.ConnectAsync(userName, oauthToken, channel ?? userName, id ?? "");
             }
             catch (AggregateException e)
@@ -360,6 +361,10 @@ public sealed partial class Tracker : TrackerBase, IDisposable
                 _logger.LogError(e, "Error in connection to Twitch chat");
                 Say(x => x.Chat.WhenDisconnected);
             }
+        }
+        else if (!string.IsNullOrEmpty(userName))
+        {
+            _logger.LogWarning("Twitch username specified, but no auth token found");
         }
     }
 

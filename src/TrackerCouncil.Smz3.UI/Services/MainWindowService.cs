@@ -92,6 +92,7 @@ public class MainWindowService(
 
         if (!isTokenValid)
         {
+            logger.LogInformation("Clearing Twitch oauth token due to it being invalid");
             _options.GeneralOptions.TwitchOAuthToken = string.Empty;
             Dispatcher.UIThread.Invoke(() =>
             {
