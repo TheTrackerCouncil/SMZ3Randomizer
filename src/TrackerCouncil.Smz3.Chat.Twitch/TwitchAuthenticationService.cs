@@ -42,10 +42,19 @@ public class TwitchAuthenticationService(
             var response = await s_httpClient.SendAsync(request, cancellationToken);
             if (response.IsSuccessStatusCode)
             {
-                using var responseStream = await response.Content.ReadAsStreamAsync(cancellationToken);
+                await using var responseStream = await response.Content.ReadAsStreamAsync(cancellationToken);
                 var validateResponse = await JsonSerializer.DeserializeAsync<ValidateResponse>(responseStream, cancellationToken: cancellationToken);
                 if (validateResponse?.ExpiresIn > 0)
+                {
+                    logger.LogInformation("Successfully validated Twitch OAuth token");
                     return true;
+                }
+
+                logger.LogWarning("Twitch OAuth token expired");
+            }
+            else
+            {
+                logger.LogError("Unsuccessful API status code {Code} when checking Twitch OAuth token validity.", response.StatusCode);
             }
         }
         catch (Exception ex)

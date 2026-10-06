@@ -108,15 +108,25 @@ public class OptionsWindowService(
 
     public void SaveViewModel()
     {
-        var options = optionsFactory.Create();
-        _model.UpdateOptions(options.GeneralOptions);
+        logger.LogInformation("Saving option window settings");
 
-        if (!Directory.Exists(options.GeneralOptions.RomOutputPath))
+        try
         {
-            Directory.CreateDirectory(options.GeneralOptions.RomOutputPath);
+            var options = optionsFactory.Create();
+            _model.UpdateOptions(options.GeneralOptions);
+
+            if (!Directory.Exists(options.GeneralOptions.RomOutputPath))
+            {
+                Directory.CreateDirectory(options.GeneralOptions.RomOutputPath);
+            }
+
+            options.Save();
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Error saving options window settings");
         }
 
-        options.Save();
     }
 
     private async Task ValidateTwitchOAuthToken()
@@ -150,13 +160,16 @@ public class OptionsWindowService(
             {
                 try
                 {
+                    logger.LogInformation("Attempting to log into twitch");
+
                     var token = await chatAuthenticationService.GetTokenInteractivelyAsync(default);
 
-                    if(token == null)
+                    if (string.IsNullOrEmpty(token))
                     {
                         logger.LogError("Token returned by chat authentication service null");
-                        TwitchError?.Invoke(this, new TwitchErrorEventHandler("An unexpected error occurred while trying to log you in with Twitch. " +
-                                                                              "Please try again or report this issue with the log file."));
+                        TwitchError?.Invoke(this, new TwitchErrorEventHandler(
+                            "An unexpected error occurred while trying to log you in with Twitch. " +
+                            "Please try again or report this issue with the log file."));
                         return;
                     }
 
@@ -165,8 +178,9 @@ public class OptionsWindowService(
                     if (userData == null)
                     {
                         logger.LogError("User Data returned by chat authentication service null");
-                        TwitchError?.Invoke(this, new TwitchErrorEventHandler("An unexpected error occurred while trying to log you in with Twitch. " +
-                                                                              "Please try again or report this issue with the log file."));
+                        TwitchError?.Invoke(this, new TwitchErrorEventHandler(
+                            "An unexpected error occurred while trying to log you in with Twitch. " +
+                            "Please try again or report this issue with the log file."));
                         return;
                     }
 
@@ -174,12 +188,15 @@ public class OptionsWindowService(
                     _model.TwitchIntegration.TwitchOAuthToken = token;
                     _model.TwitchIntegration.TwitchChannel = userData.Name;
                     _model.TwitchIntegration.TwitchId = userData.Id;
+                    SaveTwitchLogin();
+                    logger.LogInformation("Updated Twitch token successfully");
                 }
                 catch (Exception ex)
                 {
                     logger.LogError(ex, "An unknown error occurred while logging in with Twitch");
-                    TwitchError?.Invoke(this, new TwitchErrorEventHandler("An unexpected error occurred while trying to log you in with Twitch. " +
-                                                                          "Please try again or report this issue with the log file."));
+                    TwitchError?.Invoke(this, new TwitchErrorEventHandler(
+                        "An unexpected error occurred while trying to log you in with Twitch. " +
+                        "Please try again or report this issue with the log file."));
                 }
             });
         }
@@ -193,21 +210,41 @@ public class OptionsWindowService(
 
     private async void TwitchLogout()
     {
-        if (string.IsNullOrEmpty(_model.TwitchIntegration.TwitchOAuthToken))
-            return;
-
-        var revoked = await chatAuthenticationService.RevokeTokenAsync(_model.TwitchIntegration.TwitchOAuthToken, default);
-
-        if (revoked)
+        try
         {
-            _model.TwitchIntegration.TwitchUserName = "";
-            _model.TwitchIntegration.TwitchOAuthToken = "";
-            _model.TwitchIntegration.TwitchChannel = "";
-            _model.TwitchIntegration.TwitchId = "";
+            if (string.IsNullOrEmpty(_model.TwitchIntegration.TwitchOAuthToken))
+                return;
+
+            var revoked = await chatAuthenticationService.RevokeTokenAsync(_model.TwitchIntegration.TwitchOAuthToken, default);
+
+            if (revoked)
+            {
+                _model.TwitchIntegration.TwitchUserName = "";
+                _model.TwitchIntegration.TwitchOAuthToken = "";
+                _model.TwitchIntegration.TwitchChannel = "";
+                _model.TwitchIntegration.TwitchId = "";
+            }
+
+            _model.TwitchIntegration.TwitchStatusText = revoked ? "Logged out." : "Something went wrong.";
+            _model.TwitchIntegration.IsLoggedIn = false;
+            SaveTwitchLogin();
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Error logging out from Twitch");
         }
 
-        _model.TwitchIntegration.TwitchStatusText = revoked ? "Logged out." : "Something went wrong.";
-        _model.TwitchIntegration.IsLoggedIn = false;
+    }
+
+    private void SaveTwitchLogin()
+    {
+        logger.LogInformation("Saving Twitch login settings. Valid OAuthToken? {Value}", !string.IsNullOrEmpty(_model.TwitchIntegration.TwitchOAuthToken));
+        var options = optionsFactory.Create();
+        options.GeneralOptions.TwitchUserName = _model.TwitchIntegration.TwitchUserName;
+        options.GeneralOptions.TwitchOAuthToken = _model.TwitchIntegration.TwitchOAuthToken;
+        options.GeneralOptions.TwitchChannel = _model.TwitchIntegration.TwitchChannel;
+        options.GeneralOptions.TwitchId = _model.TwitchIntegration.TwitchId;
+        options.Save();
     }
 
     private async Task UpdateConfigsAsync()
